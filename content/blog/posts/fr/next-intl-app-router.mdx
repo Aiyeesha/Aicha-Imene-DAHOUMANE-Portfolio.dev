@@ -1,0 +1,44 @@
+---
+title: "i18n Next.js App Router avec next-intl (mise en place pratique)"
+excerpt: "Une configuration i18n propre et “prod-ready” : routage, messages, proxy, et bonnes pratiques UX."
+date: "2025-01-15"
+tags: ["Next.js", "i18n", "next-intl"]
+---
+
+## i18n Next.js App Router avec next-intl
+
+Ce tutoriel présente une configuration i18n **propre** et adaptée à la prod avec `next-intl`.
+
+## Ce que tu obtiens
+
+- `/en` et `/fr` en préfixe d’URL
+- Les messages dans `messages/en.json` et `messages/fr.json`
+- Un `proxy.ts` (Next.js 16) pour la négociation de locale
+- Un projet maintenable : structure claire, routing prévisible
+
+## Structure recommandée
+
+- `app/[locale]/...` pour les routes localisées
+- `messages/{locale}.json` pour les traductions
+- `i18n/request.ts` pour configurer `next-intl`
+
+## Pièges fréquents
+
+- Oublier `proxy.ts` (ou garder un `middleware` déprécié)
+- Ne pas gérer le fallback de locale par défaut
+- Mélanger traduction serveur / client sans règle claire
+
+## Conseils pratiques
+
+- Messages **petits** et **bien groupés** (`nav.*`, `contact.*`, `sections.*`)
+- Un endpoint `/api/contact` unique puis forwarding vers Formspree / email / CRM
+
+Si tu veux, on peut ajouter un système de **clés typées** + un check CI pour détecter les traductions manquantes.
+
+
+## Quick commands
+
+```bash
+npm install
+npm run dev
+```

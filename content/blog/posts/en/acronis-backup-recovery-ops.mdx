@@ -1,0 +1,124 @@
+---
+title: "Acronis: backups (Cloud + NAS), alerts, and remediation"
+excerpt: "A practical Acronis Cyber Protect Cloud runbook: plans, destinations (Cloud/NAS), retention, alerting, and how to fix common failures."
+date: "2025-02-20"
+tags: ["Backup", "Acronis", "Monitoring", "Runbooks", "IT Ops"]
+---
+
+
+## Goal
+
+Operate **reliable** backups with **Acronis Cyber Protect Cloud**:
+
+- Backup plans by type (VM / servers / workstations)
+- Destinations: **Cloud** and/or **local NAS (SMB)**
+- Retention policy
+- Alerts & daily monitoring
+- Remediation for common errors
+
+## Step 1 — Prepare destinations
+
+### 1.1 Cloud destination
+
+1. Open the Acronis console.
+2. Select the correct tenant/customer.
+3. Check Cloud quota and current usage.
+
+### 1.2 NAS (SMB) destination
+
+1. Validate SMB access from a test server:
+   - dedicated service account
+   - read/write permissions
+2. Record:
+   - SMB path: `smb://IP/share/folder`
+   - credentials stored in a secret manager
+
+## Step 2 — Create a backup plan
+
+1. **Plans** → **Create plan**.
+2. Name it (e.g.) `BKP-SRV-VM-DAILY`.
+3. **What to back up**:
+   - VMs: full machine (image) or selected disks
+   - Servers: system + data volumes
+   - SQL/Exchange: enable application-aware options if available
+4. **Where to back up**:
+   - Acronis Cloud, or
+   - NAS (SMB) path + credentials
+5. **Schedule** (example): Mon–Sat at 23:00
+6. **Retention** (example):
+   - Daily: 6 days
+   - Weekly: 4 weeks
+   - Monthly: 2 months
+7. Save.
+
+## Step 3 — Assign the plan to devices
+
+1. Go to **Devices**.
+2. Filter by site/group.
+3. Select target machines.
+4. Assign the plan (or via policy).
+5. Confirm agents are online and up to date.
+
+## Step 4 — Daily monitoring
+
+Every day:
+
+1. Open **Dashboard / Alerts**.
+2. Work in this order:
+   1) Critical
+   2) Error
+   3) Warning
+3. For each alert:
+   - identify plan + device
+   - open run details
+
+## Step 5 — Remediation: common failures
+
+### 5.1 “Not enough space / quota exceeded”
+
+1. Check destination capacity:
+   - Cloud quota + usage
+   - NAS free space + snapshots
+2. Review retention (too long?).
+3. Options:
+   - reduce retention
+   - enable compression/dedup
+   - move some jobs to another storage target
+4. Re-run on one test device.
+
+### 5.2 VMware CBT / snapshots warning
+
+1. In vCenter, check for existing/orphan snapshots.
+2. Remove/consolidate during a maintenance window.
+3. Re-run the job.
+4. If it persists, verify VMware/Acronis settings and agent versions.
+
+### 5.3 SMB authentication failure
+
+1. Test SMB access from a machine: `\IP\share\path`
+2. Check:
+   - expired password
+   - share/NTFS permissions
+   - firewall (SMB 445)
+3. Update credentials in Acronis, re-test.
+
+## Step 6 — Restore validation
+
+A backup marked “OK” is not enough: prove restore.
+
+1. Pick one critical machine.
+2. Run a restore test:
+   - file restore (quick)
+   - volume/VM restore (as needed)
+3. Validate:
+   - file integrity
+   - restore time (RTO)
+4. Document results (date, duration, operator, improvements).
+
+## Day-1 checklist
+
+- [ ] Agents online and up to date
+- [ ] Realistic retention
+- [ ] Cloud/NAS destinations reachable
+- [ ] Alerts routed to the right team (email/PSA)
+- [ ] A restore test is done and documented

@@ -1,0 +1,195 @@
+---
+title: "Datto RMM : supervision, alerting et runbooks (de l’alerte à la remédiation)"
+excerpt: "Mise en place d’une supervision Datto RMM orientée IT Ops : monitors, alertes, automatisations et runbooks (Quick Jobs) pour remédier rapidement."
+date: "2025-02-10"
+tags: ["RMM", "Monitoring", "Automation", "Runbooks", "IT Ops"]
+---
+
+> **Note** : les libellés exacts peuvent légèrement varier selon la version/tenant Datto RMM, mais la logique (Sites → Devices → Policies → Monitors → Alerts → Automation) reste identique.
+
+## Objectif
+
+Mettre en place une supervision **cohérente** et **actionnable** :
+
+- Détecter (Monitoring) : CPU/RAM/Disque, services Windows, événements critiques, disponibilité.
+- Alerter (Alerting) : priorités, routage, anti-bruit, escalade.
+- Remédier (Runbooks / Quick Jobs) : actions standardisées et tracées.
+
+## Pré-requis
+
+- Accès administrateur ou au minimum droits de gestion sur : **Sites**, **Policies**, **Monitors**, **Automation**.
+- Un agent Datto RMM installé sur au moins 1 poste/serveur (device) de test.
+- Une convention de nommage (exemple) :
+  - Monitors : `MON-<TYPE>-<WHAT>-<SEVERITY>`
+  - Policies : `POL-<SITE>-<ROLE>`
+  - Quick Jobs : `QJ-<OS>-<ACTION>`
+
+## Étape 1 — Structurer l’environnement (Sites & Devices)
+
+1. Dans le menu latéral, ouvrez **Sites**.
+2. Vérifiez que chaque client / entité dispose d’un **Site** dédié.
+3. Ouvrez un site pilote.
+4. Allez dans **Devices** → sélectionnez une machine pilote.
+5. Vérifiez les informations de base : OS, dernier reboot, agent version, statut AV, patch status.
+
+**Bonnes pratiques**
+
+- Séparez **Serveurs** et **Workstations** via des filtres / groupes.
+- Utilisez des champs personnalisés (UDF) pour : criticité, propriétaire, plage de maintenance, contact.
+
+## Étape 2 — Créer une Policy de base
+
+Objectif : une policy « socle » appliquée à une classe de machines.
+
+1. Menu → **Policies**.
+2. Cliquez **New Policy**.
+3. Nommez-la (ex.) `POL-BASE-WIN10`.
+4. Configurez :
+   - **Patch Management** : fenêtre de patching + redémarrage contrôlé.
+   - **Monitoring** : activer les moniteurs essentiels (voir étape 3).
+   - **Automation** : associer des jobs standards (voir étape 5).
+5. Sauvegardez.
+
+## Étape 3 — Mettre en place les Monitors (détection)
+
+### 3.1 Disque (capacité)
+
+- **Objectif** : alerter avant saturation.
+- Seuils recommandés (à adapter) :
+  - Warning : < 15% libre
+  - Critical : < 10% libre
+
+**Implémentation**
+
+1. Menu → **Monitors**.
+2. **New Monitor** → type « Disk Usage » (ou équivalent).
+3. Cible : `C:` (et autres volumes serveur).
+4. Seuils : définissez Warning/Critical.
+5. Message d’alerte : inclure `% free`, `GB free`, device, site.
+
+### 3.2 Services Windows critiques
+
+- Exemples : `Spooler` (serveur impression), `MSSQLSERVER` (SQL), `W3SVC` (IIS), `LanmanServer`.
+
+1. **New Monitor** → type « Service ».
+2. Service name : `MSSQLSERVER`.
+3. Condition : « Not running ».
+4. Action automatique (option) : tenter un restart (voir étape 5).
+
+### 3.3 Patch compliance
+
+1. Menu → **Patch Management**.
+2. Activez les rapports / alertes de conformité.
+3. Définissez un état « Non conforme » :
+   - Patches critiques non installés > X jours.
+
+## Étape 4 — Paramétrer les Alertes (bruit, routage, escalade)
+
+### 4.1 Triage et sévérité
+
+- **Critical** : indisponibilité, sécurité, disque critique, services cœur.
+- **Warning** : tendance (CPU élevé), disque warning.
+- **Info** : redémarrage requis, patch approuvé.
+
+### 4.2 Anti-bruit (dedup & timing)
+
+Recommandations :
+
+- Déclencher après 2–3 échecs consécutifs.
+- Cooldown de 15–30 minutes.
+- Regrouper par device pour éviter un spam de notifications.
+
+### 4.3 Routage
+
+- Notification email/Teams/PSA selon criticité.
+- Création automatique de ticket PSA uniquement au-delà d’un certain niveau.
+
+## Étape 5 — Runbooks / Quick Jobs (remédiation)
+
+### 5.1 Principe
+
+Un **runbook** = une action répétable :
+
+- Collecter des éléments (logs, inventaire)
+- Corriger (restart service, vider cache, relancer agent)
+- Valider (re-test monitor)
+
+### 5.2 Exemple : restart d’un service Windows (PowerShell)
+
+Créez un Quick Job : **Automation** → **New Quick Job** → **PowerShell**.
+
+```powershell
+# QJ-WIN-RestartService.ps1
+param(
+  [Parameter(Mandatory=$true)][string]$ServiceName
+)
+
+$svc = Get-Service -Name $ServiceName -ErrorAction Stop
+
+if ($svc.Status -ne 'Running') {
+  Write-Host "Service $ServiceName is $($svc.Status). Attempting restart..."
+  try {
+    Restart-Service -Name $ServiceName -Force -ErrorAction Stop
+    Start-Sleep -Seconds 5
+    $svc = Get-Service -Name $ServiceName
+    Write-Host "Service $ServiceName status after restart: $($svc.Status)"
+  } catch {
+    Write-Error "Failed to restart $ServiceName: $($_.Exception.Message)"
+    exit 2
+  }
+} else {
+  Write-Host "Service $ServiceName already running. No action required."
+}
+exit 0
+```
+
+**Conseil** : exposez `$ServiceName` comme paramètre du job, pour réutiliser le même runbook.
+
+### 5.3 Exemple : libérer de l’espace disque (safe)
+
+Objectif : nettoyage standard sans supprimer de données métiers.
+
+```powershell
+# QJ-WIN-DiskCleanupSafe.ps1
+$paths = @(
+  "$env:TEMP\*",
+  "$env:WINDIR\Temp\*"
+)
+
+foreach ($p in $paths) {
+  try {
+    Write-Host "Cleaning $p"
+    Remove-Item $p -Recurse -Force -ErrorAction SilentlyContinue
+  } catch {
+    Write-Warning "Failed cleaning $p : $($_.Exception.Message)"
+  }
+}
+
+Write-Host "Cleanup done."
+exit 0
+```
+
+## Étape 6 — Validation (preuve de supervision)
+
+1. Sur une machine pilote, forcez un seuil (ex. créez un fichier volumineux sur `C:`) ou stoppez un service non critique.
+2. Vérifiez :
+   - Déclenchement du monitor
+   - Création d’alerte
+   - Exécution du runbook (si configuré)
+   - Retour à l’état OK + fermeture (si auto-resolve)
+
+## Étape 7 — Industrialiser
+
+- Dupliquez la policy socle par rôle : `WIN10`, `SRV-FILE`, `SRV-SQL`, etc.
+- Versionnez les scripts (Git) et documentez les runbooks.
+- Faites une revue mensuelle : faux positifs, seuils, machines hors ligne.
+
+## Checklist rapide
+
+- [ ] Sites correctement segmentés
+- [ ] Policies par rôle
+- [ ] Monitors essentiels actifs
+- [ ] Alerting anti-bruit (cooldown, occurrences)
+- [ ] Runbooks standard (restart service, cleanup, relance agent)
+- [ ] Validation sur machine pilote
+

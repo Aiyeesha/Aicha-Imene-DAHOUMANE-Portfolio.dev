@@ -1,0 +1,350 @@
+---
+title: "Apex Triggers: 10 Best Practices for Maintainable Code"
+publishedAt: "2026-02-15"
+summary: "Practical guide to building robust, performant, and maintainable Apex triggers in your Salesforce projects."
+tags: ["Salesforce", "Apex", "Best Practices", "Development"]
+featured: true
+---
+
+Apex triggers are at the heart of many Salesforce automations. Poorly designed, they quickly become a source of bugs, performance issues, and maintenance nightmares. Here are 10 essential best practices for developing professional triggers.
+
+## 1. One Trigger Per Object, Delegation to Handler Class
+
+**❌ Bad Practice:**
+```apex
+trigger AccountTrigger on Account (before insert, after insert, before update) {
+    if (Trigger.isBefore && Trigger.isInsert) {
+        // 200 lines of business logic...
+    }
+    if (Trigger.isAfter && Trigger.isInsert) {
+        // 150 lines of business logic...
+    }
+}
+```
+
+**✅ Good Practice:**
+```apex
+trigger AccountTrigger on Account (before insert, after insert, before update, after update) {
+    AccountTriggerHandler.handle();
+}
+```
+
+Delegate all logic to a handler class. This improves testability and readability.
+
+## 2. Handler Pattern with Context-Specific Methods
+
+Structure your handler to clearly manage each context:
+
+```apex
+public class AccountTriggerHandler {
+    
+    public static void handle() {
+        if (Trigger.isBefore) {
+            if (Trigger.isInsert) beforeInsert(Trigger.new);
+            if (Trigger.isUpdate) beforeUpdate(Trigger.new, Trigger.oldMap);
+        }
+        
+        if (Trigger.isAfter) {
+            if (Trigger.isInsert) afterInsert(Trigger.new);
+            if (Trigger.isUpdate) afterUpdate(Trigger.new, Trigger.oldMap);
+        }
+    }
+    
+    private static void beforeInsert(List<Account> newAccounts) {
+        // Before insert logic
+        AccountService.setDefaultValues(newAccounts);
+        AccountService.validateBusinessRules(newAccounts);
+    }
+    
+    private static void afterInsert(List<Account> newAccounts) {
+        // After insert logic
+        ContactService.createPrimaryContacts(newAccounts);
+    }
+    
+    // ... other methods
+}
+```
+
+## 3. Logic Separation: Service Layer Pattern
+
+Don't put business logic in the handler. Create reusable service classes:
+
+```apex
+public class AccountService {
+    
+    public static void setDefaultValues(List<Account> accounts) {
+        for (Account acc : accounts) {
+            if (String.isBlank(acc.Industry)) {
+                acc.Industry = 'Technology';
+            }
+            if (acc.AnnualRevenue == null) {
+                acc.AnnualRevenue = 0;
+            }
+        }
+    }
+    
+    public static void validateBusinessRules(List<Account> accounts) {
+        for (Account acc : accounts) {
+            if (acc.Type == 'Customer' && String.isBlank(acc.Phone)) {
+                acc.addError('Phone is required for Customer accounts');
+            }
+        }
+    }
+}
+```
+
+**Benefits:**
+- Reusable from other contexts (batch, webservice)
+- Testable in isolation
+- Documented and centralized business logic
+
+## 4. Bulkification: Always Think in Bulk
+
+**❌ Non-bulkified code:**
+```apex
+private static void afterInsert(List<Account> newAccounts) {
+    for (Account acc : newAccounts) {
+        List<Contact> contacts = [SELECT Id FROM Contact WHERE AccountId = :acc.Id];
+        // SOQL in a loop = DANGER!
+    }
+}
+```
+
+**✅ Bulkified code:**
+```apex
+private static void afterInsert(List<Account> newAccounts) {
+    Set<Id> accountIds = new Set<Id>();
+    for (Account acc : newAccounts) {
+        accountIds.add(acc.Id);
+    }
+    
+    Map<Id, List<Contact>> contactsByAccount = new Map<Id, List<Contact>>();
+    for (Contact con : [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accountIds]) {
+        if (!contactsByAccount.containsKey(con.AccountId)) {
+            contactsByAccount.put(con.AccountId, new List<Contact>());
+        }
+        contactsByAccount.get(con.AccountId).add(con);
+    }
+    
+    // Bulk processing
+}
+```
+
+## 5. Prevent Infinite Recursion
+
+Use a static class to control execution:
+
+```apex
+public class TriggerControl {
+    private static Set<String> executedTriggers = new Set<String>();
+    
+    public static Boolean isFirstTime(String triggerName) {
+        if (executedTriggers.contains(triggerName)) {
+            return false;
+        }
+        executedTriggers.add(triggerName);
+        return true;
+    }
+    
+    public static void reset(String triggerName) {
+        executedTriggers.remove(triggerName);
+    }
+}
+
+// In the handler:
+public static void handle() {
+    if (!TriggerControl.isFirstTime('AccountTrigger')) {
+        return; // Prevents recursion
+    }
+    // ... trigger logic
+}
+```
+
+## 6. Handle Modified Fields (before update)
+
+Only process records where relevant fields have changed:
+
+```apex
+private static void beforeUpdate(List<Account> newAccounts, Map<Id, Account> oldMap) {
+    List<Account> accountsToProcess = new List<Account>();
+    
+    for (Account newAcc : newAccounts) {
+        Account oldAcc = oldMap.get(newAcc.Id);
+        
+        // Only process if Industry field changed
+        if (newAcc.Industry != oldAcc.Industry) {
+            accountsToProcess.add(newAcc);
+        }
+    }
+    
+    if (!accountsToProcess.isEmpty()) {
+        AccountService.recalculateIndustryMetrics(accountsToProcess);
+    }
+}
+```
+
+## 7. Unit Tests with > 85% Coverage
+
+```apex
+@isTest
+private class AccountTriggerHandler_Test {
+    
+    @isTest
+    static void testBeforeInsert_DefaultValues() {
+        // Arrange
+        List<Account> accounts = new List<Account>{
+            new Account(Name = 'Test Account 1'),
+            new Account(Name = 'Test Account 2', Industry = 'Healthcare')
+        };
+        
+        // Act
+        Test.startTest();
+        insert accounts;
+        Test.stopTest();
+        
+        // Assert
+        List<Account> insertedAccounts = [
+            SELECT Id, Industry, AnnualRevenue 
+            FROM Account 
+            WHERE Id IN :accounts
+        ];
+        
+        System.assertEquals('Technology', insertedAccounts[0].Industry, 
+            'Default industry should be Technology');
+        System.assertEquals('Healthcare', insertedAccounts[1].Industry, 
+            'Industry should remain Healthcare');
+        System.assertEquals(0, insertedAccounts[0].AnnualRevenue, 
+            'Default revenue should be 0');
+    }
+    
+    @isTest
+    static void testBulkInsert_200Records() {
+        // Test with 200 records to verify bulkification
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < 200; i++) {
+            accounts.add(new Account(Name = 'Bulk Test ' + i));
+        }
+        
+        Test.startTest();
+        insert accounts;
+        Test.stopTest();
+        
+        System.assertEquals(200, [SELECT COUNT() FROM Account], 
+            'All 200 accounts should be inserted');
+    }
+}
+```
+
+## 8. Explicit Error Handling
+
+```apex
+public static void validateBusinessRules(List<Account> accounts) {
+    for (Account acc : accounts) {
+        try {
+            if (acc.Type == 'Customer' && acc.AnnualRevenue < 10000) {
+                acc.addError('Customer accounts must have revenue >= 10,000');
+            }
+            
+            if (acc.BillingCountry == 'France' && String.isBlank(acc.SIRET__c)) {
+                acc.SIRET__c.addError('SIRET is mandatory for French companies');
+            }
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Validation error: ' + e.getMessage());
+            acc.addError('Unexpected validation error: ' + e.getMessage());
+        }
+    }
+}
+```
+
+## 9. Documentation and Comments
+
+```apex
+/**
+ * @description Handler for Account trigger operations
+ * @author Aïcha Imène DAHOUNANE
+ * @date 2026-02-15
+ * @group Trigger Handlers
+ */
+public class AccountTriggerHandler {
+    
+    /**
+     * @description Main entry point for Account trigger
+     * Delegates to specific methods based on trigger context
+     */
+    public static void handle() {
+        // Implementation
+    }
+    
+    /**
+     * @description Sets default values for new Account records
+     * - Default Industry to 'Technology' if blank
+     * - Default AnnualRevenue to 0 if null
+     * @param newAccounts List of new Account records
+     */
+    private static void beforeInsert(List<Account> newAccounts) {
+        // Implementation
+    }
+}
+```
+
+## 10. Logging and Observability
+
+```apex
+public class TriggerLogger {
+    
+    public static void logExecution(String triggerName, String context, Integer recordCount) {
+        System.debug(LoggingLevel.INFO, 
+            String.format('Trigger: {0} | Context: {1} | Records: {2}', 
+            new List<String>{triggerName, context, String.valueOf(recordCount)}));
+    }
+    
+    public static void logError(String triggerName, Exception e) {
+        System.debug(LoggingLevel.ERROR, 
+            String.format('Trigger: {0} | Error: {1} | Stack: {2}', 
+            new List<String>{triggerName, e.getMessage(), e.getStackTraceString()}));
+    }
+}
+
+// Usage in the handler:
+public static void handle() {
+    TriggerLogger.logExecution('AccountTrigger', 
+        Trigger.operationType.name(), Trigger.new.size());
+    
+    try {
+        // ... trigger logic
+    } catch (Exception e) {
+        TriggerLogger.logError('AccountTrigger', e);
+        throw e;
+    }
+}
+```
+
+## Checklist Before Deploying a Trigger
+
+- [ ] One trigger per object
+- [ ] Logic delegated to handler class
+- [ ] Service layer for reusable business logic
+- [ ] 100% bulkified code (no SOQL/DML in loops)
+- [ ] Recursion protection
+- [ ] Explicit error handling
+- [ ] Unit tests > 85% coverage
+- [ ] Bulk tests (200+ records)
+- [ ] Public methods documented
+- [ ] Critical operations logged
+
+## Conclusion
+
+Well-designed Apex triggers are:
+- **Performant**: bulkification and query optimization
+- **Maintainable**: structured, commented, and tested code
+- **Reliable**: error handling and recursion protection
+- **Scalable**: modular architecture with service layer
+
+By applying these 10 best practices, you'll avoid 90% of common Apex trigger issues and build robust automations that withstand time and evolution.
+
+---
+
+**Useful Resources:**
+- [Apex Developer Guide - Triggers](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm)
+- [Trigger Framework - Trailhead](https://trailhead.salesforce.com/content/learn/modules/apex_triggers)
+- [Apex Best Practices - Salesforce](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bestpractices.htm)
