@@ -1,0 +1,31 @@
+---
+title: "Salesforce CI/CD with GitHub Actions (a pragmatic pipeline)"
+excerpt: "From scratch to a robust pipeline: validation, tests, and safe deployment patterns."
+date: "2025-01-22"
+tags: ["Salesforce", "CI/CD", "GitHub Actions"]
+---
+
+## Salesforce CI/CD with GitHub Actions
+
+A pragmatic pipeline you can ship quickly and harden progressively.
+
+## Goals
+
+- Validate PRs (lint, tests)
+- Deploy safely to target orgs
+- Keep secrets secure
+- Reduce “works on my machine” issues
+
+## Suggested stages
+
+1. **PR validation**: run unit tests + static checks
+2. **UAT**: deploy to a sandbox, run smoke tests
+3. **Production**: controlled deployment, manual approvals if needed
+
+## Best practices
+
+- Prefer **scratch orgs** or dedicated sandboxes for validation
+- Use **least privilege** secrets in CI
+- Add a **rollback plan** and a clear change log
+
+We can add a real YAML example and explain each line step-by-step.

@@ -1,0 +1,259 @@
+{
+  "nav": {
+    "about": "À propos",
+    "skills": "Compétences",
+    "experience": "Expérience",
+    "services": "Services",
+    "projects": "Projets",
+    "contact": "Contact",
+    "testimonials": "Témoignages",
+    "blog": "Blog",
+    "menu": "Menu",
+    "tagline": "Salesforce · IT Ops",
+    "workWithMeMenu": "Travailler avec moi",
+    "home": "Accueil"
+  },
+  "hero": {
+    "title": "Développeuse & Consultante Salesforce",
+    "subtitle": "avec un bagage systèmes & DevOps",
+    "intro_salesforce": "J’aide les équipes à concevoir, construire et exploiter des solutions Salesforce et cloud sécurisées, scalables et réellement utiles pour les personnes qui les utilisent.",
+    "intro_itops": "J’aide les équipes à concevoir, maintenir et sécuriser des infrastructures IT et DevOps résilientes et évolutives.",
+    "avatar_alt": "Photo de profil",
+    "title_salesforce": "Développeuse & Consultante Salesforce",
+    "subtitle_salesforce": "avec un bagage systèmes & DevOps",
+    "title_itops": "Administratrice systèmes & réseaux",
+    "subtitle_itops": "Ingénieure opérations IT & DevOps",
+    "value_salesforce": "Développeuse / administratrice Salesforce — orientation livraison, automatisation & qualité.",
+    "value_itops": "Administratrice systèmes & IT Ops — fiabilité, automatisation & qualité.",
+    "proof1": "Sécurité d’abord",
+    "proof2": "Scalable",
+    "proof3": "Documenté & maintenable",
+    "startHere": "Commencer ici :"
+  },
+  "cta": {
+    "call": "Planifier un appel",
+    "projects": "Voir les projets",
+    "downloadCv": "Télécharger mon CV (PDF)",
+    "workWithMe": "Travailler avec moi",
+    "message": "Message",
+    "call15": "Appel 15 min",
+    "downloadProfile": "Télécharger mon profil (PDF)",
+    "cvOnRequest": "CV disponible sur demande (configurer NEXT_PUBLIC_CV_PDF_URL)"
+  },
+  "projects": {
+    "search": "Rechercher un projet...",
+    "requirements": "Exigences (PDF)",
+    "details": "Voir le détail →",
+    "featured": "Projets à la une",
+    "featuredSubtitle": "Les meilleurs exemples avant la liste complète.",
+    "labelProject": "Projet",
+    "backToProjects": "← Retour aux projets",
+    "trackLabel": "Parcours",
+    "typeLabel": "Type",
+    "scopeLabel": "Périmètre",
+    "trackSalesforce": "Salesforce",
+    "trackItOps": "IT Ops",
+    "overview": "Aperçu",
+    "downloadCode": "Télécharger le code",
+    "highlightsTitle": "Points clés"
+  },
+  "sections": {
+    "testimonials_title": "Témoignages",
+    "testimonials_subtitle": "Quelques mots de personnes avec qui j’ai travaillé.",
+    "skills_title": "Compétences",
+    "skills_subtitle": "Un mélange de Salesforce, d’administration, d’infrastructures et de pratiques DevOps.",
+    "experience_title": "Expérience",
+    "experience_subtitle": "Déplie les éléments pour voir le détail (style accordéon).",
+    "roles_title": "Rôles",
+    "certifications_title": "Certifications",
+    "services_title": "Services",
+    "services_subtitle": "Des services sur mesure selon vos besoins (Salesforce ou IT Ops).",
+    "projects_title": "Projets",
+    "projects_subtitle": "Utilise la recherche et les filtres. Le switch IT Ops / Salesforce modifie la liste.",
+    "contact_title": "Contact",
+    "contact_subtitle": "Email ou formulaire ci-dessous (protégé contre le spam).",
+    "blog_title": "Blog / Tutoriels",
+    "blog_subtitle": "Guides courts et concrets, applicables immédiatement.",
+    "profile_title": "Profil",
+    "profile_subtitle": "Des systèmes & réseaux au développement Salesforce"
+  },
+  "contact": {
+    "nameLabel": "Nom",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "namePlaceholder": "Votre nom complet",
+    "emailPlaceholder": "vous@domaine.com",
+    "messagePlaceholder": "Décrivez votre besoin, le contexte et vos objectifs…",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "success": "Message envoyé.",
+    "error": "Erreur :",
+    "privacyNote": "Votre message est envoyé de façon sécurisée. Évitez de partager des secrets (mots de passe, tokens).",
+    "otherWays": "Autres moyens",
+    "bookCall": "Réserver un appel (Calendly)",
+    "bookCallMissing": "Le lien Calendly n’est pas encore configuré.",
+    "emailMe": "M’écrire par email",
+    "emailMissing": "Email non configuré.",
+    "calendlyHint": "Réservez un créneau directement ci-dessous.",
+    "openInNewTab": "Ouvrir dans un nouvel onglet",
+    "close": "Fermer",
+    "errors": {
+      "invalid_json": "Requête invalide.",
+      "name_too_short": "Merci d’indiquer votre nom (au moins 2 caractères).",
+      "invalid_email": "Merci d’indiquer un email valide.",
+      "message_too_short": "Merci d’écrire un message plus long (au moins 10 caractères).",
+      "rate_limited": "Trop de tentatives. Réessayez dans quelques minutes.",
+      "upstream_failed": "Échec d’envoi. Réessayez plus tard ou utilisez un autre canal.",
+      "generic": "Une erreur est survenue. Réessayez.",
+      "name_too_long": "Merci d’indiquer un nom plus court (80 caractères max).",
+      "email_too_long": "Merci d’indiquer une adresse email plus courte.",
+      "invalid_topic": "Merci de sélectionner un sujet valide.",
+      "message_too_long": "Votre message est trop long (2000 caractères max).",
+      "forbidden_origin": "Requête refusée. Merci d’utiliser le formulaire du site."
+    },
+    "homeIntro": "Vous pouvez me contacter par email ou via le formulaire sécurisé. Anti-spam et limitation de débit activés.",
+    "homeMethodsTitle": "Liens rapides",
+    "homeCv": "Télécharger le CV",
+    "homeLinkedIn": "LinkedIn",
+    "homeEmail": "Email",
+    "homeFormTitle": "Envoyer un message",
+    "homeFormSubtitle": "Je réponds généralement sous 24–48h.",
+    "topicLabel": "Sujet",
+    "topicPlaceholder": "Choisir un sujet",
+    "topicGeneral": "Général",
+    "topicSalesforce": "Projet Salesforce",
+    "topicItOps": "IT Ops / DevOps",
+    "topicAvailability": "Mission / disponibilité",
+    "topicOther": "Autre",
+    "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
+    "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment."
+  },
+  "blog": {
+    "card_tutorials_kicker": "Nouveau",
+    "card_tutorials_title": "Lire les tutoriels",
+    "card_tutorials_desc": "Articles orientés implémentation : Salesforce, CI/CD, Next.js.",
+    "card_topics_kicker": "Thématiques",
+    "card_topics_desc": "Je publie des notes pratiques, patterns et checklists.",
+    "card_cta": "Ouvrir le blog",
+    "latest_loading": "Chargement des derniers articles…",
+    "latest_empty": "Aucun article pour le moment.",
+    "latest_cta": "Voir tous les articles",
+    "readingTime": "min de lecture"
+  },
+  "blogIndex": {
+    "meta": {
+      "title": "Blog / Tutoriels",
+      "description": "Tutoriels pratiques orientés implémentation."
+    },
+    "kicker": "Blog & tutoriels",
+    "title": "Articles",
+    "subtitle": "Guides pas à pas, retours d’expérience, implémentations concrètes.",
+    "backHome": "Accueil",
+    "tags": {
+      "all": "Tous",
+      "allTags": "Voir tous les tags"
+    },
+    "readCta": "Lire",
+    "pagination": {
+      "page": "Page",
+      "prev": "Précédent",
+      "next": "Suivant"
+    },
+    "ctaAllPosts": "Voir tous les articles"
+  },
+  "blogPost": {
+    "back": "Retour",
+    "previous": "Article précédent",
+    "next": "Article suivant"
+  },
+  "blogToc": {
+    "title": "Sommaire",
+    "backToList": "Retour à la liste"
+  },
+  "blogTags": {
+    "meta": {
+      "title": "Tags du blog",
+      "description": "Parcourir les articles par thème."
+    },
+    "kicker": "Thèmes",
+    "title": "Tous les tags",
+    "subtitle": "Choisis un tag pour filtrer la liste des articles.",
+    "back": "Retour"
+  },
+  "a11y": {
+    "skip": "Aller au contenu",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "closeMenuOverlay": "Fermer le menu",
+    "previousTestimonial": "Témoignage précédent",
+    "nextTestimonial": "Témoignage suivant",
+    "closeModal": "Fermer la fenêtre",
+    "toggleTheme": "Changer le thème",
+    "showImage": "Afficher l’image {index}",
+    "chooseTrack": "Choisir un parcours",
+    "chooseItOps": "Passer sur le parcours IT Ops",
+    "chooseSalesforce": "Passer sur le parcours Salesforce"
+  },
+  "tracks": {
+    "itops": "IT Ops",
+    "salesforce": "Salesforce"
+  },
+  "metadata": {
+    "title": "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
+    "description": "Portfolio : projets, articles et services en Salesforce, intégration, DevOps et IT Ops."
+  },
+  "testimonials": {
+    "kicker": "Témoignages",
+    "all": "Tous"
+  },
+  "footer": {
+    "builtWith": "Propulsé par Next.js",
+    "privacy": "Confidentialité"
+  },
+  "profile": {
+    "kicker": "Profil",
+    "title": "Des systèmes & réseaux au développement Salesforce",
+    "p1": "Un profil technique avec un solide background en infrastructures IT, désormais pleinement orienté vers le conseil Salesforce et cloud.",
+    "p2": "J’ai commencé ma carrière côté infrastructure en tant qu’administratrice systèmes et réseaux junior. J’ai assuré le support aux utilisateurs, géré des environnements Windows, surveillé des réseaux et géré des incidents de sécurité. Cette expérience de terrain m’a appris comment les systèmes se comportent dans la réalité, comment les équipes collaborent sous pression et pourquoi des fondations robustes sont essentielles.",
+    "p3": "Aujourd’hui, je suis spécialisée en développement et administration Salesforce. Après avoir complété le parcours Salesforce Developer chez OpenClassrooms et travaillé sur Apex, les Flows et la CI/CD avec Salesforce CLI, j’aide désormais les organisations à automatiser leurs processus, améliorer la qualité des données et construire des solutions sécurisées et maintenables.",
+    "p4": "Je donne le meilleur de moi-même dans des environnements où l’autonomie, la transparence et l’apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l’international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
+    "atAGlanceTitle": "En bref",
+    "basedInLabel": "Basée à",
+    "basedInValue": "Paris — ouverte à la relocalisation, au full-remote, hybride",
+    "languagesLabel": "Langues",
+    "languagesValue": "Français (natif), Anglais (C2), Espagnol (B1), Italien (A1)",
+    "rolesLabel": "Postes visés",
+    "rolesValue": "Développeuse Salesforce, Administratrice Salesforce, Consultante Salesforce / IT",
+    "availabilityLabel": "Disponibilité",
+    "availabilityValue": "Missions freelance · temps partiel ou temps plein",
+    "goalLabel": "Objectif",
+    "goalValue": "À partir de début 2026, développer progressivement une activité freelance internationale en tant que développeuse Salesforce tout en continuant à renforcer mon expertise technique et fonctionnelle chez LD Digitales.",
+    "focusLabel": "Focus",
+    "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
+    "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
+    "readMore": "Lire la suite",
+    "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l’expérience utilisateur et à la qualité de livraison.",
+    "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
+    "p3_salesforce": "Mon background systèmes & DevOps me permet d’aborder Salesforce avec une logique d’exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
+    "p4_salesforce": "Mon objectif 2026 : développer une activité freelance internationale (Salesforce) en collaboration avec des équipes distribuées, tout en continuant à renforcer mon expertise technique et fonctionnelle.",
+    "p1_itops": "IT Ops & DevOps : j’aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d’exploitation pragmatiques (runbooks, supervision, remédiation).",
+    "p2_itops": "Je mets en place des standards d’exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d’escalade, documentation et automatisation (scripts, jobs, playbooks).",
+    "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
+    "p4_itops": "Mon objectif 2026 : intervenir sur des missions IT Ops / SRE / DevOps orientées fiabilité, automatisation et sécurité, en France et à l’international."
+  },
+  "mdx": {
+    "copy": "Copier",
+    "copied": "Copié"
+  },
+  "privacy": {
+    "title": "Confidentialité & mentions",
+    "analyticsTitle": "Analytics",
+    "analyticsBody": "Ce site n’utilise pas d’analytics de tracking par défaut.",
+    "cookiesTitle": "Cookies",
+    "cookiesBody": "Aucun cookie marketing n’est déposé. Seuls des cookies techniques essentiels peuvent être utilisés par la plateforme (sécurité, fonctionnement).",
+    "formTitle": "Données du formulaire",
+    "formBody": "Lorsque vous envoyez le formulaire, votre nom, email, sujet et message sont traités pour vous répondre. Si Formspree est activé, les données sont transmises à Formspree pour l’acheminement.",
+    "retention": "Conservation : les messages sont conservés uniquement le temps nécessaire au traitement de votre demande.",
+    "contact": "Contact : {email}"
+  }
+}

@@ -1,0 +1,38 @@
+
+Lien GitHub : https://github.com/Aiyeesha/iDEM-Connect
+
+
+
+Dans ce dépôt, placez le code Salesforce sous `force-app/main/default/` :
+
+```
+/force-app/main/default
+├── triggers
+│   └── OrderTrigger.trigger        # Déclencheur unique pour l’objet Order
+├── classes
+│   ├── AppConfig.cls               # Classe de configuration centralisée
+│   ├── OrderValidationHandler.cls  # RG‑01 : empêcher activation sans OrderItem
+│   ├── OrderInsertionHandler.cls   # RG‑02 (insertion) : Active__c = true
+│   ├── OrderDeletionHandler.cls    # RG‑02 (suppression) : Active__c = false si plus d’Orders
+│   ├── AccountReminderBatch.cls    # RG‑03 : batch de création des tâches « Call »
+│   ├── AccountReminderScheduler.cls# Planification mensuelle du batch (1er lundi 09:00)
+│   └── TestDataFactory.cls         # Usine à données de tests
+├── tests
+│   └── *                           # Toutes les classes @isTest (23 classes)
+└── …
+```
+
+Batch & Scheduler
+-----------------
+
+- **Batch** : `AccountReminderBatch` avec une taille de lot de 200 en production (paramètre par défaut dans le scheduler). Il sélectionne les comptes sans Orders et crée les tâches « Call » J+5 en respectant les règles de déduplication et de sécurité.
+- **Scheduler** : `AccountReminderScheduler` planifie le batch chaque **premier lundi du mois à 09 h** (CRON `0 0 9 ? * MON#1`).
+
+Notes importantes
+-----------------
+
+- Le code respecte les bonnes pratiques **One Trigger par objet** avec délégation vers des classes handler. Les règles métier RG‑01/02/03 sont implémentées via `OrderValidationHandler`, `OrderInsertionHandler`, `OrderDeletionHandler` et `AccountReminderBatch`.
+- Toutes les opérations DML sont **bulkifiées** et aucun SOQL/DML n’est exécuté dans une boucle.
+- Les vérifications **CRUD/FLS** sont réalisées via les méthodes `isCreateable()` / `isUpdateable()` et `Security.stripInaccessible()` afin de garantir la sécurité des données.
+- La déduplication des tâches de rappel (RG‑03) utilise l’option par défaut `DEDUP_USING_AUTO_FLAG = false`, c’est‑à‑dire qu’aucune tâche « Call » n’est créée si *n’importe quelle* tâche « Call » existe déjà sur le compte.
+- La couverture de code est de **90 %** (23 tests unitaires, 100 % de réussite).

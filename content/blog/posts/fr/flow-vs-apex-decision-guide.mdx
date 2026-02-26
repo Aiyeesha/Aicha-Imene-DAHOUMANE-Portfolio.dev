@@ -1,0 +1,474 @@
+---
+title: "Flow Builder vs Apex : Quand choisir quoi ?"
+publishedAt: "2026-02-10"
+summary: "Guide de décision pratique pour choisir entre Flow Builder et Apex selon vos besoins d'automatisation Salesforce."
+tags: ["Salesforce", "Flow", "Apex", "Automation", "Architecture"]
+featured: true
+---
+
+L'une des questions les plus fréquentes en développement Salesforce : **"Dois-je utiliser un Flow ou écrire du code Apex ?"** Ce guide vous aide à prendre la bonne décision selon votre contexte.
+
+## Le principe du "Clicks, not Code"
+
+Salesforce recommande la philosophie **"Clicks, not Code"** : privilégier les outils déclaratifs (Flow Builder, Process Builder) plutôt que le code lorsque c'est possible.
+
+**Pourquoi ?**
+- ✅ Développement plus rapide
+- ✅ Maintenance facilitée (interface visuelle)
+- ✅ Moins de tests requis (pas de 75% de couverture)
+- ✅ Accessible aux admins non-développeurs
+
+**Mais attention** : ce principe a des limites. Parfois, le code est la meilleure option.
+
+## Matrice de décision rapide
+
+| Critère | Flow Builder | Apex |
+|---------|-------------|------|
+| **Logique simple** | ✅ Excellent | ⚠️ Overkill |
+| **Logique complexe** | ⚠️ Possible mais verbeux | ✅ Excellent |
+| **Performance critique** | ⚠️ Limité | ✅ Optimisable |
+| **Réutilisabilité** | ⚠️ Limitée | ✅ Service layer |
+| **Maintenance** | ✅ Interface visuelle | ⚠️ Requires dev skills |
+| **Tests** | ✅ Pas de couverture requise | ❌ 75% minimum |
+| **Debugging** | ⚠️ Debug Logs | ✅ Debug logs + IDE |
+| **Bulk operations** | ⚠️ Attention aux limites | ✅ Contrôle total |
+| **Intégrations externes** | ❌ HTTP Callouts limités | ✅ Total control |
+
+## Scénarios : Flow Builder est idéal
+
+### 1. Automatisations CRUD simples
+
+**Exemple :** Créer un Contact automatiquement lors de la création d'un Account.
+
+```
+Flow: "Auto-Create Primary Contact"
+Type: Record-Triggered Flow
+Trigger: Account - After Save - Create
+
+Logic:
+1. Get Records: Check if Contact exists for this Account
+2. Decision: Contact exists?
+   - No → Create Contact with default values
+   - Yes → End
+```
+
+**Pourquoi Flow ?**
+- Logique linéaire et simple
+- Pas de logique métier complexe
+- Visible et modifiable par un admin
+
+### 2. Validations métier avec messages d'erreur
+
+**Exemple :** Empêcher la suppression d'un Account avec des Opportunities ouvertes.
+
+```
+Flow: "Prevent Account Deletion with Open Opps"
+Type: Record-Triggered Flow
+Trigger: Account - Before Delete
+
+Logic:
+1. Get Records: Count Opportunities (StageName != 'Closed Won/Lost')
+2. Decision: Count > 0?
+   - Yes → Show Error: "Cannot delete Account with open Opportunities"
+   - No → Allow deletion
+```
+
+**Pourquoi Flow ?**
+- Validation simple basée sur une condition
+- Message d'erreur utilisateur friendly
+- Pas besoin de code pour ce cas
+
+### 3. Mises à jour de champs calculés
+
+**Exemple :** Calculer le montant total des Opportunities d'un Account.
+
+```
+Flow: "Calculate Account Total Opportunity Amount"
+Type: Record-Triggered Flow
+Trigger: Opportunity - After Save - Create, Update, Delete
+
+Logic:
+1. Get Records: Get parent Account
+2. Get Records: Sum all Opportunities.Amount for this Account
+3. Update Records: Update Account.Total_Opportunity_Amount__c
+```
+
+**Pourquoi Flow ?**
+- Calcul arithmétique simple
+- Automatisation standard
+- Maintenu facilement par un admin
+
+### 4. Envoi d'emails transactionnels
+
+**Exemple :** Envoyer un email de bienvenue après création d'un Lead.
+
+```
+Flow: "Welcome Email to New Leads"
+Type: Record-Triggered Flow
+Trigger: Lead - After Save - Create
+
+Logic:
+1. Decision: Lead Source = 'Web'?
+   - Yes → Send Email (Email Template: "Welcome_Lead")
+   - No → End
+```
+
+**Pourquoi Flow ?**
+- Action native "Send Email" disponible
+- Template email géré via Setup
+- Pas de complexité justifiant du code
+
+## Scénarios : Apex est obligatoire
+
+### 1. Logique métier complexe avec algorithmes
+
+**Exemple :** Calcul de pricing dynamique avec remises progressives.
+
+```apex
+public class PricingEngine {
+    
+    public static Decimal calculatePrice(Opportunity opp) {
+        Decimal basePrice = opp.Amount;
+        Decimal discount = 0;
+        
+        // Remise progressive par tranche
+        if (basePrice > 100000) {
+            discount = 0.15; // 15% au-delà de 100k
+        } else if (basePrice > 50000) {
+            discount = 0.10; // 10% entre 50k et 100k
+        } else if (basePrice > 10000) {
+            discount = 0.05; // 5% entre 10k et 50k
+        }
+        
+        // Remise supplémentaire si client fidèle
+        if (opp.Account.Years_as_Customer__c > 5) {
+            discount += 0.05;
+        }
+        
+        // Remise saisonnière (Q4)
+        if (System.today().month() >= 10) {
+            discount += 0.03;
+        }
+        
+        return basePrice * (1 - discount);
+    }
+}
+```
+
+**Pourquoi Apex ?**
+- Logique avec multiples conditions imbriquées
+- Calculs arithmétiques complexes
+- Code réutilisable et testable
+- Flow serait trop verbeux et difficile à maintenir
+
+### 2. Bulk operations avec milliers d'enregistrements
+
+**Exemple :** Batch de mise à jour massive de 50 000 Contacts.
+
+```apex
+public class ContactUpdateBatch implements Database.Batchable<SObject> {
+    
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([
+            SELECT Id, MailingPostalCode, MailingCity 
+            FROM Contact 
+            WHERE LastModifiedDate < LAST_N_DAYS:365
+        ]);
+    }
+    
+    public void execute(Database.BatchableContext bc, List<Contact> scope) {
+        // Geocoding API call for each Contact
+        Map<Id, Contact> contactsToUpdate = new Map<Id, Contact>();
+        
+        for (Contact con : scope) {
+            // Call external geocoding service
+            Geocoding.Result result = GeocodingService.geocode(
+                con.MailingPostalCode, 
+                con.MailingCity
+            );
+            
+            if (result.success) {
+                con.Geolocation__Latitude__s = result.latitude;
+                con.Geolocation__Longitude__s = result.longitude;
+                contactsToUpdate.put(con.Id, con);
+            }
+        }
+        
+        if (!contactsToUpdate.isEmpty()) {
+            update contactsToUpdate.values();
+        }
+    }
+    
+    public void finish(Database.BatchableContext bc) {
+        // Send completion email
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new String[] {'admin@company.com'});
+        mail.setSubject('Contact Geocoding Batch Completed');
+        mail.setPlainTextBody('Batch job finished successfully.');
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+    }
+}
+```
+
+**Pourquoi Apex ?**
+- Traitement de dizaines de milliers d'enregistrements
+- Appels HTTP externes (geocoding API)
+- Contrôle fin du chunking (200 records/batch)
+- Gestion d'erreurs avancée
+
+### 3. Intégrations REST/SOAP complexes
+
+**Exemple :** Intégration bidirectionnelle avec un ERP externe.
+
+```apex
+public class ERPIntegrationService {
+    
+    @future(callout=true)
+    public static void syncOrderToERP(Id orderId) {
+        Order order = [
+            SELECT Id, OrderNumber, TotalAmount, Account.Name, 
+                   (SELECT Product2.Name, Quantity, UnitPrice FROM OrderItems)
+            FROM Order 
+            WHERE Id = :orderId
+        ];
+        
+        // Construct JSON payload
+        Map<String, Object> payload = new Map<String, Object>{
+            'orderNumber' => order.OrderNumber,
+            'customer' => order.Account.Name,
+            'totalAmount' => order.TotalAmount,
+            'items' => buildOrderItems(order.OrderItems)
+        };
+        
+        // HTTP Callout
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('callout:ERP_API/orders');
+        req.setMethod('POST');
+        req.setHeader('Content-Type', 'application/json');
+        req.setBody(JSON.serialize(payload));
+        req.setTimeout(120000);
+        
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        
+        if (res.getStatusCode() == 201) {
+            // Parse response and update Order with ERP ID
+            Map<String, Object> responseData = 
+                (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+            
+            order.ERP_Order_ID__c = (String) responseData.get('erpOrderId');
+            order.ERP_Sync_Status__c = 'Synced';
+            update order;
+        } else {
+            throw new ERPIntegrationException('ERP sync failed: ' + res.getBody());
+        }
+    }
+    
+    private static List<Map<String, Object>> buildOrderItems(List<OrderItem> items) {
+        List<Map<String, Object>> result = new List<Map<String, Object>>();
+        for (OrderItem item : items) {
+            result.add(new Map<String, Object>{
+                'productName' => item.Product2.Name,
+                'quantity' => item.Quantity,
+                'unitPrice' => item.UnitPrice
+            });
+        }
+        return result;
+    }
+}
+```
+
+**Pourquoi Apex ?**
+- Construction dynamique de JSON complexe
+- Gestion fine des timeouts et retries
+- Parsing de réponse structurée
+- Gestion d'erreurs avec exceptions custom
+
+### 4. Tests unitaires critiques
+
+**Exemple :** Classe métier critique nécessitant 100% de tests.
+
+```apex
+@isTest
+private class PricingEngine_Test {
+    
+    @isTest
+    static void testCalculatePrice_BaseDiscount() {
+        // Arrange
+        Account acc = new Account(Name = 'Test Corp', Years_as_Customer__c = 3);
+        insert acc;
+        
+        Opportunity opp = new Opportunity(
+            Name = 'Test Deal',
+            AccountId = acc.Id,
+            Amount = 60000,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(30)
+        );
+        insert opp;
+        
+        // Act
+        Test.startTest();
+        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        Test.stopTest();
+        
+        // Assert
+        Decimal expected = 60000 * 0.90; // 10% discount
+        System.assertEquals(expected, finalPrice, 
+            'Price should have 10% discount for amount between 50k-100k');
+    }
+    
+    @isTest
+    static void testCalculatePrice_LoyalCustomer() {
+        // Arrange
+        Account acc = new Account(Name = 'Loyal Corp', Years_as_Customer__c = 7);
+        insert acc;
+        
+        Opportunity opp = new Opportunity(
+            Name = 'Test Deal',
+            AccountId = acc.Id,
+            Amount = 60000,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(30)
+        );
+        insert opp;
+        
+        // Act
+        Test.startTest();
+        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        Test.stopTest();
+        
+        // Assert
+        Decimal expected = 60000 * 0.85; // 10% base + 5% loyalty
+        System.assertEquals(expected, finalPrice, 
+            'Loyal customer should get additional 5% discount');
+    }
+}
+```
+
+**Pourquoi Apex ?**
+- Tests avec assertions précises
+- Contrôle total du contexte de test
+- Validation de chaque branche logique
+- Couverture de code requise
+
+## Approche hybride : le meilleur des deux mondes
+
+Dans de nombreux cas, la meilleure solution est **une combinaison** Flow + Apex.
+
+### Pattern recommandé : Flow appelle Apex
+
+**Exemple :** Validation de SIRET français avec API externe.
+
+**1. Créer une classe Apex invocable :**
+
+```apex
+public class SIRETValidator {
+    
+    @InvocableMethod(label='Validate SIRET' 
+                     description='Validates French SIRET number via external API')
+    public static List<Result> validateSIRET(List<Request> requests) {
+        List<Result> results = new List<Result>();
+        
+        for (Request req : requests) {
+            Result result = new Result();
+            result.isValid = callSIRETAPI(req.siretNumber);
+            results.add(result);
+        }
+        
+        return results;
+    }
+    
+    private static Boolean callSIRETAPI(String siret) {
+        // HTTP Callout to SIRENE API
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('callout:SIRENE_API/siret/' + siret);
+        req.setMethod('GET');
+        
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        
+        return res.getStatusCode() == 200;
+    }
+    
+    public class Request {
+        @InvocableVariable(required=true)
+        public String siretNumber;
+    }
+    
+    public class Result {
+        @InvocableVariable
+        public Boolean isValid;
+    }
+}
+```
+
+**2. Appeler depuis un Flow :**
+
+```
+Flow: "Validate Account SIRET"
+Type: Record-Triggered Flow
+Trigger: Account - Before Save - Create, Update
+
+Logic:
+1. Decision: Country = 'France' AND SIRET changed?
+   - Yes → Continue
+   - No → End
+
+2. Action: Apex - SIRETValidator.validateSIRET
+   Input: SIRET__c
+   Output: isValid
+
+3. Decision: isValid = false?
+   - Yes → Show Error: "Invalid SIRET number"
+   - No → Allow save
+```
+
+**Avantages :**
+- ✅ Logique Flow simple et lisible
+- ✅ Complexité technique isolée dans Apex
+- ✅ Testable (tests Apex pour l'API call)
+- ✅ Maintenable (admin peut modifier le Flow, dev gère l'API)
+
+## Checklist de décision
+
+Utilisez cette checklist pour choisir :
+
+**Privilégier Flow Builder si :**
+- [ ] La logique est linéaire (< 10 étapes)
+- [ ] Pas d'algorithmes complexes
+- [ ] Pas d'appels HTTP externes
+- [ ] < 1000 enregistrements traités
+- [ ] Maintenance par des admins non-développeurs
+
+**Privilégier Apex si :**
+- [ ] Logique avec conditions imbriquées multiples
+- [ ] Calculs mathématiques complexes
+- [ ] Intégrations REST/SOAP
+- [ ] Traitement bulk (> 10 000 records)
+- [ ] Réutilisabilité critique (service layer)
+- [ ] Performance critique
+- [ ] Tests unitaires avancés requis
+
+**Approche hybride (Flow + Apex invocable) si :**
+- [ ] Logique globale simple MAIS une étape complexe
+- [ ] Besoin d'appeler une API externe au milieu d'un Flow
+- [ ] Maintenance partagée admin/développeur
+
+## Conclusion
+
+**La règle d'or** : Commencez toujours par évaluer si Flow Builder suffit. Si vous identifiez une limitation claire (performance, complexité, intégration), alors passez à Apex.
+
+**Pattern recommandé :**
+1. **Flow** pour l'orchestration et la logique de haut niveau
+2. **Apex invocable** pour les opérations complexes spécifiques
+3. **Apex trigger/batch** uniquement pour les cas avancés
+
+Cette approche équilibre **maintenabilité** (Flow), **puissance** (Apex) et **gouvernance** (séparation des responsabilités).
+
+---
+
+**Ressources utiles :**
+- [Flow Builder Guide - Salesforce](https://help.salesforce.com/s/articleView?id=sf.flow.htm)
+- [Apex vs Flow Decision Guide - Trailhead](https://trailhead.salesforce.com/content/learn/modules/business_process_automation)
+- [Invocable Apex Methods](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_InvocableMethod.htm)
