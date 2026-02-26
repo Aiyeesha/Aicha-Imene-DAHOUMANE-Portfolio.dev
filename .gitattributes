@@ -1,2 +1,16 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Par défaut : traiter comme du texte et normaliser en LF dans le dépôt
+* text=auto eol=lf
+
+# Scripts Windows éventuellement en CRLF (optionnel)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Fichiers binaires : ne jamais modifier
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
