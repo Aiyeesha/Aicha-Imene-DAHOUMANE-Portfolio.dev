@@ -1,0 +1,137 @@
+---
+title: "Autotask : workflow de ticketing (tri, SLA, escalade, clôture)"
+excerpt: "Mettre en place un workflow Autotask pragmatique : intake email, qualification, SLA, escalade N2, time entries et clôture propre."
+date: "2025-02-14"
+tags: ["Ticketing", "IT Ops", "SLA", "Runbooks", "Support"]
+---
+
+
+## Objectif
+
+Standardiser le traitement des incidents et demandes dans **Autotask** :
+
+- Création/tri (email → ticket)
+- Qualification (impact, urgence, catégorie)
+- Respect **SLA** (priorités, escalade)
+- Traçabilité (notes, pièces jointes, **time entries**)
+- Clôture propre (résolution, communication, post-mortem léger)
+
+> **Hypothèse** : votre tenant Autotask est connecté à la boîte support (création auto de tickets à partir des emails). Si ce n’est pas le cas, adaptez l’étape 1 (intake).
+
+## Étape 1 — Intake : de l’email au ticket
+
+1. Ouvrez **Autotask**.
+2. Menu principal → **Service Desk** → **Tickets**.
+3. Filtrez par file/queue : `N1 - Support` (ou équivalent).
+4. Vérifiez que l’email reçu a bien généré un ticket :
+   - Sujet email → titre du ticket
+   - Corps email → description / note initiale
+   - Pièces jointes → onglet *Attachments*
+
+**Bonnes pratiques**
+- Une adresse unique : `support@...`
+- Un objet email explicite : `[Client] - [Service] - [Symptôme]`
+- Un champ *Company / Contact* correctement mappé (sinon le faire dès la qualification).
+
+## Étape 2 — Qualification (3 minutes max)
+
+Ouvrez le ticket et complétez immédiatement :
+
+1. **Company / Contact** (client + demandeur)
+2. **Type** : Incident / Service Request / Problem
+3. **Catégorie / Sous-catégorie** (ex. Sécurité → Antivirus / Web Filtering)
+4. **Impact** (1 utilisateur / équipe / site / prod)
+5. **Urgence** (bloquant / dégradé / mineur)
+6. **Priorité** (calculée ou manuelle selon votre modèle)
+7. **Source** (Email, Phone, Monitoring, etc.)
+
+### Mini grille Impact × Urgence (exemple)
+
+- Impact *élevé* + Urgence *élevée* → **P1**
+- Impact *élevé* + Urgence *moyenne* → **P2**
+- Impact *moyen* + Urgence *élevée* → **P2**
+- Impact *moyen* + Urgence *moyenne* → **P3**
+- Tout le reste → **P4**
+
+## Étape 3 — SLA : timers et escalade
+
+1. Vérifiez le champ **SLA** appliqué (souvent auto via Company).
+2. Contrôlez la **Due Date** et/ou les jalons (First Response / Resolution).
+3. Si P1/P2 :
+   - Assignez immédiatement à un **technicien**
+   - Ajoutez un tag/flag “On-call” si existant
+   - Prévenez via canal interne (Teams/Slack) selon runbook
+
+**Anti-bruit**
+- P1 réservé au vrai “business down”
+- Requalifier dès que vous avez des éléments (évite les escalades inutiles)
+
+## Étape 4 — Traitement : notes, actions et time entries
+
+### 4.1 Notes (communication)
+
+- **Note interne** : pour l’équipe (diagnostic, hypothèses, next steps)
+- **Note client** : claire, factuelle, sans jargon inutile
+
+**Structure recommandée (copier-coller)**
+
+- Symptôme :
+- Constat :
+- Actions effectuées :
+- Résultat :
+- Prochaine étape / ETA (si applicable) :
+
+### 4.2 Time Entry (obligatoire)
+
+1. Cliquez **New Time Entry** (ou équivalent).
+2. Renseignez :
+   - Date / Start / End
+   - Work Type (Remote/On-site)
+   - Summary Notes (résumé actionnable)
+3. Sauvegardez.
+
+> Un ticket sans time entry devient “inexploitable” (facturation, reporting, amélioration continue).
+
+## Étape 5 — Escalade N2 / vendor
+
+### 5.1 Quand escalader
+
+- Vous avez identifié un périmètre hors N1
+- Vous avez reproduit / collecté les preuves (logs, captures)
+- Vous avez tenté les actions standard (runbook N1)
+
+### 5.2 Pack d’escalade (à mettre dans le ticket)
+
+- Contexte : client, site, impact
+- Horodatage + fréquence
+- Logs pertinents / captures
+- Actions déjà tentées (et résultat)
+- Hypothèse + question précise
+
+Ensuite :
+
+1. Changez l’**Assigned Resource** vers `N2` (ou queue dédiée).
+2. Ajoutez une note interne “ESCALADE” + pack.
+3. Si vendor (ex. Webroot/Malwarebytes/Microsoft) :
+   - Créez un *case* vendor
+   - Ajoutez l’ID du case dans le ticket
+
+## Étape 6 — Clôture (qualité)
+
+Avant de fermer :
+
+1. Vérifiez qu’une **résolution** est saisie (champ Resolution).
+2. Vérifiez qu’un **compte-rendu client** est envoyé (note client ou email).
+3. Vérifiez qu’il y a :
+   - au moins 1 time entry
+   - les pièces jointes utiles
+4. Passez le ticket en **Complete / Closed**.
+
+## Étape 7 — Post-mortem léger (si P1/P2)
+
+Ajoutez une note interne “RETEX” :
+
+- Cause racine (si connue)
+- Mesure corrective
+- Mesure préventive (monitoring, policy, documentation)
+- Action à créer (task) si nécessaire

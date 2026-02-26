@@ -1,0 +1,621 @@
+---
+title: "Salesforce CI/CD with GitHub Actions: Complete 2026 Guide"
+publishedAt: "2026-02-05"
+summary: "Practical tutorial to set up a complete CI/CD pipeline for your Salesforce projects with GitHub Actions and Salesforce CLI."
+tags: ["Salesforce", "CI/CD", "GitHub Actions", "DevOps", "SFDX"]
+featured: true
+---
+
+Manual Salesforce metadata deployment via Change Sets is error-prone and slow. This guide shows you how to automate your deployments with **GitHub Actions** and **Salesforce CLI**.
+
+## Why CI/CD for Salesforce?
+
+### Manual Deployment Problems
+
+❌ **Change Sets**:
+- Slow and tedious process
+- Risk of missing components
+- No easy rollback
+- Hard to track changes
+
+❌ **Manual deployments**:
+- Human errors
+- No traceability
+- Forgotten tests
+- Extended downtime
+
+### CI/CD Benefits
+
+✅ **Complete automation**:
+- Automatic validation before merge
+- One-click environment deployment
+- Systematically run tests
+
+✅ **Quality and security**:
+- Mandatory code review
+- Automatic Apex tests (>75% coverage)
+- Security scans (PMD, ESLint)
+- Easy rollback
+
+✅ **Traceability**:
+- Complete deployment history
+- Who deployed what and when
+- Detailed logs
+
+## Pipeline Architecture
+
+```
+Developer → GitHub (PR) → Validation (CI) → Review → Merge → Deploy (CD)
+                            ↓                           ↓
+                    - Apex tests                   - Sandbox
+                    - PMD scan                     - UAT
+                    - ESLint                       - Production
+                    - Coverage check
+```
+
+### Branch Strategy
+
+```
+main (production)
+  ↓
+release/* (UAT/staging)
+  ↓
+develop (integration sandbox)
+  ↓
+feature/* (developer sandboxes)
+```
+
+## Prerequisites
+
+### 1. Install Salesforce CLI Locally
+
+```bash
+# macOS
+brew install salesforce-cli
+
+# Windows (via npm)
+npm install -g @salesforce/cli
+
+# Verify installation
+sf --version
+```
+
+### 2. Authenticate Your Salesforce Orgs
+
+```bash
+# Development sandbox
+sf org login web --alias dev-sandbox --instance-url https://test.salesforce.com
+
+# Integration sandbox
+sf org login web --alias integration-sandbox --instance-url https://test.salesforce.com
+
+# Production (with caution!)
+sf org login web --alias production --instance-url https://login.salesforce.com
+```
+
+### 3. Create a Salesforce Connected App
+
+For automated authentication in GitHub Actions:
+
+**Setup → App Manager → New Connected App**
+
+- **Connected App Name**: GitHub Actions CI/CD
+- **API (Enable OAuth Settings)**: ✅
+- **Callback URL**: `http://localhost:1717/OauthRedirect`
+- **OAuth Scopes**:
+  - `api` - Access and manage your data
+  - `refresh_token, offline_access` - Provide access your data at any time
+  - `web` - Access the web platform
+
+**Retrieve**:
+- `Consumer Key` (CLIENT_ID)
+- `Consumer Secret` (CLIENT_SECRET)
+
+### 4. Generate a JWT for Headless Authentication
+
+```bash
+# Generate private key
+openssl genrsa -out server.key 2048
+
+# Generate certificate
+openssl req -new -x509 -key server.key -out server.crt -days 365
+
+# Upload server.crt in Connected App
+# (Setup → App Manager → Edit Connected App → Use digital signatures)
+```
+
+**Store `server.key` in GitHub Secrets** (see step 5).
+
+### 5. Configure GitHub Secrets
+
+**Settings → Secrets and variables → Actions → New repository secret**
+
+Create these secrets:
+
+```
+SALESFORCE_JWT_KEY            # Content of server.key (multi-line format)
+SALESFORCE_CONSUMER_KEY       # Consumer Key from Connected App
+SALESFORCE_USERNAME_DEV       # Username for dev sandbox
+SALESFORCE_USERNAME_INTEGRATION  # Username for integration sandbox
+SALESFORCE_USERNAME_PROD      # Username for production
+```
+
+## GitHub Actions Pipeline: Validation (CI)
+
+Create `.github/workflows/pr-validation.yml`:
+
+```yaml
+name: PR Validation (CI)
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'force-app/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for delta deploy
+
+      # 2. Install Salesforce CLI
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf --version
+
+      # 3. JWT authentication to sandbox
+      - name: Authenticate to Salesforce
+        run: |
+          echo "${{ secrets.SALESFORCE_JWT_KEY }}" > server.key
+          sf org login jwt \
+            --client-id ${{ secrets.SALESFORCE_CONSUMER_KEY }} \
+            --jwt-key-file server.key \
+            --username ${{ secrets.SALESFORCE_USERNAME_DEV }} \
+            --instance-url https://test.salesforce.com \
+            --alias ci-org
+
+      # 4. Delta deployment (changes only)
+      - name: Install SGD (Salesforce Git Delta)
+        run: |
+          npm install -g sfdx-git-delta
+          
+      - name: Generate delta package
+        run: |
+          sgd --to HEAD --from HEAD~1 --output delta --source force-app
+
+      # 5. Validation (no actual deployment)
+      - name: Validate deployment
+        run: |
+          if [ -f delta/package/package.xml ]; then
+            sf project deploy validate \
+              --manifest delta/package/package.xml \
+              --target-org ci-org \
+              --test-level RunLocalTests \
+              --wait 30
+          else
+            echo "No changes to deploy"
+          fi
+
+      # 6. Security scan with PMD
+      - name: Run PMD static analysis
+        run: |
+          curl -L https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.0.0/pmd-bin-7.0.0.zip -o pmd.zip
+          unzip pmd.zip
+          ./pmd-bin-7.0.0/bin/pmd check \
+            --dir force-app \
+            --rulesets rulesets/apex/quickstart.xml \
+            --format text \
+            --report-file pmd-report.txt || true
+          cat pmd-report.txt
+
+      # 7. Check test coverage
+      - name: Check test coverage
+        run: |
+          sf apex run test \
+            --target-org ci-org \
+            --code-coverage \
+            --result-format human \
+            --wait 10 > test-results.txt
+          cat test-results.txt
+          
+          # Extract coverage percentage
+          COVERAGE=$(grep "Org Wide Coverage" test-results.txt | awk '{print $4}' | sed 's/%//')
+          echo "Test coverage: ${COVERAGE}%"
+          
+          if [ "$COVERAGE" -lt 75 ]; then
+            echo "❌ Test coverage below 75% (${COVERAGE}%)"
+            exit 1
+          fi
+
+      # 8. Cleanup
+      - name: Remove JWT key
+        if: always()
+        run: rm -f server.key
+
+      # 9. Comment PR with results
+      - name: Comment PR with results
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## 🔍 Validation Results\n\n';
+            
+            // Add PMD results
+            if (fs.existsSync('pmd-report.txt')) {
+              const pmd = fs.readFileSync('pmd-report.txt', 'utf8');
+              comment += '### PMD Analysis\n```\n' + pmd + '\n```\n\n';
+            }
+            
+            // Add test results
+            if (fs.existsSync('test-results.txt')) {
+              const tests = fs.readFileSync('test-results.txt', 'utf8');
+              comment += '### Test Results\n```\n' + tests + '\n```\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+```
+
+## GitHub Actions Pipeline: Deployment (CD)
+
+Create `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy to Salesforce (CD)
+
+on:
+  push:
+    branches:
+      - develop       # Deploy to Integration Sandbox
+      - main          # Deploy to Production
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      target_org:
+        description: 'Target org'
+        required: true
+        type: choice
+        options:
+          - integration
+          - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'integration' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf --version
+
+      # Select target org
+      - name: Set target org credentials
+        id: set-target
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "username=${{ secrets.SALESFORCE_USERNAME_PROD }}" >> $GITHUB_OUTPUT
+            echo "instance_url=https://login.salesforce.com" >> $GITHUB_OUTPUT
+            echo "env_name=Production" >> $GITHUB_OUTPUT
+          else
+            echo "username=${{ secrets.SALESFORCE_USERNAME_INTEGRATION }}" >> $GITHUB_OUTPUT
+            echo "instance_url=https://test.salesforce.com" >> $GITHUB_OUTPUT
+            echo "env_name=Integration Sandbox" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Authenticate to Salesforce
+        run: |
+          echo "${{ secrets.SALESFORCE_JWT_KEY }}" > server.key
+          sf org login jwt \
+            --client-id ${{ secrets.SALESFORCE_CONSUMER_KEY }} \
+            --jwt-key-file server.key \
+            --username ${{ steps.set-target.outputs.username }} \
+            --instance-url ${{ steps.set-target.outputs.instance_url }} \
+            --alias target-org
+
+      - name: Deploy to Salesforce
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org target-org \
+            --test-level RunLocalTests \
+            --wait 30 \
+            --verbose
+
+      - name: Cleanup
+        if: always()
+        run: rm -f server.key
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "✅ Deployment to ${{ steps.set-target.outputs.env_name }} succeeded!"
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ Deployment to ${{ steps.set-target.outputs.env_name }} failed!"
+```
+
+## Recommended Project Structure
+
+```
+salesforce-project/
+├── .github/
+│   └── workflows/
+│       ├── pr-validation.yml    # CI pipeline
+│       └── deploy.yml            # CD pipeline
+├── force-app/
+│   └── main/
+│       └── default/
+│           ├── classes/          # Apex classes
+│           ├── triggers/         # Apex triggers
+│           ├── lwc/              # Lightning Web Components
+│           ├── objects/          # Custom objects
+│           └── flows/            # Flows
+├── config/
+│   ├── project-scratch-def.json
+│   └── user-def.json
+├── scripts/
+│   └── apex/
+│       └── post-deploy.apex     # Post-deployment scripts
+├── .gitignore
+├── sfdx-project.json
+├── package.json
+└── README.md
+```
+
+### File `sfdx-project.json`
+
+```json
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true,
+      "package": "MyApp",
+      "versionName": "ver 1.0",
+      "versionNumber": "1.0.0.NEXT"
+    }
+  ],
+  "name": "my-salesforce-app",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "60.0"
+}
+```
+
+### File `.gitignore`
+
+```
+# Salesforce DX
+.sfdx/
+.sf/
+.localdevserver/
+
+# LWC Jest
+**/__tests__/**
+**/lwc/**/*.test.js
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Dependency directories
+node_modules/
+
+# Certificates and secrets
+*.key
+*.crt
+*.pem
+server.key
+```
+
+## Daily Workflow with CI/CD
+
+### 1. Develop a Feature
+
+```bash
+# Create a feature branch
+git checkout -b feature/add-validation-rules
+
+# Develop in your scratch org or sandbox
+sf org open
+
+# Retrieve modified metadata
+sf project retrieve start --source-dir force-app
+
+# Commit and push
+git add .
+git commit -m "feat: Add validation rules for Account"
+git push origin feature/add-validation-rules
+```
+
+### 2. Create a Pull Request
+
+On GitHub, create a PR to `develop`.
+
+**GitHub Actions automatically launches**:
+- ✅ Deployment validation
+- ✅ Apex tests (coverage check)
+- ✅ PMD static analysis
+- ✅ Comment with results
+
+### 3. Review and Merge
+
+After validation:
+- Code review by peer
+- Merge to `develop`
+
+**→ Automatic deployment to Integration Sandbox**
+
+### 4. Release to Production
+
+```bash
+# Create a release branch
+git checkout -b release/v1.2.0 develop
+
+# UAT testing on Integration Sandbox
+# Fixes if needed
+
+# Merge to main
+git checkout main
+git merge release/v1.2.0
+git push origin main
+```
+
+**→ Automatic deployment to Production** (after manual approval if configured)
+
+## GitHub Branch Protections
+
+**Settings → Branches → Add rule**
+
+For `main` (production):
+- ✅ Require pull request reviews (2 approvals)
+- ✅ Require status checks to pass (PR Validation)
+- ✅ Require branches to be up to date
+- ✅ Include administrators
+- ✅ Restrict who can push (admins only)
+
+For `develop`:
+- ✅ Require pull request reviews (1 approval)
+- ✅ Require status checks to pass
+
+## Best Practices
+
+### 1. Delta Deployments
+
+Deploy only changes (not entire project):
+
+```yaml
+- name: Generate delta package
+  run: |
+    sgd --to HEAD --from ${{ github.event.before }} --output delta --source force-app
+```
+
+### 2. Local Tests First
+
+Before pushing:
+
+```bash
+# Validate locally
+sf project deploy validate --manifest manifest/package.xml --target-org dev-sandbox
+
+# Run tests
+sf apex run test --target-org dev-sandbox --test-level RunLocalTests
+```
+
+### 3. GitHub Environments
+
+Use GitHub **Environments** for:
+- Production protection (approval required)
+- Environment-specific secrets
+- Deployment history
+
+### 4. Rollback Strategy
+
+In case of production failure:
+
+```bash
+# Option 1: Quick rollback with git
+git revert HEAD
+git push origin main
+# → Automatic redeployment of previous version
+
+# Option 2: Manual rollback
+sf project deploy start --source-dir force-app-backup --target-org production
+```
+
+### 5. Post-deployment Monitoring
+
+Add a smoke test script:
+
+```yaml
+- name: Post-deployment smoke test
+  run: |
+    sf apex run --target-org production --file scripts/apex/smoke-test.apex
+```
+
+## Troubleshooting
+
+### Issue: JWT authentication failed
+
+**Solution**:
+```bash
+# Verify server.key is in correct format
+cat server.key | head -1
+# Should start with -----BEGIN RSA PRIVATE KEY-----
+
+# Verify Connected App has correct certificate
+# Setup → App Manager → Edit Connected App → Use digital signatures ✅
+```
+
+### Issue: Test coverage below 75%
+
+**Solution**:
+```bash
+# Identify classes without tests
+sf apex get test --target-org dev-sandbox --code-coverage
+
+# Create missing tests
+# Ensure each trigger/class has its test class
+```
+
+### Issue: PMD violations block pipeline
+
+**Solution**:
+```yaml
+# Allow PMD to continue even with violations (non-blocking)
+--fail-on-violation false || true
+```
+
+## Useful Resources
+
+- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [sfdx-git-delta Plugin](https://github.com/scolladon/sfdx-git-delta)
+- [PMD for Salesforce](https://pmd.github.io/latest/pmd_rules_apex.html)
+
+## Conclusion
+
+A well-configured CI/CD pipeline transforms how you develop Salesforce:
+
+✅ **Automation**: No more tedious manual deployments  
+✅ **Quality**: Systematic tests and mandatory code review  
+✅ **Security**: Pre-production validation + easy rollback  
+✅ **Traceability**: Complete change history  
+
+Investing a few hours in GitHub Actions configuration will save you dozens of hours each month while drastically reducing deployment errors.
+
+---
+
+**Next steps:**
+- Configure Slack notifications for deployments
+- Add Selenium tests for UI
+- Implement feature flags strategy

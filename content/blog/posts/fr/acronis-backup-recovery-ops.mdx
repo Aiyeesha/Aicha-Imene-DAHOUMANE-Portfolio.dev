@@ -1,0 +1,140 @@
+---
+title: "Acronis : sauvegardes (Cloud + NAS), alertes et remédiation"
+excerpt: "Runbook Acronis Cyber Protect Cloud : plans, destinations (Cloud/NAS), rétention, alerting et résolution des erreurs fréquentes."
+date: "2025-02-20"
+tags: ["Backup", "Acronis", "Monitoring", "Runbooks", "IT Ops"]
+---
+
+
+## Objectif
+
+Mettre en place et exploiter des sauvegardes **fiables** via **Acronis Cyber Protect Cloud** :
+
+- Plans de sauvegarde par type (VM / serveurs / postes)
+- Destinations : **Cloud** et/ou **NAS (SMB)** en local
+- Politique de rétention
+- Alertes et supervision (tableau de bord)
+- Remédiation des erreurs courantes
+
+> **Important** : adaptez les valeurs (rétention, horaires, quota) à votre contexte et à vos contraintes réseau.
+
+## Étape 1 — Préparer les destinations
+
+### 1.1 Destination Cloud
+
+1. Ouvrez la console Acronis.
+2. Vérifiez le tenant / client sélectionné.
+3. Vérifiez la capacité Cloud disponible (quota).
+
+### 1.2 Destination NAS (SMB)
+
+1. Vérifiez l’accès SMB depuis un serveur de test :
+   - compte de service dédié
+   - droits en lecture/écriture
+2. Notez :
+   - chemin SMB : `smb://IP/partage/dossier`
+   - identifiants (stockés dans un coffre / manager de secrets)
+
+**Bonnes pratiques**
+- Dossier par client, puis par périmètre (Serveurs/VM/Workstations).
+- Sur le NAS : snapshots + contrôle d’intégrité si possible.
+
+## Étape 2 — Créer un plan de sauvegarde
+
+1. Menu → **Plans** → **Créer un plan**.
+2. Nommez le plan (ex. `BKP-SRV-VM-DAILY`).
+3. **Quoi sauvegarder** :
+   - VM : “toute la machine” (image) ou disques choisis
+   - Serveur : image + volumes data
+   - SQL/Exchange : activer les options applicatives si disponibles
+4. **Où sauvegarder** :
+   - Cloud Acronis, ou
+   - NAS (SMB) : renseignez le chemin + creds
+5. **Planification** :
+   - exemple : Lun → Sam à 23h00
+6. **Rétention** (exemple réaliste) :
+   - Journalière : 6 jours
+   - Hebdo : 4 semaines
+   - Mensuelle : 2 mois
+7. Sauvegardez.
+
+## Étape 3 — Appliquer le plan aux machines
+
+1. Allez dans **Appareils / Devices**.
+2. Filtrez par site / groupe.
+3. Sélectionnez les machines cibles.
+4. **Assigner le plan** (ou via policy).
+5. Vérifiez que l’agent est à jour et en ligne.
+
+## Étape 4 — Supervision quotidienne (tableau de bord)
+
+Chaque jour :
+
+1. Ouvrez **Tableau de bord / Alerts**.
+2. Traitez dans cet ordre :
+   1) Critique
+   2) Erreur
+   3) Avertissement
+3. Pour chaque alerte :
+   - identifiez le plan + la machine
+   - ouvrez le détail d’exécution
+
+## Étape 5 — Remédiation : erreurs fréquentes
+
+### 5.1 Quota dépassé (Cloud ou NAS)
+
+**Symptômes**
+- “quota dépassé”, “not enough space”, “storage limit reached”
+
+**Actions**
+1. Vérifiez la destination :
+   - Cloud : quota tenant + consommation
+   - NAS : espace disque + snapshots
+2. Vérifiez la rétention : trop longue ?
+3. Mesures :
+   - réduire la rétention
+   - activer la compression/déduplication
+   - déplacer certaines sauvegardes sur un autre stockage
+4. Relancez une sauvegarde manuelle sur 1 machine test.
+
+### 5.2 CBT / snapshots VMware (warning)
+
+**Symptôme**
+- warning lié à CBT (Changed Block Tracking) à cause de snapshots existants
+
+**Actions**
+1. Dans vCenter : vérifiez s’il y a des snapshots “orphelins”.
+2. Supprimez/Consolidez si possible (fenêtre de maintenance).
+3. Relancez le job.
+4. Si le warning persiste : vérifier la config VMware/Acronis et la version agent.
+
+### 5.3 Échec authentification SMB
+
+1. Testez l’accès SMB depuis une machine :
+   - `\IP\share\path`
+2. Vérifiez :
+   - mot de passe expiré ?
+   - droits NTFS/partage
+   - pare-feu (SMB 445)
+3. Corrigez les creds dans Acronis et retestez.
+
+## Étape 6 — Validation (preuve de restaurabilité)
+
+Une sauvegarde “OK” n’est pas suffisant : il faut prouver la restauration.
+
+1. Choisissez 1 machine critique.
+2. Lancez un **test restore** :
+   - restore fichier (simple)
+   - restore volume/VM (selon périmètre)
+3. Vérifiez :
+   - intégrité des fichiers
+   - temps de restauration (RTO)
+4. Documentez le résultat (date, durée, opérateur, points à améliorer).
+
+## Étape 7 — Runbook “jour 1” (checklist)
+
+- [ ] Les agents sont online et à jour
+- [ ] Les plans ont une rétention réaliste
+- [ ] Les destinations Cloud/NAS sont accessibles
+- [ ] Les alertes sont routées vers l’équipe (mail/PSA)
+- [ ] Un test restore est fait et documenté

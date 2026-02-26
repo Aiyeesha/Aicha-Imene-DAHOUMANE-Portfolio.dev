@@ -1,0 +1,127 @@
+---
+title: "Autotask: a pragmatic ticketing workflow (triage, SLA, escalation, closure)"
+excerpt: "A practical Autotask workflow: email intake, qualification, SLA control, N2 escalation, time entries, and clean closure."
+date: "2025-02-14"
+tags: ["Ticketing", "IT Ops", "SLA", "Runbooks", "Support"]
+---
+
+
+## Goal
+
+Standardize incident and request handling in **Autotask**:
+
+- Creation/triage (email → ticket)
+- Qualification (impact, urgency, category)
+- **SLA** compliance (priorities, escalation)
+- Traceability (notes, attachments, **time entries**)
+- Clean closure (resolution, customer comms, lightweight post-mortem)
+
+## Step 1 — Intake: from email to ticket
+
+1. Open **Autotask**.
+2. Go to **Service Desk** → **Tickets**.
+3. Filter by queue: `N1 - Support` (or equivalent).
+4. Confirm the email created a ticket:
+   - Email subject → ticket title
+   - Email body → description / initial note
+   - Attachments → *Attachments* tab
+
+**Good practices**
+- One support mailbox: `support@...`
+- Clear subject pattern: `[Customer] - [Service] - [Symptom]`
+- Ensure *Company / Contact* mapping is correct.
+
+## Step 2 — Qualification (≤ 3 minutes)
+
+Open the ticket and fill:
+
+1. **Company / Contact**
+2. **Type**: Incident / Service Request / Problem
+3. **Category / Subcategory**
+4. **Impact**
+5. **Urgency**
+6. **Priority**
+7. **Source** (Email, Phone, Monitoring, etc.)
+
+### Simple Impact × Urgency matrix (example)
+
+- High impact + High urgency → **P1**
+- High impact + Medium urgency → **P2**
+- Medium impact + High urgency → **P2**
+- Medium impact + Medium urgency → **P3**
+- Everything else → **P4**
+
+## Step 3 — SLA: timers and escalation
+
+1. Check which **SLA** is applied (often automatic by Company).
+2. Confirm **Due Date** and/or milestones (First Response / Resolution).
+3. For P1/P2:
+   - Assign a **technician** immediately
+   - Add “On-call” tag/flag if you use one
+   - Notify internal channel per your runbook
+
+## Step 4 — Work log: notes + time entries
+
+### 4.1 Notes (communication)
+
+- **Internal note**: for the team (diagnosis, hypotheses, next steps)
+- **Customer note**: clear, factual, minimal jargon
+
+**Recommended structure**
+
+- Symptom:
+- Findings:
+- Actions taken:
+- Result:
+- Next step:
+
+### 4.2 Time Entry (mandatory)
+
+1. Click **New Time Entry**.
+2. Fill:
+   - Date / Start / End
+   - Work Type (Remote/On-site)
+   - Summary Notes (actionable)
+3. Save.
+
+## Step 5 — Escalation to N2 / vendor
+
+### When to escalate
+
+- Scope is beyond N1
+- You collected evidence (logs/screenshots)
+- You ran standard N1 actions (runbook)
+
+### Escalation pack (put into the ticket)
+
+- Context: customer, site, impact
+- Timestamp + frequency
+- Evidence: logs/screenshots
+- Actions already tried (+ outcome)
+- Hypothesis + a specific question
+
+Then:
+
+1. Change **Assigned Resource** to `N2` (or dedicated queue).
+2. Add an internal note “ESCALATION” with the pack.
+3. If vendor case is needed, add the case ID in the ticket.
+
+## Step 6 — Closure quality
+
+Before closing:
+
+1. Ensure the **Resolution** field is filled.
+2. Ensure customer communication is logged/sent.
+3. Confirm:
+   - at least one time entry
+   - relevant attachments
+4. Set status to **Complete / Closed**.
+
+## Step 7 — Lightweight post-mortem (P1/P2)
+
+Add an internal “RETEX” note:
+
+- Root cause (if known)
+- Corrective action
+- Preventive action (monitoring, policy, documentation)
+- Follow-up task if needed

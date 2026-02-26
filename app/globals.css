@@ -1,0 +1,244 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Fixed navbar offset
+  -------------------
+  The navbar is position: fixed. We keep a single source of truth for:
+  - navbar height (layout padding)
+  - anchor scroll offset (scroll-padding-top)
+*/
+:root {
+  --nav-h: 80px;
+  --nav-gap: 24px; /* extra breathing room when scrolling to anchors */
+  --nav-offset: calc(var(--nav-h) + var(--nav-gap));
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 88px;
+    --nav-gap: 28px;
+    --nav-offset: calc(var(--nav-h) + var(--nav-gap));
+  }
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-offset); }
+
+/* Native form controls (select, date, etc.) follow the active theme */
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+/* Improve <select> dropdown readability (options) */
+html select option {
+  background-color: #ffffff;
+  color: #0f172a; /* slate-900 */
+}
+html.dark select option {
+  background-color: #070B1A;
+  color: #ffffff;
+}
+
+/**
+ * THEME STRATEGY
+ * - `next-themes` toggles `class="dark"` or `class="light"` on <html>.
+ * - Tailwind is configured with `darkMode: ["class"]`.
+ * - We define neutral base styles that adapt in light/dark.
+ */
+
+body {
+  @apply bg-white text-slate-900;
+}
+html.dark body {
+  @apply bg-[#070B1A] text-white;
+}
+
+.card {
+  @apply rounded-2xl border shadow-[0_0_0_1px_rgba(0,0,0,0.03)] backdrop-blur;
+  @apply border-black/10 bg-black/5;
+  @apply transition-transform duration-200 ease-out;
+}
+html.dark .card {
+  @apply border-white/10 bg-white/5 shadow-[0_0_0_1px_rgba(255,255,255,0.03)];
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.chip {
+  /* Higher contrast in both themes */
+  @apply rounded-full border px-3 py-1 text-xs font-medium transition-colors;
+  @apply border-slate-200 bg-slate-100 text-slate-800;
+  @apply dark:border-white/15 dark:bg-white/10 dark:text-white;
+}
+.chip:hover {
+  @apply bg-slate-200 dark:bg-white/15;
+}
+
+/* Badge tones (higher contrast) */
+.badge {
+  @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold;
+}
+.badge-client {
+  @apply border-emerald-300 bg-emerald-50 text-emerald-800;
+  @apply dark:border-emerald-400/30 dark:bg-emerald-500/15 dark:text-emerald-200;
+}
+.badge-personal {
+  @apply border-violet-300 bg-violet-50 text-violet-800;
+  @apply dark:border-violet-400/30 dark:bg-violet-500/15 dark:text-violet-200;
+}
+.badge-training {
+  @apply border-sky-300 bg-sky-50 text-sky-800;
+  @apply dark:border-sky-400/30 dark:bg-sky-500/15 dark:text-sky-200;
+}
+
+html.dark .chip {
+  @apply border-white/10 bg-white/5 text-white/80;
+}
+html.dark .chip:hover { @apply bg-white/10; }
+
+.soft-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(34,211,238,0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .card { transition: none !important; }
+  .card:hover { transform: none !important; }
+}
+
+/* Background glow */
+.page-gradient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 500px at 10% 10%, rgba(34,211,238,0.10), transparent 60%),
+    radial-gradient(700px 450px at 90% 20%, rgba(168,85,247,0.08), transparent 60%);
+  opacity: 1;
+  z-index: 0;
+}
+html.dark .page-gradient {
+  background:
+    radial-gradient(900px 500px at 10% 10%, rgba(34,211,238,0.14), transparent 60%),
+    radial-gradient(700px 450px at 90% 20%, rgba(168,85,247,0.10), transparent 60%);
+}
+
+/* Navbar "pill" indicator */
+.nav-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: rgba(34, 211, 238, 0.10);
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  filter: drop-shadow(0 0 16px rgba(34,211,238,0.12));
+}
+html.dark .nav-pill {
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+}
+
+/* Minimal MDX typography */
+.mdx h1 { font-size: 2rem; font-weight: 700; color: rgba(10,15,30,0.95); margin-top: 0.5rem; }
+.mdx h2 { font-size: 1.35rem; font-weight: 650; color: rgba(10,15,30,0.92); margin-top: 1.25rem; }
+.mdx h3 { font-size: 1.1rem; font-weight: 600; color: rgba(10,15,30,0.90); margin-top: 1.0rem; }
+html.dark .mdx h1 { color: rgba(255,255,255,0.95); }
+html.dark .mdx h2 { color: rgba(255,255,255,0.92); }
+html.dark .mdx h3 { color: rgba(255,255,255,0.90); }
+
+.mdx p  { line-height: 1.7; }
+.mdx ul { padding-left: 1.25rem; list-style: disc; }
+.mdx li { margin-top: 0.25rem; }
+
+.mdx code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 0.5rem;
+  padding: 0.1rem 0.35rem;
+}
+html.dark .mdx code {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.mdx pre {
+  margin-top: 0.8rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+html.dark .mdx pre {
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+
+}
+
+/* MDX code blocks with toolbar (copy button) */
+.mdx-code {
+  margin-top: 0.9rem;
+}
+.mdx-code__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.35rem 0.35rem 0.2rem 0.35rem;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-bottom: 0;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background: rgba(0,0,0,0.03);
+}
+html.dark .mdx-code__toolbar {
+  border: 1px solid rgba(255,255,255,0.10);
+  border-bottom: 0;
+  background: rgba(255,255,255,0.05);
+}
+.mdx-code__pre {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.mdx-code__copy {
+  border-radius: 9999px;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.04);
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+}
+html.dark .mdx-code__copy {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+
+.mdx-link {
+  color: rgb(14 116 144); /* cyan-700-ish */
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+html.dark .mdx-link { color: rgb(165 243 252); }
+
+/* Text helpers for light/dark consistency */
+.text-strong { @apply text-slate-900 dark:text-white/90; }
+.text-muted { @apply text-slate-600 dark:text-white/70; }
+.text-muted-2 { @apply text-slate-500 dark:text-white/60; }
+
+html select option {
+  background-color: #ffffff;
+  color: #0f172a; /* slate-900 */
+}
+html.dark select option {
+  background-color: #070B1A;
+  color: #ffffff;
+}
+/* ProfileNarrative details polish */
+details[open] > summary {
+  opacity: 0.95;
+}
+
+details > summary {
+  cursor: pointer;
+  user-select: none;
+}

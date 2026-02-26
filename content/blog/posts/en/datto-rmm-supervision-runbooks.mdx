@@ -1,0 +1,148 @@
+---
+title: "Datto RMM: monitoring, alerting, and runbooks (from alert to remediation)"
+excerpt: "Build an actionable Datto RMM setup: monitors, noise control, escalation, and runbooks/Quick Jobs to remediate fast."
+date: "2025-02-10"
+tags: ["RMM", "Monitoring", "Automation", "Runbooks", "IT Ops"]
+---
+
+
+> **Note**: Menu labels can vary slightly by Datto RMM version/tenant, but the overall flow (Sites → Devices → Policies → Monitors → Alerts → Automation) stays the same.
+
+## Goal
+
+Set up monitoring that is **consistent** and **actionable**:
+
+- **Detect** (Monitoring): CPU/RAM/Disk, Windows services, critical events, availability.
+- **Notify** (Alerting): priorities, routing, anti-noise, escalation.
+- **Remediate** (Runbooks / Quick Jobs): standardized actions with traceability.
+
+## Prerequisites
+
+- An account with permissions for **Sites**, **Policies**, **Monitors**, **Alerts**, **Automation**.
+- At least one test device with the Datto RMM agent installed.
+- A naming convention (example):
+  - Monitors: `MON-<TYPE>-<WHAT>-<SEVERITY>`
+  - Policies: `POL-<SITE>-<ROLE>`
+  - Quick Jobs: `QJ-<OS>-<ACTION>`
+
+## Step 1 — Structure Sites & Devices
+
+1. Open **Sites** in the left menu.
+2. Ensure each customer/entity has a dedicated **Site**.
+3. Open a pilot site.
+4. Go to **Devices** and select a pilot workstation/server.
+5. Verify baseline data: OS, last reboot, agent version, AV status, patch status.
+
+**Good practices**
+
+- Separate **Servers** and **Workstations** using filters / groups.
+- Use **UDFs** (custom fields) for: criticality, owner, maintenance window, escalation contact.
+
+## Step 2 — Create a baseline Policy
+
+The idea: one “foundation” policy per OS/role.
+
+1. Go to **Policies**.
+2. Click **New Policy**.
+3. Name it (e.g.) `POL-BASE-WIN10`.
+4. Configure:
+   - **Patch Management**: patch window + controlled reboot rules.
+   - **Monitoring**: attach core monitors (see Step 3).
+   - **Automation**: attach standard jobs (see Step 5).
+5. Save.
+
+## Step 3 — Create Monitors (detection)
+
+### 3.1 Disk space (capacity)
+
+- **Why**: avoid “full disk” incidents.
+- Suggested thresholds (adapt to your environment):
+  - Warning: < 15% free
+  - Critical: < 10% free
+
+**Implementation**
+
+1. Go to **Monitors** → **New Monitor**.
+2. Choose **Disk Usage** (or equivalent).
+3. Target: `C:` (and key volumes on servers).
+4. Configure Warning/Critical thresholds.
+5. Customize the alert message to include `% free`, `GB free`, device, site.
+
+### 3.2 Critical Windows services
+
+Examples: `Spooler` (print server), `MSSQLSERVER`, `W3SVC` (IIS), `LanmanServer`.
+
+1. **New Monitor** → type **Service**.
+2. Service name: `MSSQLSERVER`.
+3. Condition: **Not running**.
+4. (Optional) attach remediation via Automation/Quick Job (see Step 5).
+
+### 3.3 Patch compliance
+
+1. Create/enable a monitor related to **Patch Status** / **Reboot required**.
+2. Trigger “warning” for **approved pending** / “critical” for **overdue**.
+3. Pair this with a scheduled patch window and clear reboot rules.
+
+## Step 4 — Alert routing and noise control
+
+### 4.1 Severity & ownership
+
+1. In your monitor, define the **severity** (Warning vs Critical).
+2. Route alerts by:
+   - Site (customer)
+   - Role (server vs workstation)
+   - Category (security vs availability)
+
+### 4.2 Reduce alert fatigue
+
+Use at least 3 layers:
+
+- **Deduplication / cool-down**: do not open 20 identical alerts for the same disk.
+- **Time windows**: avoid alerts during maintenance.
+- **Escalation**: N1 handles, N2 on-call only if not acknowledged within X minutes.
+
+## Step 5 — Runbooks / Quick Jobs (remediation)
+
+A runbook should be safe, repeatable, and logged.
+
+### 5.1 Typical runbooks
+
+- Restart a service: `Restart-Service MSSQLSERVER`
+- Clear temporary files (disk remediation)
+- Force update policies / agent tasks
+- Trigger Windows Update scan / report
+
+### 5.2 Example: restart a service (Windows)
+
+1. Go to **Automation** (or **Quick Jobs**).
+2. Create a new job `QJ-WIN-Restart-MSSQLSERVER`.
+3. Use PowerShell (example):
+
+```powershell
+# Restart MSSQLSERVER safely
+Restart-Service -Name "MSSQLSERVER" -Force
+Start-Sleep -Seconds 10
+Get-Service -Name "MSSQLSERVER" | Select-Object Status, Name
+```
+
+4. Configure logging/output capture.
+5. Scope it to a **test device** first.
+6. Attach the job as an **auto-remediation** for the service monitor.
+
+## Step 6 — Validation checklist
+
+For each monitor/runbook, validate:
+
+- The monitor triggers as expected (simulate a stop-service or low disk threshold).
+- The alert arrives to the right channel/team.
+- The runbook executes and logs output.
+- The incident is closed with traceability (what ran, when, result).
+
+## Step 7 — Documentation (runbooks library)
+
+Keep a short “operator-friendly” doc per runbook:
+
+- Goal, prerequisites, safety checks
+- How to run manually
+- Expected output / rollback
+- When to escalate
