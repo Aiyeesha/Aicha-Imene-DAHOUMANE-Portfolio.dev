@@ -1,8 +1,8 @@
 import { redis } from "@/lib/redis";
 
 /**
- * Redis cache wrapper:
- * - If Redis is not configured (redis === null), it falls back to no-cache mode.
+ * Redis cache wrapper.
+ * Falls back to no-cache mode if Redis is not configured.
  */
 export async function cacheGetOrSet<T>(
   key: string,
@@ -10,7 +10,6 @@ export async function cacheGetOrSet<T>(
   fetcher: () => Promise<T>
 ): Promise<T> {
   if (!redis) {
-    // No Redis configured -> run without cache (keeps dev/prod resilient)
     return fetcher();
   }
 
@@ -22,7 +21,6 @@ export async function cacheGetOrSet<T>(
 
   console.log("[CACHE MISS]", key);
   const fresh = await fetcher();
-
   await redis.set(key, fresh, { ex: ttlSeconds });
   return fresh;
 }
