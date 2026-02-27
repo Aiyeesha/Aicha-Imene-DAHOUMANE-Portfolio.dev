@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 
 export async function GET() {
-  // If Redis isn't configured, return a helpful message instead of throwing.
   if (!redis) {
     return NextResponse.json(
       {
@@ -14,7 +13,6 @@ export async function GET() {
     );
   }
 
-  // Write + Read
   await redis.set("healthcheck", "ok", { ex: 60 });
   const value = await redis.get("healthcheck");
 

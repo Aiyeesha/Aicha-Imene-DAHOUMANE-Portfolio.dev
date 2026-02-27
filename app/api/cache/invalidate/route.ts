@@ -3,11 +3,11 @@ import { redis } from "@/lib/redis";
 
 /**
  * POST /api/cache/invalidate
- * Headers:
- *   x-cache-secret: <CACHE_INVALIDATE_SECRET>
- * Body (JSON, optional):
- *   { "locale": "fr" }  -> invalidates that locale only
- *   {}                  -> invalidates both fr/en (default)
+ * Header: x-cache-secret: <CACHE_INVALIDATE_SECRET>
+ * Body examples:
+ *   { "locale": "fr" } -> invalidates list for that locale
+ *   { "locale": "fr", "slug": "..." } -> invalidates list + detail for that slug
+ *   {} -> invalidates list keys for fr/en
  */
 export async function POST(req: Request) {
   const secret = req.headers.get("x-cache-secret");
@@ -22,9 +22,13 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json().catch(() => ({} as any));
-  const locale = body?.locale;
+  const locale = body?.locale as string | undefined;
+  const slug = body?.slug as string | undefined;
 
-  if (locale) {
+  if (locale && slug) {
+    await redis.del(`projects_with_assets:${locale}`);
+    await redis.del(`project:${locale}:${slug}`);
+  } else if (locale) {
     await redis.del(`projects_with_assets:${locale}`);
   } else {
     await redis.del("projects_with_assets:fr");
