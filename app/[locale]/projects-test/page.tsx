@@ -1,9 +1,11 @@
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 
+type Params = { locale: string };
+
 export default async function ProjectsTestPage({
   params,
 }: {
-  params: Promise<{ locale: string }> | { locale: string };
+  params: Promise<Params>;
 }) {
   const { locale } = await params;
 

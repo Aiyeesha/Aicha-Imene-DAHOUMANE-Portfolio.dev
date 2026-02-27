@@ -1,9 +1,10 @@
 import createMDX from "@next/mdx";
-import remarkFrontmatter from "remark-frontmatter";
 import createNextIntlPlugin from "next-intl/plugin";
+import remarkFrontmatter from "remark-frontmatter";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"]
 };
 
