@@ -1,4 +1,4 @@
-import { getCertifications } from "@/lib/data/certifications";
+import { getCertificationsCached } from "@/lib/data/certifications.cached";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -8,7 +8,7 @@ export default async function CertificationsPage({ params }: PageProps) {
   const { locale } = await params;
 
   const safeLocale = locale === "fr" ? "fr" : "en";
-  const items = (await getCertifications(safeLocale)) ?? [];
+  const items = (await getCertificationsCached(safeLocale)) ?? [];
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
