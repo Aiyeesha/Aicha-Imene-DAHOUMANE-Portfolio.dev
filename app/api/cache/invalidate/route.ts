@@ -5,9 +5,9 @@ import { redis } from "@/lib/redis";
  * POST /api/cache/invalidate
  * Header: x-cache-secret: <CACHE_INVALIDATE_SECRET>
  * Body examples:
- *   { "locale": "fr" } -> invalidates list for that locale
- *   { "locale": "fr", "slug": "..." } -> invalidates list + detail for that slug
- *   {} -> invalidates list keys for fr/en
+ *   {}                              -> flush ALL cache keys (projects, about, certifications)
+ *   { "locale": "fr" }              -> flush all keys for that locale
+ *   { "locale": "fr", "slug": "…" } -> flush list + detail for that slug only
  */
 export async function POST(req: Request) {
   const secret = req.headers.get("x-cache-secret");
@@ -25,15 +25,38 @@ export async function POST(req: Request) {
   const locale = body?.locale as string | undefined;
   const slug = body?.slug as string | undefined;
 
+  const deleted: string[] = [];
+
   if (locale && slug) {
-    await redis.del(`projects_with_assets:${locale}`);
-    await redis.del(`project:${locale}:${slug}`);
+    // Flush one specific project for a given locale
+    const keys = [
+      `projects_with_assets:${locale}`,
+      `project:${locale}:${slug}`,
+    ];
+    await redis.del(...keys);
+    deleted.push(...keys);
   } else if (locale) {
-    await redis.del(`projects_with_assets:${locale}`);
+    // Flush all keys for a given locale
+    const keys = [
+      `projects_with_assets:${locale}`,
+      `about:${locale}`,
+      `certifications:${locale}`,
+    ];
+    await redis.del(...keys);
+    deleted.push(...keys);
   } else {
-    await redis.del("projects_with_assets:fr");
-    await redis.del("projects_with_assets:en");
+    // Flush everything
+    const keys = [
+      "projects_with_assets:fr",
+      "projects_with_assets:en",
+      "about:fr",
+      "about:en",
+      "certifications:fr",
+      "certifications:en",
+    ];
+    await redis.del(...keys);
+    deleted.push(...keys);
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, deleted });
 }

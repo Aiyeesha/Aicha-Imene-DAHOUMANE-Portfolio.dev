@@ -1,4 +1,4 @@
-import { getAboutPage } from "@/lib/data/about";
+import { getAboutPageCached } from "@/lib/data/about.cached";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -20,7 +20,7 @@ export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = locale === "fr" ? "fr" : "en";
 
-  const about = await getAboutPage(safeLocale);
+  const about = await getAboutPageCached(safeLocale);
 
   if (!about) {
     return (
