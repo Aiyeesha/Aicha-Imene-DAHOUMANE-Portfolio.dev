@@ -1,16 +1,21 @@
-# Par défaut : traiter comme du texte et normaliser en LF dans le dépôt
+# Normalize text files to LF in the repository
 * text=auto eol=lf
 
-# Scripts Windows éventuellement en CRLF (optionnel)
+# Windows scripts
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.ps1 text eol=crlf
 
-# Fichiers binaires : ne jamais modifier
+# Binary assets (never transform line endings)
+*.pdf binary
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
 *.webp binary
 *.ico binary
-*.pdf binary
 *.zip binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
