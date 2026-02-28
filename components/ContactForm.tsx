@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import CalendlyModal from "./CalendlyModal";
 
 type Status =
@@ -23,6 +24,8 @@ const CV_URL =
 // Convert API error codes into i18n keys
 function errorToKey(code: string) {
   switch (code) {
+    case "policy_not_accepted":
+      return "contact.errors.policy_not_accepted";
     case "invalid_json":
       return "contact.errors.invalid_json";
     case "name_too_short":
@@ -39,6 +42,8 @@ function errorToKey(code: string) {
       return "contact.errors.message_too_short";
     case "message_too_long":
       return "contact.errors.message_too_long";
+    case "too_many_links":
+      return "contact.errors.too_many_links";
     case "forbidden_origin":
       return "contact.errors.forbidden_origin";
     case "rate_limited":
@@ -52,6 +57,7 @@ function errorToKey(code: string) {
 
 export default function ContactForm() {
   const t = useTranslations();
+  const locale = useLocale();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   // Show configuration hints only in non-production builds.
@@ -86,8 +92,12 @@ export default function ContactForm() {
       name: String(form.get("name") || ""),
       email: String(form.get("email") || ""),
       topic: String(form.get("topic") || "general"),
+      subject: String(form.get("subject") || ""),
       message: String(form.get("message") || ""),
-      company
+      // Explicit RGPD consent (required)
+      acceptedPolicy: Boolean(form.get("acceptedPolicy")),
+      company,
+      locale
     };
 
     try {
@@ -158,6 +168,17 @@ export default function ContactForm() {
           </select>
         </div>
 
+        <div>
+          <label htmlFor="contact-subject" className="text-xs text-muted-2">{t("contact.subjectLabel")}</label>
+          <input
+            id="contact-subject"
+            name="subject"
+            autoComplete="off"
+            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
+            placeholder={t("contact.subjectPlaceholder")}
+          />
+        </div>
+
         {/* Honeypot (hidden for humans) */}
         <input name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
@@ -172,6 +193,29 @@ export default function ContactForm() {
             className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.messagePlaceholder")}
           />
+        </div>
+
+        <div className="mt-1 flex items-start gap-3">
+          <input
+            id="contact-accepted-policy"
+            name="acceptedPolicy"
+            type="checkbox"
+            required
+            className="mt-1 h-4 w-4 rounded border border-black/20 dark:border-white/20 bg-black/5 dark:bg-white/5"
+            aria-label={t("contact.acceptPolicyAria")}
+          />
+          <label htmlFor="contact-accepted-policy" className="text-xs text-muted-2">
+            {t("contact.acceptPolicyPrefix")} {" "}
+            <a
+              className="underline underline-offset-4 hover:opacity-90"
+              href={`/${locale}/privacy`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t("contact.acceptPolicyLink")}
+            </a>
+            .
+          </label>
         </div>
 
         <div className="flex items-center gap-3">

@@ -111,12 +111,26 @@ export default async function LocaleLayout({
                   <span>
                     © {new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
                   </span>
-                  <a
-                    className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
-                    href={`/${locale}/privacy`}
-                  >
-                    {t("footer.privacy")}
-                  </a>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <a
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/privacy`}
+                    >
+                      {t("footer.privacy")}
+                    </a>
+                    <a
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/legal`}
+                    >
+                      {t("footer.legal")}
+                    </a>
+                    <a
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/accessibility`}
+                    >
+                      {t("footer.accessibility")}
+                    </a>
+                  </div>
                 </div>
               </div>
             </footer>
