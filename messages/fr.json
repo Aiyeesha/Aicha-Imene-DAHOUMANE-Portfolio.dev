@@ -109,7 +109,9 @@
       "email_too_long": "Merci d’indiquer une adresse email plus courte.",
       "invalid_topic": "Merci de sélectionner un sujet valide.",
       "message_too_long": "Votre message est trop long (2000 caractères max).",
-      "forbidden_origin": "Requête refusée. Merci d’utiliser le formulaire du site."
+      "forbidden_origin": "Requête refusée. Merci d’utiliser le formulaire du site.",
+      "policy_not_accepted": "Vous devez accepter la politique de confidentialité pour envoyer un message.",
+      "too_many_links": "Trop de liens dans le message."
     },
     "homeIntro": "Vous pouvez me contacter par email ou via le formulaire sécurisé. Anti-spam et limitation de débit activés.",
     "homeMethodsTitle": "Liens rapides",
@@ -126,7 +128,12 @@
     "topicAvailability": "Mission / disponibilité",
     "topicOther": "Autre",
     "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
-    "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment."
+    "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment.",
+    "subjectLabel": "Sujet (optionnel)",
+    "subjectPlaceholder": "De quoi s’agit-il ?",
+    "acceptPolicyAria": "J’accepte la politique de confidentialité",
+    "acceptPolicyPrefix": "J’ai lu et j’accepte la",
+    "acceptPolicyLink": "politique de confidentialité"
   },
   "blog": {
     "card_tutorials_kicker": "Nouveau",
@@ -208,7 +215,9 @@
   },
   "footer": {
     "builtWith": "Propulsé par Next.js",
-    "privacy": "Confidentialité"
+    "privacy": "Confidentialité",
+    "legal": "Mentions légales",
+    "accessibility": "Accessibilité"
   },
   "profile": {
     "kicker": "Profil",
@@ -255,5 +264,23 @@
     "formBody": "Lorsque vous envoyez le formulaire, votre nom, email, sujet et message sont traités pour vous répondre. Si Formspree est activé, les données sont transmises à Formspree pour l’acheminement.",
     "retention": "Conservation : les messages sont conservés uniquement le temps nécessaire au traitement de votre demande.",
     "contact": "Contact : {email}"
+  },
+  "legal": {
+    "title": "Mentions légales",
+    "editorTitle": "Éditeur du site",
+    "editorBody": "Ce site est édité par {name}. Contact : {email}.",
+    "hostingTitle": "Hébergement",
+    "hostingBody": "L’hébergement est assuré par Vercel Inc.",
+    "ipTitle": "Propriété intellectuelle",
+    "ipBody": "L’ensemble des contenus (textes, visuels, code) est protégé. Toute reproduction nécessite une autorisation préalable.",
+    "liabilityTitle": "Responsabilité",
+    "liabilityBody": "Les informations sont fournies à titre indicatif. L’éditeur ne saurait être tenu responsable d’erreurs ou d’omissions."
+  },
+  "accessibility": {
+    "title": "Accessibilité",
+    "commitmentTitle": "Engagement",
+    "commitmentBody": "Nous cherchons à rendre ce site accessible au plus grand nombre (navigation clavier, contrastes lisibles, textes alternatifs).",
+    "helpTitle": "Un problème ?",
+    "helpBody": "Si vous rencontrez un souci d’accessibilité, contactez-nous en précisant la page concernée et la difficulté rencontrée."
   }
 }

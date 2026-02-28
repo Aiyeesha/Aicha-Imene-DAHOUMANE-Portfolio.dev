@@ -13,7 +13,47 @@ type ProjectAsset = {
   title: string;
   description?: string | null;
   external_url?: string | null;
+
+  // Supabase Storage fields (used when `external_url` is empty)
+  storage_bucket?: string | null;
+  storage_path?: string | null;
+  mime_type?: string | null;
+  type?: string | null; // e.g. "image" | "deliverable"
 };
+
+function getPublicStorageUrl(bucket?: string | null, path?: string | null) {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!base || !bucket || !path) return null;
+  // Works ONLY for PUBLIC buckets.
+  return `${base}/storage/v1/object/public/${bucket}/${path}`;
+}
+
+function looksLikeImage(asset: ProjectAsset) {
+  if (asset.type === "image") return true;
+  if (asset.mime_type?.startsWith("image/")) return true;
+  const p = asset.storage_path ?? "";
+  return /\.(png|jpe?g|webp|gif|svg)$/i.test(p);
+}
+
+function getAssetHref(asset: ProjectAsset) {
+  // 1) External URL provided in DB
+  if (asset.external_url) return asset.external_url;
+
+  // 2) PUBLIC bucket URL
+  const publicUrl = getPublicStorageUrl(asset.storage_bucket, asset.storage_path);
+  if (publicUrl) return publicUrl;
+
+  // 3) PRIVATE bucket (e.g. deliverables) -> redirect endpoint generates a signed URL
+  if (asset.storage_bucket && asset.storage_path) {
+    const params = new URLSearchParams({
+      bucket: asset.storage_bucket,
+      path: asset.storage_path,
+    });
+    return `/api/storage/redirect?${params.toString()}`;
+  }
+
+  return null;
+}
 
 export default async function ProjectPage({
   params,
@@ -69,16 +109,37 @@ export default async function ProjectPage({
                     </div>
                   ) : null}
 
-                  {a.external_url ? (
-                    <a
-                      className="mt-2 inline-block underline"
-                      href={a.external_url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Ouvrir
-                    </a>
-                  ) : null}
+                  {(() => {
+                    const href = getAssetHref(a);
+                    if (!href) return null;
+
+                    const isImage = looksLikeImage(a);
+
+                    return (
+                      <>
+                        {isImage ? (
+                          <div className="mt-3">
+                            {/* Use <img> to avoid Next/Image remote domain config */}
+                            <img
+                              src={href}
+                              alt={a.title}
+                              className="max-h-72 w-auto rounded-lg border"
+                              loading="lazy"
+                            />
+                          </div>
+                        ) : null}
+
+                        <a
+                          className="mt-3 inline-block underline"
+                          href={href}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Ouvrir
+                        </a>
+                      </>
+                    );
+                  })()}
                 </div>
               ))}
             </div>

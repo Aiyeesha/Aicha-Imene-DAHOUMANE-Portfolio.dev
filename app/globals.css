@@ -98,8 +98,8 @@ html.dark .chip {
 html.dark .chip:hover { @apply bg-white/10; }
 
 .soft-ring:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(34,211,238,0.35);
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

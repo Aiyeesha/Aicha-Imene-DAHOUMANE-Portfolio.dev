@@ -109,7 +109,9 @@
       "email_too_long": "Please use a shorter email address.",
       "invalid_topic": "Please select a valid topic.",
       "message_too_long": "Your message is too long (max 2000 characters).",
-      "forbidden_origin": "Request rejected. Please use the website contact form."
+      "forbidden_origin": "Request rejected. Please use the website contact form.",
+      "policy_not_accepted": "You must accept the privacy policy to send a message.",
+      "too_many_links": "Too many links in the message."
     },
     "homeIntro": "You can reach me by email or use the secure form. Anti-spam and rate limiting are enabled.",
     "homeMethodsTitle": "Quick links",
@@ -126,7 +128,12 @@
     "topicAvailability": "Mission / availability",
     "topicOther": "Other",
     "envHint": "Missing configuration: some contact information is not set.",
-    "linkedInMissing": "The LinkedIn link is not available right now."
+    "linkedInMissing": "The LinkedIn link is not available right now.",
+    "subjectLabel": "Subject (optional)",
+    "subjectPlaceholder": "What is this about?",
+    "acceptPolicyAria": "I accept the privacy policy",
+    "acceptPolicyPrefix": "I have read and accept the",
+    "acceptPolicyLink": "privacy policy"
   },
   "blog": {
     "card_tutorials_kicker": "New",
@@ -208,7 +215,9 @@
   },
   "footer": {
     "builtWith": "Built with Next.js",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "legal": "Legal notice",
+    "accessibility": "Accessibility"
   },
   "profile": {
     "kicker": "Profile",
@@ -255,5 +264,23 @@
     "formBody": "When you submit the contact form, your name, email, topic and message are processed to reply to you. If Formspree is enabled, the data is forwarded to Formspree for delivery.",
     "retention": "Retention: messages are kept only as long as necessary to handle your request.",
     "contact": "Contact: {email}"
+  },
+  "legal": {
+    "title": "Legal notice",
+    "editorTitle": "Publisher",
+    "editorBody": "This website is published by {name}. Contact: {email}.",
+    "hostingTitle": "Hosting",
+    "hostingBody": "Hosting is provided by Vercel Inc.",
+    "ipTitle": "Intellectual property",
+    "ipBody": "All content on this website (texts, visuals, code) is protected. Any reproduction requires prior authorization.",
+    "liabilityTitle": "Liability",
+    "liabilityBody": "Information is provided for indicative purposes. The publisher cannot be held liable for errors or omissions."
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "commitmentTitle": "Commitment",
+    "commitmentBody": "We aim to make this website accessible to as many people as possible (keyboard navigation, readable contrast, alternative text).",
+    "helpTitle": "Need help?",
+    "helpBody": "If you encounter an accessibility issue, please contact us and describe the page and the problem."
   }
 }

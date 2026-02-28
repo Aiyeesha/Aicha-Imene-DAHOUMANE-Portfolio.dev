@@ -5,9 +5,17 @@ type Payload = {
   name: string;
   email: string;
   topic?: string;
+  subject?: string;
   message: string;
+  /**
+   * RGPD / privacy consent.
+   * We require explicit consent before storing/forwarding the message.
+   */
+  acceptedPolicy?: boolean;
   // Honeypot: should remain empty
   company?: string;
+  // Optional locale hint from the client ("fr" | "en")
+  locale?: string;
 };
 
 const FORMSPREE_ENDPOINT = process.env.FORMSPREE_ENDPOINT || "";
@@ -21,6 +29,7 @@ const MAX_NAME_LEN = 80;
 const MAX_EMAIL_LEN = 254;
 const MAX_MESSAGE_LEN = 2000;
 const MIN_MESSAGE_LEN = 10;
+const MAX_LINKS_IN_MESSAGE = 3;
 
 const ALLOWED_TOPICS = new Set(["general", "salesforce", "itops", "availability", "other"]);
 
@@ -35,13 +44,17 @@ function validate({
   name,
   email,
   message,
-  topic
+  topic,
+  acceptedPolicy
 }: {
   name: string;
   email: string;
   message: string;
   topic: string;
+  acceptedPolicy: boolean;
 }) {
+  if (!acceptedPolicy) return "policy_not_accepted";
+
   if (name.length < 2) return "name_too_short";
   if (name.length > MAX_NAME_LEN) return "name_too_long";
 
@@ -53,7 +66,56 @@ function validate({
   if (message.length < MIN_MESSAGE_LEN) return "message_too_short";
   if (message.length > MAX_MESSAGE_LEN) return "message_too_long";
 
+  const linkCount = (message.match(/https?:\/\//g) || []).length;
+  if (linkCount > MAX_LINKS_IN_MESSAGE) return "too_many_links";
+
   return null;
+}
+
+async function saveToSupabase(input: {
+  name: string;
+  email: string;
+  topic: string;
+  subject?: string;
+  message: string;
+  ip?: string | null;
+  userAgent?: string | null;
+  locale?: string | null;
+}) {
+  // Uses the anonymous key and relies on RLS policies to allow inserts.
+  // If you prefer to bypass RLS, switch to a SERVICE_ROLE key kept server-side only.
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !anonKey) {
+    // We don't fail the request if Supabase isn't configured.
+    // The contact message can still go to Formspree.
+    console.warn("[CONTACT] Supabase env vars missing, skipping DB insert");
+    return;
+  }
+
+  const { createClient } = await import("@supabase/supabase-js");
+  const supabase = createClient(url, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+
+  const { error } = await supabase.from("messages").insert({
+    name: input.name,
+    email: input.email,
+    topic: input.topic,
+    subject: input.subject ?? null,
+    message: input.message,
+    accepted_policy: true,
+    ip: input.ip ?? null,
+    user_agent: input.userAgent ?? null,
+    locale: input.locale ?? null
+  });
+
+  if (error) {
+    console.error("[CONTACT] Supabase insert failed", error);
+    // Non-blocking by default to avoid losing messages if DB policy is misconfigured.
+    // If you want strict behaviour, throw new Error("supabase_failed");
+  }
 }
 
 /**
@@ -100,21 +162,28 @@ export async function POST(req: Request) {
   const name = (body.name || "").trim();
   const email = (body.email || "").trim();
   const topic = String(body.topic || "general").trim();
+  const subject = String(body.subject || "").trim();
   const message = (body.message || "").trim();
   const company = (body.company || "").trim(); // honeypot
+  const acceptedPolicy = Boolean(body.acceptedPolicy);
+  const clientLocale = String(body.locale || "").trim() || null;
+  const userAgent = req.headers.get("user-agent") || null;
 
   // Bot check
   if (company) return NextResponse.json({ ok: true }, { status: 200 });
 
-  const v = validate({ name, email, message, topic });
+  const v = validate({ name, email, message, topic, acceptedPolicy });
   if (v) return NextResponse.json({ ok: false, error: v }, { status: 400 });
+
+  // Store in Supabase first (non-blocking if Supabase env/policy isn't ready)
+  await saveToSupabase({ name, email, topic, subject, message, ip, userAgent, locale: clientLocale });
 
   // Forward to Formspree if configured
   if (FORMSPREE_ENDPOINT) {
     const resp = await fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ name, email, topic, message, source: "portfolio-next" })
+      body: JSON.stringify({ name, email, topic, subject, message, source: "portfolio-next" })
     });
 
     if (!resp.ok) {
