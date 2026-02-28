@@ -468,7 +468,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   slug: "ltp-apex-backend-prototype",
   gallery: [
     {
-      src: "/projects/ltp-apex-backend-prototype/logo.png",
+      src: "/projects/ltp-apex-backend-prototype/logo-fea9770b.png",
       alt: "LTP — Le Temps des Papillons (logo)"
     },
     {
