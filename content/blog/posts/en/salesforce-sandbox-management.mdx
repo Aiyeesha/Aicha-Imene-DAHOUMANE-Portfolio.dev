@@ -1,0 +1,273 @@
+---
+title: "Salesforce Sandbox Management: Types, Refresh Strategy, and Deployment Workflow"
+excerpt: "How to manage Salesforce sandboxes effectively — choosing the right sandbox type, refresh planning, data masking for compliance, and a clean deployment workflow from dev to production."
+date: "2025-12-08"
+tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Deployment"]
+---
+
+Salesforce sandbox management is often an afterthought — until you have a broken deployment, corrupted test data, or a compliance audit asking why production data is sitting in a developer sandbox. Here's how to do it right.
+
+## Sandbox Types: Which One for What
+
+| Type | Metadata | Data | Refresh | Use Case |
+|------|----------|------|---------|----------|
+| **Developer** | Full copy | None | 1 day | Individual feature dev |
+| **Developer Pro** | Full copy | None | 1 day | Team feature dev, larger storage |
+| **Partial** | Full copy | Subset (up to 10k records) | 5 days | QA testing with representative data |
+| **Full** | Full copy | Full copy | 29 days | UAT, staging, performance testing |
+
+**Cost note:** Developer sandboxes are typically included in Enterprise/Unlimited licenses (you get several). Partial and Full sandboxes are limited — usually 1 of each. Plan carefully.
+
+## The Recommended Sandbox Strategy
+
+For a team of 3+ developers, this branching model works well:
+
+```
+[Developer Sandbox 1] ──┐
+[Developer Sandbox 2] ──┤ deploy → [Integration Sandbox] → [UAT/Staging] → [Production]
+[Developer Sandbox 3] ──┘
+```
+
+- **Developer sandboxes** (1 per developer or feature): daily refresh available
+- **Integration** (Developer Pro or Partial): merges all developer work, first integration testing
+- **UAT/Staging** (Full): business user testing against real-scale data
+- **Production**: only receives validated, approved releases
+
+## Setting Up a Sandbox
+
+### Via Setup UI
+
+1. **Setup → Environments → Sandboxes → New Sandbox**
+2. Choose type, name (e.g., `DEV-alice`, `INTEGRATION`, `UAT`)
+3. For Partial/Full: select data source, apex class for data seeding
+
+### Via Salesforce CLI
+
+```bash
+# Create a sandbox via CLI (requires org alias with admin access)
+sf env create sandbox \
+    --name DEV-feature-lwc \
+    --license-type Developer \
+    --target-org production \
+    --alias dev-lwc
+
+# Wait for sandbox creation (takes 5-30 minutes)
+sf env create sandbox --wait 60 --name DEV-feature-lwc ...
+```
+
+### Connecting to a Sandbox
+
+```bash
+# Authenticate to existing sandbox
+sf org login web --alias dev-lwc --instance-url https://test.salesforce.com
+
+# Verify connection
+sf org display --target-org dev-lwc
+```
+
+## Sandbox Refresh Planning
+
+### When to Refresh
+
+Refresh wipes the sandbox and recreates it from production. This means:
+- All sandbox-specific customizations are **lost**
+- Usernames change (sandbox suffix is appended: `user@company.com.devlwc`)
+- Connected apps and named credentials may need reconfiguration
+
+**Refresh triggers:**
+- Major production releases (refresh UAT before UAT cycle)
+- Security incidents (refresh to remove potentially compromised data)
+- Scheduled cadence (integration sandbox: monthly; developer: as needed)
+
+### Post-Refresh Runbook
+
+Create a documented runbook for post-refresh setup:
+
+```markdown
+## Post-Refresh Checklist: INTEGRATION Sandbox
+
+1. [ ] Update Named Credentials to point to sandbox APIs (not production)
+2. [ ] Re-authenticate all Connected Apps
+3. [ ] Verify all users can log in (sandbox usernames get suffix)
+4. [ ] Disable or update email outbound rules (prevent test emails going to real users)
+5. [ ] Run smoke test script: sf apex run --file scripts/smoke-test.apex
+6. [ ] Update deployment pipeline config with new sandbox session ID
+7. [ ] Notify team via Slack: #deployments
+```
+
+## Data Masking for Compliance (GDPR)
+
+Partial and Full sandboxes can contain production data. This is a **GDPR/data privacy risk** if that data includes PII.
+
+### Option 1: Sandbox Data Mask (Salesforce native)
+
+Available as a paid add-on. Automatically masks PII fields during sandbox copy.
+
+```
+Setup → Sandbox → Sandbox Data Mask
+Define masking rules per field → apply on next refresh
+```
+
+### Option 2: Post-Refresh Apex Masking Script
+
+Run this immediately after sandbox refresh, before granting access to developers:
+
+```apex
+// MaskProductionData.apex — run as Anonymous Apex after refresh
+List<Contact> contacts = [
+    SELECT Id, FirstName, LastName, Email, Phone, MailingStreet
+    FROM Contact LIMIT 50000
+];
+
+Integer i = 0;
+for (Contact c : contacts) {
+    c.FirstName = 'Test';
+    c.LastName  = 'User' + i;
+    c.Email     = 'testuser' + i + '@sandbox.test';
+    c.Phone     = '0600000' + String.valueOf(i).leftPad(4, '0');
+    c.MailingStreet = '123 Test Street';
+    i++;
+}
+
+update contacts;
+System.debug('Masked ' + contacts.size() + ' contacts');
+```
+
+**Always mask before developer access.** A sandbox with real customer emails will eventually result in a test email going to a real customer.
+
+## Deployment Workflow: Dev to Production
+
+### With Salesforce CLI + Change Sets
+
+**Step 1: In dev sandbox — retrieve your changes**
+```bash
+# Pull changes from sandbox to local project
+sf project retrieve start --target-org dev-lwc
+
+# Or retrieve specific metadata types
+sf project retrieve start \
+    --metadata "ApexClass:AccountTriggerHandler" \
+    --metadata "LightningComponentBundle:accountSummaryCard" \
+    --target-org dev-lwc
+```
+
+**Step 2: Validate against target org (no deployment)**
+```bash
+# Validate before actual deployment
+sf project deploy validate \
+    --source-dir force-app/main/default \
+    --target-org integration \
+    --test-level RunLocalTests
+```
+
+**Step 3: Deploy if validation passes**
+```bash
+sf project deploy start \
+    --source-dir force-app/main/default \
+    --target-org integration \
+    --test-level RunLocalTests
+```
+
+**Step 4: Promote through environments**
+```
+dev-lwc → integration → uat → production
+         (validate)     (validate + RunLocalTests)   (RunAllTestsInOrg)
+```
+
+### Automated with GitHub Actions
+
+```yaml
+# .github/workflows/deploy-integration.yml
+name: Deploy to Integration
+
+on:
+  push:
+    branches: [integration]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to Integration sandbox
+        run: |
+          echo "${{ secrets.INTEGRATION_SFDX_AUTH_URL }}" > auth.json
+          sf org login sfdx-url --sfdx-url-file auth.json --alias integration
+
+      - name: Validate deployment
+        run: |
+          sf project deploy validate \
+            --source-dir force-app \
+            --target-org integration \
+            --test-level RunLocalTests
+
+      - name: Deploy
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org integration \
+            --test-level RunLocalTests
+```
+
+## Sandbox User Management
+
+After refresh, sandbox usernames get a suffix: `admin@company.com.integrationsandbox`.
+
+### Reset Password for All Sandbox Users
+
+```apex
+// Quick mass password reset (useful post-refresh)
+List<User> users = [SELECT Id FROM User WHERE IsActive = true AND Profile.Name != 'Chatter External User'];
+System.resetPassword(users[0].Id, true);
+// Note: do this per-user or via UI for security
+```
+
+### Freeze/Activate Users in Sandbox
+
+```apex
+// Deactivate users in sandbox that shouldn't have access (e.g., former employees replicated from production)
+List<User> toDeactivate = [
+    SELECT Id FROM User
+    WHERE IsActive = true
+    AND Profile.Name NOT IN ('System Administrator', 'Developer Profile')
+];
+for (User u : toDeactivate) u.IsActive = false;
+update toDeactivate;
+```
+
+## Sandbox Management Checklist
+
+**Setup:**
+- [ ] Each active developer has their own Developer sandbox
+- [ ] Integration, UAT, and production sandboxes documented
+- [ ] Sandbox names follow naming convention: `[TYPE]-[PURPOSE]`
+
+**Compliance:**
+- [ ] PII masked in all sandboxes with real data (Full, Partial)
+- [ ] Email deliverability set to "System Email Only" in non-production
+- [ ] Sandbox access restricted to current team members
+
+**Deployment:**
+- [ ] Deployment validated before deploy (never skip validation)
+- [ ] Test level: RunLocalTests minimum for integration, RunAllTestsInOrg for production
+- [ ] Rollback plan documented before each production deployment
+
+**Refresh:**
+- [ ] Post-refresh runbook maintained and up to date
+- [ ] Integration sandbox refreshed at least monthly
+- [ ] UAT refreshed before each UAT cycle
+
+## Conclusion
+
+Good sandbox management is the difference between a chaotic deployment process and a repeatable, reliable one. The key habits: mask PII immediately after any refresh, enforce a linear promotion path (dev → integration → UAT → production), validate before you deploy, and maintain a post-refresh runbook so setup is never improvised. Get these right and your CI/CD pipeline runs smoothly from day one.
+
+---
+
+**Useful Resources:**
+- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
+- [Sandbox Overview - Salesforce Help](https://help.salesforce.com/s/articleView?id=sf.create_test_instance.htm)
+- [Salesforce CLI Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)

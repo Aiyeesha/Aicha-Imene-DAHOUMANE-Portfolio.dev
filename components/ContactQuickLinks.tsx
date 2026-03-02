@@ -1,30 +1,27 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { useMemo } from "react";
+import { useTrack } from "@/app/[locale]/providers";
 
-/**
- * ContactQuickLinks
- * -----------------
- * Small card used on the Home page to provide quick contact links.
- *
- * Configure:
- * - NEXT_PUBLIC_CONTACT_EMAIL
- * - NEXT_PUBLIC_LINKEDIN_URL
- * - NEXT_PUBLIC_CV_PDF_URL (preferred)
- * - NEXT_PUBLIC_CV_URL
- */
 export default function ContactQuickLinks() {
   const t = useTranslations();
+  const locale = useLocale();
+  const { track } = useTrack();
 
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
   const linkedIn = process.env.NEXT_PUBLIC_LINKEDIN_URL || "";
   const linkedInHref = linkedIn
     ? (linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`)
     : "";
-  const cvUrl =
-    process.env.NEXT_PUBLIC_CV_PDF_URL ||
-    process.env.NEXT_PUBLIC_CV_URL ||
-    "/cv.pdf";
+  const cvUrl = useMemo(
+    () =>
+      process.env.NEXT_PUBLIC_CV_PDF_URL ||
+      process.env.NEXT_PUBLIC_CV_URL ||
+      `/cv/cv-${locale}-${track}.pdf`,
+    [locale, track]
+  );
 
   return (
     <div className="card p-6">

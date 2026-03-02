@@ -1,0 +1,355 @@
+---
+title: "Testing Lightning Web Components with Jest: From Setup to Production-Grade Tests"
+excerpt: "A complete guide to unit testing LWC components with Jest and @lwc/jest-utils — mocking wire adapters, testing events, and achieving reliable component coverage."
+date: "2026-01-05"
+tags: ["Salesforce", "LWC", "Jest", "Testing", "Front-end"]
+---
+
+LWC components are testable with Jest — the same framework used across the JavaScript ecosystem. But the LWC testing setup has some quirks. Here's everything you need to know to write tests that actually catch bugs.
+
+## Setup
+
+### Install Dependencies
+
+```bash
+# From your SFDX project root
+npm install @salesforce/sfdx-lwc-jest --save-dev
+npm install @lwc/jest-utils --save-dev
+```
+
+### Configure Jest
+
+Create or update `jest.config.js`:
+
+```js
+// jest.config.js
+const { jestConfig } = require('@salesforce/sfdx-lwc-jest/config');
+
+module.exports = {
+    ...jestConfig,
+    moduleNameMapper: {
+        '^@salesforce/schema/(.+)$': '<rootDir>/jest-mocks/schema/$1.js',
+        '^lightning/(.+)$': '<rootDir>/jest-mocks/lightning/$1.js',
+        '^@salesforce/apex$': '<rootDir>/jest-mocks/apex.js',
+    },
+    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.sfdx/'],
+    collectCoverage: true,
+    coverageThreshold: {
+        global: { lines: 80 }
+    }
+};
+```
+
+### Mock Salesforce Imports
+
+Jest can't resolve Salesforce-specific modules. Create mocks:
+
+```js
+// jest-mocks/schema/Account.Name.js
+export default { fieldApiName: 'Name', objectApiName: 'Account' };
+```
+
+```js
+// jest-mocks/apex.js — generic Apex mock
+export default jest.fn();
+```
+
+```js
+// jest-mocks/lightning/uiRecordApi.js
+export const getRecord = jest.fn();
+export const updateRecord = jest.fn();
+export const createRecord = jest.fn();
+```
+
+## Your First Test
+
+Given this component:
+
+```html
+<!-- greetingCard/greetingCard.html -->
+<template>
+    <div class="card">
+        <h1>{greeting}</h1>
+        <lightning-button label="Reset" onclick={handleReset}></lightning-button>
+    </div>
+</template>
+```
+
+```js
+// greetingCard/greetingCard.js
+import { LightningElement, api } from 'lwc';
+
+export default class GreetingCard extends LightningElement {
+    @api name = 'World';
+
+    get greeting() {
+        return `Hello, ${this.name}!`;
+    }
+
+    handleReset() {
+        this.name = 'World';
+        this.dispatchEvent(new CustomEvent('reset'));
+    }
+}
+```
+
+**Test file:**
+
+```js
+// greetingCard/__tests__/greetingCard.test.js
+import { createElement } from 'lwc';
+import GreetingCard from 'c/greetingCard';
+
+describe('c-greeting-card', () => {
+
+    afterEach(() => {
+        // Clean up after each test
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+    });
+
+    it('renders default greeting', () => {
+        const element = createElement('c-greeting-card', { is: GreetingCard });
+        document.body.appendChild(element);
+
+        const heading = element.shadowRoot.querySelector('h1');
+        expect(heading.textContent).toBe('Hello, World!');
+    });
+
+    it('renders greeting with custom name', () => {
+        const element = createElement('c-greeting-card', { is: GreetingCard });
+        element.name = 'Alice';
+        document.body.appendChild(element);
+
+        const heading = element.shadowRoot.querySelector('h1');
+        expect(heading.textContent).toBe('Hello, Alice!');
+    });
+
+    it('fires reset event when button clicked', () => {
+        const element = createElement('c-greeting-card', { is: GreetingCard });
+        document.body.appendChild(element);
+
+        const resetHandler = jest.fn();
+        element.addEventListener('reset', resetHandler);
+
+        const button = element.shadowRoot.querySelector('lightning-button');
+        button.dispatchEvent(new CustomEvent('click'));
+
+        expect(resetHandler).toHaveBeenCalledTimes(1);
+    });
+});
+```
+
+Run tests:
+```bash
+npm run test:unit
+# Or with watch mode
+npm run test:unit -- --watch
+```
+
+## Mocking Wire Adapters
+
+The `@wire` decorator fetches data from Salesforce. In tests, you control what it returns.
+
+**Component under test:**
+```js
+// accountViewer.js
+import { LightningElement, api, wire } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+
+export default class AccountViewer extends LightningElement {
+    @api recordId;
+
+    @wire(getRecord, { recordId: '$recordId', fields: ['Account.Name', 'Account.Phone'] })
+    account;
+
+    get accountName() {
+        return this.account.data?.fields.Name.value ?? 'Loading...';
+    }
+
+    get hasError() {
+        return Boolean(this.account.error);
+    }
+}
+```
+
+**Test with wire mock:**
+```js
+import { createElement } from 'lwc';
+import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
+import { getRecord } from 'lightning/uiRecordApi';
+import AccountViewer from 'c/accountViewer';
+
+// Register the wire adapter
+const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
+
+describe('c-account-viewer', () => {
+
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+    });
+
+    it('displays account name when data loads', async () => {
+        const element = createElement('c-account-viewer', { is: AccountViewer });
+        element.recordId = '001000000000001AAA';
+        document.body.appendChild(element);
+
+        // Emit mock data to the wire adapter
+        getRecordAdapter.emit({
+            fields: {
+                Name: { value: 'Acme Corp' },
+                Phone: { value: '0123456789' }
+            }
+        });
+
+        // Wait for DOM update
+        await Promise.resolve();
+
+        expect(element.shadowRoot.querySelector('h1').textContent).toBe('Acme Corp');
+    });
+
+    it('shows error state when wire fails', async () => {
+        const element = createElement('c-account-viewer', { is: AccountViewer });
+        element.recordId = '001INVALID';
+        document.body.appendChild(element);
+
+        // Emit an error
+        getRecordAdapter.error({ message: 'Record not found' });
+
+        await Promise.resolve();
+
+        const errorEl = element.shadowRoot.querySelector('.error-message');
+        expect(errorEl).not.toBeNull();
+    });
+});
+```
+
+## Mocking Imperative Apex Calls
+
+```js
+// In the component:
+// import getAccountDetails from '@salesforce/apex/AccountController.getAccountDetails';
+
+// jest-mocks/apex.js or inline mock:
+import getAccountDetails from '@salesforce/apex/AccountController.getAccountDetails';
+jest.mock('@salesforce/apex/AccountController.getAccountDetails', () => jest.fn(), { virtual: true });
+
+describe('apex mock test', () => {
+    it('displays data from apex', async () => {
+        getAccountDetails.mockResolvedValue({ Name: 'Mocked Corp', Revenue: 500000 });
+
+        const element = createElement('c-account-viewer', { is: AccountViewer });
+        element.recordId = '001xxxxx';
+        document.body.appendChild(element);
+
+        await Promise.resolve();
+
+        expect(element.shadowRoot.querySelector('.account-name').textContent).toBe('Mocked Corp');
+    });
+
+    it('handles apex error', async () => {
+        getAccountDetails.mockRejectedValue(new Error('Apex error'));
+
+        const element = createElement('c-account-viewer', { is: AccountViewer });
+        document.body.appendChild(element);
+
+        await Promise.resolve();
+
+        expect(element.shadowRoot.querySelector('.error')).not.toBeNull();
+    });
+});
+```
+
+## Testing User Interactions
+
+```js
+it('filters list when search input changes', async () => {
+    const element = createElement('c-search-list', { is: SearchList });
+    element.items = [
+        { id: '1', name: 'Apple' },
+        { id: '2', name: 'Banana' },
+        { id: '3', name: 'Apricot' }
+    ];
+    document.body.appendChild(element);
+
+    // Type in search input
+    const input = element.shadowRoot.querySelector('lightning-input');
+    input.value = 'Ap';
+    input.dispatchEvent(new CustomEvent('change', { detail: { value: 'Ap' } }));
+
+    await Promise.resolve();
+
+    const items = element.shadowRoot.querySelectorAll('.list-item');
+    expect(items.length).toBe(2); // Apple and Apricot
+});
+```
+
+## Snapshot Testing
+
+Snapshot tests detect unintended DOM changes:
+
+```js
+it('matches snapshot', () => {
+    const element = createElement('c-greeting-card', { is: GreetingCard });
+    element.name = 'Alice';
+    document.body.appendChild(element);
+
+    expect(element.shadowRoot).toMatchSnapshot();
+});
+```
+
+First run creates the snapshot. Subsequent runs compare against it. Update snapshots intentionally:
+```bash
+npm run test:unit -- --updateSnapshot
+```
+
+> Use snapshots sparingly — they catch regressions but become a maintenance burden when you intentionally change templates.
+
+## Coverage and CI Integration
+
+```bash
+# Generate coverage report
+npm run test:unit -- --coverage
+
+# Coverage output
+# PASS  force-app/main/default/lwc/greetingCard/__tests__/greetingCard.test.js
+# Statements   : 95.23%
+# Branches     : 88.00%
+# Functions    : 100%
+# Lines        : 95.23%
+```
+
+Add to your GitHub Actions pipeline:
+```yaml
+- name: Run LWC tests
+  run: npm run test:unit -- --coverage --ci
+
+- name: Upload coverage
+  uses: codecov/codecov-action@v4
+```
+
+## Testing Checklist
+
+For each LWC component:
+- [ ] Renders with default `@api` values
+- [ ] Renders with each significant `@api` combination
+- [ ] All events fired and dispatched correctly
+- [ ] Wire adapter mock covers success + error states
+- [ ] Apex mock covers success + error states
+- [ ] User interactions (click, input change) tested
+- [ ] Conditional rendering blocks covered (`if:true`, `if:false`)
+- [ ] No tests relying on implementation details (test behavior, not internals)
+
+## Conclusion
+
+LWC Jest testing has a learning curve — mainly the wire adapter mocking and DOM cleanup. But once your setup is solid, the tests are fast (no browser), reliable, and run easily in CI. Testing wire and Apex error states is especially valuable: these are exactly the cases that break in production and that manual QA misses. Make them a habit from the start.
+
+---
+
+**Useful Resources:**
+- [LWC Testing Documentation](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.testing)
+- [sfdx-lwc-jest GitHub](https://github.com/salesforce/sfdx-lwc-jest)
+- [Jest Documentation](https://jestjs.io/docs/getting-started)

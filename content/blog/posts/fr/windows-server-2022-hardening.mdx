@@ -1,0 +1,271 @@
+---
+title: "Durcissement de Windows Server 2022 : checklist pratique"
+excerpt: "Guide de durcissement pas à pas pour Windows Server 2022 — désactivation des protocoles obsolètes, configuration des stratégies d'audit, pare-feu local et gestion des accès privilégiés."
+date: "2025-09-08"
+tags: ["IT Ops", "Windows Server", "Sécurité", "Durcissement", "Runbook"]
+---
+
+Un Windows Server 2022 fraîchement installé n'est pas un serveur sécurisé. Les paramètres par défaut privilégient la compatibilité à la sécurité. Ce guide passe en revue les étapes de durcissement essentielles — applicables à tout rôle, du contrôleur de domaine au serveur de fichiers.
+
+## Avant de commencer
+
+**Référentiels de base :**
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/fr-fr/download/details.aspx?id=55319) — modèles GPO pré-construits
+- Benchmark CIS pour Windows Server 2022
+- Guide de l'ANSSI pour le durcissement Windows
+
+Testez toujours sur un système hors production en premier. Certains paramètres peuvent casser des applications ou l'accès RDP si appliqués sans discernement.
+
+## 1. Désactiver les services inutiles
+
+Réduisez la surface d'attaque en arrêtant les services dont vous n'avez pas besoin :
+
+```powershell
+# Lister tous les services en cours d'exécution
+Get-Service | Where-Object {$_.Status -eq "Running"} | Sort-Object Name
+
+# Désactiver les services risqués ou inutiles
+$servicesToDisable = @(
+    "Fax",          # Service Fax — rarement nécessaire
+    "XblGameSave",  # Sauvegarde Xbox Live
+    "WSearch",      # Recherche Windows (désactiver sur les serveurs sans sessions utilisateur)
+    "Spooler"       # Si pas un serveur d'impression — risque PrintNightmare
+)
+
+foreach ($svc in $servicesToDisable) {
+    Set-Service -Name $svc -StartupType Disabled
+    Stop-Service -Name $svc -Force -ErrorAction SilentlyContinue
+    Write-Host "Désactivé : $svc"
+}
+```
+
+**Critique : Print Spooler (PrintNightmare)**
+Si ce n'est pas un serveur d'impression, désactivez le spouleur :
+```powershell
+Stop-Service -Name "Spooler" -Force
+Set-Service -Name "Spooler" -StartupType Disabled
+```
+
+## 2. Désactiver les protocoles et suites de chiffrement obsolètes
+
+### SMBv1 (vecteur EternalBlue — WannaCry, NotPetya)
+
+```powershell
+# Désactiver SMBv1 (devrait être désactivé par défaut sous Server 2022, à vérifier)
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+
+# Vérifier
+Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol
+```
+
+### LLMNR et NetBIOS (utilisés dans les attaques MITM/relay)
+
+```powershell
+# Désactiver LLMNR via le registre
+$reg = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
+New-Item -Path $reg -Force | Out-Null
+Set-ItemProperty -Path $reg -Name "EnableMulticast" -Value 0 -Type DWord
+
+# Désactiver NetBIOS sur TCP/IP sur tous les adaptateurs
+$adapters = Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object {$_.IPEnabled}
+foreach ($adapter in $adapters) {
+    $adapter.SetTcpipNetbios(2) | Out-Null  # 2 = Désactiver NetBIOS
+}
+```
+
+### TLS 1.0 et 1.1
+
+```powershell
+$path = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"
+
+# Désactiver TLS 1.0
+New-Item -Path "$path\TLS 1.0\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.0\Server" -Name "Enabled" -Value 0
+Set-ItemProperty -Path "$path\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1
+
+# Désactiver TLS 1.1
+New-Item -Path "$path\TLS 1.1\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.1\Server" -Name "Enabled" -Value 0
+Set-ItemProperty -Path "$path\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1
+
+# Vérifier que TLS 1.2 est explicitement activé
+New-Item -Path "$path\TLS 1.2\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.2\Server" -Name "Enabled" -Value 1
+Set-ItemProperty -Path "$path\TLS 1.2\Server" -Name "DisabledByDefault" -Value 0
+```
+
+### Authentification NTLMv1
+
+```
+GPO : Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
+    → Stratégies locales → Options de sécurité
+    → Niveau d'authentification LAN Manager
+    → Valeur : Envoyer uniquement la réponse NTLMv2. Refuser LM et NTLM
+```
+
+## 3. Configuration du pare-feu Windows
+
+Activez le pare-feu Windows même si vous avez un pare-feu périmétrique — défense en profondeur.
+
+```powershell
+# Activer tous les profils
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+# Définir les actions par défaut (bloquer entrant, autoriser sortant)
+Set-NetFirewallProfile -Profile Domain,Public,Private `
+    -DefaultInboundAction Block `
+    -DefaultOutboundAction Allow
+
+# Autoriser RDP uniquement depuis le sous-réseau de management
+New-NetFirewallRule `
+    -DisplayName "Autoriser RDP - Management uniquement" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 3389 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+
+# Autoriser WinRM depuis le management
+New-NetFirewallRule `
+    -DisplayName "Autoriser WinRM - Management uniquement" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 5985,5986 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+```
+
+## 4. Comptes locaux et accès privilégiés
+
+### Renommer et désactiver l'Administrateur intégré
+
+```powershell
+# Renommer le compte Administrateur intégré
+Rename-LocalUser -Name "Administrator" -NewName "srv-admin"
+
+# Créer un compte admin séparé pour l'usage quotidien
+New-LocalUser -Name "sysadmin-ops" `
+    -Password (ConvertTo-SecureString "S3cur3P@ss2026!" -AsPlainText -Force) `
+    -FullName "Admin Opérations" `
+    -PasswordNeverExpires $false
+
+Add-LocalGroupMember -Group "Administrators" -Member "sysadmin-ops"
+
+# Désactiver le compte intégré (maintenant renommé)
+Disable-LocalUser -Name "srv-admin"
+```
+
+### Désactiver le compte Invité local
+
+```powershell
+Disable-LocalUser -Name "Guest"
+```
+
+## 5. Configuration de la stratégie d'audit
+
+Un serveur sans journaux d'audit est une impasse forensique. Configurez un audit complet :
+
+```powershell
+# Appliquer la stratégie d'audit avancée via auditpol
+auditpol /set /subcategory:"Validation des informations d'identification" /success:enable /failure:enable
+auditpol /set /subcategory:"Ouverture de session" /success:enable /failure:enable
+auditpol /set /subcategory:"Verrouillage du compte" /failure:enable
+auditpol /set /subcategory:"Gestion des comptes d'utilisateurs" /success:enable /failure:enable
+auditpol /set /subcategory:"Gestion des groupes de sécurité" /success:enable
+auditpol /set /subcategory:"Création de processus" /success:enable
+auditpol /set /subcategory:"Utilisation de privilèges sensibles" /success:enable /failure:enable
+
+# Vérifier
+auditpol /get /category:*
+```
+
+### Augmenter la taille des journaux d'événements
+
+```powershell
+# Journal Sécurité : 1 Go minimum
+Limit-EventLog -LogName Security -MaximumSize 1073741824
+
+# Système et Application : 256 Mo
+Limit-EventLog -LogName System -MaximumSize 268435456
+Limit-EventLog -LogName Application -MaximumSize 268435456
+```
+
+## 6. Configuration de Windows Defender
+
+```powershell
+# Vérifier que Defender est actif et à jour
+Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, `
+    RealTimeProtectionEnabled, AntivirusSignatureLastUpdated
+
+# Activer la protection cloud et la soumission automatique d'échantillons
+Set-MpPreference -MAPSReporting Advanced
+Set-MpPreference -SubmitSamplesConsent SendAllSamples
+
+# Activer la protection réseau (bloque les URL malveillantes au niveau noyau)
+Set-MpPreference -EnableNetworkProtection Enabled
+
+# Protection PUA (Applications potentiellement indésirables)
+Set-MpPreference -PUAProtection Enabled
+
+# Règles ASR (Attack Surface Reduction)
+Add-MpPreference -AttackSurfaceReductionRules_Ids `
+    "d4f940ab-401b-4efc-aadc-ad5f3c50688a" `
+    -AttackSurfaceReductionRules_Actions Enabled
+```
+
+## 7. Sécurité du Bureau à distance (RDP)
+
+```powershell
+# S'assurer que l'authentification au niveau réseau (NLA) est requise
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+    -Name "UserAuthentication" -Value 1
+
+# Définir le niveau de chiffrement sur Élevé
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+    -Name "MinEncryptionLevel" -Value 3
+```
+
+## Checklist de durcissement complète
+
+**Protocoles :**
+- [ ] SMBv1 désactivé
+- [ ] LLMNR désactivé
+- [ ] NetBIOS sur TCP/IP désactivé
+- [ ] TLS 1.0 et 1.1 désactivés
+- [ ] NTLMv1 refusé, NTLMv2 imposé
+
+**Services :**
+- [ ] Print Spooler désactivé (si pas serveur d'impression)
+- [ ] Service Fax désactivé
+- [ ] Tous les services inutilisés désactivés
+
+**Comptes :**
+- [ ] Administrateur intégré renommé et désactivé
+- [ ] Compte Invité désactivé
+- [ ] Comptes d'administration nommés avec mots de passe forts
+
+**Pare-feu :**
+- [ ] Tous les profils activés
+- [ ] Défaut : bloquer entrant, autoriser sortant
+- [ ] RDP restreint au sous-réseau de management
+
+**Audit :**
+- [ ] Événements d'ouverture de session audités (succès + échec)
+- [ ] Gestion des comptes auditée
+- [ ] Journal Sécurité ≥ 1 Go
+
+**Antivirus :**
+- [ ] Windows Defender activé avec protection cloud
+- [ ] Protection en temps réel active
+- [ ] Règles ASR déployées
+
+## Conclusion
+
+Le durcissement de sécurité n'est pas une tâche ponctuelle — c'est une baseline que vous appliquez lors du provisionnement et maintenez dans le temps. Automatisez ces étapes avec PowerShell DSC ou Ansible pour garantir que chaque nouveau serveur respecte la baseline. Combinez avec des scans de vulnérabilités réguliers (Nessus, OpenVAS) pour détecter les dérives au fil du temps.
+
+---
+
+**Ressources utiles :**
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/fr-fr/download/details.aspx?id=55319)
+- [Benchmarks CIS pour Windows Server 2022](https://www.cisecurity.org/benchmark/microsoft_windows_server)
+- [Règles ASR Windows Defender](https://docs.microsoft.com/fr-fr/microsoft-365/security/defender-endpoint/attack-surface-reduction)

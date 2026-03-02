@@ -1,4 +1,4 @@
-// Salesforce Certifications Data
+// Certifications & Diplomas Data
 export interface Certification {
   id: string;
   name: string;
@@ -13,89 +13,54 @@ export interface Certification {
 
 export const certifications: Certification[] = [
   {
-    id: 'Salesforce Developer Diploma — OpenClassrooms',
-    name: 'Salesforce Developer Diploma',
+    id: 'dev-concepteur-logiciel-openclassrooms',
+    name: 'Développeur Concepteur Logiciel',
     issuer: 'OpenClassrooms',
-    badgeUrl: '/certifications/admin-badge.png',
-    credentialUrl: 'https://trailhead.salesforce.com/en/credentials/administrator',
+    badgeUrl: '/certifications/dev-concepteur-badge.png',
     earnedDate: 'Oct 2025',
-    description: 'Demonstrates proficiency in Salesforce administration, including user management, security, data management, and automation. Validates knowledge of Apex, Visualforce, Lightning components, and data modeling for custom application development.',
-    skills: ['User Management', 'Security & Access', 'Data Management', 'Automation', 'Reports & Dashboards', 'Apex Programming', 'Visualforce', 'Lightning Components', 'Data Modeling', 'Integration']
+    description: 'RNCP Level 6 professional title (Bac+3/4 equivalent) in software design and development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.',
+    skills: ['Apex', 'Salesforce Flows', 'LWC', 'Data Modeling', 'CI/CD', 'GitHub Actions', 'Salesforce CLI', 'API Integration', 'Security & Permissions', 'Automated Testing']
   },
   {
-    id: 'Higher Technician in Systems & Networks — GRETA du Val d’Oise',
+    id: 'tssr-greta-valdoise',
     name: 'Higher Technician in Systems & Networks',
-    issuer: 'GRETA du Val d’Oise',
+    issuer: 'GRETA du Val d\'Oise',
     badgeUrl: '/certifications/systems-networks-badge.png',
-    credentialUrl: 'https://www.greta-valdoise.fr/formation/technicien-superieur-systemes-et-reseaux',
-    earnedDate: 'Oct 2023',
-    description: 'Demonstrates proficiency in systems and networks administration, including network design, configuration, and troubleshooting.',
-    skills: ['Network Design', 'Configuration', 'Troubleshooting', 'Security', 'System Administration']
+    earnedDate: '2023',
+    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Practical internship at MIDRANGE GROUP: Windows Autopilot deployment (200+ workstations), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, PfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
+    skills: ['Windows Server 2022', 'Active Directory', 'DNS', 'DHCP', 'WDS', 'GPO', 'PXE Deployment', 'VMware Workstation 17', 'PfSense', 'Squid Proxy', 'Acronis Cyber Protect', 'Datto RMM', 'Windows Autopilot', 'Sysprep', 'Blancco Secure Erase', 'Splashtop', 'Autotask', 'Webroot']
   },
   {
-    id: 'Linguaskill C2 Certificate — University of Cambridge',
-    name: 'Linguaskill C2 Certificate',
-    issuer: 'University of Cambridge',
+    id: 'tai-greta-valdoise',
+    name: 'IT Support Technician',
+    issuer: 'GRETA du Val d\'Oise — Lycée Louis Jouvet',
+    badgeUrl: '/certifications/tai-badge.png',
+    earnedDate: 'Jul 2022',
+    description: 'RNCP Level 4 (Bac) in IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Covers Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, and hardware/software support.',
+    skills: ['Windows 10', 'VirtualBox', 'Active Directory', 'Roaming Profiles', 'WiFi Configuration', 'AOMEI Partition Assistant', 'Hardware Diagnosis', 'User Support', 'Messaging Configuration']
+  },
+  {
+    id: 'linguaskill-cambridge',
+    name: 'Linguaskill Business — C1+',
+    issuer: 'Cambridge Assessment English',
     badgeUrl: '/certifications/linguaskill-badge.png',
     credentialUrl: 'https://www.cambridge.org/linguaskill',
-    earnedDate: 'Oct 2021',
-    description: 'Demonstrates proficiency in English language skills at the C2 level, as defined by the Common European Framework of Reference for Languages (CEFR).',
-    skills: ['Reading', 'Writing', 'Listening', 'Speaking', 'Grammar', 'Vocabulary']
-  },
-  {
-    id: 'Salesforce Developer Diploma — OpenClassrooms',
-    name: 'Salesforce Developer Diploma',
-    issuer: 'OpenClassrooms',
-    badgeUrl: '/certifications/admin-badge.png',
-    credentialUrl: 'https://trailhead.salesforce.com/en/credentials/administrator',
-    earnedDate: 'Oct 2025',
-    description: 'Demonstrates proficiency in Salesforce administration, including user management, security, data management, and automation. Validates knowledge of Apex, Visualforce, Lightning components, and data modeling for custom application development.',
-    skills: ['User Management', 'Security & Access', 'Data Management', 'Automation', 'Reports & Dashboards', 'Apex Programming', 'Visualforce', 'Lightning Components', 'Data Modeling', 'Integration']
-  },
-    {id: 'admin',
-    name: 'Salesforce Certified Administrator',
-    issuer: 'Salesforce',
-    badgeUrl: '/certifications/admin-badge.png',
-    credentialUrl: 'https://trailhead.salesforce.com/en/credentials/administrator',
-    earnedDate: '2024-06-15',
-    description: 'Demonstrates proficiency in Salesforce administration, including user management, security, data management, and automation.',
-    skills: ['User Management', 'Security & Access', 'Data Management', 'Automation', 'Reports & Dashboards']
-  },
-  {
-    id: 'platform-dev-1',
-    name: 'Salesforce Certified Platform Developer I',
-    issuer: 'Salesforce',
-    badgeUrl: '/certifications/pd1-badge.png',
-    credentialUrl: 'https://trailhead.salesforce.com/en/credentials/platformdeveloperi',
-    earnedDate: '2024-09-20',
-    description: 'Validates knowledge of Apex, Visualforce, Lightning components, and data modeling for custom application development.',
-    skills: ['Apex Programming', 'Visualforce', 'Lightning Components', 'Data Modeling', 'Integration']
-  },
-  {
-    id: 'platform-app-builder',
-    name: 'Salesforce Certified Platform App Builder',
-    issuer: 'Salesforce',
-    badgeUrl: '/certifications/app-builder-badge.png',
-    credentialUrl: 'https://trailhead.salesforce.com/en/credentials/platformappbuilder',
-    earnedDate: '2024-11-10',
-    description: 'Demonstrates expertise in designing, building, and deploying custom applications using the declarative features of the Lightning Platform.',
-    skills: ['App Design', 'Business Logic', 'Process Automation', 'User Interface', 'Mobile Experience']
+    earnedDate: 'Apr 2021',
+    description: 'Cambridge Business English certification. Score: 180+ (C1+) in listening comprehension, 179 (B2) in reading comprehension. Issued via Astrolabe Formation PFD.',
+    skills: ['Business English', 'Listening Comprehension', 'Reading Comprehension', 'Professional Communication']
   }
 ];
 
 export const upcomingCertifications: string[] = [
-  'Salesforce Certified Platform Developer II',
-  'Salesforce Certified JavaScript Developer I',
-  'Salesforce Certified Sales Cloud Consultant',
-  
-  'ISC2 CC (Certified in Cybersecurity)'
-
+  'Salesforce Certified Administrator — préparation active en cours',
+  'Salesforce Certified Platform Developer I — préparation active en cours',
+  'ISC2 CC (Certified in Cybersecurity) — préparation en cours'
 ];
 
 export const trailheadProfile = {
-  badges: 150,
-  points: 45000,
-  trails: 25,
-  superbadges: 12,
-  profileUrl: 'https://trailblazer.me/id/your-trailhead-id'
+  badges: 90,
+  points: 57375,
+  trails: 15,
+  superbadges: 0,
+  profileUrl: 'https://trailblazer.me/id/aidahoumane'
 };

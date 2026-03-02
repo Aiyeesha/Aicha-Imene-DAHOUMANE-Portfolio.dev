@@ -20,8 +20,16 @@ export type BlogPostMeta = {
   date: string;
   tags: string[];
   cover?: string;
+  readingTime: number; // estimated minutes
   file: string; // absolute path (server-only)
 };
+
+/** Estimate reading time in minutes from raw MDX content (strips code blocks). */
+function calcReadingTime(content: string): number {
+  const noCode = content.replace(/```[\s\S]*?```/g, "");
+  const words = noCode.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
 
 function postsDir(locale: BlogLocale) {
   // content/blog/posts/<locale>/*.mdx
@@ -51,6 +59,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
     const date = fm.date || "1970-01-01";
     const tags = Array.isArray(fm.tags) ? fm.tags : [];
     const cover = fm.cover;
+    const readingTime = calcReadingTime(String(parsed.content || ""));
 
     out.push({
       slug,
@@ -60,6 +69,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
       date,
       tags,
       cover,
+      readingTime,
       file: abs
     });
   }
@@ -84,6 +94,7 @@ export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | n
     date: fm.date || "1970-01-01",
     tags: Array.isArray(fm.tags) ? fm.tags : [],
     cover: fm.cover,
+    readingTime: calcReadingTime(String(parsed.content || "")),
     file: abs
   };
 }

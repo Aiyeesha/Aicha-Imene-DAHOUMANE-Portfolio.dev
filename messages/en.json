@@ -1,6 +1,7 @@
 {
   "nav": {
     "about": "About",
+    "certifications": "Certifications",
     "skills": "Skills",
     "experience": "Experience",
     "services": "Services",
@@ -133,7 +134,8 @@
     "subjectPlaceholder": "What is this about?",
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
-    "acceptPolicyLink": "privacy policy"
+    "acceptPolicyLink": "privacy policy",
+    "availability": "Available · open to new opportunities"
   },
   "blog": {
     "card_tutorials_kicker": "New",
@@ -161,6 +163,10 @@
       "allTags": "All tags"
     },
     "readCta": "Read",
+    "featured": "Featured",
+    "readingTime": "min read",
+    "articleCount": "posts",
+    "noResults": "No posts found.",
     "pagination": {
       "page": "Page",
       "prev": "Previous",
@@ -171,7 +177,12 @@
   "blogPost": {
     "back": "Back",
     "previous": "Previous post",
-    "next": "Next post"
+    "next": "Next post",
+    "readingTime": "min read",
+    "author": "About the author",
+    "authorRole": "Salesforce Developer · Systems Administrator",
+    "backToTop": "Back to top",
+    "related": "Related posts"
   },
   "blogToc": {
     "title": "Table of contents",
@@ -223,8 +234,8 @@
     "kicker": "Profile",
     "title": "From systems & networks to Salesforce development",
     "p1": "A technical profile with a strong IT infrastructure background, now fully focused on Salesforce and cloud consulting.",
-    "p2": "I started my career on the infrastructure side as a junior systems and network administrator. I provided user support, managed Windows environments, monitored networks, and handled security incidents. This hands-on experience taught me how systems behave in real life, how teams collaborate under pressure, and why solid foundations matter.",
-    "p3": "Today, I specialize in Salesforce development and administration. After completing the Salesforce Developer path at OpenClassrooms and working on Apex, Flows, and CI/CD with Salesforce CLI, I help organizations automate processes, improve data quality, and build secure, maintainable solutions.",
+    "p2": "I started my career on the infrastructure side — internship at MIDRANGE GROUP (Feb – May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 200 Dell machines via Windows Autopilot, Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
+    "p3": "From Oct. 2023 to Oct. 2025, I worked as a Salesforce Developer at LD Digitales (remote) while earning the Développeur Concepteur Logiciel title (RNCP Level 6) from OpenClassrooms. I built and maintained 10+ Apex classes, created 20+ automation Flows (reducing manual workload by 30%), designed reusable LWC components, and implemented CI/CD pipelines with Salesforce CLI.",
     "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My 2026 goal is to work internationally as a freelance Salesforce developer & consultant, collaborating with distributed teams and clients in France and abroad.",
     "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
@@ -238,7 +249,7 @@
     "basedInLabel": "Based in",
     "basedInValue": "Paris — open to relocation, full-remote, or hybrid",
     "languagesLabel": "Languages",
-    "languagesValue": "French (native), English (C2), Spanish (B1), Italian (A1)",
+    "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
     "rolesValue": "Salesforce Developer, Salesforce Administrator, Salesforce / IT Consultant",
     "availabilityLabel": "Availability",
@@ -268,19 +279,23 @@
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by {name}. Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Contact: {email}.",
     "hostingTitle": "Hosting",
-    "hostingBody": "Hosting is provided by Vercel Inc.",
+    "hostingBody": "Hosting is provided by Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
-    "ipBody": "All content on this website (texts, visuals, code) is protected. Any reproduction requires prior authorization.",
+    "ipBody": "All content published on this website (texts, visuals, code, structure) is the exclusive property of the publisher, unless otherwise stated. Any reproduction, representation, or distribution, in whole or in part, by any means, without prior written authorization from the publisher, is strictly prohibited.",
     "liabilityTitle": "Liability",
-    "liabilityBody": "Information is provided for indicative purposes. The publisher cannot be held liable for errors or omissions."
+    "liabilityBody": "The information on this website is provided for informational purposes only and does not constitute a commitment from the publisher. The publisher strives to ensure the accuracy of published information but cannot guarantee its completeness or freedom from errors. Links to third-party websites are provided for reference only; the publisher has no control over their content.",
+    "dataTitle": "Personal data",
+    "dataBody": "Data collected via the contact form (name, email, message) is used solely to respond to your request and is not shared with third parties, except when using an email delivery service. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. Contact: {email}."
   },
   "accessibility": {
     "title": "Accessibility",
-    "commitmentTitle": "Commitment",
-    "commitmentBody": "We aim to make this website accessible to as many people as possible (keyboard navigation, readable contrast, alternative text).",
-    "helpTitle": "Need help?",
-    "helpBody": "If you encounter an accessibility issue, please contact us and describe the page and the problem."
+    "commitmentTitle": "Accessibility commitment",
+    "commitmentBody": "This website aims to be accessible to as many people as possible, in line with WCAG 2.1 guidelines (Level AA). Measures implemented include: full keyboard navigation, color contrast meeting recommended ratios (minimum 4.5:1 for normal text), alternative text on all informative images, semantic HTML structure with ARIA landmarks, and a skip-to-content link.",
+    "limitsTitle": "Known limitations",
+    "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
+    "helpTitle": "Accessibility issue?",
+    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email."
   }
 }

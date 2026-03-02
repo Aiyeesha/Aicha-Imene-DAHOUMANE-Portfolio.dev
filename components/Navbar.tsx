@@ -14,6 +14,8 @@ import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
 
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
+const PAGE_IDS = ["about","certifications"] as const;
+type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
 const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
@@ -29,11 +31,15 @@ export default function Navbar() {
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const spyActiveId = useActiveSection(isHome ? [...SECTION_IDS] : []);
 
-  const routeActiveId = pathname.startsWith(`/${locale}/blog`)
+  const routeActiveId: NavId = pathname.startsWith(`/${locale}/blog`)
     ? "blog"
     : pathname.startsWith(`/${locale}/projects`)
       ? "projects"
-      : "skills";
+      : pathname.startsWith(`/${locale}/about`)
+        ? "about"
+        : pathname.startsWith(`/${locale}/certifications`)
+          ? "certifications"
+          : "skills";
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
@@ -138,26 +144,25 @@ const linkClass = (id: string) =>
         : "text-slate-700 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
     }`;
 
-  const sections = [
+  const hrefFor = (id: NavId): string => {
+    if (id === "about") return `/${locale}/about`;
+    if (id === "certifications") return `/${locale}/certifications`;
+    if (isHome) return `#${id}`;
+    if (id === "blog") return `/${locale}/blog`;
+    return `/${locale}/#${id}`;
+  };
+
+  const sections: { id: NavId; label: string }[] = [
+    { id: "about", label: t("nav.about") },
     { id: "skills", label: t("nav.skills") },
     { id: "experience", label: t("nav.experience") },
+    { id: "certifications", label: t("nav.certifications") },
     { id: "services", label: t("nav.services") },
     { id: "testimonials", label: t("nav.testimonials") },
     { id: "projects", label: t("nav.projects") },
     { id: "blog", label: t("nav.blog") },
     { id: "contact", label: t("nav.contact") }
-  ] as const;
-
-  const hrefFor = (id: (typeof SECTION_IDS)[number]) => {
-    // On the landing, we scroll to the section.
-    if (isHome) return `#${id}`;
-
-    // On other pages, we route to the appropriate destination.
-    // - Blog: go to the blog index page
-    // - Others: go back to the landing with the right hash
-    if (id === "blog") return `/${locale}/blog`;
-    return `/${locale}/#${id}`;
-  };
+  ];
 
   return (
     <>

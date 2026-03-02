@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import Reveal from "./Reveal";
 import Link from "next/link";
-import { projects } from "@/content/projects";
 import { useTrack } from "@/app/[locale]/providers";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { tBadge, tCategory, tTag } from "@/i18n/projectTaxonomy";
+import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 
 const tones: Record<string, string> = {
   client: "badge badge-client",
@@ -17,11 +17,10 @@ const tones: Record<string, string> = {
 
 type ProjectsSectionProps = {
   locale?: "en" | "fr";
+  projects: ProjectWithAssets[];
 };
 
-export default function ProjectsSection({ locale: localeProp }: ProjectsSectionProps) {
-  // Keep project UI strings under the "projects" namespace in messages/{locale}.json.
-  // This avoids runtime MISSING_MESSAGE errors for keys like "search", "details", "requirements".
+export default function ProjectsSection({ locale: localeProp, projects }: ProjectsSectionProps) {
   const t = useTranslations("projects");
   const { track } = useTrack();
   const pathname = usePathname();
@@ -34,20 +33,22 @@ export default function ProjectsSection({ locale: localeProp }: ProjectsSectionP
   const categories = useMemo(() => {
     const set = new Set<string>();
     projects
-      .filter((p) => p.track === track)
-      .forEach((p) => p.categories.forEach((c) => set.add(c)));
+      .filter((p) => p.track === track && !p.featured)
+      .forEach((p) => (p.categories ?? []).forEach((c) => set.add(c)));
     return ["All", ...Array.from(set)];
-  }, [track]);
+  }, [track, projects]);
 
   const filtered = useMemo(() => {
-    const base = projects.filter((p) => p.track === track);
+    // Exclude featured projects — they already appear in the FeaturedProjects section above
+    const base = projects.filter((p) => p.track === track && !p.featured);
     return base.filter((p) => {
-      const inCat = active === "All" ? true : p.categories.includes(active);
-      const text = (p.title + " " + p.excerpt + " " + p.tags.join(" ")).toLowerCase();
+      const inCat = active === "All" ? true : (p.categories ?? []).includes(active);
+      const excerpt = p.summary ?? "";
+      const text = ((p.title ?? "") + " " + excerpt + " " + (p.tags ?? []).join(" ")).toLowerCase();
       const inQ = q.trim() === "" ? true : text.includes(q.trim().toLowerCase());
       return inCat && inQ;
     });
-  }, [track, active, q]);
+  }, [track, active, q, projects]);
 
   return (
     <div>
@@ -95,10 +96,10 @@ export default function ProjectsSection({ locale: localeProp }: ProjectsSectionP
                 ) : null}
               </div>
 
-              <p className="mt-3 text-sm text-muted">{p.excerpt}</p>
+              <p className="mt-3 text-sm text-muted">{p.summary}</p>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                {p.tags.map((tag) => (
+                {(p.tags ?? []).map((tag) => (
                   <span key={tag} className="chip">
                     {tTag(tag, locale)}
                   </span>
@@ -116,14 +117,24 @@ export default function ProjectsSection({ locale: localeProp }: ProjectsSectionP
                 </ul>
               )}
 
-              {/* Single CTA: keep cards simple. (PDF lives on the details page) */}
-              <div className="mt-5">
+              {/* CTAs */}
+              <div className="mt-5 flex items-center gap-2 flex-wrap">
                 <Link
                   href={`/${locale}/projects/${p.slug}`}
                   className="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
                 >
                   {t("details")}
                 </Link>
+                {p.repo_url ? (
+                  <a
+                    href={p.repo_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-muted hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
+                  >
+                    ↗ GitHub
+                  </a>
+                ) : null}
               </div>
             </div>
           </Reveal>

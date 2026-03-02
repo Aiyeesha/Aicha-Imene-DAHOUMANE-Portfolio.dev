@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import CalendlyModal from "./CalendlyModal";
+import { useTrack } from "@/app/[locale]/providers";
 
 type Status =
   | { kind: "idle" }
@@ -16,10 +17,6 @@ const LINKEDIN_URL = process.env.NEXT_PUBLIC_LINKEDIN_URL || "";
 const LINKEDIN_HREF = LINKEDIN_URL
   ? (LINKEDIN_URL.startsWith("http") ? LINKEDIN_URL : `https://${LINKEDIN_URL}`)
   : "";
-const CV_URL =
-  process.env.NEXT_PUBLIC_CV_PDF_URL ||
-  process.env.NEXT_PUBLIC_CV_URL ||
-  "/cv.pdf";
 
 // Convert API error codes into i18n keys
 function errorToKey(code: string) {
@@ -58,7 +55,16 @@ function errorToKey(code: string) {
 export default function ContactForm() {
   const t = useTranslations();
   const locale = useLocale();
+  const { track } = useTrack();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+
+  const cvUrl = useMemo(
+    () =>
+      process.env.NEXT_PUBLIC_CV_PDF_URL ||
+      process.env.NEXT_PUBLIC_CV_URL ||
+      `/cv/cv-${locale}-${track}.pdf`,
+    [locale, track]
+  );
 
   // Show configuration hints only in non-production builds.
   // The page should not display internal setup instructions to visitors.
@@ -240,41 +246,35 @@ export default function ContactForm() {
         <p className="pt-2 text-xs text-muted-2">{t("contact.privacyNote")}</p>
       </form>
 
-      <div className="card p-6">
-        <div className="text-sm text-slate-900 dark:text-white font-semibold">{t("contact.homeMethodsTitle")}</div>
-        <p className="mt-2 text-sm text-slate-900 dark:text-white text-muted-2">{t("contact.homeIntro")}</p>
-
-        <div className="mt-4">
-          <div className="mt-3 flex flex-wrap gap-3">
+      <div className="card p-6 flex flex-col gap-6">
+        {/* Quick links */}
+        <div>
+          <div className="text-sm font-semibold text-slate-900 dark:text-white">{t("contact.homeMethodsTitle")}</div>
+          <p className="mt-2 text-sm text-muted-2">{t("contact.homeIntro")}</p>
+          <div className="mt-4 flex flex-wrap gap-3">
             <a
-              className="rounded-full bg-cyan-500 px-5 py-2 text-sm text-slate-900 dark:text-white font-medium text-black hover:opacity-90 soft-ring"
+              className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
               href={CONTACT_EMAIL ? `mailto:${CONTACT_EMAIL}` : "#"}
               aria-disabled={!CONTACT_EMAIL}
-              onClick={(e) => {
-                if (!CONTACT_EMAIL) e.preventDefault();
-              }}
+              onClick={(e) => { if (!CONTACT_EMAIL) e.preventDefault(); }}
               title={!CONTACT_EMAIL ? t("contact.emailMissing") : undefined}
             >
               {t("contact.homeEmail")}
             </a>
-
             <a
-              className="rounded-full border border-black/10 bg-black/5 px-5 py-2 text-sm text-slate-900 dark:text-white hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+              className="rounded-full border border-black/10 bg-black/5 px-5 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
               href={LINKEDIN_HREF || "#"}
               target="_blank"
               rel="noreferrer"
               aria-disabled={!LINKEDIN_HREF}
-              onClick={(e) => {
-                if (!LINKEDIN_HREF) e.preventDefault();
-              }}
+              onClick={(e) => { if (!LINKEDIN_HREF) e.preventDefault(); }}
               title={!LINKEDIN_HREF ? t(process.env.NODE_ENV === "production" ? "contact.linkedInMissing" : "contact.envHint") : undefined}
             >
               {t("contact.homeLinkedIn")}
             </a>
-
             <a
-              className="rounded-full border border-black/10 bg-black/5 px-5 py-2 text-sm text-slate-900 dark:text-white hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
-              href={CV_URL}
+              className="rounded-full border border-black/10 bg-black/5 px-5 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+              href={cvUrl}
               target="_blank"
               rel="noreferrer"
             >
@@ -283,37 +283,26 @@ export default function ContactForm() {
           </div>
         </div>
 
-        <div className="mt-6 border-t border-black/10 pt-6 dark:border-white/10">
-          <div className="text-sm text-slate-900 dark:text-white font-semibold">{t("contact.otherWays")}</div>
-          <div className="mt-4 space-y-3">
-          {/* Calendly as an embedded modal (falls back if env is missing inside the component) */}
+        {/* Availability badge */}
+        <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3">
+          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+          <span className="text-sm text-emerald-700 dark:text-emerald-300">{t("contact.availability")}</span>
+        </div>
+
+        {/* Direct contact */}
+        <div className="border-t border-black/10 pt-2 dark:border-white/10 space-y-3">
           <CalendlyModal />
-
-          {!process.env.NEXT_PUBLIC_CALENDLY_URL ? (
-            <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm text-slate-900 dark:text-white text-muted-2">
-              {t("contact.bookCallMissing")}
-            </div>
-          ) : null}
-
           {CONTACT_EMAIL ? (
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="flex items-center justify-between rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm text-slate-900 dark:text-white hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              className="flex items-center justify-between rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
             >
-              <span>{t("contact.emailMe")}</span>
+              <span className="text-slate-900 dark:text-white">{t("contact.emailMe")}</span>
               <span className="text-xs text-muted-2">{CONTACT_EMAIL}</span>
             </a>
-          ) : (
-            <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm text-slate-900 dark:text-white text-muted-2">
-              {t("contact.emailMissing")}
-            </div>
-          )}
-          </div>
+          ) : null}
+          <p className="px-1 text-xs text-muted-2">{t("contact.homeFormSubtitle")}</p>
         </div>
-
-        {showEnvHint ? (
-          <div className="mt-5 text-xs text-muted-2">{t("contact.envHint")}</div>
-        ) : null}
       </div>
     </div>
   );

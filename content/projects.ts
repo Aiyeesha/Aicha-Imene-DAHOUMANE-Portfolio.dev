@@ -7,6 +7,7 @@ export type Project = {
   tags: string[];
   badge?: { label: string; tone: "client" | "personal" | "training" };
   pdfUrl?: string;
+  repoUrl?: string;
   updatedAt?: string;
   /**
    * Highlights or outcomes for the project. Optional.
@@ -32,6 +33,7 @@ export const projects: Project[] = [
     tags: ["Deployment", "Heroku", "Postman"],
     badge: {"label": "TRAINING PROJECT", "tone": "training"},
     pdfUrl: "/docs/projects/legarant-axg-salesforce-deployment/deployment.pdf",
+    repoUrl: "https://github.com/Aiyeesha/legarant-axg-crm-sync",
   },
   {
     slug: "ltp-apex-backend-prototype",
@@ -64,6 +66,7 @@ export const projects: Project[] = [
     tags: ["Apex", "Batch", "Testing"],
     badge: {"label": "TRAINING PROJECT", "tone": "training"},
     pdfUrl: "/docs/projects/idemconnect-apex-backend/cahier-des-charges.pdf",
+    repoUrl: "https://github.com/Aiyeesha/iDEM-Connect",
   },
   {
     slug: "fasha-apex-backend-optimization",
@@ -80,6 +83,7 @@ export const projects: Project[] = [
     tags: ["Apex", "Optimization", "Batch"],
     badge: {"label": "TRAINING PROJECT", "tone": "training"},
     pdfUrl: "/docs/projects/fasha-apex-backend-optimization/p9-note-de-cadrage-p9-note-de-cadrage.pdf",
+    repoUrl: "https://github.com/Aiyeesha/FASHA",
   },
   {
     slug: "wirebright-visualforce-to-lightning",
@@ -96,6 +100,7 @@ export const projects: Project[] = [
     tags: ["Lightning", "Visualforce", "Apex"],
     badge: {"label": "TRAINING PROJECT", "tone": "training"},
     pdfUrl: "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
+    repoUrl: "https://github.com/Aiyeesha/WireBrite-Consulting-Migration-Backup",
   },
   {
     slug: "avenir-telecom-lightning-app",
@@ -112,6 +117,7 @@ export const projects: Project[] = [
     tags: ["Lightning", "Scrum", "Kanban", "Backlog", "Testing"],
     badge: {"label": "TRAINING PROJECT", "tone": "training"},
     pdfUrl: "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
+    repoUrl: "https://github.com/Aiyeesha/Avenir-TELECOM",
   },
   {
     slug: "tours-for-life-salesforce-solution",
@@ -359,6 +365,7 @@ export const projects: Project[] = [
     tags: ["JUnit", "Mockito", "TDD", "Maven", "JaCoCo", "Surefire"],
     badge: {"label": "TRAINING PROJECT", "tone": "training"},
     pdfUrl: "/docs/projects/parkit-java-testing/guide-etapes-cles.pdf",
+    repoUrl: "https://github.com/Aiyeesha/Projet-12",
   },
   {
     slug: "pochlib-ui",
@@ -407,6 +414,36 @@ export const projects: Project[] = [
   categories: ["IT Support", "Operations"],
   tags: ["Procurement", "Sizing", "Excel"],
   badge: {"label": "TRAINING PROJECT", "tone": "training"},
+},
+{
+  slug: "python-password-checker",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Password Strength Analyzer (Python CLI)",
+  excerpt: "CLI tool that scores password strength via entropy calculation, regex pattern detection, dictionary matching, and a HaveIBeenPwned API check using k-anonymity.",
+  highlights: [
+    "Entropy calculation + score 0–100 with crack-time estimates",
+    "Regex-based pattern detection (sequences, keyboard walks, years…)",
+    "HaveIBeenPwned API via k-anonymity — password never leaves the machine"
+  ],
+  track: "itops",
+  categories: ["Security", "Development"],
+  tags: ["Python", "Regex", "Security", "API", "CLI", "HaveIBeenPwned"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+},
+{
+  slug: "python-network-scanner",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Network Scanner (FastAPI + React)",
+  excerpt: "Real-time local network scanner: FastAPI backend with WebSocket streaming, concurrent port scanning, service & risk detection, and a React/Vite frontend with live results.",
+  highlights: [
+    "FastAPI backend with WebSocket real-time result streaming",
+    "Concurrent port scan across 100+ known services with risk mapping",
+    "React/Vite UI with live progress and host/port breakdown"
+  ],
+  track: "itops",
+  categories: ["Network", "Security", "Development"],
+  tags: ["Python", "FastAPI", "WebSocket", "React", "Vite", "Network Security"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
 },
 ];
 

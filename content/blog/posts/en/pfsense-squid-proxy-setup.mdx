@@ -1,0 +1,309 @@
+---
+title: "PfSense + Squid Proxy: Secure Internet Access with Content Filtering"
+excerpt: "How to set up PfSense as a perimeter firewall with Squid as a transparent proxy — including HTTPS inspection, ACLs, and SquidGuard content filtering."
+date: "2025-08-04"
+tags: ["IT Ops", "PfSense", "Network", "Security", "Firewall", "Proxy"]
+---
+
+PfSense is one of the most powerful open-source firewall distributions available. Combined with Squid and SquidGuard, it becomes a complete secure internet access solution — SSL inspection, content filtering, bandwidth management, and detailed logging. Here's how to set it up properly.
+
+## Architecture Overview
+
+```
+[Internet] ──── [PfSense] ──── [LAN Switch]
+                    │
+                 Squid Proxy (transparent)
+                 SquidGuard (content filtering)
+                    │
+         [Workstations / Servers]
+```
+
+**WAN interface:** receives public IP from ISP
+**LAN interface:** 192.168.1.1/24 (or your internal range)
+Squid runs as a **transparent proxy** on port 3128 — clients don't need manual proxy configuration.
+
+## Phase 1: PfSense Initial Configuration
+
+### Interfaces
+
+After installation, configure interfaces:
+
+```
+WAN: DHCP or static IP from ISP
+LAN: 192.168.1.1/24 (static)
+```
+
+Navigate to **Interfaces → WAN** and **Interfaces → LAN** to set IP addresses.
+
+### Firewall Baseline Rules
+
+**LAN → WAN rules (minimum):**
+
+| Protocol | Source | Destination | Port | Action | Description |
+|----------|--------|-------------|------|--------|-------------|
+| TCP | LAN net | any | 80, 443 | Pass | HTTP/HTTPS via Squid |
+| TCP | LAN net | any | 25, 465, 587 | Pass | Email (if needed) |
+| UDP | LAN net | any | 53 | Pass | DNS |
+| ICMP | LAN net | any | — | Pass | Ping (optional) |
+| * | LAN net | any | * | Block | Default deny all else |
+
+```
+Firewall → Rules → LAN
+```
+
+**Block RFC 1918 on WAN:**
+```
+Firewall → Rules → WAN → Block → Source: RFC 1918 networks
+(prevents spoofed private IP packets from the internet)
+```
+
+## Phase 2: Install and Configure Squid
+
+### Installation
+
+```
+System → Package Manager → Available Packages
+Search: squid → Install
+```
+
+### Basic Squid Configuration
+
+```
+Services → Squid Proxy Server → General
+```
+
+**Key settings:**
+
+| Setting | Value |
+|---------|-------|
+| Enable Squid Proxy | ✅ |
+| Listen IP | LAN |
+| Proxy Port | 3128 |
+| Transparent HTTP Proxy | ✅ (intercepts without client config) |
+| Enable SSL Man In The Middle Filtering | ✅ (for HTTPS inspection) |
+| SSL/MITM Mode | Splice All + Bump if needed |
+| CA Certificate | Create or import your internal CA |
+
+### Generate Internal CA for HTTPS Inspection
+
+```
+System → Certificate Manager → CAs → Add
+```
+
+Create a CA:
+- **Descriptive name:** Squid-MITM-CA
+- **Method:** Create an internal Certificate Authority
+- **Key length:** 4096
+- **Digest algorithm:** SHA256
+- **Lifetime:** 3650 days (10 years)
+
+**Distribute this CA certificate to all client machines via GPO:**
+```
+GPO: Computer Configuration → Windows Settings → Security Settings
+     → Public Key Policies → Trusted Root Certification Authorities
+     → Import Squid-MITM-CA certificate
+```
+
+Without this, users will see SSL certificate warnings on every HTTPS site.
+
+### Transparent Proxy Firewall Rules
+
+Add a NAT rule to redirect HTTP traffic to Squid:
+
+```
+Firewall → NAT → Port Forward
+Protocol: TCP
+Interface: LAN
+Destination port: 80
+Redirect target IP: 127.0.0.1
+Redirect target port: 3128
+Description: Redirect HTTP to Squid
+```
+
+For HTTPS:
+```
+Destination port: 443
+Redirect target port: 3129 (SSL bump port)
+```
+
+## Phase 3: SquidGuard Content Filtering
+
+### Installation
+
+```
+System → Package Manager → Available Packages
+Search: squidguard → Install
+```
+
+### Configure Blacklists
+
+SquidGuard uses URL/domain blacklists to categorize and block content.
+
+Download a free blacklist (Shallalist is popular):
+```
+Services → SquidGuard Proxy Filter → Blacklist
+URL: http://www.shallalist.de/Downloads/shallalist.tar.gz
+Download → Apply
+```
+
+### Define ACL Groups
+
+```
+Services → SquidGuard → Groups ACLs → Add
+```
+
+**Example: Block social media for all users**
+```
+Name: AllUsers
+Order: 1
+Source: all (LAN network)
+Target rules:
+  - socialnetwork: deny
+  - porn: deny
+  - malware: deny
+  - gambling: deny
+  - Default: allow
+```
+
+**Example: IT staff exception (allow all)**
+```
+Name: IT-Staff
+Order: 0  (lower number = higher priority)
+Source: 192.168.1.10-192.168.1.20 (IT IP range)
+Target rules:
+  - Default: allow
+```
+
+### Block by Time (Work Hours Only)
+
+```
+Services → SquidGuard → Times → Add
+Name: WorkHours
+Values: M-F 08:00 - 18:00
+```
+
+Then in ACL:
+```
+Time: WorkHours
+Target rules within time:
+  - streaming: deny (block Netflix/YouTube during work hours)
+```
+
+## Phase 4: Caching and Performance
+
+Squid caches web objects locally — reduces bandwidth and speeds up repeat requests.
+
+```
+Services → Squid Proxy Server → Cache Management
+
+Hard Disk Cache Size: 2000 MB (adjust based on disk)
+Hard Disk Cache Location: /var/squid/cache
+Memory Cache Size: 256 MB
+Minimum Object Size: 0 KB
+Maximum Object Size: 4 MB
+```
+
+**Verify cache is working:**
+```
+Status → Squid Proxy Server → Cache Statistics
+```
+
+Look for cache hits — should increase over time as users browse common sites.
+
+## Phase 5: Logging and Monitoring
+
+### Access Logs
+
+```
+Services → Squid Proxy Server → General → Logging
+Enable Access Logging: ✅
+Log File Rotate: 7 days
+```
+
+Logs are stored at `/var/squid/logs/access.log`.
+
+**Read logs from PfSense shell:**
+```bash
+tail -f /var/squid/logs/access.log
+
+# Filter by source IP
+grep "192.168.1.100" /var/squid/logs/access.log | tail -50
+```
+
+**Log format fields:**
+```
+timestamp | duration | client IP | action/status | size | method | URL | peer | content-type
+```
+
+### PfSense Dashboard Monitoring
+
+Install the **Status Traffic Totals** package for bandwidth monitoring:
+```
+System → Package Manager → Status Traffic Totals → Install
+```
+
+Then: **Status → Traffic Totals** shows per-IP bandwidth usage.
+
+### Alerting on Security Events
+
+```
+Status → System Logs → Firewall
+```
+
+Set up email alerts for:
+```
+System → Advanced → Notifications
+SMTP server: your mail relay
+Alert on firewall blocks: ✅
+```
+
+## Common Issues and Fixes
+
+**Issue:** HTTPS sites show certificate error
+**Fix:** CA not distributed to clients. Push via GPO (see Phase 2).
+
+**Issue:** Some HTTPS sites broken after SSL inspection
+**Fix:** Certificate pinning conflicts. Add to SSL bypass list:
+```
+Services → Squid Proxy Server → SSL/MITM → Splice (bypass inspection) for:
+  - *.windowsupdate.com
+  - *.apple.com
+  - *.banking-site.com
+```
+
+**Issue:** Squid not intercepting traffic
+**Fix:** Verify NAT rule for port 80/443 redirect. Check firewall rules allow LAN → proxy.
+
+**Issue:** SquidGuard not blocking
+**Fix:** Enable SquidGuard in `Services → SquidGuard → General → Enable`. Apply settings. Blacklist must be downloaded.
+
+**Issue:** High CPU on PfSense
+**Fix:** Reduce SSL inspection scope. Bypass large file downloads (`.iso`, `.exe` extensions):
+```
+Services → Squid → General → Maximum Download Size: 100 MB
+```
+
+## Security Hardening Checklist
+
+- [ ] Squid listening only on LAN interface (not WAN)
+- [ ] HTTPS inspection CA deployed to all clients via GPO
+- [ ] SSL bypass list for certificate-pinned apps (Windows Update, Apple, banking)
+- [ ] SquidGuard blocking malware and phishing categories
+- [ ] Access logs retained for 30 days minimum
+- [ ] PfSense admin access restricted to management VLAN only
+- [ ] SSH disabled on PfSense (or key-only authentication)
+- [ ] pfBlockerNG installed for DNS-based ad/malware blocking
+- [ ] Firewall default deny on all interfaces
+- [ ] Automatic updates scheduled (System → Update → Auto Update)
+
+## Conclusion
+
+A PfSense + Squid + SquidGuard stack gives small and mid-sized organizations enterprise-grade network security without enterprise-grade costs. The key is in the CA distribution (so HTTPS inspection doesn't break browsers) and a well-tuned bypass list for certificate-pinned applications. Once running, the combination of transparent proxying, content filtering, and detailed access logs gives you full visibility into what's happening on your network.
+
+---
+
+**Useful Resources:**
+- [PfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
+- [Squid Proxy Configuration Guide](http://www.squid-cache.org/Doc/config/)
+- [Shallalist Blacklists](http://www.shallalist.de/)
+- [pfBlockerNG - Package Guide](https://docs.netgate.com/pfsense/en/latest/packages/pfblocker.html)

@@ -1,0 +1,223 @@
+---
+title: "Governor Limits Salesforce : comprendre, surveiller et les éviter"
+excerpt: "Guide pratique sur les governor limits Salesforce — les plus critiques, comment surveiller votre consommation et les patterns pour rester bien en dessous des seuils."
+date: "2025-11-03"
+tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Bonnes pratiques"]
+---
+
+Les governor limits sont les règles que Salesforce impose pour garantir qu'aucun org ne monopolise les ressources partagées de la plateforme. Les comprendre est essentiel — les dépasser en production génère des exceptions, des automatisations cassées et des utilisateurs mécontents.
+
+## Pourquoi les governor limits existent
+
+Salesforce est une plateforme multi-tenant. Votre org partage les ressources de calcul, de base de données et d'API avec des milliers d'autres. Les governor limits empêchent qu'un seul org consomme une part disproportionnée des ressources. Ce ne sont pas des bugs — c'est l'architecture.
+
+## Les limites qui posent vraiment problème
+
+### Limites synchrones par transaction
+
+| Limite | Valeur | Déclencheur courant |
+|--------|--------|---------------------|
+| Requêtes SOQL | 100 | SOQL dans une boucle |
+| Instructions DML | 150 | DML dans une boucle |
+| Lignes DML | 10 000 | Opérations en masse |
+| Lignes SOQL | 50 000 | Récupération de tables entières |
+| Taille du heap | 6 Mo | Stockage de grands jeux de données |
+| Temps CPU | 10 000 ms | Boucles complexes, algorithmes |
+| Callouts | 100 | Appels API externes |
+
+### Limites asynchrones par transaction (Batch, Future, Queueable)
+
+| Limite | Valeur |
+|--------|--------|
+| Requêtes SOQL | 200 |
+| Instructions DML | 150 |
+| Lignes DML | 10 000 |
+| Taille du heap | 12 Mo (batch) |
+| Temps CPU | 60 000 ms |
+
+### Limites quotidiennes à l'échelle de l'org
+
+| Limite | Valeur |
+|--------|--------|
+| Exécutions Apex asynchrones | 250 000 |
+| Alertes email | 1 000 par utilisateur par jour |
+| Messages sortants | 10 000 |
+| Appels API | Varie selon l'édition |
+
+## Surveiller vos limites
+
+### En code Apex
+
+```apex
+// Vérifier les limites restantes à tout moment de l'exécution
+System.debug('SOQL : ' + Limits.getQueries() + '/' + Limits.getLimitQueries());
+System.debug('DML : ' + Limits.getDmlStatements() + '/' + Limits.getLimitDmlStatements());
+System.debug('Lignes DML : ' + Limits.getDmlRows() + '/' + Limits.getLimitDmlRows());
+System.debug('CPU : ' + Limits.getCpuTime() + '/' + Limits.getLimitCpuTime());
+System.debug('Heap : ' + Limits.getHeapSize() + '/' + Limits.getLimitHeapSize());
+```
+
+### Garde proactive avant les opérations critiques
+
+```apex
+public class LimitGuard {
+    public static Boolean hasSoqlCapacity(Integer needed) {
+        return (Limits.getLimitQueries() - Limits.getQueries()) >= needed;
+    }
+
+    public static Boolean hasDmlCapacity(Integer needed) {
+        return (Limits.getLimitDmlStatements() - Limits.getDmlStatements()) >= needed;
+    }
+}
+
+// Utilisation
+if (!LimitGuard.hasSoqlCapacity(5)) {
+    throw new LimitException('Capacité SOQL insuffisante pour continuer.');
+}
+```
+
+## Les patterns qui préviennent la plupart des violations
+
+### 1. Jamais de SOQL ou DML dans une boucle
+
+C'est la cause n°1 de violations des governor limits. Une requête par enregistrement = 201 requêtes pour 201 enregistrements.
+
+```apex
+// ❌ SOQL dans une boucle — dépasse la limite à l'enregistrement 101
+for (Opportunity opp : opportunities) {
+    Account acc = [SELECT Name FROM Account WHERE Id = :opp.AccountId];
+}
+
+// ✅ Pattern bulkifié
+Set<Id> accountIds = new Set<Id>();
+for (Opportunity opp : opportunities) accountIds.add(opp.AccountId);
+
+Map<Id, Account> accountMap = new Map<Id, Account>(
+    [SELECT Id, Name FROM Account WHERE Id IN :accountIds]
+);
+
+for (Opportunity opp : opportunities) {
+    Account acc = accountMap.get(opp.AccountId);
+    // ... utiliser acc
+}
+```
+
+### 2. Collecter puis exécuter le DML une seule fois
+
+```apex
+// ❌ DML dans une boucle
+for (Contact c : contacts) {
+    c.Statut__c = 'Traité';
+    update c; // 1 DML par enregistrement
+}
+
+// ✅ Collecter puis DML une fois
+List<Contact> aMettre = new List<Contact>();
+for (Contact c : contacts) {
+    c.Statut__c = 'Traité';
+    aMettre.add(c);
+}
+if (!aMettre.isEmpty()) update aMettre; // 1 DML total
+```
+
+### 3. Utiliser `@future` ou Queueable pour les callouts
+
+```apex
+public class SyncExterneService {
+
+    @future(callout=true)
+    public static void syncVersERP(List<Id> accountIds) {
+        List<Account> accounts = [SELECT Id, Name FROM Account WHERE Id IN :accountIds];
+        // ... faire les appels HTTP
+    }
+}
+```
+
+### 4. Requêtes agrégées pour réduire le nombre de lignes
+
+```apex
+// ❌ Récupérer 50k lignes juste pour les compter
+List<Opportunity> all = [SELECT Id FROM Opportunity WHERE AccountId = :accId];
+Integer count = all.size(); // consomme 50k de votre limite de 50k lignes !
+
+// ✅ Agréger au niveau de la base de données
+Integer count = [SELECT COUNT() FROM Opportunity WHERE AccountId = :accId];
+```
+
+## Queueable Apex : mieux que `@future`
+
+Les jobs Queueable sont le remplacement moderne de `@future` — ils supportent le chaînage et les paramètres typés :
+
+```apex
+public class SyncQueueable implements Queueable, Database.AllowsCallouts {
+    private List<Id> recordIds;
+
+    public SyncQueueable(List<Id> ids) {
+        this.recordIds = ids;
+    }
+
+    public void execute(QueueableContext ctx) {
+        List<Account> accounts = [SELECT Id, Name FROM Account WHERE Id IN :recordIds];
+        // ... traitement
+
+        // Chaîner le job suivant si plus de travail à faire
+        if (plusDeTravail()) {
+            System.enqueueJob(new SyncQueueable(prochainLot));
+        }
+    }
+}
+
+// Enqueue
+System.enqueueJob(new SyncQueueable(accountIds));
+```
+
+## Que faire quand vous heurtez une limite
+
+### LimitException en production
+
+1. **Vérifier les debug logs** — identifier quelle ligne a levé l'exception
+2. **Trouver la cause racine** — souvent un trigger appelant une méthode qui fait du SOQL/DML en boucle
+3. **Vérifier la récursion** — le trigger s'appelle-t-il lui-même ? Utiliser un garde de récursion statique
+4. **Refactoriser** — appliquer les patterns de bulkification
+5. **Considérer l'asynchrone** — déplacer le traitement lourd vers Batch ou Queueable
+
+### Scénario courant : Trigger + Process Builder double-déclenchement
+
+```apex
+// Un trigger se déclenche → Process Builder crée des enregistrements → le trigger se redéclenche
+// Solution : garde de récursion statique
+
+public class GuardRecursion {
+    private static Boolean enCours = false;
+
+    public static Boolean isEnCours() { return enCours; }
+    public static void setEnCours() { enCours = true; }
+}
+
+// Dans le handler du trigger
+if (GuardRecursion.isEnCours()) return;
+GuardRecursion.setEnCours();
+// ... votre logique
+```
+
+## Tableau récapitulatif : anti-patterns → solutions
+
+| Anti-Pattern | Problème | Solution |
+|--------------|---------|----------|
+| SOQL dans une boucle | Limite de 100 requêtes | Collecter les ID, requête unique avec `IN` |
+| DML dans une boucle | Limite de 150 DML | Collecter les enregistrements, DML unique |
+| SOQL large sans LIMIT | Limite de 50 000 lignes | Ajouter WHERE, LIMIT ou agrégat |
+| Récursion de trigger | Boucle infinie | Classe garde de récursion statique |
+| Callout synchrone | Limites CPU/callout | @future ou Queueable + AllowsCallouts |
+| Stockage de listes SObject complètes | Heap de 6 Mo | Utiliser des ensembles/maps d'ID |
+
+## Conclusion
+
+Les governor limits vous forcent à écrire un meilleur code — bulkifié, efficace et conscient de la consommation de ressources. Les patterns présentés ici (requêtes en masse, DML unique, callouts asynchrones, SOQL agrégé) ne sont pas des contournements — ce sont les fondations du développement Salesforce professionnel. Appliquez-les systématiquement et vous verrez rarement une `LimitException` en dehors des tests.
+
+---
+
+**Ressources utiles :**
+- [Governor Limits Apex - Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm)
+- [Référence de la classe Limits](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_limits.htm)
+- [Queueable Apex](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_queueing_jobs.htm)
