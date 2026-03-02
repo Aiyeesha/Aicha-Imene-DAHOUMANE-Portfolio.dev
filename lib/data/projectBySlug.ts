@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { GITHUB_REPOS } from "@/content/github-repos";
 
 type ProjectAsset = {
   id: string;
@@ -15,6 +16,8 @@ type ProjectAsset = {
   sort_order?: number | null;
 };
 
+export type ProjectBadge = { label: string; tone: "client" | "personal" | "training" };
+
 export type ProjectWithAssets = {
   id: string;
   slug: string;
@@ -28,6 +31,11 @@ export type ProjectWithAssets = {
   tech_stack?: string[] | null;
   repo_url?: string | null;
   live_url?: string | null;
+  track?: string | null;
+  categories?: string[] | null;
+  tags?: string[] | null;
+  badge?: ProjectBadge | null;
+  highlights?: string[] | null;
   featured?: boolean | null;
   sort_order?: number | null;
   status?: string | null;
@@ -56,7 +64,9 @@ export async function getPublishedProjectBySlugWithAssets(
     .select(
       `
       id, slug, locale, title, summary, content, hero_subtitle, sections, gallery,
-      tech_stack, repo_url, live_url, featured, sort_order, status,
+      tech_stack, repo_url, live_url,
+      track, categories, tags, badge, highlights,
+      featured, sort_order, status,
       project_assets (
         id, project_id, type, visibility, title, description,
         storage_bucket, storage_path, external_url, mime_type, size_bytes, sort_order
@@ -98,5 +108,10 @@ export async function getPublishedProjectBySlugWithAssets(
       ? preferred.gallery
       : rows.find((r) => r.id !== preferred.id && r.gallery && r.gallery.length > 0)?.gallery ?? [];
 
-  return { ...preferred, project_assets: sortedAssets, gallery: finalGallery };
+  return {
+    ...preferred,
+    repo_url: preferred.repo_url || GITHUB_REPOS[preferred.slug] || null,
+    project_assets: sortedAssets,
+    gallery: finalGallery,
+  };
 }

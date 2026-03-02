@@ -191,9 +191,10 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
         rightMeta: "—",
         content: (
           <ul className="list-disc pl-5 space-y-2">
-            <li>Diplôme Salesforce Developer — OpenClassrooms (Oct. 2023 – Oct. 2025)</li>
-            <li>Titre pro Technicien(ne) Supérieur(e) Systèmes & Réseaux — GRETA du Val d’Oise (Oct. 2022 – Juin 2023)</li>
-            <li>Certificat Linguaskill C2 — Cambridge University</li>
+            <li>Développeur Concepteur Logiciel (niveau 6 RNCP) — OpenClassrooms (Oct. 2025)</li>
+            <li>Technicienne Supérieure Systèmes & Réseaux (niveau 5 RNCP) — GRETA du Val d’Oise (Juin 2023)</li>
+            <li>Technicien(ne) d’Assistance Informatique (niveau 4 RNCP) — GRETA du Val d’Oise, Lycée Louis Jouvet (Juil. 2022)</li>
+            <li>Linguaskill Business C1+ — Cambridge Assessment English (Avr. 2021)</li>
           </ul>
         )
       },
@@ -210,15 +211,14 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
       },
       {
         id: "cert-planned",
-        title: "Prévu",
-        subtitle: "Objectifs d’ici le 31 mars 2026",
+        title: "En préparation",
+        subtitle: "Préparation active en cours",
         rightMeta: "2026",
         content: (
           <ul className="list-disc pl-5 space-y-2">
-            <li>Salesforce Administrator</li>
-            <li>Salesforce App Builder</li>
-            <li>Salesforce Platform Developer I</li>
-            <li>ISC2 CC (Certified in Cybersecurity)</li>
+            <li>Salesforce Certified Administrator — préparation active</li>
+            <li>Salesforce Platform Developer I — préparation active</li>
+            <li>ISC2 CC (Certified in Cybersecurity) — préparation en cours</li>
           </ul>
         )
       }
@@ -233,9 +233,10 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
       rightMeta: "—",
       content: (
         <ul className="list-disc pl-5 space-y-2">
-          <li>Salesforce Developer Diploma — OpenClassrooms (Oct 2023 – Oct 2025)</li>
-          <li>Higher Technician in Systems & Networks — GRETA du Val d’Oise (Oct 2022 – Jun 2023)</li>
-          <li>Linguaskill C2 Certificate — University of Cambridge</li>
+          <li>Développeur Concepteur Logiciel (RNCP Level 6) — OpenClassrooms (Oct 2025)</li>
+          <li>Higher Technician in Systems & Networks (RNCP Level 5) — GRETA du Val d’Oise (Jun 2023)</li>
+          <li>IT Support Technician (RNCP Level 4) — GRETA du Val d’Oise, Lycée Louis Jouvet (Jul 2022)</li>
+          <li>Linguaskill Business C1+ — Cambridge Assessment English (Apr 2021)</li>
         </ul>
       )
     },
@@ -252,15 +253,14 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
     },
     {
       id: "cert-planned-en",
-      title: "Planned",
-      subtitle: "Targets by March 31, 2026",
+      title: "In preparation",
+      subtitle: "Actively preparing",
       rightMeta: "2026",
       content: (
         <ul className="list-disc pl-5 space-y-2">
-          <li>Salesforce Administrator</li>
-          <li>Salesforce App Builder</li>
-          <li>Salesforce Platform Developer I</li>
-          <li>ISC2 CC (Certified in Cybersecurity)</li>
+          <li>Salesforce Certified Administrator — actively preparing</li>
+          <li>Salesforce Platform Developer I — actively preparing</li>
+          <li>ISC2 CC (Certified in Cybersecurity) — in progress</li>
         </ul>
       )
     }

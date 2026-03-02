@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
 import { readAllPosts } from "@/content/blog/fs";
-import { projects } from "@/content/projects";
+import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 
 const STATIC_LAST_MODIFIED = new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD ?? "2026-02-04");
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   const pages: MetadataRoute.Sitemap = [
@@ -16,7 +16,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/fr/blog/tags`, lastModified: STATIC_LAST_MODIFIED }
   ];
 
-  for (const locale of ["en","fr"] as const) {
+  // Fetch slugs once from Supabase (EN locale covers all slugs since every project has an EN row)
+  const enProjects = await getPublishedProjectsWithAssetsCached("en");
+  const slugs = [...new Set(enProjects.map((p) => p.slug))];
+
+  for (const locale of ["en", "fr"] as const) {
     const posts = readAllPosts(locale);
     for (const p of posts) {
       pages.push({
@@ -26,9 +30,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
 
     // Project detail pages
-    for (const proj of projects) {
+    for (const slug of slugs) {
       pages.push({
-        url: `${base}/${locale}/projects/${proj.slug}`,
+        url: `${base}/${locale}/projects/${slug}`,
         lastModified: STATIC_LAST_MODIFIED
       });
     }

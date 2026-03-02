@@ -1,0 +1,237 @@
+---
+title: "Windows Autopilot: Mass Deployment of 200+ Workstations, Step by Step"
+excerpt: "A field-tested guide to deploying Dell workstations at scale using Windows Autopilot and Intune — from hardware hash collection to first user login."
+date: "2025-06-02"
+tags: ["IT Ops", "Windows Autopilot", "Intune", "Deployment", "Runbook"]
+---
+
+Windows Autopilot lets you deploy workstations at scale without imaging, without touching each machine manually, and without a deployment server. Here's the complete workflow, field-tested during a 200-unit Dell Optiplex/Latitude rollout.
+
+## What Autopilot Actually Does
+
+Traditional deployment: IT images a machine → configures it → ships to user.
+
+Autopilot deployment: Machine ships directly to user → user powers on → Azure AD / Intune does the rest automatically.
+
+**Requirements:**
+- Microsoft Intune (or third-party MDM)
+- Azure Active Directory (AAD)
+- Windows 10/11 Pro or Enterprise
+- Device hardware hashes uploaded to Intune
+
+## Phase 1: Hardware Hash Collection
+
+Before any machine can use Autopilot, its hardware hash must be in Intune. You collect this from the device itself.
+
+### Option A: PowerShell (single device or small batch)
+
+```powershell
+# Run on the target machine — captures hash and uploads to Intune
+# Requires: Device must have internet access and not yet been AAD-joined
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# Install the required module
+Install-Script -Name Get-WindowsAutoPilotInfo -Force
+
+# Capture and upload directly to Intune
+Get-WindowsAutoPilotInfo -Online
+```
+
+If the device is already provisioned but needs re-enrollment:
+```powershell
+# Capture hash to CSV (for manual upload)
+Get-WindowsAutoPilotInfo -OutputFile C:\AutopilotHWID.csv
+```
+
+### Option B: During OOBE (Out Of Box Experience)
+
+When a fresh Dell boots to OOBE for the first time:
+1. Press **Shift+F10** to open a command prompt
+2. Type `PowerShell` to enter PS
+3. Run `Install-Script Get-WindowsAutoPilotInfo -Force && Get-WindowsAutoPilotInfo -Online`
+
+### Option C: Dell ProDeploy / Manufacturer Upload
+
+Dell, HP, and Lenovo offer direct hash upload to your tenant at purchase time. Ask your account rep. This is the cleanest option for large orders.
+
+## Phase 2: Upload Hashes to Intune
+
+### Via CSV upload:
+
+1. **Endpoint Manager admin center** → Devices → Windows → Windows Enrollment → Devices
+2. Click **Import**
+3. Upload your CSV (column: Device Serial Number, Windows Product ID, Hardware Hash)
+
+Allow 15–20 minutes for all hashes to sync.
+
+### Verify registration:
+
+```
+Endpoint Manager → Devices → Windows Autopilot Devices
+```
+
+Status should show **Assigned** once the deployment profile is applied.
+
+## Phase 3: Create a Deployment Profile
+
+In Endpoint Manager:
+
+1. **Devices → Windows → Windows Enrollment → Deployment Profiles**
+2. **Create profile → Windows PC**
+
+**Key settings:**
+
+| Setting | Recommended Value |
+|---------|------------------|
+| Deployment mode | User-Driven |
+| Join to Azure AD as | Azure AD joined |
+| EULA | Hide |
+| Privacy settings | Hide |
+| Change account options | Hide |
+| User account type | Standard User |
+| Language/region | Configured by country |
+| Keyboard | Skip |
+| Apply device name template | Yes — e.g. `CORP-%RAND:5%` |
+
+**Assign the profile** to a device group (static or dynamic).
+
+## Phase 4: Create and Assign Intune Policies
+
+Before users power on, push these baseline policies via Intune:
+
+### Required Baseline Policies
+
+**1. BitLocker encryption:**
+- Devices → Configuration Profiles → Create → Windows 10+ → Endpoint Protection
+- Enable BitLocker with TPM + PIN
+- Recovery key: back up to AAD automatically
+
+**2. Windows Update rings:**
+- Feature updates: Semi-Annual Channel, 10-day deferral
+- Quality updates: 0-day deferral (security patches immediate)
+- Active hours: 8am–6pm (no forced restarts during work)
+
+**3. Microsoft Defender:**
+- Real-time protection: Enabled
+- Cloud-based protection: Enabled
+- PUA protection: Enabled
+- Tamper protection: Enabled
+
+**4. Local admin rights:**
+- Device Restrictions → Block local admin account creation
+- Add specific users to local admin group via Endpoint Security if needed
+
+### Required Applications (pushed before login):
+
+```
+Apps → Windows → Add → Microsoft 365 Apps
+Apps → Windows → Add → Company Portal
+Apps → Windows → Add → [your corporate VPN client]
+Apps → Windows → Add → [your endpoint security agent]
+```
+
+Assign all apps as **Required** to the All Devices group (not Available).
+
+## Phase 5: The User Experience
+
+When a user receives their device and powers on:
+
+1. Machine boots to **branded OOBE** (your company logo/name if configured)
+2. User enters **corporate email address**
+3. Azure AD authenticates → MFA challenge (if configured)
+4. Autopilot profile downloads automatically
+5. Intune begins enrolling the device
+6. Apps and policies deploy in background (10–30 min depending on app volume)
+7. User reaches the **Windows desktop**
+8. Apps continue installing in background; user can start working
+
+## Phase 6: Validation and Troubleshooting
+
+### Verify enrollment status
+
+```powershell
+# On enrolled device — check MDM enrollment
+dsregcmd /status
+
+# Key fields to verify:
+# AzureAdJoined : YES
+# DomainJoined : NO (for pure AAD)
+# MDMUrl : https://enrollment.manage.microsoft.com/...
+```
+
+### Check Intune sync
+
+In Endpoint Manager → Devices → select device → **Sync** → verify last sync time.
+
+### Common issues and fixes
+
+**Issue:** Device not found in Autopilot
+**Fix:** Verify hardware hash was successfully imported. Check CSV format — serial number must match exactly.
+
+**Issue:** Enrollment Status Page (ESP) stuck at "Identifying"
+**Fix:** Check if the device can reach Autopilot endpoints. Required URLs:
+```
+*.manage.microsoft.com
+*.microsoftonline.com
+*.login.microsoftonline.com
+go.microsoft.com
+login.live.com
+```
+
+**Issue:** Apps fail to install during ESP
+**Fix:** Check app assignment is **Required** (not Available). Verify the app package isn't corrupt. Check Intune device logs:
+```
+Event Viewer → Applications and Services Logs → Microsoft → Windows → ModernDeployment-Diagnostics-Provider
+```
+
+**Issue:** BitLocker not encrypting
+**Fix:** Verify device has TPM 2.0. Check if Secure Boot is enabled in BIOS. Validate BitLocker policy is assigned to the device (not just user).
+
+### Collect diagnostic logs
+
+```powershell
+# Collect Autopilot/MDM logs
+MdmDiagnosticsTool.exe -area Autopilot -zip C:\AutopilotLogs.zip
+
+# Or via Endpoint Manager: Device → Collect Diagnostics
+```
+
+## Scaling Tips (100+ Devices)
+
+- **Use Dynamic Device Groups** in AAD: `(device.deviceOSType -eq "Windows")` — auto-assigns all Windows devices to Autopilot profile without manual management.
+- **Pre-provision (White Glove)**: IT pre-runs the device provisioning phase before shipping to user. First user login is then just a few minutes.
+- **Ship direct from manufacturer**: Request Dell ProDeploy or HP Lifecycle Services to upload hashes at the factory — skip hash collection entirely.
+- **Stagger deployments**: Deploy 20–30 devices per day during initial rollout to catch issues before they affect hundreds of users.
+
+## Deployment Checklist
+
+**Pre-deployment:**
+- [ ] Hardware hashes uploaded and showing "Assigned" in Intune
+- [ ] Deployment profile created and assigned to device group
+- [ ] All required apps assigned as "Required"
+- [ ] Baseline configuration profiles assigned
+- [ ] BitLocker policy validated on test device
+- [ ] Enrollment Status Page (ESP) configured and tested
+
+**During deployment:**
+- [ ] User receives device with setup guide
+- [ ] Test device completes full OOBE in < 30 minutes
+- [ ] Apps are installed before user reaches desktop (or ESP is configured to wait)
+
+**Post-deployment:**
+- [ ] Device appears in Endpoint Manager with correct name
+- [ ] All policies show "Succeeded"
+- [ ] BitLocker recovery key in AAD
+- [ ] Defender shows as healthy
+
+## Conclusion
+
+Windows Autopilot eliminates the manual effort of traditional imaging while delivering a consistent, corporate-ready experience to every user. The investment in Intune configuration pays off at scale: once your deployment profile and policies are solid, each additional machine takes zero extra IT time. The 200-unit Dell rollout I ran took 3 weeks of Intune configuration, then deployed with no physical IT intervention at the users' desks.
+
+---
+
+**Useful Resources:**
+- [Windows Autopilot Documentation - Microsoft](https://docs.microsoft.com/en-us/mem/autopilot/windows-autopilot)
+- [Get-WindowsAutoPilotInfo Script](https://www.powershellgallery.com/packages/Get-WindowsAutoPilotInfo)
+- [Intune Enrollment Status Page](https://docs.microsoft.com/en-us/mem/intune/enrollment/windows-enrollment-status)

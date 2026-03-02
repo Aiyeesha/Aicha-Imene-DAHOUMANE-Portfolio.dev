@@ -1,0 +1,288 @@
+---
+title: "Active Directory & GPO: Administration and Security Best Practices"
+excerpt: "A practical guide to structuring your AD OU hierarchy, designing GPOs that are maintainable and secure, and avoiding the most common administration mistakes."
+date: "2025-07-07"
+tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Security"]
+---
+
+A poorly designed Active Directory or a tangle of conflicting GPOs is one of the most painful technical debts an IT team can inherit. Here's how to design it right from the start — or clean up what you have.
+
+## OU Structure: The Foundation
+
+Your Organizational Unit (OU) hierarchy determines how GPOs apply and how delegation works. Get it wrong and you'll be fighting it for years.
+
+### Anti-pattern: Organizing by Location or Department Only
+
+```
+domain.local
+├── Paris
+│   ├── IT
+│   ├── Sales
+│   └── HR
+└── Lyon
+    ├── IT
+    └── Sales
+```
+
+**Problem:** If Paris IT and Lyon IT need the same GPO, you apply it to both OUs — or use WMI filters. Duplication and drift.
+
+### Recommended: Functional + Type Split
+
+```
+domain.local
+├── _Computers
+│   ├── Workstations
+│   │   ├── Standard
+│   │   └── Privileged
+│   ├── Servers
+│   │   ├── Production
+│   │   └── Dev-Test
+│   └── Kiosk
+├── _Users
+│   ├── Employees
+│   │   ├── IT
+│   │   ├── Sales
+│   │   └── HR
+│   ├── ServiceAccounts
+│   └── Admins
+└── _Groups
+```
+
+**Why this works:**
+- GPOs on `_Computers\Workstations` apply to all workstations regardless of office
+- Service accounts are separated → easier auditing
+- Admins OU can have stricter GPOs (no logon scripts, no personal apps)
+
+**Naming convention for OUs:** Use a prefix like `_` or `OU-` to distinguish OUs from other AD objects in queries.
+
+## GPO Design Principles
+
+### 1. One GPO, One Purpose
+
+Every GPO should do one thing and have a name that reflects it:
+
+```
+GPO: Computers-Firewall-Baseline
+GPO: Computers-Bitlocker-Standard
+GPO: Users-Desktop-Restrictions
+GPO: Users-Proxy-Settings
+GPO: Users-Mapped-Drives-Sales
+```
+
+**Never** create a "catch-all" GPO called "IT Policy" that contains 40 different settings. When you need to change the firewall config, you don't want to risk touching mapped drives.
+
+### 2. Computer vs. User Settings
+
+GPOs have two sides — Computer Configuration and User Configuration. Keep them separate:
+
+| | Computer Config GPO | User Config GPO |
+|--|---------------------|-----------------|
+| Applied at | Machine startup | User logon |
+| Applies to | Computer account | User account |
+| Linked to | Computer OUs | User OUs (or same OU) |
+| Examples | Firewall, BitLocker, Windows Update | Mapped drives, proxy, desktop restrictions |
+
+**Best practice:** Disable the unused side of each GPO.
+- If a GPO only contains Computer Configuration settings → disable User Configuration (GPO Properties → Details tab)
+- This speeds up Group Policy processing
+
+### 3. GPO Inheritance and Blocking
+
+By default, GPOs from parent OUs apply to child OUs. You can control this with:
+
+- **Block Inheritance** on an OU: child OU ignores parent GPOs. Use sparingly — creates confusion.
+- **Enforced** on a GPO link: forces the GPO to apply even if child has Block Inheritance. Use for security-critical policies.
+- **Security Filtering**: by default, GPOs apply to "Authenticated Users". Replace with a specific group for targeted application.
+
+```powershell
+# Check which GPOs apply to a specific computer
+gpresult /scope computer /r
+
+# Detailed HTML report
+gpresult /h C:\gpo-report.html
+
+# Force immediate GPO refresh on a remote machine
+Invoke-GPUpdate -Computer "PC-EXAMPLE" -Force
+```
+
+## Essential Security GPOs
+
+### GPO: Password Policy (Default Domain Policy)
+
+Note: Password policy for domain accounts must be in the **Default Domain Policy** (or use Fine-Grained Password Policies for specific groups).
+
+```
+Computer Configuration → Windows Settings → Security Settings → Account Policies → Password Policy
+
+Minimum password length: 12
+Password complexity: Enabled
+Maximum password age: 90 days
+Minimum password age: 1 day
+Enforce password history: 24 passwords
+```
+
+**Fine-Grained Password Policy for Admins** (stricter):
+```powershell
+# Create a PSO (Password Settings Object) for admins
+New-ADFineGrainedPasswordPolicy -Name "PSO-Admins" `
+    -Precedence 10 `
+    -MinPasswordLength 16 `
+    -PasswordHistoryCount 24 `
+    -MaxPasswordAge "60.00:00:00" `
+    -ComplexityEnabled $true `
+    -ReversibleEncryptionEnabled $false
+
+# Apply to the Domain Admins group
+Add-ADFineGrainedPasswordPolicySubject "PSO-Admins" -Subjects "Domain Admins"
+```
+
+### GPO: Account Lockout
+
+```
+Computer Configuration → Windows Settings → Security Settings → Account Policies → Account Lockout
+
+Account lockout threshold: 5 invalid attempts
+Account lockout duration: 30 minutes
+Reset account lockout counter after: 30 minutes
+```
+
+### GPO: Windows Firewall Baseline
+
+```
+Computer Configuration → Windows Settings → Security Settings → Windows Defender Firewall
+
+Domain Profile: On
+Private Profile: On
+Public Profile: On (block all inbound by default)
+
+Inbound rules:
+- Allow: RDP from Management VLAN only (IP filter)
+- Allow: ICMP (ping) from Management VLAN
+- Block: SMB from external (port 445)
+```
+
+### GPO: Disable Legacy Protocols
+
+```
+Computer Configuration → Administrative Templates → Network → Lanman Workstation
+  → Enable insecure guest logons: Disabled
+
+Computer Configuration → Windows Settings → Security Settings → Local Policies → Security Options
+  → Network security: LAN Manager authentication level: Send NTLMv2 response only. Refuse LM & NTLM
+  → Minimum session security for NTLM SSP: Require NTLMv2 session security, 128-bit encryption
+```
+
+### GPO: Removable Media Restrictions
+
+```
+Computer Configuration → Administrative Templates → System → Removable Storage Access
+  → All Removable Storage classes: Deny all access: Enabled
+
+(If USB exceptions needed, use device installation policies or a whitelist by hardware ID)
+```
+
+## User Rights and Privilege Management
+
+### Restrict Local Administrator Access
+
+```powershell
+# GPO: Computer Configuration → Preferences → Control Panel Settings → Local Users and Groups
+# Create/Update a local group: Administrators
+# Members: DOMAIN\Domain Admins, DOMAIN\IT-LocalAdmins-Group
+# Action: Update (replaces existing members)
+```
+
+This ensures only authorized AD groups are local admins — local accounts can't accumulate.
+
+### Audit Policy
+
+```
+Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy
+
+Account Logon:
+  Credential Validation: Success, Failure
+
+Account Management:
+  User Account Management: Success, Failure
+  Security Group Management: Success
+
+Logon/Logoff:
+  Logon: Success, Failure
+  Logoff: Success
+
+Object Access:
+  File System: Failure (on sensitive shares only)
+
+Privilege Use:
+  Sensitive Privilege Use: Success, Failure
+
+System:
+  Security State Change: Success, Failure
+```
+
+## Scripting AD Administration
+
+```powershell
+# Create a new user in the correct OU
+New-ADUser `
+    -Name "Dupont, Jean" `
+    -GivenName "Jean" `
+    -Surname "Dupont" `
+    -SamAccountName "j.dupont" `
+    -UserPrincipalName "j.dupont@domain.local" `
+    -Path "OU=Employees,OU=_Users,DC=domain,DC=local" `
+    -AccountPassword (ConvertTo-SecureString "Temp!2026" -AsPlainText -Force) `
+    -ChangePasswordAtLogon $true `
+    -Enabled $true
+
+# Add to groups
+Add-ADGroupMember -Identity "GRP-VPN-Users" -Members "j.dupont"
+Add-ADGroupMember -Identity "GRP-Sales" -Members "j.dupont"
+```
+
+```powershell
+# Disable account and move to Disabled OU on offboarding
+$user = "j.dupont"
+Disable-ADAccount -Identity $user
+Move-ADObject -Identity (Get-ADUser $user).DistinguishedName `
+    -TargetPath "OU=Disabled,OU=_Users,DC=domain,DC=local"
+```
+
+```powershell
+# Find all inactive computers (not logged in for 90 days)
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADComputer -Filter {LastLogonDate -lt $cutoff -and Enabled -eq $true} `
+    -Properties LastLogonDate | Select-Object Name, LastLogonDate
+```
+
+## AD Administration Checklist
+
+**Structure:**
+- [ ] OU hierarchy reflects functional groups, not just org chart
+- [ ] Computers and Users are in separate OU branches
+- [ ] Service accounts are in a dedicated OU with audited access
+- [ ] Unused accounts are in a `Disabled` OU (not deleted immediately)
+
+**GPO:**
+- [ ] Each GPO has a single, documented purpose
+- [ ] GPOs are named clearly: `[Scope]-[Purpose]-[Target]`
+- [ ] Unused half (computer or user) is disabled in GPO properties
+- [ ] Password policy is in Default Domain Policy or PSO
+- [ ] Audit policy captures logon successes/failures
+
+**Security:**
+- [ ] Admin accounts are separate from daily-use accounts
+- [ ] LM/NTLM v1 disabled — NTLMv2 or Kerberos only
+- [ ] USB restrictions in place for non-IT staff
+- [ ] Local admin group controlled by GPO (no individual exceptions)
+
+## Conclusion
+
+Active Directory is the backbone of your Windows environment — its design impacts security, manageability, and scalability for years. Invest time in a clean OU structure, name your GPOs descriptively, and keep each GPO focused on a single concern. The few hours spent designing this properly will save hundreds of hours of troubleshooting later.
+
+---
+
+**Useful Resources:**
+- [Microsoft AD Best Practices](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
+- [Group Policy Overview](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-objects)
+- [Fine-Grained Password Policies](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/adac/introduction-to-active-directory-administrative-center-enhancements--level-100-)

@@ -11,14 +11,18 @@ import TrackAwareServices from "@/components/TrackAwareServices";
 import LatestPosts from "@/components/LatestPosts";
 import { getExperienceItems, getCertificationItems } from "@/content/experience";
 import { testimonials } from "@/content/testimonials";
-import { useLocale, useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 
-export default function Home() {
-  const t = useTranslations();
-  const locale = useLocale() as "en" | "fr";
+type Props = { params: Promise<{ locale: "en" | "fr" }> };
+
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
   const experienceItems = getExperienceItems(locale);
   const certificationItems = getCertificationItems(locale);
+  const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
 
   return (
     <>
@@ -131,11 +135,11 @@ export default function Home() {
               </Reveal>
 
               <div className="mt-5">
-                <FeaturedProjects />
+                <FeaturedProjects projects={supabaseProjects} />
               </div>
 
               <div className="mt-10">
-                <ProjectsSection locale={locale} />
+                <ProjectsSection locale={locale} projects={supabaseProjects} />
               </div>
             </div>
       </section>

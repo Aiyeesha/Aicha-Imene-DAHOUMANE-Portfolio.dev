@@ -1,6 +1,7 @@
 {
   "nav": {
     "about": "À propos",
+    "certifications": "Certifications",
     "skills": "Compétences",
     "experience": "Expérience",
     "services": "Services",
@@ -16,8 +17,8 @@
   "hero": {
     "title": "Développeuse & Consultante Salesforce",
     "subtitle": "avec un bagage systèmes & DevOps",
-    "intro_salesforce": "J’aide les équipes à concevoir, construire et exploiter des solutions Salesforce et cloud sécurisées, scalables et réellement utiles pour les personnes qui les utilisent.",
-    "intro_itops": "J’aide les équipes à concevoir, maintenir et sécuriser des infrastructures IT et DevOps résilientes et évolutives.",
+    "intro_salesforce": "J'aide les équipes à concevoir, construire et exploiter des solutions Salesforce et cloud sécurisées, scalables et réellement utiles pour les personnes qui les utilisent.",
+    "intro_itops": "J'aide les équipes à concevoir, maintenir et sécuriser des infrastructures IT et DevOps résilientes et évolutives.",
     "avatar_alt": "Photo de profil",
     "title_salesforce": "Développeuse & Consultante Salesforce",
     "subtitle_salesforce": "avec un bagage systèmes & DevOps",
@@ -25,7 +26,7 @@
     "subtitle_itops": "Ingénieure opérations IT & DevOps",
     "value_salesforce": "Développeuse / administratrice Salesforce — orientation livraison, automatisation & qualité.",
     "value_itops": "Administratrice systèmes & IT Ops — fiabilité, automatisation & qualité.",
-    "proof1": "Sécurité d’abord",
+    "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
     "startHere": "Commencer ici :"
@@ -59,9 +60,9 @@
   },
   "sections": {
     "testimonials_title": "Témoignages",
-    "testimonials_subtitle": "Quelques mots de personnes avec qui j’ai travaillé.",
+    "testimonials_subtitle": "Quelques mots de personnes avec qui j'ai travaillé.",
     "skills_title": "Compétences",
-    "skills_subtitle": "Un mélange de Salesforce, d’administration, d’infrastructures et de pratiques DevOps.",
+    "skills_subtitle": "Un mélange de Salesforce, d'administration, d'infrastructures et de pratiques DevOps.",
     "experience_title": "Expérience",
     "experience_subtitle": "Déplie les éléments pour voir le détail (style accordéon).",
     "roles_title": "Rôles",
@@ -91,25 +92,25 @@
     "privacyNote": "Votre message est envoyé de façon sécurisée. Évitez de partager des secrets (mots de passe, tokens).",
     "otherWays": "Autres moyens",
     "bookCall": "Réserver un appel (Calendly)",
-    "bookCallMissing": "Le lien Calendly n’est pas encore configuré.",
-    "emailMe": "M’écrire par email",
+    "bookCallMissing": "Le lien Calendly n'est pas encore configuré.",
+    "emailMe": "M'écrire par email",
     "emailMissing": "Email non configuré.",
     "calendlyHint": "Réservez un créneau directement ci-dessous.",
     "openInNewTab": "Ouvrir dans un nouvel onglet",
     "close": "Fermer",
     "errors": {
       "invalid_json": "Requête invalide.",
-      "name_too_short": "Merci d’indiquer votre nom (au moins 2 caractères).",
-      "invalid_email": "Merci d’indiquer un email valide.",
-      "message_too_short": "Merci d’écrire un message plus long (au moins 10 caractères).",
+      "name_too_short": "Merci d'indiquer votre nom (au moins 2 caractères).",
+      "invalid_email": "Merci d'indiquer un email valide.",
+      "message_too_short": "Merci d'écrire un message plus long (au moins 10 caractères).",
       "rate_limited": "Trop de tentatives. Réessayez dans quelques minutes.",
-      "upstream_failed": "Échec d’envoi. Réessayez plus tard ou utilisez un autre canal.",
+      "upstream_failed": "Échec d'envoi. Réessayez plus tard ou utilisez un autre canal.",
       "generic": "Une erreur est survenue. Réessayez.",
-      "name_too_long": "Merci d’indiquer un nom plus court (80 caractères max).",
-      "email_too_long": "Merci d’indiquer une adresse email plus courte.",
+      "name_too_long": "Merci d'indiquer un nom plus court (80 caractères max).",
+      "email_too_long": "Merci d'indiquer une adresse email plus courte.",
       "invalid_topic": "Merci de sélectionner un sujet valide.",
       "message_too_long": "Votre message est trop long (2000 caractères max).",
-      "forbidden_origin": "Requête refusée. Merci d’utiliser le formulaire du site.",
+      "forbidden_origin": "Requête refusée. Merci d'utiliser le formulaire du site.",
       "policy_not_accepted": "Vous devez accepter la politique de confidentialité pour envoyer un message.",
       "too_many_links": "Trop de liens dans le message."
     },
@@ -130,10 +131,11 @@
     "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
     "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment.",
     "subjectLabel": "Sujet (optionnel)",
-    "subjectPlaceholder": "De quoi s’agit-il ?",
-    "acceptPolicyAria": "J’accepte la politique de confidentialité",
-    "acceptPolicyPrefix": "J’ai lu et j’accepte la",
-    "acceptPolicyLink": "politique de confidentialité"
+    "subjectPlaceholder": "De quoi s'agit-il ?",
+    "acceptPolicyAria": "J'accepte la politique de confidentialité",
+    "acceptPolicyPrefix": "J'ai lu et j'accepte la",
+    "acceptPolicyLink": "politique de confidentialité",
+    "availability": "Disponible · ouverte à de nouvelles opportunités"
   },
   "blog": {
     "card_tutorials_kicker": "Nouveau",
@@ -154,13 +156,17 @@
     },
     "kicker": "Blog & tutoriels",
     "title": "Articles",
-    "subtitle": "Guides pas à pas, retours d’expérience, implémentations concrètes.",
+    "subtitle": "Guides pas à pas, retours d'expérience, implémentations concrètes.",
     "backHome": "Accueil",
     "tags": {
       "all": "Tous",
       "allTags": "Voir tous les tags"
     },
     "readCta": "Lire",
+    "featured": "À la une",
+    "readingTime": "min de lecture",
+    "articleCount": "articles",
+    "noResults": "Aucun article trouvé.",
     "pagination": {
       "page": "Page",
       "prev": "Précédent",
@@ -171,7 +177,12 @@
   "blogPost": {
     "back": "Retour",
     "previous": "Article précédent",
-    "next": "Article suivant"
+    "next": "Article suivant",
+    "readingTime": "min de lecture",
+    "author": "À propos de l'auteure",
+    "authorRole": "Développeuse Salesforce · Administratrice systèmes",
+    "backToTop": "Retour en haut",
+    "related": "Articles connexes"
   },
   "blogToc": {
     "title": "Sommaire",
@@ -196,7 +207,7 @@
     "nextTestimonial": "Témoignage suivant",
     "closeModal": "Fermer la fenêtre",
     "toggleTheme": "Changer le thème",
-    "showImage": "Afficher l’image {index}",
+    "showImage": "Afficher l'image {index}",
     "chooseTrack": "Choisir un parcours",
     "chooseItOps": "Passer sur le parcours IT Ops",
     "chooseSalesforce": "Passer sur le parcours Salesforce"
@@ -223,14 +234,14 @@
     "kicker": "Profil",
     "title": "Des systèmes & réseaux au développement Salesforce",
     "p1": "Un profil technique avec un solide background en infrastructures IT, désormais pleinement orienté vers le conseil Salesforce et cloud.",
-    "p2": "J’ai commencé ma carrière côté infrastructure en tant qu’administratrice systèmes et réseaux junior. J’ai assuré le support aux utilisateurs, géré des environnements Windows, surveillé des réseaux et géré des incidents de sécurité. Cette expérience de terrain m’a appris comment les systèmes se comportent dans la réalité, comment les équipes collaborent sous pression et pourquoi des fondations robustes sont essentielles.",
-    "p3": "Aujourd’hui, je suis spécialisée en développement et administration Salesforce. Après avoir complété le parcours Salesforce Developer chez OpenClassrooms et travaillé sur Apex, les Flows et la CI/CD avec Salesforce CLI, j’aide désormais les organisations à automatiser leurs processus, améliorer la qualité des données et construire des solutions sécurisées et maintenables.",
-    "p4": "Je donne le meilleur de moi-même dans des environnements où l’autonomie, la transparence et l’apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l’international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
+    "p2": "J'ai commencé ma carrière côté infrastructure — stage chez MIDRANGE GROUP (fév – mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 200 workstations Dell via Windows Autopilot, administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
+    "p3": "D'oct. 2023 à oct. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction de 30% de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
+    "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l'international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
     "basedInValue": "Paris — ouverte à la relocalisation, au full-remote, hybride",
     "languagesLabel": "Langues",
-    "languagesValue": "Français (natif), Anglais (C2), Espagnol (B1), Italien (A1)",
+    "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
     "rolesValue": "Développeuse Salesforce, Administratrice Salesforce, Consultante Salesforce / IT",
     "availabilityLabel": "Disponibilité",
@@ -241,14 +252,14 @@
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
     "readMore": "Lire la suite",
-    "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l’expérience utilisateur et à la qualité de livraison.",
+    "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
-    "p3_salesforce": "Mon background systèmes & DevOps me permet d’aborder Salesforce avec une logique d’exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
+    "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
     "p4_salesforce": "Mon objectif 2026 : développer une activité freelance internationale (Salesforce) en collaboration avec des équipes distribuées, tout en continuant à renforcer mon expertise technique et fonctionnelle.",
-    "p1_itops": "IT Ops & DevOps : j’aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d’exploitation pragmatiques (runbooks, supervision, remédiation).",
-    "p2_itops": "Je mets en place des standards d’exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d’escalade, documentation et automatisation (scripts, jobs, playbooks).",
+    "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
+    "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
-    "p4_itops": "Mon objectif 2026 : intervenir sur des missions IT Ops / SRE / DevOps orientées fiabilité, automatisation et sécurité, en France et à l’international."
+    "p4_itops": "Mon objectif 2026 : intervenir sur des missions IT Ops / SRE / DevOps orientées fiabilité, automatisation et sécurité, en France et à l'international."
   },
   "mdx": {
     "copy": "Copier",
@@ -257,30 +268,34 @@
   "privacy": {
     "title": "Confidentialité & mentions",
     "analyticsTitle": "Analytics",
-    "analyticsBody": "Ce site n’utilise pas d’analytics de tracking par défaut.",
+    "analyticsBody": "Ce site n'utilise pas d'analytics de tracking par défaut.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "Aucun cookie marketing n’est déposé. Seuls des cookies techniques essentiels peuvent être utilisés par la plateforme (sécurité, fonctionnement).",
+    "cookiesBody": "Aucun cookie marketing n'est déposé. Seuls des cookies techniques essentiels peuvent être utilisés par la plateforme (sécurité, fonctionnement).",
     "formTitle": "Données du formulaire",
-    "formBody": "Lorsque vous envoyez le formulaire, votre nom, email, sujet et message sont traités pour vous répondre. Si Formspree est activé, les données sont transmises à Formspree pour l’acheminement.",
+    "formBody": "Lorsque vous envoyez le formulaire, votre nom, email, sujet et message sont traités pour vous répondre. Si Formspree est activé, les données sont transmises à Formspree pour l'acheminement.",
     "retention": "Conservation : les messages sont conservés uniquement le temps nécessaire au traitement de votre demande.",
     "contact": "Contact : {email}"
   },
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par {name}. Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Contact : {email}.",
     "hostingTitle": "Hébergement",
-    "hostingBody": "L’hébergement est assuré par Vercel Inc.",
+    "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
-    "ipBody": "L’ensemble des contenus (textes, visuels, code) est protégé. Toute reproduction nécessite une autorisation préalable.",
+    "ipBody": "L'ensemble des contenus publiés sur ce site (textes, visuels, code, structure) est la propriété exclusive de l'éditeur, sauf mention contraire. Toute reproduction, représentation ou diffusion, totale ou partielle, par quelque procédé que ce soit, sans autorisation écrite préalable de l'éditeur, est strictement interdite et constituerait une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle.",
     "liabilityTitle": "Responsabilité",
-    "liabilityBody": "Les informations sont fournies à titre indicatif. L’éditeur ne saurait être tenu responsable d’erreurs ou d’omissions."
+    "liabilityBody": "Les informations présentes sur ce site sont fournies à titre indicatif et ne sauraient engager la responsabilité de l'éditeur. L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées, mais ne peut garantir leur exhaustivité ni leur absence d'erreurs. Les liens hypertextes vers des sites tiers sont fournis à titre informatif ; l'éditeur n'exerce aucun contrôle sur leur contenu.",
+    "dataTitle": "Données personnelles",
+    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont utilisées uniquement pour répondre à votre demande et ne sont pas transmises à des tiers, sauf recours à un service d'acheminement d'emails. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
   },
   "accessibility": {
     "title": "Accessibilité",
-    "commitmentTitle": "Engagement",
-    "commitmentBody": "Nous cherchons à rendre ce site accessible au plus grand nombre (navigation clavier, contrastes lisibles, textes alternatifs).",
-    "helpTitle": "Un problème ?",
-    "helpBody": "Si vous rencontrez un souci d’accessibilité, contactez-nous en précisant la page concernée et la difficulté rencontrée."
+    "commitmentTitle": "Engagement d'accessibilité",
+    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.1 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d'information, structure HTML sémantique avec landmarks ARIA, et lien d'évitement vers le contenu principal.",
+    "limitsTitle": "Limites connues",
+    "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours sont les bienvenus.",
+    "helpTitle": "Un problème d'accessibilité ?",
+    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email."
   }
 }

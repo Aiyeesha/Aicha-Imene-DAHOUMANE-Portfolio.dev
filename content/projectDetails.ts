@@ -3127,6 +3127,244 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
       ]
     }
   }
-}
+},
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PYTHON PASSWORD CHECKER
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  slug: "python-password-checker",
+  locales: {
+    en: {
+      heroSubtitle: "Password strength analyzer — entropy, regex, HaveIBeenPwned (Python CLI)",
+      sections: [
+        {
+          type: "text",
+          title: "Context",
+          paragraphs: [
+            "A command-line tool that rigorously evaluates password strength without ever transmitting the password in plain text. Built as a security-focused personal project to explore Python's regex engine, entropy math, and privacy-preserving API design.",
+            "The tool runs interactively in the terminal, masks input at the prompt, and produces a full structured report in one pass."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "What I built",
+          items: [
+            "Entropy calculation based on character-pool size and password length (bits), with a 0–100 composite score.",
+            "Regex-based pattern detection: repeated characters, numeric/alphabetic sequences, keyboard walks (qwerty/azerty), embedded years, and long digit runs.",
+            "Dictionary matching against a curated list of 30+ common passwords and base words.",
+            "Crack-time estimation at three attack speeds (10k/s, 1M/s, 1B/s) using the full search-space formula.",
+            "HaveIBeenPwned integration using the k-anonymity model: only the first 5 characters of the SHA-1 hash are sent to the API — the actual password never leaves the machine.",
+            "ANSI-colored terminal output with a progress bar, per-criterion checklist, and actionable improvement suggestions."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Key technical choices",
+          items: [
+            { label: "Entropy model", value: "log₂(pool^length) — character-pool aware" },
+            { label: "HIBP privacy", value: "k-anonymity — only 5-char SHA-1 prefix sent" },
+            { label: "Pattern engine", value: "9 compiled regex rules (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD…)" },
+            { label: "Score range", value: "0–100 with length, complexity, entropy bonuses & penalties" },
+            { label: "Dependencies", value: "stdlib only (re, hashlib, math, getpass) + optional requests" }
+          ]
+        },
+        {
+          type: "code",
+          title: "Run it",
+          language: "bash",
+          code: `# No install needed — stdlib only (requests optional for HIBP)\npython password_checker.py`
+        }
+      ]
+    },
+    fr: {
+      heroSubtitle: "Analyseur de force de mot de passe — entropie, regex, HaveIBeenPwned (CLI Python)",
+      sections: [
+        {
+          type: "text",
+          title: "Contexte",
+          paragraphs: [
+            "Un outil en ligne de commande qui évalue rigoureusement la force d'un mot de passe sans jamais le transmettre en clair. Projet personnel centré sur la sécurité pour explorer le moteur regex de Python, le calcul d'entropie et la conception d'API respectueuses de la vie privée.",
+            "L'outil fonctionne en mode interactif dans le terminal, masque la saisie et produit un rapport structuré complet en une seule passe."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Ce que j'ai réalisé",
+          items: [
+            "Calcul de l'entropie basé sur la taille du pool de caractères et la longueur du mot de passe (bits), avec un score composite de 0 à 100.",
+            "Détection de patterns par regex : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées, longues séquences numériques.",
+            "Correspondance avec un dictionnaire de 30+ mots de passe courants.",
+            "Estimation du temps de crack à trois vitesses d'attaque (10k/s, 1M/s, 1 milliard/s) via la formule de l'espace de recherche.",
+            "Intégration HaveIBeenPwned par k-anonymat : seuls les 5 premiers caractères du hash SHA-1 sont envoyés à l'API — le mot de passe ne quitte jamais la machine.",
+            "Sortie terminal colorée ANSI avec barre de progression, checklist par critère et suggestions d'amélioration."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Choix techniques clés",
+          items: [
+            { label: "Modèle d'entropie", value: "log₂(pool^longueur) — adapté au pool de caractères" },
+            { label: "Confidentialité HIBP", value: "k-anonymat — seulement 5 caractères du hash SHA-1 envoyés" },
+            { label: "Moteur de patterns", value: "9 règles regex compilées (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD…)" },
+            { label: "Plage de score", value: "0–100 avec bonus longueur, complexité, entropie et pénalités" },
+            { label: "Dépendances", value: "stdlib uniquement (re, hashlib, math, getpass) + requests optionnel" }
+          ]
+        },
+        {
+          type: "code",
+          title: "Lancer l'outil",
+          language: "bash",
+          code: `# Aucune installation requise — stdlib uniquement (requests optionnel pour HIBP)\npython password_checker.py`
+        }
+      ]
+    }
+  }
+},
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PYTHON NETWORK SCANNER
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  slug: "python-network-scanner",
+  locales: {
+    en: {
+      heroSubtitle: "Real-time network scanner — FastAPI backend + WebSocket + React/Vite UI",
+      sections: [
+        {
+          type: "text",
+          title: "Context",
+          paragraphs: [
+            "A full-stack local network scanner built as a personal security project. The goal was to produce a tool that identifies live hosts and open ports on a LAN segment, streams results in real time, and classifies each service by risk level.",
+            "The project is split into two layers: a FastAPI Python backend that does the actual scanning with concurrent threads, and a React/Vite frontend that connects over WebSocket and displays results live."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "What I built",
+          items: [
+            "FastAPI backend with a WebSocket endpoint that streams scan results as they arrive — no polling, no page refresh.",
+            "Concurrent port scanner using ThreadPoolExecutor: scans all top ports across a subnet in parallel, then aggregates results per host.",
+            "Service detection table covering 100+ well-known ports (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
+            "Risk classification (high / medium / low) per open port based on a curated RISK_MAP (Telnet, RDP, Metasploit listener, exposed databases…).",
+            "CORS-enabled REST API alongside the WebSocket endpoint for easy integration with any frontend.",
+            "React/Vite frontend with live-updating host cards, port badges colour-coded by risk, and scan progress indicator."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Technical highlights",
+          items: [
+            { label: "Transport", value: "WebSocket (FastAPI + uvicorn) — real-time streaming" },
+            { label: "Concurrency", value: "ThreadPoolExecutor — parallel port probing per host" },
+            { label: "Port coverage", value: "100+ known services mapped in KNOWN_SERVICES dict" },
+            { label: "Risk levels", value: "high / medium / low per port (Telnet, RDP, exposed DBs…)" },
+            { label: "Stack", value: "Python 3, FastAPI, uvicorn, websockets · React 18, Vite" }
+          ]
+        },
+        {
+          type: "timeline",
+          title: "How it works",
+          steps: [
+            {
+              title: "Host discovery",
+              description: "The backend resolves the local subnet and pings each IP to build a list of live hosts."
+            },
+            {
+              title: "Concurrent port scan",
+              description: "For each live host, a ThreadPoolExecutor probes the TOP_PORTS list concurrently, collecting open ports and their service names."
+            },
+            {
+              title: "Risk classification",
+              description: "Each open port is looked up in RISK_MAP and tagged high / medium / low based on known exposure risk."
+            },
+            {
+              title: "WebSocket streaming",
+              description: "Results are pushed to the frontend in real time as each host finishes scanning — no need to wait for the full scan to complete."
+            },
+            {
+              title: "React UI rendering",
+              description: "The Vite/React frontend receives JSON events over WebSocket and renders host cards with colour-coded port badges on the fly."
+            }
+          ]
+        },
+        {
+          type: "code",
+          title: "Run it",
+          language: "bash",
+          code: `# Backend\npip install fastapi uvicorn websockets\npython backend.py\n\n# Frontend (separate terminal)\ncd scanner-ui\nnpm install && npm run dev`
+        }
+      ]
+    },
+    fr: {
+      heroSubtitle: "Scanner réseau temps réel — backend FastAPI + WebSocket + interface React/Vite",
+      sections: [
+        {
+          type: "text",
+          title: "Contexte",
+          paragraphs: [
+            "Un scanner de réseau local full-stack réalisé comme projet personnel de sécurité. L'objectif était de produire un outil capable d'identifier les hôtes actifs et les ports ouverts sur un segment LAN, de diffuser les résultats en temps réel et de classer chaque service par niveau de risque.",
+            "Le projet se compose de deux couches : un backend Python FastAPI qui effectue le scan réel avec des threads concurrents, et un frontend React/Vite qui se connecte via WebSocket et affiche les résultats en direct."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Ce que j'ai réalisé",
+          items: [
+            "Backend FastAPI avec un endpoint WebSocket qui diffuse les résultats au fur et à mesure — sans polling ni rechargement de page.",
+            "Scanner de ports concurrent via ThreadPoolExecutor : parcourt tous les top ports d'un sous-réseau en parallèle, puis agrège les résultats par hôte.",
+            "Table de détection de services couvrant 100+ ports connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
+            "Classification des risques (élevé / moyen / faible) par port ouvert basée sur un RISK_MAP (Telnet, RDP, listener Metasploit, bases de données exposées…).",
+            "API REST avec CORS activé en parallèle du endpoint WebSocket pour faciliter l'intégration.",
+            "Frontend React/Vite avec cartes d'hôtes en mise à jour temps réel, badges de ports colorés par risque et indicateur de progression du scan."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Points techniques clés",
+          items: [
+            { label: "Transport", value: "WebSocket (FastAPI + uvicorn) — streaming temps réel" },
+            { label: "Concurrence", value: "ThreadPoolExecutor — sondage parallèle des ports par hôte" },
+            { label: "Couverture ports", value: "100+ services connus dans le dict KNOWN_SERVICES" },
+            { label: "Niveaux de risque", value: "élevé / moyen / faible par port (Telnet, RDP, BDD exposées…)" },
+            { label: "Stack", value: "Python 3, FastAPI, uvicorn, websockets · React 18, Vite" }
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Fonctionnement",
+          steps: [
+            {
+              title: "Découverte des hôtes",
+              description: "Le backend résout le sous-réseau local et pinge chaque IP pour construire la liste des hôtes actifs."
+            },
+            {
+              title: "Scan de ports concurrent",
+              description: "Pour chaque hôte actif, un ThreadPoolExecutor sonde la liste TOP_PORTS en parallèle, collectant les ports ouverts et les noms de services."
+            },
+            {
+              title: "Classification des risques",
+              description: "Chaque port ouvert est recherché dans RISK_MAP et étiqueté élevé / moyen / faible selon le risque d'exposition connu."
+            },
+            {
+              title: "Streaming WebSocket",
+              description: "Les résultats sont envoyés au frontend en temps réel dès que chaque hôte termine son scan — sans attendre la fin du scan complet."
+            },
+            {
+              title: "Rendu React UI",
+              description: "Le frontend Vite/React reçoit des événements JSON via WebSocket et affiche des cartes d'hôtes avec des badges de ports colorés à la volée."
+            }
+          ]
+        },
+        {
+          type: "code",
+          title: "Lancer le projet",
+          language: "bash",
+          code: `# Backend\npip install fastapi uvicorn websockets\npython backend.py\n\n# Frontend (terminal séparé)\ncd scanner-ui\nnpm install && npm run dev`
+        }
+      ]
+    }
+  }
+},
 
 ];
