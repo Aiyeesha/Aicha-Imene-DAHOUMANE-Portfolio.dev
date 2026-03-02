@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV — Aïcha Imène DAHOUMANE — Développeuse Salesforce</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.45;
+      color: #1e293b;
+      background: white;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+    .cv-header {
+      background: #1e3a8a;
+      color: white;
+      padding: 20px 28px 16px;
+    }
+    .cv-name { font-size: 20pt; font-weight: 700; letter-spacing: -0.3px; }
+    .cv-title { font-size: 11pt; margin-top: 3px; opacity: 0.9; }
+    .cv-contacts {
+      display: flex; flex-wrap: wrap; gap: 5px 18px;
+      margin-top: 10px; font-size: 8.5pt; opacity: 0.85;
+    }
+    .cv-body { display: flex; align-items: stretch; }
+    .cv-main { flex: 1; padding: 16px 22px; min-width: 0; }
+    .cv-aside {
+      width: 190px; flex-shrink: 0;
+      background: #f0f4ff;
+      padding: 16px 14px;
+      border-left: 3px solid #1e3a8a;
+    }
+    .section { margin-bottom: 14px; }
+    .section-title {
+      font-size: 7.5pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: #1e3a8a;
+      border-bottom: 1.5px solid #1e3a8a;
+      padding-bottom: 3px; margin-bottom: 8px;
+    }
+    .summary { font-size: 9.5pt; line-height: 1.55; color: #334155; }
+    .exp-item { margin-bottom: 11px; }
+    .exp-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 3px; }
+    .exp-title { font-weight: 700; font-size: 10pt; }
+    .exp-period { font-size: 8pt; color: #64748b; white-space: nowrap; font-style: italic; }
+    .exp-company { font-size: 8.5pt; color: #475569; margin-bottom: 3px; }
+    .exp-note { font-size: 8pt; color: #64748b; font-style: italic; margin-top: 3px; }
+    ul.exp-ul { padding-left: 14px; margin-top: 3px; }
+    ul.exp-ul li { font-size: 9pt; margin-bottom: 2px; }
+    .edu-item { margin-bottom: 8px; }
+    .edu-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .edu-title { font-weight: 600; font-size: 9.5pt; }
+    .edu-year { font-size: 8pt; color: #64748b; font-style: italic; white-space: nowrap; }
+    .edu-school { font-size: 8.5pt; color: #475569; }
+    .edu-detail { font-size: 8pt; color: #64748b; margin-top: 1px; }
+    .aside-section { margin-bottom: 12px; }
+    .aside-title {
+      font-size: 7pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #1e3a8a;
+      border-bottom: 1px solid #1e3a8a;
+      padding-bottom: 2px; margin-bottom: 6px;
+    }
+    .sg-title { font-weight: 600; font-size: 8pt; color: #334155; margin-top: 5px; margin-bottom: 2px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 3px; }
+    .tag {
+      background: #1e3a8a; color: white;
+      font-size: 7pt; padding: 2px 6px; border-radius: 9px;
+    }
+    .tag-light { background: #dbeafe; color: #1e3a8a; font-size: 7pt; padding: 2px 6px; border-radius: 9px; }
+    .cert-item { margin-bottom: 4px; font-size: 8pt; }
+    .done { color: #16a34a; font-weight: 700; }
+    .wip  { color: #d97706; font-weight: 700; }
+    .plan { color: #2563eb; font-weight: 700; }
+    .lang-item { font-size: 8pt; margin-bottom: 3px; }
+    .lang-name { font-weight: 600; }
+    .int-item { font-size: 8pt; margin-bottom: 3px; }
+    @media print {
+      body { font-size: 9pt; }
+      @page { margin: 8mm 10mm; size: A4; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="cv-header">
+  <div class="cv-name">Aïcha Imène DAHOUMANE</div>
+  <div class="cv-title">Développeuse &amp; Consultante Salesforce &nbsp;·&nbsp; 3+ ans d'expérience</div>
+  <div class="cv-contacts">
+    <span>ai.dahoumane@gmail.com</span>
+    <span>+33 7 62 45 23 71</span>
+    <span>linkedin.com/in/aicha-imene-dahoumane</span>
+    <span>trailblazer.me/id/aidahoumane</span>
+    <span>aicha-imene-dahoumane-portfolio.vercel.app</span>
+    <span>Paris — remote OK · relocalisation envisageable</span>
+  </div>
+</header>
+
+<div class="cv-body">
+
+  <main class="cv-main">
+
+    <div class="section">
+      <div class="section-title">Profil</div>
+      <p class="summary">
+        Développeuse Salesforce avec <strong>3+ ans de pratique sur la plateforme</strong> (depuis 2022 en autodidacte, puis 2 ans d'expérience professionnelle chez LD Digitales). Spécialisée en <strong>Apex, Flows et CI/CD</strong>, j'apporte un <strong>bagage sysadmin rare</strong> qui permet d'aborder Salesforce avec une rigueur opérationnelle : déploiements contrôlés, tests automatisés, sécurité et documentation. RNCP Niveau 6 — Développeur Concepteur Logiciel (OpenClassrooms, oct. 2025). Anglais C1+ — disponible pour des missions internationales.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Expérience professionnelle</div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Développeuse Salesforce (CDI)</span>
+          <span class="exp-period">Oct. 2025 — Présent</span>
+        </div>
+        <div class="exp-company">LD Digitales &nbsp;·&nbsp; Remote &nbsp;·&nbsp; Contexte international</div>
+        <ul class="exp-ul">
+          <li>Conception et mise en œuvre de solutions Salesforce avancées avec les équipes métier</li>
+          <li>Optimisation et refactoring du code Apex existant (performance, maintenabilité)</li>
+          <li>Supervision des bonnes pratiques : CI/CD, revues de code, gestion des performances</li>
+          <li>Accompagnement et formation des collègues et apprenants sur les outils Salesforce</li>
+          <li>Coordination produit/marketing pour aligner les livrables techniques aux besoins métier</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Développeuse Salesforce (alternance)</span>
+          <span class="exp-period">Oct. 2023 — Oct. 2025</span>
+        </div>
+        <div class="exp-company">LD Digitales &nbsp;·&nbsp; Remote &nbsp;·&nbsp; Contexte international</div>
+        <ul class="exp-ul">
+          <li>Développement et maintenance de <strong>10+ classes Apex</strong> et batch jobs pour automatiser le traitement de données et le reporting</li>
+          <li>Création de <strong>20+ Flows</strong> d'orchestration des processus métier → <strong>réduction de 30 % de la charge manuelle</strong></li>
+          <li>Conception de composants <strong>Lightning Web Components (LWC)</strong> réutilisables via Lightning App Builder</li>
+          <li>Mise en place de pipelines <strong>CI/CD avec Salesforce CLI et GitHub Actions</strong> (déploiements inter-sandboxes)</li>
+          <li>Migrations de données (CSV / Data Import Wizard) avec 99,8 % de précision sur 3 modules majeurs</li>
+          <li>Documentation des scénarios de test, onboarding de 5+ utilisateurs</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Administratrice systèmes &amp; réseaux junior (stage)</span>
+          <span class="exp-period">Fév. 2023 — Mai 2023</span>
+        </div>
+        <div class="exp-company">MIDRANGE GROUP &nbsp;·&nbsp; France &nbsp;·&nbsp; Présentiel</div>
+        <ul class="exp-ul">
+          <li>Support technique pour 50+ postes de travail sur plusieurs sites</li>
+          <li>Déploiement de <strong>200+ workstations Dell</strong> via Windows Autopilot (Sysprep, WDS, PXE)</li>
+          <li>Administration Windows Server 2022 : AD DS, DNS, DHCP, GPO &nbsp;·&nbsp; PfSense/Squid &nbsp;·&nbsp; Acronis &nbsp;·&nbsp; Datto RMM</li>
+          <li>Supervision réseau et réponse aux incidents de sécurité (exercices ransomware)</li>
+        </ul>
+        <div class="exp-note">↳ Ce bagage IT Ops différencie mon approche Salesforce : rigueur opérationnelle, sécurité et CI/CD</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Formation</div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Développeur Concepteur Logiciel — RNCP Niveau 6 (Bac+3/4)</span>
+          <span class="edu-year">Oct. 2025</span>
+        </div>
+        <div class="edu-school">OpenClassrooms &nbsp;·&nbsp; Spécialisation Salesforce (oct. 2023 – oct. 2025)</div>
+        <div class="edu-detail">Apex &amp; Triggers · Flow Automation · Modèles de données · Déploiement CI/CD · Sécurité</div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Technicienne Supérieure Systèmes &amp; Réseaux — RNCP Niveau 5 (Bac+2)</span>
+          <span class="edu-year">Juin 2023</span>
+        </div>
+        <div class="edu-school">GRETA du Val d'Oise &nbsp;·&nbsp; Oct. 2022 – Juin 2023</div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Technicien(ne) d'Assistance Informatique — RNCP Niveau 4 (Bac)</span>
+          <span class="edu-year">Juil. 2022</span>
+        </div>
+        <div class="edu-school">GRETA du Val d'Oise &nbsp;·&nbsp; Lycée Louis Jouvet, Taverny</div>
+      </div>
+    </div>
+
+  </main>
+
+  <aside class="cv-aside">
+
+    <div class="aside-section">
+      <div class="aside-title">Compétences Salesforce</div>
+      <div class="sg-title">Développement</div>
+      <div class="tags">
+        <span class="tag">Apex</span><span class="tag">Triggers</span><span class="tag">Batch Jobs</span>
+        <span class="tag">SOQL/SOSL</span><span class="tag">LWC</span><span class="tag">Aura</span>
+        <span class="tag">Flows</span><span class="tag">Validation Rules</span>
+      </div>
+      <div class="sg-title">Admin &amp; Data</div>
+      <div class="tags">
+        <span class="tag">Data Model</span><span class="tag">Record Types</span>
+        <span class="tag">Permission Sets</span><span class="tag">Sharing Rules</span>
+        <span class="tag">Page Layouts</span><span class="tag">Data Import</span>
+      </div>
+      <div class="sg-title">DevOps &amp; Outils</div>
+      <div class="tags">
+        <span class="tag">Salesforce CLI</span><span class="tag">SFDX</span>
+        <span class="tag">GitHub Actions</span><span class="tag">Change Sets</span>
+        <span class="tag">Sandboxes</span><span class="tag">VS Code</span>
+        <span class="tag">Postman</span><span class="tag">Git</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Autres technologies</div>
+      <div class="tags">
+        <span class="tag-light">Java</span><span class="tag-light">SQL</span>
+        <span class="tag-light">HTML/CSS</span><span class="tag-light">Python</span>
+        <span class="tag-light">Windows Server</span><span class="tag-light">AD DS</span>
+        <span class="tag-light">PfSense</span><span class="tag-light">Acronis</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Certifications</div>
+      <div class="cert-item"><span class="done">✓</span> Développeur Concepteur Logiciel RNCP L6 <em>(oct. 2025)</em></div>
+      <div class="cert-item"><span class="done">✓</span> Linguaskill Business C1+ — Cambridge <em>(avr. 2021)</em></div>
+      <div class="cert-item"><span class="wip">●</span> Trailhead Ranger — actif</div>
+      <div class="cert-item"><span class="plan">→</span> Salesforce Admin — en préparation</div>
+      <div class="cert-item"><span class="plan">→</span> Salesforce PD1 — en préparation</div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Langues</div>
+      <div class="lang-item"><span class="lang-name">Français</span> &nbsp;·&nbsp; natif</div>
+      <div class="lang-item"><span class="lang-name">Anglais</span> &nbsp;·&nbsp; C1+ (Linguaskill Cambridge)</div>
+      <div class="lang-item"><span class="lang-name">Espagnol</span> &nbsp;·&nbsp; B1</div>
+      <div class="lang-item"><span class="lang-name">Italien</span> &nbsp;·&nbsp; A1</div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Centres d'intérêt</div>
+      <div class="int-item">Arts martiaux · Danse</div>
+      <div class="int-item">Mode — design, sketch, défilés</div>
+      <div class="int-item">Cybersécurité, CTF</div>
+      <div class="int-item">Voyages, découvertes culturelles</div>
+    </div>
+
+  </aside>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,263 @@
+---
+title: "Active Directory et GPO : administration et bonnes pratiques de sécurité"
+excerpt: "Guide pratique pour structurer la hiérarchie d'OU de votre AD, concevoir des GPO maintenables et sécurisées, et éviter les erreurs d'administration les plus fréquentes."
+date: "2025-07-07"
+tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Sécurité"]
+---
+
+Un Active Directory mal conçu ou un enchevêtrement de GPO conflictuelles est l'une des dettes techniques les plus douloureuses qu'une équipe IT puisse hériter. Voici comment le concevoir correctement dès le départ — ou nettoyer ce que vous avez.
+
+## Structure d'OU : la fondation
+
+La hiérarchie de vos Unités d'Organisation (OU) détermine la manière dont les GPO s'appliquent et comment la délégation fonctionne. Mal conçue, vous vous batterez avec pendant des années.
+
+### Anti-pattern : organisation par localisation ou département uniquement
+
+```
+domain.local
+├── Paris
+│   ├── IT
+│   ├── Commercial
+│   └── RH
+└── Lyon
+    ├── IT
+    └── Commercial
+```
+
+**Problème :** Si l'IT Paris et l'IT Lyon ont besoin de la même GPO, vous l'appliquez aux deux OU — ou utilisez des filtres WMI. Duplication et dérive.
+
+### Recommandé : découpage fonctionnel + type
+
+```
+domain.local
+├── _Ordinateurs
+│   ├── Postes
+│   │   ├── Standard
+│   │   └── Privilegiés
+│   ├── Serveurs
+│   │   ├── Production
+│   │   └── Dev-Test
+│   └── Kiosques
+├── _Utilisateurs
+│   ├── Employes
+│   │   ├── IT
+│   │   ├── Commercial
+│   │   └── RH
+│   ├── ComptesService
+│   └── Admins
+└── _Groupes
+```
+
+**Pourquoi ça fonctionne :**
+- Les GPO sur `_Ordinateurs\Postes` s'appliquent à tous les postes quel que soit le bureau
+- Les comptes de service sont séparés → audit plus facile
+- L'OU Admins peut avoir des GPO plus strictes
+
+**Convention de nommage :** Utilisez un préfixe comme `_` pour distinguer les OU des autres objets AD dans les requêtes.
+
+## Principes de conception des GPO
+
+### 1. Une GPO, un objectif
+
+Chaque GPO doit faire une seule chose et avoir un nom qui le reflète :
+
+```
+GPO: Ordinateurs-Pare-feu-Baseline
+GPO: Ordinateurs-Bitlocker-Standard
+GPO: Utilisateurs-Bureau-Restrictions
+GPO: Utilisateurs-Proxy-Parametres
+GPO: Utilisateurs-Lecteurs-Réseau-Commercial
+```
+
+**Ne créez jamais** une GPO fourre-tout appelée « Stratégie IT » qui contient 40 paramètres différents. Quand vous devez changer la config pare-feu, vous ne voulez pas risquer de toucher aux lecteurs réseau.
+
+### 2. Paramètres ordinateur vs. utilisateur
+
+Les GPO ont deux volets — Configuration ordinateur et Configuration utilisateur. Gardez-les séparés :
+
+| | GPO Config ordinateur | GPO Config utilisateur |
+|--|----------------------|----------------------|
+| Appliqué au | Démarrage de la machine | Ouverture de session |
+| S'applique à | Compte ordinateur | Compte utilisateur |
+| Lié à | OU Ordinateurs | OU Utilisateurs |
+| Exemples | Pare-feu, BitLocker, Windows Update | Lecteurs réseau, proxy, restrictions bureau |
+
+**Bonne pratique :** Désactivez le volet inutilisé de chaque GPO.
+- GPO contenant uniquement des paramètres d'ordinateur → désactiver Configuration utilisateur (Propriétés GPO → onglet Détails)
+- Cela accélère le traitement de la stratégie de groupe
+
+### 3. Héritage et blocage des GPO
+
+Par défaut, les GPO des OU parents s'appliquent aux OU enfants. Vous pouvez contrôler cela avec :
+
+- **Bloquer l'héritage** sur une OU : l'OU enfant ignore les GPO parents. À utiliser avec parcimonie.
+- **Appliquée** sur un lien GPO : force la GPO à s'appliquer même si l'enfant bloque l'héritage. Pour les stratégies critiques de sécurité.
+- **Filtrage de sécurité** : par défaut, les GPO s'appliquent aux « Utilisateurs authentifiés ». Remplacer par un groupe spécifique pour une application ciblée.
+
+```powershell
+# Vérifier quelles GPO s'appliquent à un ordinateur spécifique
+gpresult /scope computer /r
+
+# Rapport HTML détaillé
+gpresult /h C:\rapport-gpo.html
+
+# Forcer la mise à jour immédiate des GPO sur une machine distante
+Invoke-GPUpdate -Computer "PC-EXEMPLE" -Force
+```
+
+## GPO de sécurité essentielles
+
+### GPO : Stratégie de mot de passe (Default Domain Policy)
+
+Note : la stratégie de mot de passe pour les comptes du domaine doit être dans la **Default Domain Policy** (ou utiliser des stratégies de mot de passe affinées pour des groupes spécifiques).
+
+```
+Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
+    → Stratégies de compte → Stratégie de mot de passe
+
+Longueur minimale du mot de passe : 12
+Complexité : Activée
+Durée de vie maximale : 90 jours
+Durée de vie minimale : 1 jour
+Historique des mots de passe : 24
+```
+
+**Stratégie affinée pour les admins (PSO) :**
+```powershell
+New-ADFineGrainedPasswordPolicy -Name "PSO-Admins" `
+    -Precedence 10 `
+    -MinPasswordLength 16 `
+    -PasswordHistoryCount 24 `
+    -MaxPasswordAge "60.00:00:00" `
+    -ComplexityEnabled $true
+
+Add-ADFineGrainedPasswordPolicySubject "PSO-Admins" -Subjects "Admins du domaine"
+```
+
+### GPO : Verrouillage de compte
+
+```
+Seuil de verrouillage : 5 tentatives
+Durée de verrouillage : 30 minutes
+Réinitialiser le compteur après : 30 minutes
+```
+
+### GPO : Désactiver les protocoles obsolètes
+
+```
+Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
+    → Stratégies locales → Options de sécurité
+
+Niveau d'authentification LAN Manager : Envoyer uniquement la réponse NTLMv2. Refuser LM et NTLM
+Sécurité de session minimale pour NTLM SSP : NTLMv2 requis, chiffrement 128 bits
+```
+
+### GPO : Restrictions sur les médias amovibles
+
+```
+Configuration ordinateur → Modèles d'administration → Système
+    → Accès au stockage amovible
+
+Toutes les classes de stockage amovible : Refuser tout accès : Activé
+```
+
+## Gestion des droits et des accès privilégiés
+
+### Restreindre les accès administrateurs locaux
+
+```powershell
+# Via GPO : Configuration ordinateur → Préférences → Panneau de configuration
+#    → Utilisateurs et groupes locaux
+# Créer/Mettre à jour le groupe local : Administrateurs
+# Membres : DOMAINE\Admins du domaine, DOMAINE\IT-AdminsLocaux-Groupe
+# Action : Mettre à jour (remplace les membres existants)
+```
+
+Cela garantit que seuls les groupes AD autorisés sont administrateurs locaux — les comptes locaux ne peuvent pas s'accumuler.
+
+### Stratégie d'audit
+
+```
+Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
+    → Configuration avancée de la stratégie d'audit
+
+Connexion de compte :
+  Validation des informations d'identification : Succès, Échec
+
+Gestion des comptes :
+  Gestion des comptes d'utilisateurs : Succès, Échec
+  Gestion des groupes de sécurité : Succès
+
+Connexion/Déconnexion :
+  Ouverture de session : Succès, Échec
+  Fermeture de session : Succès
+
+Utilisation des privilèges :
+  Utilisation de privilèges sensibles : Succès, Échec
+```
+
+## Scripts d'administration AD
+
+```powershell
+# Créer un utilisateur dans la bonne OU
+New-ADUser `
+    -Name "Dupont, Jean" `
+    -GivenName "Jean" `
+    -Surname "Dupont" `
+    -SamAccountName "j.dupont" `
+    -UserPrincipalName "j.dupont@domain.local" `
+    -Path "OU=Employes,OU=_Utilisateurs,DC=domain,DC=local" `
+    -AccountPassword (ConvertTo-SecureString "Temp!2026" -AsPlainText -Force) `
+    -ChangePasswordAtLogon $true `
+    -Enabled $true
+
+# Ajouter aux groupes
+Add-ADGroupMember -Identity "GRP-VPN-Utilisateurs" -Members "j.dupont"
+Add-ADGroupMember -Identity "GRP-Commercial" -Members "j.dupont"
+```
+
+```powershell
+# Désactiver le compte et déplacer dans l'OU Désactivés au départ
+$user = "j.dupont"
+Disable-ADAccount -Identity $user
+Move-ADObject -Identity (Get-ADUser $user).DistinguishedName `
+    -TargetPath "OU=Desactives,OU=_Utilisateurs,DC=domain,DC=local"
+```
+
+```powershell
+# Trouver tous les ordinateurs inactifs (pas de connexion depuis 90 jours)
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADComputer -Filter {LastLogonDate -lt $cutoff -and Enabled -eq $true} `
+    -Properties LastLogonDate | Select-Object Name, LastLogonDate
+```
+
+## Checklist d'administration AD
+
+**Structure :**
+- [ ] La hiérarchie d'OU reflète les groupes fonctionnels, pas seulement l'organigramme
+- [ ] Ordinateurs et Utilisateurs sont dans des branches d'OU séparées
+- [ ] Les comptes de service sont dans une OU dédiée avec accès audité
+- [ ] Les comptes inutilisés sont dans une OU `Désactivés` (pas supprimés immédiatement)
+
+**GPO :**
+- [ ] Chaque GPO a un objectif unique et documenté
+- [ ] Les GPO sont nommées clairement : `[Portée]-[Objectif]-[Cible]`
+- [ ] Le volet inutilisé (ordinateur ou utilisateur) est désactivé dans les propriétés GPO
+- [ ] La stratégie de mot de passe est dans la Default Domain Policy ou dans une PSO
+
+**Sécurité :**
+- [ ] Les comptes d'administration sont séparés des comptes du quotidien
+- [ ] LM/NTLM v1 désactivés — NTLMv2 ou Kerberos uniquement
+- [ ] Restrictions USB en place pour le personnel non-IT
+- [ ] Groupe d'admins locaux contrôlé par GPO
+
+## Conclusion
+
+Active Directory est la colonne vertébrale de votre environnement Windows — sa conception impacte la sécurité, la maintenabilité et la scalabilité pendant des années. Investissez du temps dans une structure d'OU propre, nommez vos GPO de façon explicite, et gardez chaque GPO focalisée sur un seul objectif. Les quelques heures passées à bien concevoir cela vous économiseront des centaines d'heures de débogage par la suite.
+
+---
+
+**Ressources utiles :**
+- [Bonnes pratiques AD - Microsoft](https://docs.microsoft.com/fr-fr/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
+- [Vue d'ensemble des stratégies de groupe](https://docs.microsoft.com/fr-fr/previous-versions/windows/desktop/policy/group-policy-objects)
+- [Stratégies de mot de passe affinées](https://docs.microsoft.com/fr-fr/windows-server/identity/ad-ds/get-started/adac/introduction-to-active-directory-administrative-center-enhancements--level-100-)

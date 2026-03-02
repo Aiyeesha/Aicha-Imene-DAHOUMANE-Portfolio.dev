@@ -1,5 +1,6 @@
 // lib/data/projects.ts
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { GITHUB_REPOS } from "@/content/github-repos";
 
 export async function getPublishedProjectsWithAssets(locale: string) {
   const supabase = createServerSupabaseClient();
@@ -8,6 +9,7 @@ export async function getPublishedProjectsWithAssets(locale: string) {
     .from("projects")
     .select(`
       id, slug, locale, title, summary, content, tech_stack, repo_url, live_url,
+      track, categories, tags, badge, highlights,
       featured, sort_order, status,
       project_assets (
         id, project_id, type, visibility, title, description,
@@ -25,6 +27,7 @@ export async function getPublishedProjectsWithAssets(locale: string) {
 
   return (data ?? []).map((p: any) => ({
     ...p,
+    repo_url: p.repo_url || GITHUB_REPOS[p.slug] || null,
     project_assets: (p.project_assets ?? []).sort(
       (a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
     ),

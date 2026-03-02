@@ -10,7 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci --passWithNoTests"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

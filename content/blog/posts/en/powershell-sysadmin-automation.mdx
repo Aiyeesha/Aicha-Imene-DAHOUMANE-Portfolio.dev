@@ -1,0 +1,308 @@
+---
+title: "PowerShell Automation for Sysadmins: Scripts That Save Hours Every Week"
+excerpt: "Practical PowerShell scripts for Windows system administrators — user management, disk monitoring, log collection, remote execution, and scheduled reporting."
+date: "2025-10-06"
+tags: ["IT Ops", "PowerShell", "Automation", "Windows", "Scripting"]
+---
+
+PowerShell is the Swiss Army knife of Windows administration. The difference between a sysadmin who's always firefighting and one who has time to think is usually a collection of good scripts. Here are the ones that have consistently saved the most time.
+
+## 1. Bulk User Account Management
+
+### Create Multiple Users from CSV
+
+```powershell
+# users.csv format:
+# GivenName,Surname,Department,Title,Manager
+# Jean,Dupont,Sales,Account Manager,m.martin
+# Alice,Martin,IT,Sysadmin,
+
+Import-Csv "C:\users.csv" | ForEach-Object {
+    $sam = "$($_.GivenName[0]).$($_.Surname)".ToLower()
+    $upn = "$sam@company.com"
+    $ou  = "OU=$($_.Department),OU=Employees,DC=company,DC=local"
+
+    # Skip if user already exists
+    if (Get-ADUser -Filter {SamAccountName -eq $sam} -ErrorAction SilentlyContinue) {
+        Write-Warning "User $sam already exists — skipping"
+        return
+    }
+
+    $params = @{
+        Name                  = "$($_.GivenName) $($_.Surname)"
+        GivenName             = $_.GivenName
+        Surname               = $_.Surname
+        SamAccountName        = $sam
+        UserPrincipalName     = $upn
+        Department            = $_.Department
+        Title                 = $_.Title
+        Path                  = $ou
+        AccountPassword       = (ConvertTo-SecureString "Welcome2026!" -AsPlainText -Force)
+        ChangePasswordAtLogon = $true
+        Enabled               = $true
+    }
+
+    New-ADUser @params
+    Write-Host "Created: $sam" -ForegroundColor Green
+}
+```
+
+### Disable Inactive Accounts (90 days)
+
+```powershell
+$cutoff = (Get-Date).AddDays(-90)
+$disabledOU = "OU=Disabled,OU=Users,DC=company,DC=local"
+
+$inactiveUsers = Get-ADUser -Filter {
+    LastLogonDate -lt $cutoff -and
+    Enabled -eq $true -and
+    DistinguishedName -notlike "*$disabledOU*"
+} -Properties LastLogonDate, Department | Where-Object {
+    $_.DistinguishedName -notlike "*ServiceAccounts*"  # protect service accounts
+}
+
+foreach ($user in $inactiveUsers) {
+    Disable-ADAccount -Identity $user.SamAccountName
+    Move-ADObject -Identity $user.DistinguishedName -TargetPath $disabledOU
+    Write-Host "Disabled and moved: $($user.SamAccountName) — Last logon: $($user.LastLogonDate)"
+}
+
+Write-Host "`nTotal processed: $($inactiveUsers.Count)"
+```
+
+### Offboarding Checklist Script
+
+```powershell
+function Invoke-UserOffboarding {
+    param([string]$SamAccountName)
+
+    $user = Get-ADUser -Identity $SamAccountName -Properties MemberOf, Manager
+
+    # 1. Disable account
+    Disable-ADAccount -Identity $SamAccountName
+
+    # 2. Clear group memberships (except Domain Users)
+    $user.MemberOf | ForEach-Object {
+        Remove-ADGroupMember -Identity $_ -Members $SamAccountName -Confirm:$false
+    }
+
+    # 3. Set description with offboarding date
+    Set-ADUser -Identity $SamAccountName -Description "Offboarded $(Get-Date -Format 'yyyy-MM-dd')"
+
+    # 4. Move to Disabled OU
+    Move-ADObject -Identity $user.DistinguishedName `
+        -TargetPath "OU=Disabled,OU=Users,DC=company,DC=local"
+
+    Write-Host "Offboarding complete for: $SamAccountName" -ForegroundColor Green
+}
+
+# Usage
+Invoke-UserOffboarding -SamAccountName "j.dupont"
+```
+
+## 2. Disk Space Monitoring
+
+### Alert on Low Disk Space
+
+```powershell
+$threshold = 20  # Alert when free space below 20%
+$smtpServer = "mail.company.com"
+$alertEmail = "it-alerts@company.com"
+
+$diskReport = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" | ForEach-Object {
+    $pctFree = [math]::Round(($_.FreeSpace / $_.Size) * 100, 1)
+    [PSCustomObject]@{
+        Computer  = $env:COMPUTERNAME
+        Drive     = $_.DeviceID
+        SizeGB    = [math]::Round($_.Size / 1GB, 1)
+        FreeGB    = [math]::Round($_.FreeSpace / 1GB, 1)
+        PctFree   = $pctFree
+        Status    = if ($pctFree -lt $threshold) { "⚠️ LOW" } else { "OK" }
+    }
+}
+
+$lowDisks = $diskReport | Where-Object { $_.Status -eq "⚠️ LOW" }
+
+if ($lowDisks) {
+    $body = $lowDisks | Format-Table | Out-String
+    Send-MailMessage -To $alertEmail -From "monitoring@company.com" `
+        -Subject "⚠️ Low Disk Space on $env:COMPUTERNAME" `
+        -Body $body -SmtpServer $smtpServer
+}
+
+$diskReport | Format-Table -AutoSize
+```
+
+### Collect Disk Usage Across Multiple Servers
+
+```powershell
+$servers = @("SRV-FILE01", "SRV-FILE02", "SRV-APP01", "SRV-DB01")
+
+$allDisks = $servers | ForEach-Object {
+    $server = $_
+    try {
+        Get-WmiObject Win32_LogicalDisk -ComputerName $server -Filter "DriveType=3" |
+        Select-Object @{n="Server";e={$server}},
+                      DeviceID,
+                      @{n="SizeGB";e={[math]::Round($_.Size/1GB,1)}},
+                      @{n="FreeGB";e={[math]::Round($_.FreeSpace/1GB,1)}},
+                      @{n="UsedPct";e={[math]::Round((($_.Size-$_.FreeSpace)/$_.Size)*100,1)}}
+    } catch {
+        Write-Warning "Cannot reach: $server"
+    }
+}
+
+$allDisks | Sort-Object UsedPct -Descending | Format-Table -AutoSize
+```
+
+## 3. Event Log Collection and Filtering
+
+### Find Failed Logon Attempts (Event ID 4625)
+
+```powershell
+$startTime = (Get-Date).AddHours(-24)
+$failedLogons = Get-WinEvent -FilterHashtable @{
+    LogName   = "Security"
+    Id        = 4625  # Failed logon
+    StartTime = $startTime
+} -ErrorAction SilentlyContinue
+
+$failedLogons | ForEach-Object {
+    $xml = [xml]$_.ToXml()
+    $data = $xml.Event.EventData.Data
+
+    [PSCustomObject]@{
+        Time        = $_.TimeCreated
+        Account     = ($data | Where-Object {$_.Name -eq "TargetUserName"})."#text"
+        Domain      = ($data | Where-Object {$_.Name -eq "TargetDomainName"})."#text"
+        SourceIP    = ($data | Where-Object {$_.Name -eq "IpAddress"})."#text"
+        LogonType   = ($data | Where-Object {$_.Name -eq "LogonType"})."#text"
+        Reason      = ($data | Where-Object {$_.Name -eq "SubStatus"})."#text"
+    }
+} | Sort-Object Time -Descending | Format-Table -AutoSize
+```
+
+### Export Security Events to CSV
+
+```powershell
+$events = Get-WinEvent -FilterHashtable @{
+    LogName   = "Security"
+    Id        = @(4624, 4625, 4648, 4720, 4726)  # Logon, failed, explicit, user created/deleted
+    StartTime = (Get-Date).AddDays(-7)
+}
+
+$events | Select-Object TimeCreated, Id, Message |
+    Export-Csv "C:\security-events-$(Get-Date -Format 'yyyy-MM-dd').csv" -NoTypeInformation
+
+Write-Host "Exported $($events.Count) events"
+```
+
+## 4. Remote Execution with Invoke-Command
+
+```powershell
+# Run a command on multiple servers simultaneously
+$servers = @("SRV-WEB01", "SRV-WEB02", "SRV-WEB03")
+
+$results = Invoke-Command -ComputerName $servers -ScriptBlock {
+    [PSCustomObject]@{
+        Server      = $env:COMPUTERNAME
+        OSVersion   = (Get-WmiObject Win32_OperatingSystem).Caption
+        Uptime      = (Get-Date) - (gcim Win32_OperatingSystem).LastBootUpTime
+        CPULoad     = (Get-WmiObject Win32_Processor | Measure-Object LoadPercentage -Average).Average
+        Services    = (Get-Service | Where-Object {$_.Status -eq "Running"}).Count
+    }
+}
+
+$results | Sort-Object Server | Format-Table -AutoSize
+```
+
+### Restart Services on Multiple Servers
+
+```powershell
+$servers = @("SRV-APP01", "SRV-APP02")
+$serviceName = "W3SVC"  # IIS
+
+Invoke-Command -ComputerName $servers -ScriptBlock {
+    param($svc)
+    $s = Get-Service -Name $svc
+    if ($s.Status -ne "Running") {
+        Start-Service $svc
+        Write-Host "$env:COMPUTERNAME: Started $svc"
+    } else {
+        Restart-Service $svc
+        Write-Host "$env:COMPUTERNAME: Restarted $svc"
+    }
+} -ArgumentList $serviceName
+```
+
+## 5. Scheduled Reporting
+
+### Weekly Server Health Report
+
+```powershell
+# Save as: C:\Scripts\weekly-report.ps1
+# Schedule via Task Scheduler: every Monday 7am
+
+$servers = @("SRV-DC01", "SRV-FILE01", "SRV-APP01")
+$html = @"
+<html><body style="font-family:Arial; font-size:12px">
+<h2>Weekly Server Health Report — $(Get-Date -Format 'dd/MM/yyyy')</h2>
+"@
+
+foreach ($server in $servers) {
+    try {
+        $os   = Get-WmiObject Win32_OperatingSystem -ComputerName $server
+        $disk = Get-WmiObject Win32_LogicalDisk -ComputerName $server -Filter "DriveType=3" |
+                Select-Object DeviceID, @{n="FreeGB";e={[math]::Round($_.FreeSpace/1GB,1)}}
+        $uptime = (Get-Date) - $os.ConvertToDateTime($os.LastBootUpTime)
+
+        $html += "<h3>$server</h3><ul>"
+        $html += "<li>Uptime: $([math]::Round($uptime.TotalDays,1)) days</li>"
+        foreach ($d in $disk) {
+            $html += "<li>Disk $($d.DeviceID): $($d.FreeGB) GB free</li>"
+        }
+        $html += "</ul>"
+    } catch {
+        $html += "<h3>$server — ⚠️ Unreachable</h3>"
+    }
+}
+
+$html += "</body></html>"
+
+Send-MailMessage -To "it-team@company.com" -From "monitoring@company.com" `
+    -Subject "Weekly Server Report — $(Get-Date -Format 'dd/MM/yyyy')" `
+    -Body $html -BodyAsHtml -SmtpServer "mail.company.com"
+```
+
+## Script Best Practices
+
+```powershell
+# Always include error handling
+try {
+    # your operation
+} catch {
+    Write-Error "Failed: $_"
+    # optionally: send alert email, write to log file
+}
+
+# Use Write-Verbose for debugging (activate with -Verbose flag)
+Write-Verbose "Processing user: $sam"
+
+# Log to file
+$logFile = "C:\Logs\script-$(Get-Date -Format 'yyyy-MM-dd').log"
+"$(Get-Date -Format 'HH:mm:ss') — Processed $($users.Count) users" | Tee-Object -FilePath $logFile -Append
+
+# Use -WhatIf for destructive operations during testing
+Remove-ADUser -Identity "j.dupont" -WhatIf
+```
+
+## Conclusion
+
+The scripts above cover the majority of repetitive sysadmin tasks: user lifecycle management, disk monitoring, log analysis, and multi-server operations. The key habit is to **always log what you do** — both for auditing and for debugging when something inevitably goes wrong at 3am. Combine these with Task Scheduler for automated weekly reports and you'll free up significant time for more interesting work.
+
+---
+
+**Useful Resources:**
+- [PowerShell Documentation - Microsoft](https://docs.microsoft.com/en-us/powershell/)
+- [ActiveDirectory Module Reference](https://docs.microsoft.com/en-us/powershell/module/activedirectory/)
+- [PowerShell Gallery](https://www.powershellgallery.com/)

@@ -1,0 +1,247 @@
+---
+title: "Gestion des sandboxes Salesforce : types, stratégie de rafraîchissement et workflow de déploiement"
+excerpt: "Comment gérer efficacement les sandboxes Salesforce — choisir le bon type, planifier les rafraîchissements, anonymiser les données pour la conformité et mettre en place un workflow de déploiement propre de dev à production."
+date: "2025-12-08"
+tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Déploiement"]
+---
+
+La gestion des sandboxes Salesforce est souvent une réflexion après coup — jusqu'au jour où vous avez un déploiement cassé, des données de test corrompues, ou un audit de conformité demandant pourquoi des données de production se trouvent dans un sandbox développeur. Voici comment faire les choses correctement.
+
+## Types de sandbox : lequel pour quoi
+
+| Type | Métadonnées | Données | Rafraîchissement | Cas d'usage |
+|------|-------------|---------|------------------|-------------|
+| **Developer** | Copie complète | Aucune | 1 jour | Développement individuel |
+| **Developer Pro** | Copie complète | Aucune | 1 jour | Développement en équipe, stockage plus grand |
+| **Partial** | Copie complète | Sous-ensemble (jusqu'à 10k enregistrements) | 5 jours | Tests QA avec données représentatives |
+| **Full** | Copie complète | Copie complète | 29 jours | UAT, staging, tests de performance |
+
+**Note sur les coûts :** Les sandboxes Developer sont généralement inclus dans les licences Enterprise/Unlimited (vous en avez plusieurs). Les sandboxes Partial et Full sont limités — souvent 1 de chaque. Planifiez soigneusement.
+
+## La stratégie de sandbox recommandée
+
+Pour une équipe de 3+ développeurs, ce modèle de branchement fonctionne bien :
+
+```
+[Sandbox Dev 1] ──┐
+[Sandbox Dev 2] ──┤ déployer → [Sandbox Intégration] → [UAT/Staging] → [Production]
+[Sandbox Dev 3] ──┘
+```
+
+- **Sandboxes Developer** (1 par développeur ou fonctionnalité) : rafraîchissement journalier disponible
+- **Intégration** (Developer Pro ou Partial) : fusionne tout le travail développeur, premiers tests d'intégration
+- **UAT/Staging** (Full) : tests par les utilisateurs métier avec données à l'échelle réelle
+- **Production** : ne reçoit que des releases validées et approuvées
+
+## Créer un sandbox
+
+### Via l'interface Setup
+
+1. **Configuration → Environnements → Bacs à sable → Nouveau bac à sable**
+2. Choisir le type, le nom (ex. `DEV-alice`, `INTEGRATION`, `UAT`)
+3. Pour Partial/Full : sélectionner la source de données
+
+### Via la CLI Salesforce
+
+```bash
+# Créer un sandbox via CLI
+sf env create sandbox \
+    --name DEV-feature-lwc \
+    --license-type Developer \
+    --target-org production \
+    --alias dev-lwc
+
+# Authentifier un sandbox existant
+sf org login web --alias dev-lwc --instance-url https://test.salesforce.com
+
+# Vérifier la connexion
+sf org display --target-org dev-lwc
+```
+
+## Planification des rafraîchissements
+
+### Quand rafraîchir
+
+Un rafraîchissement efface le sandbox et le recrée depuis la production. Cela signifie :
+- Toutes les personnalisations spécifiques au sandbox sont **perdues**
+- Les noms d'utilisateur changent (suffixe ajouté : `utilisateur@entreprise.com.integrationsandbox`)
+- Les apps connectées et les credentials nommés peuvent nécessiter une reconfiguration
+
+**Déclencheurs de rafraîchissement :**
+- Grandes releases de production (rafraîchir l'UAT avant le cycle UAT)
+- Incidents de sécurité
+- Cadence planifiée (sandbox d'intégration : mensuel ; developer : selon besoin)
+
+### Runbook post-rafraîchissement
+
+Créez un runbook documenté pour la configuration post-rafraîchissement :
+
+```markdown
+## Checklist post-rafraîchissement : Sandbox INTEGRATION
+
+1. [ ] Mettre à jour les Named Credentials pour pointer vers les API sandbox (pas production)
+2. [ ] Ré-authentifier toutes les Connected Apps
+3. [ ] Vérifier que tous les utilisateurs peuvent se connecter (les noms d'utilisateur ont un suffixe)
+4. [ ] Désactiver ou mettre à jour les règles d'email sortant
+       (éviter que les emails de test partent à de vrais utilisateurs)
+5. [ ] Exécuter le script de smoke test : sf apex run --file scripts/smoke-test.apex
+6. [ ] Mettre à jour la config du pipeline avec le nouvel ID de session
+7. [ ] Notifier l'équipe via Slack : #déploiements
+```
+
+## Anonymisation des données pour la conformité (RGPD)
+
+Les sandboxes Partial et Full peuvent contenir des données de production. C'est un **risque RGPD/confidentialité** si ces données incluent des DCP (données à caractère personnel).
+
+### Option 1 : Sandbox Data Mask (natif Salesforce)
+
+Disponible en option payante. Masque automatiquement les champs DCP lors de la copie sandbox.
+
+### Option 2 : Script Apex d'anonymisation post-rafraîchissement
+
+Exécuter immédiatement après le rafraîchissement, avant d'accorder l'accès aux développeurs :
+
+```apex
+// AnonymiserDonneesProduction.apex — exécuter en Apex anonyme après rafraîchissement
+List<Contact> contacts = [
+    SELECT Id, FirstName, LastName, Email, Phone, MailingStreet
+    FROM Contact LIMIT 50000
+];
+
+Integer i = 0;
+for (Contact c : contacts) {
+    c.FirstName   = 'Test';
+    c.LastName    = 'Utilisateur' + i;
+    c.Email       = 'testuser' + i + '@sandbox.test';
+    c.Phone       = '0600000' + String.valueOf(i).leftPad(4, '0');
+    c.MailingStreet = '123 Rue de Test';
+    i++;
+}
+
+update contacts;
+System.debug('Anonymisés : ' + contacts.size() + ' contacts');
+```
+
+**Anonymisez toujours avant l'accès développeur.** Un sandbox avec de vrais emails clients finira inevitablement par envoyer un email de test à un vrai client.
+
+## Workflow de déploiement : dev → production
+
+### Avec la CLI Salesforce
+
+**Étape 1 : Dans le sandbox dev — récupérer vos changements**
+```bash
+# Récupérer les changements depuis le sandbox vers le projet local
+sf project retrieve start --target-org dev-lwc
+
+# Ou récupérer des types de métadonnées spécifiques
+sf project retrieve start \
+    --metadata "ApexClass:AccountTriggerHandler" \
+    --metadata "LightningComponentBundle:accountSummaryCard" \
+    --target-org dev-lwc
+```
+
+**Étape 2 : Valider contre l'org cible (sans déploiement)**
+```bash
+sf project deploy validate \
+    --source-dir force-app/main/default \
+    --target-org integration \
+    --test-level RunLocalTests
+```
+
+**Étape 3 : Déployer si la validation réussit**
+```bash
+sf project deploy start \
+    --source-dir force-app/main/default \
+    --target-org integration \
+    --test-level RunLocalTests
+```
+
+### Automatisé avec GitHub Actions
+
+```yaml
+# .github/workflows/deploy-integration.yml
+name: Déployer vers Intégration
+
+on:
+  push:
+    branches: [integration]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authentifier sur le sandbox Intégration
+        run: |
+          echo "${{ secrets.INTEGRATION_SFDX_AUTH_URL }}" > auth.json
+          sf org login sfdx-url --sfdx-url-file auth.json --alias integration
+
+      - name: Valider le déploiement
+        run: |
+          sf project deploy validate \
+            --source-dir force-app \
+            --target-org integration \
+            --test-level RunLocalTests
+
+      - name: Déployer
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org integration \
+            --test-level RunLocalTests
+```
+
+## Gestion des utilisateurs sandbox
+
+Après un rafraîchissement, les noms d'utilisateur sandbox reçoivent un suffixe.
+
+### Désactiver les utilisateurs non autorisés dans le sandbox
+
+```apex
+// Désactiver les utilisateurs dans le sandbox qui ne devraient pas avoir accès
+// (ex. anciens employés répliqués depuis la production)
+List<User> aDesactiver = [
+    SELECT Id FROM User
+    WHERE IsActive = true
+    AND Profile.Name NOT IN ('Administrateur système', 'Profil Développeur')
+];
+for (User u : aDesactiver) u.IsActive = false;
+update aDesactiver;
+```
+
+## Checklist de gestion des sandboxes
+
+**Configuration :**
+- [ ] Chaque développeur actif a son propre sandbox Developer
+- [ ] Sandboxes Intégration, UAT et production documentés
+- [ ] Noms de sandboxes suivant une convention : `[TYPE]-[OBJECTIF]`
+
+**Conformité :**
+- [ ] DCP anonymisées dans tous les sandboxes avec données réelles (Full, Partial)
+- [ ] Délivrabilité email réglée sur « Email système uniquement » hors production
+- [ ] Accès sandbox restreint aux membres actuels de l'équipe
+
+**Déploiement :**
+- [ ] Déploiement validé avant deploy (ne jamais passer la validation)
+- [ ] Niveau de test : RunLocalTests minimum pour l'intégration, RunAllTestsInOrg pour la production
+- [ ] Plan de rollback documenté avant chaque déploiement production
+
+**Rafraîchissement :**
+- [ ] Runbook post-rafraîchissement maintenu et à jour
+- [ ] Sandbox d'intégration rafraîchi au moins mensuellement
+- [ ] UAT rafraîchi avant chaque cycle UAT
+
+## Conclusion
+
+Une bonne gestion des sandboxes est la différence entre un processus de déploiement chaotique et un processus reproductible et fiable. Les habitudes clés : anonymiser les DCP immédiatement après chaque rafraîchissement, imposer un chemin de promotion linéaire (dev → intégration → UAT → production), valider avant de déployer, et maintenir un runbook post-rafraîchissement pour que la configuration ne soit jamais improvisée.
+
+---
+
+**Ressources utiles :**
+- [Guide Salesforce DX](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
+- [Vue d'ensemble des sandboxes - Salesforce Help](https://help.salesforce.com/s/articleView?id=sf.create_test_instance.htm)
+- [Référence Salesforce CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)

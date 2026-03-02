@@ -1,0 +1,222 @@
+---
+title: "Windows Autopilot : déploiement en masse de 200+ postes, pas à pas"
+excerpt: "Guide éprouvé sur le terrain pour déployer des postes Dell à grande échelle avec Windows Autopilot et Intune — de la collecte des hashs matériels au premier login utilisateur."
+date: "2025-06-02"
+tags: ["IT Ops", "Windows Autopilot", "Intune", "Déploiement", "Runbook"]
+---
+
+Windows Autopilot vous permet de déployer des postes à grande échelle sans image, sans intervention manuelle sur chaque machine, et sans serveur de déploiement. Voici le workflow complet, éprouvé lors d'un déploiement de 200 postes Dell Optiplex/Latitude.
+
+## Ce que fait réellement Autopilot
+
+Déploiement traditionnel : l'IT image la machine → la configure → la livre à l'utilisateur.
+
+Déploiement Autopilot : la machine est expédiée directement à l'utilisateur → l'utilisateur la démarre → Azure AD / Intune font le reste automatiquement.
+
+**Prérequis :**
+- Microsoft Intune (ou MDM tiers)
+- Azure Active Directory (AAD)
+- Windows 10/11 Pro ou Enterprise
+- Hashs matériels des appareils uploadés dans Intune
+
+## Phase 1 : Collecte des hashs matériels
+
+Avant qu'un appareil puisse utiliser Autopilot, son hash matériel doit être dans Intune. Vous le collectez sur l'appareil lui-même.
+
+### Option A : PowerShell (appareil seul ou petit lot)
+
+```powershell
+# Exécuter sur l'appareil cible — capture le hash et l'envoie dans Intune
+# Prérequis : accès internet, pas encore joint à AAD
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# Installer le module requis
+Install-Script -Name Get-WindowsAutoPilotInfo -Force
+
+# Capturer et uploader directement dans Intune
+Get-WindowsAutoPilotInfo -Online
+```
+
+Si l'appareil est déjà provisionné mais doit être ré-enrôlé :
+```powershell
+# Capturer le hash dans un CSV (pour upload manuel)
+Get-WindowsAutoPilotInfo -OutputFile C:\AutopilotHWID.csv
+```
+
+### Option B : Pendant l'OOBE (Out Of Box Experience)
+
+Quand un Dell neuf démarre sur l'OOBE pour la première fois :
+1. Appuyer sur **Shift+F10** pour ouvrir une invite de commandes
+2. Taper `PowerShell` pour entrer en PS
+3. Exécuter `Install-Script Get-WindowsAutoPilotInfo -Force && Get-WindowsAutoPilotInfo -Online`
+
+### Option C : Upload fabricant (Dell ProDeploy)
+
+Dell, HP et Lenovo proposent l'upload direct des hashs dans votre tenant lors de l'achat. Demandez à votre account manager. C'est l'option la plus propre pour les grandes commandes.
+
+## Phase 2 : Upload des hashs dans Intune
+
+### Via import CSV :
+
+1. **Centre d'administration Endpoint Manager** → Appareils → Windows → Inscription Windows → Appareils
+2. Cliquer sur **Importer**
+3. Uploader votre CSV (colonnes : Numéro de série, Windows Product ID, Hash matériel)
+
+Prévoir 15–20 minutes de synchronisation.
+
+### Vérifier l'enregistrement :
+
+```
+Endpoint Manager → Appareils → Appareils Windows Autopilot
+```
+
+Le statut doit afficher **Affecté** une fois le profil de déploiement appliqué.
+
+## Phase 3 : Créer un profil de déploiement
+
+Dans Endpoint Manager :
+
+1. **Appareils → Windows → Inscription Windows → Profils de déploiement**
+2. **Créer un profil → PC Windows**
+
+**Paramètres clés :**
+
+| Paramètre | Valeur recommandée |
+|-----------|-------------------|
+| Mode de déploiement | Piloté par l'utilisateur |
+| Joindre à Azure AD en tant que | Jonction Azure AD |
+| CLUF | Masquer |
+| Paramètres de confidentialité | Masquer |
+| Modifier les options de compte | Masquer |
+| Type de compte utilisateur | Utilisateur standard |
+| Modèle de nom d'appareil | Oui — ex. `CORP-%RAND:5%` |
+
+**Affecter le profil** à un groupe d'appareils (statique ou dynamique).
+
+## Phase 4 : Créer et affecter les stratégies Intune
+
+Avant que les utilisateurs démarrent, appliquez ces stratégies de base via Intune :
+
+### Stratégies de base obligatoires
+
+**1. Chiffrement BitLocker :**
+- Appareils → Profils de configuration → Créer → Windows 10+ → Endpoint Protection
+- Activer BitLocker avec TPM + PIN
+- Clé de récupération : sauvegarde automatique dans AAD
+
+**2. Anneaux Windows Update :**
+- Mises à jour de fonctionnalités : Canal semi-annuel, délai 10 jours
+- Mises à jour qualité : délai 0 jour (correctifs de sécurité immédiats)
+- Heures actives : 8h–18h (pas de redémarrage forcé pendant le travail)
+
+**3. Microsoft Defender :**
+- Protection en temps réel : Activée
+- Protection cloud : Activée
+- Protection PUA : Activée
+- Protection anti-altération : Activée
+
+### Applications requises (poussées avant le login) :
+
+```
+Applications → Windows → Ajouter → Microsoft 365 Apps
+Applications → Windows → Ajouter → Portail d'entreprise
+Applications → Windows → Ajouter → [votre client VPN d'entreprise]
+Applications → Windows → Ajouter → [votre agent de sécurité endpoint]
+```
+
+Toutes les applications doivent être affectées comme **Requises** au groupe Tous les appareils (pas Disponible).
+
+## Phase 5 : L'expérience utilisateur
+
+Quand un utilisateur reçoit son appareil et le démarre :
+
+1. La machine démarre sur l'**OOBE personnalisée** (logo/nom de votre entreprise si configuré)
+2. L'utilisateur saisit son **adresse email professionnelle**
+3. Azure AD s'authentifie → défi MFA (si configuré)
+4. Le profil Autopilot se télécharge automatiquement
+5. Intune commence l'enrôlement de l'appareil
+6. Les applications et les stratégies se déploient en arrière-plan (10–30 min selon le volume)
+7. L'utilisateur atteint le **bureau Windows**
+8. Les applications continuent de s'installer en arrière-plan
+
+## Phase 6 : Validation et dépannage
+
+### Vérifier l'état d'enrôlement
+
+```powershell
+# Sur l'appareil enrôlé — vérifier l'enrôlement MDM
+dsregcmd /status
+
+# Champs clés à vérifier :
+# AzureAdJoined : OUI
+# DomainJoined : NON (pour du pur AAD)
+# MDMUrl : https://enrollment.manage.microsoft.com/...
+```
+
+### Problèmes courants et solutions
+
+**Problème :** Appareil introuvable dans Autopilot
+**Solution :** Vérifier que le hash matériel a bien été importé. Contrôler le format CSV — le numéro de série doit correspondre exactement.
+
+**Problème :** Page de statut d'enrôlement (ESP) bloquée sur « Identification »
+**Solution :** Vérifier que l'appareil peut atteindre les endpoints Autopilot. URLs requises :
+```
+*.manage.microsoft.com
+*.microsoftonline.com
+go.microsoft.com
+login.live.com
+```
+
+**Problème :** Applications échouent à s'installer pendant l'ESP
+**Solution :** Vérifier que l'affectation des applications est **Requise** (pas Disponible). Consulter les logs Intune sur l'appareil :
+```
+Observateur d'événements → Journaux des applications et des services
+    → Microsoft → Windows → ModernDeployment-Diagnostics-Provider
+```
+
+**Problème :** BitLocker ne chiffre pas
+**Solution :** Vérifier que l'appareil dispose du TPM 2.0. Contrôler que le Secure Boot est activé dans le BIOS. Valider que la stratégie BitLocker est affectée à l'appareil.
+
+### Collecter les logs de diagnostic
+
+```powershell
+# Collecter les logs Autopilot/MDM
+MdmDiagnosticsTool.exe -area Autopilot -zip C:\LogsAutopilot.zip
+
+# Ou depuis Endpoint Manager : Appareil → Collecter les diagnostics
+```
+
+## Conseils pour les déploiements à grande échelle (100+ appareils)
+
+- **Groupes dynamiques d'appareils** dans AAD : `(device.deviceOSType -eq "Windows")` — affecte automatiquement tous les appareils Windows au profil Autopilot.
+- **Pré-provisionnement (White Glove)** : l'IT exécute la phase de provisionnement en amont avant l'expédition. Le premier login utilisateur ne prend alors que quelques minutes.
+- **Expédition directe depuis le fabricant** : demander Dell ProDeploy ou HP Lifecycle Services pour uploader les hashs en usine — pas de collecte à faire.
+- **Échelonner les déploiements** : déployer 20–30 appareils par jour lors du démarrage pour détecter les problèmes avant qu'ils touchent des centaines d'utilisateurs.
+
+## Checklist de déploiement
+
+**Avant le déploiement :**
+- [ ] Hashs matériels uploadés et affichant « Affecté » dans Intune
+- [ ] Profil de déploiement créé et affecté au groupe d'appareils
+- [ ] Toutes les applications requises affectées comme « Requises »
+- [ ] Stratégies de configuration de base affectées
+- [ ] Stratégie BitLocker validée sur un appareil de test
+- [ ] Page de statut d'enrôlement (ESP) configurée et testée
+
+**Post-déploiement :**
+- [ ] L'appareil apparaît dans Endpoint Manager avec le bon nom
+- [ ] Toutes les stratégies affichent « Réussi »
+- [ ] Clé de récupération BitLocker dans AAD
+- [ ] Defender affiché comme sain
+
+## Conclusion
+
+Windows Autopilot élimine l'effort manuel du déploiement par image tout en offrant une expérience homogène et prête pour l'entreprise à chaque utilisateur. Le déploiement des 200 postes Dell que j'ai réalisé a nécessité 3 semaines de configuration Intune, puis s'est exécuté sans aucune intervention physique de l'IT sur les bureaux des utilisateurs.
+
+---
+
+**Ressources utiles :**
+- [Documentation Windows Autopilot - Microsoft](https://docs.microsoft.com/fr-fr/mem/autopilot/windows-autopilot)
+- [Script Get-WindowsAutoPilotInfo](https://www.powershellgallery.com/packages/Get-WindowsAutoPilotInfo)
+- [Page de statut d'enrôlement Intune](https://docs.microsoft.com/fr-fr/mem/intune/enrollment/windows-enrollment-status)

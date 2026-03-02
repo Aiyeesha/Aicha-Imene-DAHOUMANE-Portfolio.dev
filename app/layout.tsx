@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const locale = await getLocale(); // "en" | "fr"
   const jsonLd = buildJsonLd(locale);
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <script
           type="application/ld+json"
@@ -62,8 +62,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         />
       </head>
       <body>{children}
-        <Analytics />
-        <SpeedInsights />
+        {process.env.NODE_ENV === "production" && <Analytics />}
+        {process.env.NODE_ENV === "production" && <SpeedInsights />}
       </body>
     </html>
   );

@@ -8,7 +8,11 @@ import { getTranslations } from "next-intl/server";
 import { readAllPosts, readPostMeta } from "@/content/blog/fs";
 import { extractToc } from "@/content/blog/toc";
 import TableOfContents from "@/components/blog/TableOfContents";
+import BackToTop from "@/components/blog/BackToTop";
+import RelatedPosts from "@/components/blog/RelatedPosts";
+import ScrollProgress from "@/components/ScrollProgress";
 import { getPrevNext } from "@/content/blog/navigation";
+import { formatDate } from "@/lib/blog-utils";
 
 type Params = { locale: "en" | "fr"; slug: string };
 
@@ -34,22 +38,17 @@ export async function generateMetadata(
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio";
   const title = meta.title;
   const description = meta.excerpt || meta.title;
-  // Construct the base site URL (used to build absolute URLs)
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  // Compute absolute URL for this post
   const urlPath = `${siteUrl}/${locale}/blog/${slug}`;
-  // Use provided cover or fallback, and absolutize if it's a relative path
   const cover = meta.cover || "/opengraph-image";
   const ogImage = cover.startsWith("http://") || cover.startsWith("https://") ? cover : `${siteUrl}${cover.startsWith("/") ? cover : `/${cover}`}`;
-  // Build alternate language URLs for SEO i18n.
-// Only expose alternates that actually exist (prevents broken hreflang).
-const languages: Record<string, string> = {};
-const enExists = locale === "en" ? meta : readPostMeta("en", slug);
-const frExists = locale === "fr" ? meta : readPostMeta("fr", slug);
 
-if (enExists) languages.en = `${siteUrl}/en/blog/${slug}`;
-if (frExists) languages.fr = `${siteUrl}/fr/blog/${slug}`;
+  const languages: Record<string, string> = {};
+  const enExists = locale === "en" ? meta : readPostMeta("en", slug);
+  const frExists = locale === "fr" ? meta : readPostMeta("fr", slug);
 
+  if (enExists) languages.en = `${siteUrl}/en/blog/${slug}`;
+  if (frExists) languages.fr = `${siteUrl}/fr/blog/${slug}`;
 
   return {
     title: `${title} | ${siteName}`,
@@ -79,109 +78,154 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const meta = readPostMeta(locale, slug);
   if (!meta) notFound();
 
-  // Extract TOC from raw MDX (frontmatter removed).
   const raw = fs.readFileSync(meta.file, "utf-8");
   const parsed = matter(raw);
   const content = String(parsed.content || "");
   const toc = extractToc(content);
   const nav = getPrevNext(locale, slug);
 
-  // IMPORTANT:
-  // We render MDX using the official Next.js MDX pipeline (@next/mdx).
+  // Related posts: same locale, overlapping tags, exclude current
+  const allPosts = readAllPosts(locale);
+  const related = allPosts
+    .filter((p) => p.slug !== slug)
+    .map((p) => ({
+      ...p,
+      score: p.tags.filter((t) => meta.tags.includes(t)).length
+    }))
+    .filter((p) => p.score > 0)
+    .sort((a, b) => b.score - a.score || (a.date < b.date ? 1 : -1))
+    .slice(0, 3);
+
   const { default: Post } = await import(`@/content/blog/posts/${locale}/${slug}.mdx`);
 
-  return (
-      <section className="py-12">
-        <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-          <div className="min-w-0">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-xs text-muted-2">{meta.date}</div>
-                <h1 className="mt-2 text-4xl font-semibold leading-tight">{meta.title}</h1>
-                {meta.excerpt ? <p className="mt-4 text-muted">{meta.excerpt}</p> : null}
+  const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
+  const avatarUrl = process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.jpg";
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {meta.tags.map((tg) => (
-                    <Link
-                      key={tg}
-                      href={`/${locale}/blog?tag=${encodeURIComponent(tg)}`}
-                      className="chip hover:opacity-90"
-                    >
-                      {tg}
-                    </Link>
-                  ))}
-                </div>
+  return (
+    <section className="py-12">
+      <ScrollProgress />
+      <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
+        <div className="min-w-0">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              {/* Date + reading time */}
+              <div className="flex items-center gap-2 text-xs text-muted-2">
+                <span>{formatDate(meta.date, locale)}</span>
+                <span>·</span>
+                <span>{meta.readingTime} {t("readingTime")}</span>
               </div>
 
-              <Link
-                href={`/${locale}/blog`}
-                className="rounded-full border border-black/10 bg-black/5 px-5 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
-              >
-                ← {t("back")}
-              </Link>
+              <h1 className="mt-2 text-4xl font-semibold leading-tight">{meta.title}</h1>
+              {meta.excerpt ? <p className="mt-4 text-muted">{meta.excerpt}</p> : null}
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {meta.tags.map((tg) => (
+                  <Link
+                    key={tg}
+                    href={`/${locale}/blog?tag=${encodeURIComponent(tg)}`}
+                    className="chip hover:opacity-90"
+                  >
+                    {tg}
+                  </Link>
+                ))}
+              </div>
             </div>
 
-            <article className="mt-10 card p-7">
-              <div className="mdx space-y-5 text-slate-700 dark:text-white/80">
-                <Post />
-              </div>
-            </article>
+            <Link
+              href={`/${locale}/blog`}
+              className="rounded-full border border-black/10 bg-black/5 px-5 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring shrink-0"
+            >
+              ← {t("back")}
+            </Link>
+          </div>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              {nav.prev ? (
-                <Link
-                  href={`/${locale}/blog/${nav.prev.slug}`}
-                  className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring"
-                >
-                  <div className="text-xs text-muted-2">{t("previous")}</div>
-                  <div className="mt-1 font-medium text-strong">{nav.prev.title}</div>
-                </Link>
-              ) : (
-                <div className="card p-5 opacity-40">
-                  <div className="text-xs text-muted-2">{t("previous")}</div>
-                  <div className="mt-1 text-muted">—</div>
-                </div>
-              )}
+          <article className="mt-10 card p-7">
+            <div className="mdx space-y-5 text-slate-700 dark:text-white/80">
+              <Post />
+            </div>
+          </article>
 
-              {nav.next ? (
-                <Link
-                  href={`/${locale}/blog/${nav.next.slug}`}
-                  className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring text-right"
-                >
-                  <div className="text-xs text-muted-2">{t("next")}</div>
-                  <div className="mt-1 font-medium text-strong">{nav.next.title}</div>
-                </Link>
-              ) : (
-                <div className="card p-5 opacity-40 text-right">
-                  <div className="text-xs text-muted-2">{t("next")}</div>
-                  <div className="mt-1 text-muted">—</div>
-                </div>
-              )}
+          {/* Author card */}
+          <div className="mt-8 card p-6 flex items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={avatarUrl}
+              alt={authorName}
+              width={56}
+              height={56}
+              className="h-14 w-14 rounded-full object-cover shrink-0"
+            />
+            <div>
+              <div className="text-xs text-muted-2 uppercase tracking-wider">{t("author")}</div>
+              <div className="mt-0.5 font-semibold text-strong">{authorName}</div>
+              <div className="text-sm text-muted">{t("authorRole")}</div>
             </div>
           </div>
 
-          <TableOfContents items={toc} />
+          {/* Related posts */}
+          {related.length > 0 && (
+            <RelatedPosts posts={related} locale={locale} label={t("related")} />
+          )}
+
+          {/* Prev / Next */}
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {nav.prev ? (
+              <Link
+                href={`/${locale}/blog/${nav.prev.slug}`}
+                className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring"
+              >
+                <div className="text-xs text-muted-2">{t("previous")}</div>
+                <div className="mt-1 font-medium text-strong">{nav.prev.title}</div>
+              </Link>
+            ) : (
+              <div className="card p-5 opacity-40">
+                <div className="text-xs text-muted-2">{t("previous")}</div>
+                <div className="mt-1 text-muted">—</div>
+              </div>
+            )}
+
+            {nav.next ? (
+              <Link
+                href={`/${locale}/blog/${nav.next.slug}`}
+                className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring text-right"
+              >
+                <div className="text-xs text-muted-2">{t("next")}</div>
+                <div className="mt-1 font-medium text-strong">{nav.next.title}</div>
+              </Link>
+            ) : (
+              <div className="card p-5 opacity-40 text-right">
+                <div className="text-xs text-muted-2">{t("next")}</div>
+                <div className="mt-1 text-muted">—</div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* JSON-LD (Article) */}
-        <script
-          type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BlogPosting",
-              headline: meta.title,
-              datePublished: meta.date,
-              dateModified: meta.date,
-              author: {
-                "@type": "Person",
-                name: process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE"
-              },
-              url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + `/${locale}/blog/${slug}`
-            })
-          }}
-        />
-      </section>
+        <TableOfContents items={toc} />
+      </div>
+
+      {/* Back to top (client) */}
+      <BackToTop label={t("backToTop")} />
+
+      {/* JSON-LD (Article) */}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: meta.title,
+            datePublished: meta.date,
+            dateModified: meta.date,
+            author: {
+              "@type": "Person",
+              name: authorName
+            },
+            url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + `/${locale}/blog/${slug}`
+          })
+        }}
+      />
+    </section>
   );
 }

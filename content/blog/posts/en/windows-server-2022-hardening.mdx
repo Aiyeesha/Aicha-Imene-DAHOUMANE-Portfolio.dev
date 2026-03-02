@@ -1,0 +1,307 @@
+---
+title: "Windows Server 2022 Security Hardening: A Practical Checklist"
+excerpt: "Step-by-step hardening guide for Windows Server 2022 — from disabling legacy protocols to configuring audit policies, local firewall, and privileged access management."
+date: "2025-09-08"
+tags: ["IT Ops", "Windows Server", "Security", "Hardening", "Runbook"]
+---
+
+A freshly installed Windows Server 2022 is not a secure server. Default settings prioritize compatibility over security. This guide walks through the essential hardening steps — applicable to any role, from domain controllers to file servers.
+
+## Before You Start
+
+**Reference baselines:**
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319) — pre-built GPO templates
+- CIS Benchmark for Windows Server 2022
+- ANSSI guide for Windows hardening
+
+Always test on a non-production system first. Some settings can break applications or RDP access if applied blindly.
+
+## 1. Disable Unnecessary Services
+
+Reduce attack surface by stopping services you don't use:
+
+```powershell
+# List all running services
+Get-Service | Where-Object {$_.Status -eq "Running"} | Sort-Object Name
+
+# Disable specific risky or unnecessary services
+$servicesToDisable = @(
+    "Fax",              # Fax service — rarely needed
+    "XblGameSave",      # Xbox Live game save
+    "WSearch",          # Windows Search (disable on servers without user sessions)
+    "Print Spooler"     # If not a print server — PrintNightmare risk
+)
+
+foreach ($svc in $servicesToDisable) {
+    Set-Service -Name $svc -StartupType Disabled
+    Stop-Service -Name $svc -Force -ErrorAction SilentlyContinue
+    Write-Host "Disabled: $svc"
+}
+```
+
+**Critical: Print Spooler (PrintNightmare)**
+If this is not a print server, disable the spooler:
+```powershell
+Stop-Service -Name "Spooler" -Force
+Set-Service -Name "Spooler" -StartupType Disabled
+```
+
+## 2. Disable Legacy Protocols and Cipher Suites
+
+### SMBv1 (EternalBlue vector — WannaCry, NotPetya)
+
+```powershell
+# Disable SMBv1 (should be off by default in Server 2022, verify)
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+
+# Verify
+Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol
+```
+
+### LLMNR and NetBIOS (used in MITM/relay attacks)
+
+```powershell
+# Disable LLMNR via registry
+$reg = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
+New-Item -Path $reg -Force | Out-Null
+Set-ItemProperty -Path $reg -Name "EnableMulticast" -Value 0 -Type DWord
+
+# Disable NetBIOS over TCP/IP on all adapters
+$adapters = Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object {$_.IPEnabled}
+foreach ($adapter in $adapters) {
+    $adapter.SetTcpipNetbios(2) | Out-Null  # 2 = Disable NetBIOS
+}
+```
+
+### Weak TLS versions (TLS 1.0, 1.1)
+
+```powershell
+# Disable TLS 1.0
+$path = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"
+New-Item -Path "$path\TLS 1.0\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.0\Server" -Name "Enabled" -Value 0
+Set-ItemProperty -Path "$path\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1
+
+# Disable TLS 1.1
+New-Item -Path "$path\TLS 1.1\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.1\Server" -Name "Enabled" -Value 0
+Set-ItemProperty -Path "$path\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1
+
+# Verify TLS 1.2 is explicitly enabled
+New-Item -Path "$path\TLS 1.2\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.2\Server" -Name "Enabled" -Value 1
+Set-ItemProperty -Path "$path\TLS 1.2\Server" -Name "DisabledByDefault" -Value 0
+```
+
+### NTLMv1 Authentication
+
+```
+GPO: Computer Configuration → Windows Settings → Security Settings → Local Policies → Security Options
+  → Network security: LAN Manager authentication level
+  → Value: Send NTLMv2 response only. Refuse LM & NTLM
+```
+
+## 3. Windows Firewall Configuration
+
+Enable the Windows Firewall even if you have a perimeter firewall — defense in depth.
+
+```powershell
+# Enable all firewall profiles
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+# Set default actions (block inbound, allow outbound)
+Set-NetFirewallProfile -Profile Domain,Public,Private `
+    -DefaultInboundAction Block `
+    -DefaultOutboundAction Allow
+
+# Allow RDP only from management subnet
+New-NetFirewallRule `
+    -DisplayName "Allow RDP - Management Only" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 3389 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+
+# Allow WinRM (for remote PS management) from management only
+New-NetFirewallRule `
+    -DisplayName "Allow WinRM - Management Only" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 5985,5986 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+
+# Allow ICMP (ping) from management
+New-NetFirewallRule `
+    -DisplayName "Allow ICMP - Management" `
+    -Direction Inbound `
+    -Protocol ICMPv4 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+```
+
+## 4. Local Admin and Privileged Access
+
+### Rename and Disable Built-in Administrator
+
+```powershell
+# Rename the built-in Administrator account
+Rename-LocalUser -Name "Administrator" -NewName "srv-admin"
+
+# Create a separate admin account for daily use
+New-LocalUser -Name "sysadmin-ops" `
+    -Password (ConvertTo-SecureString "S3cur3P@ss2026!" -AsPlainText -Force) `
+    -FullName "Operations Admin" `
+    -PasswordNeverExpires $false
+
+Add-LocalGroupMember -Group "Administrators" -Member "sysadmin-ops"
+
+# Disable the built-in (now renamed) account
+Disable-LocalUser -Name "srv-admin"
+```
+
+### Disable Local Guest Account
+
+```powershell
+Disable-LocalUser -Name "Guest"
+```
+
+### Configure Local Security Policy
+
+```powershell
+# Deny network logon for local accounts (force domain auth)
+# Via GPO: User Rights Assignment → Deny access to this computer from the network
+# Add: Local account (built-in group)
+
+# Require CTRL+ALT+DELETE for interactive logon
+# GPO: Security Options → Interactive logon: Do not require CTRL+ALT+DEL → Disabled
+```
+
+## 5. Audit Policy Configuration
+
+A server without audit logs is a forensic dead end. Configure comprehensive auditing:
+
+```powershell
+# Apply advanced audit policy via auditpol
+auditpol /set /subcategory:"Credential Validation" /success:enable /failure:enable
+auditpol /set /subcategory:"Logon" /success:enable /failure:enable
+auditpol /set /subcategory:"Account Lockout" /failure:enable
+auditpol /set /subcategory:"User Account Management" /success:enable /failure:enable
+auditpol /set /subcategory:"Security Group Management" /success:enable
+auditpol /set /subcategory:"Process Creation" /success:enable
+auditpol /set /subcategory:"Detailed File Share" /failure:enable
+auditpol /set /subcategory:"Sensitive Privilege Use" /success:enable /failure:enable
+auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
+
+# Verify
+auditpol /get /category:*
+```
+
+### Increase Event Log Size
+
+```powershell
+# Security log: 1 GB minimum
+Limit-EventLog -LogName Security -MaximumSize 1073741824
+
+# System and Application: 256 MB
+Limit-EventLog -LogName System -MaximumSize 268435456
+Limit-EventLog -LogName Application -MaximumSize 268435456
+```
+
+## 6. Windows Defender Configuration
+
+```powershell
+# Verify Defender is active and up to date
+Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, `
+    RealTimeProtectionEnabled, AntispywareEnabled, `
+    AntivirusSignatureLastUpdated
+
+# Enable cloud protection and automatic sample submission
+Set-MpPreference -MAPSReporting Advanced
+Set-MpPreference -SubmitSamplesConsent SendAllSamples
+
+# Enable network protection (blocks malicious URLs at kernel level)
+Set-MpPreference -EnableNetworkProtection Enabled
+
+# PUA (Potentially Unwanted Applications) protection
+Set-MpPreference -PUAProtection Enabled
+
+# Attack Surface Reduction rules
+Add-MpPreference -AttackSurfaceReductionRules_Ids `
+    "d4f940ab-401b-4efc-aadc-ad5f3c50688a" `  # Block Office from creating child processes
+    -AttackSurfaceReductionRules_Actions Enabled
+```
+
+## 7. Remote Desktop Security
+
+```powershell
+# Ensure Network Level Authentication is required
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+    -Name "UserAuthentication" -Value 1
+
+# Set encryption level to High
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+    -Name "MinEncryptionLevel" -Value 3
+
+# Change RDP port (security by obscurity — optional but reduces noise)
+# Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+#     -Name "PortNumber" -Value 33899
+# (update firewall rule accordingly)
+```
+
+## 8. Automatic Updates
+
+```powershell
+# Via GPO for domain-joined servers:
+# Computer Configuration → Administrative Templates → Windows Components → Windows Update
+
+# For standalone servers:
+# Enable automatic updates via Settings → Windows Update → Advanced Options
+# Or configure WSUS if available
+```
+
+## Full Hardening Checklist
+
+**Protocols:**
+- [ ] SMBv1 disabled
+- [ ] LLMNR disabled
+- [ ] NetBIOS over TCP/IP disabled
+- [ ] TLS 1.0 and 1.1 disabled
+- [ ] NTLMv1 refused, NTLMv2 enforced
+
+**Services:**
+- [ ] Print Spooler disabled (if not print server)
+- [ ] Fax service disabled
+- [ ] All unused services disabled
+
+**Accounts:**
+- [ ] Built-in Administrator renamed and disabled
+- [ ] Guest account disabled
+- [ ] Named admin accounts with strong passwords
+
+**Firewall:**
+- [ ] All profiles enabled
+- [ ] Default: block inbound, allow outbound
+- [ ] RDP restricted to management subnet
+
+**Audit:**
+- [ ] Logon events audited (success + failure)
+- [ ] Account management audited
+- [ ] Security log ≥ 1 GB
+
+**Antivirus:**
+- [ ] Windows Defender enabled with cloud protection
+- [ ] Real-time protection active
+- [ ] ASR rules deployed
+
+## Conclusion
+
+Security hardening is not a one-time task — it's a baseline you apply at provisioning and maintain over time. Automate these steps with PowerShell DSC or Ansible to ensure every new server meets the baseline. Combine with regular vulnerability scans (Nessus, OpenVAS) to catch drift over time.
+
+---
+
+**Useful Resources:**
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+- [CIS Benchmarks for Windows Server 2022](https://www.cisecurity.org/benchmark/microsoft_windows_server)
+- [Windows Defender ASR Rules](https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction)

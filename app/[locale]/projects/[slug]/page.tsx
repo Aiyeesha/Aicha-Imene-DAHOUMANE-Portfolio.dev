@@ -1,8 +1,8 @@
 import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectBySlug.cached";
 import { notFound } from "next/navigation";
-import { projects } from "@/content/projects";
 import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 // Shape of a section stored as JSON in Supabase
 type ProjectSection =
@@ -175,6 +175,59 @@ function renderSection(section: ProjectSection, idx: number) {
   }
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+
+  const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
+  if (!project) return { title: "Project not found" };
+
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+  const title = `${project.title} | ${siteName}`;
+  const description = project.hero_subtitle ?? project.summary ?? project.title;
+  const canonical = `${siteUrl}/${locale}/projects/${slug}`;
+
+  // OG image: first gallery image (static public path) or default OG
+  const firstGalleryImg = project.gallery?.[0]?.src;
+  const ogImage =
+    firstGalleryImg && firstGalleryImg.startsWith("/")
+      ? `${siteUrl}${firstGalleryImg}`
+      : `${siteUrl}/opengraph-image`;
+
+  // Both locales always exist for each project
+  const languages: Record<string, string> = {
+    en: `${siteUrl}/en/projects/${slug}`,
+    fr: `${siteUrl}/fr/projects/${slug}`,
+  };
+
+  return {
+    title,
+    description,
+    alternates: { canonical, languages },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description,
+      url: canonical,
+      siteName,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: project.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
+
 export default async function ProjectPage({
   params,
 }: {
@@ -187,10 +240,8 @@ export default async function ProjectPage({
 
   const assets = (project.project_assets ?? []) as ProjectAsset[];
 
-  // Static metadata (badge, tags) from content/projects.ts
-  const staticMeta = projects.find((p) => p.slug === slug);
-  const badge = staticMeta?.badge ?? null;
-  const tags = staticMeta?.tags ?? [];
+  const badge = project.badge ?? null;
+  const tags = (project.tags ?? []) as string[];
   const techStack = project.tech_stack ?? [];
 
   // Rich content from Supabase (hero_subtitle, sections, gallery)

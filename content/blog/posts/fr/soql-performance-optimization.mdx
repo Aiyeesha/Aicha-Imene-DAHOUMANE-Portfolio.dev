@@ -1,0 +1,206 @@
+---
+title: "Optimisation des performances SOQL : des requêtes lentes aux résultats en moins d'une seconde"
+excerpt: "Techniques concrètes pour écrire des requêtes SOQL plus rapides dans Salesforce — index, filtres sélectifs, Query Plan et anti-patterns à éliminer."
+date: "2025-05-05"
+tags: ["Salesforce", "SOQL", "Performance", "Base de données", "Bonnes pratiques"]
+---
+
+Les requêtes SOQL lentes sont l'un des goulots d'étranglement de performance les plus courants dans Salesforce. Que vous heurtiez les governor limits, subissiez des timeouts ou soyez simplement frustré par des pages qui ramaient, ce guide vous donne les outils pour diagnostiquer et corriger les problèmes de performance.
+
+## Comment Salesforce exécute les requêtes
+
+Avant d'optimiser, comprendre le modèle d'exécution. Salesforce utilise une base **Oracle** sous le capot avec une architecture multi-tenant. Concepts clés :
+
+- **Sélectivité** : une requête est « sélective » si son filtre correspond à un petit pourcentage du total des enregistrements. Salesforce exige la sélectivité pour utiliser un index.
+- **Types d'index** : les champs standards (Id, Name, SystemModstamp, etc.) sont auto-indexés. Les champs personnalisés peuvent être indexés sur demande.
+- **Full table scan** : sans filtre sélectif, Salesforce parcourt tous les enregistrements — lent et bloqué au-delà d'un certain seuil.
+
+## 1. Utiliser le Query Plan Tool
+
+Le Query Plan Tool dans la Developer Console est votre premier outil :
+
+1. Ouvrez la **Developer Console**
+2. Allez dans **Help → Preferences → Enable Query Plan**
+3. Exécutez votre requête → cliquez sur l'onglet **Query Plan**
+
+**Lecture des résultats :**
+
+| Cardinalité | Signification |
+|-------------|--------------|
+| Basse (< 10%) | Index utilisé — rapide |
+| Moyenne (10–30%) | Peut utiliser l'index — acceptable |
+| Haute (> 30%) | Full table scan — à optimiser ! |
+
+## 2. Toujours filtrer sur des champs indexés
+
+**Champs standards toujours indexés :**
+- `Id`, `Name`, `OwnerId`, `RecordTypeId`
+- `CreatedDate` / `LastModifiedDate`
+- Champs de relation lookup/Master-Detail
+
+```apex
+// ❌ Non sélectif — full table scan
+List<Account> accounts = [
+    SELECT Id, Name FROM Account WHERE Industry = 'Technology'
+];
+
+// ✅ Sélectif — utilise l'index OwnerId
+List<Account> accounts = [
+    SELECT Id, Name FROM Account
+    WHERE Industry = 'Technology' AND OwnerId = :UserInfo.getUserId()
+];
+```
+
+## 3. Pas de SOQL dans les boucles
+
+C'est la cause n°1 de violations des governor limits — et c'est lent.
+
+```apex
+// ❌ SOQL dans une boucle — 1 requête par enregistrement
+for (Account acc : accounts) {
+    List<Contact> contacts = [SELECT Id FROM Contact WHERE AccountId = :acc.Id];
+}
+
+// ✅ Requête en masse — 1 requête pour tous les enregistrements
+Set<Id> accountIds = new Set<Id>();
+for (Account acc : accounts) accountIds.add(acc.Id);
+
+Map<Id, List<Contact>> contactsByAccount = new Map<Id, List<Contact>>();
+for (Contact c : [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accountIds]) {
+    if (!contactsByAccount.containsKey(c.AccountId)) {
+        contactsByAccount.put(c.AccountId, new List<Contact>());
+    }
+    contactsByAccount.get(c.AccountId).add(c);
+}
+```
+
+## 4. Requêtes relationnelles pour réduire les allers-retours
+
+Au lieu de requêter parent et enfant séparément, utilisez des sous-requêtes :
+
+```apex
+// ❌ Deux requêtes séparées
+List<Account> accounts = [SELECT Id, Name FROM Account WHERE OwnerId = :userId];
+Set<Id> ids = new Map<Id, Account>(accounts).keySet();
+List<Contact> contacts = [SELECT Id, AccountId FROM Contact WHERE AccountId IN :ids];
+
+// ✅ Une seule requête avec sous-sélection
+List<Account> accounts = [
+    SELECT Id, Name,
+           (SELECT Id, FirstName, LastName, Email FROM Contacts WHERE IsActive__c = true)
+    FROM Account
+    WHERE OwnerId = :userId
+];
+```
+
+**Limites à connaître :**
+- Max 1 niveau d'imbrication de sous-requête
+- La sous-requête retourne max 200 enregistrements par parent
+- Max 20 sous-requêtes par requête de niveau supérieur
+
+## 5. Limiter les résultats
+
+Ne récupérez jamais plus d'enregistrements que nécessaire :
+
+```apex
+// ❌ Ramène tout
+List<Account> all = [SELECT Id, Name FROM Account];
+
+// ✅ Ramène seulement ce dont vous avez besoin
+List<Account> recent = [
+    SELECT Id, Name, CreatedDate
+    FROM Account
+    WHERE CreatedDate = LAST_N_DAYS:30
+    ORDER BY CreatedDate DESC
+    LIMIT 50
+];
+```
+
+## 6. Les littéraux de date vs. les dates dynamiques
+
+Les littéraux de date sont plus performants car ils sont optimisés par le moteur de requête :
+
+```apex
+// ✅ Utiliser les littéraux de date
+WHERE CreatedDate = LAST_N_DAYS:30
+WHERE CloseDate = THIS_QUARTER
+WHERE LastModifiedDate > LAST_MONTH
+
+// ⚠️ Dates dynamiques — fonctionne mais légèrement plus lourd
+WHERE CreatedDate > :Date.today().addDays(-30)
+```
+
+**Littéraux de date courants :**
+- `TODAY`, `YESTERDAY`, `TOMORROW`
+- `THIS_WEEK`, `LAST_WEEK`, `THIS_MONTH`, `LAST_MONTH`
+- `THIS_QUARTER`, `THIS_YEAR`, `LAST_YEAR`
+- `LAST_N_DAYS:n`, `NEXT_N_DAYS:n`
+
+## 7. Requêtes agrégées et GROUP BY
+
+Les agrégations SOQL réduisent considérablement le volume de données récupérées :
+
+```apex
+// ❌ Récupérer toutes les opportunités pour compter en Apex
+List<Opportunity> opps = [SELECT Id, StageName FROM Opportunity WHERE AccountId = :accId];
+Integer closedCount = 0;
+for (Opportunity o : opps) {
+    if (o.StageName == 'Closed Won') closedCount++;
+}
+
+// ✅ Agréger directement en SOQL
+AggregateResult[] results = [
+    SELECT StageName, COUNT(Id) nb
+    FROM Opportunity
+    WHERE AccountId = :accId
+    GROUP BY StageName
+];
+for (AggregateResult r : results) {
+    System.debug(r.get('StageName') + ' : ' + r.get('nb'));
+}
+```
+
+## 8. Éviter `!=` et `NOT IN` sur les grands volumes
+
+Les conditions négatives (`!=`, `NOT IN`, `NOT LIKE`) empêchent l'utilisation des index et forcent un scan complet.
+
+```apex
+// ❌ Ne peut pas utiliser l'index
+WHERE StageName != 'Closed Won'
+
+// ✅ Reformuler en conditions positives
+WHERE StageName IN ('Prospecting', 'Qualification', 'Proposal')
+```
+
+## 9. Demander des index personnalisés pour les filtres à fort volume
+
+Si vous filtrez fréquemment sur un champ personnalisé avec des millions d'enregistrements, demandez un **index personnalisé** via le Support Salesforce.
+
+Candidats à l'indexation personnalisée :
+- Champs filtrés dans des batch jobs traitant > 100k enregistrements
+- Champs utilisés dans les WHERE de composants LWC sur des objets à fort volume
+- Champs External ID utilisés pour les upserts d'intégration
+
+## Checklist de performance
+
+Avant de déployer une requête en production :
+
+- [ ] Query Plan exécuté — cardinalité basse (< 10%)
+- [ ] Au moins un champ indexé dans la clause WHERE
+- [ ] Aucun SOQL dans les boucles
+- [ ] LIMIT appliqué partout où c'est approprié
+- [ ] Sous-requêtes utilisées plutôt que plusieurs allers-retours
+- [ ] Requêtes agrégées pour éviter de récupérer des enregistrements inutiles
+- [ ] Littéraux de date utilisés pour les filtres temporels
+- [ ] Conditions négatives (`!=`, `NOT IN`) remplacées si possible
+
+## Conclusion
+
+La performance SOQL se résume à un principe : **donnez à l'optimiseur quelque chose sur quoi travailler**. Filtrez toujours sur des champs indexés, ne mettez jamais de requêtes dans des boucles, et utilisez le Query Plan Tool pour valider avant de déployer. Sur les orgs à fort volume, ces habitudes font la différence entre un système qui passe à l'échelle et un qui s'effondre sous la charge.
+
+---
+
+**Ressources utiles :**
+- [Référence SOQL et SOSL](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/)
+- [Query Plan Tool - Developer Console](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_query.htm)
+- [Conseils de performance SOQL](https://help.salesforce.com/s/articleView?id=000181904)
