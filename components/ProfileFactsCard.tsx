@@ -14,14 +14,22 @@ export default function ProfileFactsCard({ delayMs = 120 }: { delayMs?: number }
   const t = useTranslations();
   const { track } = useTrack();
 
-  const focusValue =
-    track === "salesforce" ? t("profile.focusValueSalesforce") : t("profile.focusValueItOps");
+  const isSalesforce = track === "salesforce";
+
+  // Valeurs track-spécifiques
+  const focusValue = isSalesforce
+    ? t("profile.focusValueSalesforce")
+    : t("profile.focusValueItOps");
+
+  const rolesValue = isSalesforce
+    ? t("profile.rolesValueSalesforce")
+    : t("profile.rolesValueItops");
 
   const facts: Array<{ label: string; value: string }> = [
-    { label: t("profile.focusLabel"), value: focusValue },
-    { label: t("profile.basedInLabel"), value: t("profile.basedInValue") },
-    { label: t("profile.languagesLabel"), value: t("profile.languagesValue") },
-    { label: t("profile.rolesLabel"), value: t("profile.rolesValue") },
+    { label: t("profile.focusLabel"),        value: focusValue },
+    { label: t("profile.basedInLabel"),      value: t("profile.basedInValue") },
+    { label: t("profile.languagesLabel"),    value: t("profile.languagesValue") },
+    { label: t("profile.rolesLabel"),        value: rolesValue },
     { label: t("profile.availabilityLabel"), value: t("profile.availabilityValue") }
   ];
 

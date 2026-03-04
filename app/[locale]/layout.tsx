@@ -6,6 +6,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import Navbar from "@/components/Navbar";
 import { cookies } from "next/headers";
 import SkipToContent from "@/components/SkipToContent";
+import ScrollToTop from "@/components/ScrollToTop";
 
 /**
  * Locale layout
@@ -104,6 +105,9 @@ export default async function LocaleLayout({
             <main id="main" className="mx-auto max-w-6xl px-6 pt-[var(--nav-offset)]">
               {children}
             </main>
+
+            {/* Bouton "Retour en haut" — apparaît après 300px de scroll */}
+            <ScrollToTop />
 
             <footer className="border-t border-black/10 dark:border-white/10 py-10 mt-14">
               <div className="mx-auto max-w-6xl px-6 text-sm text-muted-2">

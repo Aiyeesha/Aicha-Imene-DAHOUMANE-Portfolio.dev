@@ -242,3 +242,95 @@ details > summary {
   cursor: pointer;
   user-select: none;
 }
+
+/* ============================================================
+   ALTERNANCE DE FONDS (sections paires)
+   ============================================================
+   Crée un rythme visuel subtil entre les sections de la landing page.
+   Fond légèrement différent sur les sections "section-stripe".
+   -  Mode clair  : slate-50/55 (très léger gris-bleu)
+   -  Mode sombre : white/2.5 (relief quasi-invisible)
+   Appliqué avec border-radius pour adoucir l'effet dans le container max-w-6xl.
+   Le margin négatif compense le px-6 du container parent pour remplir la largeur.
+   ============================================================ */
+.section-stripe {
+  border-radius: 1.5rem;
+  background: rgba(248, 250, 252, 0.55);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+}
+html.dark .section-stripe {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* ============================================================
+   PRINT STYLESHEET
+   ============================================================
+   Appliqué uniquement quand l'utilisateur imprime la page (Ctrl+P).
+   Objectif : rendu propre, économie d'encre, aucun élément interactif.
+   - Masquer : navbar, footer, bouton scroll-to-top, animations
+   - Afficher : contenu principal en noir sur blanc
+   - Police serif pour une meilleure lisibilité à l'impression
+   ============================================================ */
+@media print {
+  /* Fond blanc, texte noir — économie d'encre */
+  *,
+  *::before,
+  *::after {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Masquer les éléments non pertinents à l'impression */
+  header,          /* Navbar fixe */
+  footer,          /* Footer */
+  nav,             /* Navigations secondaires */
+  button,          /* Boutons interactifs */
+  .page-gradient,  /* Dégradé décoratif */
+  [aria-hidden="true"],
+  /* Bouton scroll-to-top */
+  .fixed.bottom-6 {
+    display: none !important;
+  }
+
+  /* Contenu principal : pleine largeur, sans padding excessif */
+  main {
+    padding-top: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Police serif pour l'impression (plus lisible sur papier) */
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  /* Les liens affichent leur URL entre parenthèses */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555 !important;
+  }
+
+  /* Sauf les liens internes (ancres) et les liens de mail */
+  a[href^="#"]::after,
+  a[href^="mailto:"]::after {
+    content: "";
+  }
+
+  /* Éviter les coupures de page dans les sections importantes */
+  section,
+  article {
+    break-inside: avoid;
+  }
+
+  /* Titres : pas de coupure après */
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+}
