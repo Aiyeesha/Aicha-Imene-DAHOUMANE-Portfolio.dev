@@ -6,6 +6,10 @@ jest.mock("next-intl", () => {
   };
 });
 
+jest.mock("@/app/[locale]/providers", () => ({
+  useTrack: () => ({ track: "itops", setTrack: jest.fn() }),
+}));
+
 import { render, screen } from "@testing-library/react";
 import ContactForm from "@/components/ContactForm";
 
