@@ -29,7 +29,9 @@
     "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
-    "startHere": "Commencer ici :"
+    "startHere": "Commencer ici :",
+    "switchToSalesforce": "Voir le profil Salesforce →",
+    "switchToItops": "Voir le profil IT Ops →"
   },
   "cta": {
     "call": "Planifier un appel",
@@ -224,6 +226,9 @@
     "kicker": "Témoignages",
     "all": "Tous"
   },
+  "trustedBy": {
+    "title": "Ils m'ont fait confiance"
+  },
   "footer": {
     "builtWith": "Propulsé par Next.js",
     "privacy": "Confidentialité",
@@ -244,6 +249,8 @@
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
     "rolesValue": "Développeuse Salesforce, Administratrice Salesforce, Consultante Salesforce / IT",
+    "rolesValueSalesforce": "Développeuse Salesforce, Administratrice Salesforce, Consultante Salesforce / IT",
+    "rolesValueItops": "Ingénieure IT Ops / SRE, Administratrice systèmes & réseaux, DevOps",
     "availabilityLabel": "Disponibilité",
     "availabilityValue": "Missions freelance · temps partiel ou temps plein",
     "goalLabel": "Objectif",
@@ -259,7 +266,22 @@
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
-    "p4_itops": "Mon objectif 2026 : intervenir sur des missions IT Ops / SRE / DevOps orientées fiabilité, automatisation et sécurité, en France et à l'international."
+    "p4_itops": "Mon objectif 2026 : intervenir sur des missions IT Ops / SRE / DevOps orientées fiabilité, automatisation et sécurité, en France et à l'international.",
+    "goals2026Title": "Objectifs 2026",
+    "goals2026Salesforce": [
+      "Développer une activité freelance internationale avec des clients Salesforce en Europe et en Amérique du Nord",
+      "Obtenir la certification Salesforce Platform Developer II",
+      "Contribuer à des projets open source Salesforce (AppExchange packages, outils DevOps)",
+      "Publier régulièrement des articles techniques sur le blog et Medium",
+      "Participer à des événements Salesforce (Dreamin', TrailheaDX) pour développer le réseau"
+    ],
+    "goals2026Itops": [
+      "Décrocher des missions IT Ops / SRE / DevOps à l'international (remote-first)",
+      "Approfondir l'infrastructure-as-code : Terraform, Ansible, automatisation de provisioning",
+      "Obtenir une certification cloud (AWS Solutions Architect ou Azure Administrator)",
+      "Construire un homelab de supervision complet : Prometheus, Grafana, Alertmanager",
+      "Contribuer à des projets open source DevOps (runbooks, scripts, dashboards de monitoring)"
+    ]
   },
   "mdx": {
     "copy": "Copier",

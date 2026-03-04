@@ -29,7 +29,9 @@
     "proof1": "Security-first",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
-    "startHere": "Start here:"
+    "startHere": "Start here:",
+    "switchToSalesforce": "View Salesforce profile →",
+    "switchToItops": "View IT Ops profile →"
   },
   "cta": {
     "call": "Schedule a discovery call",
@@ -224,6 +226,9 @@
     "kicker": "Testimonials",
     "all": "All"
   },
+  "trustedBy": {
+    "title": "Trusted by"
+  },
   "footer": {
     "builtWith": "Built with Next.js",
     "privacy": "Privacy",
@@ -245,6 +250,21 @@
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
     "p4_itops": "My 2026 goal: take on IT Ops / SRE / DevOps missions focused on reliability, automation, and security—in France and internationally.",
+    "goals2026Title": "2026 Goals",
+    "goals2026Salesforce": [
+      "Grow an international freelance practice with Salesforce clients in Europe and North America",
+      "Earn the Salesforce Platform Developer II certification",
+      "Contribute to Salesforce open-source projects (AppExchange packages, DevOps tooling)",
+      "Publish technical articles regularly on the blog and Medium",
+      "Attend Salesforce events (Dreamin', TrailheaDX) to grow the professional network"
+    ],
+    "goals2026Itops": [
+      "Land international IT Ops / SRE / DevOps missions (remote-first)",
+      "Deepen infrastructure-as-code skills: Terraform, Ansible, provisioning automation",
+      "Obtain a cloud certification (AWS Solutions Architect or Azure Administrator)",
+      "Build a full monitoring homelab: Prometheus, Grafana, Alertmanager",
+      "Contribute to open-source DevOps projects (runbooks, scripts, monitoring dashboards)"
+    ],
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
     "basedInValue": "Paris — open to relocation, full-remote, or hybrid",
@@ -252,6 +272,8 @@
     "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
     "rolesValue": "Salesforce Developer, Salesforce Administrator, Salesforce / IT Consultant",
+    "rolesValueSalesforce": "Salesforce Developer, Salesforce Administrator, Salesforce / IT Consultant",
+    "rolesValueItops": "IT Ops / SRE Engineer, Systems & Network Admin, DevOps",
     "availabilityLabel": "Availability",
     "availabilityValue": "Freelance missions · part-time or full-time",
     "goalLabel": "Goal",

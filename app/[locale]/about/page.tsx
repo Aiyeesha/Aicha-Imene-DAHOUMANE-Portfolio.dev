@@ -1,4 +1,24 @@
+// about/page.tsx
+// ---------------
+// Page dédiée "À propos" — alimentée par Supabase via getAboutPageCached.
+//
+// Structure :
+//   1. ProfileFactsCard   — "En bref", adapté au track (Client Component)
+//   2. AboutTrackIntro    — Introduction positionnement, entièrement track-aware (Client Component)
+//   3. journey            — Timeline du parcours (Supabase) — contenu générique exhaustif
+//   4. values             — Valeurs professionnelles (Supabase) — grille 2 colonnes
+//   5. passions           — En dehors du travail (Supabase)
+//   6. goals2026          — Objectifs 2026 avec checklist (Supabase)
+//
+// ProfileNarrative a été remplacé par AboutTrackIntro pour éliminer la redondance
+// avec le contenu Supabase (journey, goals) et mieux adapter l'intro au track.
+
 import { getAboutPageCached } from "@/lib/data/about.cached";
+import Link from "next/link";
+import { Suspense } from "react";
+import ProfileFactsCard from "@/components/ProfileFactsCard";
+import AboutTrackIntro from "@/components/AboutTrackIntro";
+import AboutTrackGoals from "@/components/AboutTrackGoals";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -24,7 +44,15 @@ export default async function AboutPage({ params }: PageProps) {
 
   if (!about) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mx-auto max-w-4xl px-4 py-10">
+        {/* Breadcrumb retour accueil */}
+        <nav aria-label="Fil d'Ariane" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+          <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded">
+            {safeLocale === "fr" ? "Accueil" : "Home"}
+          </Link>
+          <span aria-hidden="true">›</span>
+          <span>{safeLocale === "fr" ? "À propos" : "About"}</span>
+        </nav>
         <h1 className="text-3xl font-semibold">
           {safeLocale === "fr" ? "À propos" : "About"}
         </h1>
@@ -33,7 +61,7 @@ export default async function AboutPage({ params }: PageProps) {
             ? "Contenu indisponible pour le moment."
             : "Content not available yet."}
         </p>
-      </main>
+      </div>
     );
   }
 
@@ -42,10 +70,21 @@ export default async function AboutPage({ params }: PageProps) {
   const journey = body.journey;
   const values = body.values;
   const passions = body.passions;
-  const goals = body.goals2026;
+  // goals2026 délégué à AboutTrackGoals (Client Component track-aware)
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto max-w-4xl px-4 py-10">
+
+      {/* Breadcrumb — navigation retour vers l'accueil
+          Permet à l'utilisateur de comprendre qu'il est sur une page dédiée (hors landing). */}
+      <nav aria-label={safeLocale === "fr" ? "Fil d'Ariane" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
+          {safeLocale === "fr" ? "Accueil" : "Home"}
+        </Link>
+        <span aria-hidden="true">›</span>
+        <span className="text-muted">{safeLocale === "fr" ? "À propos" : "About"}</span>
+      </nav>
+
       <header>
         <h1 className="text-3xl font-semibold">{about.headline}</h1>
         {about.intro ? (
@@ -53,31 +92,70 @@ export default async function AboutPage({ params }: PageProps) {
         ) : null}
       </header>
 
-      {/* INTRODUCTION (si présent dans body) */}
-      {body.introduction ? (
-        <section className="mt-10 rounded-2xl border p-6">
-          <p className="text-sm leading-relaxed opacity-90">{body.introduction}</p>
-        </section>
-      ) : null}
+      {/* EN BREF (ProfileFactsCard) — déplacé depuis le hero
+          Affiche : focus, localisation, langues, postes visés, disponibilité.
+          Utilise un hook client (useTrack), donc enveloppé dans Suspense. */}
+      <section className="mt-10">
+        <Suspense fallback={
+          <div className="h-48 rounded-2xl border bg-black/5 dark:bg-white/5 animate-pulse" />
+        }>
+          <ProfileFactsCard />
+        </Suspense>
+      </section>
+
+      {/* INTRODUCTION TRACK-AWARE (AboutTrackIntro)
+          Remplace ProfileNarrative : positionnement + compétences + différenciant
+          Adapté au track actif (Salesforce → cyan / IT Ops → violet).
+          p4 exclu volontairement (objectif 2026 → déjà dans la section goals ci-dessous). */}
+      <section className="mt-10">
+        <Suspense fallback={
+          <div className="rounded-2xl border p-6 space-y-3">
+            <div className="h-3 w-16 rounded-full bg-black/5 dark:bg-white/5 animate-pulse" />
+            <div className="h-4 rounded bg-black/5 dark:bg-white/5 animate-pulse" />
+            <div className="h-4 w-5/6 rounded bg-black/5 dark:bg-white/5 animate-pulse" />
+          </div>
+        }>
+          <AboutTrackIntro />
+        </Suspense>
+      </section>
 
       <div className="mt-10 space-y-10">
-        {/* JOURNEY */}
+        {/* PARCOURS / JOURNEY — rendu en timeline verticale
+            Chaque paragraphe représente une étape du parcours.
+            Ligne verticale + numéro de phase pour rythmer la lecture. */}
         {journey?.title || (journey?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>{journey?.title ?? (safeLocale === "fr" ? "Parcours" : "Journey")}</SectionTitle>
             {Array.isArray(journey?.paragraphs) ? (
-              <div className="mt-4 space-y-3">
-                {journey!.paragraphs!.map((p, i) => (
-                  <p key={i} className="text-sm leading-relaxed opacity-90">
-                    {p}
-                  </p>
-                ))}
-              </div>
+              <ol className="mt-6 space-y-0">
+                {journey!.paragraphs!.map((p, i) => {
+                  const isLast = i === journey!.paragraphs!.length - 1;
+                  return (
+                    <li key={i} className="flex gap-4">
+                      {/* Colonne gauche : numéro + ligne verticale */}
+                      <div className="flex flex-col items-center">
+                        {/* Cercle numéroté */}
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/15 border border-cyan-500/30 text-xs font-bold text-cyan-600 dark:text-cyan-400">
+                          {i + 1}
+                        </div>
+                        {/* Ligne verticale — absente sur la dernière étape */}
+                        {!isLast && (
+                          <div className="mt-1 w-px flex-1 bg-black/10 dark:bg-white/10 min-h-[2rem]" />
+                        )}
+                      </div>
+                      {/* Colonne droite : texte + espacement */}
+                      <p className={`text-sm leading-relaxed opacity-90 ${isLast ? "" : "pb-6"}`}>
+                        {p}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ol>
             ) : null}
           </section>
         ) : null}
 
-        {/* VALUES */}
+        {/* VALEURS / VALUES */}
         {values?.title || (values?.items?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>
@@ -99,7 +177,7 @@ export default async function AboutPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        {/* PASSIONS */}
+        {/* EN DEHORS DU TRAVAIL / PASSIONS */}
         {passions?.title || (passions?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>
@@ -117,22 +195,33 @@ export default async function AboutPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        {/* GOALS */}
-        {goals?.title || (goals?.items?.length ?? 0) > 0 ? (
-          <section className="rounded-2xl border p-6">
-            <SectionTitle>{goals?.title ?? (safeLocale === "fr" ? "Objectifs" : "Goals")}</SectionTitle>
-            {Array.isArray(goals?.items) ? (
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-sm opacity-90">
-                {goals!.items!.map((g, i) => (
-                  <li key={i} className="leading-relaxed">
-                    {g}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </section>
-        ) : null}
+        {/* OBJECTIFS 2026 — track-aware via AboutTrackGoals (Client Component)
+            Salesforce : freelance SF, PDII, open source, blog, événements
+            IT Ops     : missions SRE/DevOps, IaC, certif cloud, homelab, open source */}
+        <Suspense fallback={
+          <div className="rounded-2xl border p-6 space-y-3">
+            <div className="h-4 w-32 rounded bg-black/5 dark:bg-white/5 animate-pulse" />
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex gap-3">
+                <div className="mt-0.5 h-5 w-5 rounded-full bg-black/5 dark:bg-white/5 animate-pulse shrink-0" />
+                <div className="h-4 rounded bg-black/5 dark:bg-white/5 animate-pulse flex-1" />
+              </div>
+            ))}
+          </div>
+        }>
+          <AboutTrackGoals />
+        </Suspense>
       </div>
-    </main>
+
+      {/* Bouton retour accueil — navigation alternative en bas de page */}
+      <div className="mt-12 border-t border-black/10 dark:border-white/10 pt-8">
+        <Link
+          href={`/${safeLocale}`}
+          className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+        >
+          ← {safeLocale === "fr" ? "Retour à l'accueil" : "Back to home"}
+        </Link>
+      </div>
+    </div>
   );
 }

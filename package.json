@@ -10,7 +10,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci --passWithNoTests"
+    "test:ci": "jest --ci --passWithNoTests",
+    "db:migrate": "tsx scripts/apply-supabase-sql.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
