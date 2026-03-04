@@ -1,0 +1,102 @@
+---
+# ─── FRONTMATTER ────────────────────────────────────────────────────────────
+# Champs obligatoires (lus par fs.ts via gray-matter)
+#
+# title    : Titre de l'article (H1 affiché en haut de page + balise <title> SEO)
+# excerpt  : Description courte (150-160 car.) — utilisée dans les cartes de blog,
+#            balise meta description et OpenGraph
+# date     : Date de publication ISO 8601 (YYYY-MM-DD) — tri chronologique
+# tags     : Tableau de tags — détermine la catégorie (Salesforce vs IT Ops),
+#            le filtrage dans la liste et les articles liés
+#
+# Champs optionnels :
+# cover    : Chemin relatif vers l'image de couverture dans /public/
+#            Ex : /blog/mon-article/cover.jpg (1200×630px recommandé)
+#            Sans cover → og-default.png est utilisé en OG image.
+
+title: "Titre de l'article (objectif + bénéfice concret)"
+excerpt: "Une phrase qui résume la valeur ajoutée. 150 caractères max pour le SEO."
+date: "YYYY-MM-DD"
+tags: ["Salesforce", "Apex"]   # ou ["IT Ops", "Linux", "Bash"]
+# cover: "/blog/mon-article/cover.jpg"
+# ─────────────────────────────────────────────────────────────────────────────
+---
+
+{/* ── INTRODUCTION ──────────────────────────────────────────────────────── */}
+{/* Pas de H1 — le titre du frontmatter est injecté automatiquement par     */}
+{/* la page [slug]/page.tsx. Commencer directement avec le contexte.        */}
+
+Contexte en 2-3 phrases : pourquoi ce sujet ? quel problème concret ça résout ?
+
+---
+
+## Prérequis
+
+Lister brièvement ce que le lecteur doit connaître/avoir installé.
+
+- Item 1
+- Item 2
+
+---
+
+## Section 1 — Titre descriptif (pas générique)
+
+Expliquer le concept ou la première étape concrète.
+
+```apex
+// Exemple de code Apex commenté
+public class ExampleClass {
+    public static void exampleMethod() {
+        // Code ici
+    }
+}
+```
+
+> **Note :** Encadrer les points d'attention importants en blockquote.
+
+---
+
+## Section 2
+
+Suite logique de la section 1.
+
+---
+
+## Section 3
+
+Aller vers la complexité progressivement.
+
+---
+
+## Pièges à éviter
+
+Liste des erreurs communes et comment les contourner.
+
+- **Piège 1** : description et solution
+- **Piège 2** : description et solution
+
+---
+
+## Résumé
+
+| Point clé | À retenir |
+|-----------|-----------|
+| Élément 1 | Valeur    |
+| Élément 2 | Valeur    |
+
+---
+
+## Ressources
+
+- [Lien 1](https://example.com) — description
+- [Documentation officielle](https://developer.salesforce.com) — Salesforce Docs
+
+{/* ── CHECKLIST AVANT PUBLICATION ─────────────────────────────────────── */}
+{/* [ ] title entre 50-60 caractères                                        */}
+{/* [ ] excerpt entre 120-160 caractères                                    */}
+{/* [ ] date = date réelle de publication                                   */}
+{/* [ ] au moins 2 tags pertinents (l'un doit être "Salesforce" ou "IT Ops"*/}
+{/* [ ] tous les blocs de code ont un langage spécifié (```apex, ```bash)  */}
+{/* [ ] headings H2 uniquement (pas de H1, pas de H4+)                     */}
+{/* [ ] liens vérifiés et fonctionnels                                      */}
+{/* [ ] version FR créée dans content/blog/posts/fr/même-slug.mdx          */}

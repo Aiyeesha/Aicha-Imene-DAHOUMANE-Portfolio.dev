@@ -1,4 +1,10 @@
+// certifications/page.tsx
+// -----------------------
+// Page dédiée "Certifications" — alimentée par Supabase via getCertificationsCached.
+// Contient un breadcrumb de retour et un bouton "Retour à l'accueil" en bas.
+
 import { getCertificationsCached } from "@/lib/data/certifications.cached";
+import Link from "next/link";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -11,7 +17,16 @@ export default async function CertificationsPage({ params }: PageProps) {
   const items = (await getCertificationsCached(safeLocale)) ?? [];
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto max-w-4xl px-4 py-10">
+      {/* Breadcrumb — retour accueil (cette page est accessible via le menu principal) */}
+      <nav aria-label={safeLocale === "fr" ? "Fil d'Ariane" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
+          {safeLocale === "fr" ? "Accueil" : "Home"}
+        </Link>
+        <span aria-hidden="true">›</span>
+        <span className="text-muted">Certifications</span>
+      </nav>
+
       <h1 className="text-3xl font-semibold">Certifications</h1>
 
       {items.length === 0 ? (
@@ -84,6 +99,16 @@ export default async function CertificationsPage({ params }: PageProps) {
           ))}
         </div>
       )}
-    </main>
+
+      {/* Bouton retour accueil en bas de page */}
+      <div className="mt-12 border-t border-black/10 dark:border-white/10 pt-8">
+        <Link
+          href={`/${safeLocale}`}
+          className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+        >
+          ← {safeLocale === "fr" ? "Retour à l'accueil" : "Back to home"}
+        </Link>
+      </div>
+    </div>
   );
 }

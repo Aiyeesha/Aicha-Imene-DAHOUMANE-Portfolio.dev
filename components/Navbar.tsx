@@ -130,8 +130,12 @@ useEffect(() => {
     menuButtonRef.current?.focus();
   }
 }, [mobileOpen]);
-const linkClass = (id: string) =>
-    `relative z-10 rounded-full px-3 py-2 text-sm leading-none transition-colors soft-ring ${
+// Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
+  // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
+  const PAGE_LINKS = new Set<string>(["about", "certifications"]);
+
+  const linkClass = (id: string) =>
+    `relative z-10 rounded-full px-2 xl:px-3 py-2 text-sm leading-none transition-colors soft-ring ${
       activeId === id
         ? "text-cyan-700 dark:text-cyan-200"
         : "text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white"
@@ -193,23 +197,35 @@ const linkClass = (id: string) =>
             </div>
           </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden lg:flex flex-1 min-w-0 items-center justify-center">
+          {/* Desktop nav — visible seulement à xl (≥1280px) pour éviter le débordement.
+              En dessous de xl, le menu hamburger prend le relais. */}
+          <div className="hidden xl:flex flex-1 min-w-0 items-center justify-center">
             <div
               id="desktop-nav"
-              className="relative flex h-11 max-w-full min-w-0 items-center gap-2 overflow-x-auto rounded-full px-1
+              className="relative flex h-11 max-w-full min-w-0 items-center gap-0.5 overflow-x-auto rounded-full px-1
                          [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <NavbarPill activeId={activeId} containerId="desktop-nav" />
               {sections.map((s) => (
                 <Link
                   key={s.id}
-                  className={`${linkClass(s.id)} whitespace-nowrap`}
+                  className={`${linkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`}
                   data-section={s.id}
                   href={hrefFor(s.id)}
                   aria-current={activeId === s.id ? "page" : undefined}
                 >
                   {s.label}
+                  {/* Indicateur ↗ pour les pages dédiées (About, Certifications)
+                      Signale visuellement que ce lien change de page au lieu de scroller. */}
+                  {PAGE_LINKS.has(s.id) && (
+                    <span
+                      aria-hidden="true"
+                      className="text-[10px] opacity-50 leading-none"
+                      title="Ouvre une page dédiée"
+                    >
+                      ↗
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
@@ -225,19 +241,14 @@ const linkClass = (id: string) =>
               <ThemeToggle />
               <LocaleSwitcher current={locale} />
             </div>
-            {/* Desktop: single CTA (keep the decision simple) */}
-            <Link
-              href={hrefFor("contact")}
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
-            >
-              {t("cta.workWithMe")}
-            </Link>
+            {/* CTA retiré de la navbar — présent dans le hero et le menu mobile.
+                Évite le débordement des liens nav sur les écrans ≤1440px. */}
 
 
-            {/* Mobile menu button (always visible on small screens) */}
+            {/* Bouton hamburger — visible jusqu'à xl, remplacé par le desktop nav à xl */}
             <button
               type="button"
-              className="inline-flex lg:hidden rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+              className="inline-flex xl:hidden rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
               ref={menuButtonRef}
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={t("a11y.openMenu")}
@@ -293,12 +304,15 @@ const linkClass = (id: string) =>
                   key={s.id}
                   href={hrefFor(s.id)}
                   data-section={s.id}
-                  className={mobileLinkClass(s.id)}
+                  className={`${mobileLinkClass(s.id)} flex items-center justify-between`}
                   onClick={() => setMobileOpen(false)}
                   aria-current={activeId === s.id ? "page" : undefined}
-
                 >
                   {s.label}
+                  {/* Indicateur visuel pour les pages dédiées (mobile) */}
+                  {PAGE_LINKS.has(s.id) && (
+                    <span aria-hidden="true" className="text-xs opacity-40">↗</span>
+                  )}
                 </Link>
               ))}
             </div>
