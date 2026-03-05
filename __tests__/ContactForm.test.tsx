@@ -1,13 +1,12 @@
 // NOTE: jest.mock must run before importing the module under test.
-jest.mock("next-intl", () => {
-  return {
-    useTranslations: () => ((key: string) => key),
-    useLocale: () => "en"
-  };
-});
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
+}));
 
+// ContactForm utilise useTrack() → mock du contexte Track
 jest.mock("@/app/[locale]/providers", () => ({
-  useTrack: () => ({ track: "itops", setTrack: jest.fn() }),
+  useTrack: () => ({ track: "salesforce", setTrack: jest.fn() }),
 }));
 
 import { render, screen } from "@testing-library/react";

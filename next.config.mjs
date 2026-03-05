@@ -22,6 +22,7 @@
 import createMDX from "@next/mdx";
 import createNextIntlPlugin from "next-intl/plugin";
 import remarkFrontmatter from "remark-frontmatter";
+import rehypePrettyCode from "rehype-pretty-code";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -95,9 +96,27 @@ const nextConfig = {
 };
 
 // Pipeline MDX pour les articles de blog
+// rehype-pretty-code (shiki) : coloration syntaxique build-time
+//   - thème "github-light" en mode clair, "github-dark-dimmed" en mode sombre
+//   - dual-theme via variables CSS --shiki-light / --shiki-dark
+//   - bypassInlineCode : laisse le code inline sans coloration (stylee via .mdx code)
+//   - keepBackground: false → les couleurs de fond sont gérées par globals.css
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkFrontmatter]
+    remarkPlugins: [remarkFrontmatter],
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: {
+            light: "github-light",
+            dark: "github-dark-dimmed",
+          },
+          bypassInlineCode: true,
+          keepBackground: false,
+        },
+      ],
+    ],
   }
 });
 

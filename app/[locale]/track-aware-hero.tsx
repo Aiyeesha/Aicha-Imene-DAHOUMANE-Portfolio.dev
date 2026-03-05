@@ -2,24 +2,58 @@
 
 // track-aware-hero.tsx
 // --------------------
-// Hero section simplifiée : photo + titre + 3 badges + 2 CTAs max.
-// Objectif UX : lisible en 6-10 secondes, tient en un seul écran.
-// - "En bref" (ProfileFactsCard) déplacé vers la page About
-// - "Lire la suite" (ProfileNarrative) déplacé vers la page About
-// - "Appel 15 min" déplacé dans la section Contact (CalendlyModal déjà présent dans ContactForm)
-// - Quick navigation supprimée (la navbar remplit ce rôle)
+// Hero section : photo + titre + tagline percutante + proof tags + 2 CTAs.
+// Deux variantes selon le track toggle (Salesforce / IT Ops).
+//
+// Animations (Framer Motion) :
+//   - Entrance stagger : avatar + bloc texte s'animent en séquence au chargement
+//   - Track switch     : AnimatePresence fade-slide sur le contenu dynamique
+//   - Reduced motion   : toutes les animations sont désactivées si prefers-reduced-motion
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useTrack } from "./providers";
+import { motion, AnimatePresence, useReducedMotion, type Variants } from "framer-motion";
+import { trackEvent } from "@/lib/analytics";
+
+// ── Variants Framer Motion ─────────────────────────────────────────────────
+// Container : stagger les enfants à l'entrée (0.09 s entre chaque)
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
+  },
+};
+
+// Avatar : zoom léger seulement — opacity reste à 1 pour ne pas retarder le LCP
+const avatarVariants: Variants = {
+  hidden: { opacity: 1, scale: 0.93 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+// Bloc texte : glisse depuis le bas
+const textBlockVariants: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: "easeOut" },
+  },
+};
 
 export default function TrackAwareHero() {
   const t = useTranslations();
   const { track, setTrack } = useTrack();
   const locale = useLocale();
+  const shouldReduce = useReducedMotion();
 
-  // URL du CV — adaptée au parcours (track) et à la langue (locale), avec fallback sur env var
+  // URL du CV — adaptée au track et à la langue, avec fallbacks
   const cvPdfUrl = useMemo(
     () =>
       process.env.NEXT_PUBLIC_CV_PDF_URL ||
@@ -29,21 +63,40 @@ export default function TrackAwareHero() {
     [locale, track]
   );
 
-  // Avatar : env var publique ou image locale dans /public/avatar.webp
+  // Avatar : env var ou image locale
   const avatarUrl = useMemo(
     () => process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp",
     []
   );
-  // Fallback si l'image ne se charge pas
   const [src, setSrc] = useState<string>(avatarUrl);
 
-  return (
-    // Grille 2 colonnes sur desktop : [avatar | texte]
-    // La colonne "En bref" a été retirée → déplacée dans la page About
-    <div className="grid items-center gap-8 lg:grid-cols-[250px_1fr]">
+  // Proof tags différenciés par track
+  const proofTags =
+    track === "salesforce"
+      ? [
+          t("hero.proof1_salesforce"),
+          t("hero.proof2_salesforce"),
+          t("hero.proof3_salesforce"),
+        ]
+      : [
+          t("hero.proof1_itops"),
+          t("hero.proof2_itops"),
+          t("hero.proof3_itops"),
+        ];
 
-      {/* Colonne 1 — Avatar avec bordure gradient cyan→bleu */}
-      <div className="mx-auto lg:mx-0">
+  return (
+    <motion.div
+      className="grid items-center gap-8 lg:grid-cols-[260px_1fr]"
+      // Entrance stagger (désactivé si reduced motion)
+      variants={shouldReduce ? {} : containerVariants}
+      initial={shouldReduce ? false : "hidden"}
+      animate="visible"
+    >
+      {/* ── Colonne 1 — Avatar avec bordure gradient cyan→bleu ─────────────── */}
+      <motion.div
+        className="mx-auto lg:mx-0"
+        variants={shouldReduce ? {} : avatarVariants}
+      >
         <div className="rounded-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 p-[3px] shadow-xl shadow-cyan-500/20 dark:shadow-cyan-400/15">
           <div className="relative h-[240px] w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
             <Image
@@ -51,69 +104,88 @@ export default function TrackAwareHero() {
               alt={t("hero.avatar_alt")}
               fill
               priority
-              // Taille réelle d'affichage : 240px — évite de charger une image 3840px
               sizes="(max-width: 768px) 200px, 240px"
               className="object-cover object-top"
               onError={() => setSrc("/avatar-placeholder.svg")}
             />
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Colonne 2 — Texte : qui ? quoi ? pourquoi ? */}
-      <div>
-        {/* Accroche courte au-dessus du titre (proposition de valeur) */}
-        <p className="text-sm font-medium text-cyan-800 dark:text-cyan-200">
-          {track === "salesforce" ? t("hero.value_salesforce") : t("hero.value_itops")}
-        </p>
+      {/* ── Colonne 2 — Texte ────────────────────────────────────────────────── */}
+      <motion.div variants={shouldReduce ? {} : textBlockVariants}>
 
-        {/* Titre principal H1 + sous-titre (1 phrase) */}
-        <h1 className="mt-2 text-4xl sm:text-5xl font-semibold leading-tight">
-          <span className="block">
-            {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
+        {/* Badge de disponibilité — point vert pulsant */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="relative flex h-2.5 w-2.5">
+            {/* Anneau pulsant (désactivé si prefers-reduced-motion) */}
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
           </span>
-          <span className="mt-1 block text-xl sm:text-2xl font-semibold text-cyan-700 dark:text-cyan-200">
-            {track === "salesforce" ? t("hero.subtitle_salesforce") : t("hero.subtitle_itops")}
+          <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+            {t("hero.availability")}
           </span>
-        </h1>
-
-        {/* Intro 1 phrase — répond à "pourquoi travailler avec moi ?" */}
-        <p className="mt-3 max-w-2xl text-muted text-base sm:text-lg">
-          {track === "salesforce" ? t("hero.intro_salesforce") : t("hero.intro_itops")}
-        </p>
-
-        {/* 3 badges de valeur — scanning rapide en moins de 3 secondes */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          <span className="chip">{t("hero.proof1")}</span>
-          <span className="chip">{t("hero.proof2")}</span>
-          <span className="chip">{t("hero.proof3")}</span>
         </div>
 
-        {/* CTAs — 1 principal + 1 secondaire discret
-            Le bouton "Appel 15 min" a été déplacé dans la section Contact
-            (CalendlyModal est déjà inclus dans ContactForm) */}
+        {/* Contenu dynamique (track-dépendant) — anime au changement de track */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={track}
+            initial={shouldReduce ? false : { opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={shouldReduce ? {} : { opacity: 0, x: -10 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+          >
+            {/* Accroche courte — proposition de valeur immédiate */}
+            <p className="text-sm font-medium text-cyan-800 dark:text-cyan-300">
+              {track === "salesforce" ? t("hero.value_salesforce") : t("hero.value_itops")}
+            </p>
+
+            {/* Titre H1 en Space Grotesk */}
+            <h1 className="mt-2 font-display text-4xl sm:text-5xl font-semibold leading-tight tracking-tight">
+              <span className="block">
+                {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
+              </span>
+              <span className="mt-1 block text-xl sm:text-2xl font-medium text-cyan-700 dark:text-cyan-300">
+                {track === "salesforce" ? t("hero.subtitle_salesforce") : t("hero.subtitle_itops")}
+              </span>
+            </h1>
+
+            {/* Tagline percutante — répond à "pourquoi travailler avec moi ?" */}
+            <p className="mt-3 max-w-2xl text-muted text-base sm:text-lg leading-relaxed">
+              {track === "salesforce" ? t("hero.intro_salesforce") : t("hero.intro_itops")}
+            </p>
+
+            {/* Proof tags — différents selon le track */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {proofTags.map((tag) => (
+                <span key={tag} className="chip">{tag}</span>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* CTAs — statiques, ne réaniment pas au changement de track */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          {/* CTA principal : action immédiate */}
           <a
-            className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
+            className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity"
             href="#contact"
+            onClick={() => trackEvent("calendly_open", { locale, track })}
           >
             {t("cta.workWithMe")}
           </a>
-
-          {/* CTA secondaire : téléchargement CV (toujours présent avec fallback) */}
           <a
-            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
             href={cvPdfUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={() => trackEvent("cv_download", { locale, track })}
           >
             {t("cta.downloadCv")} ↓
           </a>
         </div>
 
-        {/* Hint de changement de profil — invite à switcher vers l'autre track
-            S'affiche toujours, adapté au track actif, action directe (setTrack). */}
+        {/* Hint de switch de profil */}
         <p className="mt-4 text-xs text-muted-2">
           <button
             type="button"
@@ -125,7 +197,7 @@ export default function TrackAwareHero() {
               : t("hero.switchToSalesforce")}
           </button>
         </p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

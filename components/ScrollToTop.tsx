@@ -9,8 +9,10 @@
 // - Se positionne en bas à droite sans gêner le contenu principal
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ScrollToTop() {
+  const t = useTranslations("a11y");
   // Visible uniquement si l'utilisateur a scrollé de plus de 300px
   const [visible, setVisible] = useState(false);
 
@@ -32,7 +34,7 @@ export default function ScrollToTop() {
     <button
       type="button"
       onClick={scrollToTop}
-      aria-label="Retour en haut de page"
+      aria-label={t("scrollToTop")}
       // Transition : apparaît avec une légère translation vers le haut
       className={[
         "fixed bottom-6 right-6 z-40",

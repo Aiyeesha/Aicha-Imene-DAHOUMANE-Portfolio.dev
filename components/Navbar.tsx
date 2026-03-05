@@ -13,12 +13,33 @@ import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
 
+/** Petit bouton discret ⌘K pour rappeler le raccourci palette de commandes. */
+function CommandPaletteTrigger() {
+  return (
+    <button
+      type="button"
+      aria-label="Open command palette (⌘K)"
+      onClick={() => {
+        // Simule le raccourci clavier pour ouvrir la palette
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
+      }}
+      className="hidden 2xl:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+    >
+      <span>⌘K</span>
+    </button>
+  );
+}
+
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
-const PAGE_IDS = ["about","certifications"] as const;
+const PAGE_IDS = ["about","certifications","resources"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
 const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
+
+// IDs visibles dans le desktop nav — défini au niveau module pour être accessible
+// depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
+const DESKTOP_IDS_STATIC = new Set(["about", "skills", "certifications", "projects", "contact"]);
 
 
 export default function Navbar() {
@@ -39,13 +60,31 @@ export default function Navbar() {
         ? "about"
         : pathname.startsWith(`/${locale}/certifications`)
           ? "certifications"
-          : "skills";
+          : pathname.startsWith(`/${locale}/resources`)
+            ? "resources"
+            : "skills";
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
-  // Keep the hash in sync only on the one-page landing.
-  // (Hooks must not be called conditionally.)
-  useHashSync(isHome ? activeId : "");
+  // Desktop nav : mappe les sections non affichées (experience, services, blog…)
+  // vers la section desktop précédente la plus proche, pour que la pill reste
+  // toujours ancrée sur un item visible.
+  const SECTION_ORDER = [...SECTION_IDS] as string[];
+  const desktopActiveId: string = (() => {
+    const id = activeId;
+    if (DESKTOP_IDS_STATIC.has(id)) return id;
+    const idx = SECTION_ORDER.indexOf(id);
+    if (idx === -1) return "skills";
+    for (let i = idx - 1; i >= 0; i--) {
+      if (DESKTOP_IDS_STATIC.has(SECTION_ORDER[i])) return SECTION_ORDER[i];
+    }
+    return "skills";
+  })();
+
+  // Hash sync désactivé — l'ajout de #skills/#contact etc. dans l'URL est confusant
+  // pour les visiteurs et pollue le partage de liens. Le scroll-spy reste actif
+  // pour l'indicateur visuel de la navbar, sans modifier l'URL.
+  useHashSync("");
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -132,11 +171,20 @@ useEffect(() => {
 }, [mobileOpen]);
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "certifications"]);
+  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources"]);
 
+  // Pour le menu mobile — suit le scroll-spy complet
   const linkClass = (id: string) =>
-    `relative z-10 rounded-full px-2 xl:px-3 py-2 text-sm leading-none transition-colors soft-ring ${
+    `relative z-10 rounded-full px-2 2xl:px-3 py-2 text-sm leading-none transition-colors soft-ring ${
       activeId === id
+        ? "text-cyan-700 dark:text-cyan-200"
+        : "text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white"
+    }`;
+
+  // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
+  const desktopLinkClass = (id: string) =>
+    `relative z-10 rounded-full px-2 2xl:px-3 py-2 text-sm leading-none transition-colors soft-ring ${
+      desktopActiveId === id
         ? "text-cyan-700 dark:text-cyan-200"
         : "text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white"
     }`;
@@ -151,6 +199,7 @@ useEffect(() => {
   const hrefFor = (id: NavId): string => {
     if (id === "about") return `/${locale}/about`;
     if (id === "certifications") return `/${locale}/certifications`;
+    if (id === "resources") return `/${locale}/resources`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
     return `/${locale}/#${id}`;
@@ -161,12 +210,19 @@ useEffect(() => {
     { id: "skills", label: t("nav.skills") },
     { id: "experience", label: t("nav.experience") },
     { id: "certifications", label: t("nav.certifications") },
+    { id: "resources", label: t("nav.resources") },
     { id: "services", label: t("nav.services") },
     { id: "testimonials", label: t("nav.testimonials") },
     { id: "projects", label: t("nav.projects") },
     { id: "blog", label: t("nav.blog") },
     { id: "contact", label: t("nav.contact") }
   ];
+
+  // Desktop nav : 5 items pour tenir confortablement à xl (1280px).
+  // Expérience, Services et Blog restent accessibles via le menu mobile et la palette ⌘K.
+  // Témoignages retiré (section remplacée par TrustedBy, pas d'ancre dédiée).
+  const DESKTOP_IDS = DESKTOP_IDS_STATIC;
+  const desktopSections = sections.filter((s) => DESKTOP_IDS.has(s.id));
 
   return (
     <>
@@ -190,8 +246,8 @@ useEffect(() => {
             <div className="grid h-10 w-10 place-items-center rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-200 font-semibold">
               {BRAND_INITIALS}
             </div>
-            {/* On small screens, keep the brand compact to avoid pushing controls off-screen */}
-            <div className="hidden sm:block leading-tight">
+            {/* Texte du brand — masqué à xl pour libérer de l'espace au desktop nav (6 items) */}
+            <div className="hidden sm:block xl:hidden 2xl:block leading-tight">
               <div className="text-sm font-semibold">Aïcha Imène DAHOUMANE</div>
               <div className="text-xs text-muted-2">{t("nav.tagline")}</div>
             </div>
@@ -205,11 +261,11 @@ useEffect(() => {
               className="relative flex h-11 max-w-full min-w-0 items-center gap-0.5 overflow-x-auto rounded-full px-1
                          [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              <NavbarPill activeId={activeId} containerId="desktop-nav" />
-              {sections.map((s) => (
+              <NavbarPill activeId={desktopActiveId} containerId="desktop-nav" />
+              {desktopSections.map((s) => (
                 <Link
                   key={s.id}
-                  className={`${linkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`}
+                  className={`${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`}
                   data-section={s.id}
                   href={hrefFor(s.id)}
                   aria-current={activeId === s.id ? "page" : undefined}
@@ -240,6 +296,8 @@ useEffect(() => {
               <TrackToggle />
               <ThemeToggle />
               <LocaleSwitcher current={locale} />
+              {/* Bouton ⌘K — ouvre la palette de commandes */}
+              <CommandPaletteTrigger />
             </div>
             {/* CTA retiré de la navbar — présent dans le hero et le menu mobile.
                 Évite le débordement des liens nav sur les écrans ≤1440px. */}
@@ -251,7 +309,7 @@ useEffect(() => {
               className="inline-flex xl:hidden rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
               ref={menuButtonRef}
               onClick={() => setMobileOpen((v) => !v)}
-              aria-label={t("a11y.openMenu")}
+              aria-label={mobileOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
               aria-expanded={mobileOpen}
               aria-controls={MENU_ID}
             >
