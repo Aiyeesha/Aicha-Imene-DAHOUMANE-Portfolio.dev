@@ -48,9 +48,17 @@ html.dark select option {
 
 body {
   @apply bg-white text-slate-900;
+  /* Police de corps — Inter (lisible, neutre) */
+  font-family: var(--font-body, system-ui, sans-serif);
 }
 html.dark body {
   @apply bg-[#070B1A] text-white;
+}
+
+/* Titres h1–h3 : Space Grotesk (distinctive, premium) */
+h1, h2, h3 {
+  font-family: var(--font-display, system-ui, sans-serif);
+  letter-spacing: -0.02em;
 }
 
 .card {
@@ -177,13 +185,16 @@ html.dark .mdx pre {
 }
 
 /* MDX code blocks with toolbar (copy button) */
+/* MDX code blocks with toolbar (copy button) */
 .mdx-code {
   margin-top: 0.9rem;
 }
 .mdx-code__toolbar {
   display: flex;
   justify-content: flex-end;
-  padding: 0.35rem 0.35rem 0.2rem 0.35rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem 0.2rem 0.75rem;
   border: 1px solid rgba(0,0,0,0.10);
   border-bottom: 0;
   border-top-left-radius: 1rem;
@@ -194,6 +205,19 @@ html.dark .mdx-code__toolbar {
   border: 1px solid rgba(255,255,255,0.10);
   border-bottom: 0;
   background: rgba(255,255,255,0.05);
+}
+/* Badge de langage dans la toolbar */
+.mdx-code__lang {
+  margin-right: auto;
+  font-size: 0.7rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: rgba(0,0,0,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+html.dark .mdx-code__lang {
+  color: rgba(255,255,255,0.35);
 }
 .mdx-code__pre {
   margin-top: 0;
@@ -210,6 +234,53 @@ html.dark .mdx-code__toolbar {
 html.dark .mdx-code__copy {
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.06);
+}
+
+/* ─── rehype-pretty-code — Shiki dual-theme (light/dark) ────────────────────
+   rehype-pretty-code génère des variables CSS inline :
+     --shiki-light : couleur token en mode clair
+     --shiki-dark  : couleur token en mode sombre
+   On affiche la variante correcte selon la classe .dark sur <html>.
+   keepBackground: false → fond géré par .mdx pre ci-dessus.
+   ──────────────────────────────────────────────────────────────────────── */
+code[data-theme*=' '],
+code[data-theme*=' '] span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+html.dark code[data-theme*=' '],
+html.dark code[data-theme*=' '] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+/* Numéros de ligne (optionnel — activables via lineNumbers: true) */
+code[data-line-numbers] {
+  counter-reset: line;
+}
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: rgba(0,0,0,0.25);
+  user-select: none;
+}
+html.dark code[data-line-numbers] > [data-line]::before {
+  color: rgba(255,255,255,0.20);
+}
+/* Ligne surlignée (```ts {2-4}) */
+[data-line][data-highlighted-line] {
+  background: rgba(14,116,144,0.08);
+  border-left: 2px solid rgb(14,116,144);
+  padding-left: calc(0.75rem - 2px);
+  margin-left: -0.75rem;
+  display: block;
+}
+html.dark [data-line][data-highlighted-line] {
+  background: rgba(165,243,252,0.06);
+  border-left-color: rgba(165,243,252,0.5);
 }
 
 .mdx-link {

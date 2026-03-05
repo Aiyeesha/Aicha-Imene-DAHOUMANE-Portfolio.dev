@@ -101,8 +101,56 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const avatarUrl = process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.jpg";
 
+  // ── JSON-LD ────────────────────────────────────────────────────────────────
+  const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const postUrl  = `${siteUrl}/${locale}/blog/${slug}`;
+  const blogUrl  = `${siteUrl}/${locale}/blog`;
+
+  // BlogPosting — indexé par Google (rich snippets pour les articles)
+  const jsonLdBlogPosting = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": postUrl,
+    headline: meta.title,
+    description: meta.excerpt || meta.title,
+    url: postUrl,
+    datePublished: meta.date,
+    dateModified: meta.date,
+    inLanguage: locale === "fr" ? "fr-FR" : "en-US",
+    keywords: meta.tags.join(", "),
+    author: {
+      "@type": "Person",
+      name: authorName,
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Person",
+      name: authorName,
+      url: siteUrl,
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+    isPartOf: { "@type": "Blog", "@id": blogUrl },
+  };
+
+  // BreadcrumbList — Home → Blog → Article
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: locale === "fr" ? "Accueil" : "Home",  item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: "Blog",                                 item: blogUrl },
+      { "@type": "ListItem", position: 3, name: meta.title,                             item: postUrl },
+    ],
+  };
+
   return (
     <section className="py-12">
+      {/* Données structurées — BlogPosting + BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdBlogPosting, jsonLdBreadcrumb]) }}
+      />
       <ScrollProgress />
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0">

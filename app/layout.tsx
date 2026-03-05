@@ -3,8 +3,32 @@ import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import "./globals.css";
 
+import { Space_Grotesk, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import DevConsoleMessage from "@/components/DevConsoleMessage";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+
+// ── Polices premium ────────────────────────────────────────────────────────────
+// Space Grotesk : display/titres — distinctive, géométrique, moderne
+// Inter         : corps de texte — lisible, neutre, éprouvée
+//
+// font-display: swap évite le FOIT (flash of invisible text).
+// subsets : latin couvre le français et l'anglais.
+// variable : expose une CSS variable pour Tailwind.
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 // Root layout — point d'entrée HTML unique (html + body)
 // --------------------------------------------------------
@@ -28,7 +52,13 @@ export const metadata: Metadata = {
     ],
     // apple-touch-icon : iOS Safari (favoris, écran d'accueil)
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
-  }
+  },
+  // Flux RSS — annoncé dans <head> pour les lecteurs de flux et moteurs de recherche
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
 };
 
 /**
@@ -111,7 +141,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const locale = await getLocale(); // "en" | "fr"
   const jsonLd = buildJsonLd(locale);
   return (
-    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      className={`${spaceGrotesk.variable} ${inter.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"
@@ -119,7 +154,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>{children}
+      <body>
+        {children}
+        <DevConsoleMessage />
+        <ServiceWorkerRegistration />
         {process.env.NODE_ENV === "production" && <Analytics />}
         {process.env.NODE_ENV === "production" && <SpeedInsights />}
       </body>
