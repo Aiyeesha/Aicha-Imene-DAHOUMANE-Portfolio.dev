@@ -9,6 +9,7 @@
     "contact": "Contact",
     "testimonials": "Témoignages",
     "blog": "Blog",
+    "resources": "Ressources",
     "menu": "Menu",
     "tagline": "Salesforce · IT Ops",
     "workWithMeMenu": "Travailler avec moi",
@@ -17,18 +18,25 @@
   "hero": {
     "title": "Développeuse & Consultante Salesforce",
     "subtitle": "avec un bagage systèmes & DevOps",
-    "intro_salesforce": "J'aide les équipes à concevoir, construire et exploiter des solutions Salesforce et cloud sécurisées, scalables et réellement utiles pour les personnes qui les utilisent.",
-    "intro_itops": "J'aide les équipes à concevoir, maintenir et sécuriser des infrastructures IT et DevOps résilientes et évolutives.",
+    "intro_salesforce": "Je conçois des solutions Salesforce qui fonctionnent vraiment — sécurisées, testées et pensées pour durer. D'Apex au CI/CD, je gère chaque couche de la livraison.",
+    "intro_itops": "De l'infrastructure au déploiement, j'automatise, sécurise et documente les opérations IT pour que vos équipes se concentrent sur l'essentiel.",
     "avatar_alt": "Photo de profil",
     "title_salesforce": "Développeuse & Consultante Salesforce",
-    "subtitle_salesforce": "avec un bagage systèmes & DevOps",
-    "title_itops": "Administratrice systèmes & réseaux",
-    "subtitle_itops": "Ingénieure opérations IT & DevOps",
-    "value_salesforce": "Développeuse / administratrice Salesforce — orientation livraison, automatisation & qualité.",
-    "value_itops": "Administratrice systèmes & IT Ops — fiabilité, automatisation & qualité.",
+    "subtitle_salesforce": "Bagage systèmes & DevOps",
+    "title_itops": "Ingénieure Systèmes & IT Ops",
+    "subtitle_itops": "Infrastructure · DevOps · Sécurité",
+    "value_salesforce": "Apex · Flows · LWC · CI/CD — pensé pour durer.",
+    "value_itops": "Infrastructure · Automatisation · Sécurité — pensé pour scaler.",
+    "proof1_salesforce": "Sécurité d'abord",
+    "proof2_salesforce": "Testé & documenté",
+    "proof3_salesforce": "Prêt pour la production",
+    "proof1_itops": "Automatisé",
+    "proof2_itops": "Résilient par conception",
+    "proof3_itops": "Mindset ops-first",
     "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
+    "availability": "Disponible · ouverte à de nouvelles opportunités",
     "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
     "switchToItops": "Voir le profil IT Ops →"
@@ -106,6 +114,7 @@
       "invalid_email": "Merci d'indiquer un email valide.",
       "message_too_short": "Merci d'écrire un message plus long (au moins 10 caractères).",
       "rate_limited": "Trop de tentatives. Réessayez dans quelques minutes.",
+      "rate_limited_countdown": "Trop de tentatives. Réessayez dans {time}.",
       "upstream_failed": "Échec d'envoi. Réessayez plus tard ou utilisez un autre canal.",
       "generic": "Une erreur est survenue. Réessayez.",
       "name_too_long": "Merci d'indiquer un nom plus court (80 caractères max).",
@@ -212,7 +221,8 @@
     "showImage": "Afficher l'image {index}",
     "chooseTrack": "Choisir un parcours",
     "chooseItOps": "Passer sur le parcours IT Ops",
-    "chooseSalesforce": "Passer sur le parcours Salesforce"
+    "chooseSalesforce": "Passer sur le parcours Salesforce",
+    "scrollToTop": "Retour en haut de page"
   },
   "tracks": {
     "itops": "IT Ops",
@@ -233,7 +243,8 @@
     "builtWith": "Propulsé par Next.js",
     "privacy": "Confidentialité",
     "legal": "Mentions légales",
-    "accessibility": "Accessibilité"
+    "accessibility": "Accessibilité",
+    "status": "Statut"
   },
   "profile": {
     "kicker": "Profil",
@@ -310,6 +321,32 @@
     "liabilityBody": "Les informations présentes sur ce site sont fournies à titre indicatif et ne sauraient engager la responsabilité de l'éditeur. L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées, mais ne peut garantir leur exhaustivité ni leur absence d'erreurs. Les liens hypertextes vers des sites tiers sont fournis à titre informatif ; l'éditeur n'exerce aucun contrôle sur leur contenu.",
     "dataTitle": "Données personnelles",
     "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont utilisées uniquement pour répondre à votre demande et ne sont pas transmises à des tiers, sauf recours à un service d'acheminement d'emails. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Tout ce que vous devez savoir avant de me contacter.",
+    "items": [
+      {
+        "q": "Travaillez-vous à distance ?",
+        "a": "Oui — je travaille entièrement à distance. Basée en France, je collabore avec des clients en Europe et au-delà. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
+      },
+      {
+        "q": "Quels sont vos délais habituels ?",
+        "a": "Cela dépend du périmètre. Un audit Salesforce ou une fonctionnalité ciblée (Flow, classe Apex) prend généralement 1 à 5 jours. Une mise en œuvre complète avec tests et documentation s'étale plutôt sur 2 à 8 semaines. Je vous donne une estimation précise après un premier appel de cadrage — sans engagement."
+      },
+      {
+        "q": "Comment se déroule une mission type ?",
+        "a": "En général : un court appel de découverte (30 min) pour comprendre votre contexte → une proposition écrite avec périmètre, livrables et calendrier → livraison avec documentation claire → une session de passation pour que votre équipe puisse tout maintenir en autonomie. Vous êtes propriétaire de tout le code et des configurations que je produis."
+      },
+      {
+        "q": "Proposez-vous un suivi après la livraison ?",
+        "a": "Oui. J'inclus une courte période de support après chaque livraison pour les ajustements et les questions. Pour une maintenance continue ou l'évolution des fonctionnalités, nous pouvons envisager un arrangement en régie."
+      },
+      {
+        "q": "Êtes-vous disponible pour des missions courtes ?",
+        "a": "Absolument. Je prends en charge des missions ciblées et ponctuelles — d'une demi-journée de consultation à un projet de plusieurs semaines. Si vous avez besoin d'un second avis sur une décision d'architecture ou d'aide pour débloquer un problème précis, c'est tout à fait envisageable."
+      }
+    ]
   },
   "accessibility": {
     "title": "Accessibilité",

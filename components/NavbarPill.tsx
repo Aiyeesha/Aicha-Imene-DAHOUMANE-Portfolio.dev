@@ -28,10 +28,10 @@ export default function NavbarPill({
 
   const measure = () => {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) { setRect(null); return; }
 
     const link = container.querySelector(selector) as HTMLAnchorElement | null;
-    if (!link) return;
+    if (!link) { setRect(null); return; }
 
     const c = container.getBoundingClientRect();
     const r = link.getBoundingClientRect();

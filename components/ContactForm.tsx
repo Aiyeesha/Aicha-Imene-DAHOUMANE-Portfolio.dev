@@ -1,16 +1,26 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import CalendlyModal from "./CalendlyModal";
 import { useTrack } from "@/app/[locale]/providers";
+import { trackEvent } from "@/lib/analytics";
 
 type Status =
   | { kind: "idle" }
   | { kind: "sending" }
   | { kind: "success" }
-  | { kind: "error"; message: string };
+  | { kind: "error"; message: string }
+  // rate_limited : countdown live jusqu'à 0 puis retour à idle
+  | { kind: "rate_limited"; retryAfterSeconds: number };
+
+// Formate un nombre de secondes en "Xm Ys" ou "Ys"
+function formatCountdown(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return m > 0 ? `${m}m ${s}s` : `${s}s`;
+}
 
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
 const LINKEDIN_URL = process.env.NEXT_PUBLIC_LINKEDIN_URL || "";
@@ -57,6 +67,20 @@ export default function ContactForm() {
   const locale = useLocale();
   const { track } = useTrack();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+
+  // Countdown live : décrémente retryAfterSeconds chaque seconde jusqu'à 0,
+  // puis remet le formulaire en état idle (bouton réactivé automatiquement).
+  useEffect(() => {
+    if (status.kind !== "rate_limited") return;
+    if (status.retryAfterSeconds <= 0) {
+      setStatus({ kind: "idle" });
+      return;
+    }
+    const timer = setTimeout(() => {
+      setStatus({ kind: "rate_limited", retryAfterSeconds: status.retryAfterSeconds - 1 });
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [status]);
 
   const cvUrl = useMemo(
     () =>
@@ -116,9 +140,23 @@ export default function ContactForm() {
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as any;
         const code = String(data?.error || "generic");
+
+        // Cas spécial rate_limited : afficher un countdown avec les secondes exactes de l'API
+        if (code === "rate_limited") {
+          const retryAfter =
+            typeof data?.retryAfterSeconds === "number" && data.retryAfterSeconds > 0
+              ? data.retryAfterSeconds
+              : 60; // fallback 60s si absent
+          setStatus({ kind: "rate_limited", retryAfterSeconds: retryAfter });
+          return;
+        }
+
         const msg = t(errorToKey(code));
         throw new Error(msg);
       }
+
+      // Track form submission (topic anonymisé — pas de données perso)
+      trackEvent("contact_form_submit", { topic: payload.topic, locale });
 
       // Reset the form first, then show success.
       formEl.reset();
@@ -224,21 +262,33 @@ export default function ContactForm() {
           </label>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             type="submit"
-            disabled={status.kind === "sending"}
+            disabled={status.kind === "sending" || status.kind === "rate_limited"}
+            aria-describedby="contact-form-status"
             className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring disabled:opacity-60"
           >
             {status.kind === "sending" ? t("contact.sending") : t("contact.send")}
           </button>
 
-          <div aria-live="polite" className="min-h-[20px]">
+          <div id="contact-form-status" aria-live="polite" aria-atomic="true" className="min-h-[20px]">
             {status.kind === "success" && (
-              <span className="text-sm text-emerald-700 dark:text-emerald-200">{t("contact.success")}</span>
+              <span className="text-sm text-emerald-700 dark:text-emerald-200">
+                {t("contact.success")}
+              </span>
             )}
             {status.kind === "error" && (
-              <span className="text-sm text-rose-700 dark:text-rose-200">{status.message}</span>
+              <span className="text-sm text-rose-700 dark:text-rose-200">
+                {status.message}
+              </span>
+            )}
+            {status.kind === "rate_limited" && (
+              <span className="text-sm text-amber-700 dark:text-amber-300">
+                {t("contact.errors.rate_limited_countdown", {
+                  time: formatCountdown(status.retryAfterSeconds),
+                })}
+              </span>
             )}
           </div>
         </div>

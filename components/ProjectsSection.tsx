@@ -10,11 +10,12 @@
 //   si p.published === false, le lien est masqué (pas de page 404 en production)
 // - Réinitialisation auto du filtre catégorie et de la recherche au changement de track
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import Link from "next/link";
 import { useTrack } from "@/app/[locale]/providers";
 import { usePathname } from "next/navigation";
+import { trackEvent } from "@/lib/analytics";
 import { useTranslations } from "next-intl";
 import { tBadge, tCategory, tTag } from "@/i18n/projectTaxonomy";
 import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
@@ -56,11 +57,28 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
     return ["All", ...Array.from(set)];
   }, [track, projects]);
 
+  // Refs pour les boutons d'onglets (navigation au clavier ← →)
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const TRACKS = ["salesforce", "itops"] as const;
+
   // Changer de track en réinitialisant les filtres
   const handleTrackChange = (newTrack: "salesforce" | "itops") => {
     setTrack(newTrack);
     setActive("All");
     setQ("");
+  };
+
+  // Navigation clavier dans le tablist (APG pattern)
+  const handleTabKeyDown = (e: React.KeyboardEvent, idx: number) => {
+    let target = -1;
+    if (e.key === "ArrowRight") target = (idx + 1) % TRACKS.length;
+    else if (e.key === "ArrowLeft") target = (idx - 1 + TRACKS.length) % TRACKS.length;
+    else if (e.key === "Home") target = 0;
+    else if (e.key === "End") target = TRACKS.length - 1;
+    if (target === -1) return;
+    e.preventDefault();
+    handleTrackChange(TRACKS[target]);
+    tabRefs.current[target]?.focus();
   };
 
   // ── Filtrage : track + catégorie + recherche texte ───────────────
@@ -85,17 +103,20 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
           aria-label={locale === "fr" ? "Filtrer par parcours" : "Filter by track"}
           className="flex rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-1"
         >
-          {(["salesforce", "itops"] as const).map((tr) => {
+          {TRACKS.map((tr, idx) => {
             const count = trackCounts[tr];
             const label = tr === "salesforce" ? "Salesforce" : "IT Ops";
             const isActive = track === tr;
             return (
               <button
                 key={tr}
+                ref={(el) => { tabRefs.current[idx] = el; }}
                 type="button"
                 role="tab"
-                aria-selected={isActive ? true : false}
+                aria-selected={isActive}
+                tabIndex={isActive ? 0 : -1}
                 onClick={() => handleTrackChange(tr)}
+                onKeyDown={(e) => handleTabKeyDown(e, idx)}
                 className={[
                   "rounded-lg px-4 py-2 text-sm font-medium transition-colors soft-ring",
                   "inline-flex items-center gap-2",
@@ -198,6 +219,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
                   <Link
                     href={`/${locale}/projects/${p.slug}`}
                     className="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
+                    onClick={() => trackEvent("project_view", { slug: p.slug, track: p.track ?? track })}
                   >
                     {t("details")}
                   </Link>

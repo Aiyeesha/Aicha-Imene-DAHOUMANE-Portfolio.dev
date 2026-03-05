@@ -4,17 +4,21 @@
 // ProfileNarrative et ProfileFactsCard ont été déplacés vers la page About
 // pour alléger le hero et améliorer la lisibilité.
 
+import dynamic from "next/dynamic";
 import TrackAwareHero from "./track-aware-hero";
 import Reveal from "@/components/Reveal";
 import Accordion from "@/components/Accordion";
-import FeaturedProjects from "@/components/FeaturedProjects";
-import ProjectsSection from "@/components/ProjectsSection";
-import ContactForm from "@/components/ContactForm";
+// Above-the-fold — chargés immédiatement
 import TrackAwareSkills from "@/components/TrackAwareSkills";
-import TrackAwareServices from "@/components/TrackAwareServices";
-import LatestPosts from "@/components/LatestPosts";
-import TrustedBy from "@/components/TrustedBy";
-import { getExperienceItems, getCertificationItems } from "@/content/experience";
+// Below-the-fold — lazy-loadés pour réduire le JS initial
+const TrackAwareServices = dynamic(() => import("@/components/TrackAwareServices"));
+const ServicesFaq        = dynamic(() => import("@/components/ServicesFaq"));
+const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
+const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"));
+const ProjectsSection    = dynamic(() => import("@/components/ProjectsSection"));
+const LatestPosts        = dynamic(() => import("@/components/LatestPosts"));
+const ContactForm        = dynamic(() => import("@/components/ContactForm"));
+import { getExperienceItems } from "@/content/experience";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
@@ -25,7 +29,6 @@ export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
   const experienceItems = getExperienceItems(locale);
-  const certificationItems = getCertificationItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
 
   return (
@@ -63,24 +66,25 @@ export default async function Home({ params }: Props) {
         <Reveal delayMs={70}>
           <p className="mt-3 text-muted">{t("sections.experience_subtitle")}</p>
         </Reveal>
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        {/* Accordéon expérience — pleine largeur.
+            Les certifications ont été déplacées vers /certifications (page dédiée). */}
+        <div className="mt-8">
           <Reveal delayMs={110}>
-            <div>
-              <h3 className="text-xl font-semibold">{t("sections.roles_title")}</h3>
-              <div className="mt-4">
-                <Accordion items={experienceItems} defaultOpenId="exp-1" />
-              </div>
-            </div>
-          </Reveal>
-          <Reveal delayMs={170}>
-            <div>
-              <h3 className="text-xl font-semibold">{t("sections.certifications_title")}</h3>
-              <div className="mt-4">
-                <Accordion items={certificationItems} />
-              </div>
-            </div>
+            <Accordion items={experienceItems} defaultOpenId="exp-1" />
           </Reveal>
         </div>
+
+        {/* Lien vers la page Certifications dédiée */}
+        <Reveal delayMs={150}>
+          <div className="mt-8 flex items-center gap-4">
+            <Link
+              href={`/${locale}/certifications`}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+            >
+              {t("sections.certifications_title")} ↗
+            </Link>
+          </div>
+        </Reveal>
       </section>
 
       {/* SERVICES — section-stripe (fond alterné) */}
@@ -92,6 +96,7 @@ export default async function Home({ params }: Props) {
           <p className="mt-3 text-muted">{t("sections.services_subtitle")}</p>
         </Reveal>
         <TrackAwareServices locale={locale} />
+        <ServicesFaq />
       </section>
 
       {/* TÉMOIGNAGES / LOGOS ENTREPRISES — fond par défaut

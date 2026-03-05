@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>You're offline — Aïcha Imène DAHOUMANE</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --border: rgba(0, 0, 0, 0.08);
+        --text: #0f172a;
+        --muted: #64748b;
+        --accent: #06b6d4;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #070b1a;
+          --card: rgba(255, 255, 255, 0.04);
+          --border: rgba(255, 255, 255, 0.08);
+          --text: rgba(255, 255, 255, 0.92);
+          --muted: rgba(255, 255, 255, 0.55);
+        }
+      }
+
+      html, body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 480px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.25rem;
+        padding: 2.5rem 2rem;
+        text-align: center;
+      }
+
+      .icon {
+        font-size: 3rem;
+        line-height: 1;
+        margin-bottom: 1.25rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.75rem;
+      }
+
+      p {
+        color: var(--muted);
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 1.5rem 0;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--accent);
+        color: #000;
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.6rem 1.25rem;
+        border-radius: 9999px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.15s;
+      }
+      .btn:hover { opacity: 0.85; }
+
+      .site-name {
+        margin-top: 1.75rem;
+        font-size: 0.75rem;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="icon" aria-hidden="true">📡</div>
+
+      <h1>You're offline</h1>
+      <p>It looks like you've lost your internet connection.</p>
+      <p>Some pages you visited recently may still be available.</p>
+
+      <div class="divider"></div>
+
+      <button class="btn" onclick="location.reload()">
+        ↻ Try again
+      </button>
+
+      <p class="site-name">Aïcha Imène DAHOUMANE — Portfolio</p>
+    </div>
+  </body>
+</html>

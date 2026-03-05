@@ -7,6 +7,9 @@ import Navbar from "@/components/Navbar";
 import { cookies } from "next/headers";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
+import dynamic from "next/dynamic";
+// CommandPalette code-splitté — chargé uniquement à la demande (⌘K)
+const CommandPalette = dynamic(() => import("@/components/CommandPalette"));
 
 /**
  * Locale layout
@@ -96,6 +99,8 @@ export default async function LocaleLayout({
           <div className="relative z-10">
             <SkipToContent targetId="main" label={t("a11y.skip")} />
             <Navbar />
+            {/* Palette de commandes globale — ⌘K / Ctrl+K */}
+            <CommandPalette />
 
             {/*
               Global content container
@@ -118,6 +123,12 @@ export default async function LocaleLayout({
                   <div className="flex flex-wrap items-center gap-4">
                     <a
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/colophon`}
+                    >
+                      Colophon
+                    </a>
+                    <a
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/privacy`}
                     >
                       {t("footer.privacy")}
@@ -133,6 +144,12 @@ export default async function LocaleLayout({
                       href={`/${locale}/accessibility`}
                     >
                       {t("footer.accessibility")}
+                    </a>
+                    <a
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/status`}
+                    >
+                      {t("footer.status")}
                     </a>
                   </div>
                 </div>

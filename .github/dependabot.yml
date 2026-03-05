@@ -1,0 +1,99 @@
+# .github/dependabot.yml
+# -----------------------
+# Dependabot — mise à jour automatique des dépendances.
+#
+# Stratégie :
+#   - npm        : PRs hebdomadaires (lundi matin), groupées par catégorie
+#   - github-actions : PRs mensuelles pour les actions CI
+#
+# Groupes npm :
+#   - "next-ecosystem"  : Next.js + React + TypeScript (core — tester avant merge)
+#   - "tailwind"        : Tailwind CSS + plugins
+#   - "dev-tooling"     : ESLint, Jest, ts-jest, testing-library (dev only)
+#   - "supabase-upstash": Backend (Supabase, Upstash Redis)
+#   - toutes les autres deps sont mises à jour individuellement
+#
+# Chaque PR Dependabot déclenche le workflow CI (lint + typecheck + tests + build).
+# Ne jamais activer `auto-merge` sans que le CI soit vert.
+
+version: 2
+
+updates:
+  # ── npm ────────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/portfolio"      # package.json est dans le sous-dossier portfolio/
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 8
+    # Ignorer les majors automatiques — trop risqué sans review manuelle
+    versioning-strategy: increase
+
+    groups:
+      # Core Next.js + React — tester soigneusement avant merge
+      next-ecosystem:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "typescript"
+          - "@types/node"
+
+      # Tailwind CSS
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "postcss"
+          - "autoprefixer"
+
+      # Outils de développement (ESLint, Jest, testing-library…)
+      dev-tooling:
+        dependency-type: "development"
+        patterns:
+          - "eslint*"
+          - "@eslint/*"
+          - "jest*"
+          - "ts-jest"
+          - "@testing-library/*"
+          - "@types/jest"
+          - "typescript-eslint"
+
+      # Backend Supabase + Upstash Redis
+      supabase-upstash:
+        patterns:
+          - "@supabase/*"
+          - "@upstash/*"
+
+      # MDX pipeline
+      mdx:
+        patterns:
+          - "@next/mdx"
+          - "@mdx-js/*"
+          - "remark*"
+          - "rehype*"
+
+    # Ne pas ouvrir de PR pour les packages marqués comme ignorés
+    ignore:
+      # next-intl : les majors peuvent casser l'API i18n — upgrade manuel
+      - dependency-name: "next-intl"
+        update-types: ["version-update:semver-major"]
+      # framer-motion : les majors peuvent casser les animations — upgrade manuel
+      - dependency-name: "framer-motion"
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ──────────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"

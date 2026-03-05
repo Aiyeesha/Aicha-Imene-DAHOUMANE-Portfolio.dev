@@ -9,7 +9,8 @@ import { H2, H3 } from "@/components/mdx/Headings.server";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
-    pre: (props: any) => <CodeBlockServer>{props.children}</CodeBlockServer>,
+    // Transmission de tous les props (data-language, data-theme…) depuis rehype-pretty-code
+    pre: (props: any) => <CodeBlockServer {...props} />,
     h2: (props: any) => <H2>{props.children}</H2>,
     h3: (props: any) => <H3>{props.children}</H3>,
     a: (props: any) => <a {...props} className={["mdx-link", props.className || ""].join(" ")} />

@@ -2,10 +2,18 @@
 
 import { useTrack } from "@/app/[locale]/providers";
 import { useTranslations } from "next-intl";
+import { trackEvent } from "@/lib/analytics";
 
 export default function TrackToggle() {
   const { track, setTrack } = useTrack();
   const t = useTranslations();
+
+  // Trackage + switch — pas d'événement si on clique le track déjà actif
+  const handleSwitch = (to: "itops" | "salesforce") => {
+    if (to === track) return;
+    trackEvent("track_switch", { from: track, to });
+    setTrack(to);
+  };
 
   return (
     <div
@@ -15,7 +23,7 @@ export default function TrackToggle() {
     >
       <button
         type="button"
-        onClick={() => setTrack("itops")}
+        onClick={() => handleSwitch("itops")}
         aria-pressed={track === "itops"}
         aria-label={t("a11y.chooseItOps")}
         className={`rounded-full px-3 py-1.5 text-sm ${
@@ -28,7 +36,7 @@ export default function TrackToggle() {
       </button>
       <button
         type="button"
-        onClick={() => setTrack("salesforce")}
+        onClick={() => handleSwitch("salesforce")}
         aria-pressed={track === "salesforce"}
         aria-label={t("a11y.chooseSalesforce")}
         className={`rounded-full px-3 py-1.5 text-sm ${

@@ -9,6 +9,7 @@
     "contact": "Contact",
     "testimonials": "Testimonials",
     "blog": "Blog",
+    "resources": "Resources",
     "menu": "Menu",
     "tagline": "Salesforce · IT Ops",
     "workWithMeMenu": "Work with me",
@@ -17,18 +18,25 @@
   "hero": {
     "title": "Salesforce Developer & Consultant",
     "subtitle": "with a Systems & DevOps background",
-    "intro_salesforce": "I help teams design, build, and run secure, scalable Salesforce and cloud solutions that are genuinely useful for the people who use them.",
-    "intro_itops": "I help teams design, maintain, and secure resilient, scalable IT and DevOps infrastructures.",
+    "intro_salesforce": "I build Salesforce solutions that actually work — secure, tested, and designed to last. From Apex to CI/CD, I handle every layer of the delivery.",
+    "intro_itops": "From infrastructure to deployment, I automate, secure, and document IT operations so teams can focus on what matters.",
     "avatar_alt": "Profile photo",
     "title_salesforce": "Salesforce Developer & Consultant",
-    "subtitle_salesforce": "with a Systems & DevOps background",
-    "title_itops": "Systems & Network Administrator",
-    "subtitle_itops": "IT Operations & DevOps Engineer",
-    "value_salesforce": "Salesforce developer & admin — delivery oriented, automation & quality.",
-    "value_itops": "Systems & IT Ops — reliability, automation & quality.",
+    "subtitle_salesforce": "Systems & DevOps background",
+    "title_itops": "Systems & IT Ops Engineer",
+    "subtitle_itops": "Infrastructure · DevOps · Security",
+    "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
+    "value_itops": "Infrastructure · Automation · Security — built to scale.",
+    "proof1_salesforce": "Security-first",
+    "proof2_salesforce": "Tested & documented",
+    "proof3_salesforce": "Production-ready",
+    "proof1_itops": "Automated",
+    "proof2_itops": "Resilient by design",
+    "proof3_itops": "Ops-first mindset",
     "proof1": "Security-first",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
+    "availability": "Available · Open to new opportunities",
     "startHere": "Start here:",
     "switchToSalesforce": "View Salesforce profile →",
     "switchToItops": "View IT Ops profile →"
@@ -106,6 +114,7 @@
       "invalid_email": "Please enter a valid email address.",
       "message_too_short": "Please write a longer message (at least 10 characters).",
       "rate_limited": "Too many requests. Please try again in a few minutes.",
+      "rate_limited_countdown": "Too many requests. Retry in {time}.",
       "upstream_failed": "Delivery failed. Please try again later or use another channel.",
       "generic": "Something went wrong. Please try again.",
       "name_too_long": "Please use a shorter name (max 80 characters).",
@@ -212,7 +221,8 @@
     "showImage": "Show image {index}",
     "chooseTrack": "Choose a track",
     "chooseItOps": "Switch to IT Ops track",
-    "chooseSalesforce": "Switch to Salesforce track"
+    "chooseSalesforce": "Switch to Salesforce track",
+    "scrollToTop": "Back to top"
   },
   "tracks": {
     "itops": "IT Ops",
@@ -233,7 +243,8 @@
     "builtWith": "Built with Next.js",
     "privacy": "Privacy",
     "legal": "Legal notice",
-    "accessibility": "Accessibility"
+    "accessibility": "Accessibility",
+    "status": "Status"
   },
   "profile": {
     "kicker": "Profile",
@@ -310,6 +321,32 @@
     "liabilityBody": "The information on this website is provided for informational purposes only and does not constitute a commitment from the publisher. The publisher strives to ensure the accuracy of published information but cannot guarantee its completeness or freedom from errors. Links to third-party websites are provided for reference only; the publisher has no control over their content.",
     "dataTitle": "Personal data",
     "dataBody": "Data collected via the contact form (name, email, message) is used solely to respond to your request and is not shared with third parties, except when using an email delivery service. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. Contact: {email}."
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Everything you need to know before reaching out.",
+    "items": [
+      {
+        "q": "Do you work remotely?",
+        "a": "Yes — I work fully remote. Based in France, I collaborate with clients across Europe and beyond. Video calls, async communication, and documented handovers are part of my standard workflow."
+      },
+      {
+        "q": "What are your typical timelines?",
+        "a": "It depends on the scope. A Salesforce audit or a focused feature (Flow, Apex class) usually takes 1–5 days. A full implementation with testing and documentation typically runs 2–8 weeks. I'll give you a precise estimate after an initial scoping call — no commitment required."
+      },
+      {
+        "q": "How does a typical engagement work?",
+        "a": "It usually goes like this: a short discovery call (30 min) to understand your context → a written proposal with scope, deliverables, and timeline → delivery with clear documentation → a handover session so your team can maintain everything independently. You own all the code and configuration I produce."
+      },
+      {
+        "q": "Do you offer support after delivery?",
+        "a": "Yes. I include a short support window after each delivery for adjustments and questions. For ongoing maintenance or feature evolution, we can discuss a retainer arrangement."
+      },
+      {
+        "q": "Are you available for short missions?",
+        "a": "Absolutely. I take on focused, short-term work — from a half-day consultation to a multi-week project. If you need a second opinion on an architecture decision or help unblocking a specific issue, that works too."
+      }
+    ]
   },
   "accessibility": {
     "title": "Accessibility",

@@ -42,7 +42,7 @@ export default function BlogPostRenderer({ locale, slug }: { locale: Locale; slu
   if (!Component) {
     return (
       <div className="text-sm text-rose-200">
-        Post component not found for locale &quot;{locale}&quot; and slug &quot;{slug}&quot;.
+        Post component not found for locale "{locale}" and slug "{slug}".
       </div>
     );
   }
