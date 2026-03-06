@@ -327,7 +327,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                     rel="noreferrer"
                     className="text-sm underline underline-offset-4 hover:opacity-80"
                   >
-                    {labels.credentialLink} ↗
+                    {labels.credentialLink}<span aria-hidden="true"> ↗</span>
                   </a>
                 </div>
               )}
@@ -396,7 +396,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
                   >
-                    {labels.trailheadProfile} ↗
+                    {labels.trailheadProfile}<span aria-hidden="true"> ↗</span>
                   </a>
                 </div>
               </div>

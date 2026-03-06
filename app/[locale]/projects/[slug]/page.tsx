@@ -314,7 +314,7 @@ export default async function ProjectPage({
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
                 >
-                  ↗ Repo
+                  <span aria-hidden="true">↗ </span>Repo
                 </a>
               ) : null}
               {project.live_url ? (
@@ -324,7 +324,7 @@ export default async function ProjectPage({
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 transition-opacity soft-ring"
                 >
-                  ↗ Live
+                  <span aria-hidden="true">↗ </span>Live
                 </a>
               ) : null}
             </div>

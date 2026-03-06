@@ -5,11 +5,12 @@
 // Section "Ils m'ont fait confiance" — affichée tant que les témoignages réels
 // ne sont pas disponibles (NEXT_PUBLIC_SHOW_TESTIMONIALS !== "true").
 //
-// Fonctionnement :
-// - Logos en niveaux de gris par défaut (filter: grayscale)
-// - Hover : passage en couleur (filter: none) avec transition douce
-// - Alt text descriptif pour l'accessibilité
-// - Aucun placeholder texte visible en production
+// Comportement :
+// - Défilement horizontal automatique infini (marquee CSS Tailwind)
+// - Logos en niveaux de gris → passage en couleur au hover de la bande entière
+// - Duplication invisible du tableau pour un loop sans saut (aria-hidden sur le doublon)
+// - prefers-reduced-motion : animation stoppée, logos statiques centrés
+// - Pause au hover : group-hover sur le conteneur suspend l'animation
 //
 // Pour ajouter une entreprise : ajouter un objet dans `companies` et
 // déposer le logo dans /public/companies/ (format .webp ou .svg recommandé).
@@ -72,6 +73,29 @@ const companies: {
   }
 ];
 
+// Bloc logo individuel — réutilisé dans les deux passes du marquee
+function LogoItem({ company }: { company: (typeof companies)[0] }) {
+  return (
+    <div
+      className="
+        flex-shrink-0
+        relative flex items-center justify-center
+        opacity-50 grayscale transition-all duration-300
+        group-hover:opacity-90 group-hover:grayscale-0
+      "
+      title={company.name}
+    >
+      <Image
+        src={company.logo}
+        alt={company.name}
+        width={company.width}
+        height={company.height}
+        className="object-contain"
+      />
+    </div>
+  );
+}
+
 export default function TrustedBy() {
   const t = useTranslations();
 
@@ -79,7 +103,6 @@ export default function TrustedBy() {
   const visible = companies.filter((c) => c.is_visible);
 
   // Si aucun logo n'est disponible, ne rien afficher
-  // (évite une section vide en production)
   if (visible.length === 0) return null;
 
   return (
@@ -90,28 +113,42 @@ export default function TrustedBy() {
           {t("trustedBy.title")}
         </p>
 
-        {/* Logos — niveaux de gris + hover couleur */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-8 md:gap-12">
-          {visible.map((company, i) => (
-            <Reveal key={company.id} delayMs={i * 60}>
-              <div
-                className="
-                  relative flex items-center justify-center
-                  opacity-50 grayscale transition-all duration-300
-                  hover:opacity-100 hover:grayscale-0
-                "
-                title={company.name}
-              >
-                <Image
-                  src={company.logo}
-                  alt={company.name}
-                  width={company.width}
-                  height={company.height}
-                  className="object-contain"
-                />
-              </div>
-            </Reveal>
-          ))}
+        {/* ── Bande de défilement ───────────────────────────────────────────── */}
+        {/* Cas normal      : overflow-hidden + animate-marquee (défilement infini)
+            Reduced motion  : overflow visible + flex-wrap centré (pas de scroll)
+            group-hover     : pause au survol de la bande entière */}
+        <div
+          className="
+            group mt-8 w-full
+            overflow-hidden motion-reduce:overflow-visible
+          "
+          aria-label={t("trustedBy.title")}
+        >
+          <div
+            className="
+              flex items-center gap-12 md:gap-16
+              w-max motion-reduce:w-full
+              animate-marquee
+              motion-reduce:animate-none motion-reduce:flex-wrap motion-reduce:justify-center
+              group-hover:[animation-play-state:paused]
+            "
+          >
+            {/* Première passe — contenu accessible */}
+            {visible.map((company) => (
+              <LogoItem key={`a-${company.id}`} company={company} />
+            ))}
+
+            {/* Deuxième passe — doublon visuel masqué des lecteurs d'écran
+                (ignoré dans le cas motion-reduce car display:none via motion-reduce) */}
+            <div
+              aria-hidden="true"
+              className="contents motion-reduce:hidden"
+            >
+              {visible.map((company) => (
+                <LogoItem key={`b-${company.id}`} company={company} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </Reveal>

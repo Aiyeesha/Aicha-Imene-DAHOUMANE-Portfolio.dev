@@ -9,6 +9,7 @@
 import { useTrack } from "@/app/[locale]/providers";
 import Reveal from "@/components/Reveal";
 import { getServices, type Locale } from "@/content/services";
+import { useTranslations } from "next-intl";
 
 // ── Icônes SVG inline (24×24, stroke-based) ──────────────────────────
 // Chaque icône représente visuellement le type de service.
@@ -95,16 +96,39 @@ const ITOPS_ICONS      = [<IconShield key="a" />, <IconServer key="b" />, <IconG
 
 export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const { track } = useTrack();
+  const t = useTranslations();
   const cards = getServices(locale, track);
 
   // Sélectionner le jeu d'icônes selon le parcours actif
   const icons = track === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
+  /**
+   * handleDiscuss — bouton "Discuter de ce service"
+   *
+   * 1. Dispatche un custom event `contact:prefill` avec topic + subject.
+   *    ContactForm écoute cet événement et pré-remplit ses champs.
+   * 2. Fait défiler jusqu'à la section #contact.
+   */
+  function handleDiscuss(title: string) {
+    const topic = track === "salesforce" ? "salesforce" : "itops";
+
+    // Notifier ContactForm via un event DOM (pas de state global nécessaire)
+    window.dispatchEvent(
+      new CustomEvent("contact:prefill", { detail: { topic, subject: title } })
+    );
+
+    // Scroll vers la section contact avec smooth
+    const section = document.getElementById("contact");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   return (
     <div className="mt-6 grid gap-4 md:grid-cols-2">
       {cards.map((c, idx) => (
         <Reveal key={c.title} delayMs={110 + idx * 60}>
-          <div className="card p-6">
+          <div className="card p-6 flex flex-col">
             {/* En-tête : icône dans un badge coloré + titre */}
             <div className="flex items-start gap-3">
               <div
@@ -126,6 +150,21 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
                 <li key={b}>{b}</li>
               ))}
             </ul>
+
+            {/* CTA — pré-remplit le formulaire de contact avec ce service */}
+            <div className="mt-4 pt-4 border-t border-black/8 dark:border-white/8">
+              <button
+                type="button"
+                onClick={() => handleDiscuss(c.title)}
+                className="
+                  text-sm font-medium text-cyan-700 dark:text-cyan-300
+                  hover:underline underline-offset-4
+                  soft-ring rounded transition-opacity hover:opacity-80
+                "
+              >
+                {t("services.discuss")} →
+              </button>
+            </div>
           </div>
         </Reveal>
       ))}

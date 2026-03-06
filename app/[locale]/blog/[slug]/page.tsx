@@ -11,6 +11,7 @@ import TableOfContents from "@/components/blog/TableOfContents";
 import BackToTop from "@/components/blog/BackToTop";
 import RelatedPosts from "@/components/blog/RelatedPosts";
 import ScrollProgress from "@/components/ScrollProgress";
+import ShareButtons from "@/components/blog/ShareButtons";
 import { getPrevNext } from "@/content/blog/navigation";
 import { formatDate } from "@/lib/blog-utils";
 
@@ -209,6 +210,18 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
               <div className="text-sm text-muted">{t("authorRole")}</div>
             </div>
           </div>
+
+          {/* Share buttons — LinkedIn + copier le lien */}
+          <ShareButtons
+            url={postUrl}
+            title={meta.title}
+            labels={{
+              share:     t("share"),
+              linkedin:  t("shareLinkedIn"),
+              copyLink:  t("copyLink"),
+              copied:    t("copied"),
+            }}
+          />
 
           {/* Related posts */}
           {related.length > 0 && (

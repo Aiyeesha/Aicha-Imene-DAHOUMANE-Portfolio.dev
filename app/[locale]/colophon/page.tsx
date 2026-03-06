@@ -224,7 +224,7 @@ export default async function ColophonPage({ params }: PageProps) {
                           rel="noreferrer"
                           className="font-medium text-sm hover:underline underline-offset-4 soft-ring rounded"
                         >
-                          {item.name} ↗
+                          {item.name}<span aria-hidden="true"> ↗</span>
                         </a>
                       ) : (
                         <span className="font-medium text-sm">{item.name}</span>
@@ -289,7 +289,7 @@ export default async function ColophonPage({ params }: PageProps) {
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
           >
-            {labels.learnMore} ↗
+            {labels.learnMore}<span aria-hidden="true"> ↗</span>
           </a>
           <a
             href="https://portfolio-next-one-gold.vercel.app/en"
@@ -297,7 +297,7 @@ export default async function ColophonPage({ params }: PageProps) {
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
           >
-            {labels.viewLive} ↗
+            {labels.viewLive}<span aria-hidden="true"> ↗</span>
           </a>
         </div>
       </section>

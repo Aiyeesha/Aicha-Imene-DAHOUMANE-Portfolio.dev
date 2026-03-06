@@ -131,7 +131,7 @@ export default async function ResourcesPage({ params }: PageProps) {
                     aria-label={`${labels.visitLink} ${resource.name} (${isFr ? "nouvel onglet" : "new tab"})`}
                     className="inline-flex items-center gap-1.5 self-start rounded-full border border-black/10 dark:border-white/10 px-3 py-1.5 text-xs font-medium text-muted-2 hover:border-cyan-400/40 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors soft-ring"
                   >
-                    {labels.visitLink} ↗
+                    {labels.visitLink}<span aria-hidden="true"> ↗</span>
                   </a>
                 </article>
               ))}

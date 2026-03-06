@@ -193,7 +193,11 @@
     "author": "À propos de l'auteure",
     "authorRole": "Développeuse Salesforce · Administratrice systèmes",
     "backToTop": "Retour en haut",
-    "related": "Articles connexes"
+    "related": "Articles connexes",
+    "share": "Partager",
+    "shareLinkedIn": "Partager sur LinkedIn",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !"
   },
   "blogToc": {
     "title": "Sommaire",
@@ -238,6 +242,15 @@
   },
   "trustedBy": {
     "title": "Ils m'ont fait confiance"
+  },
+  "metrics": {
+    "apex":     "Classes Apex développées",
+    "flows":    "Flows d'automatisation",
+    "workload": "Charge manuelle réduite",
+    "projects": "Projets livrés"
+  },
+  "services": {
+    "discuss": "Discuter de ce service"
   },
   "footer": {
     "builtWith": "Propulsé par Next.js",
