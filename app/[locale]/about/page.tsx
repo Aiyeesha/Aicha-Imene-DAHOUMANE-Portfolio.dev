@@ -19,6 +19,10 @@ import { Suspense } from "react";
 import ProfileFactsCard from "@/components/ProfileFactsCard";
 import AboutTrackIntro from "@/components/AboutTrackIntro";
 import AboutTrackGoals from "@/components/AboutTrackGoals";
+// TechStackGrid — prête, masquée en attendant validation visuelle sur la page About.
+// Pour activer : décommenter l'import ET le bloc JSX ci-dessous.
+// import TechStackGrid from "@/components/TechStackGrid";
+import VisualTimeline from "@/components/VisualTimeline";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -119,6 +123,22 @@ export default async function AboutPage({ params }: PageProps) {
         </Suspense>
       </section>
 
+      {/* ── TECH STACK GRID — masquée, prête à activer ──────────────────────────
+          Grille interactive (badges colorés + tooltip hover : niveau, années, contexte).
+          Pour activer : décommenter l'import en haut du fichier + ce bloc JSX.
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold">
+          {safeLocale === "fr" ? "Stack technique" : "Tech stack"}
+        </h2>
+        <p className="mt-2 text-sm text-muted">
+          {safeLocale === "fr"
+            ? "Survolez chaque badge pour voir le niveau de maîtrise et le contexte d'utilisation."
+            : "Hover each badge to see proficiency level and usage context."}
+        </p>
+        <TechStackGrid />
+      </section>
+      ── fin bloc masqué ─────────────────────────────────────────────────── */}
+
       <div className="mt-10 space-y-10">
         {/* PARCOURS / JOURNEY — rendu en timeline verticale
             Chaque paragraphe représente une étape du parcours.
@@ -127,30 +147,10 @@ export default async function AboutPage({ params }: PageProps) {
           <section className="rounded-2xl border p-6">
             <SectionTitle>{journey?.title ?? (safeLocale === "fr" ? "Parcours" : "Journey")}</SectionTitle>
             {Array.isArray(journey?.paragraphs) ? (
-              <ol className="mt-6 space-y-0">
-                {journey!.paragraphs!.map((p, i) => {
-                  const isLast = i === journey!.paragraphs!.length - 1;
-                  return (
-                    <li key={i} className="flex gap-4">
-                      {/* Colonne gauche : numéro + ligne verticale */}
-                      <div className="flex flex-col items-center">
-                        {/* Cercle numéroté */}
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/15 border border-cyan-500/30 text-xs font-bold text-cyan-600 dark:text-cyan-400">
-                          {i + 1}
-                        </div>
-                        {/* Ligne verticale — absente sur la dernière étape */}
-                        {!isLast && (
-                          <div className="mt-1 w-px flex-1 bg-black/10 dark:bg-white/10 min-h-[2rem]" />
-                        )}
-                      </div>
-                      {/* Colonne droite : texte + espacement */}
-                      <p className={`text-sm leading-relaxed opacity-90 ${isLast ? "" : "pb-6"}`}>
-                        {p}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ol>
+              <VisualTimeline
+                steps={journey!.paragraphs!}
+                ariaLabel={journey?.title ?? (safeLocale === "fr" ? "Parcours" : "Journey")}
+              />
             ) : null}
           </section>
         ) : null}

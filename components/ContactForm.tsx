@@ -68,6 +68,23 @@ export default function ContactForm() {
   const { track } = useTrack();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
+  // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
+  const [topic,   setTopic]   = useState("general");
+  const [subject, setSubject] = useState("");
+
+  // Listener pour l'événement custom `contact:prefill` dispatché par TrackAwareServices.
+  // Quand l'utilisateur clique "Discuter de ce service", le formulaire se pré-remplit
+  // automatiquement avec le bon topic (salesforce/itops) et le titre du service.
+  useEffect(() => {
+    function handlePrefill(e: Event) {
+      const { topic: t, subject: s } = (e as CustomEvent<{ topic: string; subject: string }>).detail;
+      if (t) setTopic(t);
+      if (s) setSubject(s);
+    }
+    window.addEventListener("contact:prefill", handlePrefill);
+    return () => window.removeEventListener("contact:prefill", handlePrefill);
+  }, []);
+
   // Countdown live : décrémente retryAfterSeconds chaque seconde jusqu'à 0,
   // puis remet le formulaire en état idle (bouton réactivé automatiquement).
   useEffect(() => {
@@ -158,8 +175,10 @@ export default function ContactForm() {
       // Track form submission (topic anonymisé — pas de données perso)
       trackEvent("contact_form_submit", { topic: payload.topic, locale });
 
-      // Reset the form first, then show success.
+      // Reset le formulaire (champs non contrôlés) + réinitialise les états contrôlés.
       formEl.reset();
+      setTopic("general");
+      setSubject("");
       setStatus({ kind: "success" });
     } catch (err: any) {
       setStatus({ kind: "error", message: err?.message || t("contact.errors.generic") });
@@ -201,7 +220,8 @@ export default function ContactForm() {
             name="topic"
             autoComplete="off"
             required
-            defaultValue="general"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
             className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
           >
             <option value="general">{t("contact.topicGeneral")}</option>
@@ -218,6 +238,8 @@ export default function ContactForm() {
             id="contact-subject"
             name="subject"
             autoComplete="off"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
             className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.subjectPlaceholder")}
           />

@@ -193,7 +193,11 @@
     "author": "About the author",
     "authorRole": "Salesforce Developer · Systems Administrator",
     "backToTop": "Back to top",
-    "related": "Related posts"
+    "related": "Related posts",
+    "share": "Share",
+    "shareLinkedIn": "Share on LinkedIn",
+    "copyLink": "Copy link",
+    "copied": "Copied!"
   },
   "blogToc": {
     "title": "Table of contents",
@@ -238,6 +242,15 @@
   },
   "trustedBy": {
     "title": "Trusted by"
+  },
+  "metrics": {
+    "apex":     "Apex classes built",
+    "flows":    "Automation Flows",
+    "workload": "Manual workload reduced",
+    "projects": "Projects delivered"
+  },
+  "services": {
+    "discuss": "Discuss this service"
   },
   "footer": {
     "builtWith": "Built with Next.js",

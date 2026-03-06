@@ -4,7 +4,7 @@
 
 If you discover a security vulnerability in this portfolio, please report it responsibly:
 
-**Email** : 139870633+Aiyeesha@users.noreply.github.com
+**Email** : security@[votre-domaine].com *(à configurer avec votre adresse réelle)*
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 

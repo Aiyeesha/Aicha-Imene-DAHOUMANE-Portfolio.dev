@@ -294,7 +294,9 @@ html.dark .mdx-link { color: rgb(165 243 252); }
 /* Text helpers for light/dark consistency */
 .text-strong { @apply text-slate-900 dark:text-white/90; }
 .text-muted { @apply text-slate-600 dark:text-white/70; }
-.text-muted-2 { @apply text-slate-500 dark:text-white/60; }
+/* text-slate-500 (#64748b) = 4.34:1 sur blanc — ÉCHOUE WCAG AA (seuil 4.5:1).
+   text-slate-600 (#475569) = 5.74:1 sur blanc — PASSE WCAG AA ✓ */
+.text-muted-2 { @apply text-slate-600 dark:text-white/65; }
 
 html select option {
   background-color: #ffffff;
