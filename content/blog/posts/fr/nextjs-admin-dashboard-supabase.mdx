@@ -1,0 +1,266 @@
+---
+title: "Construire un dashboard admin sécurisé avec Next.js 16 + Supabase"
+excerpt: "Tutoriel complet : route /admin protégée par HTTP Basic Auth, client Supabase service_role, et visualisation des données — sans dépendance supplémentaire."
+date: "2026-03-06"
+tags: ["Next.js", "Supabase", "Web", "Sécurité", "Dashboard"]
+featured: false
+---
+
+Tout projet portfolio ou SaaS a besoin, à un moment, d'un endroit pour surveiller ses données sans ouvrir l'interface Supabase. Dans ce tutoriel, je vous présente exactement ce que j'ai construit pour mon portfolio : une route `/admin` protégée par HTTP Basic Auth, alimentée par un client Supabase `service_role` qui contourne le Row Level Security pour lire toutes les tables — y compris les privées comme les messages de contact.
+
+## Ce que nous allons construire
+
+- Une route `/admin` **hors** de l'arbre `[locale]` (interne, non indexée)
+- **HTTP Basic Auth** appliquée au niveau du proxy (compatible Edge runtime)
+- Un **client Supabase admin** utilisant `service_role` pour lire toutes les tables
+- Une **page dashboard** affichant : statistiques des projets, messages récents, certifications, témoignages
+
+Aucune nouvelle dépendance. Pas de page de connexion à maintenir. Pas de JWT à gérer.
+
+---
+
+## Structure du projet
+
+```
+app/
+  admin/
+    layout.tsx       ← layout isolé (sans Navbar/Footer)
+    page.tsx         ← dashboard server component
+lib/
+  supabase/
+    admin.ts         ← client service_role
+proxy.ts             ← protection Basic Auth (Edge runtime)
+.env.local           ← ADMIN_USERNAME + ADMIN_PASSWORD
+```
+
+---
+
+## Étape 1 — Client Supabase Admin
+
+Créez un client dédié utilisant la clé `service_role`. Cette clé contourne toutes les politiques RLS, elle ne doit **jamais** être exposée au navigateur.
+
+```typescript
+// lib/supabase/admin.ts
+import { createClient } from "@supabase/supabase-js";
+
+export function createAdminSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) {
+    throw new Error("SUPABASE_SERVICE_ROLE_KEY manquant");
+  }
+
+  return createClient(url, serviceKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+```
+
+> **Note de sécurité** : `SUPABASE_SERVICE_ROLE_KEY` (sans préfixe `NEXT_PUBLIC_`) reste côté serveur. Next.js ne l'inclura jamais dans le bundle client.
+
+---
+
+## Étape 2 — HTTP Basic Auth dans proxy.ts
+
+Next.js 16 utilise `proxy.ts` à la place de `middleware.ts`. Le proxy s'exécute sur l'**Edge runtime**, ce qui signifie pas de `Buffer` — utilisez `atob()` à la place.
+
+```typescript
+// proxy.ts
+import createMiddleware from "next-intl/middleware";
+import { type NextRequest, NextResponse } from "next/server";
+import { routing } from "./i18n/routing";
+
+const intlHandler = createMiddleware({
+  locales: routing.locales,
+  defaultLocale: routing.defaultLocale,
+  localePrefix: "always",
+});
+
+function adminAuth(request: NextRequest): NextResponse | null {
+  const expectedUser = process.env.ADMIN_USERNAME;
+  const expectedPass = process.env.ADMIN_PASSWORD;
+
+  if (!expectedUser || !expectedPass) {
+    return new NextResponse("Admin non configuré.", { status: 503 });
+  }
+
+  const authHeader = request.headers.get("authorization");
+  if (authHeader?.startsWith("Basic ")) {
+    try {
+      const decoded = atob(authHeader.slice(6)); // décodage base64 Edge-compatible
+      const colonIdx = decoded.indexOf(":");
+      if (colonIdx !== -1) {
+        const user = decoded.slice(0, colonIdx);
+        const pass = decoded.slice(colonIdx + 1);
+        if (user === expectedUser && pass === expectedPass) {
+          return null; // ✅ autorisé
+        }
+      }
+    } catch {
+      // base64 malformé → rejeter
+    }
+  }
+
+  return new NextResponse("Authentification requise.", {
+    status: 401,
+    headers: {
+      "WWW-Authenticate": 'Basic realm="Admin", charset="UTF-8"',
+    },
+  });
+}
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/admin")) {
+    const deny = adminAuth(request);
+    if (deny) return deny;
+    return NextResponse.next();
+  }
+
+  return intlHandler(request);
+}
+
+export const config = {
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
+};
+```
+
+Le point clé : quand le chemin commence par `/admin`, on intercepte **avant** que le gestionnaire i18n s'exécute. Aucun préfixe de locale n'est ajouté aux routes admin.
+
+---
+
+## Étape 3 — Variables d'environnement
+
+À ajouter dans `.env.local` :
+
+```bash
+# Supabase service_role (côté serveur uniquement, jamais exposé au navigateur)
+SUPABASE_SERVICE_ROLE_KEY=eyJ...votre_clé_service_role...
+
+# HTTP Basic Auth admin
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=votre-mot-de-passe-fort
+```
+
+> En production (Vercel), ajoutez ces variables dans Settings → Environment Variables. Utilisez un mot de passe fort (16+ caractères recommandés).
+
+---
+
+## Étape 4 — Layout Admin
+
+Le layout admin **ne doit pas** inclure `<html>` ou `<body>` — ils sont fournis par `app/layout.tsx`. Les ajouter à nouveau provoque une erreur de hydratation React.
+
+```typescript
+// app/admin/layout.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin — Dashboard",
+  robots: { index: false, follow: false }, // jamais indexé
+};
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased">
+      <header className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-semibold">Portfolio Admin</span>
+          <span className="rounded-full bg-cyan-500/15 px-2 py-0.5 text-[11px] font-medium text-cyan-400">
+            dashboard
+          </span>
+        </div>
+        <span className="text-xs text-slate-500">Supabase · service_role</span>
+      </header>
+      <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
+    </div>
+  );
+}
+```
+
+---
+
+## Étape 5 — Page Dashboard
+
+La page est un **Server Component** — elle récupère toutes les données côté serveur, sans état client nécessaire.
+
+```typescript
+// app/admin/page.tsx (extrait)
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+
+export default async function AdminPage() {
+  const supabase = createAdminSupabaseClient();
+
+  const [projects, messages, certifications] = await Promise.all([
+    supabase
+      .from("projects")
+      .select("id, slug, title, status, track, featured, created_at")
+      .order("created_at", { ascending: false }),
+
+    supabase
+      .from("messages")  // 🔐 inaccessible en anon — nécessite service_role
+      .select("id, name, email, topic, subject, message, created_at")
+      .order("created_at", { ascending: false })
+      .limit(20),
+
+    supabase
+      .from("certifications")
+      .select("id, name, issuer, locale"),
+  ]);
+
+  // ... rendu des données
+}
+```
+
+La table `messages` est protégée par RLS : le rôle `anon` ne peut qu'insérer (formulaire de contact), jamais lire. Le client `service_role` contourne cette restriction — c'est pourquoi il est crucial de ne jamais l'exposer côté client.
+
+---
+
+## Considérations de sécurité
+
+### Ce que HTTP Basic Auth protège
+
+- Les visiteurs qui tombent accidentellement sur `/admin`
+- L'indexation par les moteurs de recherche (combiné à `robots: { index: false }`)
+- Les scanners automatisés sans identifiants
+
+### Ce qu'il ne protège PAS
+
+- Les attaques par force brute (ajoutez du rate-limiting sur `/admin` si nécessaire)
+- L'interception réseau (toujours utiliser HTTPS en production — Vercel l'impose)
+- Les identifiants compromis
+
+### Le RLS reste important
+
+La clé `service_role` contourne le RLS uniquement côté serveur. Si vos politiques RLS sont correctes :
+- Les visiteurs publics ne peuvent pas lire `messages` même avec la clé anon
+- L'utilisation de `service_role` est tracée dans l'audit Supabase
+
+### Ne pas committer les credentials
+
+`.env.local` est dans `.gitignore` par défaut. Pour le CI/CD :
+
+```bash
+# Dans le dashboard Vercel → Settings → Environment Variables
+SUPABASE_SERVICE_ROLE_KEY=...
+ADMIN_USERNAME=...
+ADMIN_PASSWORD=...
+```
+
+---
+
+## Résultat
+
+Accédez à `http://localhost:3000/admin`. Le navigateur affiche la popup d'authentification HTTP Basic Auth native. Après authentification, vous obtenez une vue complète de vos données Supabase — projets, messages, certifications — rendus entièrement côté serveur, sans JavaScript client.
+
+Tout le feature coûte :
+- ~25 lignes dans `proxy.ts`
+- ~20 lignes pour le client admin
+- Zéro nouveau package npm
+- Une entrée dans le fichier d'environnement
+
+C'est exactement le type de ratio qui justifie de livrer une feature.

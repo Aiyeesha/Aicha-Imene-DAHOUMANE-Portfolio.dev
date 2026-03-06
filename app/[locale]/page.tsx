@@ -14,6 +14,7 @@ import TrackAwareSkills from "@/components/TrackAwareSkills";
 const TrackAwareServices = dynamic(() => import("@/components/TrackAwareServices"));
 const ServicesFaq        = dynamic(() => import("@/components/ServicesFaq"));
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
+const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
 const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"));
 const ProjectsSection    = dynamic(() => import("@/components/ProjectsSection"));
 const LatestPosts        = dynamic(() => import("@/components/LatestPosts"));
@@ -55,6 +56,7 @@ export default async function Home({ params }: Props) {
         <Reveal delayMs={70}>
           <p className="mt-3 text-muted">{t("sections.skills_subtitle")}</p>
         </Reveal>
+
         <TrackAwareSkills locale={locale} />
       </section>
 
@@ -81,7 +83,8 @@ export default async function Home({ params }: Props) {
               href={`/${locale}/certifications`}
               className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
             >
-              {t("sections.certifications_title")} ↗
+              {t("sections.certifications_title")}
+              <span aria-hidden="true"> ↗</span>
             </Link>
           </div>
         </Reveal>
@@ -116,7 +119,11 @@ export default async function Home({ params }: Props) {
             </div>
           </>
         ) : (
-          <TrustedBy />
+          <>
+            <TrustedBy />
+            {/* Compteurs animés — métriques clés chiffrées (Apex, Flows, gain, projets) */}
+            <GlobalMetrics />
+          </>
         )}
       </section>
 
