@@ -28,6 +28,18 @@ import rehypePrettyCode from "rehype-pretty-code";
 const nextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
+  images: {
+    // Servir AVIF en priorité (25-50 % plus léger que WebP), fallback WebP.
+    // Next.js teste le support navigateur via Accept et sert le bon format.
+    formats: ["image/avif", "image/webp"],
+    // Cache CDN/navigateur des images optimisées : 30 jours.
+    // Par défaut Next.js utilise 60 s — très court, force des re-optimisations fréquentes.
+    minimumCacheTTL: 2592000, // 30 jours
+    // Tailles d'image générées pour les usages fill/responsive.
+    // On conserve les valeurs par défaut mais on ajoute 480px (courant sur mobile).
+    deviceSizes: [480, 640, 750, 828, 1080, 1200, 1920],
+  },
+
   async headers() {
     return [
       {

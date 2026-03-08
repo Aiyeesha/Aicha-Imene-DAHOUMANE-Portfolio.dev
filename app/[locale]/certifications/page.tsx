@@ -29,7 +29,7 @@ export async function generateMetadata({
       : "Certifications & Diplomas — Aïcha Imène DAHOUMANE",
     description: isFr
       ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Ranger) et certifications en préparation (Salesforce Admin, Platform Developer I, ISC2 CC)."
-      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Ranger) and upcoming certifications (Salesforce Admin, Platform Developer I, ISC2 CC).",
+      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Ranger) and upcoming certifications (CompTIA A+, Salesforce Admin, Platform Developer I, ISC2 CC).",
   };
 }
 
@@ -196,6 +196,17 @@ export default async function CertificationsPage({ params }: PageProps) {
 
   // Certifications en préparation
   const upcomingItems = [
+    {
+      id: "comptia-aplus",
+      name: "CompTIA A+",
+      issuer: "CompTIA",
+      target: "2026",
+      description: isFr
+        ? "Certification fondamentale en support matériel et logiciel : installation, configuration, dépannage de postes de travail, OS, réseaux et sécurité."
+        : "Foundational hardware and software support certification: installation, configuration, troubleshooting of workstations, OS, networking and security.",
+      initials: "A+",
+      color: "bg-red-600",
+    },
     {
       id: "sf-admin",
       name: "Salesforce Certified Administrator",

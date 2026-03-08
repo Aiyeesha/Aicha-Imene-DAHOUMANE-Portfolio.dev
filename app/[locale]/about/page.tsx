@@ -14,6 +14,7 @@
 // avec le contenu Supabase (journey, goals) et mieux adapter l'intro au track.
 
 import { getAboutPageCached } from "@/lib/data/about.cached";
+import { getGoals2026 } from "@/lib/data/goals";
 import Link from "next/link";
 import { Suspense } from "react";
 import ProfileFactsCard from "@/components/ProfileFactsCard";
@@ -23,6 +24,7 @@ import AboutTrackGoals from "@/components/AboutTrackGoals";
 // Pour activer : décommenter l'import ET le bloc JSX ci-dessous.
 // import TechStackGrid from "@/components/TechStackGrid";
 import VisualTimeline from "@/components/VisualTimeline";
+import CareerTimeline from "@/components/CareerTimeline";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -44,7 +46,10 @@ export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = locale === "fr" ? "fr" : "en";
 
-  const about = await getAboutPageCached(safeLocale);
+  const [about, goals] = await Promise.all([
+    getAboutPageCached(safeLocale),
+    getGoals2026(),
+  ]);
 
   if (!about) {
     return (
@@ -139,6 +144,21 @@ export default async function AboutPage({ params }: PageProps) {
       </section>
       ── fin bloc masqué ─────────────────────────────────────────────────── */}
 
+      {/* ── FRISE CHRONOLOGIQUE — données statiques, toujours visible ──────────
+          Complément visuel à la section "Mon parcours" Supabase ci-dessous.
+          Affiche les années, types et organisations clairement. */}
+      <section className="mt-10 rounded-2xl border border-black/10 dark:border-white/10 p-6">
+        <SectionTitle>
+          {safeLocale === "fr" ? "Parcours en un coup d'œil" : "Career at a glance"}
+        </SectionTitle>
+        <p className="mt-2 text-sm text-muted">
+          {safeLocale === "fr"
+            ? "Formation → Stage → Alternance → CDI — une montée en compétences continue."
+            : "Training → Internship → Work-study → Full-time — continuous upskilling."}
+        </p>
+        <CareerTimeline locale={safeLocale} />
+      </section>
+
       <div className="mt-10 space-y-10">
         {/* PARCOURS / JOURNEY — rendu en timeline verticale
             Chaque paragraphe représente une étape du parcours.
@@ -209,7 +229,7 @@ export default async function AboutPage({ params }: PageProps) {
             ))}
           </div>
         }>
-          <AboutTrackGoals />
+          <AboutTrackGoals goals={goals} />
         </Suspense>
       </div>
 

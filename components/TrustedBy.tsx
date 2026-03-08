@@ -90,6 +90,7 @@ function LogoItem({ company }: { company: (typeof companies)[0] }) {
         alt={company.name}
         width={company.width}
         height={company.height}
+        loading="lazy"
         className="object-contain"
       />
     </div>

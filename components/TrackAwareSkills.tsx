@@ -105,7 +105,8 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
   return (
     <div className="mt-6 grid gap-4 md:grid-cols-2">
       {groups.map((g, idx) => (
-        <Reveal key={g.title} delayMs={110 + idx * 60}>
+        // Alternance : colonne gauche (pair) ← , colonne droite (impair) →
+        <Reveal key={g.title} delayMs={110 + idx * 60} from={idx % 2 === 0 ? "left" : "right"}>
           <div className="card p-6">
             {/* En-tête : icône + titre du groupe */}
             <div className="flex items-center gap-2.5 mb-3">
