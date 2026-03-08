@@ -17,7 +17,15 @@ import Modal from "./Modal";
 // Récupération de l'URL Calendly depuis l'env var (côté client uniquement)
 const CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
 
-export default function CalendlyModal() {
+type Props = {
+  /**
+   * "contact" (défaut) : bouton full-width pour la section contact.
+   * "hero"             : pill compacte pour les CTAs du hero.
+   */
+  variant?: "contact" | "hero";
+};
+
+export default function CalendlyModal({ variant = "contact" }: Props) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   // Suivi de l'état de chargement de l'iframe pour afficher le skeleton
@@ -33,17 +41,28 @@ export default function CalendlyModal() {
 
   return (
     <>
-      {/* Bouton déclencheur — style secondaire (action moins prioritaire que le formulaire) */}
-      <button
-        type="button"
-        onClick={handleOpen}
-        className="flex w-full items-center justify-between rounded-xl border border-black/10 dark:border-white/10
-          bg-black/5 dark:bg-white/5 px-4 py-3 text-sm
-          hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-      >
-        <span>{t("contact.bookCall")}</span>
-        <span aria-hidden="true">↗</span>
-      </button>
+      {variant === "hero" ? (
+        /* ── Variante hero : pill compacte alignée avec les autres CTAs ── */
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+        >
+          {t("cta.call15")} ↗
+        </button>
+      ) : (
+        /* ── Variante contact : bouton full-width (usage original) ── */
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="flex w-full items-center justify-between rounded-xl border border-black/10 dark:border-white/10
+            bg-black/5 dark:bg-white/5 px-4 py-3 text-sm
+            hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+        >
+          <span>{t("contact.bookCall")}</span>
+          <span aria-hidden="true">↗</span>
+        </button>
+      )}
 
       {/* Modale Calendly */}
       <Modal open={open} title={t("contact.bookCall")} onClose={() => setOpen(false)}>

@@ -332,6 +332,46 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Déploiement"],
   },
 
+  // --- Apex Triggers Best Practices
+  {
+    slug: "apex-triggers-best-practices",
+    locale: "en",
+    title: "Apex Triggers: 10 Best Practices for Maintainable Code",
+    excerpt:
+      "Practical guide to building robust, performant, and maintainable Apex triggers in your Salesforce projects.",
+    date: "2026-02-15",
+    tags: ["Salesforce", "Apex", "Best Practices", "Development"],
+  },
+  {
+    slug: "apex-triggers-best-practices",
+    locale: "fr",
+    title: "Triggers Apex : 10 bonnes pratiques pour un code maintenable",
+    excerpt:
+      "Guide pratique pour développer des triggers Apex robustes, performants et faciles à maintenir dans vos projets Salesforce.",
+    date: "2026-02-15",
+    tags: ["Salesforce", "Apex", "Bonnes pratiques", "Développement"],
+  },
+
+  // --- Flow vs Apex Decision Guide
+  {
+    slug: "flow-vs-apex-decision-guide",
+    locale: "en",
+    title: "Flow Builder vs Apex: When to Choose What?",
+    excerpt:
+      "Practical decision guide for choosing between Flow Builder and Apex for your Salesforce automation needs.",
+    date: "2026-02-10",
+    tags: ["Salesforce", "Flow", "Apex", "Automation", "Architecture"],
+  },
+  {
+    slug: "flow-vs-apex-decision-guide",
+    locale: "fr",
+    title: "Flow Builder vs Apex : Quand choisir quoi ?",
+    excerpt:
+      "Guide de décision pratique pour choisir entre Flow Builder et Apex selon vos besoins d'automatisation Salesforce.",
+    date: "2026-02-10",
+    tags: ["Salesforce", "Flow", "Apex", "Automatisation", "Architecture"],
+  },
+
   // --- LWC Testing
   {
     slug: "salesforce-lwc-testing",
@@ -350,5 +390,25 @@ export const BLOG_POSTS: BlogPostMeta[] = [
       "Guide complet pour tester les composants LWC avec Jest et @lwc/jest-utils — mocker les wire adapters, tester les événements et obtenir une couverture fiable.",
     date: "2026-01-05",
     tags: ["Salesforce", "LWC", "Jest", "Tests", "Front-end"],
+  },
+
+  // --- Next.js Admin Dashboard (personal project)
+  {
+    slug: "nextjs-admin-dashboard-supabase",
+    locale: "en",
+    title: "Building a Secure Admin Dashboard with Next.js 16 + Supabase",
+    excerpt:
+      "Step-by-step tutorial: protected /admin route with HTTP Basic Auth, Supabase service_role client, and a full data visualization dashboard — no extra dependencies.",
+    date: "2026-03-06",
+    tags: ["Next.js", "Supabase", "Web", "Security", "Dashboard"],
+  },
+  {
+    slug: "nextjs-admin-dashboard-supabase",
+    locale: "fr",
+    title: "Construire un dashboard admin sécurisé avec Next.js 16 + Supabase",
+    excerpt:
+      "Tutoriel complet : route /admin protégée par HTTP Basic Auth, client Supabase service_role, et visualisation des données — sans dépendance supplémentaire.",
+    date: "2026-03-06",
+    tags: ["Next.js", "Supabase", "Web", "Sécurité", "Dashboard"],
   },
 ];

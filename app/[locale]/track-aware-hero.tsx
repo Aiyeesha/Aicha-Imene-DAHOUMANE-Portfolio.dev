@@ -2,20 +2,29 @@
 
 // track-aware-hero.tsx
 // --------------------
-// Hero section : photo + titre + tagline percutante + proof tags + 2 CTAs.
+// Hero section : photo + titre + tagline percutante + proof tags + CTAs.
 // Deux variantes selon le track toggle (Salesforce / IT Ops).
 //
 // Animations (Framer Motion) :
 //   - Entrance stagger : avatar + bloc texte s'animent en séquence au chargement
 //   - Track switch     : AnimatePresence fade-slide sur le contenu dynamique
+//   - Parallaxe avatar : léger décalage vertical de l'avatar au scroll (useScroll)
 //   - Reduced motion   : toutes les animations sont désactivées si prefers-reduced-motion
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useTrack } from "./providers";
-import { motion, AnimatePresence, useReducedMotion, type Variants } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type Variants,
+} from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
+import CalendlyModal from "@/components/CalendlyModal";
 
 // ── Variants Framer Motion ─────────────────────────────────────────────────
 // Container : stagger les enfants à l'entrée (0.09 s entre chaque)
@@ -52,6 +61,13 @@ export default function TrackAwareHero() {
   const { track, setTrack } = useTrack();
   const locale = useLocale();
   const shouldReduce = useReducedMotion();
+
+  // ── Parallaxe avatar ───────────────────────────────────────────────────────
+  // scrollY : 0 → 400px de scroll → avatar remonte de 0 → -28px (subtil).
+  // Désactivé si prefers-reduced-motion (useTransform appelé inconditionnellement
+  // mais appliqué seulement si !shouldReduce pour respecter la règle des hooks).
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 400], [0, -28]);
 
   // URL du CV — adaptée au track et à la langue, avec fallbacks
   const cvPdfUrl = useMemo(
@@ -93,9 +109,11 @@ export default function TrackAwareHero() {
       animate="visible"
     >
       {/* ── Colonne 1 — Avatar avec bordure gradient cyan→bleu ─────────────── */}
+      {/* style.y : parallaxe au scroll (désactivé si prefers-reduced-motion) */}
       <motion.div
         className="mx-auto lg:mx-0"
         variants={shouldReduce ? {} : avatarVariants}
+        style={shouldReduce ? undefined : { y: parallaxY }}
       >
         <div className="rounded-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 p-[3px] shadow-xl shadow-cyan-500/20 dark:shadow-cyan-400/15">
           <div className="relative h-[240px] w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
@@ -104,7 +122,7 @@ export default function TrackAwareHero() {
               alt={t("hero.avatar_alt")}
               fill
               priority
-              sizes="(max-width: 768px) 200px, 240px"
+              sizes="240px"
               className="object-cover object-top"
               onError={() => setSrc("/avatar-placeholder.svg")}
             />
@@ -167,13 +185,19 @@ export default function TrackAwareHero() {
 
         {/* CTAs — statiques, ne réaniment pas au changement de track */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
+          {/* CTA primaire : scroll vers la section contact */}
           <a
             className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity"
             href="#contact"
-            onClick={() => trackEvent("calendly_open", { locale, track })}
+            onClick={() => trackEvent("contact_click", { locale, track })}
           >
             {t("cta.workWithMe")}
           </a>
+
+          {/* CTA secondaire 1 : ouvre la modale Calendly (disparaît si URL non configurée) */}
+          <CalendlyModal variant="hero" />
+
+          {/* CTA secondaire 2 : télécharge le CV PDF */}
           <a
             className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
             href={cvPdfUrl}

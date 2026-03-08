@@ -1719,889 +1719,173 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
       }
     }
   },
+  // ── IT OPS — 13 case studies ──────────────────────────────────────────────
   {
-    slug: "monitoring-automation-pack",
-    locales: {
-      en: {
-        heroSubtitle: "Monitoring & automation pack",
-        sections: [
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Scoped the work: objectives, deliverables, acceptance criteria.",
-              "Implemented and/or documented the solution end‑to‑end.",
-              "Validated results with tests/evidence and wrote clear documentation."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Monitoring & automation pack",
-        sections: [
-          {
-            type: "bullets",
-            title: "Ce que j’ai réalisé",
-            items: [
-              "Cadrage : objectifs, livrables, critères d’acceptation.",
-              "Réalisation : implémentation et/ou documentation de bout en bout.",
-              "Validation : tests / preuves + mise en forme de la documentation."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tssr-windows-autopilot-provisioning",
+    slug: "workstation-mass-deployment",
     gallery: [
-      { src: "/projects/tssr-windows-autopilot-provisioning/tssr-1.webp", alt: "Autopilot provisioning — OOBE / setup" },
-      { src: "/projects/tssr-windows-autopilot-provisioning/tssr-2.webp", alt: "Autopilot provisioning — PowerShell hash collection" },
-      { src: "/projects/tssr-windows-autopilot-provisioning/tssr-3.webp", alt: "Autopilot provisioning — provisioning flow" },
-      { src: "/projects/tssr-windows-autopilot-provisioning/tssr-4.webp", alt: "Autopilot provisioning — validation (grouptag / domain)" }
+      { src: "/projects/workstation-mass-deployment/cover.jpg", alt: "Dell laptop running Image Assist Dynamic WinPC — workstation imaging at MIDRANGE GROUP" },
+      { src: "/projects/workstation-mass-deployment/img-2.jpg", alt: "Dell Image Assist — WIM image restore in progress on Dell Latitude" },
+      { src: "/projects/workstation-mass-deployment/img-3.jpg", alt: "Blancco disk erasure at 98% on Lenovo monitor — secure data wiping before redeployment" },
     ],
     locales: {
-      en: {
-        heroSubtitle: "Windows Autopilot provisioning (Dell fleet)",
-        sections: [
-          {
-            type: "text",
-            title: "Context",
-            paragraphs: [
-              "During my internship (MSP environment), I helped prepare and deliver large device batches for different customers.",
-              "The goal was to standardize Windows provisioning so every device is compliant, up to date, and ready for the end user with minimal manual steps."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Scope & goals",
-            items: [
-              "Apply a clean baseline image ('vanilla' Windows) with current OEM drivers.",
-              "Collect the hardware hash and hand it over to the Intune/Autopilot administration team for device registration.",
-              "Trigger the Autopilot provisioning (apps, scripts, policies), then seal the device for delivery.",
-              "Run final checks: drivers, activation, device naming, domain / tenant targeting (group tag)."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Operational runbook (high level)",
-            steps: [
-              { title: "Apply baseline image", description: "Boot from the Dell ImageAssist USB key and deploy the vanilla Windows 10 image with the correct, up‑to‑date model drivers." },
-              { title: "Enter OOBE + open CMD", description: "At first boot (OOBE), open a command prompt with Shift+F10 (or Shift+Fn+F10 depending on the device)." },
-              { title: "Run PowerShell + allow scripts", description: "Start PowerShell, set the execution policy to allow the Autopilot script to run (per the runbook). Use an offline USB key to export the CSV output." },
-              { title: "Collect hardware hash", description: "Install and run Get‑WindowsAutopilotInfo to export the hardware hash as a CSV file." },
-              { title: "Registration workflow", description: "Send the CSV to the customer/DSI team. Wait for confirmation that the device has been imported into Intune and assigned to the correct Autopilot profile." },
-              { title: "Start Autopilot provisioning", description: "Close the console and trigger the provisioning step (e.g., the Windows key action defined by the customer). Start provisioning and monitor progress." },
-              { title: "Reseal & reboot", description: "Once provisioning completes, reseal the device so it boots into the standard first‑use experience. Reboot and verify the expected lock screen / group tag." },
-              { title: "Final validation", description: "Verify naming conventions, domain/tenant targeting, Windows activation, and that required apps and policies are in place." }
-            ]
-          },
-          {
-            type: "metrics",
-            title: "What I measured / validated",
-            items: [
-              { label: "Provisioning time per device", value: "~35 minutes", note: "Varies with network bandwidth and app/policy payload." },
-              { label: "Evidence collected", value: "Autopilot CSV hash + screenshots", note: "Used for traceability and handover." },
-              { label: "Quality gates", value: "Drivers + activation + naming + policies", note: "Final checks before delivery to end users." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Tools",
-            items: [
-              "Dell ImageAssist (vanilla image + current drivers).",
-              "PowerShell + Get‑WindowsAutopilotInfo (hardware hash export).",
-              "Microsoft Intune / Autopilot (import, profile assignment, provisioning).",
-              "Windows activation & device readiness checks (drivers, updates)."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Provisionnement Windows Autopilot (parc Dell)",
-        sections: [
-          {
-            type: "text",
-            title: "Contexte",
-            paragraphs: [
-              "Lors de mon stage (environnement MSP), j’ai participé à la préparation et à la livraison de lots de postes pour plusieurs clients.",
-              "L’objectif était de standardiser le provisionnement Windows afin que chaque machine soit conforme, à jour et prête à l’emploi, avec un minimum d’actions manuelles."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Périmètre & objectifs",
-            items: [
-              "Appliquer une image de base propre (Windows « vanilla ») avec des drivers OEM récents.",
-              "Récupérer le hardware hash et le transmettre à l’équipe d’administration Intune/Autopilot pour l’enrôlement.",
-              "Déclencher le provisionnement Autopilot (apps, scripts, politiques), puis « resceller » le poste pour la livraison.",
-              "Effectuer les contrôles finaux : drivers, activation, nommage, ciblage domaine/tenant (group tag)."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Procédure opérationnelle (niveau macro)",
-            steps: [
-              { title: "Appliquer l’image de base", description: "Démarrer sur la clé USB Dell ImageAssist et déployer l’image Windows 10 « vanilla » avec les pilotes à jour pour le modèle." },
-              { title: "OOBE + ouverture du CMD", description: "Au premier démarrage (OOBE), ouvrir un invite de commandes avec Shift+F10 (ou Shift+Fn+F10 selon le modèle)." },
-              { title: "PowerShell + autoriser l’exécution", description: "Lancer PowerShell, ajuster la policy d’exécution pour exécuter le script Autopilot (selon la procédure). Utiliser une clé USB pour exporter le CSV." },
-              { title: "Récupérer le hardware hash", description: "Installer et exécuter Get‑WindowsAutopilotInfo afin d’exporter le hardware hash dans un fichier CSV." },
-              { title: "Workflow d’enrôlement", description: "Transmettre le CSV à l’équipe DSI/Intune du client. Attendre la confirmation d’import dans Intune et d’affectation au bon profil Autopilot." },
-              { title: "Lancer le provisionnement Autopilot", description: "Fermer la console puis déclencher le mode de provisionnement (action spécifique client). Démarrer et suivre l’avancement." },
-              { title: "Resceller & redémarrer", description: "Une fois terminé, resceller le poste pour revenir à une expérience « prêt à livrer ». Redémarrer et vérifier l’écran attendu (grouptag / verrouillage)." },
-              { title: "Validation finale", description: "Contrôler les conventions de nommage, le ciblage (domaine/tenant), l’activation Windows, et la présence des applications/politiques requises." }
-            ]
-          },
-          {
-            type: "metrics",
-            title: "Contrôles & résultats",
-            items: [
-              { label: "Temps de provisionnement / poste", value: "≈ 35 minutes", note: "Variable selon le réseau et la charge (apps/politiques)." },
-              { label: "Preuves / traçabilité", value: "CSV hardware hash + captures", note: "Pour la passation et le suivi." },
-              { label: "Gates qualité", value: "Drivers + activation + nommage + policies", note: "Avant remise à l’utilisateur final." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Outils",
-            items: [
-              "Dell ImageAssist (image « vanilla » + drivers récents).",
-              "PowerShell + Get‑WindowsAutopilotInfo (export hardware hash).",
-              "Microsoft Intune / Autopilot (import, affectation profil, provisioning).",
-              "Vérifications Windows (activation, drivers, mises à jour)."
-            ]
-          }
-        ]
-      }
-    }
+      en: { heroSubtitle: "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP internship" },
+      fr: { heroSubtitle: "Windows Autopilot · Dell Image Assist · Blancco · Intune · Stage MIDRANGE GROUP" },
+    },
   },
   {
-    slug: "tssr-secure-wipe-and-imaging",
+    slug: "it-ops-incident-management",
+    gallery: [
+      { src: "/projects/it-ops-incident-management/cover.png", alt: "Autotask PSA dashboard — open incidents, SLA metrics and alert overview at MIDRANGE GROUP" },
+      { src: "/projects/it-ops-incident-management/img-2.png", alt: "Autotask ticket — client data redacted" },
+      { src: "/projects/it-ops-incident-management/img-3.png", alt: "Autotask time entry — ticket billing and intervention timeline" },
+    ],
     locales: {
-      en: {
-        heroSubtitle: "Secure device preparation at scale",
-        sections: [
-          {
-            type: "text",
-            title: "Context",
-            paragraphs: [
-              "In an MSP context, I supported the preparation of customer device batches before deployment to end users.",
-              "The workflow combined certified data erasure with reimaging and final quality checks (drivers, updates, activation)."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Performed secure wipes on desktop devices using Blancco (license‑based certified erasure).",
-              "Reinstalled a standardized Windows image using a Sysprep‑based deployment method.",
-              "Updated drivers and firmware where required and applied OS updates.",
-              "Validated Windows activation and delivery readiness for each device."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Why it matters",
-            items: [
-              "Certified wipe provides auditable evidence of data destruction and reduces legal/security risk.",
-              "Standard imaging reduces variability, accelerates delivery, and improves supportability (known baseline).",
-              "Final checks prevent avoidable incidents on day‑1 (missing drivers, activation issues, outdated OS)."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Tools",
-            items: [
-              "Blancco (secure erase + reporting).",
-              "Sysprep imaging workflow.",
-              "Windows update / driver management and activation validation."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Préparation sécurisée de postes à grande échelle",
-        sections: [
-          {
-            type: "text",
-            title: "Contexte",
-            paragraphs: [
-              "En environnement MSP, j’ai participé à la préparation de lots de postes clients avant déploiement aux utilisateurs finaux.",
-              "Le workflow combinait effacement sécurisé certifié, re‑imaging et contrôles qualité (drivers, mises à jour, activation)."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Réalisations",
-            items: [
-              "Effacement sécurisé des postes fixes avec Blancco (effacement certifié via licences).",
-              "Réinstallation d’une image Windows standardisée via une méthode de déploiement basée sur Sysprep.",
-              "Mise à jour des drivers/firmwares si nécessaire et application des mises à jour Windows.",
-              "Vérification de l’activation Windows et de l’état « prêt à livrer » pour chaque poste."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Apport",
-            items: [
-              "L’effacement certifié fournit une traçabilité (preuve) et réduit le risque légal/sécurité.",
-              "L’image standard réduit la variabilité, accélère la livraison et facilite le support (baseline connue).",
-              "Les contrôles finaux évitent les incidents « day‑1 » (drivers manquants, activation, OS obsolète)."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Outils",
-            items: [
-              "Blancco (effacement sécurisé + reporting).",
-              "Workflow d’image Sysprep.",
-              "Gestion Windows Update / drivers et contrôle d’activation."
-            ]
-          }
-        ]
-      }
-    }
+      en: { heroSubtitle: "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP internship" },
+      fr: { heroSubtitle: "Autotask PSA · Splashtop · Webroot · Datto RMM · Stage MIDRANGE GROUP" },
+    },
+  },
+  {
+    slug: "hardware-upgrade-hp-laptop",
+    gallery: [
+      { src: "/projects/hardware-upgrade-hp-laptop/cover.png", alt: "HP laptop disassembled — bottom cover removed for RAM and SSD replacement" },
+      { src: "/projects/hardware-upgrade-hp-laptop/img-2.png", alt: "Samsung 16 GB DDR4-2666 SO-DIMM RAM stick — component sourced for the upgrade" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Samsung DDR4 · Samsung SSD · Acronis Clone · HP Laptop · Personal Project" },
+      fr: { heroSubtitle: "Samsung DDR4 · Samsung SSD · Clone Acronis · HP Laptop · Projet personnel" },
+    },
+  },
+  {
+    slug: "it-ops-rmm-supervision",
+    gallery: [
+      { src: "/projects/it-ops-rmm-supervision/cover.png", alt: "Datto RMM Default Dashboard — 551 managed devices with MalwareBytes and antivirus coverage overview" },
+      { src: "/projects/it-ops-rmm-supervision/img-2.png", alt: "Datto RMM device profile — LENOVO laptop with Quick Job panel open for MalwareBytes deployment" },
+      { src: "/projects/it-ops-rmm-supervision/img-3.png", alt: "Datto RMM device summary — Windows 10 Pro endpoint detail view (agent 4.4.2195)" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP internship" },
+      fr: { heroSubtitle: "Datto RMM · Splashtop · MalwareBytes · Stage MIDRANGE GROUP" },
+    },
+  },
+  {
+    slug: "it-ops-acronis-backup",
+    gallery: [
+      { src: "/projects/it-ops-acronis-backup/cover.png", alt: "Acronis Cyber Backup dashboard — 105 protected devices, 85 active alerts, 21.18 Tio total storage" },
+      { src: "/projects/it-ops-acronis-backup/img-2.png", alt: "Acronis Cyber Backup — backup plans list (Toutes les VM, SQL-CLOUD 2, Bases_Exchange)" },
+      { src: "/projects/it-ops-acronis-backup/img-3.png", alt: "Acronis Cyber Backup — Toutes les VM plan details (16 devices, NAS backups-new, 2-month retention)" },
+      { src: "/projects/it-ops-acronis-backup/img-4.png", alt: "Acronis Cyber Backup — Alertes view (client data redacted)" },
+      { src: "/projects/it-ops-acronis-backup/img-5.png", alt: "Acronis Cyber Backup — Emplacements NAS and Acronis cloud (client data redacted)" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP internship" },
+      fr: { heroSubtitle: "Acronis Cyber Backup · Acronis Cyber Protect Cloud · Stage MIDRANGE GROUP" },
+    },
+  },
+  {
+    slug: "it-ops-virtualization-lab",
+    gallery: [
+      { src: "/projects/it-ops-virtualization-lab/cover.png", alt: "VMware Workstation Pro 17 home screen — host for the virtualized Windows Server 2022 lab" },
+      { src: "/projects/it-ops-virtualization-lab/img-2.png", alt: "New VM Wizard — naming the virtual machine DCAD22" },
+      { src: "/projects/it-ops-virtualization-lab/img-3.png", alt: "Windows Server 2022 Datacenter Evaluation selected for installation" },
+      { src: "/projects/it-ops-virtualization-lab/img-4.png", alt: "Server Manager — DCAD22 with AD DS, DHCP, DNS, WDS roles installed" },
+      { src: "/projects/it-ops-virtualization-lab/img-5.png", alt: "DNS Manager — DP-AICHALAN forward and reverse lookup zones on DCAD22" },
+    ],
+    locales: {
+      en: { heroSubtitle: "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS" },
+      fr: { heroSubtitle: "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS" },
+    },
+  },
+  {
+    slug: "it-ops-network-security",
+    gallery: [
+      { src: "/projects/it-ops-network-security/cover.png", alt: "pfSense 2.6.0 web UI login page at 192.168.100.220 — gateway for the private LAN" },
+      { src: "/projects/it-ops-network-security/img-2.png", alt: "pfSense Firewall / Rules / LAN — REFUS SRV VERS INTERNET blocking server outbound traffic" },
+      { src: "/projects/it-ops-network-security/img-3.png", alt: "pfSense Firewall Aliases — IP — Client and SRV aliases configured" },
+      { src: "/projects/it-ops-network-security/img-4.png", alt: "pfSense Package Manager — LightSquid, squid and squidGuard installed" },
+      { src: "/projects/it-ops-network-security/img-5.png", alt: "pfSense Certificate Manager — Pfsense-CA self-signed internal CA (C=FR, O=greta)" },
+    ],
+    locales: {
+      en: { heroSubtitle: "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17" },
+      fr: { heroSubtitle: "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17" },
+    },
+  },
+  {
+    slug: "it-ops-disk-backup",
+    gallery: [
+      { src: "/projects/it-ops-disk-backup/cover.png", alt: "AOMEI Backupper Standard — disk backup selection screen" },
+      { src: "/projects/it-ops-disk-backup/img-2.png", alt: "AOMEI Partition Assistant — resize partition E from 50.04 GB to 47.71 GB" },
+      { src: "/projects/it-ops-disk-backup/img-3.png", alt: "AOMEI Partition Assistant — pending operations dialog" },
+      { src: "/projects/it-ops-disk-backup/img-4.png", alt: "AOMEI Backupper — operation completed successfully" },
+      { src: "/projects/it-ops-disk-backup/img-5.png", alt: "Windows Server 2012 (VirtualBox) — Windows Server Backup feature installation" },
+      { src: "/projects/it-ops-disk-backup/img-6.png", alt: "Windows Server Backup wizard — Mise en route (getting started page)" },
+      { src: "/projects/it-ops-disk-backup/img-7.png", alt: "Windows Server Backup — Specify destination type (dedicated disk recommended)" },
+      { src: "/projects/it-ops-disk-backup/img-8.png", alt: "Windows Server Backup — Progression: 22.67 Go transferred, backup complete" },
+      { src: "/projects/it-ops-disk-backup/img-9.png", alt: "Windows Server Backup — Modify scheduled backup settings (daily 14:00, DISK_01)" },
+    ],
+    locales: {
+      en: { heroSubtitle: "AOMEI Partition Assistant · AOMEI Backupper · Windows Server Backup · VirtualBox · Greta du Val d'Oise" },
+      fr: { heroSubtitle: "AOMEI Partition Assistant · AOMEI Backupper · Sauvegarde Windows Server · VirtualBox · Greta du Val d'Oise" },
+    },
+  },
+  {
+    slug: "it-ops-workstation-setup",
+    gallery: [
+      { src: "/projects/it-ops-workstation-setup/cover.png", alt: "Ninite installer running on Windows 10 — Chrome, Skype, Spotify, Dropbox, LibreOffice, Malwarebytes" },
+      { src: "/projects/it-ops-workstation-setup/img-2.png", alt: "Ninite + Microsoft Office 2016 installation running in parallel" },
+      { src: "/projects/it-ops-workstation-setup/img-3.png", alt: "Windows 10 installation — Preparation des fichiers pour l installation (9%)" },
+      { src: "/projects/it-ops-workstation-setup/img-4.png", alt: "Windows 10 OOBE — region selection (France)" },
+      { src: "/projects/it-ops-workstation-setup/img-5.png", alt: "Windows 10 — Cette operation peut durer plusieurs minutes (first-run configuration)" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise" },
+      fr: { heroSubtitle: "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise" },
+    },
+  },
+  {
+    slug: "it-ops-wifi-config",
+    gallery: [
+      { src: "/projects/it-ops-wifi-config/cover.png", alt: "Dossier Professionnel — Configurer un point d acces WIFI (TP-Link, Greta du Val d Oise)" },
+      { src: "/projects/it-ops-wifi-config/img-2.jpg", alt: "Greta training lab — network rack with switch and router equipment" },
+    ],
+    locales: {
+      en: { heroSubtitle: "TP-Link Access Point · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise" },
+      fr: { heroSubtitle: "Point d'acces TP-Link · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise" },
+    },
+  },
+  {
+    slug: "it-ops-roaming-profiles",
+    gallery: [
+      { src: "/projects/it-ops-roaming-profiles/cover.png", alt: "Active Directory Users and Computers + Explorer showing technicien.tai.V6 roaming profile folder" },
+      { src: "/projects/it-ops-roaming-profiles/img-2.png", alt: "Share permissions for Profil itinerant — Utilisateurs (EBTAI) with Modify + Read access" },
+      { src: "/projects/it-ops-roaming-profiles/img-3.png", alt: "Profil itinerant folder advanced sharing — share name and concurrent user limit" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Active Directory · Roaming Profiles · Windows Server · EBTAI Domain · Greta du Val d'Oise" },
+      fr: { heroSubtitle: "Active Directory · Profils itinerants · Windows Server · Domaine EBTAI · Greta du Val d'Oise" },
+    },
+  },
+  {
+    slug: "it-ops-hardware-procurement",
+    gallery: [
+      { src: "/projects/it-ops-hardware-procurement/cover.jpg", alt: "Greta du Val d Oise training lab — IT workstations and network equipment" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Hardware Sizing · Excel Devis · Component Research · Greta du Val d'Oise" },
+      fr: { heroSubtitle: "Dimensionnement materiel · Devis Excel · Recherche composants · Greta du Val d'Oise" },
+    },
+  },
+  {
+    slug: "it-ops-email-config",
+    gallery: [
+      { src: "/projects/it-ops-email-config/cover.png", alt: "Outlook 2016 inbox — tai7@outlook.fr account configured with test email received" },
+      { src: "/projects/it-ops-email-config/img-2.png", alt: "Bienvenue dans Microsoft Outlook 2016 — account setup wizard launch screen" },
+    ],
+    locales: {
+      en: { heroSubtitle: "Outlook 2016 · Exchange ActiveSync · User Onboarding · Greta du Val d'Oise" },
+      fr: { heroSubtitle: "Outlook 2016 · Exchange ActiveSync · Onboarding utilisateur · Greta du Val d'Oise" },
+    },
   },
 
-  {
-    slug: "tssr-incident-management-rmm",
-    gallery: [
-      { src: "/projects/tssr-incident-management-rmm/datto-rmm-dashboard-redacted.jpg", alt: "Datto RMM — dashboard" },
-      { src: "/projects/tssr-incident-management-rmm/autotask-dashboard-redacted.jpg", alt: "Autotask — ticketing dashboard" },
-      { src: "/projects/tssr-incident-management-rmm/malwarebytes-activity-redacted.jpg", alt: "Malwarebytes — activity / detections" },
-      { src: "/projects/tssr-incident-management-rmm/mitre-attack.webp", alt: "MITRE ATT&CK — reference" }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Incident handling with RMM, ticketing & endpoint security",
-        sections: [
-          {
-            type: "text",
-            title: "Context",
-            paragraphs: [
-              "During my internship at Midrange Group, I worked alongside the operations team (Exploitation) and the technical support team.",
-              "The workflow combined a ticketing system (Autotask), remote monitoring/management (Datto RMM + Splashtop), and endpoint security tooling (e.g., Webroot / Malwarebytes)."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Mission",
-            items: [
-              "Triage user incidents, reproduce the issue when possible, and collect the right evidence.",
-              "Use remote access to investigate quickly (without onsite travel).",
-              "Apply a safe remediation (allowlisting, configuration change, or security action), then validate with the user.",
-              "Document the resolution in the ticket and capture learnings as a lightweight runbook."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Typical incident flow",
-            steps: [
-              { title: "Ticket intake", description: "Incident opened by phone/email/agent; assignment to Support or Operations depending on scope." },
-              { title: "Remote session", description: "Start a Splashtop session from Datto RMM to observe the issue live and gather context." },
-              { title: "Investigation", description: "Check endpoint security alerts/logs, confirm the exact blocked resource, and identify the control that triggered (policy/rule/category)." },
-              { title: "Remediation", description: "Apply the least‑privilege fix (e.g., allowlist a legitimate URL/domain in the security console) and keep an audit trail." },
-              { title: "Validation", description: "Retest with the user, confirm normal behavior, and ensure no side effects on other policies or endpoints." },
-              { title: "Closure", description: "Update the Autotask ticket: steps, root cause, changes made, and prevention recommendations." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Tools & references",
-            items: [
-              "Autotask (ticket lifecycle, communication, traceability).",
-              "Datto RMM + Splashtop (remote monitoring and remote assistance).",
-              "Endpoint security consoles (Webroot / Malwarebytes) for investigation and allowlisting.",
-              "MITRE ATT&CK as a shared vocabulary when mapping suspicious activity." 
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Gestion d’incidents avec RMM, ticketing & outils de sécurité",
-        sections: [
-          {
-            type: "text",
-            title: "Contexte",
-            paragraphs: [
-              "Lors de mon stage chez Midrange Group, j’ai travaillé en lien avec l’équipe Exploitation et l’équipe Support Technique.",
-              "Le fonctionnement s’appuyait sur un outil de ticketing (Autotask), une plateforme RMM (Datto RMM + Splashtop) et des consoles de sécurité endpoint (ex. Webroot / Malwarebytes)."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Mission",
-            items: [
-              "Qualifier l’incident (symptômes, impact, périmètre) et collecter des éléments factuels.",
-              "Investiguer à distance via une prise en main (Splashtop) pour gagner du temps et éviter un déplacement.",
-              "Appliquer une remédiation sûre et traçable (ex. exclusion/allowlist d’une URL légitime, ajustement de règles).",
-              "Valider avec l’utilisateur, puis documenter la résolution et les actions préventives."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Déroulé type d’un incident",
-            steps: [
-              { title: "Ouverture / affectation", description: "Ticket ouvert par téléphone / email / agent; affectation Support ou Exploitation selon la nature du sujet." },
-              { title: "Prise en main", description: "Connexion Splashtop depuis Datto RMM pour observer le problème et comprendre le contexte." },
-              { title: "Investigation", description: "Analyse des alertes/logs de sécurité, identification précise de la ressource bloquée et de la règle/politique déclenchée." },
-              { title: "Remédiation", description: "Correction au plus juste (least privilege) : par exemple, ajout en allowlist/exclusion d’un domaine/URL légitime, avec traçabilité." },
-              { title: "Validation", description: "Re-tests avec l’utilisateur, vérification de l’absence d’effets de bord sur les autres postes/politiques." },
-              { title: "Clôture", description: "Mise à jour du ticket Autotask : cause racine, actions réalisées, preuves, recommandations." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Outils & références",
-            items: [
-              "Autotask (cycle de vie des tickets, communication, traçabilité).",
-              "Datto RMM + Splashtop (supervision et assistance à distance).",
-              "Consoles endpoint (Webroot / Malwarebytes) pour analyser et autoriser/bloquer.",
-              "MITRE ATT&CK pour cartographier/qualifier une activité suspecte." 
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tssr-acronis-backup-recovery",
-    gallery: [
-      { src: "/projects/tssr-acronis-backup-recovery/acronis-dashboard-redacted.jpg", alt: "Acronis — dashboard / alerts" }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Backup & recovery operations (Acronis)",
-        sections: [
-          {
-            type: "text",
-            title: "Context",
-            paragraphs: [
-              "As part of operations work, I used Acronis Cyber Protect Cloud / Acronis Cyber Backup to supervise backups for client environments.",
-              "The objective was to keep backups reliable: detect failures early, remediate root causes (storage, connectivity, corruption), and validate recovery readiness."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Daily dashboard review (alerts, job status, storage consumption).",
-              "Investigate failures: full repository, offline host, transfer/network issues, corrupted backups.",
-              "Remediation: cleanup/retention adjustments, fix connectivity (NAS/network), recreate plans when needed, rerun jobs.",
-              "Verification: confirm job success and, when applicable, perform/prepare restore checks (granular or full).",
-              "Document recurring causes and the remediation playbook."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Operational workflow",
-            steps: [
-              { title: "Supervise", description: "Check dashboard alerts and failed jobs across sites/clients." },
-              { title: "Diagnose", description: "Identify the failure reason (storage thresholds, offline devices, corruption, network transfer)." },
-              { title: "Fix", description: "Apply the right corrective action: retention cleanup, plan adjustment, network/NAS remediation, recreate a plan if corrupted." },
-              { title: "Validate", description: "Rerun backup jobs and verify success; ensure recovery objectives remain achievable." },
-              { title: "Report", description: "Update runbooks and share prevention recommendations with the team." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Tools",
-            items: [
-              "Acronis Cyber Protect Cloud (cloud backups + security visibility).",
-              "Acronis Cyber Backup (local/NAS backups, centralized management).",
-              "Datto RMM (as a complementary view for endpoints/availability when needed)."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Exploitation sauvegardes & restauration (Acronis)",
-        sections: [
-          {
-            type: "text",
-            title: "Contexte",
-            paragraphs: [
-              "Dans un contexte d’exploitation, j’ai utilisé Acronis Cyber Protect Cloud / Acronis Cyber Backup pour superviser les sauvegardes d’environnements clients.",
-              "L’objectif : garantir la fiabilité des sauvegardes (détection rapide des échecs), corriger les causes racines (stockage, réseau, corruption) et maintenir la capacité de restauration."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Ce que j’ai fait",
-            items: [
-              "Revue quotidienne des tableaux de bord (alertes, jobs en échec, capacité de stockage).",
-              "Analyse des causes d’échec : dépôt saturé (seuil ~75%), hôte arrêté/déconnecté, problèmes réseau/transfert, sauvegarde corrompue.",
-              "Remédiation : nettoyage/rétention, correction réseau/NAS, recréation de plan si corruption, relance des jobs.",
-              "Vérification : confirmation du succès et préparation/contrôle de la capacité de restauration (granulaire ou complète).",
-              "Capitalisation : documentation des causes récurrentes et d’une procédure reproductible."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Workflow d’exploitation",
-            steps: [
-              { title: "Superviser", description: "Contrôler alertes et jobs en échec sur les parcs / sites." },
-              { title: "Diagnostiquer", description: "Identifier la cause (stockage, hôte hors-ligne, corruption, réseau/transfert)." },
-              { title: "Corriger", description: "Appliquer l’action adaptée : rétention/nettoyage, ajustements, correction NAS/réseau, recréation de plan si nécessaire." },
-              { title: "Valider", description: "Relancer la sauvegarde et vérifier la réussite; s’assurer que les objectifs de restauration restent atteignables." },
-              { title: "Documenter", description: "Mettre à jour runbooks et recommandations de prévention." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Outils",
-            items: [
-              "Acronis Cyber Protect Cloud (sauvegardes cloud + visibilité sécurité).",
-              "Acronis Cyber Backup (sauvegardes locales/NAS, gestion centralisée).",
-              "Datto RMM (vue complémentaire sur disponibilité/postes si besoin)."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tssr-virtualization-windows-server-2022",
-    gallery: [
-      { src: "/projects/tssr-virtualization-windows-server-2022/tssr-1.png", alt: "VMware Workstation — VM creation" },
-      { src: "/projects/tssr-virtualization-windows-server-2022/tssr-2.webp", alt: "Windows Server 2022 — network settings" },
-      { src: "/projects/tssr-virtualization-windows-server-2022/tssr-3.webp", alt: "Active Directory — OU/users/groups" },
-      { src: "/projects/tssr-virtualization-windows-server-2022/tssr-4.webp", alt: "WDS — PXE deployment" }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Virtualization lab: Windows Server 2022 + AD DS",
-        sections: [
-          {
-            type: "text",
-            title: "Context",
-            paragraphs: [
-              "Training lab to build a full Windows infrastructure from scratch on a type‑2 hypervisor.",
-              "The objective was to simulate a small company environment and validate key system administration tasks end‑to‑end."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I built",
-            items: [
-              "VM networking design (NAT network, controlled DHCP, static addressing).",
-              "Windows Server 2022 installation + baseline hardening (static IPv4, IPv6 disable when required, VMware Tools).",
-              "Directory services stack: AD DS + DNS + DHCP.",
-              "Deployment services: WDS with PXE boot + Windows 10 client deployment and domain join.",
-              "Ops building blocks: shared folder, OU structure, groups/users, roaming profile, mapped drive, GPOs."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Implementation steps",
-            steps: [
-              { title: "Hypervisor & VM creation", description: "Create the server VM in VMware Workstation (resources aligned with the lab spec). Configure a dedicated NAT network (e.g., 192.168.100.0/24) with DHCP disabled when required." },
-              { title: "Server installation", description: "Install Windows Server 2022, then set a static IPv4 address and apply baseline settings. Install VMware Tools for better UX and drivers." },
-              { title: "Server identity", description: "Rename the server as per naming convention and reboot to apply changes." },
-              { title: "AD DS / DNS", description: "Install AD DS (DNS included), promote the server to a domain controller, and validate name resolution." },
-              { title: "DHCP", description: "Install DHCP, define scopes/options, and validate lease distribution for lab clients." },
-              { title: "File services & structure", description: "Add an extra disk if needed, create and share a folder, set share/NTFS permissions, and model OUs/groups/users." },
-              { title: "GPO & roaming", description: "Create and link GPOs, configure roaming profiles and mapped drives, then validate on the client side." },
-              { title: "WDS / PXE deployment", description: "Import boot/install images, configure PXE, deploy a Windows 10 client via network boot, join it to the domain, and confirm policies apply." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Key takeaways",
-            items: [
-              "Treat networking (addressing, DNS, DHCP) as a prerequisite for everything else.",
-              "Automate / standardize where possible (WDS deployment, GPO baselines).",
-              "Validate continuously: after each role install, confirm expected behavior before moving on."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Lab virtualisation : Windows Server 2022 + AD DS",
-        sections: [
-          {
-            type: "text",
-            title: "Contexte",
-            paragraphs: [
-              "Lab de formation visant à construire une infrastructure Windows complète sur un hyperviseur de type 2.",
-              "L’objectif : simuler un environnement « petite entreprise » et valider les tâches d’administration de bout en bout."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Ce que j’ai construit",
-            items: [
-              "Conception du réseau VM (NAT dédié, DHCP maîtrisé, adressage statique).",
-              "Installation Windows Server 2022 + paramétrage de base (IPv4 statique, désactivation IPv6 si demandé, VMware Tools).",
-              "Socle annuaire : AD DS + DNS + DHCP.",
-              "Services de déploiement : WDS avec boot PXE + déploiement d’un client Windows 10 et jointure au domaine.",
-              "Briques « ops » : partage de fichiers, UO, groupes/utilisateurs, profil itinérant, lecteur mappé, GPO."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Étapes de réalisation",
-            steps: [
-              { title: "Hyperviseur & création VM", description: "Créer la VM serveur dans VMware Workstation (ressources selon le cahier des charges). Configurer un réseau NAT dédié (ex. 192.168.100.0/24) avec DHCP désactivé si requis." },
-              { title: "Installation du serveur", description: "Installer Windows Server 2022, puis configurer une IPv4 statique et appliquer les réglages de base. Installer VMware Tools pour les drivers et le confort." },
-              { title: "Identité du serveur", description: "Renommer le serveur selon la convention et redémarrer pour appliquer." },
-              { title: "AD DS / DNS", description: "Installer AD DS (DNS inclus), promouvoir le serveur en contrôleur de domaine et valider la résolution DNS." },
-              { title: "DHCP", description: "Installer DHCP, définir les scopes/options, puis valider la distribution des baux côté clients." },
-              { title: "Fichiers & structure", description: "Ajouter un disque si nécessaire, créer/partager un dossier, régler les droits (partage + NTFS), modéliser UO/groupes/utilisateurs." },
-              { title: "GPO & itinérance", description: "Créer et lier les GPO, configurer les profils itinérants et les lecteurs mappés, puis valider côté poste client." },
-              { title: "WDS / déploiement PXE", description: "Importer les images boot/install, configurer PXE, déployer un client Windows 10 via le réseau, le joindre au domaine et vérifier l’application des GPO." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Points clés",
-            items: [
-              "Le réseau (adressage, DNS, DHCP) est un prérequis : sans lui, tout le reste tombe.",
-              "Standardiser/automatiser dès que possible (WDS, baselines GPO).",
-              "Valider au fil de l’eau : après chaque rôle, vérifier le résultat avant de poursuivre."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tssr-pfsense-squid-proxy",
-    gallery: [
-      { src: "/projects/tssr-pfsense-squid-proxy/tssr-1.webp", alt: "pfSense — interfaces WAN/LAN" },
-      { src: "/projects/tssr-pfsense-squid-proxy/tssr-2.webp", alt: "Squid — proxy configuration" },
-      { src: "/projects/tssr-pfsense-squid-proxy/tssr-3.webp", alt: "Firewall rules — allow proxy traffic" },
-      { src: "/projects/tssr-pfsense-squid-proxy/tssr-4.webp", alt: "Client settings — proxy + validation" }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Network security lab: pfSense + Squid proxy",
-        sections: [
-          {
-            type: "text",
-            title: "Context",
-            paragraphs: [
-              "Training lab to secure internet access for a private network using a dedicated firewall and an explicit proxy.",
-              "The design used a pfSense VM with two network interfaces: WAN bridged to the upstream internet access and LAN connected to the internal virtual network."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Goals",
-            items: [
-              "Provide a controlled egress point (firewall) for the private network.",
-              "Add an HTTP/HTTPS proxy (Squid) to enforce access control lists and generate audit logs.",
-              "Keep the setup reproducible with a clear runbook and validation checklist."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Implementation steps",
-            steps: [
-              { title: "Install pfSense VM", description: "Deploy a pfSense VM with two NICs and complete the base installation." },
-              { title: "Configure WAN", description: "Set WAN parameters according to the ISP / upstream access method and confirm outbound connectivity." },
-              { title: "Configure LAN", description: "Assign LAN IP/subnet to match the private network and ensure clients can reach the gateway." },
-              { title: "Install Squid", description: "From pfSense Packages, install Squid and open the Squid Proxy Server settings under Services." },
-              { title: "Configure proxy", description: "Enable the proxy, set the listening port, define ACLs (who can use it, what can be accessed), and tune cache/options as required." },
-              { title: "Firewall rules", description: "Create rules to allow LAN clients to reach the proxy and allow the proxy to reach the internet (HTTP/HTTPS). Keep rules minimal and explicit." },
-              { title: "Client configuration", description: "Configure each client to use the proxy (IP + port) at OS or browser level." },
-              { title: "Validation", description: "Test browsing, verify blocks/allow rules, and review Squid logs to confirm policy enforcement and traceability." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Security notes",
-            items: [
-              "Prefer least‑privilege rules: allow only required egress ports and destinations.",
-              "For HTTPS inspection, be explicit about legal/compliance constraints and certificate management (lab scope unless mandated).",
-              "Log review is part of operations: validate that logs are usable and stored safely."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Lab sécurité réseau : pfSense + proxy Squid",
-        sections: [
-          {
-            type: "text",
-            title: "Contexte",
-            paragraphs: [
-              "Lab de formation visant à sécuriser l’accès Internet d’un réseau privé via un firewall dédié et un proxy explicite.",
-              "Le design repose sur une VM pfSense avec deux interfaces : WAN en bridge vers l’accès Internet et LAN connecté au réseau interne de virtualisation."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Objectifs",
-            items: [
-              "Fournir un point de sortie contrôlé (pare‑feu) pour le réseau privé.",
-              "Ajouter un proxy HTTP/HTTPS (Squid) pour appliquer des ACL et produire des logs d’audit.",
-              "Rendre l’installation reproductible avec une procédure claire et une checklist de validation."
-            ]
-          },
-          {
-            type: "timeline",
-            title: "Étapes de mise en œuvre",
-            steps: [
-              { title: "Installer la VM pfSense", description: "Déployer une VM pfSense avec 2 cartes réseau et finaliser l’installation de base." },
-              { title: "Configurer le WAN", description: "Renseigner les paramètres WAN selon le mode d’accès (FAI / amont) et valider la connectivité sortante." },
-              { title: "Configurer le LAN", description: "Définir l’IP et le sous‑réseau LAN correspondant au réseau privé et vérifier l’accès à la passerelle." },
-              { title: "Installer Squid", description: "Depuis Packages, installer Squid puis accéder à Services > Squid Proxy Server." },
-              { title: "Paramétrer le proxy", description: "Activer le proxy, définir le port d’écoute, configurer les ACL (qui/quoi), et ajuster cache/options selon le besoin." },
-              { title: "Règles firewall", description: "Créer les règles permettant aux clients LAN d’atteindre le proxy, et au proxy de sortir vers Internet (HTTP/HTTPS). Rester minimal et explicite." },
-              { title: "Configurer les clients", description: "Paramétrer chaque client pour utiliser le proxy (IP + port) au niveau OS ou navigateur." },
-              { title: "Valider", description: "Tester la navigation, vérifier les blocages/autorisation, et contrôler les logs Squid pour confirmer l’application des règles et la traçabilité." }
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Notes sécurité",
-            items: [
-              "Appliquer le moindre privilège : n’autoriser que les flux nécessaires (ports/destinations).",
-              "Pour l’inspection HTTPS : cadrer les contraintes légales/compliance et la gestion des certificats (hors scope sauf demande).",
-              "La revue des logs fait partie du RUN : s’assurer que les logs sont lisibles et correctement conservés."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tai-disk-partition-backup-restore",
-    gallery: [
-      {
-        src: "/projects/tai-disk-partition-backup-restore/tai-1.webp",
-        alt: "tai-disk-partition-backup-restore — 1"
-      },
-      {
-        src: "/projects/tai-disk-partition-backup-restore/tai-2.webp",
-        alt: "tai-disk-partition-backup-restore — 2"
-      },
-      {
-        src: "/projects/tai-disk-partition-backup-restore/tai-3.webp",
-        alt: "tai-disk-partition-backup-restore — 3"
-      }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Disk partitioning & backup/restore (AOMEI + Windows Server Backup)",
-        sections: [
-          {
-            type: "bullets",
-            title: "Context & goals",
-            items: [
-              "Build a reproducible lab (VM / test bench) or address a user need.",
-              "Follow a structured approach: prepare → configure → validate → document."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Configuration & hardening (network, accounts, services, rules).",
-              "Validation tests (connectivity, scenarios).",
-              "Wrote a step‑by‑step runbook."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Disk partitioning & backup/restore (AOMEI + Windows Server Backup)",
-        sections: [
-          {
-            type: "bullets",
-            title: "Contexte & objectifs",
-            items: [
-              "Mettre en place un environnement de test (VM / lab) ou intervenir sur un besoin utilisateur.",
-              "Appliquer une démarche structurée : préparation → configuration → validation → documentation."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Ce que j’ai fait",
-            items: [
-              "Paramétrage et sécurisation (réseau, comptes, services, règles).",
-              "Tests de fonctionnement (connectivité, performances, scénarios).",
-              "Rédaction d’une procédure reproductible."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tai-wifi-access-point-setup",
-    gallery: [
-      {
-        src: "/projects/tai-wifi-access-point-setup/tai-1.png",
-        alt: "tai-wifi-access-point-setup — 1"
-      }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Wi‑Fi access point configuration",
-        sections: [
-          {
-            type: "bullets",
-            title: "Context & goals",
-            items: [
-              "Build a reproducible lab (VM / test bench) or address a user need.",
-              "Follow a structured approach: prepare → configure → validate → document."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Configuration & hardening (network, accounts, services, rules).",
-              "Validation tests (connectivity, scenarios).",
-              "Wrote a step‑by‑step runbook."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Wi‑Fi access point configuration",
-        sections: [
-          {
-            type: "bullets",
-            title: "Contexte & objectifs",
-            items: [
-              "Mettre en place un environnement de test (VM / lab) ou intervenir sur un besoin utilisateur.",
-              "Appliquer une démarche structurée : préparation → configuration → validation → documentation."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Ce que j’ai fait",
-            items: [
-              "Paramétrage et sécurisation (réseau, comptes, services, règles).",
-              "Tests de fonctionnement (connectivité, performances, scénarios).",
-              "Rédaction d’une procédure reproductible."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tai-roaming-profile-adds",
-    gallery: [
-      {
-        src: "/projects/tai-roaming-profile-adds/tai-1.webp",
-        alt: "tai-roaming-profile-adds — 1"
-      },
-      {
-        src: "/projects/tai-roaming-profile-adds/tai-2.png",
-        alt: "tai-roaming-profile-adds — 2"
-      }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Roaming profiles with Active Directory",
-        sections: [
-          {
-            type: "bullets",
-            title: "Context & goals",
-            items: [
-              "Build a reproducible lab (VM / test bench) or address a user need.",
-              "Follow a structured approach: prepare → configure → validate → document."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Configuration & hardening (network, accounts, services, rules).",
-              "Validation tests (connectivity, scenarios).",
-              "Wrote a step‑by‑step runbook."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Roaming profiles with Active Directory",
-        sections: [
-          {
-            type: "bullets",
-            title: "Contexte & objectifs",
-            items: [
-              "Mettre en place un environnement de test (VM / lab) ou intervenir sur un besoin utilisateur.",
-              "Appliquer une démarche structurée : préparation → configuration → validation → documentation."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Ce que j’ai fait",
-            items: [
-              "Paramétrage et sécurisation (réseau, comptes, services, règles).",
-              "Tests de fonctionnement (connectivité, performances, scénarios).",
-              "Rédaction d’une procédure reproductible."
-            ]
-          }
-        ]
-      }
-    }
-  },
-  {
-    slug: "tai-email-configuration-guide",
-    gallery: [
-      {
-        src: "/projects/tai-email-configuration-guide/tai-1.webp",
-        alt: "tai-email-configuration-guide — 1"
-      },
-      {
-        src: "/projects/tai-email-configuration-guide/tai-2.png",
-        alt: "tai-email-configuration-guide — 2"
-      }
-    ],
-    locales: {
-      en: {
-        heroSubtitle: "Outlook email configuration guide",
-        sections: [
-          {
-            type: "bullets",
-            title: "Context & goals",
-            items: [
-              "Build a reproducible lab (VM / test bench) or address a user need.",
-              "Follow a structured approach: prepare → configure → validate → document."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "What I did",
-            items: [
-              "Configuration & hardening (network, accounts, services, rules).",
-              "Validation tests (connectivity, scenarios).",
-              "Wrote a step‑by‑step runbook."
-            ]
-          }
-        ]
-      },
-      fr: {
-        heroSubtitle: "Outlook email configuration guide",
-        sections: [
-          {
-            type: "bullets",
-            title: "Contexte & objectifs",
-            items: [
-              "Mettre en place un environnement de test (VM / lab) ou intervenir sur un besoin utilisateur.",
-              "Appliquer une démarche structurée : préparation → configuration → validation → documentation."
-            ]
-          },
-          {
-            type: "bullets",
-            title: "Ce que j’ai fait",
-            items: [
-              "Paramétrage et sécurisation (réseau, comptes, services, règles).",
-              "Tests de fonctionnement (connectivité, performances, scénarios).",
-              "Rédaction d’une procédure reproductible."
-            ]
-          }
-        ]
-      }
-    }
-  },
 {
   slug: "hemebiotech-java-debug",
   gallery: [

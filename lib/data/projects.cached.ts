@@ -6,7 +6,7 @@ type ProjectsWithAssets = Awaited<ReturnType<typeof getPublishedProjectsWithAsse
 
 export async function getPublishedProjectsWithAssetsCached(locale: string) {
   const key = `projects_with_assets:${locale}`;
-  const ttl = 300; // 5 minutes
+  const ttl = 600; // 10 minutes — les projets changent rarement en production
 
   return cacheGetOrSet<ProjectsWithAssets>(key, ttl, async () => {
     return getPublishedProjectsWithAssets(locale);
