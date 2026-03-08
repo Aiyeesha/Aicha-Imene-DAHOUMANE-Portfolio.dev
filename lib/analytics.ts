@@ -15,13 +15,14 @@ import { track } from "@vercel/analytics";
 // Ajouter un nouveau type d'événement ici avant de l'utiliser dans le code.
 
 export type AnalyticsEvent =
-  | { name: "cv_download";        props: { locale: string; track: string } }
-  | { name: "calendly_open";      props: { locale: string; track: string } }
+  | { name: "cv_download";         props: { locale: string; track: string } }
+  | { name: "calendly_open";       props: { locale: string; track: string } }
+  | { name: "contact_click";       props: { locale: string; track: string } }
   | { name: "contact_form_submit"; props: { topic: string; locale: string } }
-  | { name: "track_switch";       props: { from: string; to: string } }
-  | { name: "project_view";       props: { slug: string; track: string } }
-  | { name: "linkedin_click";     props: { locale: string } }
-  | { name: "email_click";        props: { locale: string } };
+  | { name: "track_switch";        props: { from: string; to: string } }
+  | { name: "project_view";        props: { slug: string; track: string } }
+  | { name: "linkedin_click";      props: { locale: string } }
+  | { name: "email_click";         props: { locale: string } };
 
 // ── Fonction principale ───────────────────────────────────────────────────────
 

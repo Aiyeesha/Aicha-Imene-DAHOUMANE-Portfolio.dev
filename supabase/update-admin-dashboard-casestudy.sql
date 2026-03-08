@@ -35,7 +35,7 @@ UPDATE projects SET
         "Edge runtime has no Buffer: the standard Node.js approach (Buffer.from(b64, ''base64'').toString()) fails silently. I had to use atob() instead.",
         "The messages table is SELECT-blocked for the anon role by RLS policy. Reading it requires a service_role client — which must never leave the server.",
         "The admin layout must NOT include <html>/<body> — the root app/layout.tsx already provides those. Duplicating them triggers a React hydration mismatch.",
-        "The /admin path must be excluded from next-intl's locale-prefixing logic, otherwise the proxy tries to redirect /admin to /en/admin."
+        "The /admin path must be excluded from next-intl''s locale-prefixing logic, otherwise the proxy tries to redirect /admin to /en/admin."
       ]
     },
     {

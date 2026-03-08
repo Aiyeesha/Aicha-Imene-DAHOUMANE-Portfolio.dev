@@ -2,7 +2,7 @@
 // ---------------------------------------------
 // Image OG dynamique par article de blog.
 // Rendue avec Satori (next/og) — une image par (locale, slug).
-// Affiche : titre de l'article, 2 premiers tags, auteure, URL du site.
+// Affiche : titre de l'article, tags, temps de lecture, auteure, URL du site.
 
 import { ImageResponse } from "next/og";
 import { readAllPosts, readPostMeta } from "@/content/blog/fs";
@@ -33,11 +33,13 @@ export default async function Image({ params }: Props) {
   // Lecture des métadonnées de l'article
   const post = readPostMeta(safeLocale, slug);
 
-  const title   = post?.title   || slug.replace(/-/g, " ");
-  const excerpt = post?.excerpt || "";
-  const tags    = post?.tags?.slice(0, 3) ?? [];
+  const title       = post?.title       || slug.replace(/-/g, " ");
+  const excerpt     = post?.excerpt     || "";
+  const tags        = post?.tags?.slice(0, 3) ?? [];
+  const readingTime = post?.readingTime ?? null;
+  const isFr        = safeLocale === "fr";
 
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "portfolio-next-one-gold.vercel.app")
+  const siteUrl    = (process.env.NEXT_PUBLIC_SITE_URL || "portfolio-next-one-gold.vercel.app")
     .replace(/^https?:\/\//, "");
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
 
@@ -78,6 +80,7 @@ export default async function Image({ params }: Props) {
             gap: 12,
           }}
         >
+          {/* Badge "Blog" */}
           <div
             style={{
               padding: "6px 16px",
@@ -92,6 +95,25 @@ export default async function Image({ params }: Props) {
           >
             Blog
           </div>
+
+          {/* Temps de lecture */}
+          {readingTime && (
+            <div
+              style={{
+                padding: "6px 16px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.6)",
+                fontSize: 16,
+                display: "flex",
+              }}
+            >
+              {readingTime} min {isFr ? "de lecture" : "read"}
+            </div>
+          )}
+
+          {/* Tags (2 max pour ne pas surcharger la ligne) */}
           {tags.slice(0, 2).map((tag) => (
             <div
               key={tag}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import type React from "react";
 import { getTranslations } from "next-intl/server";
 import { readAllPosts } from "@/content/blog/fs";
 import { formatDate, detectTrack, getTopTags } from "@/lib/blog-utils";
@@ -49,6 +50,13 @@ function TrackBadge({ track }: { track: "salesforce" | "itops" | null }) {
       {isSF ? "Salesforce" : "IT Ops"}
     </span>
   );
+}
+
+// Bordure gauche colorée — style inline requis (voir LatestPosts.tsx pour l'explication)
+function trackBorderStyle(track: "salesforce" | "itops" | null): React.CSSProperties | undefined {
+  if (track === "salesforce") return { borderLeft: "4px solid #06b6d4" };
+  if (track === "itops")     return { borderLeft: "4px solid #8b5cf6" };
+  return undefined;
 }
 
 export default async function BlogIndexPage({
@@ -174,11 +182,14 @@ export default async function BlogIndexPage({
       {/* Posts grid */}
       {gridItems.length > 0 ? (
         <div className="mt-6 grid gap-5 md:grid-cols-2">
-          {gridItems.map((p) => (
+          {gridItems.map((p) => {
+            const postTrack = detectTrack(p.tags);
+            return (
             <Link
               key={`${p.locale}-${p.slug}`}
               href={`/${locale}/blog/${p.slug}`}
               className="card p-6 hover:bg-black/10 dark:hover:bg-white/5 soft-ring"
+              style={trackBorderStyle(postTrack)}
             >
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <TrackBadge track={detectTrack(p.tags)} />
@@ -195,7 +206,8 @@ export default async function BlogIndexPage({
               </div>
               <div className="mt-4 text-sm text-cyan-700 dark:text-cyan-200">{t("readCta")} →</div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       ) : (
         !featuredPost && (

@@ -18,9 +18,9 @@
 
 ---
 
-## Couverture actuelle (38 articles)
+## Couverture actuelle (40 articles)
 
-### Salesforce (19 articles EN + FR)
+### Salesforce (18 articles EN + FR)
 
 | Slug | Titre | Tags |
 |------|-------|------|
@@ -33,9 +33,8 @@
 | salesforce-lwc-testing | LWC Testing | Salesforce, LWC |
 | salesforce-sandbox-management | Sandbox Management | Salesforce |
 | soql-performance-optimization | SOQL Performance | Salesforce, SOQL |
-| next-intl-app-router | Next.js i18n with next-intl | Next.js, i18n |
 
-### IT Ops (19 articles EN + FR)
+### IT Ops (18 articles EN + FR)
 
 | Slug | Titre | Tags |
 |------|-------|------|
@@ -48,6 +47,13 @@
 | powershell-sysadmin-automation | PowerShell Automation | IT Ops, PowerShell |
 | windows-autopilot-deployment | Windows Autopilot | IT Ops, Windows |
 | windows-server-2022-hardening | Windows Server Hardening | IT Ops, Security |
+
+### Web / Next.js (4 articles EN + FR)
+
+| Slug | Titre | Tags |
+|------|-------|------|
+| next-intl-app-router | Next.js App Router i18n with next-intl | Next.js, i18n |
+| nextjs-admin-dashboard-supabase | Secure Admin Dashboard (Next.js 16 + Supabase) | Next.js, Supabase, Security |
 
 ---
 

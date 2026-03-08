@@ -56,7 +56,16 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
 
     const title = fm.title || slug.replace(/-/g, " ");
     const excerpt = fm.excerpt || "";
-    const date = fm.date || "1970-01-01";
+    // gray-matter (via js-yaml) auto-casts "YYYY-MM-DD" to a JS Date object
+    // at runtime, even though the type says `string | undefined`.
+    // Cast to unknown first so the instanceof check compiles cleanly.
+    const rawDate: unknown = fm.date;
+    const date =
+      rawDate instanceof Date
+        ? rawDate.toISOString().slice(0, 10)
+        : typeof rawDate === "string" && rawDate
+          ? rawDate
+          : "1970-01-01";
     const tags = Array.isArray(fm.tags) ? fm.tags : [];
     const cover = fm.cover;
     const readingTime = calcReadingTime(String(parsed.content || ""));
@@ -91,7 +100,15 @@ export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | n
     locale,
     title: fm.title || slug.replace(/-/g, " "),
     excerpt: fm.excerpt || "",
-    date: fm.date || "1970-01-01",
+    date: (() => {
+      // Same normalisation as in readAllPosts: js-yaml can return a Date object.
+      const raw: unknown = fm.date;
+      return raw instanceof Date
+        ? raw.toISOString().slice(0, 10)
+        : typeof raw === "string" && raw
+          ? raw
+          : "1970-01-01";
+    })(),
     tags: Array.isArray(fm.tags) ? fm.tags : [],
     cover: fm.cover,
     readingTime: calcReadingTime(String(parsed.content || "")),

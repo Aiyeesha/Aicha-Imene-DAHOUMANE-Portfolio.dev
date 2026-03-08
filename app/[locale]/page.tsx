@@ -23,6 +23,7 @@ import { getExperienceItems } from "@/content/experience";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
+import { cookies } from "next/headers";
 
 type Props = { params: Promise<{ locale: "en" | "fr" }> };
 
@@ -31,6 +32,12 @@ export default async function Home({ params }: Props) {
   const t = await getTranslations({ locale });
   const experienceItems = getExperienceItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
+
+  // Lecture du track actif depuis le cookie (même logique que le layout)
+  const cookieStore = await cookies();
+  const rawTrack = cookieStore.get("track")?.value;
+  const activeTrack: "salesforce" | "itops" =
+    rawTrack === "itops" ? "itops" : "salesforce";
 
   return (
     <>
@@ -160,7 +167,7 @@ export default async function Home({ params }: Props) {
           <p className="mt-3 text-muted">{t("sections.blog_subtitle")}</p>
         </Reveal>
         <div className="mt-8">
-          <LatestPosts locale={locale} />
+          <LatestPosts locale={locale} track={activeTrack} />
         </div>
         <div className="mt-6">
           <Link

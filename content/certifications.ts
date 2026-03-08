@@ -52,6 +52,7 @@ export const certifications: Certification[] = [
 ];
 
 export const upcomingCertifications: string[] = [
+  'CompTIA A+ — préparation en cours',
   'Salesforce Certified Administrator — préparation active en cours',
   'Salesforce Certified Platform Developer I — préparation active en cours',
   'ISC2 CC (Certified in Cybersecurity) — préparation en cours'

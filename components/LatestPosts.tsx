@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { readAllPosts } from "@/content/blog/fs";
+import { detectTrack } from "@/lib/blog-utils";
 import matter from "gray-matter";
 import fs from "node:fs";
+import type React from "react";
 
 function readingTimeMinutes(mdxFileAbsPath: string): number {
   try {
@@ -24,12 +26,31 @@ function readingTimeMinutes(mdxFileAbsPath: string): number {
 type LatestPostsProps = {
   locale: "en" | "fr";
   className?: string;
+  /** Track actif — filtre les articles affichés sur la homepage */
+  track?: "salesforce" | "itops";
 };
 
-export default function LatestPosts({ className = "", locale }: LatestPostsProps) {
+// Bordure gauche colorée selon le track de l'article.
+// Style inline requis car .card définit border-color en dehors de @layer,
+// ce qui écrase les utilitaires Tailwind border-l-*.
+function trackBorderStyle(postTrack: "salesforce" | "itops" | null): React.CSSProperties | undefined {
+  if (postTrack === "salesforce") return { borderLeft: "4px solid #06b6d4" }; // cyan-500
+  if (postTrack === "itops")     return { borderLeft: "4px solid #8b5cf6" }; // violet-500
+  return undefined;
+}
+
+export default function LatestPosts({ className = "", locale, track }: LatestPostsProps) {
   const t = useTranslations();
 
-  const posts = readAllPosts(locale).slice(0, 2);
+  const all = readAllPosts(locale);
+
+  // Si un track est fourni, filtrer les articles du track actif (ou sans track = neutres).
+  // Fallback : si aucun article ne correspond, afficher les 2 derniers sans filtre.
+  const filtered = track
+    ? all.filter((p) => { const pt = detectTrack(p.tags); return pt === null || pt === track; })
+    : all;
+
+  const posts = (filtered.length > 0 ? filtered : all).slice(0, 2);
 
   return (
     <div className={className}>
@@ -38,11 +59,14 @@ export default function LatestPosts({ className = "", locale }: LatestPostsProps
           posts.map((p) => {
             const mins = readingTimeMinutes(p.file);
 
+            const postTrack = detectTrack(p.tags);
+
             return (
               <Link
                 key={p.slug}
                 href={`/${locale}/blog/${p.slug}`}
                 className="card p-6 hover:bg-black/10 dark:hover:bg-white/5 soft-ring"
+                style={trackBorderStyle(postTrack)}
               >
                 <div className="flex items-center gap-2 text-xs text-muted-2">
                   <span>{p.date}</span>

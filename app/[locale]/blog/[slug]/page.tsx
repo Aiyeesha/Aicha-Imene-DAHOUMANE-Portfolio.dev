@@ -10,10 +10,12 @@ import { extractToc } from "@/content/blog/toc";
 import TableOfContents from "@/components/blog/TableOfContents";
 import BackToTop from "@/components/blog/BackToTop";
 import RelatedPosts from "@/components/blog/RelatedPosts";
+import SeriesBanner from "@/components/blog/SeriesBanner";
 import ScrollProgress from "@/components/ScrollProgress";
 import ShareButtons from "@/components/blog/ShareButtons";
 import { getPrevNext } from "@/content/blog/navigation";
 import { formatDate } from "@/lib/blog-utils";
+import { getSeriePosition } from "@/content/blog/series";
 
 type Params = { locale: "en" | "fr"; slug: string };
 
@@ -84,6 +86,9 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const content = String(parsed.content || "");
   const toc = extractToc(content);
   const nav = getPrevNext(locale, slug);
+
+  // Série d'articles — null si l'article n'appartient à aucune série
+  const seriePosition = getSeriePosition(slug);
 
   // Related posts: same locale, overlapping tags, exclude current
   const allPosts = readAllPosts(locale);
@@ -178,6 +183,11 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
                   </Link>
                 ))}
               </div>
+
+              {/* Bandeau de série — affiché uniquement si l'article appartient à une série */}
+              {seriePosition && (
+                <SeriesBanner position={seriePosition} locale={locale} />
+              )}
             </div>
 
             <Link

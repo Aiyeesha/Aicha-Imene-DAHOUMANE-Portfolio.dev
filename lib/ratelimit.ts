@@ -67,3 +67,10 @@ export const contactRatelimit = redis
 export const blogRatelimit = redis
   ? createRatelimit(redis, 30, 60, "portfolio:rl:blog")
   : createNoOpRatelimit(30, 60_000);
+
+// ── Limiteur pour /api/testimonial-submit ─────────────────────────────
+// 3 soumissions par 24 heures par IP — les témoignages sont rares et
+// intentionnels ; une limite stricte protège contre l'abus et le spam.
+export const testimonialRatelimit = redis
+  ? createRatelimit(redis, 3, 86_400, "portfolio:rl:testimonial")
+  : createNoOpRatelimit(3, 86_400_000);

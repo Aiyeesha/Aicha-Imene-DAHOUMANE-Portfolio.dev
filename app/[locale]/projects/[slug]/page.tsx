@@ -101,18 +101,36 @@ function renderSection(section: ProjectSection, idx: number) {
         </div>
       );
 
-    case "metrics":
+    case "metrics": {
+      // Use stat-card layout only when all values are short (≤ 18 chars = numbers/percentages).
+      // Otherwise use a spec-sheet table layout (label → value).
+      const isStatLayout = section.items.every((item) => item.value.length <= 18);
       return wrapper(
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {section.items.map((item, i) => (
-            <div key={i} className="rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/3 p-4">
-              <div className="text-3xl font-bold text-cyan-500">{item.value}</div>
-              <div className="mt-1 text-sm font-medium text-strong">{item.label}</div>
-              {item.note ? <div className="mt-1 text-xs text-muted">{item.note}</div> : null}
-            </div>
-          ))}
-        </div>
+        isStatLayout ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {section.items.map((item, i) => (
+              <div key={i} className="rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/3 p-4">
+                <div className="text-3xl font-bold text-cyan-500">{item.value}</div>
+                <div className="mt-1 text-sm font-medium text-strong">{item.label}</div>
+                {item.note ? <div className="mt-1 text-xs text-muted">{item.note}</div> : null}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <dl className="divide-y divide-black/8 dark:divide-white/8">
+            {section.items.map((item, i) => (
+              <div key={i} className="grid grid-cols-[minmax(120px,180px)_1fr] gap-x-4 gap-y-1 py-3 text-sm">
+                <dt className="font-medium text-strong self-start pt-0.5 shrink-0">{item.label}</dt>
+                <dd className="text-muted leading-relaxed">
+                  {item.value}
+                  {item.note ? <span className="ml-2 text-xs opacity-70">({item.note})</span> : null}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )
       );
+    }
 
     case "timeline":
       return wrapper(
