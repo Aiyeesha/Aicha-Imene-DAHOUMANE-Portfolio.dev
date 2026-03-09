@@ -131,7 +131,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
                   "rounded-full px-1.5 py-0.5 text-xs leading-none",
                   isActive
                     ? "bg-cyan-500/30 text-cyan-800 dark:text-cyan-100"
-                    : "bg-black/10 dark:bg-white/10 text-slate-500 dark:text-white/50"
+                    : "bg-black/10 dark:bg-white/10 text-slate-600 dark:text-white/70"
                 ].join(" ")}>
                   {count}
                 </span>

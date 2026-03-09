@@ -35,19 +35,19 @@ export default function GlobalMetrics() {
       {/* Séparateur visuel discret au-dessus */}
       <div className="mt-10 border-t border-black/8 dark:border-white/8 pt-10">
         {/* Grille 4 colonnes (2 sur mobile) */}
+        {/* dl > div(Reveal) > dt + dd — structure valide WCAG (dl > div wrapping dt/dd) */}
         <dl className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {METRICS.map(({ value, suffix, labelKey }, i) => (
-            <Reveal key={labelKey} delayMs={i * 60}>
-              <div className="flex flex-col items-center text-center gap-1">
-                {/* Nombre animé — grand et accentué */}
-                <dt className="text-3xl font-display font-bold text-cyan-600 dark:text-cyan-400 tabular-nums">
-                  <AnimatedCounter value={value} suffix={suffix} />
-                </dt>
-                {/* Label descriptif */}
-                <dd className="text-xs font-medium text-muted-2 uppercase tracking-wider">
-                  {t(labelKey)}
-                </dd>
-              </div>
+            // Reveal rend un <div> — doit contenir dt/dd directement pour un <dl> valide
+            <Reveal key={labelKey} delayMs={i * 60} className="flex flex-col items-center text-center gap-1">
+              {/* Nombre animé — grand et accentué */}
+              <dt className="text-3xl font-display font-bold text-cyan-600 dark:text-cyan-400 tabular-nums">
+                <AnimatedCounter value={value} suffix={suffix} />
+              </dt>
+              {/* Label descriptif */}
+              <dd className="text-xs font-medium text-muted-2 uppercase tracking-wider">
+                {t(labelKey)}
+              </dd>
             </Reveal>
           ))}
         </dl>
