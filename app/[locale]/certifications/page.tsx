@@ -11,6 +11,7 @@
 
 import { trailheadProfile } from "@/content/certifications";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -71,10 +72,28 @@ function StatusBadge({ status, locale }: StatusBadgeProps) {
   );
 }
 
-// ── Composant — Icône placeholder certification ────────────────────────────────
-// Utilisé quand aucune image de badge n'est disponible.
+// ── Composant — Icône certification (logo si disponible, sinon badge initiales) ──
 
-function CertIconPlaceholder({ initials, color }: { initials: string; color: string }) {
+function CertIcon({
+  initials, color, logoUrl
+}: { initials: string; color: string; logoUrl?: string }) {
+  if (logoUrl) {
+    return (
+      <div
+        aria-hidden="true"
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/5 p-2"
+      >
+        <Image
+          src={logoUrl}
+          alt=""
+          width={48}
+          height={48}
+          className="h-10 w-10 object-contain"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
   return (
     <div
       aria-hidden="true"
@@ -144,7 +163,8 @@ export default async function CertificationsPage({ params }: PageProps) {
       skills: ["Apex", "Salesforce Flows", "LWC", "Data Modeling", "CI/CD", "GitHub Actions", "Salesforce CLI", "API Integration", "Security & Permissions", "Automated Testing"],
       credentialUrl: undefined,
       initials: "DCL",
-      color: "bg-indigo-500",
+      color: "bg-indigo-700",
+      logoUrl: "/companies/openclassrooms.svg",
     },
     {
       id: "tssr-greta-valdoise",
@@ -160,7 +180,8 @@ export default async function CertificationsPage({ params }: PageProps) {
       skills: ["Windows Server 2022", "Active Directory", "DNS / DHCP / WDS", "GPO", "PXE", "VMware Workstation 17", "PfSense", "Squid Proxy", "Acronis Cyber Protect", "Datto RMM", "Windows Autopilot"],
       credentialUrl: undefined,
       initials: "TSSR",
-      color: "bg-blue-500",
+      color: "bg-blue-700",
+      logoUrl: "/companies/greta.svg",
     },
     {
       id: "tai-greta-valdoise",
@@ -176,7 +197,8 @@ export default async function CertificationsPage({ params }: PageProps) {
       skills: ["Windows 10", "VirtualBox", "Active Directory", "Roaming Profiles", "WiFi Configuration", "Hardware Diagnosis", "User Support"],
       credentialUrl: undefined,
       initials: "TAI",
-      color: "bg-violet-500",
+      color: "bg-violet-700",
+      logoUrl: "/companies/greta.svg",
     },
     {
       id: "linguaskill-cambridge",
@@ -190,7 +212,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       skills: ["Business English", "Listening Comprehension", "Reading Comprehension", "Professional Communication"],
       credentialUrl: "https://www.cambridge.org/linguaskill",
       initials: "C1+",
-      color: "bg-rose-500",
+      color: "bg-rose-700", // rose-500 = 3.67:1 ✗ → rose-700 ≈ 7:1 ✓
     },
   ];
 
@@ -216,7 +238,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         ? "Administration Salesforce : configuration, automatisation, sécurité, rapports et tableaux de bord."
         : "Salesforce administration: configuration, automation, security, reports and dashboards.",
       initials: "ADM",
-      color: "bg-sky-500",
+      color: "bg-sky-800", // sky-500 = 2.77:1 ✗ → sky-800 ≈ 9:1 ✓
     },
     {
       id: "sf-pdi",
@@ -227,7 +249,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         ? "Développement sur la plateforme Salesforce : Apex, SOQL, LWC, tests unitaires, déploiement."
         : "Development on the Salesforce platform: Apex, SOQL, LWC, unit testing, deployment.",
       initials: "PDI",
-      color: "bg-sky-500",
+      color: "bg-sky-800", // sky-500 = 2.77:1 ✗ → sky-800 ≈ 9:1 ✓
     },
     {
       id: "isc2-cc",
@@ -301,7 +323,7 @@ export default async function CertificationsPage({ params }: PageProps) {
             >
               {/* En-tête de carte */}
               <div className="flex items-start gap-4">
-                <CertIconPlaceholder initials={cert.initials} color={cert.color} />
+                <CertIcon initials={cert.initials} color={cert.color} logoUrl={(cert as { logoUrl?: string }).logoUrl} />
                 <div className="min-w-0">
                   <h3 className="text-base font-semibold leading-snug">{cert.name}</h3>
                   <p className="mt-0.5 text-sm text-muted">{cert.issuer}</p>
@@ -436,7 +458,7 @@ export default async function CertificationsPage({ params }: PageProps) {
             >
               {/* En-tête */}
               <div className="flex items-start gap-3">
-                <CertIconPlaceholder initials={cert.initials} color={cert.color} />
+                <CertIcon initials={cert.initials} color={cert.color} />
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold leading-snug">{cert.name}</h3>
                   <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>

@@ -14,6 +14,7 @@
 // Bilingue : chaque milestone a un champ `label` { en, fr }.
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -32,6 +33,8 @@ type Milestone = {
   description: { en: string; fr: string };
   /** Tags compétences ou diplômes */
   tags: string[];
+  /** Logos des organismes (chemins dans /public/) */
+  logos?: { src: string; alt: string }[];
 };
 
 // ── Données du parcours ────────────────────────────────────────────────────────
@@ -50,6 +53,10 @@ const MILESTONES: Milestone[] = [
       fr: "Première qualification professionnelle en informatique. Matériel, réseau, Windows 10, VirtualBox, Active Directory, support utilisateur.",
     },
     tags: ["RNCP 4", "Windows 10", "Active Directory", "VirtualBox"],
+    logos: [
+      { src: "/companies/greta.svg",       alt: "GRETA du Val d'Oise" },
+      { src: "/companies/lycee-jouvet.svg", alt: "Lycée Louis Jouvet"  },
+    ],
   },
   {
     period: "2023",
@@ -64,6 +71,9 @@ const MILESTONES: Milestone[] = [
       fr: "Déploiement de 200+ postes via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
     },
     tags: ["Windows Server 2022", "Autopilot", "PfSense", "Acronis", "Datto RMM"],
+    logos: [
+      { src: "/companies/midrange.webp", alt: "Midrange Group" },
+    ],
   },
   {
     period: "2023",
@@ -78,6 +88,9 @@ const MILESTONES: Milestone[] = [
       fr: "Administration des environnements Windows Server, réseaux, virtualisation, sécurité et supervision.",
     },
     tags: ["RNCP 5", "Windows Server", "VMware", "GPO", "Supervision"],
+    logos: [
+      { src: "/companies/greta.svg", alt: "GRETA du Val d'Oise" },
+    ],
   },
   {
     period: "2023 – 2025",
@@ -92,6 +105,10 @@ const MILESTONES: Milestone[] = [
       fr: "Développement Salesforce full-stack (Apex, Flows, LWC, SOQL), CI/CD GitHub Actions, sécurité, déploiements et support client.",
     },
     tags: ["Apex", "LWC", "Flows", "SOQL", "GitHub Actions", "Salesforce CLI"],
+    logos: [
+      { src: "/companies/ld-digitales.webp",  alt: "LD Digitales"    },
+      { src: "/companies/openclassrooms.svg", alt: "OpenClassrooms"  },
+    ],
   },
   {
     period: "2025",
@@ -106,6 +123,9 @@ const MILESTONES: Milestone[] = [
       fr: "Titre RNCP niveau 6 (Bac+3/4). Spécialisation Salesforce : Apex, LWC, CI/CD, tests automatisés, modélisation des données.",
     },
     tags: ["RNCP 6", "Apex", "LWC", "CI/CD", "Tests unitaires"],
+    logos: [
+      { src: "/companies/openclassrooms.svg", alt: "OpenClassrooms" },
+    ],
   },
   {
     period: "2025 →",
@@ -120,6 +140,9 @@ const MILESTONES: Milestone[] = [
       fr: "Livraisons de projets Salesforce, développement Apex/LWC, automatisation Flows, intégrations, support client, documentation technique.",
     },
     tags: ["Salesforce", "Apex", "LWC", "Integrations", "DevOps"],
+    logos: [
+      { src: "/companies/ld-digitales.webp", alt: "LD Digitales" },
+    ],
   },
 ];
 
@@ -237,10 +260,35 @@ function TimelineItem({
           </span>
         </div>
 
-        <h3 className="text-sm font-semibold leading-snug">
-          {isFr ? milestone.title.fr : milestone.title.en}
-        </h3>
-        <p className="mt-0.5 text-xs font-medium text-muted-2">{milestone.org}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-sm font-semibold leading-snug">
+              {isFr ? milestone.title.fr : milestone.title.en}
+            </h3>
+            <p className="mt-0.5 text-xs font-medium text-muted-2">{milestone.org}</p>
+          </div>
+
+          {/* Logos des organismes */}
+          {milestone.logos && milestone.logos.length > 0 && (
+            <div className="flex items-center gap-2 shrink-0">
+              {milestone.logos.map((logo) => (
+                <div
+                  key={logo.src}
+                  className="h-8 w-auto flex items-center justify-center rounded bg-white dark:bg-white/5 px-1.5 py-1 border border-black/8 dark:border-white/8"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={56}
+                    height={24}
+                    className="h-5 w-auto object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <p className="mt-2 text-sm text-muted leading-relaxed">
           {isFr ? milestone.description.fr : milestone.description.en}
