@@ -1,6 +1,7 @@
 # Aïcha Imène DAHOUMANE — Portfolio
 
 [![CI](https://github.com/Aiyeesha/portfolio-next/actions/workflows/ci.yml/badge.svg)](https://github.com/Aiyeesha/portfolio-next/actions/workflows/ci.yml)
+[![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://portfolio-next-one-gold.vercel.app/en)
 [![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://portfolio-next-one-gold.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -15,28 +16,69 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 15 (App Router) + React 19 + TypeScript 5 |
+| Framework | Next.js 16 (App Router) + React 19 + TypeScript 5 |
 | Styling | Tailwind CSS + next-themes (dark mode) |
+| Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR) |
-| Backend | Supabase (PostgreSQL) — projects, about, certifications, contact |
+| Backend | Supabase (PostgreSQL) — projects, about, certifications, contact, goals, uptime |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
-| Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark |
+| Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
 | Forms | API Route + Formspree (fallback) + honeypot + rate-limit |
 | Analytics | Vercel Analytics + Speed Insights (production only) |
+| Monitoring | Vercel Cron (every 5 min) → `/api/cron/ping` → Supabase `uptime_pings` |
 | Deployment | Vercel (Hobby) |
+
+---
+
+## Architecture
+
+```
+Browser
+  │
+  ├─ Next.js 16 (App Router — SSR + ISR)
+  │     ├─ Server Components → Supabase REST API ──► PostgreSQL
+  │     │                    → Upstash Redis (cache, rate-limit)
+  │     ├─ Client Components → Framer Motion, next-intl, track toggle
+  │     └─ API Routes
+  │           ├─ /api/contact          → Formspree + Supabase messages
+  │           ├─ /api/health           → ping Supabase + Redis + Formspree
+  │           ├─ /api/cron/ping        → Vercel Cron (5 min) → uptime_pings
+  │           └─ /api/testimonial-submit → testimonial_submissions
+  │
+  ├─ Supabase (PostgreSQL + RLS)
+  │     Tables: projects · project_assets · about_pages · certifications
+  │             messages · testimonials · testimonial_submissions
+  │             goals_2026 · uptime_pings
+  │
+  ├─ Upstash Redis
+  │     Keys: portfolio:rl:contact · portfolio:rl:testimonial
+  │           portfolio:uptime:stats:30d · project:* · projects_with_assets:*
+  │
+  └─ Vercel
+        CDN (static assets, ISR pages)
+        Cron jobs (vercel.json)
+        Analytics + Speed Insights
+```
 
 ---
 
 ## Features
 
 - **Dual-track hero** — Salesforce and IT Ops profiles share the same avatar; text, tags, and accent colors adapt per track
-- **Dedicated pages** — `/about`, `/certifications`, `/blog`, `/projects`
-- **Blog** — MDX articles (EN + FR), syntax highlighting, copy button, table of contents, reading time
-- **Certifications page** — 3 sections: Completed, Active (Trailhead Ranger), In preparation
-- **Contact form** — rate-limited, honeypot, topic selector, Calendly modal
+- **Dedicated pages** — `/about`, `/certifications`, `/blog`, `/projects`, `/status`
+- **Career timeline** — Visual frise chronologique (2022 → present) on the About page
+- **2026 Goals** — Checkable objectives with `not_started / in_progress / completed` status (Supabase)
+- **Blog** — MDX articles (EN + FR), syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
+- **Article series** — 6 curated reading paths (Salesforce DevOps, LWC, Windows Server, IT Ops Monitoring…)
+- **Certifications page** — 3 sections: Completed, Active (Trailhead animated counters), In preparation
+- **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
+- **Contact form** — rate-limited, honeypot, topic selector, Calendly modal in hero + contact section
+- **Status page** — real health checks (Supabase, Redis, Formspree), uptime % over 30 days, ISR 60s
+- **Animations** — Framer Motion: scroll parallax, directional reveals (left/right/bottom), stagger, AnimatedCounter
+- **Open Graph** — dynamic OG images per blog article and project page (`next/og`)
 - **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
 - **RSS feed** — `/feed.xml` (EN articles)
-- **PWA** — Web App Manifest, icons 192/512
+- **PWA** — Web App Manifest (installable), `display_override`, shortcuts, icons 192/512
 - **Accessibility** — skip link, keyboard nav, focus rings, ARIA landmarks
 - **SEO** — JSON-LD (WebSite + Person + ProfessionalService), sitemap, robots.txt, hreflang
 
@@ -93,6 +135,9 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `CACHE_INVALIDATE_SECRET` | Optional | Secret for `/api/cache/invalidate` endpoint |
 | `CONTACT_RATE_LIMIT_WINDOW_SECONDS` | Optional | Rate-limit window in seconds (default: 600) |
 | `CONTACT_RATE_LIMIT_MAX_REQUESTS` | Optional | Max requests per window (default: 5) |
+| `TESTIMONIAL_SUBMIT_TOKEN` | Optional | Token for `/[locale]/testimonial-submit?token=...` (generate with `openssl rand -base64 32`) |
+| `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
+| `NEXT_PUBLIC_FORMSPREE_ID` | Optional | Formspree form ID (used by `/api/health` to check contact form availability) |
 
 ---
 
