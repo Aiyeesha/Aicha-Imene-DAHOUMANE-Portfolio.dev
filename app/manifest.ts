@@ -1,60 +1,91 @@
 // manifest.ts
 // -----------
-// Web App Manifest — permet une apparence soignée dans les favoris
-// et sur mobile (PWA-ready, sans service worker pour l'instant).
+// Web App Manifest — PWA complète, installable sur mobile et desktop.
 //
-// Pour activer l'installation PWA complète :
-// 1. Ajouter un service worker (optionnel, pas nécessaire pour un portfolio)
-// 2. Ajouter les icônes aux tailles requises dans /public/ :
-//    - icon-192.png (192×192)
-//    - icon-512.png (512×512)
-//    - apple-touch-icon.png (180×180)
+// Icônes requises dans /public/ :
+//   - icon-192.png  (192×192) — Android home screen
+//   - icon-512.png  (512×512) — Splash screen + any purpose
+//   - apple-touch-icon.png (180×180) — iOS Safari
 //
-// Doc : https://developer.mozilla.org/fr/docs/Web/Manifest
+// Générer les icônes : https://realfavicongenerator.net ou pwa-asset-generator
+// Valider le manifest : https://web.dev/pwa-checklist/
+//
+// Doc : https://developer.mozilla.org/en-US/docs/Web/Manifest
 
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha DAHOUMANE — Portfolio";
 
   return {
-    name: siteName,
-    short_name: "AID Portfolio",
-    description: "Portfolio professionnel — Salesforce Developer & Consultant · IT Ops",
-    start_url: "/",
-    // standalone : ouvre l'app sans barre d'adresse sur mobile
-    display: "standalone",
-    // Couleur de la barre de statut mobile (correspond à --nav bg)
-    background_color: "#ffffff",
-    theme_color: "#06b6d4", // cyan-500
-    orientation: "portrait-primary",
-    scope: siteUrl,
-    lang: "fr",
-    // Icônes — à générer depuis avatar.webp (outils : pwa-asset-generator, realfavicongenerator.net)
+    // ── Identité ────────────────────────────────────────────────────────────
+    // `id` est requis par Chrome pour l'install prompt (identifiant stable de la PWA).
+    // Doit correspondre à start_url ou être une sous-route.
+    id:          "/",
+    name:        siteName,
+    short_name:  "AID",
+    description: "Salesforce Developer & Consultant · IT Ops — Portfolio professionnel d'Aïcha Imène DAHOUMANE.",
+
+    // ── Navigation ──────────────────────────────────────────────────────────
+    start_url: "/en",          // Page d'accueil EN (langue par défaut du site)
+    scope:     "/",            // Toutes les sous-routes sont dans le scope de la PWA
+    lang:      "en",           // Langue par défaut du site
+
+    // ── Affichage ───────────────────────────────────────────────────────────
+    // display_override : tente "window-controls-overlay" (PWA desktop), fallback "standalone"
+    display:              "standalone",
+    display_override:     ["window-controls-overlay", "standalone", "minimal-ui"],
+    orientation:          "portrait-primary",
+
+    // ── Couleurs ────────────────────────────────────────────────────────────
+    // Doit correspondre à la couleur de fond du site (dark mode par défaut).
+    background_color: "#070B1A", // couleur de fond dark (--bg-dark)
+    theme_color:      "#06b6d4", // cyan-500 — cohérent avec l'accent du portfolio
+
+    // ── Icônes ─────────────────────────────────────────────────────────────
+    // "any"      : usage général (bookmark, splash screen)
+    // "maskable" : icône adaptative Android (safe area — fond solid requis)
     icons: [
       {
-        src: "/icon-192.png",
-        sizes: "192x192",
-        type: "image/png"
+        src:     "/icon-192.png",
+        sizes:   "192x192",
+        type:    "image/png",
+        purpose: "any"
       },
       {
-        src: "/icon-512.png",
-        sizes: "512x512",
-        type: "image/png"
+        src:     "/icon-512.png",
+        sizes:   "512x512",
+        type:    "image/png",
+        purpose: "any"
       },
       {
-        src: "/icon-512.png",
-        sizes: "512x512",
-        type: "image/png",
-        // maskable : icône adaptative Android (safe area)
+        src:     "/icon-512.png",
+        sizes:   "512x512",
+        type:    "image/png",
         purpose: "maskable"
       }
     ],
-    // Catégories pour les stores PWA
-    categories: ["portfolio", "business", "productivity"],
-    // Couleur d'accentuation de l'interface (barre de titre, etc.)
-    // Note : non standard mais supporté par Chrome
-    screenshots: []
+
+    // ── Raccourcis ──────────────────────────────────────────────────────────
+    // Apparaissent dans le menu contextuel long-press de l'icône (Android/Chrome)
+    shortcuts: [
+      {
+        name:       "Blog",
+        short_name: "Blog",
+        url:        "/en/blog",
+        icons:      [{ src: "/icon-192.png", sizes: "192x192" }]
+      },
+      {
+        name:       "About",
+        short_name: "About",
+        url:        "/en/about",
+        icons:      [{ src: "/icon-192.png", sizes: "192x192" }]
+      }
+    ],
+
+    // ── Divers ──────────────────────────────────────────────────────────────
+    categories:               ["portfolio", "business", "productivity"],
+    prefer_related_applications: false, // Privilégier la PWA plutôt qu'une app native
+    screenshots:              []
   };
 }

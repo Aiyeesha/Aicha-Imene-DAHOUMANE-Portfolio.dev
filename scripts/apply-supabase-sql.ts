@@ -212,6 +212,9 @@ async function main() {
   const SQL_FILES = [
     path.resolve(process.cwd(), "supabase/testimonials.sql"),
     path.resolve(process.cwd(), "supabase/policies.sql"),
+    path.resolve(process.cwd(), "supabase/uptime.sql"),
+    path.resolve(process.cwd(), "supabase/testimonial-submissions.sql"),
+    path.resolve(process.cwd(), "supabase/goals-2026.sql"),
   ];
 
   let totalOk = 0, totalSkipped = 0, totalFailed = 0;
