@@ -15,9 +15,9 @@
 // Pour ajouter une entreprise : ajouter un objet dans `companies` et
 // déposer le logo dans /public/companies/ (format .webp ou .svg recommandé).
 
-import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 // Définition des entreprises/organismes associés
 // Mettre is_visible: false pour masquer temporairement sans supprimer
@@ -59,14 +59,6 @@ const companies: {
     id: "greta",
     name: "GRETA du Val d'Oise",
     logo: "/companies/greta.svg",
-    width: 160,
-    height: 44,
-    is_visible: true
-  },
-  {
-    id: "lycee-jouvet",
-    name: "Lycée Louis Jouvet",
-    logo: "/companies/lycee-jouvet.svg",
     width: 160,
     height: 44,
     is_visible: true
