@@ -257,7 +257,8 @@
     "privacy": "Confidentialité",
     "legal": "Mentions légales",
     "accessibility": "Accessibilité",
-    "status": "Statut"
+    "status": "Statut",
+    "changelog": "Changelog"
   },
   "profile": {
     "kicker": "Profil",

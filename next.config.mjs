@@ -24,6 +24,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
 
+const isDev = process.env.NODE_ENV === "development";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
@@ -81,18 +83,24 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              // 'unsafe-inline' requis par Next.js App Router (inline scripts de hydratation)
-              // 'unsafe-eval' requis par certains modules webpack en développement
-              // À durcir avec des nonces si vous passez sur une CSP stricte
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com",
+              // 'unsafe-inline' requis par Next.js App Router (inline scripts de hydratation).
+              // 'unsafe-eval' uniquement en développement (webpack HMR) — retiré en production.
+              isDev
+                ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com"
+                : "script-src 'self' 'unsafe-inline' https://assets.calendly.com https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
-              "img-src 'self' data: https:",
+              // img-src : restreint aux origines connues plutôt que https: générique
+              `img-src 'self' data: https://*.supabase.co https://*.supabase.in`,
               "font-src 'self'",
               "frame-src https://calendly.com",
-              // data: requis pour React DevTools (extension navigateur, dev uniquement)
-              "connect-src 'self' data: https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com",
+              // connect-src : data: uniquement en dev (React DevTools)
+              isDev
+                ? "connect-src 'self' data: https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
+                : "connect-src 'self' https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
               "object-src 'none'",
-              "base-uri 'self'"
+              "base-uri 'self'",
+              // Bloque les iframes non explicitement autorisées (renforce X-Frame-Options)
+              "frame-ancestors 'none'",
             ].join("; ")
           },
           // Force HTTPS pendant 2 ans (includeSubDomains + preload)
