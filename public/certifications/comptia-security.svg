@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="CompTIA Security+">
+  <title>CompTIA Security+</title>
+
+  <!-- Fond sombre (#1C1C1C — style badge CompTIA) -->
+  <rect width="200" height="200" rx="20" fill="#1C1C1C"/>
+
+  <!--
+    Bandeau rouge CompTIA en haut du badge.
+    Le path couvre les coins arrondis du haut et se termine par un bord droit.
+  -->
+  <path fill="#C8102E" d="M0,20 Q0,0 20,0 L180,0 Q200,0 200,20 L200,66 L0,66 Z"/>
+
+  <!-- "CompTIA" wordmark en blanc dans le bandeau rouge -->
+  <text
+    x="100"
+    y="43"
+    fill="white"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="20"
+    font-weight="bold"
+    text-anchor="middle"
+    letter-spacing="0.5"
+  >CompTIA</text>
+
+  <!--
+    Bouclier de sécurité — forme de pentagon pointu vers le bas.
+    Remplissage rouge très atténué + contour rouge plein.
+  -->
+  <path
+    fill="#C8102E"
+    fill-opacity="0.12"
+    stroke="#C8102E"
+    stroke-width="2.5"
+    stroke-linejoin="round"
+    d="M100,82 L140,95 L140,144 C140,165 122,178 100,186 C78,178 60,165 60,144 L60,95 Z"
+  />
+
+  <!--
+    Coche (checkmark) à l'intérieur du bouclier —
+    symbole universel de certification réussie.
+  -->
+  <path
+    fill="none"
+    stroke="#C8102E"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M80,138 L94,153 L122,118"
+  />
+
+  <!-- "Security+" en rouge sous le bouclier -->
+  <text
+    x="100"
+    y="197"
+    fill="#C8102E"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="14"
+    font-weight="bold"
+    text-anchor="middle"
+    letter-spacing="0.5"
+  >Security+</text>
+</svg>

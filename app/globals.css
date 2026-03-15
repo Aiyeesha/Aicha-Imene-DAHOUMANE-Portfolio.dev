@@ -211,13 +211,16 @@ html.dark .mdx-code__toolbar {
   margin-right: auto;
   font-size: 0.7rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color: rgba(0,0,0,0.45);
+  /* rgba(0,0,0,0.65) ≈ #595959 sur fond blanc → 6.25:1 ✓ WCAG AA */
+  color: rgba(0,0,0,0.65);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  -webkit-user-select: none;
   user-select: none;
 }
 html.dark .mdx-code__lang {
-  color: rgba(255,255,255,0.35);
+  /* rgba(255,255,255,0.60) ≈ #a5a7ac sur fond sombre → 6.11:1 ✓ WCAG AA */
+  color: rgba(255,255,255,0.60);
 }
 .mdx-code__pre {
   margin-top: 0;
@@ -265,6 +268,7 @@ code[data-line-numbers] > [data-line]::before {
   margin-right: 1rem;
   text-align: right;
   color: rgba(0,0,0,0.25);
+  -webkit-user-select: none;
   user-select: none;
 }
 html.dark code[data-line-numbers] > [data-line]::before {
@@ -313,6 +317,7 @@ details[open] > summary {
 
 details > summary {
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 }
 
