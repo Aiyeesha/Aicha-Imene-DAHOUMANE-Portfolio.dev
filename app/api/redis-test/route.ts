@@ -3,18 +3,21 @@ import { redis } from "@/lib/redis";
 
 export async function GET() {
   if (!redis) {
+    // Ne pas exposer les détails de configuration dans la réponse
     return NextResponse.json(
-      {
-        success: false,
-        error:
-          "Redis is not configured. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in .env.local (local) or Vercel env vars (prod).",
-      },
-      { status: 500 }
+      { success: false, error: "Cache service unavailable." },
+      { status: 503 }
     );
   }
 
-  await redis.set("healthcheck", "ok", { ex: 60 });
-  const value = await redis.get("healthcheck");
-
-  return NextResponse.json({ success: true, value });
+  try {
+    await redis.set("healthcheck", "ok", { ex: 60 });
+    const value = await redis.get("healthcheck");
+    return NextResponse.json({ success: true, value });
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "Cache service unavailable." },
+      { status: 503 }
+    );
+  }
 }

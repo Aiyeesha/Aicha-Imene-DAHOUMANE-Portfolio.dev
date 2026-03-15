@@ -62,14 +62,6 @@ const companies: {
     width: 160,
     height: 44,
     is_visible: true
-  },
-  {
-    id: "lycee-jouvet",
-    name: "Lycée Louis Jouvet",
-    logo: "/companies/lycee-jouvet.svg",
-    width: 160,
-    height: 44,
-    is_visible: true
   }
 ];
 

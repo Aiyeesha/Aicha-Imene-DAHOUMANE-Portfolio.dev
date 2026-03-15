@@ -74,3 +74,10 @@ export const blogRatelimit = redis
 export const testimonialRatelimit = redis
   ? createRatelimit(redis, 3, 86_400, "portfolio:rl:testimonial")
   : createNoOpRatelimit(3, 86_400_000);
+
+// ── Limiteur pour /api/cache/invalidate ───────────────────────────────
+// 10 requêtes par 60 secondes — route admin uniquement, mais on la
+// protège contre un abus de type DoS (vidage en boucle du cache).
+export const cacheInvalidateRatelimit = redis
+  ? createRatelimit(redis, 10, 60, "portfolio:rl:cache-invalidate")
+  : createNoOpRatelimit(10, 60_000);

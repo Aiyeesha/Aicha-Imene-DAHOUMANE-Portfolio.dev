@@ -12,7 +12,34 @@
 
 import { useMemo, useRef, useState } from "react";
 import Reveal from "./Reveal";
+
+// Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
+// Nécessaire car les gallery JSON en base peuvent référencer d'anciens noms de fichiers
+function CoverImage({ src, fallback, alt }: { src: string; fallback?: string; alt: string }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [failed, setFailed] = useState(false);
+
+  if (failed) return null;
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill
+      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+      className="object-cover"
+      loading="lazy"
+      onError={() => {
+        if (fallback && imgSrc !== fallback) {
+          setImgSrc(fallback);
+        } else {
+          setFailed(true);
+        }
+      }}
+    />
+  );
+}
 import Link from "next/link";
+import Image from "next/image";
 import { useTrack } from "@/app/[locale]/providers";
 import { usePathname } from "next/navigation";
 import { trackEvent } from "@/lib/analytics";
@@ -182,7 +209,16 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((p, idx) => (
           <Reveal key={p.slug} delayMs={Math.min(280, idx * 60)}>
-            <div className="card p-5">
+            <div className="card overflow-hidden">
+              {/* Image de couverture */}
+              <div className="relative h-36 w-full bg-black/5 dark:bg-white/5">
+                <CoverImage
+                  src={p.gallery?.[0]?.src || `/projects/${p.slug}/cover.webp`}
+                  fallback={`/projects/${p.slug}/cover.webp`}
+                  alt={p.title}
+                />
+              </div>
+              <div className="p-5">
               {/* En-tête : titre + badge */}
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-lg font-semibold">{p.title}</h3>
@@ -237,6 +273,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
                   </a>
                 ) : null}
               </div>
+              </div>{/* /p-5 */}
             </div>
           </Reveal>
         ))}
