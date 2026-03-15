@@ -29,4 +29,6 @@ const customBase = {
   },
 };
 
-export default [customBase, ...restConfig];
+const flatConfig = [customBase, ...restConfig];
+
+export default flatConfig;
