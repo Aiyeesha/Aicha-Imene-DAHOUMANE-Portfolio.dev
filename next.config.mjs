@@ -122,9 +122,10 @@ const withMDX = createMDX({
         {
           theme: {
             light: "github-light",
-            // github-dark-dimmed avait des commentaires (#768390) à contraste insuffisant (3.92:1).
-            // github-dark utilise #8b949e pour les commentaires ≈ 4.8:1 sur fond sombre ✓
-            dark: "github-dark",
+            // github-dark        : commentaires #6a737d → 3.14:1 sur #0d1117 ✗ WCAG AA
+            // github-dark-dimmed : commentaires #768390 → 3.92:1 ✗
+            // github-dark-default: commentaires #8b949e → 6.15:1 ✓ ← sélectionné
+            dark: "github-dark-default",
           },
           bypassInlineCode: true,
           keepBackground: false,

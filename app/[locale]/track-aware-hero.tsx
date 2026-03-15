@@ -69,15 +69,32 @@ export default function TrackAwareHero() {
   const { scrollY } = useScroll();
   const parallaxY = useTransform(scrollY, [0, 400], [0, -28]);
 
-  // URL du CV — adaptée au track et à la langue, avec fallbacks
-  const cvPdfUrl = useMemo(
-    () =>
+  // URL du CV — toujours calculée en fonction du track ET de la locale.
+  //
+  // Priorité :
+  //   1. NEXT_PUBLIC_CV_PDF_URL si elle contient les tokens {locale} et/ou {track}
+  //      (ex: "https://storage.example.com/cv-{locale}-{track}.pdf")
+  //   2. Pattern local : /cv/cv-{locale}-{track}.pdf  (4 fichiers dans /public/cv/)
+  //
+  // Une URL statique sans token dans NEXT_PUBLIC_CV_PDF_URL est ignorée
+  // volontairement : elle servirait le même PDF quelle que soit la langue/le track,
+  // ce qui est précisément le bug à corriger.
+  const cvPdfUrl = useMemo(() => {
+    const envUrl =
       process.env.NEXT_PUBLIC_CV_PDF_URL ||
       process.env.NEXT_PUBLIC_CV_URL ||
-      process.env.NEXT_PUBLIC_PROFILE_PDF_URL ||
-      `/cv/cv-${locale}-${track}.pdf`,
-    [locale, track]
-  );
+      process.env.NEXT_PUBLIC_PROFILE_PDF_URL;
+
+    if (envUrl && (envUrl.includes("{locale}") || envUrl.includes("{track}"))) {
+      // L'env var est un template : remplace les tokens
+      return envUrl
+        .replace(/\{locale\}/g, locale)
+        .replace(/\{track\}/g, track);
+    }
+
+    // Fallback : fichiers locaux dans /public/cv/
+    return `/cv/cv-${locale}-${track}.pdf`;
+  }, [locale, track]);
 
   // Avatar : env var ou image locale
   const avatarUrl = useMemo(

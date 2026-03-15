@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 238" role="img" aria-label="Salesforce">
+  <title>Salesforce</title>
+  <defs>
+    <!--
+      Le cloud Salesforce est construit à partir de 4 cercles qui se chevauchent
+      (respectant les proportions de la charte graphique officielle) +
+      un rectangle arrondi qui forme la base du nuage.
+      Le clip-path SVG masque le rectangle de fond bleu à cette forme exacte.
+    -->
+    <clipPath id="sf-cloud-clip">
+      <!-- Cercle gauche (petit) -->
+      <circle cx="55"  cy="160" r="50"/>
+      <!-- Cercle centre-gauche (moyen) -->
+      <circle cx="112" cy="127" r="70"/>
+      <!-- Cercle centre-droit (grand — le plus haut) -->
+      <circle cx="188" cy="103" r="88"/>
+      <!-- Cercle droit (moyen) -->
+      <circle cx="255" cy="130" r="64"/>
+      <!-- Base rectangulaire arrondie du nuage -->
+      <rect x="5" y="160" width="325" height="68" rx="34"/>
+    </clipPath>
+  </defs>
+
+  <!-- Fond bleu Salesforce (#00A1E0) découpé par la forme du nuage -->
+  <rect width="335" height="238" fill="#00A1E0" clip-path="url(#sf-cloud-clip)"/>
+
+  <!-- Wordmark "salesforce" en blanc, centré dans la base du nuage -->
+  <text
+    x="167"
+    y="208"
+    fill="white"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="30"
+    font-weight="bold"
+    text-anchor="middle"
+    letter-spacing="-1"
+  >salesforce</text>
+</svg>

@@ -25,10 +25,16 @@ export const projectDetails: ProjectDetails[] = [
   {
     slug: "legarant-axg-salesforce-deployment",
     gallery: [
-      { src: "/projects/legarant-axg-salesforce-deployment/changes-1.png", alt: "Legarant‑AXG — Heroku changes (1)" },
-      { src: "/projects/legarant-axg-salesforce-deployment/changes-2.webp", alt: "Legarant‑AXG — Heroku changes (2)" },
-      { src: "/projects/legarant-axg-salesforce-deployment/deploy-1.png", alt: "Legarant‑AXG — Deployment evidence (1)" },
-      { src: "/projects/legarant-axg-salesforce-deployment/deploy-2.webp", alt: "Legarant‑AXG — Deployment evidence (2)" }
+        { src: "/projects/legarant-axg-salesforce-deployment/cover.webp", alt: "Legarant-AXG — cover" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-1.webp", alt: "Legarant-AXG — screenshot 1" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-2.webp", alt: "Legarant-AXG — screenshot 2" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-3.webp", alt: "Legarant-AXG — screenshot 3" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-4.webp", alt: "Legarant-AXG — screenshot 4" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-5.webp", alt: "Legarant-AXG — screenshot 5" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-6.webp", alt: "Legarant-AXG — screenshot 6" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-7.webp", alt: "Legarant-AXG — screenshot 7" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-8.webp", alt: "Legarant-AXG — screenshot 8" },
+        { src: "/projects/legarant-axg-salesforce-deployment/screenshot-9.webp", alt: "Legarant-AXG — screenshot 9" },
     ],
     locales: {
       en: {
@@ -467,22 +473,19 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
   slug: "ltp-apex-backend-prototype",
   gallery: [
-    {
-      src: "/projects/ltp-apex-backend-prototype/logo-fea9770b.png",
-      alt: "LTP — Le Temps des Papillons (logo)"
-    },
-    {
-      src: "/projects/ltp-apex-backend-prototype/shot-1.svg",
-      alt: "LTP — Architecture & integration (illustration)"
-    },
-    {
-      src: "/projects/ltp-apex-backend-prototype/shot-2.svg",
-      alt: "LTP — Data model (illustration)"
-    },
-    {
-      src: "/projects/ltp-apex-backend-prototype/shot-3.svg",
-      alt: "LTP — Security & import strategy (illustration)"
-    }
+      { src: "/projects/ltp-apex-backend-prototype/cover.webp", alt: "LTP Apex Prototype — cover" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-1.png", alt: "LTP Apex Prototype — screenshot 1" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-10.webp", alt: "LTP Apex Prototype — screenshot 10" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-11.webp", alt: "LTP Apex Prototype — screenshot 11" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-12.webp", alt: "LTP Apex Prototype — screenshot 12" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-13.webp", alt: "LTP Apex Prototype — screenshot 13" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-14.webp", alt: "LTP Apex Prototype — screenshot 14" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-15.webp", alt: "LTP Apex Prototype — screenshot 15" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-16.webp", alt: "LTP Apex Prototype — screenshot 16" },
+      { src: "/projects/ltp-apex-backend-prototype/screenshot-17.webp", alt: "LTP Apex Prototype — screenshot 17" },
+      { src: "/projects/ltp-apex-backend-prototype/shot-1.svg", alt: "LTP Apex Prototype — shot 1" },
+      { src: "/projects/ltp-apex-backend-prototype/shot-2.svg", alt: "LTP Apex Prototype — shot 2" },
+      { src: "/projects/ltp-apex-backend-prototype/shot-3.svg", alt: "LTP Apex Prototype — shot 3" },
   ],
   locales: {
     en: {
@@ -644,7 +647,28 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "idemconnect-apex-backend",
     gallery: [
-      { src: "/projects/idemconnect-apex-backend/cover.svg", alt: "iDEM Connect — Apex backend" }
+        { src: "/projects/idemconnect-apex-backend/cover.svg", alt: "IdemConnect — cover" },
+        { src: "/projects/idemconnect-apex-backend/cover.webp", alt: "IdemConnect — cover" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-1.webp", alt: "IdemConnect — screenshot 1" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-2.webp", alt: "IdemConnect — screenshot 2" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-3.webp", alt: "IdemConnect — screenshot 3" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-4.webp", alt: "IdemConnect — screenshot 4" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-5.webp", alt: "IdemConnect — screenshot 5" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-6.webp", alt: "IdemConnect — screenshot 6" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-7.webp", alt: "IdemConnect — screenshot 7" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-8.webp", alt: "IdemConnect — screenshot 8" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-9.webp", alt: "IdemConnect — screenshot 9" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-10.webp", alt: "IdemConnect — screenshot 10" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-11.webp", alt: "IdemConnect — screenshot 11" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-12.webp", alt: "IdemConnect — screenshot 12" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-13.webp", alt: "IdemConnect — screenshot 13" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-14.webp", alt: "IdemConnect — screenshot 14" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-15.webp", alt: "IdemConnect — screenshot 15" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-16.webp", alt: "IdemConnect — screenshot 16" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-17.webp", alt: "IdemConnect — screenshot 17" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-18.webp", alt: "IdemConnect — screenshot 18" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-19.webp", alt: "IdemConnect — screenshot 19" },
+        { src: "/projects/idemconnect-apex-backend/screenshot-20.webp", alt: "IdemConnect — screenshot 20" },
     ],
     locales: {
       en: {
@@ -774,7 +798,27 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "fasha-apex-backend-optimization",
     gallery: [
-      { src: "/projects/fasha-apex-backend-optimization/cover.svg", alt: "FASHA — Apex backend optimization" }
+        { src: "/projects/fasha-apex-backend-optimization/cover.svg", alt: "FASHA — cover" },
+        { src: "/projects/fasha-apex-backend-optimization/cover.webp", alt: "FASHA — cover" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-1.webp", alt: "FASHA — screenshot 1" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-2.webp", alt: "FASHA — screenshot 2" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-3.webp", alt: "FASHA — screenshot 3" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-4.webp", alt: "FASHA — screenshot 4" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-5.webp", alt: "FASHA — screenshot 5" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-6.webp", alt: "FASHA — screenshot 6" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-7.webp", alt: "FASHA — screenshot 7" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-8.webp", alt: "FASHA — screenshot 8" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-9.webp", alt: "FASHA — screenshot 9" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-10.webp", alt: "FASHA — screenshot 10" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-11.webp", alt: "FASHA — screenshot 11" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-12.webp", alt: "FASHA — screenshot 12" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-13.webp", alt: "FASHA — screenshot 13" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-14.webp", alt: "FASHA — screenshot 14" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-15.webp", alt: "FASHA — screenshot 15" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-16.webp", alt: "FASHA — screenshot 16" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-17.webp", alt: "FASHA — screenshot 17" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-18.webp", alt: "FASHA — screenshot 18" },
+        { src: "/projects/fasha-apex-backend-optimization/screenshot-19.webp", alt: "FASHA — screenshot 19" },
     ],
     locales: {
       en: {
@@ -894,30 +938,30 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "wirebright-visualforce-to-lightning",
     gallery: [
-      {
-        src: "/projects/wirebright-visualforce-to-lightning/HomepageClassique.png",
-        alt: "wirebright-visualforce-to-lightning — classic home"
-      },
-      {
-        src: "/projects/wirebright-visualforce-to-lightning/HomepageLightning.png",
-        alt: "wirebright-visualforce-to-lightning — lightning home"
-      },
-      {
-        src: "/projects/wirebright-visualforce-to-lightning/LeadUpdateClassique.png",
-        alt: "wirebright-visualforce-to-lightning — classic lead update"
-      },
-      {
-        src: "/projects/wirebright-visualforce-to-lightning/LeadUpdateLightning.png",
-        alt: "wirebright-visualforce-to-lightning — lightning lead update"
-      },
-      {
-        src: "/projects/wirebright-visualforce-to-lightning/Opportunity-SearchClassique.png",
-        alt: "wirebright-visualforce-to-lightning — classic opportunity search"
-      },
-      {
-        src: "/projects/wirebright-visualforce-to-lightning/Opportunity-SearchLightning.png",
-        alt: "wirebright-visualforce-to-lightning — lightning opportunity search"
-      }
+        { src: "/projects/wirebright-visualforce-to-lightning/cover.png", alt: "Wirebright — cover" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-1.png", alt: "Wirebright — screenshot 1" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-2.png", alt: "Wirebright — screenshot 2" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-3.png", alt: "Wirebright — screenshot 3" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-4.png", alt: "Wirebright — screenshot 4" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-5.png", alt: "Wirebright — screenshot 5" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-6.png", alt: "Wirebright — screenshot 6" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-7.png", alt: "Wirebright — screenshot 7" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-8.png", alt: "Wirebright — screenshot 8" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-9.png", alt: "Wirebright — screenshot 9" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-10.png", alt: "Wirebright — screenshot 10" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-11.png", alt: "Wirebright — screenshot 11" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-12.png", alt: "Wirebright — screenshot 12" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-13.png", alt: "Wirebright — screenshot 13" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-14.png", alt: "Wirebright — screenshot 14" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-15.jpg", alt: "Wirebright — screenshot 15" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-16.png", alt: "Wirebright — screenshot 16" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-17.png", alt: "Wirebright — screenshot 17" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-18.png", alt: "Wirebright — screenshot 18" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-19.png", alt: "Wirebright — screenshot 19" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-20.png", alt: "Wirebright — screenshot 20" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-21.png", alt: "Wirebright — screenshot 21" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-22.png", alt: "Wirebright — screenshot 22" },
+        { src: "/projects/wirebright-visualforce-to-lightning/screenshot-23.png", alt: "Wirebright — screenshot 23" },
     ],
     locales: {
       en: {
@@ -1063,18 +1107,10 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "avenir-telecom-lightning-app",
     gallery: [
-      {
-        src: "/projects/avenir-telecom-lightning-app/image-e5a88d7b.webp",
-        alt: "Avenir Télécom — Lightning app (overview)"
-      },
-      {
-        src: "/projects/avenir-telecom-lightning-app/kanban-board.webp",
-        alt: "Avenir Télécom — Kanban backlog (evolutions & fixes)"
-      },
-      {
-        src: "/projects/avenir-telecom-lightning-app/image.webp",
-        alt: "Avenir Télécom — Lightning app (screen)"
-      }
+        { src: "/projects/avenir-telecom-lightning-app/cover.webp", alt: "Avenir Telecom — Lightning — cover" },
+        { src: "/projects/avenir-telecom-lightning-app/screenshot-1.webp", alt: "Avenir Telecom — Lightning — screenshot 1" },
+        { src: "/projects/avenir-telecom-lightning-app/screenshot-2.webp", alt: "Avenir Telecom — Lightning — screenshot 2" },
+        { src: "/projects/avenir-telecom-lightning-app/screenshot-3.webp", alt: "Avenir Telecom — Lightning — screenshot 3" },
     ],
     locales: {
       en: {
@@ -1232,14 +1268,22 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "tours-for-life-salesforce-solution",
     gallery: [
-      {
-        src: "/projects/tours-for-life-salesforce-solution/screenshot-1.webp",
-        alt: "Tours For Life — Home page & dashboards"
-      },
-      {
-        src: "/projects/tours-for-life-salesforce-solution/data-model.webp",
-        alt: "Tours For Life — Data model (Schema)"
-      }
+        { src: "/projects/tours-for-life-salesforce-solution/cover.png", alt: "Tours for Life — cover" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-1.png", alt: "Tours for Life — screenshot 1" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-2.png", alt: "Tours for Life — screenshot 2" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-3.png", alt: "Tours for Life — screenshot 3" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-4.png", alt: "Tours for Life — screenshot 4" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-5.png", alt: "Tours for Life — screenshot 5" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-6.png", alt: "Tours for Life — screenshot 6" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-7.png", alt: "Tours for Life — screenshot 7" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-8.png", alt: "Tours for Life — screenshot 8" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-9.png", alt: "Tours for Life — screenshot 9" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-10.png", alt: "Tours for Life — screenshot 10" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-11.png", alt: "Tours for Life — screenshot 11" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-12.png", alt: "Tours for Life — screenshot 12" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-13.png", alt: "Tours for Life — screenshot 13" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-14.webp", alt: "Tours for Life — screenshot 14" },
+        { src: "/projects/tours-for-life-salesforce-solution/screenshot-15.webp", alt: "Tours for Life — screenshot 15" },
     ],
     locales: {
       en: {
@@ -1451,30 +1495,11 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "digit-learning-salesforce-update",
     gallery: [
-      {
-        src: "/projects/digit-learning-salesforce-update/Schema_builder_captures_decran_122023.png",
-        alt: "Digit Learning — data model (Schema Builder)"
-      },
-      {
-        src: "/projects/digit-learning-salesforce-update/Mise a jour de place disponible par formation-.png",
-        alt: "Digit Learning — Flow: update available seats"
-      },
-      {
-        src: "/projects/digit-learning-salesforce-update/Mise a jours des status des etudiants vers Ancient client.png",
-        alt: "Digit Learning — Scheduled Flow: student status to former client"
-      },
-      {
-        src: "/projects/digit-learning-salesforce-update/inscriptions-formation-acheter-firefox-1.png",
-        alt: "Digit Learning — Enrollment screen (1)"
-      },
-      {
-        src: "/projects/digit-learning-salesforce-update/inscriptions-formation-acheter-firefox-2.png",
-        alt: "Digit Learning — Enrollment screen (2)"
-      },
-      {
-        src: "/projects/digit-learning-salesforce-update/Comparatif entre des taux de transformations du statut prospect en client actif.png",
-        alt: "Digit Learning — report: prospect → active customer conversion"
-      }
+        { src: "/projects/digit-learning-salesforce-update/cover.webp", alt: "Digit Learning — cover" },
+        { src: "/projects/digit-learning-salesforce-update/screenshot-1.webp", alt: "Digit Learning — screenshot 1" },
+        { src: "/projects/digit-learning-salesforce-update/screenshot-2.webp", alt: "Digit Learning — screenshot 2" },
+        { src: "/projects/digit-learning-salesforce-update/screenshot-3.webp", alt: "Digit Learning — screenshot 3" },
+        { src: "/projects/digit-learning-salesforce-update/screenshot-4.webp", alt: "Digit Learning — screenshot 4" },
     ],
     locales: {
       en: {
@@ -1723,9 +1748,25 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "workstation-mass-deployment",
     gallery: [
-      { src: "/projects/workstation-mass-deployment/cover.jpg", alt: "Dell laptop running Image Assist Dynamic WinPC — workstation imaging at MIDRANGE GROUP" },
-      { src: "/projects/workstation-mass-deployment/img-2.jpg", alt: "Dell Image Assist — WIM image restore in progress on Dell Latitude" },
-      { src: "/projects/workstation-mass-deployment/img-3.jpg", alt: "Blancco disk erasure at 98% on Lenovo monitor — secure data wiping before redeployment" },
+        { src: "/projects/workstation-mass-deployment/cover.png", alt: "Workstation Deployment — cover" },
+        { src: "/projects/workstation-mass-deployment/screenshot-1.png", alt: "Workstation Deployment — screenshot 1" },
+        { src: "/projects/workstation-mass-deployment/screenshot-2.png", alt: "Workstation Deployment — screenshot 2" },
+        { src: "/projects/workstation-mass-deployment/screenshot-3.png", alt: "Workstation Deployment — screenshot 3" },
+        { src: "/projects/workstation-mass-deployment/screenshot-4.png", alt: "Workstation Deployment — screenshot 4" },
+        { src: "/projects/workstation-mass-deployment/screenshot-5.png", alt: "Workstation Deployment — screenshot 5" },
+        { src: "/projects/workstation-mass-deployment/screenshot-6.png", alt: "Workstation Deployment — screenshot 6" },
+        { src: "/projects/workstation-mass-deployment/screenshot-7.png", alt: "Workstation Deployment — screenshot 7" },
+        { src: "/projects/workstation-mass-deployment/screenshot-8.png", alt: "Workstation Deployment — screenshot 8" },
+        { src: "/projects/workstation-mass-deployment/screenshot-9.png", alt: "Workstation Deployment — screenshot 9" },
+        { src: "/projects/workstation-mass-deployment/screenshot-10.png", alt: "Workstation Deployment — screenshot 10" },
+        { src: "/projects/workstation-mass-deployment/screenshot-11.png", alt: "Workstation Deployment — screenshot 11" },
+        { src: "/projects/workstation-mass-deployment/screenshot-12.png", alt: "Workstation Deployment — screenshot 12" },
+        { src: "/projects/workstation-mass-deployment/screenshot-13.png", alt: "Workstation Deployment — screenshot 13" },
+        { src: "/projects/workstation-mass-deployment/screenshot-14.png", alt: "Workstation Deployment — screenshot 14" },
+        { src: "/projects/workstation-mass-deployment/screenshot-15.jpg", alt: "Workstation Deployment — screenshot 15" },
+        { src: "/projects/workstation-mass-deployment/screenshot-16.jpg", alt: "Workstation Deployment — screenshot 16" },
+        { src: "/projects/workstation-mass-deployment/screenshot-17.jpg", alt: "Workstation Deployment — screenshot 17" },
+        { src: "/projects/workstation-mass-deployment/screenshot-18.jpg", alt: "Workstation Deployment — screenshot 18" },
     ],
     locales: {
       en: { heroSubtitle: "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP internship" },
@@ -1735,9 +1776,14 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-incident-management",
     gallery: [
-      { src: "/projects/it-ops-incident-management/cover.png", alt: "Autotask PSA dashboard — open incidents, SLA metrics and alert overview at MIDRANGE GROUP" },
-      { src: "/projects/it-ops-incident-management/img-2.png", alt: "Autotask ticket — client data redacted" },
-      { src: "/projects/it-ops-incident-management/img-3.png", alt: "Autotask time entry — ticket billing and intervention timeline" },
+        { src: "/projects/it-ops-incident-management/cover.webp", alt: "IT Ops — Incident Management — cover" },
+        { src: "/projects/it-ops-incident-management/screenshot-1.webp", alt: "IT Ops — Incident Management — screenshot 1" },
+        { src: "/projects/it-ops-incident-management/screenshot-2.webp", alt: "IT Ops — Incident Management — screenshot 2" },
+        { src: "/projects/it-ops-incident-management/screenshot-3.webp", alt: "IT Ops — Incident Management — screenshot 3" },
+        { src: "/projects/it-ops-incident-management/screenshot-4.webp", alt: "IT Ops — Incident Management — screenshot 4" },
+        { src: "/projects/it-ops-incident-management/screenshot-5.webp", alt: "IT Ops — Incident Management — screenshot 5" },
+        { src: "/projects/it-ops-incident-management/screenshot-6.webp", alt: "IT Ops — Incident Management — screenshot 6" },
+        { src: "/projects/it-ops-incident-management/screenshot-7.webp", alt: "IT Ops — Incident Management — screenshot 7" },
     ],
     locales: {
       en: { heroSubtitle: "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP internship" },
@@ -1747,8 +1793,8 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "hardware-upgrade-hp-laptop",
     gallery: [
-      { src: "/projects/hardware-upgrade-hp-laptop/cover.png", alt: "HP laptop disassembled — bottom cover removed for RAM and SSD replacement" },
-      { src: "/projects/hardware-upgrade-hp-laptop/img-2.png", alt: "Samsung 16 GB DDR4-2666 SO-DIMM RAM stick — component sourced for the upgrade" },
+        { src: "/projects/hardware-upgrade-hp-laptop/cover.webp", alt: "HP Laptop Upgrade — cover" },
+        { src: "/projects/hardware-upgrade-hp-laptop/screenshot-1.webp", alt: "HP Laptop Upgrade — screenshot 1" },
     ],
     locales: {
       en: { heroSubtitle: "Samsung DDR4 · Samsung SSD · Acronis Clone · HP Laptop · Personal Project" },
@@ -1758,9 +1804,14 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-rmm-supervision",
     gallery: [
-      { src: "/projects/it-ops-rmm-supervision/cover.png", alt: "Datto RMM Default Dashboard — 551 managed devices with MalwareBytes and antivirus coverage overview" },
-      { src: "/projects/it-ops-rmm-supervision/img-2.png", alt: "Datto RMM device profile — LENOVO laptop with Quick Job panel open for MalwareBytes deployment" },
-      { src: "/projects/it-ops-rmm-supervision/img-3.png", alt: "Datto RMM device summary — Windows 10 Pro endpoint detail view (agent 4.4.2195)" },
+        { src: "/projects/it-ops-rmm-supervision/cover.webp", alt: "IT Ops — RMM Supervision — cover" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-1.webp", alt: "IT Ops — RMM Supervision — screenshot 1" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-2.webp", alt: "IT Ops — RMM Supervision — screenshot 2" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-3.webp", alt: "IT Ops — RMM Supervision — screenshot 3" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-4.webp", alt: "IT Ops — RMM Supervision — screenshot 4" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-5.webp", alt: "IT Ops — RMM Supervision — screenshot 5" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-6.webp", alt: "IT Ops — RMM Supervision — screenshot 6" },
+        { src: "/projects/it-ops-rmm-supervision/screenshot-7.webp", alt: "IT Ops — RMM Supervision — screenshot 7" },
     ],
     locales: {
       en: { heroSubtitle: "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP internship" },
@@ -1770,11 +1821,9 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-acronis-backup",
     gallery: [
-      { src: "/projects/it-ops-acronis-backup/cover.png", alt: "Acronis Cyber Backup dashboard — 105 protected devices, 85 active alerts, 21.18 Tio total storage" },
-      { src: "/projects/it-ops-acronis-backup/img-2.png", alt: "Acronis Cyber Backup — backup plans list (Toutes les VM, SQL-CLOUD 2, Bases_Exchange)" },
-      { src: "/projects/it-ops-acronis-backup/img-3.png", alt: "Acronis Cyber Backup — Toutes les VM plan details (16 devices, NAS backups-new, 2-month retention)" },
-      { src: "/projects/it-ops-acronis-backup/img-4.png", alt: "Acronis Cyber Backup — Alertes view (client data redacted)" },
-      { src: "/projects/it-ops-acronis-backup/img-5.png", alt: "Acronis Cyber Backup — Emplacements NAS and Acronis cloud (client data redacted)" },
+        { src: "/projects/it-ops-acronis-backup/cover.webp", alt: "IT Ops — Acronis Backup — cover" },
+        { src: "/projects/it-ops-acronis-backup/screenshot-1.webp", alt: "IT Ops — Acronis Backup — screenshot 1" },
+        { src: "/projects/it-ops-acronis-backup/screenshot-2.webp", alt: "IT Ops — Acronis Backup — screenshot 2" },
     ],
     locales: {
       en: { heroSubtitle: "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP internship" },
@@ -1784,11 +1833,35 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-virtualization-lab",
     gallery: [
-      { src: "/projects/it-ops-virtualization-lab/cover.png", alt: "VMware Workstation Pro 17 home screen — host for the virtualized Windows Server 2022 lab" },
-      { src: "/projects/it-ops-virtualization-lab/img-2.png", alt: "New VM Wizard — naming the virtual machine DCAD22" },
-      { src: "/projects/it-ops-virtualization-lab/img-3.png", alt: "Windows Server 2022 Datacenter Evaluation selected for installation" },
-      { src: "/projects/it-ops-virtualization-lab/img-4.png", alt: "Server Manager — DCAD22 with AD DS, DHCP, DNS, WDS roles installed" },
-      { src: "/projects/it-ops-virtualization-lab/img-5.png", alt: "DNS Manager — DP-AICHALAN forward and reverse lookup zones on DCAD22" },
+        { src: "/projects/it-ops-virtualization-lab/cover.webp", alt: "IT Ops — Virtualization Lab — cover" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-1.webp", alt: "IT Ops — Virtualization Lab — screenshot 1" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-2.webp", alt: "IT Ops — Virtualization Lab — screenshot 2" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-3.webp", alt: "IT Ops — Virtualization Lab — screenshot 3" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-4.webp", alt: "IT Ops — Virtualization Lab — screenshot 4" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-5.webp", alt: "IT Ops — Virtualization Lab — screenshot 5" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-6.webp", alt: "IT Ops — Virtualization Lab — screenshot 6" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-7.webp", alt: "IT Ops — Virtualization Lab — screenshot 7" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-8.webp", alt: "IT Ops — Virtualization Lab — screenshot 8" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-9.webp", alt: "IT Ops — Virtualization Lab — screenshot 9" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-10.webp", alt: "IT Ops — Virtualization Lab — screenshot 10" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-11.webp", alt: "IT Ops — Virtualization Lab — screenshot 11" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-12.webp", alt: "IT Ops — Virtualization Lab — screenshot 12" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-13.webp", alt: "IT Ops — Virtualization Lab — screenshot 13" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-14.webp", alt: "IT Ops — Virtualization Lab — screenshot 14" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-15.webp", alt: "IT Ops — Virtualization Lab — screenshot 15" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-16.webp", alt: "IT Ops — Virtualization Lab — screenshot 16" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-17.webp", alt: "IT Ops — Virtualization Lab — screenshot 17" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-18.webp", alt: "IT Ops — Virtualization Lab — screenshot 18" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-19.webp", alt: "IT Ops — Virtualization Lab — screenshot 19" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-20.webp", alt: "IT Ops — Virtualization Lab — screenshot 20" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-21.webp", alt: "IT Ops — Virtualization Lab — screenshot 21" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-22.webp", alt: "IT Ops — Virtualization Lab — screenshot 22" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-23.webp", alt: "IT Ops — Virtualization Lab — screenshot 23" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-24.webp", alt: "IT Ops — Virtualization Lab — screenshot 24" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-25.webp", alt: "IT Ops — Virtualization Lab — screenshot 25" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-26.webp", alt: "IT Ops — Virtualization Lab — screenshot 26" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-27.webp", alt: "IT Ops — Virtualization Lab — screenshot 27" },
+        { src: "/projects/it-ops-virtualization-lab/screenshot-28.webp", alt: "IT Ops — Virtualization Lab — screenshot 28" },
     ],
     locales: {
       en: { heroSubtitle: "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS" },
@@ -1798,11 +1871,16 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-network-security",
     gallery: [
-      { src: "/projects/it-ops-network-security/cover.png", alt: "pfSense 2.6.0 web UI login page at 192.168.100.220 — gateway for the private LAN" },
-      { src: "/projects/it-ops-network-security/img-2.png", alt: "pfSense Firewall / Rules / LAN — REFUS SRV VERS INTERNET blocking server outbound traffic" },
-      { src: "/projects/it-ops-network-security/img-3.png", alt: "pfSense Firewall Aliases — IP — Client and SRV aliases configured" },
-      { src: "/projects/it-ops-network-security/img-4.png", alt: "pfSense Package Manager — LightSquid, squid and squidGuard installed" },
-      { src: "/projects/it-ops-network-security/img-5.png", alt: "pfSense Certificate Manager — Pfsense-CA self-signed internal CA (C=FR, O=greta)" },
+        { src: "/projects/it-ops-network-security/cover.webp", alt: "IT Ops — Network Security — cover" },
+        { src: "/projects/it-ops-network-security/screenshot-1.webp", alt: "IT Ops — Network Security — screenshot 1" },
+        { src: "/projects/it-ops-network-security/screenshot-2.webp", alt: "IT Ops — Network Security — screenshot 2" },
+        { src: "/projects/it-ops-network-security/screenshot-3.webp", alt: "IT Ops — Network Security — screenshot 3" },
+        { src: "/projects/it-ops-network-security/screenshot-4.webp", alt: "IT Ops — Network Security — screenshot 4" },
+        { src: "/projects/it-ops-network-security/screenshot-5.webp", alt: "IT Ops — Network Security — screenshot 5" },
+        { src: "/projects/it-ops-network-security/screenshot-6.webp", alt: "IT Ops — Network Security — screenshot 6" },
+        { src: "/projects/it-ops-network-security/screenshot-7.webp", alt: "IT Ops — Network Security — screenshot 7" },
+        { src: "/projects/it-ops-network-security/screenshot-8.webp", alt: "IT Ops — Network Security — screenshot 8" },
+        { src: "/projects/it-ops-network-security/screenshot-9.webp", alt: "IT Ops — Network Security — screenshot 9" },
     ],
     locales: {
       en: { heroSubtitle: "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17" },
@@ -1812,15 +1890,16 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-disk-backup",
     gallery: [
-      { src: "/projects/it-ops-disk-backup/cover.png", alt: "AOMEI Backupper Standard — disk backup selection screen" },
-      { src: "/projects/it-ops-disk-backup/img-2.png", alt: "AOMEI Partition Assistant — resize partition E from 50.04 GB to 47.71 GB" },
-      { src: "/projects/it-ops-disk-backup/img-3.png", alt: "AOMEI Partition Assistant — pending operations dialog" },
-      { src: "/projects/it-ops-disk-backup/img-4.png", alt: "AOMEI Backupper — operation completed successfully" },
-      { src: "/projects/it-ops-disk-backup/img-5.png", alt: "Windows Server 2012 (VirtualBox) — Windows Server Backup feature installation" },
-      { src: "/projects/it-ops-disk-backup/img-6.png", alt: "Windows Server Backup wizard — Mise en route (getting started page)" },
-      { src: "/projects/it-ops-disk-backup/img-7.png", alt: "Windows Server Backup — Specify destination type (dedicated disk recommended)" },
-      { src: "/projects/it-ops-disk-backup/img-8.png", alt: "Windows Server Backup — Progression: 22.67 Go transferred, backup complete" },
-      { src: "/projects/it-ops-disk-backup/img-9.png", alt: "Windows Server Backup — Modify scheduled backup settings (daily 14:00, DISK_01)" },
+        { src: "/projects/it-ops-disk-backup/cover.webp", alt: "IT Ops — Disk Backup — cover" },
+        { src: "/projects/it-ops-disk-backup/screenshot-1.webp", alt: "IT Ops — Disk Backup — screenshot 1" },
+        { src: "/projects/it-ops-disk-backup/screenshot-2.webp", alt: "IT Ops — Disk Backup — screenshot 2" },
+        { src: "/projects/it-ops-disk-backup/screenshot-3.webp", alt: "IT Ops — Disk Backup — screenshot 3" },
+        { src: "/projects/it-ops-disk-backup/screenshot-4.webp", alt: "IT Ops — Disk Backup — screenshot 4" },
+        { src: "/projects/it-ops-disk-backup/screenshot-5.webp", alt: "IT Ops — Disk Backup — screenshot 5" },
+        { src: "/projects/it-ops-disk-backup/screenshot-6.webp", alt: "IT Ops — Disk Backup — screenshot 6" },
+        { src: "/projects/it-ops-disk-backup/screenshot-7.webp", alt: "IT Ops — Disk Backup — screenshot 7" },
+        { src: "/projects/it-ops-disk-backup/screenshot-8.webp", alt: "IT Ops — Disk Backup — screenshot 8" },
+        { src: "/projects/it-ops-disk-backup/screenshot-9.webp", alt: "IT Ops — Disk Backup — screenshot 9" },
     ],
     locales: {
       en: { heroSubtitle: "AOMEI Partition Assistant · AOMEI Backupper · Windows Server Backup · VirtualBox · Greta du Val d'Oise" },
@@ -1830,11 +1909,14 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-workstation-setup",
     gallery: [
-      { src: "/projects/it-ops-workstation-setup/cover.png", alt: "Ninite installer running on Windows 10 — Chrome, Skype, Spotify, Dropbox, LibreOffice, Malwarebytes" },
-      { src: "/projects/it-ops-workstation-setup/img-2.png", alt: "Ninite + Microsoft Office 2016 installation running in parallel" },
-      { src: "/projects/it-ops-workstation-setup/img-3.png", alt: "Windows 10 installation — Preparation des fichiers pour l installation (9%)" },
-      { src: "/projects/it-ops-workstation-setup/img-4.png", alt: "Windows 10 OOBE — region selection (France)" },
-      { src: "/projects/it-ops-workstation-setup/img-5.png", alt: "Windows 10 — Cette operation peut durer plusieurs minutes (first-run configuration)" },
+        { src: "/projects/it-ops-workstation-setup/cover.webp", alt: "IT Ops — Workstation Setup — cover" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-1.webp", alt: "IT Ops — Workstation Setup — screenshot 1" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-2.webp", alt: "IT Ops — Workstation Setup — screenshot 2" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-3.webp", alt: "IT Ops — Workstation Setup — screenshot 3" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-4.webp", alt: "IT Ops — Workstation Setup — screenshot 4" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-5.webp", alt: "IT Ops — Workstation Setup — screenshot 5" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-6.webp", alt: "IT Ops — Workstation Setup — screenshot 6" },
+        { src: "/projects/it-ops-workstation-setup/screenshot-7.webp", alt: "IT Ops — Workstation Setup — screenshot 7" },
     ],
     locales: {
       en: { heroSubtitle: "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise" },
@@ -1844,8 +1926,8 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-wifi-config",
     gallery: [
-      { src: "/projects/it-ops-wifi-config/cover.png", alt: "Dossier Professionnel — Configurer un point d acces WIFI (TP-Link, Greta du Val d Oise)" },
-      { src: "/projects/it-ops-wifi-config/img-2.jpg", alt: "Greta training lab — network rack with switch and router equipment" },
+        { src: "/projects/it-ops-wifi-config/cover.webp", alt: "IT Ops — Wi-Fi Config — cover" },
+        { src: "/projects/it-ops-wifi-config/screenshot-1.webp", alt: "IT Ops — Wi-Fi Config — screenshot 1" },
     ],
     locales: {
       en: { heroSubtitle: "TP-Link Access Point · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise" },
@@ -1855,9 +1937,12 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-roaming-profiles",
     gallery: [
-      { src: "/projects/it-ops-roaming-profiles/cover.png", alt: "Active Directory Users and Computers + Explorer showing technicien.tai.V6 roaming profile folder" },
-      { src: "/projects/it-ops-roaming-profiles/img-2.png", alt: "Share permissions for Profil itinerant — Utilisateurs (EBTAI) with Modify + Read access" },
-      { src: "/projects/it-ops-roaming-profiles/img-3.png", alt: "Profil itinerant folder advanced sharing — share name and concurrent user limit" },
+        { src: "/projects/it-ops-roaming-profiles/cover.webp", alt: "IT Ops — Roaming Profiles — cover" },
+        { src: "/projects/it-ops-roaming-profiles/screenshot-1.webp", alt: "IT Ops — Roaming Profiles — screenshot 1" },
+        { src: "/projects/it-ops-roaming-profiles/screenshot-2.webp", alt: "IT Ops — Roaming Profiles — screenshot 2" },
+        { src: "/projects/it-ops-roaming-profiles/screenshot-3.webp", alt: "IT Ops — Roaming Profiles — screenshot 3" },
+        { src: "/projects/it-ops-roaming-profiles/screenshot-4.webp", alt: "IT Ops — Roaming Profiles — screenshot 4" },
+        { src: "/projects/it-ops-roaming-profiles/screenshot-5.webp", alt: "IT Ops — Roaming Profiles — screenshot 5" },
     ],
     locales: {
       en: { heroSubtitle: "Active Directory · Roaming Profiles · Windows Server · EBTAI Domain · Greta du Val d'Oise" },
@@ -1867,7 +1952,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-hardware-procurement",
     gallery: [
-      { src: "/projects/it-ops-hardware-procurement/cover.jpg", alt: "Greta du Val d Oise training lab — IT workstations and network equipment" },
+        { src: "/projects/it-ops-hardware-procurement/cover.webp", alt: "IT Ops — Hardware Procurement — cover" },
     ],
     locales: {
       en: { heroSubtitle: "Hardware Sizing · Excel Devis · Component Research · Greta du Val d'Oise" },
@@ -1877,8 +1962,8 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   {
     slug: "it-ops-email-config",
     gallery: [
-      { src: "/projects/it-ops-email-config/cover.png", alt: "Outlook 2016 inbox — tai7@outlook.fr account configured with test email received" },
-      { src: "/projects/it-ops-email-config/img-2.png", alt: "Bienvenue dans Microsoft Outlook 2016 — account setup wizard launch screen" },
+        { src: "/projects/it-ops-email-config/cover.webp", alt: "IT Ops — Email Config — cover" },
+        { src: "/projects/it-ops-email-config/screenshot-1.webp", alt: "IT Ops — Email Config — screenshot 1" },
     ],
     locales: {
       en: { heroSubtitle: "Outlook 2016 · Exchange ActiveSync · User Onboarding · Greta du Val d'Oise" },
@@ -1889,7 +1974,8 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
 {
   slug: "hemebiotech-java-debug",
   gallery: [
-    { src: "/projects/hemebiotech-java-debug/cover.png", alt: "HemeBiotech — Java debugging project" }
+      { src: "/projects/hemebiotech-java-debug/cover.webp", alt: "HémeBioTech — cover" },
+      { src: "/projects/hemebiotech-java-debug/screenshot-1.webp", alt: "HémeBioTech — screenshot 1" },
   ],
   locales: {
     en: {
@@ -2076,26 +2162,26 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
 {
   slug: "parkit-java-testing",
   gallery: [
-    {
-      src: "/projects/parkit-java-testing/2024-06-07 00_45_59-TEST JACOCO Parking Service class.png",
-      alt: "Parkit — JaCoCo coverage (ParkingService)"
-    },
-    {
-      src: "/projects/parkit-java-testing/2024-06-07 00_45_59-TEST JACOCO in Clone of WIN10 DEV SALESFORCE - VMware Workstation.png",
-      alt: "Parkit — JaCoCo report"
-    },
-    {
-      src: "/projects/parkit-java-testing/2024-06-07 00_48_38-TEST Surefire in Clone of WIN10 DEV SALESFORCE - VMware Workstation.png",
-      alt: "Parkit — Maven Surefire report"
-    },
-    {
-      src: "/projects/parkit-java-testing/2024-06-07 00_48_38-TEST Surefire with details in Clone of WIN10 DEV SALESFORCE - VMware Workstation.png",
-      alt: "Parkit — Surefire report details"
-    },
-    {
-      src: "/projects/parkit-java-testing/2024-06-25 13_21_08-com.parkit.parkingsystem.dao - Opera.png",
-      alt: "Parkit — DAO layer"
-    }
+      { src: "/projects/parkit-java-testing/cover.png", alt: "Parkit — cover" },
+      { src: "/projects/parkit-java-testing/screenshot-1.png", alt: "Parkit — screenshot 1" },
+      { src: "/projects/parkit-java-testing/screenshot-2.png", alt: "Parkit — screenshot 2" },
+      { src: "/projects/parkit-java-testing/screenshot-3.png", alt: "Parkit — screenshot 3" },
+      { src: "/projects/parkit-java-testing/screenshot-4.png", alt: "Parkit — screenshot 4" },
+      { src: "/projects/parkit-java-testing/screenshot-5.png", alt: "Parkit — screenshot 5" },
+      { src: "/projects/parkit-java-testing/screenshot-6.png", alt: "Parkit — screenshot 6" },
+      { src: "/projects/parkit-java-testing/screenshot-7.png", alt: "Parkit — screenshot 7" },
+      { src: "/projects/parkit-java-testing/screenshot-8.png", alt: "Parkit — screenshot 8" },
+      { src: "/projects/parkit-java-testing/screenshot-9.png", alt: "Parkit — screenshot 9" },
+      { src: "/projects/parkit-java-testing/screenshot-10.png", alt: "Parkit — screenshot 10" },
+      { src: "/projects/parkit-java-testing/screenshot-11.png", alt: "Parkit — screenshot 11" },
+      { src: "/projects/parkit-java-testing/screenshot-12.png", alt: "Parkit — screenshot 12" },
+      { src: "/projects/parkit-java-testing/screenshot-13.png", alt: "Parkit — screenshot 13" },
+      { src: "/projects/parkit-java-testing/screenshot-14.png", alt: "Parkit — screenshot 14" },
+      { src: "/projects/parkit-java-testing/screenshot-15.png", alt: "Parkit — screenshot 15" },
+      { src: "/projects/parkit-java-testing/screenshot-16.png", alt: "Parkit — screenshot 16" },
+      { src: "/projects/parkit-java-testing/screenshot-17.png", alt: "Parkit — screenshot 17" },
+      { src: "/projects/parkit-java-testing/screenshot-18.png", alt: "Parkit — screenshot 18" },
+      { src: "/projects/parkit-java-testing/screenshot-19.png", alt: "Parkit — screenshot 19" },
   ],
   locales: {
     en: {
@@ -2286,10 +2372,27 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
 {
   slug: "pochlib-ui",
   gallery: [
-    {
-      src: "/projects/pochlib-ui/cover.png",
-      alt: "Poch'Lib — UI cover"
-    }
+      { src: "/projects/pochlib-ui/screenshot-1.png", alt: "Poch'Lib UI — screenshot 1" },
+      { src: "/projects/pochlib-ui/screenshot-2.png", alt: "Poch'Lib UI — screenshot 2" },
+      { src: "/projects/pochlib-ui/screenshot-3.png", alt: "Poch'Lib UI — screenshot 3" },
+      { src: "/projects/pochlib-ui/screenshot-4.png", alt: "Poch'Lib UI — screenshot 4" },
+      { src: "/projects/pochlib-ui/screenshot-5.png", alt: "Poch'Lib UI — screenshot 5" },
+      { src: "/projects/pochlib-ui/screenshot-6.png", alt: "Poch'Lib UI — screenshot 6" },
+      { src: "/projects/pochlib-ui/screenshot-7.png", alt: "Poch'Lib UI — screenshot 7" },
+      { src: "/projects/pochlib-ui/screenshot-8.png", alt: "Poch'Lib UI — screenshot 8" },
+      { src: "/projects/pochlib-ui/screenshot-9.png", alt: "Poch'Lib UI — screenshot 9" },
+      { src: "/projects/pochlib-ui/screenshot-10.png", alt: "Poch'Lib UI — screenshot 10" },
+      { src: "/projects/pochlib-ui/screenshot-11.png", alt: "Poch'Lib UI — screenshot 11" },
+      { src: "/projects/pochlib-ui/screenshot-12.png", alt: "Poch'Lib UI — screenshot 12" },
+      { src: "/projects/pochlib-ui/screenshot-13.png", alt: "Poch'Lib UI — screenshot 13" },
+      { src: "/projects/pochlib-ui/screenshot-14.png", alt: "Poch'Lib UI — screenshot 14" },
+      { src: "/projects/pochlib-ui/screenshot-15.png", alt: "Poch'Lib UI — screenshot 15" },
+      { src: "/projects/pochlib-ui/screenshot-16.png", alt: "Poch'Lib UI — screenshot 16" },
+      { src: "/projects/pochlib-ui/screenshot-17.png", alt: "Poch'Lib UI — screenshot 17" },
+      { src: "/projects/pochlib-ui/screenshot-18.png", alt: "Poch'Lib UI — screenshot 18" },
+      { src: "/projects/pochlib-ui/screenshot-19.png", alt: "Poch'Lib UI — screenshot 19" },
+      { src: "/projects/pochlib-ui/screenshot-20.png", alt: "Poch'Lib UI — screenshot 20" },
+      { src: "/projects/pochlib-ui/screenshot-21.png", alt: "Poch'Lib UI — screenshot 21" },
   ],
   locales: {
     en: {
