@@ -19,7 +19,11 @@ import { getSeriePosition } from "@/content/blog/series";
 
 type Params = { locale: "en" | "fr"; slug: string };
 
-export const dynamicParams = false;
+// ISR : les articles pré-générés sont revalidés toutes les 24 h.
+// dynamicParams = true → un nouvel article se génère à la première visite
+// sans déclencher un rebuild complet (utile à 50+ articles).
+export const revalidate    = 86400;
+export const dynamicParams = true;
 
 export async function generateStaticParams(): Promise<Params[]> {
   const out: Params[] = [];

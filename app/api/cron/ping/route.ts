@@ -19,13 +19,17 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs"; // Supabase JS ne supporte pas l'Edge runtime
 
 export async function GET(req: Request) {
-  // ── 1. Authentification ───────────────────────────────────────────────────
+  // ── 1. Authentification — CRON_SECRET obligatoire ─────────────────────────
+  // Si la variable n'est pas configurée, on refuse toute requête pour éviter
+  // qu'un endpoint non protégé soit accessible publiquement.
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
-    }
+  if (!cronSecret) {
+    console.error("[CRON/PING] CRON_SECRET is not configured — request blocked.");
+    return NextResponse.json({ ok: false, error: "Service unavailable" }, { status: 503 });
+  }
+  const auth = req.headers.get("authorization");
+  if (auth !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
   // ── 2. Health checks ──────────────────────────────────────────────────────

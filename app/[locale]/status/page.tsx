@@ -13,7 +13,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { runHealthChecks } from "@/lib/health";
 import type { ServiceStatus } from "@/lib/health";
-import { getUptimeStats } from "@/lib/uptime";
+import { getUptimeStats, getLatencyHistory } from "@/lib/uptime";
+import LatencySparkline from "@/components/LatencySparkline";
 
 // ISR : revalide toutes les 60 secondes
 export const revalidate = 60;
@@ -99,10 +100,11 @@ export default async function StatusPage({
   const safeLocale: Locale = locale === "fr" ? "fr" : "en";
   const isFr = safeLocale === "fr";
 
-  // Health checks réels + uptime stats en parallèle
-  const [report, uptimeStats] = await Promise.all([
+  // Health checks réels + uptime stats + historique latence en parallèle
+  const [report, uptimeStats, latencyHistory] = await Promise.all([
     runHealthChecks(),
     getUptimeStats(),
+    getLatencyHistory(),
   ]);
 
   const global   = report.overall;
@@ -124,6 +126,7 @@ export default async function StatusPage({
     servicesTitle: isFr ? "Services"                 : "Services",
     lastChecked:   isFr ? "Vérifié le"               : "Last checked",
     latency:       isFr ? "Latence"                  : "Latency",
+    sparklineLabel: isFr ? "Latence sur 7 jours"     : "7-day latency",
     backHome:      isFr ? "← Retour à l'accueil"    : "← Back to home",
     noIncidents:   isFr
       ? "Aucun incident signalé. Tout fonctionne normalement."
@@ -185,7 +188,13 @@ export default async function StatusPage({
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  {/* Latence (uniquement si mesurée et significative) */}
+                  {/* Sparkline latence 7 jours — affiché si historique disponible */}
+                  {(latencyHistory[service.name]?.length ?? 0) >= 2 && (
+                    <span title={labels.sparklineLabel}>
+                      <LatencySparkline data={latencyHistory[service.name]} />
+                    </span>
+                  )}
+                  {/* Latence instantanée (uniquement si mesurée et significative) */}
                   {service.latencyMs !== null && service.latencyMs > 0 && (
                     <span className="text-xs text-muted-2 tabular-nums">
                       {service.latencyMs} ms

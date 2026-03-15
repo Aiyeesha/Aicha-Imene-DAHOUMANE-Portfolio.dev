@@ -5,6 +5,11 @@ import { getTranslations } from "next-intl/server";
 import { readAllPosts } from "@/content/blog/fs";
 import { formatDate, detectTrack, getTopTags } from "@/lib/blog-utils";
 
+// ISR : revalide la liste des articles toutes les heures.
+// Permet d'intégrer de nouveaux posts sans rebuild complet
+// une fois le blog migré vers une source externe (CMS, Supabase).
+export const revalidate = 3600;
+
 type Params = { locale: "en" | "fr" };
 
 export async function generateMetadata(

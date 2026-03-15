@@ -257,7 +257,8 @@
     "privacy": "Privacy",
     "legal": "Legal notice",
     "accessibility": "Accessibility",
-    "status": "Status"
+    "status": "Status",
+    "changelog": "Changelog"
   },
   "profile": {
     "kicker": "Profile",

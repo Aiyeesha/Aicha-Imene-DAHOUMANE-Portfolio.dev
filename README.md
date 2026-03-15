@@ -12,6 +12,22 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 
 ---
 
+## Screenshots
+
+| Hero — Salesforce | Hero — IT Ops |
+|---|---|
+| ![Hero Salesforce](docs/screenshots/hero-salesforce.png) | ![Hero IT Ops](docs/screenshots/hero-itops.png) |
+
+| Blog listing | Blog article |
+|---|---|
+| ![Blog](docs/screenshots/blog.png) | ![Blog article](docs/screenshots/blog-article.png) |
+
+| About — career timeline | Status — health checks & sparklines |
+|---|---|
+| ![About](docs/screenshots/about.png) | ![Status](docs/screenshots/status.png) |
+
+---
+
 ## Stack
 
 | Layer | Technology |
@@ -73,7 +89,7 @@ Browser
 - **Certifications page** — 3 sections: Completed, Active (Trailhead animated counters), In preparation
 - **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
 - **Contact form** — rate-limited, honeypot, topic selector, Calendly modal in hero + contact section
-- **Status page** — real health checks (Supabase, Redis, Formspree), uptime % over 30 days, ISR 60s
+- **Status page** — real health checks (Supabase, Redis, Formspree), uptime % over 30 days, latency sparklines (7 days), ISR 60s
 - **Animations** — Framer Motion: scroll parallax, directional reveals (left/right/bottom), stagger, AnimatedCounter
 - **Open Graph** — dynamic OG images per blog article and project page (`next/og`)
 - **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
@@ -88,7 +104,7 @@ Browser
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 24+
 - npm (or pnpm / bun)
 
 ### Install & run

@@ -18,7 +18,9 @@ const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
 const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"));
 const ProjectsSection    = dynamic(() => import("@/components/ProjectsSection"));
 const LatestPosts        = dynamic(() => import("@/components/LatestPosts"));
-const ContactForm        = dynamic(() => import("@/components/ContactForm"));
+const ContactForm           = dynamic(() => import("@/components/ContactForm"));
+// PresentationMode utilise ssr: false → doit passer par un wrapper Client Component
+import PresentationModeLoader from "@/components/PresentationModeLoader";
 import { getExperienceItems } from "@/content/experience";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
@@ -41,10 +43,13 @@ export default async function Home({ params }: Props) {
 
   return (
     <>
+      {/* MODE PRÉSENTATION — bouton flottant + contrôles (Alt+P pour activer) */}
+      <PresentationModeLoader locale={locale} />
+
       {/* HERO — simplifié (photo + titre + badges + 2 CTAs)
           ProfileNarrative et ProfileFactsCard ont été déplacés vers /about
           pour que le hero tienne en un seul écran sur desktop 1440px et mobile 375px. */}
-      <section className="py-8 md:py-10">
+      <section id="hero" className="py-8 md:py-10">
         <div className="pt-4 md:pt-6">
           <TrackAwareHero />
         </div>

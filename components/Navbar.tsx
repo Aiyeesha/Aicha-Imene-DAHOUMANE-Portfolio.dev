@@ -81,10 +81,20 @@ export default function Navbar() {
     return "skills";
   })();
 
-  // Hash sync désactivé — l'ajout de #skills/#contact etc. dans l'URL est confusant
-  // pour les visiteurs et pollue le partage de liens. Le scroll-spy reste actif
-  // pour l'indicateur visuel de la navbar, sans modifier l'URL.
-  useHashSync("");
+  // Hash sync actif sur la home uniquement — l'URL reflète la section visible au scroll.
+  useHashSync(isHome ? spyActiveId : "");
+
+  // Scroll vers l'ancre après navigation cross-page (ex: /about → /#projects).
+  // router.push avec scroll:false ne déclenche pas le scroll natif du navigateur
+  // dans les SPAs — on le fait manuellement après que la page est rendue.
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const t = setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+    return () => clearTimeout(t);
+  }, [pathname]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -262,28 +272,39 @@ useEffect(() => {
                          [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <NavbarPill activeId={desktopActiveId} containerId="desktop-nav" />
-              {desktopSections.map((s) => (
-                <Link
-                  key={s.id}
-                  className={`${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`}
-                  data-section={s.id}
-                  href={hrefFor(s.id)}
-                  aria-current={activeId === s.id ? "page" : undefined}
-                >
-                  {s.label}
-                  {/* Indicateur ↗ pour les pages dédiées (About, Certifications)
-                      Signale visuellement que ce lien change de page au lieu de scroller. */}
-                  {PAGE_LINKS.has(s.id) && (
-                    <span
-                      aria-hidden="true"
-                      className="text-[10px] opacity-50 leading-none"
-                      title="Ouvre une page dédiée"
-                    >
-                      ↗
-                    </span>
-                  )}
-                </Link>
-              ))}
+              {desktopSections.map((s) => {
+                const href = hrefFor(s.id);
+                const cls = `${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`;
+                const isPageLink = PAGE_LINKS.has(s.id);
+                const pageIcon = isPageLink ? (
+                  <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9"
+                    fill="none" stroke="currentColor" strokeWidth="1.5"
+                    strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
+                    <title>Ouvre une page dédiée</title>
+                    <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
+                  </svg>
+                ) : null;
+
+                // Page links (About, Certifications) — navigation complète via Link
+                if (isPageLink) {
+                  return (
+                    <Link key={s.id} className={cls} data-section={s.id} href={href}
+                      aria-current={activeId === s.id ? "page" : undefined}>
+                      {s.label}{pageIcon}
+                    </Link>
+                  );
+                }
+
+                // Section links — <a> natif pour garantir le scroll hash fiable
+                // sans interférence du routeur Next.js
+                return (
+                  <a key={s.id} className={cls} data-section={s.id}
+                    href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
+                    aria-current={activeId === s.id ? "page" : undefined}>
+                    {s.label}
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -310,7 +331,7 @@ useEffect(() => {
               ref={menuButtonRef}
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
-              aria-expanded={mobileOpen}
+              aria-expanded={mobileOpen ? "true" : "false"}
               aria-controls={MENU_ID}
             >
               ☰
@@ -357,22 +378,38 @@ useEffect(() => {
             </div>
 
             <div className="mt-4 space-y-2">
-              {sections.map((s) => (
-                <Link
-                  key={s.id}
-                  href={hrefFor(s.id)}
-                  data-section={s.id}
-                  className={`${mobileLinkClass(s.id)} flex items-center justify-between`}
-                  onClick={() => setMobileOpen(false)}
-                  aria-current={activeId === s.id ? "page" : undefined}
-                >
-                  {s.label}
-                  {/* Indicateur visuel pour les pages dédiées (mobile) */}
-                  {PAGE_LINKS.has(s.id) && (
-                    <span aria-hidden="true" className="text-xs opacity-40">↗</span>
-                  )}
-                </Link>
-              ))}
+              {sections.map((s) => {
+                const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
+                const isPageLink = PAGE_LINKS.has(s.id);
+                const pageIcon = isPageLink ? (
+                  <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9"
+                    fill="none" stroke="currentColor" strokeWidth="1.5"
+                    strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
+                    <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
+                  </svg>
+                ) : null;
+
+                // Page links — navigation via Link
+                if (isPageLink) {
+                  return (
+                    <Link key={s.id} href={hrefFor(s.id)} data-section={s.id}
+                      className={cls} onClick={() => setMobileOpen(false)}
+                      aria-current={activeId === s.id ? "page" : undefined}>
+                      {s.label}{pageIcon}
+                    </Link>
+                  );
+                }
+
+                // Section links — <a> natif + fermeture du menu mobile
+                return (
+                  <a key={s.id} data-section={s.id} className={cls}
+                    href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
+                    onClick={() => setMobileOpen(false)}
+                    aria-current={activeId === s.id ? "page" : undefined}>
+                    {s.label}
+                  </a>
+                );
+              })}
             </div>
 
             <div className="mt-6 border-t border-black/10 pt-5 dark:border-white/10">
@@ -389,7 +426,7 @@ useEffect(() => {
                   href={calendlyUrl || "#"}
                   target={calendlyUrl ? "_blank" : undefined}
                   rel={calendlyUrl ? "noreferrer" : undefined}
-                  aria-disabled={!calendlyUrl}
+                  aria-disabled={!calendlyUrl ? "true" : "false"}
                   className={`inline-flex w-full justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-3 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring ${
                     calendlyUrl ? "" : "pointer-events-none opacity-50"
                   }`}

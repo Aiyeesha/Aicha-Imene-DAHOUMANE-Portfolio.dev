@@ -54,8 +54,7 @@ const MILESTONES: Milestone[] = [
     },
     tags: ["RNCP 4", "Windows 10", "Active Directory", "VirtualBox"],
     logos: [
-      { src: "/companies/greta.svg",       alt: "GRETA du Val d'Oise" },
-      { src: "/companies/lycee-jouvet.svg", alt: "Lycée Louis Jouvet"  },
+      { src: "/companies/greta.svg", alt: "GRETA du Val d'Oise" },
     ],
   },
   {

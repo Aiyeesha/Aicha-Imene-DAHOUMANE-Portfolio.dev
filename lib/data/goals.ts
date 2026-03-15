@@ -26,7 +26,17 @@ export async function getGoals2026(): Promise<Goal[]> {
       .order("sort_order");
 
     if (error || !data) return [];
-    return data as Goal[];
+
+    // Déduplication : la migration peut avoir été exécutée plusieurs fois,
+    // créant des doublons. On conserve la première occurrence par (track, text_en).
+    const seen = new Set<string>();
+    const unique = (data as Goal[]).filter((g) => {
+      const key = `${g.track}:${g.text_en}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    return unique;
   } catch {
     // Table absente ou erreur réseau → fallback silencieux
     return [];

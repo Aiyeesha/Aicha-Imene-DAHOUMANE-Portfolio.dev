@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { tBadge, tTag } from "@/i18n/projectTaxonomy";
 import { usePathname } from "next/navigation";
@@ -12,6 +13,31 @@ import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 type FeaturedProjectsProps = {
   projects: ProjectWithAssets[];
 };
+
+// Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
+function CoverImage({ src, fallback, alt, loading }: { src: string; fallback?: string; alt: string; loading?: "lazy" | "eager" }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [failed, setFailed] = useState(false);
+
+  if (failed) return null;
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill
+      sizes="(max-width: 1024px) 100vw, 33vw"
+      className="object-cover"
+      loading={loading}
+      onError={() => {
+        if (fallback && imgSrc !== fallback) {
+          setImgSrc(fallback);
+        } else {
+          setFailed(true);
+        }
+      }}
+    />
+  );
+}
 
 export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const t = useTranslations();
@@ -30,7 +56,17 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
     <div className="grid gap-4 lg:grid-cols-3">
       {featured.map((p, i) => (
         <Reveal key={p.slug} delayMs={i * 80}>
-          <div className="card p-6">
+          <div className="card overflow-hidden">
+            {/* Image de couverture */}
+            <div className="relative h-40 w-full bg-black/5 dark:bg-white/5">
+              <CoverImage
+                src={p.gallery?.[0]?.src || `/projects/${p.slug}/cover.webp`}
+                fallback={`/projects/${p.slug}/cover.webp`}
+                alt={p.title}
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            </div>
+            <div className="p-6">
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-lg font-semibold">{p.title}</h3>
               {p.badge ? (
@@ -77,6 +113,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                 </a>
               ) : null}
             </div>
+            </div>{/* /p-6 */}
           </div>
         </Reveal>
       ))}
