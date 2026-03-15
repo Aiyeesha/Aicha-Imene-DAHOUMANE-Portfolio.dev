@@ -213,6 +213,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       credentialUrl: "https://www.cambridge.org/linguaskill",
       initials: "C1+",
       color: "bg-rose-700", // rose-500 = 3.67:1 ✗ → rose-700 ≈ 7:1 ✓
+      logoUrl: "/certifications/linguaskill.svg",
     },
   ];
 
@@ -228,6 +229,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Foundational hardware and software support certification: installation, configuration, troubleshooting of workstations, OS, networking and security.",
       initials: "A+",
       color: "bg-red-600",
+      logoUrl: "/certifications/comptia-security.svg",
     },
     {
       id: "sf-admin",
@@ -239,6 +241,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Salesforce administration: configuration, automation, security, reports and dashboards.",
       initials: "ADM",
       color: "bg-sky-800", // sky-500 = 2.77:1 ✗ → sky-800 ≈ 9:1 ✓
+      logoUrl: "/certifications/salesforce.svg",
     },
     {
       id: "sf-pdi",
@@ -250,6 +253,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Development on the Salesforce platform: Apex, SOQL, LWC, unit testing, deployment.",
       initials: "PDI",
       color: "bg-sky-800", // sky-500 = 2.77:1 ✗ → sky-800 ≈ 9:1 ✓
+      logoUrl: "/certifications/salesforce.svg",
     },
     {
       id: "isc2-cc",
@@ -458,7 +462,7 @@ export default async function CertificationsPage({ params }: PageProps) {
             >
               {/* En-tête */}
               <div className="flex items-start gap-3">
-                <CertIcon initials={cert.initials} color={cert.color} />
+                <CertIcon initials={cert.initials} color={cert.color} logoUrl={(cert as { logoUrl?: string }).logoUrl} />
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold leading-snug">{cert.name}</h3>
                   <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>
