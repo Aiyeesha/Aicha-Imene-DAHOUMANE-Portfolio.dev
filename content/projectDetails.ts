@@ -2521,6 +2521,10 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
 // ─────────────────────────────────────────────────────────────────────────────
 {
   slug: "python-password-checker",
+  gallery: [
+      { src: "/projects/python-password-checker/cover.svg", alt: "Password Checker — cover" },
+      { src: "/projects/python-password-checker/screenshot-1.svg", alt: "Password Checker — screenshot 1" },
+  ],
   locales: {
     en: {
       heroSubtitle: "Password strength analyzer — entropy, regex, HaveIBeenPwned (Python CLI)",
@@ -2614,6 +2618,10 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
 // ─────────────────────────────────────────────────────────────────────────────
 {
   slug: "python-network-scanner",
+  gallery: [
+      { src: "/projects/python-network-scanner/cover.svg", alt: "Network Scanner — cover" },
+      { src: "/projects/python-network-scanner/screenshot-1.svg", alt: "Network Scanner — screenshot 1" },
+  ],
   locales: {
     en: {
       heroSubtitle: "Real-time network scanner — FastAPI backend + WebSocket + React/Vite UI",
