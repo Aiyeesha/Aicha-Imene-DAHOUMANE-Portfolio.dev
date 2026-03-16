@@ -1,5 +1,24 @@
 name: CI
 
+# ── Supply-chain security note ────────────────────────────────────────────────
+# GitHub Actions tags (v4, v6) are mutable — a compromised maintainer could
+# push malicious code under the same tag.  Best practice is to pin every
+# third-party action to its full immutable commit SHA.
+#
+# To generate pinned SHAs, run these commands once (requires gh CLI):
+#
+#   gh api repos/actions/checkout/git/ref/tags/v4   --jq '.object.sha'
+#   gh api repos/actions/setup-node/git/ref/tags/v6 --jq '.object.sha'
+#   gh api repos/actions/upload-artifact/git/ref/tags/v4 --jq '.object.sha'
+#
+# Then replace e.g. `uses: actions/checkout@v4` with:
+#   uses: actions/checkout@<SHA>  # v4.x.x
+#
+# Dependabot (.github/dependabot.yml) is already configured to open monthly PRs
+# for Actions updates — it will keep pinned SHAs up to date automatically once
+# the initial pins are set.
+# ─────────────────────────────────────────────────────────────────────────────
+
 on:
   push:
     branches: [main, master]

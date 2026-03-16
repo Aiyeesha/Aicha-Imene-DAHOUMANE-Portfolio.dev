@@ -28,6 +28,9 @@ const isDev = process.env.NODE_ENV === "development";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Supprime le header X-Powered-By: Next.js — évite le fingerprinting du framework
+  poweredByHeader: false,
+
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
   images: {
@@ -115,6 +118,11 @@ const nextConfig = {
               "base-uri 'self'",
               // Bloque les iframes non explicitement autorisées (renforce X-Frame-Options)
               "frame-ancestors 'none'",
+              // Réception des rapports de violation CSP (POST JSON navigateur → /api/csp-report).
+              // Les violations apparaissent dans Vercel Runtime Logs.
+              // report-uri est déprécié en CSP Level 3 au profit de report-to,
+              // mais reste le seul mécanisme supporté par tous les navigateurs actuels.
+              "report-uri /api/csp-report",
             ].join("; ")
           },
           // Force HTTPS pendant 2 ans (includeSubDomains + preload)
@@ -122,6 +130,19 @@ const nextConfig = {
           {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload"
+          },
+          // Empêche les attaques cross-origin de type Spectre et les fuites mémoire
+          // entre onglets/fenêtres (ex : window.opener exploit).
+          // same-origin : seules les pages de la même origine peuvent partager un contexte.
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin"
+          },
+          // Empêche d'autres origines de charger nos ressources (images, fonts, JSON)
+          // dans leur propre contexte, sauf via CORS explicite.
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-origin"
           }
         ]
       }

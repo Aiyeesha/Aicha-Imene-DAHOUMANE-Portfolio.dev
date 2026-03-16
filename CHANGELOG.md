@@ -9,15 +9,28 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Fixed
-- **CLS fix — `scrollbar-gutter: stable`** — adds `scrollbar-gutter: stable` to `<html>` in `globals.css`; prevents viewport width from changing when the scrollbar appears/disappears during SPA navigation between pages of different heights (real user CLS was 0.46 🔴)
-- **CLS fix — hero `min-height`** — adds `min-h-[320px] sm:min-h-[400px]` to the hero section to prevent height collapse during Framer Motion entrance animation
-- **TBT fix — font `display: swap`** — reverted `display: optional` → `display: swap` for Space Grotesk and Inter (other session regression); desktop TBT had regressed to 240ms
-- **Vercel region** — changed from `iad1` (US East) to `cdg1` (Paris) for lower latency for FR/EU visitors
-
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
 - Newsletter opt-in (ConvertKit or Brevo)
+- Nonce-based CSP (remove `'unsafe-inline'` from `script-src`)
+
+---
+
+## [1.6.0] — 2026-03-16
+
+### Security
+
+- **Brute-force protection on `/admin`** — `proxy.ts` now applies a Redis rate-limit (10 attempts / 5 min / IP) before the HTTP Basic Auth check; returns `429 Too Many Requests` with `Retry-After: 300` when the limit is exceeded. Prior to this fix, credentials could be brute-forced without any server-side friction.
+- **`/api/redis-test` disabled in production** — diagnostic route now returns `404` when `NODE_ENV !== "development"`. Previously accessible publicly, it confirmed Redis presence and allowed unauthenticated writes to the cache key `healthcheck`.
+- **Rate-limiting on `/api/newsletter`** — 3 submissions / hour / IP via Upstash Redis. Without this, the endpoint was open to Brevo API quota exhaustion, email enumeration via distinct response codes, and unsolicited third-party submissions.
+- **Rate-limiting on `/api/health`** — reuses the `blogRatelimit` limiter (30 req / 60 s / IP) to prevent loop-based infrastructure probing.
+- **CORS on `/api/health` restricted** — `Access-Control-Allow-Origin` changed from `*` to `NEXT_PUBLIC_SITE_URL`. The wildcard allowed any third-party page to silently read internal service latencies (Supabase, Redis) via `fetch()` from a browser context. Uptime monitoring tools operate server-to-server and do not require CORS.
+- **`poweredByHeader: false`** — suppresses `X-Powered-By: Next.js` response header. Removes framework fingerprinting that enabled targeted CVE scanning.
+- **`Cross-Origin-Opener-Policy: same-origin`** — prevents cross-origin windows from accessing the browsing context (mitigates `window.opener` hijack and Spectre-class attacks via shared contexts).
+- **`Cross-Origin-Resource-Policy: same-origin`** — prevents other origins from loading site resources (images, JSON, fonts) into their own context without explicit CORS.
+- **RLS `project_assets` hardened** — policy changed from `USING (true)` to a sub-select requiring `projects.status = 'published'`. Previously, assets of draft and archived projects were publicly readable via the Supabase anon key REST API regardless of the parent project's visibility.
+- **`robots.txt` updated** — added `Disallow: /cv/` (prevents direct PDF indexing by search engines) and `Disallow: /admin/` (explicit exclusion of the admin panel from crawlers).
+- **`adminRatelimit` + `newsletterRatelimit` added to `lib/ratelimit.ts`** — two new Upstash sliding-window limiters centralised alongside existing limiters; both fall back to a no-op if Redis is unavailable (development / CI).
 
 ---
 
@@ -208,7 +221,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/Aiyeesha/portfolio-next/compare/v1.3.3...v1.3.4

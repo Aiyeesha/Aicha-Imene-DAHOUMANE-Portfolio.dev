@@ -1,6 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
+import { adminRatelimit } from "./lib/ratelimit";
 
 /**
  * Next.js 16: `middleware.ts` file convention is deprecated in favor of `proxy.ts`.
@@ -51,11 +52,27 @@ function adminAuth(request: NextRequest): NextResponse | null {
   });
 }
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protection /admin
   if (pathname.startsWith("/admin")) {
+    // ── Rate-limit anti brute-force ──────────────────────────────────
+    // Priorité à x-real-ip (injecté par Vercel, non spoofable).
+    // Fallback sur x-forwarded-for uniquement si x-real-ip absent.
+    const ip =
+      request.headers.get("x-real-ip") ??
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      "unknown";
+
+    const { success } = await adminRatelimit.limit(ip);
+    if (!success) {
+      return new NextResponse("Too many requests.", {
+        status: 429,
+        headers: { "Retry-After": "300" },
+      });
+    }
+
     const deny = adminAuth(request);
     if (deny) return deny;
     return NextResponse.next();
