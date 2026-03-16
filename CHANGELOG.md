@@ -9,22 +9,37 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Planned
+- LinkedIn recommendations / testimonials (pending responses from colleagues)
+- Execute `supabase/update-sections.sql` in Supabase to populate project detail pages
+- Newsletter opt-in (ConvertKit or Brevo)
+
+---
+
+## [1.5.0] — 2026-03-16
+
 ### Added
-- **FAQ section** — accordion Q&A (native `<details>/<summary>`) below the Services section, bilingual EN/FR
+- **AvailabilityModal** — interactive "open to work" badge in the hero; click opens a modal detailing contract types (CDI · CDD · Freelance · Mission), work modes (Full remote · Hybrid · On-site), target roles, and location (Paris / Île-de-France · Marseille / PACA); bilingual EN/FR
+- **OG image for `/about`** — dedicated `opengraph-image.tsx` (1200×630) with indigo accent, journey subtitle, and skill tags; consistent with certifications and blog post OG images
+- **B2 case study SQL** — `supabase/update-sections.sql`: 22 UPDATE statements (11 projects × 2 locales) populating `hero_subtitle` and `sections` JSONB (text, bullets, metrics types) extracted from jury evaluation Word documents
+- **FAQ updated** — new bilingual question "Êtes-vous ouverte à un CDI, ou uniquement en freelance ?" / "Are you open to permanent roles, or only freelance?"; updated remote work answer to reflect full remote + hybrid + on-site
 - **Page Ressources / Boîte à outils** — `/en/resources` & `/fr/resources`, 20 tools in 4 categories (Salesforce, Dev Stack, IT Ops, Learning), static Server Component
 - **Page de statut publique** — `/en/status` & `/fr/status`, shows operational status of all services; linked in footer
 - **WCAG 2.2 AA fixes** — hamburger `aria-label` dynamic (open/close), ProjectsSection tab arrow-key navigation (APG), ContactForm `aria-describedby` on status region, ScrollToTop `aria-label` via i18n, ServicesFaq `focus-visible` ring
 - **Navbar desktop** — pill scroll-spy now always stays on a visible item via `desktopActiveId` mapping; removed truncation at 1280px (5 items, `2xl:px-3`)
 - **CommandPalette** — "Resources" page added to Pages group
 
+### Changed
+- Availability info updated across the entire portfolio — `ProfileFactsCard`, About page, i18n translations (`messages/fr.json`, `messages/en.json`), `content/about.ts` goals: CDI · CDD · Freelance · Mission, Full remote · Hybrid · On-site, Paris/IDF · Marseille/PACA
+- Cron schedule in `vercel.json` changed from `*/5 * * * *` to `0 8 * * *` (Vercel Hobby plan compatibility)
+
 ### Fixed
 - Navbar hamburger `aria-label` now reads "Close menu" when menu is open (was always "Open menu")
 - NavbarPill now hides correctly when active section has no corresponding desktop link
 
-### Planned
-- LinkedIn recommendations / testimonials (pending responses from colleagues)
-- Analytics integration (Umami or Plausible)
-- Newsletter opt-in (ConvertKit or Brevo)
+### Removed
+- `app/[locale]/projects-test/` — debug page listing all project slugs; was publicly accessible
+- `public/projects/python-network-scanner/scanner-ui/node_modules/` — accidentally committed `node_modules` was being served as static assets
 
 ---
 
@@ -188,7 +203,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/Aiyeesha/portfolio-next/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/Aiyeesha/portfolio-next/compare/v1.3.2...v1.3.3
