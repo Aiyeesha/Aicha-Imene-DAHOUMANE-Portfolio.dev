@@ -47,8 +47,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json() as { "csp-report"?: Record<string, unknown> };
-    const report = body["csp-report"] ?? body;
+    const body = await req.json() as Record<string, unknown>;
+    // CSP Level 2 wraps the report under a "csp-report" key.
+    // Some older implementations send the fields at the top level.
+    const report = (body["csp-report"] ?? body) as Record<string, unknown>;
 
     // Structured log — appears in Vercel Runtime Logs / your observability tool
     console.warn("[CSP-VIOLATION]", JSON.stringify({
