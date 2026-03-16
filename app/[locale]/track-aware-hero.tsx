@@ -25,6 +25,7 @@ import {
 } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import CalendlyModal from "@/components/CalendlyModal";
+import AvailabilityModal from "@/components/AvailabilityModal";
 
 // ── Variants Framer Motion ─────────────────────────────────────────────────
 // Container : stagger les enfants à l'entrée (0.09 s entre chaque)
@@ -150,16 +151,9 @@ export default function TrackAwareHero() {
       {/* ── Colonne 2 — Texte ────────────────────────────────────────────────── */}
       <motion.div variants={shouldReduce ? {} : textBlockVariants}>
 
-        {/* Badge de disponibilité — point vert pulsant */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="relative flex h-2.5 w-2.5">
-            {/* Anneau pulsant (désactivé si prefers-reduced-motion) */}
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-          </span>
-          <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-            {t("hero.availability")}
-          </span>
+        {/* Badge de disponibilité — cliquable → ouvre la modale de détails */}
+        <div className="mb-4">
+          <AvailabilityModal />
         </div>
 
         {/* Contenu dynamique (track-dépendant) — anime au changement de track */}

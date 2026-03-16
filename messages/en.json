@@ -270,21 +270,21 @@
     "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
-    "p4_salesforce": "My 2026 goal: grow an international Salesforce freelance activity, collaborating with distributed teams while continuing to strengthen both my technical and functional expertise.",
+    "p4_salesforce": "Available immediately — open to a permanent, fixed-term, freelance, or contract Salesforce role, in Paris / Marseille or fully remote.",
     "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
-    "p4_itops": "My 2026 goal: take on IT Ops / SRE / DevOps missions focused on reliability, automation, and security—in France and internationally.",
+    "p4_itops": "Available immediately — open to a permanent, fixed-term, freelance, or contract IT Ops / DevOps / SRE role, in Paris / Marseille or fully remote.",
     "goals2026Title": "2026 Goals",
     "goals2026Salesforce": [
-      "Grow an international freelance practice with Salesforce clients in Europe and North America",
+      "Land a Salesforce role or project (permanent · fixed-term · freelance) in France or fully remote",
       "Earn the Salesforce Platform Developer II certification",
       "Contribute to Salesforce open-source projects (AppExchange packages, DevOps tooling)",
       "Publish technical articles regularly on the blog and Medium",
       "Attend Salesforce events (Dreamin', TrailheaDX) to grow the professional network"
     ],
     "goals2026Itops": [
-      "Land international IT Ops / SRE / DevOps missions (remote-first)",
+      "Land an IT Ops / SRE / DevOps role or project (permanent · fixed-term · freelance) in France or fully remote",
       "Deepen infrastructure-as-code skills: Terraform, Ansible, provisioning automation",
       "Obtain a cloud certification (AWS Solutions Architect or Azure Administrator)",
       "Build a full monitoring homelab: Prometheus, Grafana, Alertmanager",
@@ -292,17 +292,17 @@
     ],
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
-    "basedInValue": "Paris — open to relocation, full-remote, or hybrid",
+    "basedInValue": "Paris / Île-de-France · Marseille / PACA — Full remote · Hybrid · On-site",
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
-    "rolesValue": "Salesforce Developer, Salesforce Administrator, Salesforce / IT Consultant",
-    "rolesValueSalesforce": "Salesforce Developer, Salesforce Administrator, Salesforce / IT Consultant",
-    "rolesValueItops": "IT Ops / SRE Engineer, Systems & Network Admin, DevOps",
+    "rolesValue": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant",
+    "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant",
+    "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Freelance missions · part-time or full-time",
+    "availabilityValue": "Immediate · Permanent · Fixed-term · Freelance · Contract",
     "goalLabel": "Goal",
-    "goalValue": "From early 2026, gradually build an international freelance activity as a Salesforce developer while continuing to strengthen my technical and functional expertise at LD Digitales.",
+    "goalValue": "Join a team or project (permanent, fixed-term, freelance, or contract) in Salesforce or IT Ops / DevOps — in France (Paris / Marseille) or fully remote.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Quality · Security",
     "focusValueItOps": "Monitoring · Runbooks · Automation · Security",
@@ -341,8 +341,12 @@
     "subtitle": "Everything you need to know before reaching out.",
     "items": [
       {
+        "q": "Are you open to permanent roles, or only freelance?",
+        "a": "I'm open to all forms of collaboration: permanent, fixed-term, freelance, or contract. Available immediately, I can join a team in Paris / Île-de-France, Marseille / PACA, or work fully remote from anywhere."
+      },
+      {
         "q": "Do you work remotely?",
-        "a": "Yes — I work fully remote. Based in France, I collaborate with clients across Europe and beyond. Video calls, async communication, and documented handovers are part of my standard workflow."
+        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in France and available in Paris / Île-de-France and Marseille / PACA. Video calls, async communication, and documented handovers are part of my standard workflow."
       },
       {
         "q": "What are your typical timelines?",
@@ -355,10 +359,6 @@
       {
         "q": "Do you offer support after delivery?",
         "a": "Yes. I include a short support window after each delivery for adjustments and questions. For ongoing maintenance or feature evolution, we can discuss a retainer arrangement."
-      },
-      {
-        "q": "Are you available for short missions?",
-        "a": "Absolutely. I take on focused, short-term work — from a half-day consultation to a multi-week project. If you need a second opinion on an architecture decision or help unblocking a specific issue, that works too."
       }
     ]
   },
@@ -370,5 +370,22 @@
     "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
     "helpTitle": "Accessibility issue?",
     "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email."
+  },
+  "availModal": {
+    "badge": "Available · Open to new opportunities",
+    "title": "My availability",
+    "delay": "Availability",
+    "delayValue": "Immediate",
+    "contracts": "Contract types",
+    "contractValues": "Permanent · Fixed-term · Freelance · Contract",
+    "workMode": "Work modes",
+    "workModeValues": "Full remote · Hybrid · On-site",
+    "sector": "Sectors",
+    "sectorValues": "Salesforce · IT Ops / DevOps",
+    "roles": "Target roles",
+    "rolesValues": "Systems & Network Admin · DevOps · Salesforce Admin · Salesforce Developer · IT Consultant · Salesforce Consultant",
+    "location": "Location",
+    "locationValues": "Paris / Île-de-France · Marseille / Provence-Alpes-Côte d'Azur",
+    "cta": "Get in touch →"
   }
 }

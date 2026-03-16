@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { ReactNode, createContext, useContext, useMemo, useState } from "react";
 
 export type Track = "itops" | "salesforce";
 type TrackContextValue = { track: Track; setTrack: (t: Track) => void };
@@ -31,15 +31,6 @@ export default function Providers({
   initialTrack: Track;
 }) {
   const [track, setTrackState] = useState<Track>(initialTrack);
-
-  // Optional: localStorage fallback (older visits) without overriding SSR if already correct.
-  useEffect(() => {
-    const saved = window.localStorage.getItem("track");
-    if ((saved === "itops" || saved === "salesforce") && saved !== track) {
-      setTrackState(saved);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const setTrack = (t: Track) => {
     setTrackState(t);

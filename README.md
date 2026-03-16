@@ -41,7 +41,7 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
 | Forms | API Route + Formspree (fallback) + honeypot + rate-limit |
 | Analytics | Vercel Analytics + Speed Insights (production only) |
-| Monitoring | Vercel Cron (every 5 min) → `/api/cron/ping` → Supabase `uptime_pings` |
+| Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → Supabase `uptime_pings` |
 | Deployment | Vercel (Hobby) |
 
 ---
@@ -58,7 +58,7 @@ Browser
   │     └─ API Routes
   │           ├─ /api/contact          → Formspree + Supabase messages
   │           ├─ /api/health           → ping Supabase + Redis + Formspree
-  │           ├─ /api/cron/ping        → Vercel Cron (5 min) → uptime_pings
+  │           ├─ /api/cron/ping        → Vercel Cron (daily 08:00 UTC) → uptime_pings
   │           └─ /api/testimonial-submit → testimonial_submissions
   │
   ├─ Supabase (PostgreSQL + RLS)
@@ -81,21 +81,24 @@ Browser
 ## Features
 
 - **Dual-track hero** — Salesforce and IT Ops profiles share the same avatar; text, tags, and accent colors adapt per track
-- **Dedicated pages** — `/about`, `/certifications`, `/blog`, `/projects`, `/status`
-- **Career timeline** — Visual frise chronologique (2022 → present) on the About page
-- **2026 Goals** — Checkable objectives with `not_started / in_progress / completed` status (Supabase)
-- **Blog** — MDX articles (EN + FR), syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
+- **Availability modal** — pulsing "open to work" badge in the hero; click opens a modal detailing contract types, work modes, target roles, and location (FR/EN)
+- **Dedicated pages** — `/about`, `/certifications`, `/blog`, `/projects`, `/status`, `/resources`, `/colophon`, `/changelog`, `/uses`
+- **Career timeline** — visual timeline (2022 → present) on the About page
+- **2026 Goals** — checkable objectives with `not_started / in_progress / completed` status (Supabase)
+- **Blog** — 19 MDX articles (EN + FR), syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
 - **Article series** — 6 curated reading paths (Salesforce DevOps, LWC, Windows Server, IT Ops Monitoring…)
 - **Certifications page** — 3 sections: Completed, Active (Trailhead animated counters), In preparation
 - **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
 - **Contact form** — rate-limited, honeypot, topic selector, Calendly modal in hero + contact section
 - **Status page** — real health checks (Supabase, Redis, Formspree), uptime % over 30 days, latency sparklines (7 days), ISR 60s
-- **Animations** — Framer Motion: scroll parallax, directional reveals (left/right/bottom), stagger, AnimatedCounter
-- **Open Graph** — dynamic OG images per blog article and project page (`next/og`)
+- **Admin dashboard** — `/admin` (HTTP Basic Auth) — project/cert/testimonial/message stats and recent contact messages
+- **Command palette** — `⌘K` / `Ctrl+K` — navigate sections, switch track/theme/language, download CV, open LinkedIn
+- **Animations** — Framer Motion: scroll parallax, directional reveals, stagger, AnimatedCounter, AnimatePresence on track switch
+- **Open Graph** — dynamic OG images per blog article, project page, `/about`, and `/certifications` (`next/og`)
 - **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
 - **RSS feed** — `/feed.xml` (EN articles)
 - **PWA** — Web App Manifest (installable), `display_override`, shortcuts, icons 192/512
-- **Accessibility** — skip link, keyboard nav, focus rings, ARIA landmarks
+- **Accessibility** — skip link, keyboard nav, focus rings, ARIA landmarks, WCAG 2.2 AA
 - **SEO** — JSON-LD (WebSite + Person + ProfessionalService), sitemap, robots.txt, hreflang
 
 ---
@@ -162,36 +165,66 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 ```
 portfolio/
 ├── app/
-│   ├── [locale]/           # Locale-scoped pages (App Router)
-│   │   ├── page.tsx        # One-page landing (home)
-│   │   ├── about/          # Dedicated About page
-│   │   ├── certifications/ # Certifications & Diplomas
-│   │   ├── blog/           # Blog index + [slug] post pages
-│   │   ├── projects/       # Projects [slug] detail pages
-│   │   └── layout.tsx      # Locale layout (Navbar, Footer, ScrollToTop)
-│   ├── api/                # API routes (contact, cache, blog, storage)
-│   ├── feed.xml/           # RSS feed route handler
-│   ├── layout.tsx          # Root HTML layout (JSON-LD, fonts, analytics)
-│   ├── sitemap.ts          # Dynamic sitemap
-│   └── robots.ts           # robots.txt
-├── components/             # Reusable React components
+│   ├── [locale]/               # Locale-scoped pages (App Router)
+│   │   ├── page.tsx            # One-page landing (home)
+│   │   ├── about/              # About page + opengraph-image.tsx
+│   │   ├── certifications/     # Certifications & Diplomas + opengraph-image.tsx
+│   │   ├── blog/               # Blog index + [slug] post pages + tags/
+│   │   ├── projects/           # Projects [slug] detail pages + opengraph-image.tsx
+│   │   ├── status/             # Public status page (health checks, uptime, sparklines)
+│   │   ├── resources/          # Boîte à outils (20 tools, 4 categories)
+│   │   ├── changelog/          # Public changelog page
+│   │   ├── colophon/           # Full stack documentation
+│   │   ├── uses/               # Tools & setup page
+│   │   ├── legal/              # Legal notice
+│   │   ├── privacy/            # Privacy policy
+│   │   ├── accessibility/      # Accessibility statement
+│   │   ├── testimonial-submit/ # Token-gated testimonial form
+│   │   └── layout.tsx          # Locale layout (Navbar, Footer, ScrollToTop)
+│   ├── admin/                  # Admin dashboard (HTTP Basic Auth, Supabase service_role)
+│   ├── api/                    # API routes
+│   │   ├── contact/            # Contact form → Supabase + Formspree
+│   │   ├── cache/invalidate/   # Manual Redis cache invalidation
+│   │   ├── cron/ping/          # Vercel Cron (daily 08:00 UTC) → uptime_pings
+│   │   ├── health/             # Ping Supabase + Redis + Formspree
+│   │   ├── blog/latest/        # Latest posts API
+│   │   ├── testimonial-submit/ # Token-gated testimonial submission
+│   │   ├── newsletter/         # Newsletter opt-in
+│   │   └── github-activity/    # GitHub contribution data
+│   ├── feed.xml/               # RSS feed route handler
+│   ├── layout.tsx              # Root HTML layout (JSON-LD, fonts, analytics)
+│   ├── opengraph-image.tsx     # Default OG image (1200×630)
+│   ├── twitter-image.tsx       # Twitter card image
+│   ├── sitemap.ts              # Dynamic sitemap
+│   ├── robots.ts               # robots.txt
+│   └── manifest.ts             # PWA manifest
+├── components/                 # 47 reusable React components (Server + Client)
 ├── content/
-│   ├── blog/posts/{en,fr}/ # MDX articles
-│   ├── certifications.ts   # Static certifications data
-│   ├── experience.tsx      # Work experience accordion data
-│   └── skills.ts / services.ts / projects.ts
+│   ├── blog/
+│   │   ├── posts/{en,fr}/      # 19 MDX articles × 2 locales
+│   │   ├── registry.ts         # Article metadata registry
+│   │   ├── series.ts           # Article series definitions
+│   │   └── toc.ts              # Table of contents utilities
+│   ├── about.ts                # Static about content (FR + EN)
+│   ├── certifications.ts       # Static certifications data
+│   ├── experience.tsx          # Work experience accordion data
+│   ├── testimonials.ts         # Testimonials (feature-flagged)
+│   └── skills.ts / services.ts
 ├── lib/
-│   ├── data/               # Supabase data fetchers (cached)
-│   ├── supabase/           # Supabase client helpers
-│   └── ratelimit.ts / redis.ts / cache.ts
+│   ├── data/                   # Supabase data fetchers (cached via Redis)
+│   ├── supabase/               # Supabase client helpers (anon + service_role)
+│   └── ratelimit.ts / redis.ts / cache.ts / analytics.ts
 ├── messages/
-│   ├── en.json             # English translations
-│   └── fr.json             # French translations
+│   ├── en.json                 # English translations (~400 keys)
+│   └── fr.json                 # French translations (~400 keys)
+├── supabase/                   # SQL migration files
+├── scripts/                    # Utility scripts (db:migrate, CV generation)
 └── public/
     ├── .well-known/
-    │   └── security.txt    # RFC 9116 security contact
-    ├── companies/          # Trusted-by company logos
-    └── cv/                 # CV PDFs (per locale/track)
+    │   └── security.txt        # RFC 9116 security contact
+    ├── companies/              # Trusted-by company logos (webp)
+    ├── projects/               # Project screenshots and source files
+    └── cv/                     # CV PDFs (per locale/track)
 ```
 
 ---
