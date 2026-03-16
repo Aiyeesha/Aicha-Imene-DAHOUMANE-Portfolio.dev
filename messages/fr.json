@@ -269,17 +269,17 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l'international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Paris — ouverte à la relocalisation, au full-remote, hybride",
+    "basedInValue": "Paris / Île-de-France · Marseille / PACA — Full remote · Hybride · Sur site",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
-    "rolesValue": "Développeuse Salesforce, Administratrice Salesforce, Consultante Salesforce / IT",
-    "rolesValueSalesforce": "Développeuse Salesforce, Administratrice Salesforce, Consultante Salesforce / IT",
-    "rolesValueItops": "Ingénieure IT Ops / SRE, Administratrice systèmes & réseaux, DevOps",
+    "rolesValue": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT",
+    "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT",
+    "rolesValueItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Missions freelance · temps partiel ou temps plein",
+    "availabilityValue": "Immédiate · CDI · CDD · Freelance · Mission",
     "goalLabel": "Objectif",
-    "goalValue": "À partir de début 2026, développer progressivement une activité freelance internationale en tant que développeuse Salesforce tout en continuant à renforcer mon expertise technique et fonctionnelle chez LD Digitales.",
+    "goalValue": "Intégrer une équipe ou une mission (CDI, CDD, freelance) dans la tech Salesforce ou l'IT Ops / DevOps — en France (Paris / Marseille) ou en full remote.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
@@ -287,21 +287,21 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "Mon objectif 2026 : développer une activité freelance internationale (Salesforce) en collaboration avec des équipes distribuées, tout en continuant à renforcer mon expertise technique et fonctionnelle.",
+    "p4_salesforce": "Disponible immédiatement — ouverte à un CDI, CDD, freelance ou mission Salesforce, à Paris / Marseille ou en full remote.",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
-    "p4_itops": "Mon objectif 2026 : intervenir sur des missions IT Ops / SRE / DevOps orientées fiabilité, automatisation et sécurité, en France et à l'international.",
+    "p4_itops": "Disponible immédiatement — ouverte à un CDI, CDD, freelance ou mission IT Ops / DevOps / SRE, à Paris / Marseille ou en full remote.",
     "goals2026Title": "Objectifs 2026",
     "goals2026Salesforce": [
-      "Développer une activité freelance internationale avec des clients Salesforce en Europe et en Amérique du Nord",
+      "Décrocher un poste ou une mission Salesforce (CDI · CDD · Freelance) en France ou en full remote",
       "Obtenir la certification Salesforce Platform Developer II",
       "Contribuer à des projets open source Salesforce (AppExchange packages, outils DevOps)",
       "Publier régulièrement des articles techniques sur le blog et Medium",
       "Participer à des événements Salesforce (Dreamin', TrailheaDX) pour développer le réseau"
     ],
     "goals2026Itops": [
-      "Décrocher des missions IT Ops / SRE / DevOps à l'international (remote-first)",
+      "Décrocher un poste ou une mission IT Ops / SRE / DevOps (CDI · CDD · Freelance) en France ou en full remote",
       "Approfondir l'infrastructure-as-code : Terraform, Ansible, automatisation de provisioning",
       "Obtenir une certification cloud (AWS Solutions Architect ou Azure Administrator)",
       "Construire un homelab de supervision complet : Prometheus, Grafana, Alertmanager",
@@ -341,8 +341,12 @@
     "subtitle": "Tout ce que vous devez savoir avant de me contacter.",
     "items": [
       {
+        "q": "Êtes-vous ouverte à un CDI, ou uniquement en freelance ?",
+        "a": "Je suis ouverte à toutes les formes de collaboration : CDI, CDD, freelance ou mission. Disponible immédiatement, je peux intégrer une équipe à Paris / Île-de-France, Marseille / PACA, ou travailler en full remote depuis n'importe où."
+      },
+      {
         "q": "Travaillez-vous à distance ?",
-        "a": "Oui — je travaille entièrement à distance. Basée en France, je collabore avec des clients en Europe et au-delà. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
+        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée en France et mobilisable sur Paris / Île-de-France et Marseille / PACA. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
       },
       {
         "q": "Quels sont vos délais habituels ?",
@@ -355,10 +359,6 @@
       {
         "q": "Proposez-vous un suivi après la livraison ?",
         "a": "Oui. J'inclus une courte période de support après chaque livraison pour les ajustements et les questions. Pour une maintenance continue ou l'évolution des fonctionnalités, nous pouvons envisager un arrangement en régie."
-      },
-      {
-        "q": "Êtes-vous disponible pour des missions courtes ?",
-        "a": "Absolument. Je prends en charge des missions ciblées et ponctuelles — d'une demi-journée de consultation à un projet de plusieurs semaines. Si vous avez besoin d'un second avis sur une décision d'architecture ou d'aide pour débloquer un problème précis, c'est tout à fait envisageable."
       }
     ]
   },
@@ -370,5 +370,22 @@
     "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours sont les bienvenus.",
     "helpTitle": "Un problème d'accessibilité ?",
     "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email."
+  },
+  "availModal": {
+    "badge": "Disponible · ouverte à de nouvelles opportunités",
+    "title": "Mes disponibilités",
+    "delay": "Disponibilité",
+    "delayValue": "Immédiate",
+    "contracts": "Types de contrat",
+    "contractValues": "CDI · CDD · Freelance · Mission",
+    "workMode": "Modes de travail",
+    "workModeValues": "Full remote · Hybride · Sur site",
+    "sector": "Secteurs",
+    "sectorValues": "Salesforce · IT Ops / DevOps",
+    "roles": "Postes ciblés",
+    "rolesValues": "Administratrice systèmes & réseaux · DevOps · Administratrice Salesforce · Développeuse Salesforce · Consultante IT · Consultante Salesforce",
+    "location": "Localisation",
+    "locationValues": "Paris / Île-de-France · Marseille / Provence-Alpes-Côte d'Azur",
+    "cta": "Prendre contact →"
   }
 }

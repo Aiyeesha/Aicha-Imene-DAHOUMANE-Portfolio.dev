@@ -20,14 +20,17 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
-  display: "swap",
+  // "optional" : 100ms window — élimine le CLS lié au font-swap.
+  // Si la font est en cache (2ᵉ visite+), elle charge dans la fenêtre → zéro flash.
+  // Sur première visite lente, le fallback est utilisé pour toute la page = stable.
+  display: "optional",
   weight: ["400", "500", "600", "700"],
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-  display: "swap",
+  display: "optional",
 });
 
 // Root layout — point d'entrée HTML unique (html + body)
@@ -148,6 +151,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`${spaceGrotesk.variable} ${inter.variable}`}
     >
       <head>
+        {/* Preconnect — réduit la latence DNS+TCP+TLS pour les APIs SSR et client */}
+        {/* Supabase : projets, certifications, about (SSR + client) */}
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
+        )}
+        {/* Upstash Redis : cache API rate-limiting */}
+        {process.env.UPSTASH_REDIS_REST_URL && (
+          <link rel="dns-prefetch" href={new URL(process.env.UPSTASH_REDIS_REST_URL).origin} />
+        )}
+        {/* Formspree : formulaire de contact (chargé à la demande) */}
+        <link rel="dns-prefetch" href="https://formspree.io" />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger

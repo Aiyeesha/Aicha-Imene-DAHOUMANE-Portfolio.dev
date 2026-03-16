@@ -189,7 +189,7 @@ Use the imperative mood: "add" not "added", "fix" not "fixed".
 3. **Checklist** before requesting review:
    - [ ] `npm run typecheck` passes
    - [ ] `npm run lint` passes
-   - [ ] `npm test` passes (all 59+ tests green)
+   - [ ] `npm test` passes (all tests green)
    - [ ] `npm run build` succeeds
    - [ ] Tested on mobile (375px) and desktop (1440px)
    - [ ] Tested in dark mode and light mode

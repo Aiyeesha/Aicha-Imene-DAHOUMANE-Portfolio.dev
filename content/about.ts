@@ -51,7 +51,7 @@ export const aboutContent = {
     goals2026: {
       title: "Objectifs 2026",
       items: [
-        "Développer mon activité freelance internationale avec des clients Salesforce en Europe et Amérique du Nord",
+        "Décrocher un poste ou une mission Salesforce (CDI · CDD · Freelance) en France ou en full remote",
         "Salesforce Certified Administrator — préparation active en cours",
         "Salesforce Platform Developer I — préparation active en cours",
         "Contribuer activement à des projets open source Salesforce (AppExchange packages, outils DevOps)",
@@ -112,7 +112,7 @@ export const aboutContent = {
     goals2026: {
       title: "2026 Goals",
       items: [
-        "Develop my international freelance activity with Salesforce clients in Europe and North America",
+        "Land a Salesforce role or project (permanent · fixed-term · freelance) in France or fully remote",
         "Salesforce Certified Administrator — actively preparing",
         "Salesforce Platform Developer I — actively preparing",
         "Actively contribute to Salesforce open source projects (AppExchange packages, DevOps tools)",

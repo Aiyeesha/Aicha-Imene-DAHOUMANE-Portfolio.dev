@@ -44,6 +44,20 @@ const nextConfig = {
 
   async headers() {
     return [
+      // ── Assets statiques publics (logo, avatar, CV PDF…) ──────────────────────
+      // Vercel cache déjà /_next/static/ avec immutable.
+      // Les fichiers dans /public/ n'ont pas de Cache-Control par défaut → on fixe 1 an.
+      // Ils n'ont pas de hash dans leur URL, donc on ne met pas "immutable"
+      // (sinon une mise à jour de /avatar.webp ne serait pas récupérée avant 1 an).
+      {
+        source: "/(:path*\\.(?:webp|png|jpg|jpeg|svg|ico|gif|avif|woff2|woff|ttf|otf|pdf))",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
       {
         // Appliquer les headers de sécurité à toutes les routes
         source: "/(.*)",
