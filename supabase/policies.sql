@@ -45,12 +45,26 @@ DROP POLICY IF EXISTS "anon cannot write projects" ON projects;
 
 ALTER TABLE IF EXISTS project_assets ENABLE ROW LEVEL SECURITY;
 
+-- SÉCURITÉ : la policy précédente (USING true) exposait les assets de tous
+-- les projets, y compris ceux en statut 'draft' ou 'archived'.
+-- Un attaquant connaissant un project_id pouvait accéder aux médias d'un
+-- projet non publié via l'API REST Supabase avec la clé anon.
+--
+-- Correction : jointure explicite sur le statut du projet parent.
+-- Seuls les assets dont le projet a status = 'published' sont lisibles par anon.
 DROP POLICY IF EXISTS "anon can read project assets" ON project_assets;
-CREATE POLICY "anon can read project assets"
+CREATE POLICY "anon can read published project assets"
   ON project_assets
   FOR SELECT
   TO anon
-  USING (true);
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM projects p
+      WHERE p.id = project_assets.project_id
+        AND p.status = 'published'
+    )
+  );
 
 
 -- ════════════════════════════════════════════════════════════════════

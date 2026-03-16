@@ -20,7 +20,7 @@ This is a personal site — contributions are limited to bug reports, accessibil
 
 ## Local setup
 
-**Requirements:** Node.js 20+, npm 10+
+**Requirements:** Node.js 24+, npm 10+
 
 ```bash
 # 1. Clone the repository
@@ -55,15 +55,24 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key (public) |
 | `NEXT_PUBLIC_SITE_URL` | Yes | Production URL (no trailing slash) |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Yes | Contact email displayed on site |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key — **server-only, never expose** |
+| `UPSTASH_REDIS_REST_URL` | Recommended | Upstash Redis URL (rate-limiting) |
+| `UPSTASH_REDIS_REST_TOKEN` | Recommended | Upstash Redis token — server-only |
 | `NEXT_PUBLIC_LINKEDIN_URL` | No | LinkedIn profile URL |
 | `NEXT_PUBLIC_CALENDLY_URL` | No | Calendly booking URL |
 | `NEXT_PUBLIC_CV_PDF_URL` | No | CV PDF URL (fallback: `/cv/cv-{locale}-{track}.pdf`) |
 | `FORMSPREE_ENDPOINT` | No | Formspree contact form endpoint |
-| `UPSTASH_REDIS_REST_URL` | No | Upstash Redis URL (rate-limiting) |
-| `UPSTASH_REDIS_REST_TOKEN` | No | Upstash Redis token |
+| `ADMIN_USERNAME` | No | Username for `/admin` Basic Auth |
+| `ADMIN_PASSWORD` | No | Password for `/admin` Basic Auth — server-only |
+| `CRON_SECRET` | No | Bearer token for `/api/cron/ping` |
+| `TESTIMONIAL_SUBMIT_TOKEN` | No | Token for the testimonial submission form |
+| `CACHE_INVALIDATE_SECRET` | No | Secret header for `/api/cache/invalidate` |
 
 The site works without Supabase in dev mode — most pages fall back gracefully.
-Rate-limiting is disabled if Upstash is not configured.
+Rate-limiting is disabled if Upstash is not configured (all limiters degrade to a no-op).
+
+> **Security:** Never commit `.env.local` to version control. It is excluded by `.gitignore` (pattern `.env*`).
+> All secrets must remain server-only — do not add `NEXT_PUBLIC_` to any sensitive variable.
 
 ---
 
@@ -79,6 +88,9 @@ main
 2. Make your changes (see [Code conventions](#code-conventions))
 3. Run checks locally before pushing (see [Scripts](#scripts))
 4. Open a pull request against `main`
+
+> **Before touching any API route or middleware**, re-read the rate-limiting strategy in `lib/ratelimit.ts`
+> and confirm the route is covered (or intentionally public).
 
 ---
 
@@ -196,6 +208,8 @@ Use the imperative mood: "add" not "added", "fix" not "fixed".
    - [ ] Tested with both tracks (Salesforce and IT Ops)
    - [ ] New strings added to both `messages/en.json` and `messages/fr.json`
    - [ ] `CHANGELOG.md` updated under `[Unreleased]`
+   - [ ] No secrets introduced in `NEXT_PUBLIC_*` variables or committed files
+   - [ ] New API routes have rate-limiting, input validation, and appropriate auth
 
 PRs that break the CI pipeline will not be merged.
 

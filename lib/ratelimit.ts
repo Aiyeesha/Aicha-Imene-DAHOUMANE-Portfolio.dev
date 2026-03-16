@@ -81,3 +81,19 @@ export const testimonialRatelimit = redis
 export const cacheInvalidateRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:cache-invalidate")
   : createNoOpRatelimit(10, 60_000);
+
+// ── Limiteur pour /admin (HTTP Basic Auth brute force) ────────────────
+// 10 tentatives par 5 minutes par IP.
+// Sans ce limiteur, un attaquant peut brute-forcer les credentials
+// admin sans aucune friction côté serveur.
+export const adminRatelimit = redis
+  ? createRatelimit(redis, 10, 300, "portfolio:rl:admin")
+  : createNoOpRatelimit(10, 300_000);
+
+// ── Limiteur pour /api/newsletter ─────────────────────────────────────
+// 3 inscriptions par heure par IP.
+// Sans ce limiteur : abus quota Brevo, énumération d'emails via codes
+// de retour (409 = déjà inscrit), soumissions non consenties vers tiers.
+export const newsletterRatelimit = redis
+  ? createRatelimit(redis, 3, 3_600, "portfolio:rl:newsletter")
+  : createNoOpRatelimit(3, 3_600_000);

@@ -4,6 +4,16 @@ import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+// ── URL safety helper ─────────────────────────────────────────────────────────
+// Blocks javascript: / data: / vbscript: injection from JSONB fields stored
+// in Supabase. Only allows relative paths (/…) and http(s):// URLs.
+function safeHref(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (/^(https?:\/\/|\/)/i.test(trimmed)) return trimmed;
+  return null;
+}
+
 // Shape of a section stored as JSON in Supabase
 type ProjectSection =
   | { type: "bullets";   title: string; items: string[] }
@@ -42,7 +52,7 @@ function looksLikeImage(asset: ProjectAsset) {
 const PRIVATE_BUCKETS = new Set(["deliverables"]);
 
 function getAssetHref(asset: ProjectAsset) {
-  if (asset.external_url) return asset.external_url;
+  if (asset.external_url) return safeHref(asset.external_url);
   if (asset.storage_bucket && asset.storage_path) {
     if (PRIVATE_BUCKETS.has(asset.storage_bucket)) {
       const params = new URLSearchParams({
@@ -157,29 +167,37 @@ function renderSection(section: ProjectSection, idx: number) {
     case "resources":
       return wrapper(
         <ul className="space-y-2">
-          {section.items.map((item, i) => (
-            <li key={i} className="flex items-baseline gap-2 text-sm">
-              <span className="text-sky-500" aria-hidden>↗</span>
-              <span>
-                <a href={item.href} target="_blank" rel="noreferrer"
-                  className="underline underline-offset-4 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">
-                  {item.label}
-                </a>
-                {item.note ? <span className="ml-2 text-xs text-muted">{item.note}</span> : null}
-              </span>
-            </li>
-          ))}
+          {section.items.map((item, i) => {
+            const href = safeHref(item.href);
+            return (
+              <li key={i} className="flex items-baseline gap-2 text-sm">
+                <span className="text-sky-500" aria-hidden>↗</span>
+                <span>
+                  {href ? (
+                    <a href={href} target="_blank" rel="noreferrer"
+                      className="underline underline-offset-4 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <span className="text-muted">{item.label}</span>
+                  )}
+                  {item.note ? <span className="ml-2 text-xs text-muted">{item.note}</span> : null}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       );
 
-    case "code":
+    case "code": {
+      const dlUrl = safeHref(section.downloadUrl);
       return wrapper(
         <>
           <pre className="overflow-x-auto rounded-xl bg-black/10 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 text-xs leading-relaxed font-mono">
             <code>{section.code}</code>
           </pre>
-          {section.downloadUrl ? (
-            <a href={section.downloadUrl}
+          {dlUrl ? (
+            <a href={dlUrl}
               className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted underline underline-offset-4 hover:opacity-70"
               target="_blank" rel="noreferrer">
               ↓ Télécharger
@@ -187,6 +205,7 @@ function renderSection(section: ProjectSection, idx: number) {
           ) : null}
         </>
       );
+    }
 
     default:
       return null;
@@ -323,30 +342,34 @@ export default async function ProjectPage({
           ) : null}
 
           {/* Repo / Live links */}
-          {(project.repo_url || project.live_url) ? (
-            <div className="mt-5 flex flex-wrap gap-3">
-              {project.repo_url ? (
-                <a
-                  href={project.repo_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
-                >
-                  <span aria-hidden="true">↗ </span>Repo
-                </a>
-              ) : null}
-              {project.live_url ? (
-                <a
-                  href={project.live_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 transition-opacity soft-ring"
-                >
-                  <span aria-hidden="true">↗ </span>Live
-                </a>
-              ) : null}
-            </div>
-          ) : null}
+          {(project.repo_url || project.live_url) ? (() => {
+            const repoHref = safeHref(project.repo_url);
+            const liveHref = safeHref(project.live_url);
+            return (repoHref || liveHref) ? (
+              <div className="mt-5 flex flex-wrap gap-3">
+                {repoHref ? (
+                  <a
+                    href={repoHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
+                  >
+                    <span aria-hidden="true">↗ </span>Repo
+                  </a>
+                ) : null}
+                {liveHref ? (
+                  <a
+                    href={liveHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 transition-opacity soft-ring"
+                  >
+                    <span aria-hidden="true">↗ </span>Live
+                  </a>
+                ) : null}
+              </div>
+            ) : null;
+          })() : null}
         </header>
 
         {/* DIVIDER */}

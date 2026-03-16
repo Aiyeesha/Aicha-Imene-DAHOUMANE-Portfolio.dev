@@ -244,8 +244,8 @@
     "title": "Trusted by"
   },
   "metrics": {
-    "apex":     "Apex classes built",
-    "flows":    "Automation Flows",
+    "apex": "Apex classes built",
+    "flows": "Automation Flows",
     "workload": "Manual workload reduced",
     "projects": "Projects delivered"
   },
@@ -313,15 +313,19 @@
     "copied": "Copied"
   },
   "privacy": {
-    "title": "Privacy & legal notice",
-    "analyticsTitle": "Analytics",
-    "analyticsBody": "This site does not use tracking analytics by default.",
+    "title": "Privacy policy",
+    "analyticsTitle": "Analytics & Performance",
+    "analyticsBody": "This site uses Vercel Analytics and Vercel Speed Insights in production to measure Core Web Vitals and real-user performance. No personal data is collected — metrics are aggregated and anonymous. These services are disabled in development.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "No marketing cookies are set. Only essential technical cookies may be used by the platform (e.g., for security).",
+    "cookiesBody": "No marketing or tracking cookies are set. One functional cookie (NEXT_LOCALE) stores your language preference. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection).",
     "formTitle": "Contact form data",
-    "formBody": "When you submit the contact form, your name, email, topic and message are processed to reply to you. If Formspree is enabled, the data is forwarded to Formspree for delivery.",
-    "retention": "Retention: messages are kept only as long as necessary to handle your request.",
-    "contact": "Contact: {email}"
+    "formBody": "When you submit the contact form, the following data is collected: name, email, topic, message, IP address, and User-Agent. This data is used solely to process and respond to your request. If Formspree is enabled as a fallback, message content is forwarded to Formspree (a third-party email delivery service based in the United States).",
+    "retention": "Retention: contact messages are kept for a maximum of 90 days, then deleted. You may request early deletion by contacting us.",
+    "newsletterTitle": "Newsletter",
+    "newsletterBody": "If you subscribe to the newsletter, your email address is transmitted to Brevo (ex-Sendinblue), a third-party email marketing service. You can unsubscribe at any time by clicking the unsubscribe link in any email.",
+    "rightsTitle": "Your rights",
+    "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, and request deletion of your personal data.",
+    "contact": "To exercise your rights: {email}"
   },
   "legal": {
     "title": "Legal notice",
@@ -365,7 +369,7 @@
   "accessibility": {
     "title": "Accessibility",
     "commitmentTitle": "Accessibility commitment",
-    "commitmentBody": "This website aims to be accessible to as many people as possible, in line with WCAG 2.1 guidelines (Level AA). Measures implemented include: full keyboard navigation, color contrast meeting recommended ratios (minimum 4.5:1 for normal text), alternative text on all informative images, semantic HTML structure with ARIA landmarks, and a skip-to-content link.",
+    "commitmentBody": "This website aims to be accessible to as many people as possible, in line with WCAG 2.2 guidelines (Level AA). Measures implemented include: full keyboard navigation, color contrast meeting recommended ratios (minimum 4.5:1 for normal text), alternative text on all informative images, semantic HTML structure with ARIA landmarks, a skip-to-content link, and focus-visible indicators on all interactive elements.",
     "limitsTitle": "Known limitations",
     "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
     "helpTitle": "Accessibility issue?",

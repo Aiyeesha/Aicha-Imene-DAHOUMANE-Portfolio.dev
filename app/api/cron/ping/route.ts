@@ -51,7 +51,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "db_insert_failed" }, { status: 500 });
   }
 
-  // ── 4. Purge des lignes > 30 jours ────────────────────────────────────────
+  // ── 4. Purge des lignes uptime_pings > 30 jours ──────────────────────────
   // Purge non bloquante — une erreur ici ne fait pas échouer la réponse.
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const { error: purgeError } = await supabase
@@ -59,6 +59,17 @@ export async function GET(req: Request) {
     .delete()
     .lt("checked_at", cutoff);
   if (purgeError) console.warn("[CRON/PING] Purge warning:", purgeError.message);
+
+  // ── 5. Purge des messages de contact > 90 jours ───────────────────────────
+  // Rétention RGPD : données personnelles (nom, email, message) conservées
+  // 90 jours maximum, conformément à la politique de confidentialité.
+  // Purge non bloquante.
+  const msgCutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+  const { error: msgPurgeError } = await supabase
+    .from("messages")
+    .delete()
+    .lt("created_at", msgCutoff);
+  if (msgPurgeError) console.warn("[CRON/PING] Messages purge warning:", msgPurgeError.message);
 
   return NextResponse.json({
     ok:             true,

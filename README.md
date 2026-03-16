@@ -68,6 +68,7 @@ Browser
   │
   ├─ Upstash Redis
   │     Keys: portfolio:rl:contact · portfolio:rl:testimonial
+  │           portfolio:rl:newsletter · portfolio:rl:admin
   │           portfolio:uptime:stats:30d · project:* · projects_with_assets:*
   │
   └─ Vercel
@@ -95,7 +96,7 @@ Browser
 - **Command palette** — `⌘K` / `Ctrl+K` — navigate sections, switch track/theme/language, download CV, open LinkedIn
 - **Animations** — Framer Motion: scroll parallax, directional reveals, stagger, AnimatedCounter, AnimatePresence on track switch
 - **Open Graph** — dynamic OG images per blog article, project page, `/about`, and `/certifications` (`next/og`)
-- **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
+- **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP; `X-Powered-By` suppressed
 - **RSS feed** — `/feed.xml` (EN articles)
 - **PWA** — Web App Manifest (installable), `display_override`, shortcuts, icons 192/512
 - **Accessibility** — skip link, keyboard nav, focus rings, ARIA landmarks, WCAG 2.2 AA
@@ -156,6 +157,10 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `CONTACT_RATE_LIMIT_MAX_REQUESTS` | Optional | Max requests per window (default: 5) |
 | `TESTIMONIAL_SUBMIT_TOKEN` | Optional | Token for `/[locale]/testimonial-submit?token=...` (generate with `openssl rand -base64 32`) |
 | `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
+| `ADMIN_USERNAME` | Optional | Username for `/admin` HTTP Basic Auth |
+| `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
+| `BREVO_API_KEY` | Optional | Brevo (ex-Sendinblue) API key for newsletter subscriptions |
+| `BREVO_LIST_ID` | Optional | Brevo contact list ID |
 | `NEXT_PUBLIC_FORMSPREE_ID` | Optional | Formspree form ID (used by `/api/health` to check contact form availability) |
 
 ---
@@ -253,11 +258,18 @@ npm test             # Jest unit tests
 
 ## Security
 
-- HTTP security headers configured in `next.config.mjs` (CSP, HSTS, X-Frame-Options…)
-- Supabase Row Level Security (RLS) enabled on all tables
-- Contact form: rate-limiting (Upstash Redis), honeypot field, origin validation
-- See [`SECURITY.md`](SECURITY.md) for vulnerability disclosure policy
-- Security contact: [`/.well-known/security.txt`](public/.well-known/security.txt)
+| Layer | Measure |
+|-------|---------|
+| HTTP headers | CSP, HSTS (2 yr + preload), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — `X-Powered-By` suppressed |
+| Database | Supabase RLS on all tables — `project_assets` restricted to published projects only |
+| Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/newsletter`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/health`, and `/admin` (brute-force protection) |
+| Admin panel | HTTP Basic Auth + middleware rate-limit (10 req / 5 min / IP) |
+| Contact form | Honeypot, origin check, server-side input validation, dual submission |
+| Debug routes | `/api/redis-test` returns 404 in production |
+| Crawlers | `robots.txt` disallows `/cv/` and `/admin/` |
+
+See [`SECURITY.md`](SECURITY.md) for the full security policy and vulnerability disclosure process.
+Security contact: [`/.well-known/security.txt`](public/.well-known/security.txt)
 
 ---
 
