@@ -1,22 +1,16 @@
 name: CI
 
-# ── Supply-chain security note ────────────────────────────────────────────────
-# GitHub Actions tags (v4, v6) are mutable — a compromised maintainer could
-# push malicious code under the same tag.  Best practice is to pin every
-# third-party action to its full immutable commit SHA.
+# ── Supply-chain security — SHA pinning ──────────────────────────────────────
+# All third-party actions are pinned to their full immutable commit SHA.
+# Mutable tags (v4, v6) can be silently redirected by a compromised maintainer;
+# a SHA cannot be forged or reused for different content.
 #
-# To generate pinned SHAs, run these commands once (requires gh CLI):
+# Pinned versions (verified 2026-03-17 via GitHub API):
+#   actions/checkout        34e114876b0b11c390a56381ad16ebd13914f8d5  v4.3.1
+#   actions/setup-node      53b83947a5a98c8d113130e565377fae1a50d02f  v6.3.0
+#   actions/upload-artifact ea165f8d65b6e75b540449e92b4886f43607fa02  v4.6.2
 #
-#   gh api repos/actions/checkout/git/ref/tags/v4   --jq '.object.sha'
-#   gh api repos/actions/setup-node/git/ref/tags/v6 --jq '.object.sha'
-#   gh api repos/actions/upload-artifact/git/ref/tags/v4 --jq '.object.sha'
-#
-# Then replace e.g. `uses: actions/checkout@v4` with:
-#   uses: actions/checkout@<SHA>  # v4.x.x
-#
-# Dependabot (.github/dependabot.yml) is already configured to open monthly PRs
-# for Actions updates — it will keep pinned SHAs up to date automatically once
-# the initial pins are set.
+# Dependabot (.github/dependabot.yml) opens monthly PRs to keep SHAs current.
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -38,10 +32,10 @@ jobs:
       NEXT_PUBLIC_OG_NAME: ${{ secrets.NEXT_PUBLIC_OG_NAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
         with:
           node-version: 24
           cache: npm
@@ -63,7 +57,7 @@ jobs:
 
       # Upload du build pour le job E2E (évite de rebuilder)
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: next-build
           path: |
@@ -85,10 +79,10 @@ jobs:
       NEXT_PUBLIC_OG_NAME: ${{ secrets.NEXT_PUBLIC_OG_NAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
         with:
           node-version: 24
           cache: npm
@@ -108,7 +102,7 @@ jobs:
 
       # Conserver les rapports d'échec pour debug
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         if: failure()
         with:
           name: playwright-report
