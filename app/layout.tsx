@@ -20,17 +20,14 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
-  // "optional" : 100ms window — élimine le CLS lié au font-swap.
-  // Si la font est en cache (2ᵉ visite+), elle charge dans la fenêtre → zéro flash.
-  // Sur première visite lente, le fallback est utilisé pour toute la page = stable.
-  display: "optional",
+  display: "swap",
   weight: ["400", "500", "600", "700"],
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-  display: "optional",
+  display: "swap",
 });
 
 // Root layout — point d'entrée HTML unique (html + body)

@@ -47,7 +47,7 @@
     "downloadCv": "Download my CV (PDF)",
     "workWithMe": "Work with me",
     "message": "Message",
-    "call15": "Call 15 min",
+    "call15": "Call 30 min",
     "downloadProfile": "Download my profile (PDF)",
     "cvOnRequest": "CV available on request (set NEXT_PUBLIC_CV_PDF_URL)"
   },

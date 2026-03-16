@@ -23,7 +23,17 @@
   }
 }
 
-html { scroll-behavior: smooth; scroll-padding-top: var(--nav-offset); }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-offset);
+  /*
+    Prevent CLS from scrollbar appearing/disappearing between pages.
+    Reserves permanent space for the vertical scrollbar so the viewport
+    width never changes during navigation (SPA) or on short pages.
+    Chrome 94+, Firefox 97+, Safari 15.4+ — safe to use.
+  */
+  scrollbar-gutter: stable;
+}
 
 /* Native form controls (select, date, etc.) follow the active theme */
 html { color-scheme: light; }
