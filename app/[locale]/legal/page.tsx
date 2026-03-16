@@ -35,6 +35,13 @@ export default async function LegalPage({
           <h2 className="text-lg font-semibold">{t("liabilityTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("liabilityBody")}</p>
         </section>
+
+        {/* Données personnelles — clé présente dans les traductions, section précédemment non rendue */}
+        <section className="card p-6">
+          <h2 className="text-lg font-semibold">{t("dataTitle")}</h2>
+          <p className="mt-2 text-sm text-muted-2">{t("dataBody", { email: email || "—" })}</p>
+        </section>
+
       </div>
     </div>
   );

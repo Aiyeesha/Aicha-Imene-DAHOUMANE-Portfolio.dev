@@ -244,8 +244,8 @@
     "title": "Ils m'ont fait confiance"
   },
   "metrics": {
-    "apex":     "Classes Apex développées",
-    "flows":    "Flows d'automatisation",
+    "apex": "Classes Apex développées",
+    "flows": "Flows d'automatisation",
     "workload": "Charge manuelle réduite",
     "projects": "Projets livrés"
   },
@@ -313,15 +313,19 @@
     "copied": "Copié"
   },
   "privacy": {
-    "title": "Confidentialité & mentions",
-    "analyticsTitle": "Analytics",
-    "analyticsBody": "Ce site n'utilise pas d'analytics de tracking par défaut.",
+    "title": "Politique de confidentialité",
+    "analyticsTitle": "Analytics & Performance",
+    "analyticsBody": "Ce site utilise Vercel Analytics et Vercel Speed Insights en production pour mesurer les Core Web Vitals et les performances réelles. Aucune donnée personnelle n’est collectée — les métriques sont agrégées et anonymes. Ces services sont désactivés en développement.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "Aucun cookie marketing n'est déposé. Seuls des cookies techniques essentiels peuvent être utilisés par la plateforme (sécurité, fonctionnement).",
-    "formTitle": "Données du formulaire",
-    "formBody": "Lorsque vous envoyez le formulaire, votre nom, email, sujet et message sont traités pour vous répondre. Si Formspree est activé, les données sont transmises à Formspree pour l'acheminement.",
-    "retention": "Conservation : les messages sont conservés uniquement le temps nécessaire au traitement de votre demande.",
-    "contact": "Contact : {email}"
+    "cookiesBody": "Aucun cookie marketing ni de suivi n’est déposé. Un cookie fonctionnel (NEXT_LOCALE) enregistre votre préférence de langue. Vercel peut déposer des cookies techniques à des fins d’infrastructure (CDN, protection DDoS).",
+    "formTitle": "Données du formulaire de contact",
+    "formBody": "Lorsque vous envoyez le formulaire de contact, les données suivantes sont collectées : nom, email, sujet, message, adresse IP et User-Agent. Ces données sont utilisées uniquement pour traiter et répondre à votre demande. Si Formspree est activé en solution de secours, le contenu du message est transmis à Formspree (service tiers d’acheminement d’emails basé aux États-Unis).",
+    "retention": "Conservation : les messages de contact sont conservés au maximum 90 jours, puis supprimés. Vous pouvez demander une suppression anticipée en nous contactant.",
+    "newsletterTitle": "Newsletter",
+    "newsletterBody": "Si vous vous inscrivez à la newsletter, votre adresse email est transmise à Brevo (ex-Sendinblue), un service tiers d’email marketing. Vous pouvez vous désabonner à tout moment en cliquant sur le lien de désinscription présent dans chaque email.",
+    "rightsTitle": "Vos droits",
+    "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d’un droit d’accès, de rectification et de suppression de vos données personnelles.",
+    "contact": "Pour exercer vos droits : {email}"
   },
   "legal": {
     "title": "Mentions légales",
@@ -365,7 +369,7 @@
   "accessibility": {
     "title": "Accessibilité",
     "commitmentTitle": "Engagement d'accessibilité",
-    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.1 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d'information, structure HTML sémantique avec landmarks ARIA, et lien d'évitement vers le contenu principal.",
+    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
     "limitsTitle": "Limites connues",
     "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours sont les bienvenus.",
     "helpTitle": "Un problème d'accessibilité ?",

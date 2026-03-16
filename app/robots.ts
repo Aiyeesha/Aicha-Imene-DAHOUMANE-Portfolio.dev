@@ -6,8 +6,12 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/"
+      allow: "/",
+      // /cv/ : les PDFs du CV ne doivent pas être indexés directement par Google
+      // (risque d'indexation d'une version statique dépassée, et OSINT inutile).
+      // /admin/ : panneau d'administration — jamais indexé.
+      disallow: ["/cv/", "/admin/"],
     },
-    sitemap: `${base}/sitemap.xml`
+    sitemap: `${base}/sitemap.xml`,
   };
 }

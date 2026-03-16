@@ -71,7 +71,7 @@ export default async function ColophonPage({ params }: PageProps) {
     {
       title: isFr ? "Frontend" : "Frontend",
       items: [
-        { name: "Next.js 15", role: isFr ? "Framework React (App Router, SSR, SSG, ISR)" : "React framework (App Router, SSR, SSG, ISR)", link: "https://nextjs.org" },
+        { name: "Next.js 16", role: isFr ? "Framework React (App Router, SSR, SSG, ISR)" : "React framework (App Router, SSR, SSG, ISR)", link: "https://nextjs.org" },
         { name: "React 19", role: isFr ? "Bibliothèque UI — Server & Client Components" : "UI library — Server & Client Components", link: "https://react.dev" },
         { name: "TypeScript 5", role: isFr ? "Typage statique de bout en bout" : "End-to-end static typing", link: "https://www.typescriptlang.org" },
         { name: "Tailwind CSS", role: isFr ? "Utility-first CSS — dark mode via class" : "Utility-first CSS — dark mode via class", link: "https://tailwindcss.com" },
@@ -97,7 +97,7 @@ export default async function ColophonPage({ params }: PageProps) {
       title: "Backend",
       items: [
         { name: "Supabase", role: isFr ? "PostgreSQL hébergé — projets, certifications, contact, about. RLS activé sur toutes les tables." : "Hosted PostgreSQL — projects, certifications, contact, about. RLS enabled on all tables.", link: "https://supabase.com" },
-        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting du formulaire de contact" : "Stale-while-revalidate cache + contact form rate-limiting", link: "https://upstash.com" },
+        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur 6 endpoints (contact, newsletter, témoignages, cache, health, admin)" : "Stale-while-revalidate cache + rate-limiting on 6 endpoints (contact, newsletter, testimonials, cache, health, admin)", link: "https://upstash.com" },
         { name: "Formspree", role: isFr ? "Acheminement email de secours pour le formulaire de contact" : "Email routing fallback for the contact form", link: "https://formspree.io" },
       ],
     },
@@ -151,22 +151,26 @@ export default async function ColophonPage({ params }: PageProps) {
 
   const secPoints = isFr
     ? [
-        "**En-têtes HTTP** configurés dans `next.config.mjs` : CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.",
-        "**Row Level Security (RLS)** activé sur toutes les tables Supabase — aucune donnée non publique accessible sans authentification.",
-        "**Rate-limiting** du formulaire de contact via Upstash Redis : 5 requêtes par fenêtre de 10 minutes par IP.",
-        "**Honeypot** : champ caché dans le formulaire pour détecter les soumissions automatiques.",
-        "**Validation d'origine** : les requêtes API sans le bon `Origin` / `Referer` sont rejetées.",
-        "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116).",
-        "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles restent côté serveur.",
+        "**En-têtes HTTP** dans `next.config.mjs` : CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Fingerprinting du framework désactivé (`poweredByHeader: false`).",
+        "**Row Level Security (RLS)** activé sur toutes les tables Supabase. `project_assets` restreinte aux assets des projets publiés uniquement — les brouillons ne sont pas exposés via la clé anon.",
+        "**Rate-limiting** via Upstash Redis (fenêtre glissante) sur 6 endpoints : contact (5 req/10 min), newsletter (3 req/h), témoignages (3 req/24h), invalidation cache (10 req/min), health check (30 req/min), panneau admin (10 req/5 min — protection anti brute-force).",
+        "**Honeypot** : champs cachés dans les formulaires de contact et de témoignages — les bots remplissant ces champs reçoivent un 200 silencieux.",
+        "**Validation d'origine** : les requêtes API provenant d'origines inconnues sont rejetées en production.",
+        "**Routes de diagnostic désactivées en production** : `/api/redis-test` retourne 404 hors mode développement.",
+        "**CORS restreint** : `/api/health` scoped à l'origine du site uniquement — les outils de monitoring opèrent en serveur-à-serveur.",
+        "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116) — contact de divulgation responsable.",
+        "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (service role, token Redis, credentials admin) restent strictement côté serveur.",
       ]
     : [
-        "**HTTP headers** configured in `next.config.mjs`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.",
-        "**Row Level Security (RLS)** enabled on all Supabase tables — no non-public data accessible without authentication.",
-        "**Contact form rate-limiting** via Upstash Redis: 5 requests per 10-minute window per IP.",
-        "**Honeypot**: hidden field in the contact form to detect automated submissions.",
-        "**Origin validation**: API requests without the correct `Origin` / `Referer` header are rejected.",
-        "**security.txt** available at `/.well-known/security.txt` (RFC 9116).",
-        "**No secrets** in `NEXT_PUBLIC_*` variables — all sensitive keys stay server-side.",
+        "**HTTP headers** in `next.config.mjs`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Framework fingerprinting suppressed via `poweredByHeader: false`.",
+        "**Row Level Security (RLS)** enabled on all Supabase tables. `project_assets` restricted to published-project assets only — draft assets are not exposed via the anon key.",
+        "**Rate-limiting** via Upstash Redis (sliding window) on 6 endpoints: contact (5 req/10 min), newsletter (3 req/h), testimonials (3 req/24h), cache invalidation (10 req/min), health check (30 req/min), admin panel (10 req/5 min — brute-force protection).",
+        "**Honeypot fields** on contact and testimonial forms — bots filling hidden fields receive a silent 200 response.",
+        "**Origin validation**: API requests from unknown origins are rejected in production.",
+        "**Debug routes disabled in production**: `/api/redis-test` returns 404 outside of development mode.",
+        "**CORS restricted**: `/api/health` scoped to the site origin only — monitoring tools call server-to-server, no browser CORS needed.",
+        "**security.txt** at `/.well-known/security.txt` (RFC 9116) — responsible disclosure contact.",
+        "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (service role, Redis token, admin credentials) remain strictly server-side.",
       ];
 
   // ── Helpers — rendu texte Markdown minimal (gras uniquement) ──────────────

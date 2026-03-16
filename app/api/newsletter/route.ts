@@ -16,10 +16,29 @@
 //   - NEXT_PUBLIC_SITE_URL utilisé pour la vérification d'origine
 
 import { NextRequest, NextResponse } from "next/server";
+import { newsletterRatelimit } from "@/lib/ratelimit";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/contacts";
 
 export async function POST(req: NextRequest) {
+  // ── Rate-limiting ────────────────────────────────────────────────────────
+  // 3 soumissions par heure par IP — protège contre :
+  //   - l'épuisement du quota Brevo (plan gratuit : 300 emails/jour)
+  //   - l'énumération d'emails valides via les codes de retour
+  //   - les inscriptions non consenties vers tiers
+  const ip =
+    req.headers.get("x-real-ip") ??
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown";
+
+  const { success } = await newsletterRatelimit.limit(ip);
+  if (!success) {
+    return NextResponse.json(
+      { error: "too_many_requests" },
+      { status: 429, headers: { "Retry-After": "3600" } }
+    );
+  }
+
   // ── Variables d'environnement ───────────────────────────────────────────
   const apiKey = process.env.BREVO_API_KEY;
   const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null;
