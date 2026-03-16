@@ -9,9 +9,14 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- **CLS fix — `scrollbar-gutter: stable`** — adds `scrollbar-gutter: stable` to `<html>` in `globals.css`; prevents viewport width from changing when the scrollbar appears/disappears during SPA navigation between pages of different heights (real user CLS was 0.46 🔴)
+- **CLS fix — hero `min-height`** — adds `min-h-[320px] sm:min-h-[400px]` to the hero section to prevent height collapse during Framer Motion entrance animation
+- **TBT fix — font `display: swap`** — reverted `display: optional` → `display: swap` for Space Grotesk and Inter (other session regression); desktop TBT had regressed to 240ms
+- **Vercel region** — changed from `iad1` (US East) to `cdg1` (Paris) for lower latency for FR/EU visitors
+
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
-- Execute `supabase/update-sections.sql` in Supabase to populate project detail pages
 - Newsletter opt-in (ConvertKit or Brevo)
 
 ---
