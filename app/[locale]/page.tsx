@@ -49,7 +49,8 @@ export default async function Home({ params }: Props) {
       {/* HERO — simplifié (photo + titre + badges + 2 CTAs)
           ProfileNarrative et ProfileFactsCard ont été déplacés vers /about
           pour que le hero tienne en un seul écran sur desktop 1440px et mobile 375px. */}
-      <section id="hero" className="py-8 md:py-10">
+      {/* min-h prevents height collapse during Framer Motion opacity:0 entrance */}
+      <section id="hero" className="py-8 md:py-10 min-h-[320px] sm:min-h-[400px]">
         <div className="pt-4 md:pt-6">
           <TrackAwareHero />
         </div>
