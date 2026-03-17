@@ -321,8 +321,6 @@
     "formTitle": "Données du formulaire de contact",
     "formBody": "Lorsque vous envoyez le formulaire de contact, les données suivantes sont collectées : nom, email, sujet, message, adresse IP et User-Agent. Ces données sont utilisées uniquement pour traiter et répondre à votre demande. Si Formspree est activé en solution de secours, le contenu du message est transmis à Formspree (service tiers d’acheminement d’emails basé aux États-Unis).",
     "retention": "Conservation : les messages de contact sont conservés au maximum 90 jours, puis supprimés. Vous pouvez demander une suppression anticipée en nous contactant.",
-    "newsletterTitle": "Newsletter",
-    "newsletterBody": "Si vous vous inscrivez à la newsletter, votre adresse email est transmise à Brevo (ex-Sendinblue), un service tiers d’email marketing. Vous pouvez vous désabonner à tout moment en cliquant sur le lien de désinscription présent dans chaque email.",
     "rightsTitle": "Vos droits",
     "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d’un droit d’accès, de rectification et de suppression de vos données personnelles.",
     "contact": "Pour exercer vos droits : {email}"
