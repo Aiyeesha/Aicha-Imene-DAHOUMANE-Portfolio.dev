@@ -83,6 +83,21 @@ export async function POST(req: NextRequest) {
   if (message.length < 20)               return NextResponse.json({ error: "Message too short (20 chars min)." }, { status: 400 });
   if (message.length > 2000)             return NextResponse.json({ error: "Message too long (2000 chars max)." }, { status: 400 });
 
+  // Valider photo_url : doit être une URL http/https valide ou null.
+  // Sans cette validation, un attaquant pourrait injecter une URL javascript:
+  // (XSS si rendue sans sanitisation) ou une URL de tracking arbitraire
+  // (fuite d'IP lors de l'affichage). On accepte uniquement http/https.
+  if (photo_url) {
+    try {
+      const parsed = new URL(photo_url);
+      if (!["http:", "https:"].includes(parsed.protocol)) {
+        return NextResponse.json({ error: "Invalid photo URL protocol." }, { status: 400 });
+      }
+    } catch {
+      return NextResponse.json({ error: "Invalid photo URL format." }, { status: 400 });
+    }
+  }
+
   // ── 6. Insertion Supabase (service_role — contourne le RLS) ─────────────────
   const supabase = createAdminSupabaseClient();
   const { error } = await supabase.from("testimonial_submissions").insert({
