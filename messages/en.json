@@ -321,8 +321,6 @@
     "formTitle": "Contact form data",
     "formBody": "When you submit the contact form, the following data is collected: name, email, topic, message, IP address, and User-Agent. This data is used solely to process and respond to your request. If Formspree is enabled as a fallback, message content is forwarded to Formspree (a third-party email delivery service based in the United States).",
     "retention": "Retention: contact messages are kept for a maximum of 90 days, then deleted. You may request early deletion by contacting us.",
-    "newsletterTitle": "Newsletter",
-    "newsletterBody": "If you subscribe to the newsletter, your email address is transmitted to Brevo (ex-Sendinblue), a third-party email marketing service. You can unsubscribe at any time by clicking the unsubscribe link in any email.",
     "rightsTitle": "Your rights",
     "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, and request deletion of your personal data.",
     "contact": "To exercise your rights: {email}"
