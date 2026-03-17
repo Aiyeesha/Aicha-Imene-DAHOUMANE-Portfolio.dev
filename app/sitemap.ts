@@ -10,6 +10,10 @@ import type { MetadataRoute } from "next";
 import { readAllPosts } from "@/content/blog/fs";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 
+// Rendu à la requête — le sitemap appelle Supabase (getPublishedProjectsWithAssetsCached)
+// qui ne doit pas être appelé au build time (credentials absentes en CI pour les PRs Dependabot).
+export const dynamic = "force-dynamic";
+
 const STATIC_LAST_MODIFIED = new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD ?? "2026-02-04");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
