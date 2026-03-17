@@ -24,13 +24,18 @@ const url   = process.env.UPSTASH_REDIS_REST_URL;
 const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 // ── Factory : crée un limiteur no-op si Redis n'est pas disponible ────
-// Évite de crasher en développement local ou en CI sans Redis configuré.
+// En développement local et CI : success=true (pas de friction sans Redis).
+// En production  : success=false (fail-closed) pour éviter qu'une panne
+// Upstash désactive silencieusement toutes les protections anti-flood.
+// Un attaquant qui surveille le statut Upstash pourrait sinon déclencher
+// une attaque pendant une fenêtre de dégradation Redis.
+const isProd = process.env.NODE_ENV === "production";
 function createNoOpRatelimit(maxReq: number, windowMs: number) {
   return {
     limit: async () => ({
-      success: true,
+      success: !isProd, // fail-closed en production, permissif en dev/CI
       limit: maxReq,
-      remaining: maxReq,
+      remaining: isProd ? 0 : maxReq,
       reset: Date.now() + windowMs
     })
   } as unknown as Ratelimit;
@@ -90,10 +95,12 @@ export const adminRatelimit = redis
   ? createRatelimit(redis, 10, 300, "portfolio:rl:admin")
   : createNoOpRatelimit(10, 300_000);
 
-// ── Limiteur pour /api/newsletter ─────────────────────────────────────
-// 3 inscriptions par heure par IP.
-// Sans ce limiteur : abus quota Brevo, énumération d'emails via codes
-// de retour (409 = déjà inscrit), soumissions non consenties vers tiers.
-export const newsletterRatelimit = redis
-  ? createRatelimit(redis, 3, 3_600, "portfolio:rl:newsletter")
-  : createNoOpRatelimit(3, 3_600_000);
+// ── Limiteur pour /api/csp-report ─────────────────────────────────────
+// 20 rapports par 60 secondes par IP.
+// Remplace l'ancien compteur in-memory qui était réinitialisé à chaque
+// cold-start Vercel — inefficace sur une architecture serverless.
+// Un attaquant pouvait flooder /api/csp-report sans friction, épuisant
+// les function invocations Vercel Hobby (100 000/mois).
+export const cspReportRatelimit = redis
+  ? createRatelimit(redis, 20, 60, "portfolio:rl:csp-report")
+  : createNoOpRatelimit(20, 60_000);

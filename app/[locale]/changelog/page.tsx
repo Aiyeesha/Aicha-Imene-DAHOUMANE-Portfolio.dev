@@ -176,15 +176,6 @@ export default async function ChangelogPage({
         >
           {l.formatLink}
         </a>
-        {" · "}
-        <a
-          href="https://semver.org/spec/v2.0.0.html"
-          target="_blank"
-          rel="noreferrer"
-          className="underline underline-offset-4 hover:opacity-80"
-        >
-          {l.semver}
-        </a>
       </p>
 
       {/* ── Liste des versions ──────────────────────────────────────────────── */}
@@ -195,21 +186,8 @@ export default async function ChangelogPage({
             {/* En-tête de version */}
             <div className="flex flex-wrap items-baseline gap-3 border-b border-black/10 dark:border-white/10 pb-3">
               <h2 className="text-xl font-semibold">
-                {v.version === "Unreleased" ? l.unreleased : `v${v.version}`}
+                {v.version === "Unreleased" ? l.unreleased : v.date || "—"}
               </h2>
-              {v.date && (
-                <span className="text-sm text-muted-2 tabular-nums">{v.date}</span>
-              )}
-              {v.compareUrl && (
-                <a
-                  href={v.compareUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="ml-auto text-xs text-muted-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded"
-                >
-                  {l.compare}
-                </a>
-              )}
             </div>
 
             {/* Sections (Added, Changed, Fixed…) */}
