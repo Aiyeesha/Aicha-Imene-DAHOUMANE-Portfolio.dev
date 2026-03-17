@@ -71,6 +71,18 @@ export async function GET(req: Request) {
     .lt("created_at", msgCutoff);
   if (msgPurgeError) console.warn("[CRON/PING] Messages purge warning:", msgPurgeError.message);
 
+  // ── 6. Purge des soumissions de témoignages non approuvées > 90 jours ─────
+  // Les testimonial_submissions stockent l'IP de soumission (donnée personnelle).
+  // Les soumissions approuvées sont conservées (elles alimentent la table
+  // testimonials) ; les soumissions rejetées ou en attente sont purgées.
+  // Purge non bloquante.
+  const { error: submPurgeError } = await supabase
+    .from("testimonial_submissions")
+    .delete()
+    .lt("created_at", msgCutoff) // même cutoff 90 jours
+    .eq("approved", false);
+  if (submPurgeError) console.warn("[CRON/PING] Testimonial submissions purge warning:", submPurgeError.message);
+
   return NextResponse.json({
     ok:             true,
     checkedAt:      report.checkedAt,

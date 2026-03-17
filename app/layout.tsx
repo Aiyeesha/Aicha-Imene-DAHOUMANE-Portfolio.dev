@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import "./globals.css";
 
@@ -140,6 +141,9 @@ function buildJsonLd(locale: string) {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale(); // "en" | "fr"
   const jsonLd = buildJsonLd(locale);
+  // Lire le nonce injecté par proxy.ts dans les headers de requête.
+  // undefined si le middleware ne tourne pas (build statique, tests).
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html
       lang={locale}
@@ -159,8 +163,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         )}
         {/* Formspree : formulaire de contact (chargé à la demande) */}
         <link rel="dns-prefetch" href="https://formspree.io" />
+        {/* nonce : autorise ce script inline dans la CSP sans 'unsafe-inline' */}
         <script
           type="application/ld+json"
+          nonce={nonce}
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
@@ -169,8 +175,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {children}
         <DevConsoleMessage />
         <ServiceWorkerRegistration />
-        {process.env.NODE_ENV === "production" && <Analytics />}
-        {process.env.NODE_ENV === "production" && <SpeedInsights />}
+        {/* nonce transmis pour que les scripts Vercel respectent la CSP */}
+        {process.env.NODE_ENV === "production" && <Analytics nonce={nonce} />}
+        {process.env.NODE_ENV === "production" && <SpeedInsights nonce={nonce} />}
       </body>
     </html>
   );
