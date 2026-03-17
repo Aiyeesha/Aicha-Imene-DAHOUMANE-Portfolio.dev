@@ -167,6 +167,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <script
           type="application/ld+json"
           nonce={nonce}
+          suppressHydrationWarning
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
