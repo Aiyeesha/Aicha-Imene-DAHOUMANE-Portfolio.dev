@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { contactRatelimit } from "@/lib/ratelimit";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
 type Payload = {
   name: string;
@@ -82,22 +83,19 @@ async function saveToSupabase(input: {
   userAgent?: string | null;
   locale?: string | null;
 }) {
-  // Uses the anonymous key and relies on RLS policies to allow inserts.
-  // If you prefer to bypass RLS, switch to a SERVICE_ROLE key kept server-side only.
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url || !anonKey) {
-    // We don't fail the request if Supabase isn't configured.
-    // The contact message can still go to Formspree.
-    console.warn("[CONTACT] Supabase env vars missing, skipping DB insert");
+  // Utilise service_role (createAdminSupabaseClient) — contourne le RLS.
+  // La table messages n'a plus de policy INSERT pour anon : l'insertion directe
+  // via l'API REST Supabase avec la clé anon publique est donc bloquée.
+  // Seule cette Route Handler (côté serveur) peut insérer des messages,
+  // garantissant que honeypot, origin guard et rate-limiting sont toujours actifs.
+  let supabase: ReturnType<typeof createAdminSupabaseClient>;
+  try {
+    supabase = createAdminSupabaseClient();
+  } catch {
+    // SUPABASE_SERVICE_ROLE_KEY non configurée — non bloquant, Formspree prend le relais.
+    console.warn("[CONTACT] Admin Supabase client unavailable, skipping DB insert");
     return;
   }
-
-  const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(url, anonKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
 
   const { error } = await supabase.from("messages").insert({
     name: input.name,
@@ -113,8 +111,6 @@ async function saveToSupabase(input: {
 
   if (error) {
     console.error("[CONTACT] Supabase insert failed", error);
-    // Non-blocking by default to avoid losing messages if DB policy is misconfigured.
-    // If you want strict behaviour, throw new Error("supabase_failed");
   }
 }
 
@@ -127,11 +123,13 @@ async function saveToSupabase(input: {
  * - If FORMSPREE_ENDPOINT is set, forwards to Formspree and maps errors
  */
 export async function POST(req: Request) {
-  // Origin guard: in production, reject cross-origin requests if configured.
-  // Note: some legitimate clients may omit the Origin header (rare for browsers on same-origin).
+  // Origin guard strict : en production, exiger que l'en-tête Origin soit présent
+  // et corresponde à l'origine du site. Les navigateurs envoient toujours Origin
+  // sur les requêtes POST cross-site ; les bots automatisés l'omettent souvent.
+  // Rejeter aussi les requêtes sans Origin pour bloquer curl/scripts directs.
   if (process.env.NODE_ENV === "production" && ALLOWED_ORIGIN) {
     const origin = req.headers.get("origin") || "";
-    if (origin && origin !== ALLOWED_ORIGIN) {
+    if (!origin || origin !== ALLOWED_ORIGIN) {
       return NextResponse.json({ ok: false, error: "forbidden_origin" }, { status: 403 });
     }
   }

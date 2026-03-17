@@ -41,6 +41,12 @@ const nextConfig = {
     // Tailles d'image générées pour les usages fill/responsive.
     // On conserve les valeurs par défaut mais on ajoute 480px (courant sur mobile).
     deviceSizes: [480, 640, 750, 828, 1080, 1200, 1920],
+    // Autoriser l'optimisation des images provenant de Supabase Storage.
+    // Sans cette liste, <Image src="https://*.supabase.co/..."> lève une erreur.
+    remotePatterns: [
+      { protocol: "https", hostname: "**.supabase.co" },
+      { protocol: "https", hostname: "**.supabase.in" },
+    ],
   },
 
   async headers() {

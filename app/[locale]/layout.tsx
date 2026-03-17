@@ -4,7 +4,6 @@ import Providers from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import Navbar from "@/components/Navbar";
-import { cookies } from "next/headers";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
 import dynamic from "next/dynamic";
@@ -85,14 +84,12 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale: locale });
   const t = await getTranslations({ locale });
 
-  // Read the preferred track from a cookie so SSR and the client agree.
-  const cookieStore = await cookies();
-  const rawTrack = cookieStore.get("track")?.value;
-  const initialTrack = rawTrack === "itops" || rawTrack === "salesforce" ? rawTrack : "salesforce";
-
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      <Providers initialTrack={initialTrack}>
+      {/* initialTrack defaults to "salesforce"; Providers restores the saved
+          preference from localStorage on mount (see providers.tsx useEffect).
+          Removing cookies() here enables ISR and CDN caching for all pages. */}
+      <Providers initialTrack="salesforce">
         <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070B1A] dark:text-white">
           <div className="page-gradient" />
 

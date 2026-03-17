@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { ReactNode, createContext, useContext, useMemo, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 export type Track = "itops" | "salesforce";
 type TrackContextValue = { track: Track; setTrack: (t: Track) => void };
@@ -31,6 +31,17 @@ export default function Providers({
   initialTrack: Track;
 }) {
   const [track, setTrackState] = useState<Track>(initialTrack);
+
+  // Hydrate the track from localStorage on mount.
+  // The layout no longer reads cookies (enabling ISR/CDN caching), so we restore
+  // the saved preference client-side. This causes at most one extra render for
+  // users who have previously switched to "itops".
+  useEffect(() => {
+    const saved = localStorage.getItem("track");
+    if (saved === "itops" || saved === "salesforce") {
+      setTrackState(saved);
+    }
+  }, []);
 
   const setTrack = (t: Track) => {
     setTrackState(t);

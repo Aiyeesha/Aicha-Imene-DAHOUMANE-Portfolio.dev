@@ -37,8 +37,12 @@ const intlHandler = createMiddleware({
 function buildCSP(nonce: string, isDev: boolean): string {
   return [
     "default-src 'self'",
+    // Dev : 'unsafe-inline' + 'unsafe-eval' nécessaires — webpack HMR injecte de nombreux
+    // inline scripts sans nonce (hot-update chunks, error overlay, source maps).
+    // Ces directives ne s'appliquent JAMAIS en production (isDev = false → branche else).
+    // Prod : nonce uniquement — Next.js applique automatiquement x-nonce aux RSC scripts.
     isDev
-      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com`
+      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com`
       : `script-src 'self' 'nonce-${nonce}' https://assets.calendly.com https://va.vercel-scripts.com`,
     "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
     "img-src 'self' data: https://*.supabase.co https://*.supabase.in",
@@ -55,10 +59,32 @@ function buildCSP(nonce: string, isDev: boolean): string {
   ].join("; ");
 }
 
+// ── Comparaison de strings en temps constant (timing-safe) ───────────────────
+// crypto.subtle.timingSafeEqual() est disponible dans l'Edge Runtime.
+// La comparaison == en JS peut court-circuiter sur le premier caractère différent,
+// créant un timing oracle : un attaquant peut déduire le bon credential caractère
+// par caractère en mesurant le temps de réponse (même si le rate-limit atténue
+// fortement le risque ici, la correction a un coût quasi nul).
+//
+// Technique : on encode les deux chaînes en UTF-8 et on les pad à la même longueur
+// avant la comparaison pour éviter un oracle sur la longueur. La longueur est
+// comparée séparément avant de retourner le résultat final.
+async function timingSafeStringEqual(a: string, b: string): Promise<boolean> {
+  const enc = new TextEncoder();
+  const maxLen = Math.max(a.length, b.length);
+  // Pad pour que les buffers soient identiques en longueur avant timingSafeEqual
+  const aBuf = enc.encode(a.padEnd(maxLen, "\0"));
+  const bBuf = enc.encode(b.padEnd(maxLen, "\0"));
+  // timingSafeEqual compare les deux buffers octet par octet sans court-circuit
+  const equal = await crypto.subtle.timingSafeEqual(aBuf, bBuf);
+  // Vérifier aussi la longueur originale pour rejeter les paddings faussement égaux
+  return equal && a.length === b.length;
+}
+
 // ── HTTP Basic Auth pour /admin ───────────────────────────────────────────────
 // Retourne null si les credentials sont valides, NextResponse sinon.
 // Edge Runtime : utilise atob() (pas Buffer.from()).
-function adminAuth(request: NextRequest): NextResponse | null {
+async function adminAuth(request: NextRequest): Promise<NextResponse | null> {
   const expectedUser = process.env.ADMIN_USERNAME;
   const expectedPass = process.env.ADMIN_PASSWORD;
 
@@ -74,7 +100,10 @@ function adminAuth(request: NextRequest): NextResponse | null {
       if (colonIdx !== -1) {
         const user = decoded.slice(0, colonIdx);
         const pass = decoded.slice(colonIdx + 1);
-        if (user === expectedUser && pass === expectedPass) {
+        // Comparaison en temps constant — évite le timing oracle
+        const userMatch = await timingSafeStringEqual(user, expectedUser);
+        const passMatch = await timingSafeStringEqual(pass, expectedPass);
+        if (userMatch && passMatch) {
           return null; // autorisé
         }
       }
@@ -118,7 +147,7 @@ export async function proxy(request: NextRequest) {
       });
     }
 
-    const deny = adminAuth(request);
+    const deny = await adminAuth(request);
     if (deny) return deny;
 
     // Injecter le nonce dans les headers de requête (lisible par Server Components
