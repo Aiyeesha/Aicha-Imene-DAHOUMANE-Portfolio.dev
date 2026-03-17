@@ -9,32 +9,18 @@
 //
 // Format W3C CSP Level 2 :
 //   { "csp-report": { "violated-directive": "…", "blocked-uri": "…", … } }
+//
+// SÉCURITÉ (rate-limiting) :
+//   Utilise Upstash Redis (sliding window, 20 req/60 s par IP) au lieu d'un
+//   compteur in-memory. Sur Vercel serverless, chaque invocation peut être
+//   une instance distincte — l'état in-memory est réinitialisé à chaque
+//   cold-start. Sans Redis, un flood illimité épuiserait les 100 000
+//   function invocations/mois du plan Hobby.
 
 import { NextRequest, NextResponse } from "next/server";
+import { cspReportRatelimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
-
-// Limit report ingestion — browsers can flood this endpoint if a page
-// triggers many violations (e.g. browser extension injecting scripts).
-// A lightweight in-memory counter is sufficient; this endpoint is not
-// critical and will restart between cold-starts.
-const BURST_WINDOW_MS  = 60_000; // 1 minute
-const BURST_MAX        = 20;     // max reports per IP per window
-const windowStart      = new Map<string, number>();
-const windowCount      = new Map<string, number>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const start = windowStart.get(ip) ?? 0;
-  if (now - start > BURST_WINDOW_MS) {
-    windowStart.set(ip, now);
-    windowCount.set(ip, 1);
-    return false;
-  }
-  const count = (windowCount.get(ip) ?? 0) + 1;
-  windowCount.set(ip, count);
-  return count > BURST_MAX;
-}
 
 export async function POST(req: NextRequest) {
   const ip =
@@ -42,8 +28,10 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  if (isRateLimited(ip)) {
-    return new NextResponse(null, { status: 429 });
+  const { success } = await cspReportRatelimit.limit(ip);
+  if (!success) {
+    // 204 plutôt que 429 — le navigateur n'a pas besoin de savoir qu'il est limité
+    return new NextResponse(null, { status: 204 });
   }
 
   try {

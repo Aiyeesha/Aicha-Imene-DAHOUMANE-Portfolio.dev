@@ -46,13 +46,16 @@ export async function GET(req: NextRequest) {
     report.overall === "degraded"    ? 207 : // Multi-Status
                                        503;  // Service Unavailable
 
-  // Strip internal latencies from public response.
-  // latencyMs reveals infrastructure details (Supabase: 117ms, Redis: 66ms)
-  // that help fingerprint and time attacks. The cron job stores them
-  // server-side via runHealthChecks() directly — they never need to be public.
+  // Strip internal details from public response:
+  //   - latencyMs : reveals infrastructure timings (Supabase: 117ms, Redis: 66ms)
+  //                 enabling fingerprinting and timing attacks.
+  //   - message   : reveals internal configuration state ("Formspree not configured",
+  //                 "Redis unavailable", etc.) — information an attacker can use to
+  //                 identify which fallbacks are active and plan targeted attacks.
+  // The cron job stores the full data server-side — they never need to be public.
   const publicReport = {
     ...report,
-    services: report.services.map(({ latencyMs: _l, ...rest }) => rest),
+    services: report.services.map(({ latencyMs: _l, message: _m, ...rest }) => rest),
   };
 
   const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? "";

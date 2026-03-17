@@ -71,9 +71,9 @@ export default async function ColophonPage({ params }: PageProps) {
     {
       title: isFr ? "Frontend" : "Frontend",
       items: [
-        { name: "Next.js 16", role: isFr ? "Framework React (App Router, SSR, SSG, ISR)" : "React framework (App Router, SSR, SSG, ISR)", link: "https://nextjs.org" },
-        { name: "React 19", role: isFr ? "Bibliothèque UI — Server & Client Components" : "UI library — Server & Client Components", link: "https://react.dev" },
-        { name: "TypeScript 5", role: isFr ? "Typage statique de bout en bout" : "End-to-end static typing", link: "https://www.typescriptlang.org" },
+        { name: "Next.js", role: isFr ? "Framework React (App Router, SSR, SSG, ISR)" : "React framework (App Router, SSR, SSG, ISR)", link: "https://nextjs.org" },
+        { name: "React", role: isFr ? "Bibliothèque UI — Server & Client Components" : "UI library — Server & Client Components", link: "https://react.dev" },
+        { name: "TypeScript", role: isFr ? "Typage statique de bout en bout" : "End-to-end static typing", link: "https://www.typescriptlang.org" },
         { name: "Tailwind CSS", role: isFr ? "Utility-first CSS — dark mode via class" : "Utility-first CSS — dark mode via class", link: "https://tailwindcss.com" },
         { name: "next-themes", role: isFr ? "Toggle dark/light avec persistance" : "Dark/light toggle with persistence", link: "https://github.com/pacocoursey/next-themes" },
       ],
@@ -97,7 +97,7 @@ export default async function ColophonPage({ params }: PageProps) {
       title: "Backend",
       items: [
         { name: "Supabase", role: isFr ? "PostgreSQL hébergé — projets, certifications, contact, about. RLS activé sur toutes les tables." : "Hosted PostgreSQL — projects, certifications, contact, about. RLS enabled on all tables.", link: "https://supabase.com" },
-        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur 6 endpoints (contact, newsletter, témoignages, cache, health, admin)" : "Stale-while-revalidate cache + rate-limiting on 6 endpoints (contact, newsletter, testimonials, cache, health, admin)", link: "https://upstash.com" },
+        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health)" : "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health)", link: "https://upstash.com" },
         { name: "Formspree", role: isFr ? "Acheminement email de secours pour le formulaire de contact" : "Email routing fallback for the contact form", link: "https://formspree.io" },
       ],
     },
@@ -151,9 +151,10 @@ export default async function ColophonPage({ params }: PageProps) {
 
   const secPoints = isFr
     ? [
-        "**En-têtes HTTP** dans `next.config.mjs` : CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Fingerprinting du framework désactivé (`poweredByHeader: false`).",
+        "**CSP nonce-based** : `'unsafe-inline'` retiré de `script-src`. Un nonce cryptographique unique est généré par requête dans le middleware Edge (`proxy.ts`) et injecté dans tous les scripts inline autorisés (JSON-LD, Vercel Analytics, hydratation Next.js). Tout script inline sans nonce est bloqué par le navigateur.",
+        "**En-têtes HTTP** dans `next.config.mjs` : HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy étendu, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Fingerprinting du framework désactivé (`poweredByHeader: false`).",
         "**Row Level Security (RLS)** activé sur toutes les tables Supabase. `project_assets` restreinte aux assets des projets publiés uniquement — les brouillons ne sont pas exposés via la clé anon.",
-        "**Rate-limiting** via Upstash Redis (fenêtre glissante) sur 6 endpoints : contact (5 req/10 min), newsletter (3 req/h), témoignages (3 req/24h), invalidation cache (10 req/min), health check (30 req/min), panneau admin (10 req/5 min — protection anti brute-force).",
+        "**Rate-limiting** via Upstash Redis (fenêtre glissante) sur les endpoints sensibles : contact (5 req/10 min), témoignages (3 req/24h), invalidation cache (10 req/min), health check (30 req/min), rapports CSP (20 req/min), panneau admin (10 req/5 min — protection anti brute-force). En cas d'indisponibilité Redis, le limiteur bascule en mode fail-closed en production.",
         "**Honeypot** : champs cachés dans les formulaires de contact et de témoignages — les bots remplissant ces champs reçoivent un 200 silencieux.",
         "**Validation d'origine** : les requêtes API provenant d'origines inconnues sont rejetées en production.",
         "**Routes de diagnostic désactivées en production** : `/api/redis-test` retourne 404 hors mode développement.",
@@ -164,7 +165,7 @@ export default async function ColophonPage({ params }: PageProps) {
     : [
         "**HTTP headers** in `next.config.mjs`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Framework fingerprinting suppressed via `poweredByHeader: false`.",
         "**Row Level Security (RLS)** enabled on all Supabase tables. `project_assets` restricted to published-project assets only — draft assets are not exposed via the anon key.",
-        "**Rate-limiting** via Upstash Redis (sliding window) on 6 endpoints: contact (5 req/10 min), newsletter (3 req/h), testimonials (3 req/24h), cache invalidation (10 req/min), health check (30 req/min), admin panel (10 req/5 min — brute-force protection).",
+        "**Rate-limiting** via Upstash Redis (sliding window) on sensitive endpoints: contact (5 req/10 min), testimonials (3 req/24h), cache invalidation (10 req/min), health check (30 req/min), CSP reports (20 req/min), admin panel (10 req/5 min — brute-force protection). When Redis is unavailable, the limiter fails closed in production.",
         "**Honeypot fields** on contact and testimonial forms — bots filling hidden fields receive a silent 200 response.",
         "**Origin validation**: API requests from unknown origins are rejected in production.",
         "**Debug routes disabled in production**: `/api/redis-test` returns 404 outside of development mode.",
@@ -225,7 +226,7 @@ export default async function ColophonPage({ params }: PageProps) {
                         <a
                           href={item.link}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noreferrer noopener"
                           className="font-medium text-sm hover:underline underline-offset-4 soft-ring rounded"
                         >
                           {item.name}<span aria-hidden="true"> ↗</span>
@@ -290,7 +291,7 @@ export default async function ColophonPage({ params }: PageProps) {
           <a
             href="https://github.com/Aiyeesha/portfolio-next"
             target="_blank"
-            rel="noreferrer"
+            rel="noreferrer noopener"
             className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
           >
             {labels.learnMore}<span aria-hidden="true"> ↗</span>
@@ -298,7 +299,7 @@ export default async function ColophonPage({ params }: PageProps) {
           <a
             href="https://portfolio-next-one-gold.vercel.app/en"
             target="_blank"
-            rel="noreferrer"
+            rel="noreferrer noopener"
             className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
           >
             {labels.viewLive}<span aria-hidden="true"> ↗</span>

@@ -21,6 +21,13 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    # Permissions minimales — principe du moindre privilège.
+    # contents:read : checkout du code uniquement.
+    # Sans cette restriction, le GITHUB_TOKEN par défaut a des droits write
+    # sur le repo (création de releases, push de code, etc.), ce qui élargit
+    # la surface d'attaque en cas de compromission d'une action tierce.
+    permissions:
+      contents: read
     env:
       # Force les actions GitHub (checkout, upload-artifact) à utiliser Node 24
       # au lieu de Node 20 (déprécié depuis juin 2026).
@@ -46,6 +53,13 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      # Audit de sécurité des dépendances npm.
+      # --audit-level=high : échoue uniquement sur les vulnérabilités HIGH et CRITICAL.
+      # --production : ignore les devDependencies (non déployées sur Vercel).
+      # Sans cette étape, des CVE connues peuvent être mergées sans alerte.
+      - name: Security audit
+        run: npm audit --audit-level=high --production
 
       - name: Lint
         run: npm run lint
@@ -73,6 +87,8 @@ jobs:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
     needs: build-test
+    permissions:
+      contents: read
     env:
       # Force les actions GitHub (checkout, upload-artifact) à utiliser Node 24
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

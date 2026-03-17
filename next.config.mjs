@@ -24,8 +24,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
 
-const isDev = process.env.NODE_ENV === "development";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Supprime le header X-Powered-By: Next.js — évite le fingerprinting du framework
@@ -80,51 +78,31 @@ const nextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin"
           },
-          // Désactive les APIs sensibles non utilisées dans ce portfolio
+          // Désactive les APIs sensibles non utilisées dans ce portfolio.
+          // Liste étendue pour couvrir les APIs modernes (payment, USB, bluetooth…)
+          // qui pourraient être exploitées via des scripts tiers (Calendly, Analytics).
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()"
-          },
-          // Content Security Policy
-          // Sources autorisées par catégorie :
-          //   default-src : fallback restrictif
-          //   script-src  : scripts first-party + inline/eval Next.js + Vercel Analytics + Calendly
-          //   style-src   : styles first-party + inline (Tailwind purge)
-          //   img-src     : images first-party + data URI + tout https (badges, avatars Supabase)
-          //   font-src    : polices first-party
-          //   frame-src   : Calendly (iframe de réservation)
-          //   connect-src : appels API internes + Supabase + Upstash + Formspree + Vercel Analytics
-          //   object-src  : aucun plugin (Flash, etc.)
-          //   base-uri    : restreint les URL de base à la même origine
-          {
-            key: "Content-Security-Policy",
             value: [
-              "default-src 'self'",
-              // 'unsafe-inline' requis par Next.js App Router (inline scripts de hydratation).
-              // 'unsafe-eval' uniquement en développement (webpack HMR) — retiré en production.
-              isDev
-                ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com"
-                : "script-src 'self' 'unsafe-inline' https://assets.calendly.com https://va.vercel-scripts.com",
-              "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
-              // img-src : restreint aux origines connues plutôt que https: générique
-              `img-src 'self' data: https://*.supabase.co https://*.supabase.in`,
-              "font-src 'self'",
-              "frame-src https://calendly.com",
-              // connect-src : data: uniquement en dev (React DevTools)
-              isDev
-                ? "connect-src 'self' data: https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
-                : "connect-src 'self' https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
-              "object-src 'none'",
-              "base-uri 'self'",
-              // Bloque les iframes non explicitement autorisées (renforce X-Frame-Options)
-              "frame-ancestors 'none'",
-              // Réception des rapports de violation CSP (POST JSON navigateur → /api/csp-report).
-              // Les violations apparaissent dans Vercel Runtime Logs.
-              // report-uri est déprécié en CSP Level 3 au profit de report-to,
-              // mais reste le seul mécanisme supporté par tous les navigateurs actuels.
-              "report-uri /api/csp-report",
-            ].join("; ")
+              "camera=()",
+              "microphone=()",
+              "geolocation=()",
+              "payment=()",
+              "usb=()",
+              "bluetooth=()",
+              "midi=()",
+              "accelerometer=()",
+              "gyroscope=()",
+              "magnetometer=()",
+              "interest-cohort=()",  // désactive FLoC/Topics API Google
+            ].join(", ")
           },
+          // Content-Security-Policy : DYNAMIQUE via proxy.ts (middleware Edge).
+          // La CSP est générée par requête dans proxy.ts avec un nonce unique
+          // (btoa(crypto.randomUUID())) — ce nonce remplace 'unsafe-inline' dans
+          // script-src. Ne pas remettre de CSP statique ici, cela écraserait la
+          // CSP dynamique du middleware sur les routes HTML.
+          // Voir proxy.ts > buildCSP() pour le détail des directives.
           // Force HTTPS pendant 2 ans (includeSubDomains + preload)
           // À activer uniquement si le domaine est toujours servi en HTTPS
           {
@@ -143,7 +121,25 @@ const nextConfig = {
           {
             key: "Cross-Origin-Resource-Policy",
             value: "same-origin"
-          }
+          },
+          // ── Reporting API — complément moderne à report-uri ───────────────
+          // report-uri (CSP Level 2) est déprécié en CSP Level 3 mais reste
+          // le seul mécanisme universellement supporté. On ajoute les deux :
+          //   - Report-To      : Reporting API v0 (Chrome, Edge)
+          //   - Reporting-Endpoints : Reporting API v1 (Chrome 96+)
+          // Ils réutilisent le même endpoint /api/csp-report.
+          {
+            key: "Report-To",
+            value: JSON.stringify({
+              group: "csp-endpoint",
+              max_age: 86400,
+              endpoints: [{ url: "/api/csp-report" }],
+            })
+          },
+          {
+            key: "Reporting-Endpoints",
+            value: 'csp-endpoint="/api/csp-report"'
+          },
         ]
       }
     ];

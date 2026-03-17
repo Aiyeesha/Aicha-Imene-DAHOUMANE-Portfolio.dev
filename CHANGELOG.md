@@ -11,8 +11,17 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
-- Newsletter opt-in (ConvertKit or Brevo)
-- Nonce-based CSP (remove `'unsafe-inline'` from `script-src`)
+
+---
+
+## [1.7.0] — 2026-03-17
+
+### Security
+
+- **Nonce-based CSP** — `'unsafe-inline'` removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` (Edge Runtime) via the Web Crypto API. The nonce is injected into the `Content-Security-Policy` response header and forwarded to Server Components via the `x-nonce` request header. Inline scripts that require explicit authorisation (JSON-LD in root layout, Vercel Analytics, Vercel Speed Insights, Next.js hydration) receive the nonce attribute. Any injected inline script without a matching nonce is now blocked by the browser.
+- **CSP moved from static (`next.config.mjs`) to dynamic (`proxy.ts`)** — static CSP headers cannot embed per-request nonces. `next.config.mjs` no longer contains a `Content-Security-Policy` entry; all other security headers (HSTS, X-Frame-Options, Permissions-Policy, Report-To, etc.) remain static.
+- **Security documentation updated** — `SECURITY.md`, `/colophon`, `/changelog` reflect the current security posture. Version numbers removed from public-facing tech stack listings. RLS policy on `uptime_pings` tightened (anon SELECT removed).
+- **GitHub Advanced Security enabled** — CodeQL code scanning, Dependabot alerts + security updates, secret scanning all activated on the repository.
 
 ---
 
@@ -221,7 +230,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.3.4...v1.4.0

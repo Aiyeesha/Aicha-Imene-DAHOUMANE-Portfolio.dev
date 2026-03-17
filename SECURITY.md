@@ -32,18 +32,20 @@ The following security headers are set on all responses via `next.config.mjs`:
 | `X-Frame-Options` | `DENY` | Prevents clickjacking — blocks all iframe embedding |
 | `X-Content-Type-Options` | `nosniff` | Prevents MIME type sniffing attacks |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | Limits referrer leakage to same-origin only |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | Disables unused sensitive browser APIs |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), midi=(), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()` | Disables unused sensitive browser APIs (including modern APIs exploitable via third-party scripts) |
 | `Content-Security-Policy` | (see below) | Allowlists trusted sources for scripts, styles, frames, and API calls |
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | Enforces HTTPS for 2 years (HSTS preload) |
 | `Cross-Origin-Opener-Policy` | `same-origin` | Prevents cross-origin window access (Spectre, `window.opener` hijack) |
 | `Cross-Origin-Resource-Policy` | `same-origin` | Prevents other origins from embedding site resources |
 | `X-Powered-By` | *(suppressed)* | Framework fingerprinting disabled via `poweredByHeader: false` |
+| `Report-To` | `{"group":"csp-endpoint","max_age":86400,...}` | Reporting API v0 — routes CSP violations to `/api/csp-report` (Chrome, Edge) |
+| `Reporting-Endpoints` | `csp-endpoint="/api/csp-report"` | Reporting API v1 — modern Chrome 96+ endpoint declaration |
 
 #### Content Security Policy (CSP)
 
 ```
 default-src 'self'
-script-src 'self' 'unsafe-inline' https://assets.calendly.com https://va.vercel-scripts.com
+script-src 'self' 'nonce-{per-request}' https://assets.calendly.com https://va.vercel-scripts.com
 style-src 'self' 'unsafe-inline' https://assets.calendly.com
 img-src 'self' data: https://*.supabase.co https://*.supabase.in
 font-src 'self'
@@ -53,10 +55,18 @@ connect-src 'self' https://*.supabase.co https://*.upstash.io https://formspree.
 object-src 'none'
 base-uri 'self'
 frame-ancestors 'none'
+report-uri /api/csp-report
+report-to csp-endpoint
 ```
 
-> **Note:** `'unsafe-inline'` is required by Next.js App Router for hydration inline scripts and Tailwind CSS.
-> A nonce-based CSP (removing `'unsafe-inline'` entirely) is planned for a future hardening phase.
+**Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` (Edge Runtime) using the Web Crypto API. The nonce is:
+- Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
+- Forwarded to Server Components via the `x-nonce` request header
+- Applied to all inline scripts that require it: JSON-LD, Vercel Analytics, Vercel Speed Insights, and Next.js hydration scripts
+
+Any inline script without a matching nonce is blocked by the browser. `'unsafe-eval'` is retained in development only (webpack HMR).
+
+> **Note:** `'unsafe-inline'` remains in `style-src` — CSS injection cannot execute JavaScript, and Tailwind requires it. Nonce-based style CSP is not planned.
 
 ---
 
@@ -67,15 +77,15 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | Endpoint | Limit | Window | Purpose |
 |----------|-------|--------|---------|
 | `POST /api/contact` | 5 requests | 10 minutes / IP | Anti-spam, anti-flood |
-| `POST /api/newsletter` | 3 requests | 1 hour / IP | Protects Brevo API quota, prevents email enumeration |
 | `POST /api/testimonial-submit` | 3 requests | 24 hours / IP | Anti-spam |
 | `POST /api/cache/invalidate` | 10 requests | 60 seconds / IP | DoS protection on cache invalidation |
 | `GET /api/health` | 30 requests | 60 seconds / IP | Prevents infrastructure probing in a loop |
+| `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
 | `GET /admin/*` | 10 requests | 5 minutes / IP | **Brute-force protection** on HTTP Basic Auth |
 
 IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controlled) with `x-forwarded-for` as fallback.
 
-If Upstash Redis is unavailable, rate limiting degrades gracefully to a no-op (development / CI use case).
+**Fail-closed in production**: if Upstash Redis is unavailable, rate limiters return `success: false` — no request passes through unthrottled. In development and CI (no Redis configured), limiters are permissive (`success: true`).
 
 ---
 
@@ -113,9 +123,10 @@ Row Level Security (RLS) is **enabled on all tables**. Policies by table:
 | `testimonials` | `is_published = true` only | ❌ | Unpublished testimonials not visible |
 | `messages` | ❌ | ✅ | Contact submissions: write-only for `anon` |
 | `testimonial_submissions` | ❌ | ✅ | Pending admin review, `approved = false` by default |
-| `uptime_pings` | ❌ | ❌ | Server-side only (service_role) |
+| `uptime_pings` | ❌ | ❌ | Server-side only (service_role) — anon SELECT policy removed |
+| `goals_2026` | ✅ (all) | ❌ | Public content (intentional — used for public roadmap display) |
 
-The `service_role` key bypasses RLS automatically and is **strictly server-side** — never exposed to the client or in any `NEXT_PUBLIC_*` variable.
+The `service_role` key bypasses RLS automatically and is **strictly server-side** — never exposed to the client or in any `NEXT_PUBLIC_*` variable. The admin Supabase client (`lib/supabase/admin.ts`) uses `import 'server-only'` to produce a build-time error if accidentally imported into a client bundle.
 
 ---
 
@@ -144,8 +155,13 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 ### CI / CD
 
 - GitHub Actions: `npm ci` (lockfile-enforced installs), lint → typecheck → test → build
+- `npm audit --audit-level=high --production` runs on every CI build — fails on HIGH/CRITICAL CVEs in production dependencies
+- All third-party GitHub Actions pinned to **immutable commit SHAs** (not mutable tags) — supply chain attack mitigation
+- CI jobs run with `permissions: contents: read` (principle of least privilege — default GITHUB_TOKEN write access revoked)
 - Secrets injected via GitHub Secrets — never hardcoded in workflow files
-- Dependabot configured for npm and GitHub Actions dependency updates
+- Dependabot enabled for npm and GitHub Actions dependency updates (security updates + alerts)
+- CodeQL code scanning enabled — runs on every push/PR and weekly
+- Secret scanning enabled — GitHub alerts on any accidentally committed credentials
 
 ---
 
