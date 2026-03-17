@@ -1,6 +1,7 @@
 import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectBySlug.cached";
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -390,13 +391,19 @@ export default async function ProjectPage({
               if (!href) return null;
               return (
                 <div key={a.id} className="card overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={href}
-                    alt={a.title}
-                    className="w-full object-contain"
-                    loading="lazy"
-                  />
+                  {/* Conteneur aspect-ratio fixé pour éviter le CLS (Cumulative Layout Shift).
+                      Next.js <Image fill> requiert un parent position:relative avec dimensions.
+                      aspect-video (16/9) est un bon compromis pour des captures d'écran. */}
+                  <div className="relative w-full aspect-video">
+                    <Image
+                      src={href}
+                      alt={a.title ?? ""}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-contain"
+                      loading="lazy"
+                    />
+                  </div>
                   {a.title ? (
                     <p className="px-4 py-2 text-xs text-muted">{a.title}</p>
                   ) : null}

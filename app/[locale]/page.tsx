@@ -8,38 +8,46 @@ import dynamic from "next/dynamic";
 import TrackAwareHero from "./track-aware-hero";
 import Reveal from "@/components/Reveal";
 import Accordion from "@/components/Accordion";
+import SkeletonCard from "@/components/SkeletonCard";
 // Above-the-fold — chargés immédiatement
 import TrackAwareSkills from "@/components/TrackAwareSkills";
 // Below-the-fold — lazy-loadés pour réduire le JS initial
-const TrackAwareServices = dynamic(() => import("@/components/TrackAwareServices"));
+const TrackAwareServices = dynamic(() => import("@/components/TrackAwareServices"), {
+  loading: () => <div className="mt-8 grid gap-4 md:grid-cols-2"><SkeletonCard /><SkeletonCard /></div>,
+});
 const ServicesFaq        = dynamic(() => import("@/components/ServicesFaq"));
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
 const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
-const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"));
-const ProjectsSection    = dynamic(() => import("@/components/ProjectsSection"));
-const LatestPosts        = dynamic(() => import("@/components/LatestPosts"));
-const ContactForm           = dynamic(() => import("@/components/ContactForm"));
+const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"), {
+  loading: () => <div className="mt-5 grid gap-4 md:grid-cols-2"><SkeletonCard /><SkeletonCard /></div>,
+});
+const ProjectsSection    = dynamic(() => import("@/components/ProjectsSection"), {
+  loading: () => <div className="mt-10 grid gap-4 md:grid-cols-2"><SkeletonCard /><SkeletonCard /></div>,
+});
+const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
+  loading: () => <div className="mt-8 grid gap-4 md:grid-cols-2"><SkeletonCard lines={2} /><SkeletonCard lines={2} /></div>,
+});
+const ContactForm        = dynamic(() => import("@/components/ContactForm"));
 // PresentationMode utilise ssr: false → doit passer par un wrapper Client Component
 import PresentationModeLoader from "@/components/PresentationModeLoader";
 import { getExperienceItems } from "@/content/experience";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
-import { cookies } from "next/headers";
 
 type Props = { params: Promise<{ locale: "en" | "fr" }> };
+
+// ISR : re-génère la page au plus toutes les heures.
+// Suppression de cookies() dans ce fichier et dans layout.tsx permet à Vercel
+// de mettre en cache la réponse HTML sur l'Edge (CDN global) — TTFB ≈ 50ms
+// au lieu de ≈1.5s (cold start serverless) pour les visiteurs internationaux.
+export const revalidate = 3600;
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
   const experienceItems = getExperienceItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
-
-  // Lecture du track actif depuis le cookie (même logique que le layout)
-  const cookieStore = await cookies();
-  const rawTrack = cookieStore.get("track")?.value;
-  const activeTrack: "salesforce" | "itops" =
-    rawTrack === "itops" ? "itops" : "salesforce";
 
   return (
     <>
@@ -173,7 +181,9 @@ export default async function Home({ params }: Props) {
           <p className="mt-3 text-muted">{t("sections.blog_subtitle")}</p>
         </Reveal>
         <div className="mt-8">
-          <LatestPosts locale={locale} track={activeTrack} />
+          {/* track omis — LatestPosts affiche les 2 derniers posts (tous tracks).
+              La personnalisation par track était bloquante pour le SSR. */}
+          <LatestPosts locale={locale} />
         </div>
         <div className="mt-6">
           <Link
