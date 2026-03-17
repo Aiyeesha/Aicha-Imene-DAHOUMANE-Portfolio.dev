@@ -53,12 +53,6 @@ export default async function PrivacyPage({
           <p className="mt-3 text-sm text-muted-2">{t("retention")}</p>
         </section>
 
-        {/* Newsletter */}
-        <section className="card p-6">
-          <h2 className="text-lg font-semibold">{t("newsletterTitle")}</h2>
-          <p className="mt-2 text-sm text-muted-2">{t("newsletterBody")}</p>
-        </section>
-
         {/* Vos droits */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("rightsTitle")}</h2>
