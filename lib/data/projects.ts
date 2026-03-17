@@ -23,7 +23,13 @@ export async function getPublishedProjectsWithAssets(locale: string) {
     .order("featured", { ascending: false })
     .order("sort_order", { ascending: true });
 
-  if (error) throw error;
+  // En CI ou si Supabase est indisponible, retourner un tableau vide plutôt que de
+  // crasher la page entière. Une erreur fatale ici entraîne une page d'erreur Next.js
+  // sans root layout, ce qui déclenche des violations axe (html-has-lang) dans les E2E.
+  if (error) {
+    console.error("[projects] Supabase error:", error.message ?? error);
+    return [];
+  }
 
   return (data ?? []).map((p: any) => ({
     ...p,
