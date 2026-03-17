@@ -147,6 +147,15 @@ export async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
 
+  // Transmettre la locale détectée par next-intl aux Server Components.
+  // getLocale() lit x-next-intl-locale depuis les request headers.
+  // On extrait la locale depuis le pathname (ex: /fr/about → "fr")
+  // car intlHandler communique la locale via ses request headers internes
+  // que NextResponse.next() ne reçoit pas automatiquement.
+  const localeMatch = pathname.match(/^\/([a-z]{2})(?:\/|$)/);
+  const detectedLocale = localeMatch ? localeMatch[1] : routing.defaultLocale;
+  requestHeaders.set("x-next-intl-locale", detectedLocale);
+
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   });
