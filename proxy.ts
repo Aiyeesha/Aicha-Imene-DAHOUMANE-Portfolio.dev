@@ -69,6 +69,13 @@ function buildCSP(nonce: string, isDev: boolean): string {
 // Technique : on encode les deux chaînes en UTF-8 et on les pad à la même longueur
 // avant la comparaison pour éviter un oracle sur la longueur. La longueur est
 // comparée séparément avant de retourner le résultat final.
+// crypto.subtle.timingSafeEqual() est disponible dans l'Edge Runtime (Node.js ≥ 15 / Web Crypto),
+// mais absent des types TypeScript standard de SubtleCrypto (non spécifié dans le W3C).
+// On étend localement le type plutôt que d'utiliser `any`.
+type SubtleCryptoWithTimingSafe = SubtleCrypto & {
+  timingSafeEqual(a: BufferSource, b: BufferSource): Promise<boolean>;
+};
+
 async function timingSafeStringEqual(a: string, b: string): Promise<boolean> {
   const enc = new TextEncoder();
   const maxLen = Math.max(a.length, b.length);
@@ -76,7 +83,7 @@ async function timingSafeStringEqual(a: string, b: string): Promise<boolean> {
   const aBuf = enc.encode(a.padEnd(maxLen, "\0"));
   const bBuf = enc.encode(b.padEnd(maxLen, "\0"));
   // timingSafeEqual compare les deux buffers octet par octet sans court-circuit
-  const equal = await crypto.subtle.timingSafeEqual(aBuf, bBuf);
+  const equal = await (crypto.subtle as SubtleCryptoWithTimingSafe).timingSafeEqual(aBuf, bBuf);
   // Vérifier aussi la longueur originale pour rejeter les paddings faussement égaux
   return equal && a.length === b.length;
 }
