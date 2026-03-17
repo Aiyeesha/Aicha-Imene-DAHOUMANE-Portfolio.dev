@@ -176,8 +176,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <DevConsoleMessage />
         <ServiceWorkerRegistration />
         {/* nonce transmis pour que les scripts Vercel respectent la CSP */}
-        {process.env.NODE_ENV === "production" && <Analytics nonce={nonce} />}
-        {process.env.NODE_ENV === "production" && <SpeedInsights nonce={nonce} />}
+        {process.env.NODE_ENV === "production" && <Analytics />}
+        {process.env.NODE_ENV === "production" && <SpeedInsights />}
       </body>
     </html>
   );
