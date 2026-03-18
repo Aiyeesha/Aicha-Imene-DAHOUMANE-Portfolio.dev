@@ -22,6 +22,12 @@ import { revalidateRatelimit } from "@/lib/ratelimit";
 // Locales supportées par le site
 const LOCALES = ["en", "fr"] as const;
 
+// timingSafeEqual n'est pas dans les types W3C standard de SubtleCrypto —
+// on étend le type localement comme dans proxy.ts.
+type SubtleCryptoWithTimingSafe = SubtleCrypto & {
+  timingSafeEqual(a: BufferSource, b: BufferSource): Promise<boolean>;
+};
+
 // Comparaison timing-safe pour éviter les attaques par oracle temporel
 async function timingSafeEqual(a: string, b: string): Promise<boolean> {
   const enc = new TextEncoder();
@@ -33,7 +39,7 @@ async function timingSafeEqual(a: string, b: string): Promise<boolean> {
   const paddedB = new Uint8Array(len);
   paddedA.set(bufA);
   paddedB.set(bufB);
-  const equal = await crypto.subtle.timingSafeEqual(paddedA, paddedB);
+  const equal = await (crypto.subtle as SubtleCryptoWithTimingSafe).timingSafeEqual(paddedA, paddedB);
   return equal && bufA.length === bufB.length;
 }
 

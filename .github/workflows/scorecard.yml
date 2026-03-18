@@ -48,6 +48,8 @@ jobs:
         with:
           results_file: scorecard-results.sarif
           results_format: sarif
+          # Token requis pour accéder au repo et uploader les résultats
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           # Publie le score publiquement sur scorecard.dev
           publish_results: true
 
