@@ -88,12 +88,14 @@ export const cacheInvalidateRatelimit = redis
   : createNoOpRatelimit(10, 60_000);
 
 // ── Limiteur pour /admin (HTTP Basic Auth brute force) ────────────────
-// 10 tentatives par 5 minutes par IP.
-// Sans ce limiteur, un attaquant peut brute-forcer les credentials
-// admin sans aucune friction côté serveur.
+// 5 tentatives par 15 minutes par IP (réduit de 10/5min).
+// Valeur précédente (10/5min) permettait ~100 tentatives/heure avec des
+// proxies rotatifs — trop permissif pour un endpoint d'authentification.
+// Avec 5/15min : ~20 tentatives/heure par IP → brute force distribué
+// nettement plus coûteux en ressources pour l'attaquant.
 export const adminRatelimit = redis
-  ? createRatelimit(redis, 10, 300, "portfolio:rl:admin")
-  : createNoOpRatelimit(10, 300_000);
+  ? createRatelimit(redis, 5, 900, "portfolio:rl:admin")
+  : createNoOpRatelimit(5, 900_000);
 
 // ── Limiteur pour /api/csp-report ─────────────────────────────────────
 // 20 rapports par 60 secondes par IP.
@@ -104,3 +106,12 @@ export const adminRatelimit = redis
 export const cspReportRatelimit = redis
   ? createRatelimit(redis, 20, 60, "portfolio:rl:csp-report")
   : createNoOpRatelimit(20, 60_000);
+
+// ── Limiteur pour /api/revalidate ─────────────────────────────────────
+// 10 requêtes par 60 secondes par IP.
+// Protège contre le flood de l'endpoint ISR en cas de fuite/bruteforce du
+// REVALIDATE_SECRET — épuisement des invocations Vercel Hobby (1M/mois).
+// Suffisamment permissif pour les webhooks Supabase légitimes.
+export const revalidateRatelimit = redis
+  ? createRatelimit(redis, 10, 60, "portfolio:rl:revalidate")
+  : createNoOpRatelimit(10, 60_000);

@@ -27,8 +27,8 @@ import { useState, useId } from "react";
 type Locale = "en" | "fr";
 
 type Props = {
-  /** Token de soumission passé par le Server Component — jamais exposé dans l'URL côté client */
-  token: string;
+  /** Clé de session HMAC 30 min générée côté serveur — jamais le token brut */
+  sessionKey: string;
   locale: Locale;
 };
 
@@ -97,7 +97,7 @@ const LABELS = {
 
 // ── Composant principal ───────────────────────────────────────────────────────
 
-export default function TestimonialSubmitForm({ token, locale }: Props) {
+export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
   const l = LABELS[locale];
   const uid = useId(); // préfixe unique pour les id HTML (accessibilité)
 
@@ -135,7 +135,7 @@ export default function TestimonialSubmitForm({ token, locale }: Props) {
       const res = await fetch("/api/testimonial-submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...fields, token }),
+        body: JSON.stringify({ ...fields, sessionKey }),
       });
 
       const data: { ok?: boolean; error?: string } = await res.json();

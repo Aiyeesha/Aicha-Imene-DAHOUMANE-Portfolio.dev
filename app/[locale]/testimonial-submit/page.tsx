@@ -15,6 +15,7 @@
 //      avec approved = false — à valider manuellement avant publication
 
 import type { Metadata } from "next";
+import { createHmac } from "crypto";
 import TestimonialSubmitForm from "@/components/TestimonialSubmitForm";
 
 // ── Métadonnées — noindex obligatoire (page privée) ───────────────────────────
@@ -74,6 +75,14 @@ export default async function TestimonialSubmitPage({
     );
   }
 
+  // ── Génération d'une clé de session HMAC à durée limitée (30 min) ─────────
+  // On ne passe JAMAIS le token brut au composant client — il serait sérialisé
+  // dans le payload RSC (visible dans le HTML source). À la place, on génère un
+  // HMAC(token, bucket_temps) valable 30 min. Le composant client l'envoie
+  // à l'API, qui le revalide côté serveur sans exposer le secret d'origine.
+  const timeBucket = Math.floor(Date.now() / (30 * 60 * 1000)).toString();
+  const sessionKey  = createHmac("sha256", expectedToken).update(timeBucket).digest("hex");
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
       {/* En-tête */}
@@ -88,8 +97,8 @@ export default async function TestimonialSubmitPage({
         </p>
       </div>
 
-      {/* Formulaire — le token est passé en prop (jamais via l'URL côté client) */}
-      <TestimonialSubmitForm token={expectedToken} locale={locale} />
+      {/* Formulaire — sessionKey HMAC 30 min, jamais le token brut */}
+      <TestimonialSubmitForm sessionKey={sessionKey} locale={locale} />
 
       {/* Confidentialité */}
       <p className="mt-8 text-xs text-muted-2">

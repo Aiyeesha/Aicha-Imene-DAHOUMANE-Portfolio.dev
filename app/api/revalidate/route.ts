@@ -17,20 +17,46 @@
 
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateRatelimit } from "@/lib/ratelimit";
 
 // Locales supportées par le site
 const LOCALES = ["en", "fr"] as const;
 
+// Comparaison timing-safe pour éviter les attaques par oracle temporel
+async function timingSafeEqual(a: string, b: string): Promise<boolean> {
+  const enc = new TextEncoder();
+  const bufA = enc.encode(a);
+  const bufB = enc.encode(b);
+  // Longueurs différentes → faux, mais on compare quand même pour masquer le timing
+  const len = Math.max(bufA.length, bufB.length);
+  const paddedA = new Uint8Array(len);
+  const paddedB = new Uint8Array(len);
+  paddedA.set(bufA);
+  paddedB.set(bufB);
+  const equal = await crypto.subtle.timingSafeEqual(paddedA, paddedB);
+  return equal && bufA.length === bufB.length;
+}
+
 export async function POST(request: NextRequest) {
-  // ── 1. Vérification du secret ─────────────────────────────────────────────
+  // ── 0. Rate-limit par IP ──────────────────────────────────────────────────
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown";
+  const { success: rateLimitOk } = await revalidateRatelimit.limit(ip);
+  if (!rateLimitOk) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
+  // ── 1. Vérification du secret (timing-safe) ───────────────────────────────
   const secret = process.env.REVALIDATE_SECRET;
   if (!secret) {
     console.error("[revalidate] REVALIDATE_SECRET non configuré");
     return NextResponse.json({ error: "Not configured" }, { status: 503 });
   }
 
-  const provided = request.headers.get("x-revalidate-secret");
-  if (!provided || provided !== secret) {
+  const provided = request.headers.get("x-revalidate-secret") ?? "";
+  const valid = await timingSafeEqual(provided, secret);
+  if (!valid) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
