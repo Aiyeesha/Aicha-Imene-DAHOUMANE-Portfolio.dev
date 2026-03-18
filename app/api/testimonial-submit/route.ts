@@ -15,7 +15,7 @@
 //   SUPABASE_SERVICE_KEY       — clé service_role (jamais NEXT_PUBLIC_)
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
+import { createHmac, createHash } from "crypto";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { testimonialRatelimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
@@ -115,7 +115,19 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── 6. Insertion Supabase (service_role — contourne le RLS) ─────────────────
+  // ── 6. Pseudonymisation de l'IP (RGPD) ──────────────────────────────────────
+  // L'adresse IP est une donnée personnelle au sens RGPD. On la hache avec un sel
+  // secret (IP_HASH_SALT) avant stockage pour permettre la déduplication (rate-limit
+  // manuel, détection d'abus) sans stocker la valeur brute.
+  // Si IP_HASH_SALT n'est pas défini, on utilise une chaîne vide — le hachage reste
+  // irréversible mais sans sel, ce qui est acceptable pour un cas d'usage à faible
+  // volumétrie. Ajouter IP_HASH_SALT en variable d'environnement est recommandé.
+  const ipHashSalt = process.env.IP_HASH_SALT ?? "";
+  const ipHash = createHash("sha256")
+    .update(ip + ipHashSalt)
+    .digest("hex");
+
+  // ── 7. Insertion Supabase (service_role — contourne le RLS) ─────────────────
   const supabase = createAdminSupabaseClient();
   const { error } = await supabase.from("testimonial_submissions").insert({
     full_name,
@@ -127,7 +139,7 @@ export async function POST(req: NextRequest) {
     photo_url,
     locale,
     approved:              false,    // toujours false — modération manuelle
-    submitted_ip:          ip,
+    submitted_ip:          ipHash,   // hash SHA-256 + sel — jamais l'IP brute
   });
 
   if (error) {
