@@ -16,6 +16,17 @@
 //
 // Edge Runtime — pas de Buffer, pas de Node.js. API Web uniquement.
 // crypto.randomUUID() et btoa() sont disponibles dans l'Edge Runtime.
+//
+// ── NOTE ARCHITECTURALE : nonce CSP vs cache CDN ─────────────────────────────
+// Le nonce généré ici est lu par app/layout.tsx via headers().get("x-nonce").
+// Cet appel à headers() en Server Component opt TOUTE la route en rendu
+// dynamique (Next.js App Router), ce qui interdit la mise en cache CDN Vercel
+// (Cache-Control: no-store automatique) et rend l'ISR inopérant.
+//
+// Ce comportement est VOULU : la sécurité (nonce unique + strict-dynamic) prime
+// sur le cache CDN. La résolution est prévue au homelab via reverse proxy cache
+// (Nginx proxy_cache_bypass / Caddy cache directive) — voir app/layout.tsx.
+// ─────────────────────────────────────────────────────────────────────────────
 
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
@@ -51,9 +62,13 @@ function buildCSP(nonce: string, isDev: boolean): string {
     "img-src 'self' data: https://*.supabase.co https://*.supabase.in",
     "font-src 'self'",
     "frame-src https://calendly.com",
+    // Upstash Redis intentionnellement absent de connect-src :
+    // les appels Redis sont exclusivement server-side (API routes, middleware).
+    // Aucun script client ne contacte Upstash directement — l'autoriser dans
+    // la CSP du navigateur serait une permission inutile (overpermission).
     isDev
-      ? "connect-src 'self' data: https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
-      : "connect-src 'self' https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
+      ? "connect-src 'self' data: https://*.supabase.co https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
+      : "connect-src 'self' https://*.supabase.co https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
     "object-src 'none'",
     "base-uri 'self'",
     // Empêche les <form action="..."> de soumettre vers une URL externe.
