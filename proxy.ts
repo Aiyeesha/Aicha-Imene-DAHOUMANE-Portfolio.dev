@@ -43,7 +43,10 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Prod : nonce uniquement — Next.js applique automatiquement x-nonce aux RSC scripts.
     isDev
       ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com`
-      : `script-src 'self' 'nonce-${nonce}' https://assets.calendly.com https://va.vercel-scripts.com`,
+      // 'strict-dynamic' (CSP3) : seuls les scripts chargés par un script noncé
+      // héritent de la confiance — la whitelist de domaines est ignorée par les
+      // navigateurs qui supportent strict-dynamic, mais reste en fallback pour les autres.
+      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://assets.calendly.com https://va.vercel-scripts.com`,
     "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
     "img-src 'self' data: https://*.supabase.co https://*.supabase.in",
     "font-src 'self'",
