@@ -80,6 +80,7 @@ export default async function TestimonialSubmitPage({
   // dans le payload RSC (visible dans le HTML source). À la place, on génère un
   // HMAC(token, bucket_temps) valable 30 min. Le composant client l'envoie
   // à l'API, qui le revalide côté serveur sans exposer le secret d'origine.
+  // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
   const timeBucket = Math.floor(Date.now() / (30 * 60 * 1000)).toString();
   const sessionKey  = createHmac("sha256", expectedToken).update(timeBucket).digest("hex");
 
