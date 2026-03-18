@@ -37,10 +37,13 @@ import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached
 
 type Props = { params: Promise<{ locale: "en" | "fr" }> };
 
-// ISR : re-génère la page au plus toutes les heures.
-// Suppression de cookies() dans ce fichier et dans layout.tsx permet à Vercel
-// de mettre en cache la réponse HTML sur l'Edge (CDN global) — TTFB ≈ 50ms
-// au lieu de ≈1.5s (cold start serverless) pour les visiteurs internationaux.
+// ISR — revalidation toutes les heures.
+// ⚠️ Ce paramètre est actuellement sans effet sur le cache CDN Vercel :
+// app/layout.tsx appelle headers() (pour le nonce CSP et getLocale()),
+// ce qui opt toute la route en rendu dynamique et force Cache-Control: no-store.
+// L'ISR redevient opérationnel lorsque le cache sera géré par le reverse proxy
+// homelab (Nginx/Caddy) indépendamment du Cache-Control applicatif.
+// Conserver cette valeur : elle sera utile dès la migration homelab.
 export const revalidate = 3600;
 
 export default async function Home({ params }: Props) {

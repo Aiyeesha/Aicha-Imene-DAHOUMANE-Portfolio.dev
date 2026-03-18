@@ -138,8 +138,37 @@ function buildJsonLd(locale: string) {
   };
 }
 
+// ── NOTE ARCHITECTURALE : tension CSP nonce ↔ cache CDN ──────────────────────
+//
+// Ce layout appelle headers() à deux endroits :
+//   1. getLocale()         → next-intl lit x-next-intl-locale via headers() en interne
+//   2. headers().get("x-nonce") → lecture du nonce CSP injecté par proxy.ts
+//
+// En Next.js App Router, tout appel à headers() dans l'arbre de rendu opt le
+// ROUTE ENTIER en rendu dynamique (per-request), ce qui force :
+//   - Cache-Control: private, no-cache, no-store (posé par Next.js)
+//   - X-Vercel-Cache: MISS sur toutes les requêtes (CDN ne cache pas)
+//   - ISR (revalidate: 3600 dans page.tsx) ignoré — la page est re-rendue à chaque req.
+//   - TTFB = cold start serverless (~1.5–2s sur Vercel Hobby)
+//
+// CE COMPORTEMENT EST INTENTIONNEL. La sécurité prime sur la performance CDN :
+//   - Nonce unique par requête + 'strict-dynamic' = CSP niveau 3 (gold standard)
+//   - Régresser vers 'unsafe-inline' pour gagner du cache CDN serait une
+//     dégradation de sécurité inacceptable.
+//
+// RÉSOLUTION PRÉVUE — migration homelab (fin 2026) :
+//   Nginx / Caddy en reverse proxy peut mettre en cache le HTML rendu à sa couche
+//   (proxy_cache / Cache directive), indépendamment du Cache-Control applicatif.
+//   Séparation des responsabilités : l'app reste dynamique + sécurisée,
+//   le cache est géré par l'infra. TTFB cible : ~5–20ms sur cache HIT.
+//
+//   Exemple Nginx (à configurer côté homelab) :
+//     proxy_cache_valid 200 1h;
+//     proxy_ignore_headers Cache-Control;   # ignore le no-store de l'app
+//     proxy_cache_bypass $http_pragma;      # bypass sur Ctrl+F5
+// ─────────────────────────────────────────────────────────────────────────────
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const locale = await getLocale(); // "en" | "fr"
+  const locale = await getLocale(); // "en" | "fr" — lit x-next-intl-locale via headers()
   const jsonLd = buildJsonLd(locale);
   // Lire le nonce injecté par proxy.ts dans les headers de requête.
   // undefined si le middleware ne tourne pas (build statique, tests).
