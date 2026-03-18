@@ -1,0 +1,13 @@
+# .github/CODEOWNERS
+# -------------------
+# Tout changement sur les fichiers critiques de sécurité requiert
+# une review de @Aiyeesha avant merge.
+
+/portfolio/proxy.ts                    @Aiyeesha
+/portfolio/next.config.mjs             @Aiyeesha
+/portfolio/lib/ratelimit.ts            @Aiyeesha
+/portfolio/lib/supabase/admin.ts       @Aiyeesha
+/portfolio/supabase/                   @Aiyeesha
+/portfolio/app/api/                    @Aiyeesha
+/portfolio/app/admin/                  @Aiyeesha
+/.github/workflows/                    @Aiyeesha

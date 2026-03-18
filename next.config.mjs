@@ -100,8 +100,19 @@ const nextConfig = {
               "accelerometer=()",
               "gyroscope=()",
               "magnetometer=()",
-              "interest-cohort=()",  // désactive FLoC/Topics API Google
+              "interest-cohort=()",    // désactive FLoC/Topics API Google
+              "document-domain=()",    // bloque les attaques de réassignation de document.domain
+              "display-capture=()",    // bloque getDisplayMedia() (capture d'écran)
+              "clipboard-read=()",     // bloque l'accès en lecture au presse-papiers
+              "xr-spatial-tracking=()", // bloque WebXR (AR/VR)
             ].join(", ")
+          },
+          // Bloque le chargement cross-domain de ressources via Flash/PDF/Silverlight legacy.
+          // Cosmétique aujourd'hui (ces plugins sont éteints), mais attendu par les scanners
+          // de sécurité professionnels (Qualys, SecurityHeaders.com).
+          {
+            key: "X-Permitted-Cross-Domain-Policies",
+            value: "none"
           },
           // Content-Security-Policy : DYNAMIQUE via proxy.ts (middleware Edge).
           // La CSP est générée par requête dans proxy.ts avec un nonce unique

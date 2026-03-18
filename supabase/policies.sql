@@ -90,12 +90,14 @@ ALTER TABLE IF EXISTS about_pages ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "about_read_published" ON about_pages;
 DROP POLICY IF EXISTS "about_write_admin" ON about_pages;
 
+-- Filtre sur status = 'published' — la table utilise status et non is_published.
+-- Protège contre l'exposition accidentelle d'un brouillon (status = 'draft').
 DROP POLICY IF EXISTS "anon can read about" ON about_pages;
 CREATE POLICY "anon can read about"
   ON about_pages
   FOR SELECT
   TO anon
-  USING (true);
+  USING (status = 'published');
 
 
 -- ════════════════════════════════════════════════════════════════════
@@ -130,8 +132,22 @@ CREATE POLICY "anon can read published testimonials"
   TO anon
   USING (is_published = true);
 
--- Aucune écriture anonyme
--- (les témoignages sont créés via le dashboard Supabase, pas via l'API publique)
+-- CORRECTION SÉCURITÉ : suppression de la policy INSERT anon sur testimonial_submissions.
+-- La policy "anon can submit testimonials" existait en production et permettait à
+-- n'importe qui avec la clé anon publique d'insérer directement dans Supabase,
+-- bypassant honeypot, rate-limit Redis, validation des champs et token HMAC.
+-- Toutes les insertions passent désormais par /api/testimonial-submit (service_role).
+DROP POLICY IF EXISTS "anon can submit testimonials" ON testimonial_submissions;
+ALTER TABLE IF EXISTS testimonial_submissions ENABLE ROW LEVEL SECURITY;
+-- Aucune policy anon = deny by default. Le service_role (côté serveur) contourne RLS.
+
+-- CORRECTION SÉCURITÉ : suppression du SELECT anon sur uptime_pings.
+-- La policy était documentée comme supprimée mais toujours active en production.
+-- uptime_pings contient des données d'infrastructure (latences, historique uptime)
+-- qui ne doivent pas être lisibles publiquement.
+DROP POLICY IF EXISTS "anon can read uptime pings" ON uptime_pings;
+ALTER TABLE IF EXISTS uptime_pings ENABLE ROW LEVEL SECURITY;
+-- Aucune policy anon = deny by default.
 
 
 -- ════════════════════════════════════════════════════════════════════
