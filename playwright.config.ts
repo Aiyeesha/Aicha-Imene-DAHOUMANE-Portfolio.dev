@@ -2,7 +2,7 @@
 // --------------------
 // Configuration Playwright pour les tests E2E du portfolio.
 //
-// Navigateurs : Chromium uniquement (CI rapide).
+// Navigateurs : Chromium + Firefox (couverture multi-moteur).
 // En local : réutilise un serveur de dev déjà actif (reuseExistingServer).
 // En CI   : démarre le serveur de production (npm run start, après build).
 //
@@ -41,6 +41,11 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      // Firefox — moteur Gecko, comportements CSP/crypto parfois différents de Blink
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
     },
   ],
 
