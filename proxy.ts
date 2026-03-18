@@ -56,6 +56,12 @@ function buildCSP(nonce: string, isDev: boolean): string {
       : "connect-src 'self' https://*.supabase.co https://*.upstash.io https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
     "object-src 'none'",
     "base-uri 'self'",
+    // Empêche les <form action="..."> de soumettre vers une URL externe.
+    // Ne bloque pas fetch()/XHR — cible uniquement les soumissions HTML classiques.
+    // Protection supplémentaire contre le détournement de formulaire (CSRF via HTML).
+    "form-action 'self'",
+    // Autorise le Service Worker (PWA) à s'enregistrer depuis la même origine.
+    "worker-src 'self'",
     "frame-ancestors 'none'",
     "report-uri /api/csp-report",
     "report-to csp-endpoint",

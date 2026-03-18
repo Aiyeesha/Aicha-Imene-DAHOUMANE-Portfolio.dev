@@ -99,7 +99,7 @@ async function checkRedis(): Promise<ServiceHealth> {
 async function checkContactForm(): Promise<ServiceHealth> {
   const start = Date.now();
   try {
-    const formId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+    const formId = process.env.FORMSPREE_ID;
     if (!formId) {
       return { name: "Contact form", status: "operational", latencyMs: null, message: "Formspree not configured" };
     }

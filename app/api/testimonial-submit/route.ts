@@ -15,6 +15,7 @@
 //   SUPABASE_SERVICE_KEY       — clé service_role (jamais NEXT_PUBLIC_)
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHmac } from "crypto";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { testimonialRatelimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
@@ -54,11 +55,27 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  // ── 4. Validation du token de soumission ────────────────────────────────────
+  // ── 4. Validation de la clé de session HMAC ─────────────────────────────────
+  // La page serveur génère un HMAC(token, bucket_30min) et le passe au client.
+  // On revalide ici en recalculant le HMAC pour le bucket courant ET le précédent
+  // (pour absorber les requêtes à cheval sur une frontière de 30 min).
+  // Le token brut n'est jamais exposé côté client.
   const expectedToken = process.env.TESTIMONIAL_SUBMIT_TOKEN;
-  const submittedToken = typeof body.token === "string" ? body.token.trim() : "";
+  const submittedKey  = typeof body.sessionKey === "string" ? body.sessionKey.trim() : "";
 
-  if (!expectedToken || submittedToken !== expectedToken) {
+  if (!expectedToken || !submittedKey) {
+    return NextResponse.json(
+      { error: "Invalid or missing access token." },
+      { status: 403 }
+    );
+  }
+
+  const now        = Math.floor(Date.now() / (30 * 60 * 1000));
+  const validKeys  = [now, now - 1].map((bucket) =>
+    createHmac("sha256", expectedToken).update(bucket.toString()).digest("hex")
+  );
+
+  if (!validKeys.includes(submittedKey)) {
     return NextResponse.json(
       { error: "Invalid or missing access token." },
       { status: 403 }
