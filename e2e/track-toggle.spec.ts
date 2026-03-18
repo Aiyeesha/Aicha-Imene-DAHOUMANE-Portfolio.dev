@@ -55,9 +55,10 @@ test.describe("Track toggle", () => {
     expect(storedTrack).toBe("itops");
 
     // Recharger la page — le track doit être restauré
-    await page.reload();
+    // waitUntil: "domcontentloaded" évite le timeout Firefox sur l'événement "load"
+    await page.reload({ waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("button", { name: /switch to salesforce/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 15000 });
   });
 });
