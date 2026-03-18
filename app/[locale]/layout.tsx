@@ -6,14 +6,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import Navbar from "@/components/Navbar";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
-import dynamic from "next/dynamic";
-// CommandPalette : ssr: false + code-split.
-// ssr: false évite le rendu serveur d'un composant jamais visible au chargement
-// (s'ouvre uniquement sur ⌘K / Ctrl+K), réduit le JS hydraté au first load
-// et améliore l'INP en différant l'initialisation des listeners clavier.
-const CommandPalette = dynamic(() => import("@/components/CommandPalette"), {
-  ssr: false,
-});
+import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 
 /**
  * Locale layout
@@ -107,7 +100,7 @@ export default async function LocaleLayout({
             <SkipToContent targetId="main" label={t("a11y.skip")} />
             <Navbar />
             {/* Palette de commandes globale — ⌘K / Ctrl+K */}
-            <CommandPalette />
+            <CommandPaletteLoader />
 
             {/*
               Global content container
