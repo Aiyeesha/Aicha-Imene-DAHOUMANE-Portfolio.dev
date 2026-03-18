@@ -7,8 +7,13 @@ import Navbar from "@/components/Navbar";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
 import dynamic from "next/dynamic";
-// CommandPalette code-splitté — chargé uniquement à la demande (⌘K)
-const CommandPalette = dynamic(() => import("@/components/CommandPalette"));
+// CommandPalette : ssr: false + code-split.
+// ssr: false évite le rendu serveur d'un composant jamais visible au chargement
+// (s'ouvre uniquement sur ⌘K / Ctrl+K), réduit le JS hydraté au first load
+// et améliore l'INP en différant l'initialisation des listeners clavier.
+const CommandPalette = dynamic(() => import("@/components/CommandPalette"), {
+  ssr: false,
+});
 
 /**
  * Locale layout
@@ -31,9 +36,14 @@ export async function generateMetadata({
   const title = t("metadata.title");
   const description = t("metadata.description");
 
+  // NEXT_PUBLIC_SITE_URL est prioritaire (domaine custom).
+  // VERCEL_URL n'est utilisé qu'en production Vercel — en preview, chaque déploiement
+  // a une URL éphémère différente qui ne doit pas polluer les canonicals et og:url.
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+    (process.env.VERCEL_ENV === "production" && process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
 
   const canonical = `${siteUrl}/${locale}`;
 

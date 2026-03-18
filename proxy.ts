@@ -206,11 +206,22 @@ export async function proxy(request: NextRequest) {
   });
   response.headers.set("Content-Security-Policy", csp);
 
-  // Préserver les headers de intlHandler (cookie de locale, x-next-intl-*, etc.)
+  // Préserver les headers de intlHandler (x-next-intl-*, etc.)
+  // ⚠️ NEXT_LOCALE cookie intentionnellement filtré :
+  //    Quand Set-Cookie est présent dans la réponse, Vercel CDN force
+  //    Cache-Control: private/no-cache et ne met jamais la page en cache,
+  //    ce qui désactive complètement l'ISR (revalidate: 3600) — chaque
+  //    visiteur paye un cold start serverless (~1.5–2s TTFB).
+  //    Le cookie est redondant : la locale est déjà dans l'URL
+  //    (localePrefix: "always"). Seule perte : '/' redirige vers la locale
+  //    par défaut (/en/) au lieu de la préférence précédente — acceptable
+  //    pour un portfolio.
   intlResponse.headers.forEach((value, key) => {
     if (key === "set-cookie") {
-      // append pour ne pas écraser les cookies existants
-      response.headers.append(key, value);
+      // Transmettre tous les cookies SAUF NEXT_LOCALE
+      if (!value.startsWith("NEXT_LOCALE=")) {
+        response.headers.append(key, value);
+      }
     } else if (!response.headers.has(key)) {
       response.headers.set(key, value);
     }
