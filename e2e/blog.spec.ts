@@ -82,10 +82,14 @@ test.describe("Blog", () => {
 
   test("le bouton 'Copier le lien' affiche 'Copied!' puis revient", async ({
     page,
+    browserName,
   }) => {
     await page.goto(`/en/blog/${KNOWN_SLUG}`);
 
-    await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Firefox ne supporte pas clipboard-read via grantPermissions
+    if (browserName !== "firefox") {
+      await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+    }
 
     const copyBtn = page.getByRole("button", { name: /copy link/i });
     await copyBtn.click();

@@ -25,7 +25,6 @@ import AboutTrackGoals from "@/components/AboutTrackGoals";
 // import TechStackGrid from "@/components/TechStackGrid";
 import VisualTimeline from "@/components/VisualTimeline";
 import CareerTimeline from "@/components/CareerTimeline";
-import GitHubHeatmap  from "@/components/GitHubHeatmap";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -234,17 +233,7 @@ export default async function AboutPage({ params }: PageProps) {
         </Suspense>
       </div>
 
-      {/* ACTIVITÉ GITHUB — heatmap 52 semaines (client, données /api/github-activity) */}
-      <section className="mt-10 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.02] p-6">
-        <SectionTitle>
-          {safeLocale === "fr" ? "Activité GitHub" : "GitHub Activity"}
-        </SectionTitle>
-        <div className="mt-4">
-          <GitHubHeatmap locale={safeLocale} />
-        </div>
-      </section>
-
-      {/* Bouton retour accueil — navigation alternative en bas de page */}
+{/* Bouton retour accueil — navigation alternative en bas de page */}
       <div className="mt-12 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${safeLocale}`}
