@@ -54,9 +54,10 @@ test.describe("Track toggle", () => {
     );
     expect(storedTrack).toBe("itops");
 
-    // Recharger la page — le track doit être restauré
-    // waitUntil: "domcontentloaded" évite le timeout Firefox sur l'événement "load"
-    await page.reload({ waitUntil: "domcontentloaded" });
+    // Navigation fraîche vers /en (équivalent à un reload pour tester localStorage)
+    // page.reload() sur Firefox CI peut ne jamais déclencher domcontentloaded
+    // quand la page a scrollé vers un hash (#skills) — goto() contourne ce problème.
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("button", { name: /switch to salesforce/i })
     ).toBeVisible({ timeout: 15000 });
