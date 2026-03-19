@@ -337,7 +337,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               <div className="flex items-start gap-4">
                 <CertIcon initials={cert.initials} color={cert.color} logoUrl={(cert as { logoUrl?: string }).logoUrl} />
                 <div className="min-w-0">
-                  <h3 className="text-base font-semibold leading-snug">{cert.name}</h3>
+                  <h3 className="text-base font-semibold leading-snug text-slate-900 dark:text-white">{cert.name}</h3>
                   <p className="mt-0.5 text-sm text-muted">{cert.issuer}</p>
                   <p className="mt-0.5 text-xs text-muted-2">{cert.level}</p>
                   <p className="mt-0.5 text-xs text-muted-2">
@@ -406,7 +406,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {/* Texte */}
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h3 className="text-base font-semibold">Trailhead Ranger</h3>
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">Trailhead Ranger</h3>
                 </div>
                 <p className="mt-0.5 text-sm text-muted">Salesforce Trailhead</p>
                 <p className="mt-2 text-sm text-muted leading-relaxed">{labels.trailheadHint}</p>
@@ -414,19 +414,19 @@ export default async function CertificationsPage({ params }: PageProps) {
                 {/* Stats Trailhead */}
                 <div className="mt-5 grid grid-cols-3 gap-4">
                   <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-center">
-                    <p className="text-xl font-bold">
+                    <p className="text-xl font-bold text-slate-900 dark:text-white">
                       <AnimatedCounter value={trailheadProfile.badges} />
                     </p>
                     <p className="mt-0.5 text-xs text-muted">{labels.trailheadBadges}</p>
                   </div>
                   <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-center">
-                    <p className="text-xl font-bold">
+                    <p className="text-xl font-bold text-slate-900 dark:text-white">
                       <AnimatedCounter value={trailheadProfile.points} />
                     </p>
                     <p className="mt-0.5 text-xs text-muted">{labels.trailheadPoints}</p>
                   </div>
                   <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-center">
-                    <p className="text-xl font-bold">
+                    <p className="text-xl font-bold text-slate-900 dark:text-white">
                       <AnimatedCounter value={trailheadProfile.trails} />
                     </p>
                     <p className="mt-0.5 text-xs text-muted">{labels.trailheadTrails}</p>
@@ -472,7 +472,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               <div className="flex items-start gap-3">
                 <CertIcon initials={cert.initials} color={cert.color} logoUrl={(cert as { logoUrl?: string }).logoUrl} />
                 <div className="min-w-0">
-                  <h3 className="text-sm font-semibold leading-snug">{cert.name}</h3>
+                  <h3 className="text-sm font-semibold leading-snug text-slate-900 dark:text-white">{cert.name}</h3>
                   <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>
                 </div>
               </div>
