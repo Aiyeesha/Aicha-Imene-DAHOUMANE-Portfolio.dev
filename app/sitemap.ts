@@ -1,7 +1,11 @@
 // sitemap.ts
 // ----------
 // Sitemap dynamique — inclut toutes les pages indexables dans les deux langues.
-// Pages statiques : accueil, about, certifications, blog, tags
+// Chaque entrée bilingue expose ses alternates hreflang (EN / FR / x-default)
+// pour que Google indexe correctement les deux versions linguistiques.
+//
+// Pages statiques : accueil, about, certifications, blog, tags, resources, uses,
+//                   colophon, changelog, legal, privacy, accessibility
 // Pages dynamiques : articles de blog (MDX) + pages projets (Supabase)
 //
 // Mettre à jour NEXT_PUBLIC_SITE_LASTMOD (format ISO 8601) après chaque déploiement majeur.
@@ -16,50 +20,121 @@ export const dynamic = "force-dynamic";
 
 const STATIC_LAST_MODIFIED = new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD ?? "2026-02-04");
 
+type SitemapEntry = MetadataRoute.Sitemap[number];
+
+/**
+ * Génère une paire d'entrées sitemap (EN + FR) avec les balises hreflang correctes.
+ * x-default pointe toujours vers la version EN (langue par défaut du site).
+ *
+ * @param base     - URL de base (ex : "https://example.com")
+ * @param path     - Chemin sans locale (ex : "/about" ou "" pour la home)
+ * @param opts     - priority, changeFrequency, lastModified
+ */
+function biEntry(
+  base: string,
+  path: string,
+  opts: {
+    priority: number;
+    changeFrequency?: SitemapEntry["changeFrequency"];
+    lastModified?: Date;
+  }
+): SitemapEntry[] {
+  const {
+    priority,
+    changeFrequency = "monthly",
+    lastModified = STATIC_LAST_MODIFIED,
+  } = opts;
+
+  const languages: Record<string, string> = {
+    "x-default": `${base}/en${path}`,
+    en: `${base}/en${path}`,
+    fr: `${base}/fr${path}`,
+  };
+
+  return (["en", "fr"] as const).map((locale) => ({
+    url: `${base}/${locale}${path}`,
+    lastModified,
+    priority,
+    changeFrequency,
+    alternates: { languages },
+  }));
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   const pages: MetadataRoute.Sitemap = [
-    // Pages d'accueil — priorité maximale
-    { url: `${base}/en`, lastModified: STATIC_LAST_MODIFIED, priority: 1.0 },
-    { url: `${base}/fr`, lastModified: STATIC_LAST_MODIFIED, priority: 1.0 },
+    // ── Pages principales ────────────────────────────────────────────────────
+    ...biEntry(base, "", { priority: 1.0, changeFrequency: "weekly" }),
+    ...biEntry(base, "/about", { priority: 0.9, changeFrequency: "monthly" }),
+    ...biEntry(base, "/certifications", { priority: 0.8, changeFrequency: "monthly" }),
 
-    // Page About — haute valeur SEO (positionnement professionnel)
-    { url: `${base}/en/about`, lastModified: STATIC_LAST_MODIFIED, priority: 0.9 },
-    { url: `${base}/fr/about`, lastModified: STATIC_LAST_MODIFIED, priority: 0.9 },
+    // ── Blog ─────────────────────────────────────────────────────────────────
+    ...biEntry(base, "/blog", { priority: 0.8, changeFrequency: "weekly" }),
+    ...biEntry(base, "/blog/tags", { priority: 0.5, changeFrequency: "weekly" }),
 
-    // Page Certifications
-    { url: `${base}/en/certifications`, lastModified: STATIC_LAST_MODIFIED, priority: 0.8 },
-    { url: `${base}/fr/certifications`, lastModified: STATIC_LAST_MODIFIED, priority: 0.8 },
+    // ── Contenu statique ─────────────────────────────────────────────────────
+    ...biEntry(base, "/resources", { priority: 0.6, changeFrequency: "monthly" }),
+    ...biEntry(base, "/uses", { priority: 0.4, changeFrequency: "monthly" }),
+    ...biEntry(base, "/colophon", { priority: 0.3, changeFrequency: "yearly" }),
+    ...biEntry(base, "/changelog", { priority: 0.4, changeFrequency: "monthly" }),
 
-    // Blog (index + tags)
-    { url: `${base}/en/blog`, lastModified: STATIC_LAST_MODIFIED, priority: 0.8 },
-    { url: `${base}/fr/blog`, lastModified: STATIC_LAST_MODIFIED, priority: 0.8 },
-    { url: `${base}/en/blog/tags`, lastModified: STATIC_LAST_MODIFIED, priority: 0.5 },
-    { url: `${base}/fr/blog/tags`, lastModified: STATIC_LAST_MODIFIED, priority: 0.5 }
+    // ── Pages légales (faible priorité SEO, peu de changements) ──────────────
+    ...biEntry(base, "/legal", { priority: 0.2, changeFrequency: "yearly" }),
+    ...biEntry(base, "/privacy", { priority: 0.2, changeFrequency: "yearly" }),
+    ...biEntry(base, "/accessibility", { priority: 0.2, changeFrequency: "yearly" }),
   ];
 
-  // Slugs des projets depuis Supabase (EN couvre tous les slugs — chaque projet a une ligne EN)
+  // ── Projets depuis Supabase ───────────────────────────────────────────────
+  // Les slugs EN couvrent tous les projets publiés (chaque projet a une ligne EN).
   const enProjects = await getPublishedProjectsWithAssetsCached("en");
   const slugs = [...new Set(enProjects.map((p) => p.slug))];
 
-  for (const locale of ["en", "fr"] as const) {
-    // Articles de blog MDX
-    const posts = readAllPosts(locale);
-    for (const p of posts) {
-      pages.push({
-        url: `${base}/${locale}/blog/${p.slug}`,
-        lastModified: new Date(p.date),
-        priority: 0.7
-      });
+  for (const slug of slugs) {
+    pages.push(
+      ...biEntry(base, `/projects/${slug}`, {
+        priority: 0.7,
+        changeFrequency: "monthly",
+      })
+    );
+  }
+
+  // ── Articles de blog MDX ──────────────────────────────────────────────────
+  // Les articles FR sont un sous-ensemble des articles EN.
+  // On génère une entrée par locale existante, avec hreflang conditionnels.
+  const enPosts = readAllPosts("en");
+  const frPosts = readAllPosts("fr");
+  const frSlugSet = new Set(frPosts.map((p) => p.slug));
+
+  for (const post of enPosts) {
+    const hasFr = frSlugSet.has(post.slug);
+    const lastModified = new Date(post.date);
+
+    const languages: Record<string, string> = {
+      "x-default": `${base}/en/blog/${post.slug}`,
+      en: `${base}/en/blog/${post.slug}`,
+    };
+    if (hasFr) {
+      languages.fr = `${base}/fr/blog/${post.slug}`;
     }
 
-    // Pages détaillées des projets (conservées dans le repo même si non visibles en production)
-    for (const slug of slugs) {
+    // Entrée EN — toujours présente
+    pages.push({
+      url: `${base}/en/blog/${post.slug}`,
+      lastModified,
+      priority: 0.7,
+      changeFrequency: "yearly",
+      alternates: { languages },
+    });
+
+    // Entrée FR — uniquement si la traduction existe
+    if (hasFr) {
       pages.push({
-        url: `${base}/${locale}/projects/${slug}`,
-        lastModified: STATIC_LAST_MODIFIED,
-        priority: 0.7
+        url: `${base}/fr/blog/${post.slug}`,
+        lastModified,
+        priority: 0.7,
+        changeFrequency: "yearly",
+        alternates: { languages },
       });
     }
   }

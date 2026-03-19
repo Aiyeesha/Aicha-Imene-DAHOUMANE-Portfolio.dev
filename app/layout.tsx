@@ -55,9 +55,13 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
   },
   // Flux RSS — annoncé dans <head> pour les lecteurs de flux et moteurs de recherche
+  // Deux flux : EN (/feed.xml) et FR (/feed-fr.xml) pour l'audience francophone.
   alternates: {
     types: {
-      "application/rss+xml": "/feed.xml",
+      "application/rss+xml": [
+        { url: "/feed.xml", title: "RSS Feed (EN)" },
+        { url: "/feed-fr.xml", title: "Flux RSS (FR)" },
+      ],
     },
   },
 };
@@ -192,6 +196,18 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         )}
         {/* Formspree : formulaire de contact (chargé à la demande) */}
         <link rel="dns-prefetch" href="https://formspree.io" />
+        {/* Preload avatar — candidat LCP (Largest Contentful Paint) sur le hero.
+            fetchpriority="high" priorise le téléchargement avant le parsing du Hero.
+            Gain LCP typique : ~200–400ms sur Chrome/Edge.
+            Dégradation gracieuse : ignoré silencieusement sur Firefox et Safari < 17.2
+            (pas de régression, juste pas de gain de priorité sur ces navigateurs). */}
+        <link
+          rel="preload"
+          as="image"
+          href={process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp"}
+          // @ts-expect-error — fetchpriority est un attribut HTML valide, pas encore dans les types React
+          fetchpriority="high"
+        />
         {/* nonce : autorise ce script inline dans la CSP sans 'unsafe-inline' */}
         <script
           type="application/ld+json"

@@ -126,6 +126,63 @@ html.dark .chip:hover { @apply bg-white/10; }
   .card:hover { transform: none !important; }
 }
 
+/* ============================================================
+   WINDOWS HIGH CONTRAST MODE (forced-colors)
+   ============================================================
+   En mode Contraste Élevé Windows (HCM), le navigateur remplace les
+   couleurs personnalisées par une palette système limitée. Sans ces règles,
+   les éléments avec des backgrounds/borders CSS personnalisés deviennent
+   invisibles ou indiscernables.
+
+   Conventions forced-colors :
+     ButtonText     : texte des boutons (noir/blanc selon theme HCM)
+     ButtonBorder   : bordure des boutons
+     LinkText       : couleur des liens
+     HighlightText  : texte sélectionné / actif
+     Highlight      : fond de sélection
+     GrayText       : texte désactivé
+     Canvas         : fond de page
+     CanvasText     : texte de page
+   ============================================================ */
+@media (forced-colors: active) {
+  /* Cartes — rétablir bordure visible en HCM */
+  .card {
+    border: 1px solid ButtonBorder;
+    background: Canvas;
+  }
+
+  /* Chips / badges — fond transparent, bordure forcée */
+  .chip,
+  .badge {
+    background: Canvas;
+    border: 1px solid ButtonBorder;
+    color: CanvasText;
+  }
+
+  /* Bouton de focus — l'outline currentColor peut disparaître en HCM */
+  .soft-ring:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+
+  /* Section stripe — supprimer le fond custom, invisible en HCM */
+  .section-stripe {
+    background: Canvas;
+    border: 1px solid ButtonBorder;
+  }
+
+  /* Page gradient — décoratif, masquer en HCM */
+  .page-gradient {
+    display: none;
+  }
+
+  /* Nav pill — invisible en HCM sans ces règles */
+  .nav-pill {
+    border: 2px solid Highlight;
+    background: transparent;
+  }
+}
+
 /* Background glow */
 .page-gradient {
   position: fixed;
@@ -420,5 +477,38 @@ html.dark .section-stripe {
   /* Titres : pas de coupure après */
   h1, h2, h3 {
     break-after: avoid;
+  }
+}
+
+/* ── Reveal — animation scroll-triggered (CSS + IntersectionObserver) ─────────
+   Remplace l'ancienne implémentation Framer Motion (inutile pour fade+translate).
+   Contrôlé par data-attributes depuis Reveal.tsx :
+     data-animating  : JS a pris le contrôle, l'élément est sous la ligne de flottaison
+     data-visible    : l'élément est entré dans le viewport → joue la transition
+     data-from       : direction d'entrée (bottom | left | right)
+   La variable CSS --reveal-delay est passée via style={{ "--reveal-delay": "…ms" }}
+   (propriété personnalisée CSS — seul cas légitime d'inline style dans ce projet). */
+
+[data-animating] {
+  opacity: 0;
+  transition:
+    opacity  0.55s ease-out var(--reveal-delay, 0ms),
+    transform 0.55s ease-out var(--reveal-delay, 0ms);
+}
+[data-animating][data-from="bottom"] { transform: translateY(14px); }
+[data-animating][data-from="left"]   { transform: translateX(-24px); }
+[data-animating][data-from="right"]  { transform: translateX(24px); }
+
+[data-animating][data-visible] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Pas d'animation pour prefers-reduced-motion (géré aussi côté JS) */
+@media (prefers-reduced-motion: reduce) {
+  [data-animating] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
