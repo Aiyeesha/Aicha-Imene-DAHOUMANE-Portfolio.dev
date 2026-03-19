@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import DevConsoleMessage from "@/components/DevConsoleMessage";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 
 // ── Polices premium ────────────────────────────────────────────────────────────
 // Space Grotesk : display/titres — distinctive, géométrique, moderne
@@ -135,7 +136,15 @@ function buildJsonLd(locale: string) {
         provider: { "@id": personId },
         // Catégories de services
         serviceType: ["Salesforce Development", "Salesforce Administration", "IT Operations", "DevOps"],
-        areaServed: "FR",
+        areaServed: [
+          { "@type": "Country", name: "France" },
+          { "@type": "Country", name: "Algeria" },
+          { "@type": "Country", name: "Belgium" },
+          { "@type": "Country", name: "Switzerland" },
+          { "@type": "Country", name: "Luxembourg" },
+          { "@type": "Country", name: "Canada" },
+          "Worldwide", // remote international — string Text valide Schema.org
+        ],
         inLanguage: locale === "fr" ? "fr-FR" : "en-US"
       }
     ]
@@ -219,6 +228,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       </head>
       <body>
         {children}
+        <GlobalErrorHandler />
         <DevConsoleMessage />
         <ServiceWorkerRegistration />
         {/* nonce transmis pour que les scripts Vercel respectent la CSP */}

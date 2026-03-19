@@ -11,15 +11,23 @@ type Props = {
   /** Nombre de lignes de texte de description (1–4, défaut : 3) */
   lines?: number;
   className?: string;
+  /**
+   * Index de stagger (0-3) — applique un `animation-delay` CSS via la classe
+   * `.skeleton-delay-{n}` définie dans globals.css, pour créer un effet
+   * de cascade ondulant plutôt qu'une pulsation synchrone de toutes les cartes.
+   */
+  staggerIndex?: 0 | 1 | 2 | 3;
 };
 
-export default function SkeletonCard({ lines = 3, className = "" }: Props) {
+export default function SkeletonCard({ lines = 3, className = "", staggerIndex }: Props) {
+  const staggerClass = staggerIndex ? `skeleton-delay-${staggerIndex}` : "";
   return (
     <div
       className={[
         "card p-6 animate-pulse",
+        staggerClass,
         className,
-      ].join(" ")}
+      ].join(" ").trim()}
       aria-hidden="true"
     >
       {/* En-tête : titre + badge placeholder */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import CalendlyModal from "./CalendlyModal";
@@ -67,6 +67,8 @@ export default function ContactForm() {
   const locale = useLocale();
   const { track } = useTrack();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  // Guard: fire contact_form_started only once per mount (first keystroke)
+  const startedRef = useRef(false);
 
   // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
   const [topic,   setTopic]   = useState("general");
@@ -187,7 +189,16 @@ export default function ContactForm() {
 
   return (
     <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_420px]">
-      <form onSubmit={onSubmit} className="card p-6 space-y-3">
+      <form
+        onSubmit={onSubmit}
+        className="card p-6 space-y-3"
+        onChange={() => {
+          // Fire once on first user interaction with any form field
+          if (startedRef.current) return;
+          startedRef.current = true;
+          trackEvent("contact_form_started", { locale });
+        }}
+      >
         <div>
           <label htmlFor="contact-name" className="text-xs text-muted-2">{t("contact.nameLabel")}</label>
           <input
@@ -289,14 +300,35 @@ export default function ContactForm() {
             type="submit"
             disabled={status.kind === "sending" || status.kind === "rate_limited"}
             aria-describedby="contact-form-status"
-            className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring disabled:opacity-60 disabled:cursor-not-allowed"
           >
+            {status.kind === "sending" && (
+              /* Spinner CSS — aucune dépendance JS, animate-spin est natif Tailwind */
+              <svg
+                aria-hidden="true"
+                className="h-3.5 w-3.5 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12" cy="12" r="10"
+                  stroke="currentColor" strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+            )}
             {status.kind === "sending" ? t("contact.sending") : t("contact.send")}
           </button>
 
           <div id="contact-form-status" aria-live="polite" aria-atomic="true" className="min-h-[20px]">
             {status.kind === "success" && (
-              <span className="text-sm text-emerald-700 dark:text-emerald-200">
+              /* animate-in = classe Tailwind v3.4+ animate-[fadeIn_0.3s_ease] */
+              <span className="inline-block text-sm text-emerald-700 dark:text-emerald-200 animate-[fadeIn_0.35s_ease_forwards]">
                 {t("contact.success")}
               </span>
             )}

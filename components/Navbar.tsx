@@ -340,17 +340,28 @@ useEffect(() => {
         </div>
       </header>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-[80] lg:hidden">
+      {/* Mobile drawer — toujours dans le DOM, affiché/masqué par CSS.
+          pointer-events-none + aria-hidden quand fermé pour bloquer interaction
+          et navigation clavier. Le panel slide depuis la droite (translate-x),
+          le backdrop fade en opacity — aucune dépendance Framer Motion pour
+          ne pas charger ~25 KB gzip sur toutes les pages. */}
+      <div
+        className={`fixed inset-0 z-[80] lg:hidden transition-opacity duration-200 ease-out ${
+          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        aria-hidden={!mobileOpen}
+      >
           <button
             className="absolute inset-0 bg-black/40"
-            tabIndex={-1}
+            tabIndex={mobileOpen ? 0 : -1}
             aria-hidden="true"
             onClick={() => setMobileOpen(false)}
             aria-label={t("a11y.closeMenuOverlay")}
           />
-          <div className="absolute right-0 top-0 h-full w-[85%] max-w-sm border-l border-black/10 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-[#070B1A]"
+          <div
+            className={`absolute right-0 top-0 h-full w-[85%] max-w-sm border-l border-black/10 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-[#070B1A] transition-transform duration-300 ease-out ${
+              mobileOpen ? "translate-x-0" : "translate-x-full"
+            }`}
             id={MENU_ID}
             role="dialog"
             aria-modal="true"
@@ -438,8 +449,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
-        </div>
-      )}
+      </div>
     </>
   );
 }

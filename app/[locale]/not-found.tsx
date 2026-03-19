@@ -1,20 +1,13 @@
-// app/not-found.tsx
-// -----------------
-// Page 404 racine — fallback global quand aucun [locale]/not-found.tsx ne correspond.
-// S'affiche pour les routes hors [locale]/ (ex: /admin/page-inconnue).
+// app/[locale]/not-found.tsx
+// --------------------------
+// Page 404 locale — prioritaire sur app/not-found.tsx pour toutes les routes
+// sous app/[locale]/ (projets, blog, certifications, etc.).
 //
-// Détection de langue via navigator.language (client only) — flash acceptable
-// sur ce fallback rare. La version locale (app/[locale]/not-found.tsx) utilise
-// useParams() et n'a pas ce flash.
+// useParams() résout la locale synchroniquement depuis l'URL — zéro flash.
 
 "use client";
 
-import { useEffect, useState } from "react";
-
-function getPreferredLocale(): "fr" | "en" {
-  if (typeof window === "undefined") return "en";
-  return navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en";
-}
+import { useParams } from "next/navigation";
 
 const content = {
   fr: {
@@ -39,7 +32,9 @@ const content = {
   },
 } as const;
 
-// ── Icône : boussole / lien brisé ──────────────────────────────────────────
+type Locale = keyof typeof content;
+
+// ── Icône : boussole ────────────────────────────────────────────────────────
 function Icon404() {
   return (
     <svg
@@ -50,15 +45,10 @@ function Icon404() {
       fill="none"
       className="mx-auto text-cyan-500/50 dark:text-cyan-400/40"
     >
-      {/* Cercle extérieur */}
       <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="2" />
-      {/* Aiguille boussole haut-droite */}
       <path d="M24 24 L32 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      {/* Aiguille boussole bas-gauche */}
       <path d="M24 24 L16 34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.4" />
-      {/* Centre */}
       <circle cx="24" cy="24" r="2.5" fill="currentColor" />
-      {/* Points cardinaux */}
       <circle cx="24" cy="6"  r="1.5" fill="currentColor" fillOpacity="0.3" />
       <circle cx="42" cy="24" r="1.5" fill="currentColor" fillOpacity="0.3" />
       <circle cx="24" cy="42" r="1.5" fill="currentColor" fillOpacity="0.3" />
@@ -67,13 +57,10 @@ function Icon404() {
   );
 }
 
-export default function NotFound() {
-  const [locale, setLocale] = useState<"fr" | "en">("en");
-
-  useEffect(() => {
-    setLocale(getPreferredLocale());
-  }, []);
-
+export default function LocaleNotFound() {
+  const params = useParams();
+  const raw = params?.locale;
+  const locale: Locale = raw === "fr" || raw === "en" ? raw : "en";
   const c = content[locale];
 
   return (
@@ -82,17 +69,14 @@ export default function NotFound() {
 
         <Icon404 />
 
-        {/* Code d'erreur */}
         <p className="mt-4 text-8xl font-black text-cyan-500/30 dark:text-cyan-400/20 select-none leading-none">
           {c.code}
         </p>
 
-        {/* Titre + description */}
         <h1 className="mt-4 text-2xl font-semibold">{c.title}</h1>
         <p className="mt-3 text-sm text-slate-500 dark:text-white/60">{c.description}</p>
         <p className="mt-2 text-sm text-slate-400 dark:text-white/40">{c.hint}</p>
 
-        {/* CTAs */}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <a
             href={c.href}
