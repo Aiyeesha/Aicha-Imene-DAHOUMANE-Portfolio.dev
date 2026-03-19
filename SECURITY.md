@@ -165,6 +165,44 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 
 ---
 
+## Secret Rotation Procedure
+
+All secrets below should be rotated **immediately** if compromised, and periodically (every 6–12 months for credentials, every 90 days for tokens if policy requires it).
+
+### Rotation checklist per secret
+
+| Secret | Where generated | Where to update |
+|--------|----------------|-----------------|
+| `ADMIN_PASSWORD` | Random strong password (min. 24 chars) | Vercel env vars → redeploy |
+| `ADMIN_USERNAME` | Arbitrary string (avoid obvious names) | Vercel env vars → redeploy |
+| `CRON_SECRET` | `openssl rand -base64 32` | Vercel env vars + Vercel Cron config → redeploy |
+| `REVALIDATE_SECRET` | `openssl rand -base64 32` | Vercel env vars → redeploy |
+| `CACHE_INVALIDATE_SECRET` | `openssl rand -base64 32` | Vercel env vars → redeploy |
+| `TESTIMONIAL_SUBMIT_TOKEN` | `openssl rand -base64 32` | Vercel env vars → redeploy |
+| `IP_HASH_SALT` | `openssl rand -hex 32` | Vercel env vars → redeploy (invalidates existing hashes) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → Settings → API | Vercel env vars → redeploy |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Console → Database → REST API | Vercel env vars → redeploy |
+
+### Step-by-step procedure
+
+1. **Generate** a new secret value (use the command shown in the table, or a password manager)
+2. **Update** the secret in Vercel → Project Settings → Environment Variables (Production + Preview)
+3. **Trigger a redeploy** on Vercel (or push a commit) — the new value takes effect immediately after deployment
+4. **Revoke** the old secret from its source (Supabase, Upstash Console) if applicable
+5. **Verify** the deployment is healthy via `/api/health` and `/status`
+
+> **Note on `IP_HASH_SALT` rotation**: changing this salt invalidates all existing rate-limit keys in Upstash Redis (IPs are hashed before storage). This has no functional impact beyond briefly resetting in-flight rate-limit counters.
+
+### Signs of compromise to watch for
+
+- Unexpected entries in Supabase `messages` or `testimonial_submissions` tables
+- Unusual spike in Vercel function invocations (> 100k/month on Hobby plan)
+- CSP violations reported to `/api/csp-report` from unexpected `document-uri`
+- `/api/health` returning degraded status for Redis (possible token invalidation)
+- GitHub Secret Scanning alert (auto-sent by GitHub if a secret is pushed)
+
+---
+
 ## Reporting a Vulnerability
 
 1. Send an email to the security contact above describing the vulnerability

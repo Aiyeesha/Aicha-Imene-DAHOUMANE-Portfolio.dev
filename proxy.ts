@@ -83,6 +83,27 @@ function buildCSP(nonce: string, isDev: boolean): string {
   ].join("; ");
 }
 
+// ── CSP Report-Only : Trusted Types ──────────────────────────────────────────
+// En mode report-only, la politique N'EST PAS appliquée — les violations sont
+// seulement signalées à /api/csp-report?ro=1.
+//
+// Objectif ici : détecter toute utilisation de sink DOM dangereux (innerHTML,
+// eval, document.write…) via require-trusted-types-for 'script'.
+// React 19 est compatible Trusted Types (il ne passe par ces sinks), mais
+// des bibliothèques tierces ou des patterns hérités pourraient en avoir besoin.
+// Le paramètre ?ro=1 distingue les rapports report-only des violations actives
+// dans les Vercel Runtime Logs, pour faciliter le tri.
+function buildCSPReportOnly(): string {
+  return [
+    // Détecte tout usage de sink DOM non-noncé (innerHTML, eval, etc.)
+    // Sans bloquer — le site reste fonctionnel même si des violations sont trouvées.
+    "require-trusted-types-for 'script'",
+    // Endpoint dédié report-only (distingué par ?ro=1 dans les logs)
+    "report-uri /api/csp-report?ro=1",
+    "report-to csp-endpoint",
+  ].join("; ");
+}
+
 // ── Comparaison de strings en temps constant (timing-safe) ───────────────────
 // crypto.subtle.timingSafeEqual() est disponible dans l'Edge Runtime.
 // La comparaison == en JS peut court-circuiter sur le premier caractère différent,
@@ -160,6 +181,7 @@ export async function proxy(request: NextRequest) {
   // btoa() encode en base64 — le nonce dans la CSP doit être base64.
   const nonce = btoa(crypto.randomUUID());
   const csp = buildCSP(nonce, isDev);
+  const cspRO = buildCSPReportOnly();
 
   // ── 2. Protection /admin ──────────────────────────────────────────────────
   if (pathname.startsWith("/admin")) {
@@ -190,6 +212,7 @@ export async function proxy(request: NextRequest) {
       request: { headers: requestHeaders },
     });
     response.headers.set("Content-Security-Policy", csp);
+    response.headers.set("Content-Security-Policy-Report-Only", cspRO);
     return response;
   }
 
@@ -220,6 +243,7 @@ export async function proxy(request: NextRequest) {
     request: { headers: requestHeaders },
   });
   response.headers.set("Content-Security-Policy", csp);
+  response.headers.set("Content-Security-Policy-Report-Only", cspRO);
 
   // Préserver les headers de intlHandler (x-next-intl-*, etc.)
   // ⚠️ NEXT_LOCALE cookie intentionnellement filtré :
