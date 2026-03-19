@@ -117,7 +117,8 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
               >
                 {icons[idx]}
               </div>
-              <h3 className="font-semibold text-sm leading-tight">{g.title}</h3>
+              {/* Explicit dark:text-white avoids inheriting body color mid-transition */}
+              <h3 className="font-semibold text-sm leading-tight text-slate-900 dark:text-white">{g.title}</h3>
             </div>
 
             {/* Liste des compétences */}

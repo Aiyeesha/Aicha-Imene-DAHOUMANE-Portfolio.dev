@@ -138,7 +138,8 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               >
                 {icons[idx]}
               </div>
-              <h3 className="font-semibold leading-snug pt-1.5">{c.title}</h3>
+              {/* Explicit dark:text-white avoids inheriting body color mid-transition */}
+              <h3 className="font-semibold leading-snug pt-1.5 text-slate-900 dark:text-white">{c.title}</h3>
             </div>
 
             {/* Description courte */}
