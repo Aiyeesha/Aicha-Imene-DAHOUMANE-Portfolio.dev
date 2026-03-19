@@ -16,8 +16,8 @@ export async function POST(req: Request) {
   // ── 1. Rate-limit par IP ────────────────────────────────────────────────────
   const headersList = await headers();
   const ip =
-    headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     headersList.get("x-real-ip") ||
+    headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
 
   const { success: rateLimitOk } = await cacheInvalidateRatelimit.limit(ip);

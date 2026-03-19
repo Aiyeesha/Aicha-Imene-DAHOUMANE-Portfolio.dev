@@ -52,6 +52,32 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
       .slice(0, 4);
   }, [projects, track]);
 
+  // ── Empty state ─────────────────────────────────────────────────────────────
+  // Déclenché quand Supabase est indisponible (retourne []) ou quand aucun
+  // projet n'a featured=true pour le track actif.
+  if (featured.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-12 px-6 text-center">
+        {/* Icône dossier vide */}
+        <svg
+          className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-white/20"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.2}
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3 7a2 2 0 012-2h3.586a1 1 0 01.707.293L10.414 6.5H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
+          />
+        </svg>
+        <p className="text-sm text-muted">{t("projects.emptyFeatured")}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       {featured.map((p, i) => (

@@ -68,7 +68,11 @@ export async function generateMetadata(
       description,
       url: urlPath,
       siteName,
-      images: [{ url: ogImage }]
+      images: [{ url: ogImage }],
+      // article:published_time — indexed by Google and social platforms (LinkedIn, Twitter)
+      publishedTime: meta.date,
+      // article:author — links to the author's profile page
+      authors: [`${siteUrl}/en/about`],
     },
     twitter: {
       card: "summary_large_image",

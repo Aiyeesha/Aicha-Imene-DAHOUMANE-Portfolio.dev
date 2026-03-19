@@ -101,12 +101,8 @@ function buildJsonLd(locale: string) {
         name: siteName,
         url: siteUrl,
         inLanguage: locale === "fr" ? "fr-FR" : "en-US",
-        // Permet à Google de générer un champ de recherche dans les résultats
-        potentialAction: {
-          "@type": "SearchAction",
-          target: `${siteUrl}/${locale}/blog?q={search_term_string}`,
-          "query-input": "required name=search_term_string"
-        }
+        // potentialAction SearchAction supprimée : la route /blog?q= n'implémente
+        // pas de recherche côté serveur — Google ignorerait ou déprécierait l'entrée.
       },
 
       // Person — profil professionnel indexable

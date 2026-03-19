@@ -86,17 +86,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // ── Projets depuis Supabase ───────────────────────────────────────────────
-  // Les slugs EN couvrent tous les projets publiés (chaque projet a une ligne EN).
-  const enProjects = await getPublishedProjectsWithAssetsCached("en");
-  const slugs = [...new Set(enProjects.map((p) => p.slug))];
+  // Récupère EN + FR pour savoir quels slugs existent dans chaque locale.
+  // Un projet locale="multi" apparaît dans les deux ; locale="en" uniquement en EN.
+  // biEntry crée des URLs EN+FR — on le restreint aux slugs qui ont une version FR.
+  const [enProjects, frProjects] = await Promise.all([
+    getPublishedProjectsWithAssetsCached("en"),
+    getPublishedProjectsWithAssetsCached("fr"),
+  ]);
+  const enSlugs = [...new Set(enProjects.map((p) => p.slug))];
+  const frSlugSetProjects = new Set(frProjects.map((p) => p.slug));
 
-  for (const slug of slugs) {
-    pages.push(
-      ...biEntry(base, `/projects/${slug}`, {
+  for (const slug of enSlugs) {
+    const hasFr = frSlugSetProjects.has(slug);
+
+    const projectLanguages: Record<string, string> = {
+      "x-default": `${base}/en/projects/${slug}`,
+      en: `${base}/en/projects/${slug}`,
+    };
+    if (hasFr) {
+      projectLanguages.fr = `${base}/fr/projects/${slug}`;
+    }
+
+    // Entrée EN — toujours présente
+    pages.push({
+      url: `${base}/en/projects/${slug}`,
+      priority: 0.7,
+      changeFrequency: "monthly",
+      alternates: { languages: projectLanguages },
+    });
+
+    // Entrée FR — uniquement si le projet est disponible en FR
+    if (hasFr) {
+      pages.push({
+        url: `${base}/fr/projects/${slug}`,
         priority: 0.7,
         changeFrequency: "monthly",
-      })
-    );
+        alternates: { languages: projectLanguages },
+      });
+    }
   }
 
   // ── Articles de blog MDX ──────────────────────────────────────────────────

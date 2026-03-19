@@ -20,12 +20,21 @@ export async function generateMetadata(
 
   const title = t("meta.title");
   const description = t("meta.description");
-  const urlPath = `/${locale}/blog`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/blog`;
 
   return {
     title,
     description,
-    alternates: { canonical: urlPath },
+    // URLs absolues requises pour hreflang — Next.js combine metadataBase + relative
+    // uniquement pour le canonical HTML, pas pour les balises <link rel="alternate">.
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/blog`,
+        fr: `${siteUrl}/fr/blog`,
+      }
+    },
     openGraph: {
       title,
       description,
@@ -216,7 +225,33 @@ export default async function BlogIndexPage({
         </div>
       ) : (
         !featuredPost && (
-          <p className="mt-10 text-muted">{t("noResults")}</p>
+          // Empty state : tag sélectionné sans résultats — ou liste vide si aucun article
+          <div className="mt-10 flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-16 px-6 text-center">
+            {/* Icône signet */}
+            <svg
+              className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-white/20"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.2}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+              />
+            </svg>
+            <p className="font-medium text-strong">{t("noResults")}</p>
+            {selectedTag && (
+              <Link
+                href={`/${locale}/blog`}
+                className="mt-4 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("tags.all")}
+              </Link>
+            )}
+          </div>
         )
       )}
 
