@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import Providers from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -58,7 +59,9 @@ export async function generateMetadata({
       description,
       images: [
         {
-          url: "/opengraph-image",
+          // URL absolue requise : certains crawlers OG (LinkedIn, Slack, WhatsApp)
+          // n'utilisent pas metadataBase et échouent sur les URLs relatives.
+          url: `${siteUrl}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: title
@@ -69,7 +72,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["/twitter-image"]
+      images: [`${siteUrl}/twitter-image`]
     }
   };
 }
@@ -120,44 +123,46 @@ export default async function LocaleLayout({
                   <span>
                     © {new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
                   </span>
-                  <div className="flex flex-wrap items-center gap-4">
-                    <a
+                  {/* Link (Next.js) pour la navigation SPA — évite le rechargement de page
+                      complet que <a href> provoque sur les routes locales. */}
+                  <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-4">
+                    <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/colophon`}
                     >
                       Colophon
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/privacy`}
                     >
                       {t("footer.privacy")}
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/legal`}
                     >
                       {t("footer.legal")}
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/accessibility`}
                     >
                       {t("footer.accessibility")}
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/status`}
                     >
                       {t("footer.status")}
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/changelog`}
                     >
                       {t("footer.changelog")}
-                    </a>
-                  </div>
+                    </Link>
+                  </nav>
                 </div>
               </div>
             </footer>

@@ -45,6 +45,10 @@ export default function manifest(): MetadataRoute.Manifest {
     // ── Icônes ─────────────────────────────────────────────────────────────
     // "any"      : usage général (bookmark, splash screen)
     // "maskable" : icône adaptative Android (safe area — fond solid requis)
+    //
+    // WebP (27 KB) en tête : Chrome 73+, Edge, Firefox et Safari 14+ le supportent.
+    // PNG (65 KB) en fallback : navigateurs anciens, iOS < 14, lecteurs de flux.
+    // Le navigateur choisit le premier format qu'il comprend dans la liste.
     icons: [
       {
         src:     "/icon-192.png",
@@ -52,6 +56,14 @@ export default function manifest(): MetadataRoute.Manifest {
         type:    "image/png",
         purpose: "any"
       },
+      // WebP 512 — format prioritaire (−60% vs PNG original)
+      {
+        src:     "/icon-512.webp",
+        sizes:   "512x512",
+        type:    "image/webp",
+        purpose: "any"
+      },
+      // PNG 512 — fallback universel (palette PNG, −60% vs original 163 KB)
       {
         src:     "/icon-512.png",
         sizes:   "512x512",

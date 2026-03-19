@@ -254,6 +254,7 @@
   },
   "footer": {
     "builtWith": "Propulsé par Next.js",
+    "nav": "Navigation du pied de page",
     "privacy": "Confidentialité",
     "legal": "Mentions légales",
     "accessibility": "Accessibilité",

@@ -254,6 +254,7 @@
   },
   "footer": {
     "builtWith": "Built with Next.js",
+    "nav": "Footer navigation",
     "privacy": "Privacy",
     "legal": "Legal notice",
     "accessibility": "Accessibility",

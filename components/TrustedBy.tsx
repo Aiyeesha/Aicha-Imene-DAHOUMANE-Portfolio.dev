@@ -110,12 +110,16 @@ export default function TrustedBy() {
         {/* Cas normal      : overflow-hidden + animate-marquee (défilement infini)
             Reduced motion  : overflow visible + flex-wrap centré (pas de scroll)
             group-hover     : pause au survol de la bande entière */}
+        {/* role="region" est requis pour que aria-label soit reconnu par les lecteurs
+            d'écran (un <div> sans role ARIA ignore son aria-label — violation ARIA 1.2).
+            La région est nommée par le <p> précédent, confirmé par aria-label. */}
         <div
+          role="region"
+          aria-label={t("trustedBy.title")}
           className="
             group mt-8 w-full
             overflow-hidden motion-reduce:overflow-visible
           "
-          aria-label={t("trustedBy.title")}
         >
           <div
             className="
