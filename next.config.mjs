@@ -23,6 +23,15 @@ import createMDX from "@next/mdx";
 import createNextIntlPlugin from "next-intl/plugin";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+// Bundle analyzer — activé uniquement si ANALYZE=true (jamais en production)
+// Usage : ANALYZE=true npm run build
+// Ouvre deux rapports HTML : client bundle + server bundle
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: true,
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -195,4 +204,4 @@ const withMDX = createMDX({
 // Pointe explicitement vers le fichier de config App Router
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
-export default withNextIntl(withMDX(nextConfig));
+export default withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));
