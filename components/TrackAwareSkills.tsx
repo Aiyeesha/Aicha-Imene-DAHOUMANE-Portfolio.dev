@@ -122,7 +122,8 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
             </div>
 
             {/* Liste des compétences */}
-            <ul className="list-disc space-y-1 pl-5 text-sm text-muted">
+            {/* dark:text-slate-400 : explicit color breaks inheritance from transitioning body */}
+            <ul className="list-disc space-y-1 pl-5 text-sm text-muted dark:text-slate-400">
               {g.items.map((it) => (
                 <li key={it}>{it}</li>
               ))}
