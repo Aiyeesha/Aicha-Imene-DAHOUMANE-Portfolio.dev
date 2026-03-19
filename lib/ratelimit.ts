@@ -107,6 +107,15 @@ export const cspReportRatelimit = redis
   ? createRatelimit(redis, 20, 60, "portfolio:rl:csp-report")
   : createNoOpRatelimit(20, 60_000);
 
+// ── Limiteur pour /api/errors (client error reporting) ───────────────
+// 10 rapports par 60 secondes par IP.
+// Généreux pour ne pas bloquer un client en crash-loop (erreur JS qui
+// se rejoue), mais suffisant pour absorber un flush d'erreurs groupées.
+// La dedup côté client (GlobalErrorHandler) réduit déjà le bruit.
+export const errorRatelimit = redis
+  ? createRatelimit(redis, 10, 60, "portfolio:rl:errors")
+  : createNoOpRatelimit(10, 60_000);
+
 // ── Limiteur pour /api/revalidate ─────────────────────────────────────
 // 10 requêtes par 60 secondes par IP.
 // Protège contre le flood de l'endpoint ISR en cas de fuite/bruteforce du

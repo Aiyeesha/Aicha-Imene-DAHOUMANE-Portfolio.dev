@@ -24,6 +24,14 @@ import { useTrack } from "@/app/[locale]/providers";
 // ── Styles injectés une seule fois via <style> ────────────────────────────────
 // L'overlay et le panel sont stylés ici car cmdk accepte seulement des classNames.
 const PALETTE_STYLES = `
+  @keyframes cmdk-overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes cmdk-panel-in {
+    from { opacity: 0; transform: translateX(-50%) scale(0.96) translateY(-8px); }
+    to   { opacity: 1; transform: translateX(-50%) scale(1)    translateY(0);    }
+  }
   [cmdk-overlay] {
     position: fixed;
     inset: 0;
@@ -31,6 +39,7 @@ const PALETTE_STYLES = `
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    animation: cmdk-overlay-in 150ms ease;
   }
   [cmdk-dialog] {
     position: fixed;
@@ -42,6 +51,7 @@ const PALETTE_STYLES = `
     border-radius: 1rem;
     overflow: hidden;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    animation: cmdk-panel-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   [cmdk-input] {
     width: 100%;

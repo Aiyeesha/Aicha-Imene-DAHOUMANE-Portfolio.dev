@@ -72,8 +72,12 @@ export default function Loading() {
 
         {/* Grille de 4 cartes */}
         <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <SkeletonCard key={i} lines={i === 3 ? 2 : 3} />
+          {(Array.from({ length: 4 }) as undefined[]).map((_, i) => (
+            <SkeletonCard
+              key={i}
+              lines={i === 3 ? 2 : 3}
+              staggerIndex={i as 0 | 1 | 2 | 3}
+            />
           ))}
         </div>
       </div>

@@ -74,13 +74,17 @@ h1, h2, h3 {
 .card {
   @apply rounded-2xl border shadow-[0_0_0_1px_rgba(0,0,0,0.03)] backdrop-blur;
   @apply border-black/10 bg-black/5;
-  @apply transition-transform duration-200 ease-out;
+  @apply transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out;
 }
 html.dark .card {
   @apply border-white/10 bg-white/5 shadow-[0_0_0_1px_rgba(255,255,255,0.03)];
 }
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+}
+html.dark .card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
 }
 
 .chip {
@@ -119,6 +123,80 @@ html.dark .chip:hover { @apply bg-white/10; }
   outline: 2px solid currentColor;
   outline-offset: 3px;
 }
+
+/* ── Interactive feedback ─────────────────────────────────────────────────────
+   Press scale : feedback tactile au clic sur tous les boutons interactifs.
+   La durée courte (100ms) donne une sensation de réactivité immédiate.
+   Les boutons désactivés restent à 100% pour indiquer qu'ils ne répondent pas.
+   disabled:cursor-not-allowed est géré en Tailwind sur chaque composant — on le
+   centralise ici pour ne pas l'oublier sur un nouveau bouton. */
+button:not([disabled]):active {
+  transform: scale(0.97);
+  transition-duration: 100ms;
+}
+button[disabled],
+button[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* ── Dark / Light mode — transition globale ───────────────────────────────────
+   Quand next-themes change la classe .dark sur <html>, tous les éléments
+   qui utilisent des valeurs dark: recalculent leurs couleurs CSS.
+   Cette transition évite le flash brutal light→dark ou dark→light.
+   Limitée aux propriétés de couleur — ne ralentit pas les autres animations.
+   Exclue en prefers-reduced-motion pour ne pas retarder l'affichage. */
+body,
+header,
+nav,
+footer,
+.card,
+.chip,
+.badge,
+.section-stripe {
+  transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ── Fade-in générique (ContactForm success, toasts, messages status) ─────────
+   Utilisé via `animate-[fadeIn_0.35s_ease_forwards]` (Tailwind JIT arbitrary). */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── ThemeToggle — animation de rotation lors du changement de thème ─────────
+   Utilisé via la classe .theme-icon-spin ajoutée/retirée depuis ThemeToggle.tsx.
+   La rotation 0→360 est imperceptible sur mobile mais donne un retour visuel
+   satisfaisant sur desktop. */
+@keyframes theme-spin {
+  from { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.15); }
+  to   { transform: rotate(360deg) scale(1); }
+}
+.theme-icon-spin {
+  display: inline-block;
+  animation: theme-spin 350ms ease-out;
+}
+
+/* ── CommandPalette — animations d'entrée ────────────────────────────────────
+   L'overlay et le panel s'animent à l'ouverture pour éviter l'effet "pop"
+   abrupt de la dialog Radix UI. Pas d'animation de fermeture (la dialog est
+   détruite immédiatement par cmdk — les exit animations nécessiteraient
+   AnimatePresence et ajouteraient de la complexité). */
+@keyframes cmdk-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cmdk-panel-in {
+  from { opacity: 0; transform: translateX(-50%) scale(0.96) translateY(-6px); }
+  to   { opacity: 1; transform: translateX(-50%) scale(1)    translateY(0);    }
+}
+
+/* ── Skeleton stagger — animation-delay par index ────────────────────────────
+   Utilisé dans loading.tsx pour créer un effet de cascade ondulant
+   plutôt que la pulsation synchrone de toutes les cartes. */
+.skeleton-delay-1 { animation-delay: 120ms; }
+.skeleton-delay-2 { animation-delay: 240ms; }
+.skeleton-delay-3 { animation-delay: 360ms; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

@@ -59,6 +59,7 @@ Browser
   │           ├─ /api/contact          → Formspree + Supabase messages
   │           ├─ /api/health           → ping Supabase + Redis + Formspree
   │           ├─ /api/cron/ping        → Vercel Cron (daily 08:00 UTC) → uptime_pings
+  │           ├─ /api/errors           → client JS error reports (GlobalErrorHandler)
   │           └─ /api/testimonial-submit → testimonial_submissions
   │
   ├─ Supabase (PostgreSQL + RLS)
@@ -69,6 +70,7 @@ Browser
   ├─ Upstash Redis
   │     Keys: portfolio:rl:contact · portfolio:rl:testimonial
   │           portfolio:rl:newsletter · portfolio:rl:admin
+  │           portfolio:rl:errors · portfolio:rl:revalidate
   │           portfolio:uptime:stats:30d · project:* · projects_with_assets:*
   │
   └─ Vercel
@@ -185,19 +187,23 @@ portfolio/
 │   │   ├── privacy/            # Privacy policy
 │   │   ├── accessibility/      # Accessibility statement
 │   │   ├── testimonial-submit/ # Token-gated testimonial form
+│   │   ├── error.tsx           # Locale error boundary (500 — useParams locale)
+│   │   ├── not-found.tsx       # Locale 404 (useParams — no hydration flash)
 │   │   └── layout.tsx          # Locale layout (Navbar, Footer, ScrollToTop)
 │   ├── admin/                  # Admin dashboard (HTTP Basic Auth, Supabase service_role)
 │   ├── api/                    # API routes
 │   │   ├── contact/            # Contact form → Supabase + Formspree
 │   │   ├── cache/invalidate/   # Manual Redis cache invalidation
 │   │   ├── cron/ping/          # Vercel Cron (daily 08:00 UTC) → uptime_pings
+│   │   ├── errors/             # Client JS error reports (GlobalErrorHandler → sendBeacon)
 │   │   ├── health/             # Ping Supabase + Redis + Formspree
 │   │   ├── blog/latest/        # Latest posts API
 │   │   ├── testimonial-submit/ # Token-gated testimonial submission
 │   │   ├── newsletter/         # Newsletter opt-in
 │   │   └── github-activity/    # GitHub contribution data
+│   ├── error.tsx               # Root error boundary (500)
 │   ├── feed.xml/               # RSS feed route handler
-│   ├── layout.tsx              # Root HTML layout (JSON-LD, fonts, analytics)
+│   ├── layout.tsx              # Root HTML layout (JSON-LD, fonts, analytics, GlobalErrorHandler)
 │   ├── opengraph-image.tsx     # Default OG image (1200×630)
 │   ├── twitter-image.tsx       # Twitter card image
 │   ├── sitemap.ts              # Dynamic sitemap
@@ -262,7 +268,7 @@ npm test             # Jest unit tests
 |-------|---------|
 | HTTP headers | CSP, HSTS (2 yr + preload), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — `X-Powered-By` suppressed |
 | Database | Supabase RLS on all tables — `project_assets` restricted to published projects only |
-| Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/newsletter`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/health`, and `/admin` (brute-force protection) |
+| Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/newsletter`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/revalidate`, `/api/health`, `/api/errors`, and `/admin` (brute-force protection) |
 | Admin panel | HTTP Basic Auth + middleware rate-limit (10 req / 5 min / IP) |
 | Contact form | Honeypot, origin check, server-side input validation, dual submission |
 | Debug routes | `/api/redis-test` returns 404 in production |

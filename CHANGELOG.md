@@ -14,6 +14,33 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.8.0] — 2026-03-19
+
+### Added
+
+- **Error boundaries** — `app/error.tsx` (root) and `app/[locale]/error.tsx` (locale-level) catch unhandled rendering errors (Supabase timeout, Redis crash, etc.). Both expose a `reset()` button that re-renders the crashed segment without a full page reload. Locale detected via `useParams()` in the locale boundary (zero flash), via `navigator.language` in the root fallback. Error digest shown in development only.
+- **`app/[locale]/not-found.tsx`** — locale-level 404 page, takes priority over the root `not-found.tsx` for all routes under `/[locale]/`. Locale resolved synchronously via `useParams()` (no hydration flash). Root `not-found.tsx` redesigned with compass icon + entrance animation.
+- **Client-side error tracking** — `GlobalErrorHandler` (client component, mounted in root layout) intercepts `window.onerror` and `unhandledrejection`. Sends a structured payload to `POST /api/errors` via `navigator.sendBeacon` (non-blocking, survives page unload). Per-session dedup (module-level `Set`) avoids flooding the same error. Browser extension errors and cross-origin "Script error." filtered out. Dev mode: console only (no API call).
+- **`POST /api/errors`** — new endpoint receiving client error reports. Rate-limited at 10 req / 60 s / IP (`errorRatelimit`). Strict payload validation (`type`, `message` required, size-bounded). Logs structured JSON tagged `[CLIENT-ERROR]` to stdout (captured by Vercel Runtime Logs, forward-compatible with homelab log aggregators).
+- **`errorRatelimit`** — new Upstash Redis sliding-window limiter in `lib/ratelimit.ts` (10 req / 60 s, prefix `portfolio:rl:errors`). Fail-closed in production; permissive no-op in dev/CI.
+- **Analytics events wired** — three typed events from `lib/analytics.ts` now fire from actual components:
+  - `contact_form_started` — first `onChange` on `ContactForm` (bubbles from all fields, ref-guarded, fires once per mount)
+  - `availability_checked` — button click in `AvailabilityModal` (locale + track captured)
+  - `blog_article_completed` — `ArticleReadTracker` (new client component): `IntersectionObserver` on a sentinel at the bottom of `<article>`, `rootMargin: "-10% 0px"`, disconnects after first fire; `read_time_sec = readingTimeMin × 60`
+- **JSON-LD `areaServed` expanded** — `ProfessionalService` now lists France, Algeria, Belgium, Switzerland, Luxembourg, Canada as structured `Country` objects, plus `"Worldwide"` (Schema.org `Text` value) for remote-international coverage.
+
+### Fixed
+
+- **Service Worker `networkFirst` bug** — on a non-ok server response (e.g. Supabase returning 500), the previous implementation returned the error response directly without consulting the cache. Fixed: on `!response.ok`, the cache is checked first; if a cached version exists it is served; only if absent is the error response returned (React error boundaries handle it client-side). Strategy explicitly documented as "without timeout" (intentional: no `AbortController` + `setTimeout`, avoids serving stale content to users on slow-but-available connections).
+- **`adminRatelimit` doc** — `SECURITY.md` showed outdated limit (10 req / 5 min); corrected to current value (5 req / 15 min / IP).
+
+### Changed
+
+- `.env.example` — 9 missing variables documented: `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `REVALIDATE_SECRET`, `CRON_SECRET`, `IP_HASH_SALT`, `TESTIMONIAL_SUBMIT_TOKEN`, `VERCEL_ENV`, `VERCEL_URL` (new sections: Admin, Cron jobs, Security, Testimonials, Vercel runtime).
+- 404/500 pages — unified visual design: inline SVG icon (compass for 404, lightning bolt for 500), `animate-[fadeIn_0.4s_ease_forwards]` entrance animation, `type="button"` on all `<button>` elements.
+
+---
+
 ## [1.7.0] — 2026-03-17
 
 ### Security
@@ -230,7 +257,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.4.0...v1.5.0
