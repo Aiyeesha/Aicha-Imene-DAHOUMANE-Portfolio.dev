@@ -210,8 +210,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           rel="preload"
           as="image"
           href={process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp"}
-          // @ts-expect-error — fetchpriority est un attribut HTML valide, pas encore dans les types React
-          fetchpriority="high"
+          fetchPriority="high"
         />
         {/* nonce : autorise ce script inline dans la CSP sans 'unsafe-inline' */}
         <script

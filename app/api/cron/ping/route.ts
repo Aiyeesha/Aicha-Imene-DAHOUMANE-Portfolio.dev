@@ -1,6 +1,6 @@
 // app/api/cron/ping/route.ts
 // --------------------------
-// Vercel Cron endpoint — appelé toutes les 5 minutes (voir vercel.json).
+// Vercel Cron endpoint — appelé une fois par jour à 8h UTC (voir vercel.json).
 //
 // 1. Vérifie CRON_SECRET dans le header Authorization
 // 2. Exécute les health checks (lib/health.ts)
@@ -34,6 +34,25 @@ export async function GET(req: Request) {
 
   // ── 2. Health checks ──────────────────────────────────────────────────────
   const report = await runHealthChecks();
+
+  // ── 2b. Alerte webhook (optionnel) ────────────────────────────────────────
+  // Si ALERT_WEBHOOK_URL est configuré et que l'état global n'est pas "operational",
+  // envoie une notification POST compatible Discord, Slack, ntfy, Make, etc.
+  // Non bloquant — une erreur ici ne fait pas échouer la réponse cron.
+  const alertUrl = process.env.ALERT_WEBHOOK_URL;
+  if (alertUrl && report.overall !== "operational") {
+    const lines = report.services
+      .filter((s) => s.status !== "operational")
+      .map((s) => `• ${s.name}: ${s.status}${s.message ? ` — ${s.message}` : ""}`)
+      .join("\n");
+    const msg = `Portfolio status: ${report.overall}\n${lines}`;
+    // Payload générique : content (Discord), text (Slack), message (ntfy/Make)
+    fetch(alertUrl, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ content: msg, text: msg, message: msg }),
+    }).catch((e) => console.warn("[CRON/PING] Alert webhook failed:", String(e)));
+  }
 
   // ── 3. Insert dans Supabase ───────────────────────────────────────────────
   const supabase = createAdminSupabaseClient();
