@@ -16,9 +16,13 @@ export default function Modal({
 }) {
   const t = useTranslations();
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
+
+    // Mémoriser l'élément actif pour restaurer le focus à la fermeture (ARIA pattern)
+    prevFocusRef.current = document.activeElement as HTMLElement;
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -56,6 +60,8 @@ export default function Modal({
     return () => {
       clearTimeout(t);
       document.removeEventListener("keydown", onKeyDown);
+      // Restaurer le focus sur l'élément déclencheur quand la modale se ferme
+      prevFocusRef.current?.focus();
     };
   }, [open, onClose]);
 
@@ -82,9 +88,10 @@ export default function Modal({
             <button
               type="button"
               onClick={onClose}
+              aria-label={t("a11y.closeModal")}
               className="rounded-full border border-black/10 bg-black/5 px-3 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
             >
-              ✕
+              <span aria-hidden="true">✕</span>
             </button>
           </div>
 

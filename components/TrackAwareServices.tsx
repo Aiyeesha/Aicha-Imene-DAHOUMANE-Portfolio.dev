@@ -132,9 +132,13 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             {/* En-tête : icône dans un badge coloré + titre */}
             <div className="flex items-start gap-3">
               <div
-                className="flex-shrink-0 grid h-10 w-10 place-items-center rounded-xl
-                  bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
+                className={`flex-shrink-0 grid h-10 w-10 place-items-center rounded-xl ${
+                  track === "salesforce"
+                    ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
+                    : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                }`}
                 aria-hidden="true"
+                suppressHydrationWarning
               >
                 {icons[idx]}
               </div>

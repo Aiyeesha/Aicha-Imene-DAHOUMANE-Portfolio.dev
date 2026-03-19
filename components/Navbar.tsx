@@ -353,10 +353,9 @@ useEffect(() => {
       >
           <button
             className="absolute inset-0 bg-black/40"
-            tabIndex={mobileOpen ? 0 : -1}
+            tabIndex={-1}
             aria-hidden="true"
             onClick={() => setMobileOpen(false)}
-            aria-label={t("a11y.closeMenuOverlay")}
           />
           <div
             className={`absolute right-0 top-0 h-full w-[85%] max-w-sm border-l border-black/10 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-[#070B1A] transition-transform duration-300 ease-out ${
@@ -437,7 +436,7 @@ useEffect(() => {
                   href={calendlyUrl || "#"}
                   target={calendlyUrl ? "_blank" : undefined}
                   rel={calendlyUrl ? "noreferrer" : undefined}
-                  aria-disabled={!calendlyUrl ? "true" : "false"}
+                  aria-disabled={!calendlyUrl ? true : undefined}
                   className={`inline-flex w-full justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-3 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring ${
                     calendlyUrl ? "" : "pointer-events-none opacity-50"
                   }`}

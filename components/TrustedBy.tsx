@@ -84,6 +84,7 @@ function LogoItem({ company }: { company: (typeof companies)[0] }) {
         height={company.height}
         loading="lazy"
         className="object-contain"
+        style={{ height: "auto" }}
       />
     </div>
   );
