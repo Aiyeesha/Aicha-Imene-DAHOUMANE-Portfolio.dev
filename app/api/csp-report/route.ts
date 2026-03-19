@@ -1,28 +1,65 @@
 // app/api/csp-report/route.ts
 // ---------------------------
-// Récepteur de rapports de violation CSP.
-// Les navigateurs envoient un POST JSON quand une ressource est bloquée
-// par la Content-Security-Policy (directive report-uri dans next.config.mjs).
+// Récepteur de rapports de violation CSP (actifs) et CSPO (report-only).
+// Les navigateurs envoient un POST JSON quand une ressource est bloquée (CSP)
+// ou détectée (CSPO) par la Content-Security-Policy.
 //
-// En production : log structuré → visible dans Vercel Runtime Logs.
-// En développement : affichage détaillé en console.
+// Deux modes :
+//   - POST /api/csp-report       → violation CSP active (bloquée)
+//   - POST /api/csp-report?ro=1  → violation CSPO Trusted Types (report-only)
 //
 // Format W3C CSP Level 2 :
 //   { "csp-report": { "violated-directive": "…", "blocked-uri": "…", … } }
 //
 // SÉCURITÉ (rate-limiting) :
-//   Utilise Upstash Redis (sliding window, 20 req/60 s par IP) au lieu d'un
-//   compteur in-memory. Sur Vercel serverless, chaque invocation peut être
-//   une instance distincte — l'état in-memory est réinitialisé à chaque
-//   cold-start. Sans Redis, un flood illimité épuiserait les 100 000
-//   function invocations/mois du plan Hobby.
+//   Upstash Redis sliding window (20 req/60 s / IP) — robuste aux cold-starts
+//   serverless (contrairement à un compteur in-memory).
 
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { cspReportRatelimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
+// ── Faux positifs connus ─────────────────────────────────────────────────────
+// Les extensions navigateur génèrent des violations CSP légitimes dans leur
+// propre contexte. Ces rapports ne reflètent PAS une vulnérabilité du site —
+// les ignorer évite le bruit dans les logs et préserve les invocations Vercel.
+const FALSE_POSITIVE_PREFIXES = [
+  "chrome-extension://",
+  "moz-extension://",
+  "safari-extension://",
+  "safari-web-extension://",
+  "ms-browser-extension://",
+  "edge-extension://",
+];
+
+// URI "vide" renvoyée par certains navigateurs pour les inline scripts bloqués.
+// "(null)" est l'encodage textuel de l'URI null dans les rapports CSP Level 2.
+const FALSE_POSITIVE_EXACT = new Set(["", "(null)", "about:blank", "data:"]);
+
+function isFalsePositive(blockedUri: string | undefined): boolean {
+  if (!blockedUri) return true;
+  if (FALSE_POSITIVE_EXACT.has(blockedUri)) return true;
+  return FALSE_POSITIVE_PREFIXES.some((prefix) => blockedUri.startsWith(prefix));
+}
+
+// ── Classification par sévérité ───────────────────────────────────────────────
+// Les violations script-src sont les plus critiques (exécution de code).
+// Les violations img-src ou font-src sont bénignes (chargement de ressource).
+function getSeverity(violatedDirective: string | undefined): "critical" | "high" | "medium" | "low" {
+  if (!violatedDirective) return "low";
+  const directive = violatedDirective.split(" ")[0]; // ex: "script-src-elem" → "script-src-elem"
+  if (directive.startsWith("script-src") || directive === "require-trusted-types-for") return "critical";
+  if (directive === "object-src" || directive === "base-uri" || directive === "form-action") return "high";
+  if (directive.startsWith("connect-src") || directive.startsWith("frame-src")) return "medium";
+  return "low";
+}
+
 export async function POST(req: NextRequest) {
+  // ── Déterminer si c'est un rapport report-only (CSPO) ────────────────────
+  const { searchParams } = new URL(req.url);
+  const isReportOnly = searchParams.get("ro") === "1";
+
   const ip =
     req.headers.get("x-real-ip") ??
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -36,22 +73,42 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json() as Record<string, unknown>;
-    // CSP Level 2 wraps the report under a "csp-report" key.
-    // Some older implementations send the fields at the top level.
+    // CSP Level 2 encapsule le rapport dans "csp-report".
+    // Certaines anciennes implémentations envoient les champs au niveau racine.
     const report = (body["csp-report"] ?? body) as Record<string, unknown>;
 
-    // Structured log — appears in Vercel Runtime Logs / your observability tool
-    console.warn("[CSP-VIOLATION]", JSON.stringify({
-      blockedUri:         report["blocked-uri"]         ?? report["blockedURI"],
-      violatedDirective:  report["violated-directive"]  ?? report["violatedDirective"],
-      documentUri:        report["document-uri"]        ?? report["documentURL"],
-      referrer:           report["referrer"],
-      originalPolicy:     report["original-policy"]     ?? report["originalPolicy"],
+    const blockedUri        = String(report["blocked-uri"]        ?? report["blockedURI"]        ?? "");
+    const violatedDirective = String(report["violated-directive"] ?? report["violatedDirective"] ?? "");
+    const documentUri       = String(report["document-uri"]       ?? report["documentURL"]       ?? "");
+    const referrer          = String(report["referrer"]           ?? "");
+
+    // ── Filtrer les faux positifs silencieusement ─────────────────────────
+    // Pas de log pour éviter le bruit — les extensions navigateur génèrent
+    // de nombreux rapports sans rapport avec une vulnérabilité du site.
+    if (isFalsePositive(blockedUri)) {
+      return new NextResponse(null, { status: 204 });
+    }
+
+    const severity = getSeverity(violatedDirective);
+
+    // ── Log structuré → Vercel Runtime Logs ──────────────────────────────
+    // Préfixe [CSP-VIOLATION] ou [CSPO-VIOLATION] pour filtrer facilement
+    // dans Vercel Runtime Logs / un outil d'observabilité (Axiom, etc.)
+    const prefix = isReportOnly ? "[CSPO-VIOLATION]" : "[CSP-VIOLATION]";
+
+    console.warn(prefix, JSON.stringify({
+      severity,
+      report_only:        isReportOnly,
+      blocked_uri:        blockedUri,
+      violated_directive: violatedDirective,
+      document_uri:       documentUri,
+      referrer:           referrer || undefined,
+      original_policy:    report["original-policy"] ?? report["originalPolicy"] ?? undefined,
     }));
   } catch {
-    // Malformed body — ignore silently
+    // Corps mal formé — ignorer silencieusement
   }
 
-  // 204 No Content — browser expects no body
+  // 204 No Content — le navigateur n'attend pas de corps
   return new NextResponse(null, { status: 204 });
 }

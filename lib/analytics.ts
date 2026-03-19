@@ -15,10 +15,19 @@ import { track } from "@vercel/analytics";
 // Ajouter un nouveau type d'événement ici avant de l'utiliser dans le code.
 
 export type AnalyticsEvent =
+  // ── Conversion principale ────────────────────────────────────────────────
   | { name: "cv_download";         props: { locale: string; track: string } }
   | { name: "calendly_open";       props: { locale: string; track: string } }
   | { name: "contact_click";       props: { locale: string; track: string } }
   | { name: "contact_form_submit"; props: { topic: string; locale: string } }
+  // ── Funnel de conversion ─────────────────────────────────────────────────
+  // Permet de mesurer le taux de complétion (started → submit) du formulaire
+  | { name: "contact_form_started"; props: { locale: string } }
+  // Mesure l'intérêt pour la disponibilité (modal "Book a call" ou équivalent)
+  | { name: "availability_checked"; props: { locale: string; track: string } }
+  // Mesure la lecture complète des articles (scroll >90 % de la page)
+  | { name: "blog_article_completed"; props: { slug: string; locale: string; read_time_sec: number } }
+  // ── Navigation et engagement ─────────────────────────────────────────────
   | { name: "track_switch";        props: { from: string; to: string } }
   | { name: "project_view";        props: { slug: string; track: string } }
   | { name: "linkedin_click";      props: { locale: string } }

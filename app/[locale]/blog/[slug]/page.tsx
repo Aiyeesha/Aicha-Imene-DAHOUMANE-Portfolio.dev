@@ -117,6 +117,13 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const blogUrl  = `${siteUrl}/${locale}/blog`;
 
   // BlogPosting — indexé par Google (rich snippets pour les articles)
+  // Le champ `image` est requis pour les Google Rich Results (article featured snippet).
+  const coverImageUrl = meta.cover
+    ? meta.cover.startsWith("http")
+      ? meta.cover
+      : `${siteUrl}${meta.cover.startsWith("/") ? meta.cover : `/${meta.cover}`}`
+    : `${siteUrl}/opengraph-image`;
+
   const jsonLdBlogPosting = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -128,6 +135,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     dateModified: meta.date,
     inLanguage: locale === "fr" ? "fr-FR" : "en-US",
     keywords: meta.tags.join(", "),
+    image: coverImageUrl,
     author: {
       "@type": "Person",
       name: authorName,
@@ -282,25 +290,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       {/* Back to top (client) */}
       <BackToTop label={t("backToTop")} />
 
-      {/* JSON-LD (Article) */}
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: meta.title,
-            datePublished: meta.date,
-            dateModified: meta.date,
-            author: {
-              "@type": "Person",
-              name: authorName
-            },
-            url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + `/${locale}/blog/${slug}`
-          })
-        }}
-      />
+      {/* JSON-LD supprimé ici — BlogPosting complet déjà injecté en tête de composant (lignes ~158-163). */}
     </section>
   );
 }

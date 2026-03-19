@@ -11,6 +11,9 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Cache l'image OG 24h — sans revalidate, elle est recalculée à chaque crawl
+// OG (LinkedIn, Twitter, Slack, WhatsApp) ce qui consomme des CPU cycles inutilement.
+export const revalidate = 86400;
 
 export default function Image() {
   const name    = process.env.NEXT_PUBLIC_OG_NAME     || "Aïcha Imène DAHOUMANE";

@@ -54,9 +54,15 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
     }
   }, [inView, shouldReduce, value, mv]);
 
+  // aria-label expose la valeur finale statique aux lecteurs d'écran.
+  // Sans cela, le SR lirait "0" au chargement (valeur initiale de l'animation)
+  // ou annoncerait chaque nombre intermédiaire pendant l'animation spring.
+  const ariaLabel = `${value.toLocaleString()}${suffix}`;
+
   return (
-    <span ref={ref} className={className}>
-      {display.toLocaleString()}{suffix}
+    <span ref={ref} className={className} aria-label={ariaLabel}>
+      {/* aria-hidden masque les valeurs intermédiaires — le SR utilise aria-label */}
+      <span aria-hidden="true">{display.toLocaleString()}{suffix}</span>
     </span>
   );
 }
