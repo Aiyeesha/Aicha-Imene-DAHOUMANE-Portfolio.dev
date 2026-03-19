@@ -143,10 +143,11 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             </div>
 
             {/* Description courte */}
-            <p className="mt-3 text-sm text-muted">{c.description}</p>
+            {/* dark:text-slate-400 : explicit color breaks inheritance from transitioning body */}
+            <p className="mt-3 text-sm text-muted dark:text-slate-400">{c.description}</p>
 
             {/* Bullets des prestations incluses */}
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted dark:text-slate-400">
               {c.bullets.map((b) => (
                 <li key={b}>{b}</li>
               ))}
