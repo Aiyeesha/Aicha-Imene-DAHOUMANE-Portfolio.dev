@@ -279,7 +279,6 @@ export default function ContactForm() {
             type="checkbox"
             required
             className="mt-1 h-4 w-4 rounded border border-black/20 dark:border-white/20 bg-black/5 dark:bg-white/5"
-            aria-label={t("contact.acceptPolicyAria")}
           />
           <label htmlFor="contact-accepted-policy" className="text-xs text-muted-2">
             {t("contact.acceptPolicyPrefix")} {" "}
@@ -359,7 +358,7 @@ export default function ContactForm() {
             <a
               className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
               href={CONTACT_EMAIL ? `mailto:${CONTACT_EMAIL}` : "#"}
-              aria-disabled={!CONTACT_EMAIL}
+              aria-disabled={!CONTACT_EMAIL ? true : undefined}
               onClick={(e) => { if (!CONTACT_EMAIL) e.preventDefault(); }}
               title={!CONTACT_EMAIL ? t("contact.emailMissing") : undefined}
             >
@@ -370,7 +369,7 @@ export default function ContactForm() {
               href={LINKEDIN_HREF || "#"}
               target="_blank"
               rel="noreferrer"
-              aria-disabled={!LINKEDIN_HREF}
+              aria-disabled={!LINKEDIN_HREF ? true : undefined}
               onClick={(e) => { if (!LINKEDIN_HREF) e.preventDefault(); }}
               title={!LINKEDIN_HREF ? t(process.env.NODE_ENV === "production" ? "contact.linkedInMissing" : "contact.envHint") : undefined}
             >

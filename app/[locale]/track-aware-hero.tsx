@@ -28,11 +28,13 @@ import CalendlyModal from "@/components/CalendlyModal";
 import AvailabilityModal from "@/components/AvailabilityModal";
 
 // ── Variants Framer Motion ─────────────────────────────────────────────────
-// Container : stagger les enfants à l'entrée (0.09 s entre chaque)
+// Container : orchestre le stagger des enfants — pas d'opacité propre.
+// Le container reste visible (opacity: 1) dès le premier paint pour que
+// l'image avatar (priority, LCP) soit immédiatement rendue, même avant
+// que Framer Motion n'ait hydraté. Seul le bloc texte fait un fade-in.
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: { staggerChildren: 0.09, delayChildren: 0.05 },
   },
 };

@@ -323,7 +323,7 @@
     "analyticsTitle": "Analytics & Performance",
     "analyticsBody": "Ce site utilise Vercel Analytics et Vercel Speed Insights en production pour mesurer les Core Web Vitals et les performances réelles. Aucune donnée personnelle n’est collectée — les métriques sont agrégées et anonymes. Ces services sont désactivés en développement.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "Aucun cookie marketing ni de suivi n’est déposé. Un cookie fonctionnel (NEXT_LOCALE) enregistre votre préférence de langue. Vercel peut déposer des cookies techniques à des fins d’infrastructure (CDN, protection DDoS).",
+    "cookiesBody": "Aucun cookie marketing ni de suivi n’est déposé. La préférence de langue est reflétée dans l’URL (ex. /en/, /fr/) et non dans un cookie. Vercel peut déposer des cookies techniques à des fins d’infrastructure (CDN, protection DDoS).",
     "formTitle": "Données du formulaire de contact",
     "formBody": "Lorsque vous envoyez le formulaire de contact, les données suivantes sont collectées : nom, email, sujet, message, adresse IP et User-Agent. Ces données sont utilisées uniquement pour traiter et répondre à votre demande. Si Formspree est activé en solution de secours, le contenu du message est transmis à Formspree (service tiers d’acheminement d’emails basé aux États-Unis).",
     "retention": "Conservation : les messages de contact sont conservés au maximum 90 jours, puis supprimés. Vous pouvez demander une suppression anticipée en nous contactant.",
