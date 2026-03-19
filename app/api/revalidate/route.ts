@@ -46,6 +46,7 @@ async function timingSafeEqual(a: string, b: string): Promise<boolean> {
 export async function POST(request: NextRequest) {
   // ── 0. Rate-limit par IP ──────────────────────────────────────────────────
   const ip =
+    request.headers.get("x-real-ip") ??
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
   const { success: rateLimitOk } = await revalidateRatelimit.limit(ip);

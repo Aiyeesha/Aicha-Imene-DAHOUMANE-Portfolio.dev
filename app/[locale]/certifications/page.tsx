@@ -24,6 +24,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   return {
     title: isFr
       ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
@@ -31,6 +32,13 @@ export async function generateMetadata({
     description: isFr
       ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Ranger) et certifications en préparation (Salesforce Admin, Platform Developer I, ISC2 CC)."
       : "Degrees (RNCP 4/5/6), active certifications (Trailhead Ranger) and upcoming certifications (CompTIA A+, Salesforce Admin, Platform Developer I, ISC2 CC).",
+    alternates: {
+      canonical: `${siteUrl}/${locale}/certifications`,
+      languages: {
+        en: `${siteUrl}/en/certifications`,
+        fr: `${siteUrl}/fr/certifications`,
+      }
+    },
   };
 }
 

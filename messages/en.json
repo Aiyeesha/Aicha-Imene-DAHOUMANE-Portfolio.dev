@@ -66,7 +66,12 @@
     "trackItOps": "IT Ops",
     "overview": "Overview",
     "downloadCode": "Download code",
-    "highlightsTitle": "Highlights"
+    "highlightsTitle": "Highlights",
+    "emptyFeatured": "No featured projects configured for this track yet.",
+    "emptyState": "No projects available at the moment.",
+    "emptyStateSubtitle": "Content is being prepared — please check back soon.",
+    "noMatch": "No projects match your search or filters.",
+    "resetFilters": "Reset filters"
   },
   "sections": {
     "testimonials_title": "Testimonials",

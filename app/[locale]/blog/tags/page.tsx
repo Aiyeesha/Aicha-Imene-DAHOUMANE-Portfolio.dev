@@ -13,12 +13,19 @@ export async function generateMetadata(
 
   const title = t("meta.title");
   const description = t("meta.description");
-  const urlPath = `/${locale}/blog/tags`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/blog/tags`;
 
   return {
     title,
     description,
-    alternates: { canonical: urlPath },
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/blog/tags`,
+        fr: `${siteUrl}/fr/blog/tags`,
+      }
+    },
     openGraph: {
       title,
       description,

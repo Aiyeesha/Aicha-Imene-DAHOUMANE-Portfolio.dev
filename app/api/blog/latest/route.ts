@@ -12,9 +12,11 @@ import { readAllPosts } from "@/content/blog/fs";
 
 // Extrait l'IP réelle du client depuis les headers Vercel / proxy standard.
 function getClientIp(req: Request): string {
-  const xf = req.headers.get("x-forwarded-for") || "";
-  const ip = xf.split(",")[0]?.trim();
-  return ip || req.headers.get("x-real-ip") || "unknown";
+  return (
+    req.headers.get("x-real-ip") ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
 }
 
 export async function GET(req: Request) {

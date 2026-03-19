@@ -66,7 +66,12 @@
     "trackItOps": "IT Ops",
     "overview": "Aperçu",
     "downloadCode": "Télécharger le code",
-    "highlightsTitle": "Points clés"
+    "highlightsTitle": "Points clés",
+    "emptyFeatured": "Aucun projet à la une configuré pour ce parcours.",
+    "emptyState": "Aucun projet disponible pour l'instant.",
+    "emptyStateSubtitle": "Le contenu est en cours de préparation — revenez bientôt.",
+    "noMatch": "Aucun projet ne correspond à votre recherche ou vos filtres.",
+    "resetFilters": "Réinitialiser les filtres"
   },
   "sections": {
     "testimonials_title": "Témoignages",

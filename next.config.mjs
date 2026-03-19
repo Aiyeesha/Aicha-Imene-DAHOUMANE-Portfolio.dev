@@ -19,11 +19,11 @@
 //   - Formspree requiert connect-src formspree.io.
 //   - Si vous ajoutez Google Analytics / Plausible / autres, mettez à jour script-src et connect-src.
 
+import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import createNextIntlPlugin from "next-intl/plugin";
-import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
-import bundleAnalyzer from "@next/bundle-analyzer";
+import remarkFrontmatter from "remark-frontmatter";
 
 // Bundle analyzer — activé uniquement si ANALYZE=true (jamais en production)
 // Usage : ANALYZE=true npm run build
@@ -114,8 +114,19 @@ const nextConfig = {
               "display-capture=()",    // bloque getDisplayMedia() (capture d'écran)
               "clipboard-read=()",     // bloque l'accès en lecture au presse-papiers
               "xr-spatial-tracking=()", // bloque WebXR (AR/VR)
+              'ambient-light-sensor=()',
+    'battery=()',
+    'display-capture=()',
+    'document-domain=()',
+    'encrypted-media=()',
+    'fullscreen=(self)',
+    
+    'serial=()',
+    
+    'web-share=(self)'
             ].join(", ")
           },
+          
           // Bloque le chargement cross-domain de ressources via Flash/PDF/Silverlight legacy.
           // Cosmétique aujourd'hui (ces plugins sont éteints), mais attendu par les scanners
           // de sécurité professionnels (Qualys, SecurityHeaders.com).
@@ -133,7 +144,8 @@ const nextConfig = {
           // À activer uniquement si le domaine est toujours servi en HTTPS
           {
             key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload"
+            // max-age=63072000 = 2 ans (minimum pour preload)
+  value: 'max-age=63072000; includeSubDomains; preload'
           },
           // Empêche les attaques cross-origin de type Spectre et les fuites mémoire
           // entre onglets/fenêtres (ex : window.opener exploit).
