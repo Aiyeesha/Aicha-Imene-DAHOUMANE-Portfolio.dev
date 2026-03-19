@@ -79,9 +79,11 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `POST /api/contact` | 5 requests | 10 minutes / IP | Anti-spam, anti-flood |
 | `POST /api/testimonial-submit` | 3 requests | 24 hours / IP | Anti-spam |
 | `POST /api/cache/invalidate` | 10 requests | 60 seconds / IP | DoS protection on cache invalidation |
+| `POST /api/revalidate` | 10 requests | 60 seconds / IP | Protects ISR invalidation against REVALIDATE_SECRET brute-force |
 | `GET /api/health` | 30 requests | 60 seconds / IP | Prevents infrastructure probing in a loop |
 | `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
-| `GET /admin/*` | 10 requests | 5 minutes / IP | **Brute-force protection** on HTTP Basic Auth |
+| `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
+| `GET /admin/*` | 5 requests | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth |
 
 IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controlled) with `x-forwarded-for` as fallback.
 
@@ -92,7 +94,7 @@ IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controll
 ### Admin Dashboard (`/admin`)
 
 - Protected by HTTP Basic Auth (credentials from `ADMIN_USERNAME` / `ADMIN_PASSWORD` environment variables)
-- Rate-limited: **10 failed attempts per 5 minutes per IP** — brute force locked out at the middleware level (`proxy.ts`)
+- Rate-limited: **5 failed attempts per 15 minutes per IP** — brute force locked out at the middleware level (`proxy.ts`)
 - Returns `503` if credentials are not configured
 - Metadata set to `robots: { index: false, follow: false }` — not indexed by search engines
 - Not linked from public navigation
@@ -136,8 +138,10 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 |-------|---------------------|
 | `GET /admin/*` | HTTP Basic Auth + rate-limit (middleware) |
 | `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET` |
+| `POST /api/revalidate` | `?secret=` query param compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
 | `POST /api/testimonial-submit` | `token` field in body compared to `TESTIMONIAL_SUBMIT_TOKEN` |
+| `POST /api/errors` | Public (client reports) — rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
 | `GET /api/redis-test` | **Only available in `development` mode** — returns 404 in production |
 | `GET /api/health` | Public — CORS restricted to `NEXT_PUBLIC_SITE_URL` (no wildcard `*`) |
 

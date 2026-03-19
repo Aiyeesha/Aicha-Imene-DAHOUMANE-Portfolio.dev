@@ -97,33 +97,59 @@ async function cacheFirst(request) {
   }
 }
 
-// ── Stratégie Network First ───────────────────────────────────────────────────
-// 1. Essayer le réseau (toujours les données les plus récentes)
-// 2. Si réseau OK : mettre en cache + retourner
-// 3. Si réseau KO : chercher dans le cache
-// 4. Si absent du cache : retourner la page offline.html
+// ── Stratégie Network First (sans timeout) ───────────────────────────────────
+//
+// "Sans timeout" = décision intentionnelle :
+//   - Avec timeout : on servirait du contenu obsolète même quand l'utilisateur
+//     est en ligne mais sur une connexion lente → expérience dégradée silencieuse.
+//   - Sans timeout : l'utilisateur attend le réseau aussi longtemps qu'il le faut.
+//     La page est toujours fraîche si le serveur répond.
+//
+// Flux :
+//   1. fetch(request)                               — réseau, pas de timeout
+//   2. response.ok (2xx)  → stocker dans le cache, retourner la réponse fraîche
+//   3. response non-ok (4xx/5xx) → essayer le cache (ex: Supabase 500 temporaire)
+//      → si absent du cache → retourner la réponse d'erreur telle quelle
+//   4. fetch throw (offline, DNS fail) → essayer le cache
+//      → si absent → offline.html
+//
+// Correction vs v1 : le cas "response non-ok" ne tombait PAS dans le catch,
+// donc le cache n'était jamais consulté sur une erreur 500 — l'utilisateur
+// voyait l'erreur serveur sans fallback cache disponible.
 async function networkFirst(request) {
   try {
     const response = await fetch(request);
+
     if (response.ok) {
+      // Réseau OK : mettre en cache pour les visites hors ligne futures
       const cache = await caches.open(CACHE_NAME);
-      cache.put(request, response.clone());
+      cache.put(request, response.clone()); // non bloquant (pas de await)
+      return response;
     }
-    return response;
-  } catch {
+
+    // Serveur joignable mais réponse d'erreur (4xx / 5xx) :
+    // tenter le cache avant de montrer l'erreur.
     const cached = await caches.match(request);
     if (cached) return cached;
 
-    // Fallback ultime : page offline (toujours précachée à l'installation)
+    // Pas de cache disponible → retourner la réponse d'erreur telle quelle
+    // (les error boundaries React prendront le relais côté client)
+    return response;
+  } catch {
+    // Réseau injoignable (offline, timeout DNS, etc.)
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    // Fallback ultime : page offline précachée à l'installation
     const offline = await caches.match("/offline.html");
     return (
       offline ||
       new Response(
-        `<!doctype html><html><body style="font-family:sans-serif;padding:2rem">
-          <h1>You're offline</h1>
-          <p>Please check your connection and try again.</p>
+        `<!doctype html><html lang="en"><body style="font-family:sans-serif;padding:2rem;max-width:480px;margin:auto">
+          <h1 style="font-size:1.5rem">You're offline</h1>
+          <p style="color:#666">Please check your connection and try again.</p>
         </body></html>`,
-        { headers: { "Content-Type": "text/html" } }
+        { headers: { "Content-Type": "text/html;charset=utf-8" } }
       )
     );
   }

@@ -7,8 +7,10 @@
 // modes de travail, secteurs, postes ciblés, localisation.
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Modal from "./Modal";
+import { useTrack } from "@/app/[locale]/providers";
+import { trackEvent } from "@/lib/analytics";
 
 // ── Icônes inline légères (SVG 16×16) ────────────────────────────────────
 
@@ -71,6 +73,8 @@ function IconLocation() {
 // ── Composant principal ───────────────────────────────────────────────────
 export default function AvailabilityModal() {
   const t = useTranslations("availModal");
+  const locale = useLocale();
+  const { track } = useTrack();
   const [open, setOpen] = useState(false);
 
   const rows = [
@@ -87,7 +91,10 @@ export default function AvailabilityModal() {
       {/* ── Trigger : badge pulsant cliquable ─────────────────────────────── */}
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          trackEvent("availability_checked", { locale, track });
+        }}
         className="group flex items-center gap-2 rounded-full px-2 py-1 -mx-2 -my-1
           hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2
           focus-visible:ring-emerald-400/60 transition-colors soft-ring"
