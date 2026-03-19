@@ -35,10 +35,14 @@ const MAX_LINKS_IN_MESSAGE = 3;
 const ALLOWED_TOPICS = new Set(["general", "salesforce", "itops", "availability", "other"]);
 
 function getClientIp(req: Request) {
-  const xf = req.headers.get("x-forwarded-for") || "";
-  // x-forwarded-for can be "ip, proxy1, proxy2"
-  const ip = xf.split(",")[0]?.trim();
-  return ip || "unknown";
+  // x-real-ip is injected by Vercel's edge — cannot be spoofed by the client.
+  // x-forwarded-for is attacker-controlled (any value can be prepended),
+  // so it is used only as a last-resort fallback.
+  return (
+    req.headers.get("x-real-ip") ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
 }
 
 function validate({

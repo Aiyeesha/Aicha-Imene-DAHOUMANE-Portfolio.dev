@@ -7,10 +7,12 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // /cv/ : les PDFs du CV ne doivent pas être indexés directement par Google
-      // (risque d'indexation d'une version statique dépassée, et OSINT inutile).
-      // /admin/ : panneau d'administration — jamais indexé.
-      disallow: ["/cv/", "/admin/"],
+      // Règles Disallow — trailing slash couvre à la fois /path et /path/xxx.
+      // /cv/            : PDFs du CV — pas d'indexation directe (version statique potentiellement dépassée).
+      // /admin/         : panneau d'administration — jamais indexé.
+      // /api/           : routes API — pas de pages lisibles; couvre aussi /api/health, /api/cron…
+      // /*/testimonial-submit/ : formulaire privé token-gated — pas d'indexation.
+      disallow: ["/cv/", "/admin/", "/api/", "/*/testimonial-submit/", "/*/status/"],
     },
     sitemap: `${base}/sitemap.xml`,
   };

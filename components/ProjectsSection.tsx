@@ -140,7 +140,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
                 ref={(el) => { tabRefs.current[idx] = el; }}
                 type="button"
                 role="tab"
-                aria-selected={isActive}
+                aria-selected={isActive ? "true" : "false"}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => handleTrackChange(tr)}
                 onKeyDown={(e) => handleTabKeyDown(e, idx)}
@@ -205,7 +205,32 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
         </div>
       )}
 
+      {/* ── Empty state : Supabase indisponible ou aucun projet publié ──────────
+          Cas distinct de "aucun résultat de recherche" (projects.length === 0).
+          Affiché avant la grille pour ne pas rendre une grille vide. */}
+      {projects.length === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-16 px-6 text-center">
+          <svg
+            className="mx-auto mb-4 h-12 w-12 text-slate-300 dark:text-white/20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.2}
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 7a2 2 0 012-2h3.586a1 1 0 01.707.293L10.414 6.5H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
+            />
+          </svg>
+          <p className="font-medium text-strong">{t("emptyState")}</p>
+          <p className="mt-1 text-sm text-muted">{t("emptyStateSubtitle")}</p>
+        </div>
+      )}
+
       {/* ── Grille de projets ──────────────────────────────────── */}
+      {projects.length > 0 && (
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((p, idx) => (
           <Reveal key={p.slug} delayMs={Math.min(280, idx * 60)}>
@@ -278,14 +303,35 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
           </Reveal>
         ))}
       </div>
-
-      {/* Message si aucun résultat */}
-      {filtered.length === 0 && (
-        <p className="mt-8 text-center text-sm text-muted">
-          {locale === "fr"
-            ? "Aucun projet ne correspond à votre recherche."
-            : "No projects match your search."}
-        </p>
+      )}
+      {/* ── Empty state : aucun résultat pour la recherche / les filtres ──────────
+          Cas distinct de "Supabase indisponible" (projects.length > 0 ici). */}
+      {projects.length > 0 && filtered.length === 0 && (
+        <div className="mt-8 flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-12 px-6 text-center">
+          {/* Icône loupe */}
+          <svg
+            className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-white/20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.2}
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"
+            />
+          </svg>
+          <p className="text-sm text-muted">{t("noMatch")}</p>
+          <button
+            type="button"
+            onClick={() => { setQ(""); setActive("All"); }}
+            className="mt-4 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+          >
+            {t("resetFilters")}
+          </button>
+        </div>
       )}
     </div>
   );
