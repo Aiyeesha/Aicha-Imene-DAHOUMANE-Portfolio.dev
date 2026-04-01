@@ -18,6 +18,10 @@ on:
     branches: [main, master]
   pull_request:
 
+# Permissions par défaut restrictives au niveau workflow (recommandation Scorecard).
+# Chaque job redéfinit uniquement ce dont il a besoin (contents: read).
+permissions: read-all
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
