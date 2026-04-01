@@ -10,6 +10,7 @@ import { useTrack } from "@/app/[locale]/providers";
 import Reveal from "@/components/Reveal";
 import { getServices, type Locale } from "@/content/services";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 // ── Icônes SVG inline (24×24, stroke-based) ──────────────────────────
 // Chaque icône représente visuellement le type de service.
@@ -99,6 +100,13 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const t = useTranslations();
   const cards = getServices(locale, track);
 
+  // Différer le rendu des icônes après le montage pour éviter le mismatch
+  // d'hydratation : le chunk dynamique peut se charger après que Providers ait
+  // déjà lu localStorage et mis à jour le track (salesforce → itops), ce qui
+  // crée une divergence entre le HTML serveur (salesforce) et le rendu client.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   // Sélectionner le jeu d'icônes selon le parcours actif
   const icons = track === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
@@ -138,9 +146,8 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
                     : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
                 }`}
                 aria-hidden="true"
-                suppressHydrationWarning
               >
-                {icons[idx]}
+                {mounted && icons[idx]}
               </div>
               {/* Explicit dark:text-white avoids inheriting body color mid-transition */}
               <h3 className="font-semibold leading-snug pt-1.5 text-slate-900 dark:text-white">{c.title}</h3>
