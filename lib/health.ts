@@ -113,9 +113,9 @@ async function checkContactForm(): Promise<ServiceHealth> {
     );
 
     const latencyMs = Date.now() - start;
-    // 200, 405 (Method Not Allowed) = endpoint joignable
-    // 302 = redirect HTTPS acceptable
-    const ok = res.ok || res.status === 405 || res.status === 302;
+    // Tout code < 500 = Formspree est joignable (400 = HEAD non supporté, 405 = méthode refusée, etc.)
+    // Seul un 5xx ou un timeout indique une vraie indisponibilité du service.
+    const ok = res.status < 500;
     return {
       name: "Contact form",
       status: ok ? "operational" : "degraded",
