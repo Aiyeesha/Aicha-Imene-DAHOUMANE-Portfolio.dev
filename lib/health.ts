@@ -99,19 +99,23 @@ async function checkRedis(): Promise<ServiceHealth> {
 async function checkContactForm(): Promise<ServiceHealth> {
   const start = Date.now();
   try {
-    const formId = process.env.FORMSPREE_ID;
-    if (!formId) {
+    // Utilise FORMSPREE_ENDPOINT (même variable que app/api/contact/route.ts)
+    // pour éviter la désynchronisation avec FORMSPREE_ID.
+    // Si non configuré → Supabase seul gère les messages, ce n'est pas une dégradation.
+    const endpoint = process.env.FORMSPREE_ENDPOINT;
+    if (!endpoint) {
       return { name: "Contact form", status: "operational", latencyMs: null, message: "Formspree not configured" };
     }
 
     const res = await withTimeout(
-      fetch(`https://formspree.io/f/${formId}`, { method: "HEAD", cache: "no-store" }),
+      fetch(endpoint, { method: "HEAD", cache: "no-store" }),
       4000
     );
 
     const latencyMs = Date.now() - start;
-    // 200 ou 405 (Method Not Allowed) = endpoint joignable
-    const ok = res.ok || res.status === 405;
+    // 200, 405 (Method Not Allowed) = endpoint joignable
+    // 302 = redirect HTTPS acceptable
+    const ok = res.ok || res.status === 405 || res.status === 302;
     return {
       name: "Contact form",
       status: ok ? "operational" : "degraded",
