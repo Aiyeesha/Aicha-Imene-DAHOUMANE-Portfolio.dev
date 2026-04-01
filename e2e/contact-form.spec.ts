@@ -7,8 +7,10 @@ import { test, expect } from "@playwright/test";
 test.describe("Formulaire de contact", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/en");
-    // S'assurer que la section contact est chargée avant chaque test
-    await page.locator("#contact").waitFor({ state: "visible" });
+    // S'assurer que la section contact est chargée avant chaque test.
+    // .first() évite la violation de strict mode : Next.js streaming peut créer
+    // brièvement 2 éléments #contact pendant l'hydratation (fallback + contenu réel).
+    await page.locator("#contact").first().waitFor({ state: "visible" });
   });
 
   test("la section contact est présente sur la page d'accueil", async ({
