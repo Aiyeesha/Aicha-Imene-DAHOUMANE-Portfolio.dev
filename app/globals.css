@@ -163,6 +163,56 @@ footer,
   to   { opacity: 1; transform: translateY(0);   }
 }
 
+/* ── Cursor blink — utilisé par TypingText ───────────────────────────────────*/
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Animated gradient text — utilisé sur le h1 hero ────────────────────────
+   background-size: 200% auto + animation sur background-position → shimmer.
+   Appliquer avec bg-clip-text text-transparent + la classe .animate-gradient-x */
+@keyframes gradient-x {
+  0%,100% { background-position: 0% 50%;   }
+  50%     { background-position: 100% 50%; }
+}
+.animate-gradient-x {
+  background-size: 200% auto;
+  animation: gradient-x 5s ease infinite;
+}
+
+/* ── Card contextual glow — utilisé par GlowCard ────────────────────────────
+   Le ::after suit la souris via les custom properties --glow-x / --glow-y
+   positionnées depuis GlowCard.tsx onMouseMove.
+   z-index: 0 sur ::after + z-index: 1 sur les enfants → le glow passe
+   derrière le contenu mais reste visible à travers l'arrière-plan semi-transparent.
+   overflow:hidden sur .card clip le glow aux bords arrondis de la carte. */
+.glow-card {
+  position: relative;
+}
+.glow-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    380px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(6, 182, 212, 0.11),
+    transparent 70%
+  );
+}
+.glow-card:hover::after {
+  opacity: 1;
+}
+.glow-card > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* ── ThemeToggle — animation de rotation lors du changement de thème ─────────
    Utilisé via la classe .theme-icon-spin ajoutée/retirée depuis ThemeToggle.tsx.
    La rotation 0→360 est imperceptible sur mobile mais donne un retour visuel

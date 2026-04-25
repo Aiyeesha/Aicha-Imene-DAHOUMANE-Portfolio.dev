@@ -26,6 +26,7 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import CalendlyModal from "@/components/CalendlyModal";
 import AvailabilityModal from "@/components/AvailabilityModal";
+import { TypingText } from "@/components/TypingText";
 
 // ── Variants Framer Motion ─────────────────────────────────────────────────
 // Container : orchestre le stagger des enfants — pas d'opacité propre.
@@ -167,14 +168,17 @@ export default function TrackAwareHero() {
             exit={shouldReduce ? {} : { opacity: 0, x: -10 }}
             transition={{ duration: 0.22, ease: "easeInOut" }}
           >
-            {/* Accroche courte — proposition de valeur immédiate */}
+            {/* Accroche courte — typing effect */}
             <p className="text-sm font-medium text-cyan-800 dark:text-cyan-300">
-              {track === "salesforce" ? t("hero.value_salesforce") : t("hero.value_itops")}
+              <TypingText
+                text={track === "salesforce" ? t("hero.value_salesforce") : t("hero.value_itops")}
+                speed={28}
+              />
             </p>
 
-            {/* Titre H1 en Space Grotesk */}
+            {/* Titre H1 — gradient animé */}
             <h1 className="mt-2 font-display text-4xl sm:text-5xl font-semibold leading-tight tracking-tight">
-              <span className="block">
+              <span className="block animate-gradient-x bg-gradient-to-r from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white bg-clip-text text-transparent">
                 {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
               </span>
               <span className="mt-1 block text-xl sm:text-2xl font-medium text-cyan-700 dark:text-cyan-300">
