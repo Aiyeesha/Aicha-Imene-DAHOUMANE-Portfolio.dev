@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { tBadge, tTag } from "@/i18n/projectTaxonomy";
 import { usePathname } from "next/navigation";
 import Reveal from "./Reveal";
+import { GlowCard } from "./GlowCard";
 import { useTrack } from "@/app/[locale]/providers";
 import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 
@@ -82,7 +83,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
     <div className="grid gap-4 lg:grid-cols-3">
       {featured.map((p, i) => (
         <Reveal key={p.slug} delayMs={i * 80}>
-          <div className="card overflow-hidden">
+          <GlowCard className="card overflow-hidden">
             {/* Image de couverture */}
             <div className="relative h-40 w-full bg-black/5 dark:bg-white/5">
               <CoverImage
@@ -140,7 +141,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               ) : null}
             </div>
             </div>{/* /p-6 */}
-          </div>
+          </GlowCard>
         </Reveal>
       ))}
     </div>
