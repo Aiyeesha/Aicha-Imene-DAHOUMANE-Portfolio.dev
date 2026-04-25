@@ -320,6 +320,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 sizes="(max-width: 768px) 100vw, 1200px"
                 className="object-contain bg-white/90 dark:bg-white/5"
                 priority
+                unoptimized
               />
             </div>
           </div>

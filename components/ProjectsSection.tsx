@@ -12,6 +12,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Reveal from "./Reveal";
+import { GlowCard } from "./GlowCard";
 
 // Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
 // Nécessaire car les gallery JSON en base peuvent référencer d'anciens noms de fichiers
@@ -28,6 +29,7 @@ function CoverImage({ src, fallback, alt }: { src: string; fallback?: string; al
       sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
       className="object-cover"
       loading="lazy"
+      unoptimized
       onError={() => {
         if (fallback && imgSrc !== fallback) {
           setImgSrc(fallback);
@@ -234,7 +236,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((p, idx) => (
           <Reveal key={p.slug} delayMs={Math.min(280, idx * 60)}>
-            <div className="card overflow-hidden">
+            <GlowCard className="card overflow-hidden">
               {/* Image de couverture */}
               <div className="relative h-36 w-full bg-black/5 dark:bg-white/5">
                 <CoverImage
@@ -299,7 +301,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
                 ) : null}
               </div>
               </div>{/* /p-5 */}
-            </div>
+            </GlowCard>
           </Reveal>
         ))}
       </div>
