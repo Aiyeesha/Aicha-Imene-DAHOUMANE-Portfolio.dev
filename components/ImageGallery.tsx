@@ -45,6 +45,7 @@ export default function ImageGallery({
              * Subsequent images will not be preloaded unnecessarily.
              */
             priority={idx === 0}
+            unoptimized
           />
         </div>
       </div>
@@ -64,7 +65,7 @@ export default function ImageGallery({
               ].join(" ")}
               aria-label={t("a11y.showImage", { index: i + 1 })}
             >
-              <Image src={img.src} alt={img.alt} fill sizes="112px" className="object-contain" />
+              <Image src={img.src} alt={img.alt} fill sizes="112px" className="object-contain" unoptimized />
             </button>
           ))}
         </div>
