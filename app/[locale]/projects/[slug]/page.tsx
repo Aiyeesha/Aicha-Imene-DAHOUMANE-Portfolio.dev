@@ -6,8 +6,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 // ── URL safety helper ─────────────────────────────────────────────────────────
-// Blocks javascript: / data: / vbscript: injection from JSONB fields stored
-// in Supabase. Only allows relative paths (/…) and http(s):// URLs.
 function safeHref(url: string | null | undefined): string | null {
   if (!url) return null;
   const trimmed = url.trim();
@@ -15,12 +13,11 @@ function safeHref(url: string | null | undefined): string | null {
   return null;
 }
 
-// Shape of a section stored as JSON in Supabase
 type ProjectSection =
   | { type: "bullets";   title: string; items: string[] }
-  | { type: "text";      title: string; paragraphs: string[] }
+  | { type: "text";      title: string; paragraphs?: string[]; body?: string }
   | { type: "metrics";   title: string; items: { label: string; value: string; note?: string }[] }
-  | { type: "timeline";  title: string; steps: { title: string; description: string }[] }
+  | { type: "timeline";  title: string; steps: { title?: string; label?: string; description: string }[] }
   | { type: "resources"; title: string; items: { label: string; href: string; note?: string }[] }
   | { type: "code";      title: string; language?: string; code: string; downloadUrl?: string };
 
@@ -38,8 +35,11 @@ type ProjectAsset = {
 };
 
 function getPublicStorageUrl(bucket?: string | null, path?: string | null) {
+  if (!path) return null;
+  // Si storage_path est déjà une URL complète, la retourner directement
+  if (/^https?:\/\//i.test(path)) return path;
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!base || !bucket || !path) return null;
+  if (!base || !bucket) return null;
   return `${base}/storage/v1/object/public/${bucket}/${path}`;
 }
 
@@ -67,7 +67,7 @@ function getAssetHref(asset: ProjectAsset) {
   return null;
 }
 
-// Section accent color per type
+// ── Section accent colours ────────────────────────────────────────────────────
 const sectionAccent: Record<string, string> = {
   bullets:   "bg-cyan-500",
   text:      "bg-violet-500",
@@ -81,10 +81,10 @@ function renderSection(section: ProjectSection, idx: number) {
   const accent = sectionAccent[section.type] ?? "bg-cyan-500";
 
   const wrapper = (children: React.ReactNode) => (
-    <div key={idx} className="card p-6">
+    <div key={idx} className="card p-6 md:p-7">
       <div className="flex items-center gap-3 mb-5">
-        <span className={`h-5 w-1 rounded-full ${accent}`} aria-hidden />
-        <h2 className="text-base font-semibold text-strong">{section.title}</h2>
+        <span className={`h-5 w-1.5 rounded-full ${accent} flex-shrink-0`} aria-hidden />
+        <h2 className="text-base font-semibold text-strong tracking-tight">{section.title}</h2>
       </div>
       {children}
     </div>
@@ -93,48 +93,53 @@ function renderSection(section: ProjectSection, idx: number) {
   switch (section.type) {
     case "bullets":
       return wrapper(
-        <ul className="space-y-2 text-sm">
+        <ul className="space-y-3">
           {section.items.map((item, i) => (
             <li key={i} className="flex gap-3">
-              <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-500" aria-hidden />
-              <span className="text-muted leading-relaxed">{item}</span>
+              <span className="mt-[5px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-500" aria-hidden />
+              <span className="text-sm text-muted leading-relaxed">{item}</span>
             </li>
           ))}
         </ul>
       );
 
-    case "text":
+    case "text": {
+      // Support both `body` (string) and `paragraphs` (string[]) shapes
+      const paras: string[] = section.body
+        ? [section.body]
+        : Array.isArray(section.paragraphs)
+        ? section.paragraphs
+        : [];
       return wrapper(
-        <div className="space-y-3">
-          {section.paragraphs.map((p, i) => (
-            <p key={i} className="text-sm leading-relaxed text-muted">{p}</p>
+        <div className="space-y-4">
+          {paras.map((p, i) => (
+            <p key={i} className="text-sm leading-[1.8] text-muted">{p}</p>
           ))}
         </div>
       );
+    }
 
     case "metrics": {
-      // Use stat-card layout only when all values are short (≤ 18 chars = numbers/percentages).
-      // Otherwise use a spec-sheet table layout (label → value).
       const isStatLayout = section.items.every((item) => item.value.length <= 18);
       return wrapper(
         isStatLayout ? (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {section.items.map((item, i) => (
-              <div key={i} className="rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/3 p-4">
-                <div className="text-3xl font-bold text-cyan-500">{item.value}</div>
+              <div key={i} className="rounded-xl border border-black/8 dark:border-white/8 bg-black/[0.02] dark:bg-white/[0.02] p-4">
+                <div className="text-2xl font-bold text-cyan-500 tabular-nums">{item.value}</div>
                 <div className="mt-1 text-sm font-medium text-strong">{item.label}</div>
-                {item.note ? <div className="mt-1 text-xs text-muted">{item.note}</div> : null}
+                {item.note ? <div className="mt-1 text-xs text-muted-2">{item.note}</div> : null}
               </div>
             ))}
           </div>
         ) : (
-          <dl className="divide-y divide-black/8 dark:divide-white/8">
+          <dl className="divide-y divide-black/6 dark:divide-white/6">
             {section.items.map((item, i) => (
-              <div key={i} className="grid grid-cols-[minmax(120px,180px)_1fr] gap-x-4 gap-y-1 py-3 text-sm">
+              <div key={i} className="grid grid-cols-[minmax(120px,160px)_1fr] gap-x-6 py-3 text-sm">
                 <dt className="font-medium text-strong self-start pt-0.5 shrink-0">{item.label}</dt>
                 <dd className="text-muted leading-relaxed">
                   {item.value}
-                  {item.note ? <span className="ml-2 text-xs opacity-70">({item.note})</span> : null}
+                  {item.note ? <span className="ml-2 text-xs opacity-60">({item.note})</span> : null}
                 </dd>
               </div>
             ))}
@@ -145,20 +150,20 @@ function renderSection(section: ProjectSection, idx: number) {
 
     case "timeline":
       return wrapper(
-        <ol className="space-y-5">
+        <ol className="space-y-0">
           {section.steps.map((step, i) => (
             <li key={i} className="flex gap-4">
-              <div className="flex flex-col items-center">
-                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-amber-500/15 text-xs font-bold text-amber-600 dark:text-amber-300">
+              <div className="flex flex-col items-center flex-shrink-0">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/15 text-xs font-bold text-amber-600 dark:text-amber-300 ring-1 ring-amber-500/20">
                   {i + 1}
                 </span>
-                {i < section.steps.length - 1 ? (
-                  <span className="mt-1 h-full w-px bg-amber-500/20" />
-                ) : null}
+                {i < section.steps.length - 1 && (
+                  <span className="mt-1 flex-1 w-px bg-amber-500/20 min-h-[1.5rem]" />
+                )}
               </div>
-              <div className="pb-4">
-                <div className="text-sm font-semibold text-strong">{step.title}</div>
-                <div className="mt-1 text-sm text-muted leading-relaxed">{step.description}</div>
+              <div className="pb-6 min-w-0">
+                <div className="text-sm font-semibold text-strong leading-tight">{step.label ?? step.title}</div>
+                <div className="mt-2 text-sm text-muted leading-[1.8]">{step.description}</div>
               </div>
             </li>
           ))}
@@ -167,22 +172,22 @@ function renderSection(section: ProjectSection, idx: number) {
 
     case "resources":
       return wrapper(
-        <ul className="space-y-2">
+        <ul className="space-y-2.5">
           {section.items.map((item, i) => {
             const href = safeHref(item.href);
             return (
-              <li key={i} className="flex items-baseline gap-2 text-sm">
-                <span className="text-sky-500" aria-hidden>↗</span>
+              <li key={i} className="flex items-start gap-3 text-sm">
+                <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-sky-500/10 text-sky-500 text-xs" aria-hidden>↗</span>
                 <span>
                   {href ? (
                     <a href={href} target="_blank" rel="noreferrer"
-                      className="underline underline-offset-4 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">
+                      className="font-medium text-strong underline underline-offset-4 decoration-black/20 dark:decoration-white/20 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">
                       {item.label}
                     </a>
                   ) : (
                     <span className="text-muted">{item.label}</span>
                   )}
-                  {item.note ? <span className="ml-2 text-xs text-muted">{item.note}</span> : null}
+                  {item.note ? <span className="ml-2 text-xs text-muted-2">{item.note}</span> : null}
                 </span>
               </li>
             );
@@ -194,12 +199,11 @@ function renderSection(section: ProjectSection, idx: number) {
       const dlUrl = safeHref(section.downloadUrl);
       return wrapper(
         <>
-          <pre className="overflow-x-auto rounded-xl bg-black/10 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 text-xs leading-relaxed font-mono">
+          <pre className="overflow-x-auto rounded-xl bg-black/[0.04] dark:bg-white/[0.04] border border-black/8 dark:border-white/8 p-5 text-xs leading-relaxed font-mono">
             <code>{section.code}</code>
           </pre>
           {dlUrl ? (
-            <a href={dlUrl}
-              className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted underline underline-offset-4 hover:opacity-70"
+            <a href={dlUrl} className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted underline underline-offset-4 hover:opacity-70 transition-opacity"
               target="_blank" rel="noreferrer">
               ↓ Télécharger
             </a>
@@ -213,13 +217,9 @@ function renderSection(section: ProjectSection, idx: number) {
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
+// ── Metadata ──────────────────────────────────────────────────────────────────
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale, slug } = await params;
-
   const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
   if (!project) return { title: "Project not found" };
 
@@ -232,14 +232,12 @@ export async function generateMetadata({
   const description = project.hero_subtitle ?? project.summary ?? project.title;
   const canonical = `${siteUrl}/${locale}/projects/${slug}`;
 
-  // OG image: first gallery image (static public path) or default OG
   const firstGalleryImg = project.gallery?.[0]?.src;
   const ogImage =
     firstGalleryImg && firstGalleryImg.startsWith("/")
       ? `${siteUrl}${firstGalleryImg}`
       : `${siteUrl}/opengraph-image`;
 
-  // Both locales always exist for each project
   const languages: Record<string, string> = {
     en: `${siteUrl}/en/projects/${slug}`,
     fr: `${siteUrl}/fr/projects/${slug}`,
@@ -266,31 +264,22 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: Promise<Params>;
-}) {
+// ── Page ──────────────────────────────────────────────────────────────────────
+export default async function ProjectPage({ params }: { params: Promise<Params> }) {
   const { locale, slug } = await params;
 
   const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
   if (!project) return notFound();
 
-  const assets = (project.project_assets ?? []) as ProjectAsset[];
-
-  const badge = project.badge ?? null;
-  const tags = (project.tags ?? []) as string[];
-  const techStack = project.tech_stack ?? [];
-
-  // Rich content from Supabase (hero_subtitle, sections, gallery)
-  const sections = (project.sections ?? []) as ProjectSection[];
-  // If there is already a "resources" section, don't show Supabase file assets
-  // (same deliverables would appear twice).
+  const assets      = (project.project_assets ?? []) as ProjectAsset[];
+  const badge       = project.badge ?? null;
+  const tags        = (project.tags ?? []) as string[];
+  const techStack   = project.tech_stack ?? [];
+  const sections    = (project.sections ?? []) as ProjectSection[];
   const hasStaticResources = sections.some((s) => s.type === "resources");
   const heroSubtitle = project.hero_subtitle ?? project.summary ?? null;
-  const gallery = project.gallery ?? [];
+  const gallery     = project.gallery ?? [];
 
-  // Split assets: images displayed inline, others as download cards
   const imageAssets = assets.filter(looksLikeImage);
   const fileAssets  = assets.filter((a) => !looksLikeImage(a));
 
@@ -299,163 +288,230 @@ export default async function ProjectPage({
     badge?.tone === "personal" ? "badge badge-personal" :
     badge?.tone === "training" ? "badge badge-training" : "";
 
+  const repoHref = safeHref(project.repo_url);
+  const liveHref = safeHref(project.live_url);
+
+  // Cover = first gallery image. Remaining go to the gallery viewer.
+  const coverImage  = gallery[0] ?? null;
+  const galleryRest = gallery.slice(1);
+
+  const isFr = locale === "fr";
+
   return (
-    <main className="py-10 md:py-14">
-      <div className="container mx-auto max-w-4xl px-4">
+    <main className="py-10 md:py-16">
+      <div className="container mx-auto max-w-6xl px-4">
 
-        {/* BACK */}
-        <div className="mb-8">
-          <Link
-            href={`/${locale}#projects`}
-            className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
-          >
-            ← {locale === "fr" ? "Retour aux projets" : "Back to projects"}
-          </Link>
-        </div>
+        {/* ── BACK ─────────────────────────────────────────────────────────── */}
+        <Link
+          href={`/${locale}#projects`}
+          className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
+        >
+          ← {isFr ? "Retour aux projets" : "Back to projects"}
+        </Link>
 
-        {/* HERO */}
-        <header>
-          <div className="flex flex-wrap items-start gap-3">
-            <h1 className="text-3xl font-bold text-strong leading-tight flex-1">
-              {project.title}
-            </h1>
-            {badge ? (
-              <span className={badgeClass}>{badge.label}</span>
-            ) : null}
+        {/* ── COVER IMAGE ──────────────────────────────────────────────────── */}
+        {coverImage && (
+          <div className="mt-8 card overflow-hidden">
+            <div className="relative aspect-[16/9] w-full">
+              <Image
+                src={coverImage.src}
+                alt={coverImage.alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 1200px"
+                className="object-contain bg-white/90 dark:bg-white/5"
+                priority
+              />
+            </div>
           </div>
+        )}
 
-          {heroSubtitle ? (
-            <p className="mt-4 text-base text-muted leading-relaxed max-w-2xl">
+        {/* ── HERO TEXT ────────────────────────────────────────────────────── */}
+        <header className="mt-8">
+          {badge && (
+            <div className="mb-3">
+              <span className={badgeClass}>{badge.label}</span>
+            </div>
+          )}
+          <h1 className="text-3xl md:text-4xl font-bold text-strong leading-tight tracking-tight">
+            {project.title}
+          </h1>
+          {heroSubtitle && (
+            <p className="mt-4 text-base md:text-lg text-muted leading-relaxed max-w-3xl">
               {heroSubtitle}
             </p>
-          ) : null}
-
-          {/* Tags + tech stack */}
-          {(tags.length > 0 || techStack.length > 0) ? (
-            <div className="mt-5 flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span key={tag} className="chip">{tag}</span>
-              ))}
-              {techStack.map((tech) => (
-                <span key={tech} className="chip">{tech}</span>
-              ))}
-            </div>
-          ) : null}
-
-          {/* Repo / Live links */}
-          {(project.repo_url || project.live_url) ? (() => {
-            const repoHref = safeHref(project.repo_url);
-            const liveHref = safeHref(project.live_url);
-            return (repoHref || liveHref) ? (
-              <div className="mt-5 flex flex-wrap gap-3">
-                {repoHref ? (
-                  <a
-                    href={repoHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
-                  >
-                    <span aria-hidden="true">↗ </span>Repo
-                  </a>
-                ) : null}
-                {liveHref ? (
-                  <a
-                    href={liveHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 transition-opacity soft-ring"
-                  >
-                    <span aria-hidden="true">↗ </span>Live
-                  </a>
-                ) : null}
-              </div>
-            ) : null;
-          })() : null}
+          )}
         </header>
 
-        {/* DIVIDER */}
-        <div className="mt-10 h-px w-full bg-black/10 dark:bg-white/10" />
+        <div className="mt-8 h-px w-full bg-black/8 dark:bg-white/8" />
 
-        {/* GALLERY */}
-        {gallery.length > 0 ? (
-          <div className="mt-10">
-            <ImageGallery images={gallery} />
-          </div>
-        ) : null}
+        {/* ── TWO-COLUMN LAYOUT ────────────────────────────────────────────── */}
+        <div className="mt-10 lg:grid lg:grid-cols-3 lg:gap-10 lg:items-start">
 
-        {/* INLINE IMAGES from Supabase Storage */}
-        {imageAssets.length > 0 ? (
-          <div className={`mt-10 grid gap-4 ${imageAssets.length > 1 ? "sm:grid-cols-2" : ""}`}>
-            {imageAssets.map((a) => {
-              const href = getAssetHref(a);
-              if (!href) return null;
-              return (
-                <div key={a.id} className="card overflow-hidden">
-                  {/* Conteneur aspect-ratio fixé pour éviter le CLS (Cumulative Layout Shift).
-                      Next.js <Image fill> requiert un parent position:relative avec dimensions.
-                      aspect-video (16/9) est un bon compromis pour des captures d'écran. */}
-                  <div className="relative w-full aspect-video">
-                    <Image
-                      src={href}
-                      alt={a.title ?? ""}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                      className="object-contain"
-                      loading="lazy"
-                    />
-                  </div>
-                  {a.title ? (
-                    <p className="px-4 py-2 text-xs text-muted">{a.title}</p>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
+          {/* ── LEFT: SECTIONS (2/3) ─────────────────────────────────────── */}
+          <div className="lg:col-span-2 space-y-5">
 
-        {/* RICH SECTIONS */}
-        {sections.length > 0 ? (
-          <div className="mt-10 space-y-5">
             {sections.map((section, idx) => renderSection(section, idx))}
-          </div>
-        ) : null}
 
-        {/* DELIVERABLES / FILE ASSETS */}
-        {fileAssets.length > 0 && !hasStaticResources ? (
-          <section className="mt-10">
-            <h2 className="text-lg font-semibold text-strong mb-4">
-              {locale === "fr" ? "Livrables & documents" : "Deliverables & documents"}
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {fileAssets.map((a) => {
-                const href = getAssetHref(a);
-                return (
-                  <div key={a.id} className="card flex items-start gap-4 p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 text-lg font-bold">
-                      ↓
+            {/* Supabase storage images */}
+            {imageAssets.length > 0 && (
+              <div className={`grid gap-4 ${imageAssets.length > 1 ? "sm:grid-cols-2" : ""}`}>
+                {imageAssets.map((a) => {
+                  const href = getAssetHref(a);
+                  if (!href) return null;
+                  return (
+                    <div key={a.id} className="card overflow-hidden">
+                      <div className="relative w-full aspect-video">
+                        <Image
+                          src={href}
+                          alt={a.title ?? ""}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                          className="object-contain"
+                          loading="lazy"
+                          unoptimized
+                        />
+                      </div>
+                      {a.title && (
+                        <p className="px-4 py-2 text-xs text-muted-2">{a.title}</p>
+                      )}
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm font-medium text-strong truncate">{a.title}</div>
-                      {a.description ? (
-                        <div className="mt-0.5 text-xs text-muted">{a.description}</div>
-                      ) : null}
-                      {href ? (
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-2 inline-block text-xs text-cyan-600 dark:text-cyan-300 underline underline-offset-4 hover:opacity-70 transition-opacity"
-                        >
-                          {locale === "fr" ? "Ouvrir le fichier" : "Open file"}
-                        </a>
-                      ) : null}
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Gallery viewer — remaining screenshots */}
+            {galleryRest.length > 0 && (
+              <div className="card p-6 md:p-7">
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="h-5 w-1.5 rounded-full bg-slate-400 flex-shrink-0" aria-hidden />
+                  <h2 className="text-base font-semibold text-strong tracking-tight">
+                    {isFr ? "Captures d'écran" : "Screenshots"}
+                  </h2>
+                </div>
+                <ImageGallery images={galleryRest} />
+              </div>
+            )}
+          </div>
+
+          {/* ── RIGHT: STICKY SIDEBAR (1/3) ──────────────────────────────── */}
+          <aside className="mt-8 lg:mt-0">
+            <div className="lg:sticky lg:top-[calc(var(--nav-h)+1.5rem)] space-y-4">
+
+              {/* Project metadata card */}
+              <div className="card p-5 space-y-5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
+                  {isFr ? "Informations" : "Project info"}
+                </p>
+
+                {badge && (
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">Type</p>
+                    <span className={badgeClass}>{badge.label}</span>
+                  </div>
+                )}
+
+                {tags.length > 0 && (
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
+                      {isFr ? "Compétences" : "Skills"}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {tags.map((tag) => (
+                        <span key={tag} className="chip">{tag}</span>
+                      ))}
                     </div>
                   </div>
-                );
-              })}
+                )}
+
+                {techStack.length > 0 && (
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
+                      {isFr ? "Technologies" : "Tech stack"}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {techStack.map((t) => (
+                        <span key={t} className="chip">{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action buttons */}
+              {(repoHref || liveHref) && (
+                <div className="flex flex-col gap-2">
+                  {repoHref && (
+                    <a
+                      href={repoHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center gap-2 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring text-strong"
+                    >
+                      <span aria-hidden>↗</span>
+                      {isFr ? "Voir le code" : "View source"}
+                    </a>
+                  )}
+                  {liveHref && (
+                    <a
+                      href={liveHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black hover:opacity-90 transition-opacity soft-ring"
+                    >
+                      <span aria-hidden>↗</span>
+                      {isFr ? "Voir le projet" : "Live demo"}
+                    </a>
+                  )}
+                </div>
+              )}
+
+              {/* Deliverables */}
+              {fileAssets.length > 0 && !hasStaticResources && (
+                <div className="card p-5 space-y-3">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
+                    {isFr ? "Livrables" : "Deliverables"}
+                  </p>
+                  <ul className="space-y-3">
+                    {fileAssets.map((a) => {
+                      const href = getAssetHref(a);
+                      return (
+                        <li key={a.id} className="flex items-start gap-3">
+                          <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 text-sm" aria-hidden>↓</span>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-strong truncate leading-tight">{a.title}</p>
+                            {a.description && (
+                              <p className="mt-0.5 text-xs text-muted-2 leading-snug">{a.description}</p>
+                            )}
+                            {href && (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-1 inline-block text-xs text-cyan-600 dark:text-cyan-300 underline underline-offset-4 hover:opacity-70 transition-opacity"
+                              >
+                                {isFr ? "Ouvrir" : "Open file"}
+                              </a>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              {/* Back link — repeated for easy access on long pages */}
+              <Link
+                href={`/${locale}#projects`}
+                className="flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
+              >
+                ← {isFr ? "Tous les projets" : "All projects"}
+              </Link>
+
             </div>
-          </section>
-        ) : null}
+          </aside>
+        </div>
 
       </div>
     </main>

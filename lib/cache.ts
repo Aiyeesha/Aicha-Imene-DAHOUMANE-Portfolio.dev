@@ -13,19 +13,24 @@ export async function cacheGetOrSet<T>(
     return fetcher();
   }
 
-  const cached = await redis.get<T>(key);
-  if (cached !== null && cached !== undefined) {
-    console.log("[CACHE HIT]", key);
-    return cached;
-  }
+  try {
+    const cached = await redis.get<T>(key);
+    if (cached !== null && cached !== undefined) {
+      console.log("[CACHE HIT]", key);
+      return cached;
+    }
 
-  console.log("[CACHE MISS]", key);
-  const fresh = await fetcher();
-  await redis.set(key, fresh, { ex: ttlSeconds });
-  return fresh;
+    console.log("[CACHE MISS]", key);
+    const fresh = await fetcher();
+    await redis.set(key, fresh, { ex: ttlSeconds }).catch(() => {});
+    return fresh;
+  } catch (err) {
+    console.warn("[CACHE ERROR] Redis unavailable, falling back to direct fetch:", err instanceof Error ? err.message : err);
+    return fetcher();
+  }
 }
 
 export async function cacheDel(key: string) {
   if (!redis) return;
-  await redis.del(key);
+  await redis.del(key).catch(() => {});
 }

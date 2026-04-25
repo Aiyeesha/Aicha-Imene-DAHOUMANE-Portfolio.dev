@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
 import CommandPaletteLoader from "@/components/CommandPaletteLoader";
+import CursorSpotlight from "@/components/CursorSpotlight";
 
 /**
  * Locale layout
@@ -96,6 +97,7 @@ export default async function LocaleLayout({
           preference from localStorage on mount (see providers.tsx useEffect).
           Removing cookies() here enables ISR and CDN caching for all pages. */}
       <Providers initialTrack="salesforce">
+        <CursorSpotlight />
         <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070B1A] dark:text-white">
           <div className="page-gradient" />
 
