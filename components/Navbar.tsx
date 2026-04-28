@@ -87,13 +87,29 @@ export default function Navbar() {
   // Scroll vers l'ancre après navigation cross-page (ex: /about → /#projects).
   // router.push avec scroll:false ne déclenche pas le scroll natif du navigateur
   // dans les SPAs — on le fait manuellement après que la page est rendue.
+  // Retry toutes les 150 ms (max 20 tentatives ≈ 3 s) pour attendre que les
+  // sections dynamiques (Supabase / Suspense) soient montées dans le DOM.
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-    const t = setTimeout(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 120);
-    return () => clearTimeout(t);
+
+    let attempts = 0;
+    const MAX = 20;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const tryScroll = () => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (attempts < MAX) {
+        attempts++;
+        timer = setTimeout(tryScroll, 150);
+      }
+    };
+
+    // Premier essai après 100 ms (laisse le temps au premier render)
+    timer = setTimeout(tryScroll, 100);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -295,12 +311,18 @@ useEffect(() => {
                   );
                 }
 
-                // Section links — <a> natif pour garantir le scroll hash fiable
-                // sans interférence du routeur Next.js
+                // Section links — <a> natif + scrollIntoView sur la home pour
+                // garantir le smooth scroll même si le navigateur l'ignore sur les ancres.
                 return (
                   <a key={s.id} className={cls} data-section={s.id}
                     href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
-                    aria-current={activeId === s.id ? "page" : undefined}>
+                    aria-current={activeId === s.id ? "page" : undefined}
+                    onClick={(e) => {
+                      if (isHome) {
+                        e.preventDefault();
+                        document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }
+                    }}>
                     {s.label}
                   </a>
                 );
@@ -410,11 +432,17 @@ useEffect(() => {
                   );
                 }
 
-                // Section links — <a> natif + fermeture du menu mobile
+                // Section links — <a> natif + fermeture du menu mobile + scrollIntoView
                 return (
                   <a key={s.id} data-section={s.id} className={cls}
                     href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={(e) => {
+                      setMobileOpen(false);
+                      if (isHome) {
+                        e.preventDefault();
+                        document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }
+                    }}
                     aria-current={activeId === s.id ? "page" : undefined}>
                     {s.label}
                   </a>
