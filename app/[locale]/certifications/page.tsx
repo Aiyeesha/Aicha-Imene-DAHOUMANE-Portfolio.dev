@@ -30,8 +30,8 @@ export async function generateMetadata({
       ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
       : "Certifications & Diplomas — Aïcha Imène DAHOUMANE",
     description: isFr
-      ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Ranger) et certifications en préparation (Salesforce Admin, Platform Developer I, ISC2 CC)."
-      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Ranger) and upcoming certifications (CompTIA A+, Salesforce Admin, Platform Developer I, ISC2 CC).",
+      ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Ranger) et plan de 12 certifications Salesforce + CompTIA (2026–2027)."
+      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Ranger) and a 12-certification roadmap across Salesforce + CompTIA (2026–2027).",
     alternates: {
       canonical: `${siteUrl}/${locale}/certifications`,
       languages: {
@@ -135,7 +135,7 @@ export default async function CertificationsPage({ params }: PageProps) {
     sectionActive: isFr ? "Actif" : "Active",
     sectionActiveSub: isFr ? "Progression continue" : "Continuous learning",
     sectionUpcoming: isFr ? "En préparation" : "In preparation",
-    sectionUpcomingSub: isFr ? "Objectifs 2026" : "2026 Goals",
+    sectionUpcomingSub: isFr ? "Objectifs 2026–2027" : "2026–2027 Goals",
     trailheadBadges: isFr ? "badges" : "badges",
     trailheadPoints: isFr ? "points" : "points",
     trailheadTrails: isFr ? "parcours" : "trails",
@@ -220,61 +220,197 @@ export default async function CertificationsPage({ params }: PageProps) {
       skills: ["Business English", "Listening Comprehension", "Reading Comprehension", "Professional Communication"],
       credentialUrl: "https://www.cambridge.org/linguaskill",
       initials: "C1+",
-      color: "bg-rose-700", // rose-500 = 3.67:1 ✗ → rose-700 ≈ 7:1 ✓
+      color: "bg-rose-700",
       logoUrl: "/certifications/linguaskill.svg",
+    },
+    {
+      id: "sf-platform-foundations",
+      name: "Salesforce Platform Foundations",
+      issuer: "Salesforce",
+      earnedDate: isFr ? "Avr. 2026" : "Apr 2026",
+      level: "Salesforce Associate",
+      description: isFr
+        ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
+        : "Salesforce platform fundamentals: navigation, standard objects, basic security and simple automations.",
+      skills: isFr
+        ? ["Salesforce CRM", "Navigation", "Objets standard", "Sécurité", "Automatisation"]
+        : ["Salesforce CRM", "Navigation", "Standard Objects", "Security", "Automation"],
+      credentialUrl: undefined,
+      initials: "PF",
+      color: "bg-sky-700",
+      logoUrl: "/certifications/salesforce.svg",
+    },
+    {
+      id: "sf-sales-foundations",
+      name: "Salesforce Sales Foundations",
+      issuer: "Salesforce",
+      earnedDate: isFr ? "Avr. 2026" : "Apr 2026",
+      level: "Salesforce Associate",
+      description: isFr
+        ? "Fondamentaux Sales Cloud : gestion des leads, opportunités, comptes, contacts et prévisions commerciales."
+        : "Sales Cloud fundamentals: lead management, opportunities, accounts, contacts and sales forecasting.",
+      skills: isFr
+        ? ["Sales Cloud", "Leads", "Opportunités", "Comptes", "Prévisions"]
+        : ["Sales Cloud", "Leads", "Opportunities", "Accounts", "Forecasting"],
+      credentialUrl: undefined,
+      initials: "SF",
+      color: "bg-sky-700",
+      logoUrl: "/certifications/salesforce.svg",
     },
   ];
 
-  // Certifications en préparation
-  const upcomingItems = [
+  // Certifications en préparation — groupées par domaine
+  type UpcomingItem = {
+    id: string;
+    name: string;
+    issuer: string;
+    target: string;
+    description: string;
+    initials: string;
+    color: string;
+    logoUrl?: string;
+    track: "salesforce" | "comptia";
+    isActive?: boolean;
+  };
+
+  const upcomingItems: UpcomingItem[] = [
+    // ── Salesforce track (sprint Avr. → Juil. 2026) ──────────────────────────
     {
-      id: "comptia-aplus",
-      name: "CompTIA A+",
-      issuer: "CompTIA",
-      target: "2026",
-      description: isFr
-        ? "Certification fondamentale en support matériel et logiciel : installation, configuration, dépannage de postes de travail, OS, réseaux et sécurité."
-        : "Foundational hardware and software support certification: installation, configuration, troubleshooting of workstations, OS, networking and security.",
-      initials: "A+",
-      color: "bg-red-600",
-      logoUrl: "/certifications/comptia-security.svg",
-    },
-    {
-      id: "sf-admin",
-      name: "Salesforce Certified Administrator",
+      id: "sf-platform-administrator",
+      name: "Salesforce Platform Administrator",
       issuer: "Salesforce",
-      target: "2026",
+      target: isFr ? "Juin 2026" : "Jun 2026",
       description: isFr
-        ? "Administration Salesforce : configuration, automatisation, sécurité, rapports et tableaux de bord."
-        : "Salesforce administration: configuration, automation, security, reports and dashboards.",
+        ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
+        : "Advanced administration: configuration, security, Flow automations, user management and org maintenance.",
       initials: "ADM",
-      color: "bg-sky-800", // sky-500 = 2.77:1 ✗ → sky-800 ≈ 9:1 ✓
+      color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+      isActive: true,
     },
     {
-      id: "sf-pdi",
+      id: "sf-platform-app-builder",
+      name: "Salesforce Platform App Builder",
+      issuer: "Salesforce",
+      target: isFr ? "Juil. 2026" : "Jul 2026",
+      description: isFr
+        ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
+        : "Design and deployment of custom applications on the Salesforce platform using low-code tools.",
+      initials: "PAB",
+      color: "bg-sky-800",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+    },
+    {
+      id: "sf-cpq-administrator",
+      name: "Salesforce CPQ Administrator",
+      issuer: "Salesforce",
+      target: isFr ? "Août 2026" : "Aug 2026",
+      description: isFr
+        ? "Configuration Salesforce CPQ : catalogues produits, règles de prix, bundles et processus de devis complexes."
+        : "Salesforce CPQ configuration: product catalogs, pricing rules, bundles and complex quoting processes.",
+      initials: "CPQ",
+      color: "bg-sky-800",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+    },
+    {
+      id: "sf-marketing-cloud-admin",
+      name: "Marketing Cloud Engagement Admin",
+      issuer: "Salesforce",
+      target: isFr ? "Sept. 2026" : "Sep 2026",
+      description: isFr
+        ? "Administration Marketing Cloud : Email Studio, Journey Builder, segmentation des abonnés et reporting."
+        : "Marketing Cloud administration: Email Studio, Journey Builder, subscriber segmentation and reporting.",
+      initials: "MCA",
+      color: "bg-sky-800",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+    },
+    {
+      id: "sf-platform-developer-i",
       name: "Salesforce Platform Developer I",
       issuer: "Salesforce",
-      target: "2026",
+      target: isFr ? "Oct. 2026" : "Oct 2026",
       description: isFr
-        ? "Développement sur la plateforme Salesforce : Apex, SOQL, LWC, tests unitaires, déploiement."
-        : "Development on the Salesforce platform: Apex, SOQL, LWC, unit testing, deployment.",
+        ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
+        : "Salesforce development: Apex, SOQL, Lightning Web Components, unit testing and best practices.",
       initials: "PDI",
-      color: "bg-sky-800", // sky-500 = 2.77:1 ✗ → sky-800 ≈ 9:1 ✓
+      color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+    },
+    // ── CompTIA track (sprint Oct. 2026 → Mai 2027) ──────────────────────────
+    {
+      id: "comptia-network-plus",
+      name: "CompTIA Network+",
+      issuer: "CompTIA",
+      target: isFr ? "Nov. 2026" : "Nov 2026",
+      description: isFr
+        ? "Fondamentaux des réseaux : protocoles TCP/IP, infrastructure, sécurité réseau, dépannage et virtualisation."
+        : "Networking fundamentals: TCP/IP protocols, infrastructure, network security, troubleshooting and virtualization.",
+      initials: "N+",
+      color: "bg-red-700",
+      logoUrl: "/certifications/comptia-security.svg",
+      track: "comptia",
     },
     {
-      id: "isc2-cc",
-      name: "ISC2 CC — Certified in Cybersecurity",
-      issuer: "ISC²",
-      target: "2026",
+      id: "comptia-security-plus",
+      name: "CompTIA Security+",
+      issuer: "CompTIA",
+      target: isFr ? "Jan. 2027" : "Jan 2027",
       description: isFr
-        ? "Fondamentaux de la cybersécurité : principes de sécurité, contrôle d'accès, réponse aux incidents, cryptographie."
-        : "Cybersecurity fundamentals: security principles, access control, incident response, cryptography.",
-      initials: "CC",
-      color: "bg-slate-500",
+        ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
+        : "Industry-standard cybersecurity cert: threats, security architecture, identity management and incident response.",
+      initials: "S+",
+      color: "bg-red-700",
+      logoUrl: "/certifications/comptia-security.svg",
+      track: "comptia",
+    },
+    {
+      id: "comptia-linux-plus",
+      name: "CompTIA Linux+",
+      issuer: "CompTIA",
+      target: isFr ? "Fév. 2027" : "Feb 2027",
+      description: isFr
+        ? "Administration Linux : ligne de commande, scripts shell, gestion des utilisateurs, sécurité et automatisation système."
+        : "Linux administration: command line, shell scripting, user management, security and system automation.",
+      initials: "L+",
+      color: "bg-red-700",
+      logoUrl: "/certifications/comptia-security.svg",
+      track: "comptia",
+    },
+    {
+      id: "comptia-cysa-plus",
+      name: "CompTIA CySA+",
+      issuer: "CompTIA",
+      target: isFr ? "Avr. 2027" : "Apr 2027",
+      description: isFr
+        ? "Analyse cybersécurité : threat intelligence, SIEM, analyse comportementale et gestion des vulnérabilités."
+        : "Cybersecurity analysis: threat intelligence, SIEM, behavioral analysis and vulnerability management.",
+      initials: "CSA+",
+      color: "bg-red-700",
+      logoUrl: "/certifications/comptia-security.svg",
+      track: "comptia",
+    },
+    {
+      id: "comptia-pentest-plus",
+      name: "CompTIA PenTest+",
+      issuer: "CompTIA",
+      target: isFr ? "Mai 2027" : "May 2027",
+      description: isFr
+        ? "Tests de pénétration : planification, reconnaissance, exploitation, post-exploitation et rapport de vulnérabilités."
+        : "Penetration testing: planning, reconnaissance, exploitation, post-exploitation and vulnerability reporting.",
+      initials: "PT+",
+      color: "bg-red-700",
+      logoUrl: "/certifications/comptia-security.svg",
+      track: "comptia",
     },
   ];
+
+  const salesforceCerts = upcomingItems.filter((c) => c.track === "salesforce");
+  const comptaCerts = upcomingItems.filter((c) => c.track === "comptia");
 
   // ── JSON-LD — BreadcrumbList ──────────────────────────────────────────────
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -462,33 +598,80 @@ export default async function CertificationsPage({ params }: PageProps) {
         </div>
         <p className="mt-1 text-sm text-muted">{labels.sectionUpcomingSub}</p>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {upcomingItems.map((cert) => (
-            <article
-              key={cert.id}
-              className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
-            >
-              {/* En-tête */}
-              <div className="flex items-start gap-3">
-                <CertIcon initials={cert.initials} color={cert.color} logoUrl={(cert as { logoUrl?: string }).logoUrl} />
-                <div className="min-w-0">
-                  <h3 className="text-sm font-semibold leading-snug text-slate-900 dark:text-white">{cert.name}</h3>
-                  <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>
+        {/* ── Sous-groupe Salesforce ──────────────────────────────────────── */}
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              Salesforce
+            </span>
+            <span className="text-xs text-muted-2">
+              {isFr ? "— sprint Avr. → Oct. 2026" : "— sprint Apr. → Oct. 2026"}
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {salesforceCerts.map((cert) => (
+              <article
+                key={cert.id}
+                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+              >
+                <div className="flex items-start gap-3">
+                  <CertIcon initials={cert.initials} color={cert.color} logoUrl={cert.logoUrl} />
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-semibold leading-snug text-slate-900 dark:text-white">{cert.name}</h3>
+                    <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>
+                  </div>
                 </div>
-              </div>
+                <p className="mt-4 text-sm text-muted leading-relaxed">{cert.description}</p>
+                <div className="mt-4 flex items-center gap-2">
+                  {cert.isActive ? (
+                    <span className="inline-flex items-center rounded-full bg-cyan-100 dark:bg-cyan-900/30 px-2.5 py-0.5 text-xs font-medium text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
+                      {isFr ? "↻ En cours" : "↻ In progress"}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-300">
+                      {labels.activelyPreparing}
+                    </span>
+                  )}
+                  <span className="text-xs text-muted-2">— {cert.target}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
 
-              {/* Description */}
-              <p className="mt-4 text-sm text-muted leading-relaxed">{cert.description}</p>
-
-              {/* Statut */}
-              <div className="mt-4 flex items-center gap-2">
-                <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-300">
-                  {labels.activelyPreparing}
-                </span>
-                <span className="text-xs text-muted-2">— {cert.target}</span>
-              </div>
-            </article>
-          ))}
+        {/* ── Sous-groupe CompTIA ─────────────────────────────────────────── */}
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              CompTIA
+            </span>
+            <span className="text-xs text-muted-2">
+              {isFr ? "— sprint Oct. 2026 → Mai 2027" : "— sprint Oct. 2026 → May 2027"}
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {comptaCerts.map((cert) => (
+              <article
+                key={cert.id}
+                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+              >
+                <div className="flex items-start gap-3">
+                  <CertIcon initials={cert.initials} color={cert.color} logoUrl={cert.logoUrl} />
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-semibold leading-snug text-slate-900 dark:text-white">{cert.name}</h3>
+                    <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm text-muted leading-relaxed">{cert.description}</p>
+                <div className="mt-4 flex items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-300">
+                    {labels.activelyPreparing}
+                  </span>
+                  <span className="text-xs text-muted-2">— {cert.target}</span>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
