@@ -20,9 +20,7 @@ import { Suspense } from "react";
 import ProfileFactsCard from "@/components/ProfileFactsCard";
 import AboutTrackIntro from "@/components/AboutTrackIntro";
 import AboutTrackGoals from "@/components/AboutTrackGoals";
-// TechStackGrid — prête, masquée en attendant validation visuelle sur la page About.
-// Pour activer : décommenter l'import ET le bloc JSX ci-dessous.
-// import TechStackGrid from "@/components/TechStackGrid";
+import TechStackGrid from "@/components/TechStackGrid";
 import VisualTimeline from "@/components/VisualTimeline";
 import CareerTimeline from "@/components/CareerTimeline";
 
@@ -128,9 +126,7 @@ export default async function AboutPage({ params }: PageProps) {
         </Suspense>
       </section>
 
-      {/* ── TECH STACK GRID — masquée, prête à activer ──────────────────────────
-          Grille interactive (badges colorés + tooltip hover : niveau, années, contexte).
-          Pour activer : décommenter l'import en haut du fichier + ce bloc JSX.
+      {/* ── TECH STACK GRID ──────────────────────────────────────────────────── */}
       <section className="mt-10">
         <h2 className="text-xl font-semibold">
           {safeLocale === "fr" ? "Stack technique" : "Tech stack"}
@@ -142,7 +138,6 @@ export default async function AboutPage({ params }: PageProps) {
         </p>
         <TechStackGrid />
       </section>
-      ── fin bloc masqué ─────────────────────────────────────────────────── */}
 
       {/* ── FRISE CHRONOLOGIQUE — données statiques, toujours visible ──────────
           Complément visuel à la section "Mon parcours" Supabase ci-dessous.

@@ -303,7 +303,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
         {/* ── BACK ─────────────────────────────────────────────────────────── */}
         <Link
-          href={`/${locale}#projects`}
+          href={`/${locale}/#projects`}
           className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
         >
           ← {isFr ? "Retour aux projets" : "Back to projects"}
@@ -504,7 +504,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
               {/* Back link — repeated for easy access on long pages */}
               <Link
-                href={`/${locale}#projects`}
+                href={`/${locale}/#projects`}
                 className="flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
               >
                 ← {isFr ? "Tous les projets" : "All projects"}
