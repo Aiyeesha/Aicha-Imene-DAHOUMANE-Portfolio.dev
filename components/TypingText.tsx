@@ -28,14 +28,18 @@ export function TypingText({ text, speed = 32, className }: TypingTextProps) {
   }, [text, speed]);
 
   return (
-    <span className={className} aria-label={text}>
-      <span aria-hidden="true">{displayed}</span>
-      {!done && (
-        <span
-          className="ml-0.5 inline-block h-[0.85em] w-[2px] translate-y-[1px] bg-current align-middle animate-[blink_0.75s_step-end_infinite]"
-          aria-hidden="true"
-        />
-      )}
+    <span className={className}>
+      {/* Texte complet pour les lecteurs d'écran — invisible visuellement */}
+      <span className="sr-only">{text}</span>
+      {/* Animation visible — masquée aux lecteurs d'écran */}
+      <span aria-hidden="true">
+        {displayed}
+        {!done && (
+          <span
+            className="ml-0.5 inline-block h-[0.85em] w-[2px] translate-y-[1px] bg-current align-middle animate-[blink_0.75s_step-end_infinite]"
+          />
+        )}
+      </span>
     </span>
   );
 }
