@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
+
+// CDN Supabase Storage — images optimisées dans le bucket "projects"
+const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { tBadge, tTag } from "@/i18n/projectTaxonomy";
@@ -87,8 +90,8 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             {/* Image de couverture */}
             <div className="relative h-40 w-full bg-black/5 dark:bg-white/5">
               <CoverImage
-                src={p.gallery?.[0]?.src || `/projects/${p.slug}/cover.webp`}
-                fallback={`/projects/${p.slug}/cover.webp`}
+                src={p.gallery?.[0]?.src || `${STORAGE_CDN}/${p.slug}/cover.webp`}
+                fallback={`${STORAGE_CDN}/${p.slug}/cover.webp`}
                 alt={p.title}
                 loading={i === 0 ? "eager" : "lazy"}
               />

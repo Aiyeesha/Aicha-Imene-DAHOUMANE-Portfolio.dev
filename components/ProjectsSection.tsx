@@ -14,6 +14,9 @@ import { useMemo, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
 
+// CDN Supabase Storage — les images sont uploadées dans le bucket "projects"
+const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
+
 // Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
 // Nécessaire car les gallery JSON en base peuvent référencer d'anciens noms de fichiers
 function CoverImage({ src, fallback, alt }: { src: string; fallback?: string; alt: string }) {
@@ -240,8 +243,8 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
               {/* Image de couverture */}
               <div className="relative h-36 w-full bg-black/5 dark:bg-white/5">
                 <CoverImage
-                  src={p.gallery?.[0]?.src || `/projects/${p.slug}/cover.webp`}
-                  fallback={`/projects/${p.slug}/cover.webp`}
+                  src={p.gallery?.[0]?.src || `${STORAGE_CDN}/${p.slug}/cover.webp`}
+                  fallback={`${STORAGE_CDN}/${p.slug}/cover.webp`}
                   alt={p.title}
                 />
               </div>
