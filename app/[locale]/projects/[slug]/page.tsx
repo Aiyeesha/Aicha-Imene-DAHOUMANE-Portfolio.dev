@@ -233,10 +233,11 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const canonical = `${siteUrl}/${locale}/projects/${slug}`;
 
   const firstGalleryImg = project.gallery?.[0]?.src;
-  const ogImage =
-    firstGalleryImg && firstGalleryImg.startsWith("/")
-      ? `${siteUrl}${firstGalleryImg}`
-      : `${siteUrl}/opengraph-image`;
+  const ogImage = firstGalleryImg
+    ? firstGalleryImg.startsWith("http")
+      ? firstGalleryImg                      // URL CDN Supabase — déjà absolue
+      : `${siteUrl}${firstGalleryImg}`       // chemin local — préfixer avec siteUrl
+    : `${siteUrl}/opengraph-image`;
 
   const languages: Record<string, string> = {
     en: `${siteUrl}/en/projects/${slug}`,
