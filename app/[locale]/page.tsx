@@ -30,6 +30,7 @@ const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
 const ContactForm        = dynamic(() => import("@/components/ContactForm"));
 // PresentationMode utilise ssr: false → doit passer par un wrapper Client Component
 import PresentationModeLoader from "@/components/PresentationModeLoader";
+import ScrollToHash from "@/components/ScrollToHash";
 import { getExperienceItems } from "@/content/experience";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
@@ -54,6 +55,9 @@ export default async function Home({ params }: Props) {
 
   return (
     <>
+      {/* Scroll vers ancre (#hash) sur navigation SPA inter-pages */}
+      <ScrollToHash />
+
       {/* MODE PRÉSENTATION — bouton flottant + contrôles (Alt+P pour activer) */}
       <PresentationModeLoader locale={locale} />
 
