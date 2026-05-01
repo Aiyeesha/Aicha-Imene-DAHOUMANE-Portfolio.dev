@@ -1,0 +1,219 @@
+---
+title: "Gestion des certificats SSL/TLS : Let's Encrypt, renouvellement et surveillance"
+excerpt: "Gérez les certificats TLS à grande échelle — automatisez le renouvellement Let's Encrypt avec Certbot et ACME, surveillez l'expiration sur plusieurs serveurs et gérez les certificats wildcard."
+date: "2026-04-30"
+tags: ["IT Ops", "TLS", "Security", "Linux"]
+featured: false
+---
+
+L'expiration des certificats est toujours l'une des causes les plus fréquentes de pannes en production — même en 2026. Automatiser le renouvellement et surveiller l'expiration évite l'alerte à 3h du matin quand votre site tombe en HTTPS cassé. Voici une configuration complète.
+
+---
+
+## Prérequis
+
+- Serveur Ubuntu/Debian
+- Nginx ou Apache installé
+- Domaine pointant vers l'IP de votre serveur
+- Port 80 ouvert (pour le challenge HTTP-01)
+
+---
+
+## Installer Certbot et obtenir votre premier certificat
+
+```bash
+# Installer Certbot avec le plugin Nginx
+sudo apt install certbot python3-certbot-nginx -y
+
+# Obtenir le certificat et configurer Nginx automatiquement
+sudo certbot --nginx -d votredomaine.com -d www.votredomaine.com
+
+# Ou pour Apache
+sudo certbot --apache -d votredomaine.com
+
+# Mode standalone (si pas de serveur web)
+sudo certbot certonly --standalone -d votredomaine.com
+```
+
+Certbot stocke les certificats dans `/etc/letsencrypt/live/votredomaine.com/` :
+```
+cert.pem       — Votre certificat de domaine
+chain.pem      — Certificats intermédiaires
+fullchain.pem  — cert.pem + chain.pem (utilisez celui-ci dans Nginx)
+privkey.pem    — Clé privée
+```
+
+---
+
+## Configuration Nginx avec TLS robuste
+
+```nginx
+# /etc/nginx/sites-available/votredomaine.com
+server {
+    listen 80;
+    server_name votredomaine.com www.votredomaine.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name votredomaine.com www.votredomaine.com;
+
+    ssl_certificate /etc/letsencrypt/live/votredomaine.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/votredomaine.com/privkey.pem;
+
+    # Paramètres TLS robustes
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    # HSTS (activer uniquement après tests — difficile à annuler)
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    # Agrafage OCSP
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/votredomaine.com/chain.pem;
+    resolver 1.1.1.1 valid=300s;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+---
+
+## Renouvellement automatique
+
+Certbot installe un timer systemd (ou une tâche cron) automatiquement :
+
+```bash
+# Vérifier le timer
+systemctl status certbot.timer
+systemctl list-timers | grep certbot
+
+# Tester le renouvellement sans vraiment renouveler
+sudo certbot renew --dry-run
+
+# Renouvellement manuel (si nécessaire)
+sudo certbot renew
+sudo systemctl reload nginx
+```
+
+Si le renouvellement automatique de Certbot ne fonctionne pas, ajoutez une tâche cron :
+
+```bash
+# crontab -e
+0 12 * * * certbot renew --quiet --post-hook "systemctl reload nginx"
+```
+
+---
+
+## Certificats wildcard avec le challenge DNS-01
+
+Les certificats wildcard (`*.votredomaine.com`) nécessitent une validation DNS :
+
+```bash
+# Challenge DNS manuel (non adapté à l'automatisation)
+sudo certbot certonly --manual --preferred-challenges dns \
+  -d "*.votredomaine.com" -d "votredomaine.com"
+```
+
+Pour le renouvellement automatique des wildcards, utilisez un plugin de fournisseur DNS :
+
+```bash
+# Exemple Cloudflare
+sudo pip install certbot-dns-cloudflare
+
+# Créer le fichier de credentials
+cat > /root/.cloudflare.ini << EOF
+dns_cloudflare_api_token = VOTRE_TOKEN_API_CLOUDFLARE
+EOF
+chmod 600 /root/.cloudflare.ini
+
+# Obtenir le certificat wildcard
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /root/.cloudflare.ini \
+  -d "*.votredomaine.com" -d "votredomaine.com"
+```
+
+---
+
+## Script de surveillance d'expiration des certificats
+
+```bash
+#!/bin/bash
+# check-cert-expiry.sh
+# Via cron : 0 8 * * * /opt/scripts/check-cert-expiry.sh
+
+DOMAINES="votredomaine.com api.votredomaine.com app.votredomaine.com"
+JOURS_ALERTE=30
+EMAIL_ALERTE="ops@votredomaine.com"
+
+for DOMAINE in $DOMAINES; do
+    EXPIRATION=$(echo | openssl s_client -servername "$DOMAINE" \
+        -connect "$DOMAINE":443 2>/dev/null | \
+        openssl x509 -noout -enddate 2>/dev/null | \
+        cut -d= -f2)
+
+    EXPIRATION_EPOCH=$(date -d "$EXPIRATION" +%s)
+    MAINTENANT_EPOCH=$(date +%s)
+    JOURS_RESTANTS=$(( (EXPIRATION_EPOCH - MAINTENANT_EPOCH) / 86400 ))
+
+    if [ $JOURS_RESTANTS -le $JOURS_ALERTE ]; then
+        echo "ALERTE : $DOMAINE expire dans $JOURS_RESTANTS jours ($EXPIRATION)" | \
+            mail -s "ALERTE EXPIRATION CERT : $DOMAINE" $EMAIL_ALERTE
+        echo "ALERTE : $DOMAINE — $JOURS_RESTANTS jours restants"
+    else
+        echo "OK : $DOMAINE — $JOURS_RESTANTS jours restants"
+    fi
+done
+```
+
+---
+
+## Certificats internes avec une CA privée
+
+Pour les services internes, créez votre propre CA avec OpenSSL :
+
+```bash
+# Créer la clé et le certificat de CA
+openssl genrsa -out ca.key 4096
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt \
+  -subj "/C=FR/O=VotreOrg/CN=CA Interne"
+
+# Créer le certificat pour un service
+openssl genrsa -out service.key 2048
+openssl req -new -key service.key -out service.csr \
+  -subj "/C=FR/O=VotreOrg/CN=service-interne.local"
+
+# Signer avec votre CA
+openssl x509 -req -days 365 -in service.csr \
+  -CA ca.crt -CAkey ca.key -CAcreateserial -out service.crt
+
+# Distribuer ca.crt à tous les clients qui doivent faire confiance à la CA
+```
+
+---
+
+## Pièges courants
+
+- **HSTS sans test** : une fois activé avec un max-age long, HSTS est très difficile à retirer — testez d'abord avec une valeur courte
+- **Oublier de recharger Nginx après le renouvellement** : ajoutez `--post-hook "systemctl reload nginx"` à votre cron certbot renew
+- **Surveiller uniquement votre propre serveur** : les services tiers (CDN, load balancer) peuvent avoir des dates d'expiration différentes
+- **Permissions de la clé privée** : `privkey.pem` doit être lisible uniquement par root (mode 600) — Nginx la lit en tant que root au démarrage
+
+---
+
+## Ressources
+
+- [Documentation Certbot](https://certbot.eff.org/docs/)
+- [Générateur de configuration SSL Mozilla](https://ssl-config.mozilla.org/)
+- [SSL Labs Server Test](https://www.ssllabs.com/ssltest/)

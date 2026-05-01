@@ -1,0 +1,202 @@
+---
+title: "Salesforce Org Health Check: Audit Checklist for Admins"
+excerpt: "A practical audit checklist to assess your Salesforce org — technical debt, security gaps, unused metadata, governor limit risks, and performance red flags."
+date: "2026-04-30"
+tags: ["Salesforce", "Admin", "Audit", "Best Practices"]
+featured: false
+---
+
+Most Salesforce orgs accumulate technical debt silently. Unused fields, duplicate automations, stale users, and performance-killing queries build up over years. This health check gives you a systematic way to audit an org — whether it's one you inherited or one you've managed for years.
+
+---
+
+## When to Run a Health Check
+
+- Taking over an existing org
+- Before a major project or migration
+- Annually as part of regular maintenance
+- After rapid growth or a large implementation
+
+---
+
+## 1. Security Audit
+
+**Users and Access:**
+```
+[ ] List active users with System Administrator profile
+    → SELECT Id, Name, Profile.Name FROM User WHERE IsActive = true 
+      AND Profile.Name = 'System Administrator'
+    → Should be minimal — every sysadmin is a security risk
+
+[ ] Users who haven't logged in for 90+ days (deactivate or investigate)
+    → SELECT Id, Name, LastLoginDate FROM User 
+      WHERE IsActive = true AND LastLoginDate < LAST_N_DAYS:90
+
+[ ] Profiles with "Modify All Data" or "View All Data"
+    → Check Setup → Profiles → check for broad permissions beyond System Admin
+
+[ ] API-only users without IP restrictions
+    → Setup → Users → filter by API-Enabled, check Login IP Ranges
+```
+
+**OWD and Sharing:**
+```
+[ ] Organization-Wide Defaults set to Private for sensitive objects
+    → Setup → Security → Sharing Settings
+
+[ ] Sharing rules reviewed for consistency with current team structure
+[ ] Apex sharing rules still relevant (no orphaned share records)
+```
+
+---
+
+## 2. Metadata Quality
+
+**Custom Objects:**
+```sql
+-- Check object API names for legacy naming patterns
+SELECT QualifiedApiName, DeveloperName FROM EntityDefinition 
+WHERE IsCustomSetting = false AND IsCustomizable = true
+ORDER BY DeveloperName
+```
+
+Look for:
+- `Old__c`, `Legacy__c`, `Temp__c`, `Test__c` — orphaned objects
+- Duplicate objects doing the same thing
+- Objects with 0 records (possibly unused)
+
+**Custom Fields:**
+```
+[ ] Fields with no reports, formulas, or code references
+    → Use Salesforce Optimizer (Setup → Optimizer) to find unused fields
+    → Also: Field Usage report in Setup
+
+[ ] Formula fields that reference other formula fields deeply nested
+    → Risk: formula complexity limits and CPU time governor limits
+
+[ ] Fields with blank labels or API names like "Field1__c"
+```
+
+**Automations:**
+```
+[ ] Multiple overlapping triggers on the same object
+    → One trigger per object pattern: check if violations exist
+
+[ ] Active workflows, process builders, AND flows on the same object
+    → Order of execution matters — document it
+
+[ ] Scheduled flows/batch jobs that no longer have a purpose
+    → Setup → Flows → filter by Scheduled/Active
+
+[ ] Apex scheduled jobs
+    → SELECT Id, JobType, CronJobDetail.Name, State FROM CronTrigger
+```
+
+---
+
+## 3. Performance Red Flags
+
+**SOQL Queries:**
+```apex
+// Check for non-selective queries in Apex (these slow down with scale)
+// Bad pattern in Apex:
+[SELECT Id FROM Account WHERE CreatedById = :userId]  // Not indexed
+[SELECT Id FROM Contact WHERE Name LIKE '%Smith%']    // LIKE with leading wildcard
+
+// Check the Query Optimizer in Setup → Schema Builder or SOQL inspector tools
+```
+
+**Indexes to verify:**
+- External ID fields used for upserts — must be indexed
+- Lookup fields used in WHERE clauses of heavy queries
+- Custom indexed fields: Setup → Object Manager → Field → [Field detail]
+
+**Apex Limits:**
+```soql
+-- Check for Apex CPU time violations in logs
+SELECT Id, Operation, Status, StartedDate 
+FROM AsyncApexJob 
+WHERE Status = 'Failed' AND JobType = 'BatchApex'
+ORDER BY StartedDate DESC LIMIT 50
+```
+
+---
+
+## 4. Data Quality
+
+```sql
+-- Accounts without contacts (orphaned data)
+SELECT Id, Name FROM Account 
+WHERE Id NOT IN (SELECT AccountId FROM Contact WHERE AccountId != null)
+LIMIT 100
+
+-- Duplicate detection
+SELECT Name, COUNT(Id) cnt FROM Account 
+GROUP BY Name HAVING COUNT(Id) > 1 
+ORDER BY cnt DESC
+
+-- Contacts with no email (if email is critical for your process)
+SELECT Id, FirstName, LastName FROM Contact 
+WHERE Email = null AND IsDeleted = false
+```
+
+**Key metrics to capture:**
+- Total record counts per major object
+- % records with required fields populated
+- Duplicate rate (configure Duplicate Rules if not present)
+
+---
+
+## 5. Deployment and Change Management
+
+```
+[ ] Change Sets or CLI used? (No? Add Git integration)
+
+[ ] Sandbox refresh schedule documented?
+    → When was the last sandbox refresh?
+    → Are sandboxes used for testing before production deploys?
+
+[ ] Apex test coverage across the org
+    → Setup → Apex Classes → Run All Tests
+    → Target: 85%+ (75% is the minimum — don't treat it as the goal)
+
+[ ] Deployment history reviewed
+    → Look for recent large deploys without test execution records
+```
+
+---
+
+## 6. Storage
+
+```
+[ ] Data storage usage (Setup → Company Information → Storage)
+    → > 80% of allocated storage = risk zone
+    [ ] Large objects / attachments using legacy Attachments vs. Files
+    [ ] Old ContentVersion records from deleted records
+
+[ ] File storage
+    → ContentDocument with no parent record (orphaned files)
+    SELECT Id FROM ContentDocument 
+    WHERE Id NOT IN (SELECT ContentDocumentId FROM ContentDocumentLink)
+```
+
+---
+
+## Reporting Your Findings
+
+Structure your findings as:
+
+| Category | Finding | Severity | Recommendation |
+|----------|---------|----------|---------------|
+| Security | 12 active System Admins | High | Reduce to 3, use Permission Sets |
+| Performance | 3 triggers on Account with no handler pattern | Medium | Consolidate into TriggerFramework |
+| Data | 8,400 Contacts with no email | Low | Data cleanup campaign |
+| Metadata | 47 unused custom fields | Low | Deactivate after impact analysis |
+
+---
+
+## Resources
+
+- [Salesforce Optimizer](https://help.salesforce.com/s/articleView?id=sf.optimizer_kick_off.htm)
+- [Trust Status and Limits](https://status.salesforce.com/)
+- [Health Check in Setup](https://help.salesforce.com/s/articleView?id=sf.security_health_check.htm)

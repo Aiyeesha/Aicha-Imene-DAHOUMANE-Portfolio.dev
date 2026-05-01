@@ -1,0 +1,273 @@
+---
+title: "Windows Server & Active Directory Setup: A Practical Guide"
+excerpt: "Deploy Windows Server, promote it to a Domain Controller, configure DNS, OUs, Group Policy, and harden AD against common attacks — step by step."
+date: "2026-05-01"
+tags: ["IT Ops", "Windows Server", "Active Directory", "Security"]
+featured: false
+---
+
+Active Directory is the backbone of most enterprise environments. Setting it up correctly from day one prevents years of painful remediation. Here's how to build a solid AD foundation — installation, DNS, OU structure, GPOs, and hardening.
+
+---
+
+## Prerequisites
+
+- Windows Server 2022 (Standard or Datacenter)
+- Static IP assigned before promotion
+- 4GB+ RAM, 60GB+ disk for DC
+- Basic understanding of DNS and LDAP
+
+---
+
+## Step 1: Install Windows Server Roles
+
+```powershell
+# Install AD DS and DNS Server roles
+Install-WindowsFeature -Name AD-Domain-Services, DNS -IncludeManagementTools
+
+# Verify installation
+Get-WindowsFeature AD-Domain-Services, DNS
+```
+
+---
+
+## Step 2: Promote to Domain Controller
+
+```powershell
+# Install a new forest (first DC in environment)
+Import-Module ADDSDeployment
+
+Install-ADDSForest `
+  -DomainName "corp.example.com" `
+  -DomainNetBIOSName "CORP" `
+  -ForestMode "WinThreshold" `
+  -DomainMode "WinThreshold" `
+  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+  -InstallDns `
+  -Force
+
+# Server will restart automatically
+```
+
+**After reboot — verify promotion:**
+
+```powershell
+Get-ADDomain
+Get-ADForest
+(Get-ADDomainController).HostName
+```
+
+---
+
+## Step 3: DNS Configuration
+
+AD relies entirely on DNS — get this right.
+
+```powershell
+# Verify DNS zones were created
+Get-DnsServerZone
+
+# Expected zones:
+# corp.example.com          (Forward lookup, AD-integrated)
+# _msdcs.corp.example.com   (SRV records for DCs)
+# 10.168.192.in-addr.arpa   (Reverse lookup)
+
+# Create reverse lookup zone if missing
+Add-DnsServerPrimaryZone -NetworkID "192.168.10.0/24" -ReplicationScope "Forest"
+
+# Set forwarders (use your ISP or 8.8.8.8 as fallback)
+Set-DnsServerForwarder -IPAddress "8.8.8.8", "1.1.1.1"
+```
+
+**Client DNS configuration:** All domain-joined clients must point to the DC's IP as their primary DNS — not the router or an external resolver.
+
+---
+
+## Step 4: OU Structure
+
+Plan your OU hierarchy before creating users. Group objects by **function and location**, not by object type.
+
+```
+corp.example.com
+├── _Corp (root OU for all managed objects)
+│   ├── Users
+│   │   ├── Employees
+│   │   ├── Service Accounts
+│   │   └── Contractors
+│   ├── Computers
+│   │   ├── Workstations
+│   │   │   ├── London
+│   │   │   └── Paris
+│   │   └── Servers
+│   ├── Groups
+│   │   ├── Security
+│   │   └── Distribution
+│   └── Disabled (holding OU for offboarded accounts)
+└── Domain Controllers (default, leave here)
+```
+
+```powershell
+# Create the OU structure
+$base = "DC=corp,DC=example,DC=com"
+
+New-ADOrganizationalUnit -Name "_Corp" -Path $base
+$corp = "OU=_Corp,$base"
+
+New-ADOrganizationalUnit -Name "Users" -Path $corp
+New-ADOrganizationalUnit -Name "Computers" -Path $corp
+New-ADOrganizationalUnit -Name "Groups" -Path $corp
+New-ADOrganizationalUnit -Name "Disabled" -Path $corp
+
+New-ADOrganizationalUnit -Name "Employees" -Path "OU=Users,$corp"
+New-ADOrganizationalUnit -Name "Service Accounts" -Path "OU=Users,$corp"
+New-ADOrganizationalUnit -Name "Workstations" -Path "OU=Computers,$corp"
+New-ADOrganizationalUnit -Name "Servers" -Path "OU=Computers,$corp"
+```
+
+---
+
+## Step 5: Group Policy Essentials
+
+**GPO 1 — Domain password policy (Default Domain Policy):**
+
+```powershell
+# Via PowerShell (Fine-Grained Password Policy for specific groups)
+New-ADFineGrainedPasswordPolicy `
+  -Name "AdminPasswordPolicy" `
+  -Precedence 10 `
+  -MinPasswordLength 16 `
+  -PasswordHistoryCount 24 `
+  -MaxPasswordAge "90.00:00:00" `
+  -LockoutThreshold 5 `
+  -LockoutDuration "00:30:00" `
+  -LockoutObservationWindow "00:30:00" `
+  -ComplexityEnabled $true `
+  -ReversibleEncryptionEnabled $false
+
+# Apply to Domain Admins group
+Add-ADFineGrainedPasswordPolicySubject -Identity "AdminPasswordPolicy" -Subjects "Domain Admins"
+```
+
+**GPO 2 — Workstation security baseline (via Group Policy Management Console):**
+
+Key settings to configure under `Computer Configuration → Policies`:
+
+| Setting | Path | Value |
+|---------|------|-------|
+| Disable SMBv1 | Windows Settings → Security → Services | Disabled |
+| Require NLA for RDP | Admin Templates → Windows Components → RDS | Enabled |
+| Disable LLMNR | Admin Templates → Network → DNS Client | Disabled |
+| Audit logon events | Windows Settings → Security → Audit Policy | Success + Failure |
+| Windows Firewall | Windows Settings → Security → Windows Firewall | Domain profile ON |
+| Screen lock timeout | Admin Templates → Control Panel → Personalization | 900 seconds |
+
+---
+
+## Step 6: Harden Active Directory
+
+### Tiered Administration Model
+
+```
+Tier 0 — Domain Controllers, AD itself
+  → Admins: Domain Admins, only log into DCs
+
+Tier 1 — Servers (production, app, database)
+  → Admins: Server Admins group, never log into workstations
+
+Tier 2 — Workstations
+  → Admins: Helpdesk group, no server access
+```
+
+Never use a Tier 0 account to log into a workstation — credential theft would give full domain compromise.
+
+### Protect Privileged Accounts
+
+```powershell
+# Disable the built-in Administrator account (create a named admin instead)
+Disable-ADAccount -Identity "Administrator"
+
+# Enable Protected Users security group for all admin accounts
+# Members cannot use NTLM, DES, RC4; no credential caching
+Add-ADGroupMember -Identity "Protected Users" -Members "admin-john", "admin-sarah"
+
+# Enable AD Recycle Bin (prevents accidental deletions)
+Enable-ADOptionalFeature -Identity "Recycle Bin Feature" `
+  -Scope ForestOrConfigurationSet `
+  -Target "corp.example.com" `
+  -Confirm:$false
+```
+
+### Audit Critical Events
+
+```powershell
+# Enable advanced audit policies
+auditpol /set /subcategory:"Logon" /success:enable /failure:enable
+auditpol /set /subcategory:"Account Lockout" /success:enable /failure:enable
+auditpol /set /subcategory:"Directory Service Changes" /success:enable /failure:enable
+auditpol /set /subcategory:"Credential Validation" /success:enable /failure:enable
+
+# Key Event IDs to monitor:
+# 4625 — Failed logon
+# 4768 — Kerberos TGT request (failed = 4771)
+# 4728 — Member added to security-enabled global group
+# 4672 — Special privileges assigned (admin logon)
+# 4648 — Explicit credential logon (pass-the-hash indicator)
+```
+
+---
+
+## Step 7: Add a Second Domain Controller
+
+A single DC is a single point of failure. Add a replica as soon as possible.
+
+```powershell
+# On the second server — join domain first, then promote
+Add-Computer -DomainName "corp.example.com" -Restart
+
+# After restart, promote as additional DC
+Install-ADDSDomainController `
+  -DomainName "corp.example.com" `
+  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+  -InstallDns `
+  -Force
+```
+
+---
+
+## Common Pitfalls
+
+- **Static IP set after promotion**: AD writes the DC IP into DNS SRV records — changing it breaks replication and authentication
+- **Using the default Admin account**: It can't be locked out and is targeted by every attack script — rename and disable it
+- **All users in "Users" container**: GPOs don't apply to the default Users container — move accounts into OUs immediately
+- **Forgetting a second DC**: Rebooting your only DC takes the entire domain down — always run 2+ DCs
+- **SYSVOL not replicating**: Check with `repadmin /showrepl` and `dcdiag /test:netlogons` — replication issues silently break GPOs and logons
+
+---
+
+## Useful Diagnostic Commands
+
+```powershell
+# Replication health
+repadmin /showrepl
+repadmin /replsummary
+
+# DC diagnostics
+dcdiag /v
+
+# Check SYSVOL replication
+Get-DfsrState
+
+# Verify FSMO roles
+netdom query fsmo
+
+# Test domain connectivity from a client
+nltest /dsgetdc:corp.example.com
+```
+
+---
+
+## Resources
+
+- [Active Directory Best Practices — Microsoft](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+- [Tiered Administration Model](https://docs.microsoft.com/en-us/security/compass/privileged-access-access-model)

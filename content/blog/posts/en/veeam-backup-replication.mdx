@@ -1,0 +1,284 @@
+---
+title: "Backup Strategy with Veeam: 3-2-1 Rule, Replication, and Recovery Testing"
+excerpt: "Implement a production-grade backup strategy with Veeam Backup & Replication — 3-2-1 rule, job configuration, off-site replication to object storage, and automated recovery testing."
+date: "2026-05-01"
+tags: ["IT Ops", "Backup", "Veeam", "Disaster Recovery"]
+featured: false
+---
+
+A backup that hasn't been tested is not a backup. Most organizations discover their backups are broken during an actual disaster. Here's how to build a backup strategy with Veeam that you can actually rely on.
+
+---
+
+## The 3-2-1 Rule
+
+```
+3 copies of data
+  → Production + 2 backups
+
+2 different storage media
+  → Local backup repository + off-site storage (cloud/tape)
+
+1 off-site copy
+  → Different physical location or cloud object storage
+```
+
+Veeam's architecture maps directly to this:
+
+```
+Production VMs (vSphere/Hyper-V)
+    ↓  Backup Job (nightly)
+Local Repository (NAS/DAS on-premise)
+    ↓  Backup Copy Job (hourly offset)
+Object Storage (S3/Azure Blob/Wasabi)  ← off-site, immutable
+```
+
+---
+
+## Installation Overview
+
+**Veeam Backup & Replication** is installed on a Windows Server (2019 or 2022):
+
+- Minimum: 4 cores, 8GB RAM, 500GB for catalog + metadata
+- Repository servers: dedicated servers or NAS with SMB/NFS
+- Community Edition: free up to 10 workloads
+
+After installing and adding your vCenter/Hyper-V host as a managed server, you're ready to configure jobs.
+
+---
+
+## Backup Job Configuration
+
+### Job 1: Daily VM Backup
+
+```
+Job Name: Production-Daily
+Type: Backup (VMware or Hyper-V)
+VMs: All production VMs (or specific folders/tags)
+
+Schedule:
+  Start time: 22:00
+  Retry failed: 3 times, 10 min interval
+
+Storage:
+  Repository: Local-NAS-Repo
+  Restore Points: 14 (keep 2 weeks daily)
+  Compression: Optimal
+  Deduplication: Enabled
+
+Guest Processing:
+  Enable application-aware processing: Yes
+  Guest credentials: svc-veeam (local admin)
+  Transaction log truncation: Enabled (for SQL/Exchange)
+
+Advanced → Notifications:
+  Send email report: Enabled
+  Recipients: ops-team@company.com
+  Notify on: Warning + Failure
+```
+
+### Job 2: SQL Server — More Frequent Backup
+
+For databases, use Veeam Agent or application-aware backup with log shipping:
+
+```
+Job Name: SQL-Production-Frequent
+VMs: db-prod-01 only
+Schedule: Every 4 hours
+Application-aware: Enabled
+  SQL Server credentials: svc-sqlbackup
+  Log backup interval: 15 minutes (transaction logs)
+Retention: 7 days
+```
+
+---
+
+## Backup Copy Job (Off-site)
+
+The backup copy job takes from your local repository and sends to object storage:
+
+```
+Job Name: Offsite-Copy-S3
+Type: Backup Copy
+Source: Production-Daily (backup job)
+Schedule: Copy immediately when backup completes
+
+Target Repository: S3-Compatible-Object-Storage
+  Vendor: Amazon S3 (or Wasabi/Backblaze B2)
+  Bucket: company-backups-prod
+  Folder: veeam/
+  Immutability: Enable, 30 days
+  Encryption: AES-256 (enable with strong password)
+
+Retention:
+  Restore points: 30 (monthly GFS rotation)
+  GFS:
+    Keep weekly: 4
+    Keep monthly: 12
+    Keep yearly: 1
+```
+
+**Adding S3 as object storage repository:**
+
+```
+Backup Infrastructure → Add Repository → Object Storage → Amazon S3
+
+Credentials: IAM user with s3:PutObject, s3:GetObject, s3:DeleteObject
+  (use IAM roles if Veeam server is on AWS)
+Bucket: company-backups-prod
+Region: eu-west-1
+Immutability: Enable (requires S3 Object Lock, Compliance mode)
+```
+
+---
+
+## Replication Job (Warm Standby)
+
+For critical VMs, replicate to a DR site for fast failover (RTO minutes vs. hours):
+
+```
+Job Name: Critical-VMs-Replication
+Type: Replication
+Source VMs: crm-prod, erp-prod, dc-prod
+
+Destination: DR-vCenter (remote vSphere host)
+  Datastore: DR-SSD-Datastore
+  Replica name suffix: _replica
+
+Schedule: Every 4 hours
+Retention: 7 restore points
+
+Network mapping:
+  Production network → DR-network (VLAN mapping)
+  IP remapping: Enable (different subnet at DR site)
+```
+
+**Failover plan:**
+
+```
+Home → Replicas → Failover Plans → New
+
+Name: DR-Failover-Complete
+Steps:
+  1. crm-prod_replica (priority 1, wait 300s before next)
+  2. erp-prod_replica (priority 2)
+  3. dc-prod_replica (priority 3)
+
+Pre-failover script: notify-oncall.ps1
+Post-failover script: update-dns-dr.ps1
+```
+
+---
+
+## Recovery Testing (SureBackup)
+
+SureBackup automatically starts backed-up VMs in an isolated environment and verifies they boot and pass heartbeat/ping checks.
+
+```
+Application Group: AG-Core-Services
+VMs: dc-prod, crm-prod
+
+SureBackup Job: Weekly-Recovery-Verification
+Schedule: Every Sunday at 03:00
+Application Group: AG-Core-Services
+Linked Jobs: Production-Daily (uses latest restore point)
+
+Test options:
+  Heartbeat test: Enabled
+  Ping test: Enabled
+  Script test: Enabled
+    Script: C:\Veeam\Tests\verify-sql-connectivity.ps1
+    Max execution time: 120 seconds
+
+Keep VM running after test: No (isolated network, no risk)
+Send report: ops-team@company.com
+```
+
+**Verification script example:**
+
+```powershell
+# verify-sql-connectivity.ps1
+# Runs inside isolated VM during SureBackup
+param($VMName)
+
+try {
+    $conn = New-Object System.Data.SqlClient.SqlConnection
+    $conn.ConnectionString = "Server=localhost;Integrated Security=true"
+    $conn.Open()
+    $conn.Close()
+    Write-Output "SQL Server connection: OK"
+    exit 0
+} catch {
+    Write-Output "SQL Server connection: FAILED - $_"
+    exit 1
+}
+```
+
+---
+
+## Monitoring and Alerting
+
+**Veeam ONE** (free for monitoring Veeam jobs):
+
+Key alarms to configure:
+- Backup job failed
+- Repository running low on space (<20% free)
+- Last backup older than 24h
+- Replication job failed
+- SureBackup verification failed
+
+**PowerShell health check script:**
+
+```powershell
+# Get all backup job results from last 24h
+$jobs = Get-VBRJob
+$cutoff = (Get-Date).AddHours(-24)
+
+foreach ($job in $jobs) {
+    $session = Get-VBRBackupSession | 
+      Where-Object { $_.JobName -eq $job.Name -and $_.CreationTime -gt $cutoff } |
+      Sort-Object CreationTime -Descending |
+      Select-Object -First 1
+
+    if ($session -eq $null) {
+        Write-Warning "[$($job.Name)] No session in last 24h"
+    } elseif ($session.Result -ne "Success") {
+        Write-Warning "[$($job.Name)] Last result: $($session.Result)"
+    } else {
+        Write-Host "[$($job.Name)] OK — $($session.CreationTime)"
+    }
+}
+```
+
+---
+
+## Repository Sizing
+
+| Workload | Change Rate | Daily Backup Size | 14-day Retention |
+|----------|-------------|-------------------|------------------|
+| File server (2TB) | 2% | ~40GB | ~560GB |
+| SQL Server (500GB) | 10% | ~50GB | ~700GB |
+| Exchange (1TB) | 5% | ~50GB | ~700GB |
+
+**Rule of thumb:** Repository size ≈ full backup × 1.5 + daily increments × retention days
+
+Always enable deduplication + compression — typical ratio is 2:1 to 5:1 depending on data type.
+
+---
+
+## Common Pitfalls
+
+- **Never testing restores**: Run SureBackup weekly and do manual file-level restores monthly — discover issues before disaster strikes
+- **Backup server on production storage**: If the SAN fails, you lose backups too — keep the repository on separate hardware
+- **No encryption on off-site copies**: S3 buckets are readable by anyone with the keys — always enable encryption for cloud repos
+- **Ignoring immutability**: Without immutability, ransomware can delete cloud backups via compromised credentials — enable S3 Object Lock
+- **Single backup job for everything**: Separate job per criticality tier (hourly SQL, daily VMs, weekly file shares) for better scheduling control
+
+---
+
+## Resources
+
+- [Veeam Best Practices Guide](https://bp.veeam.com/)
+- [Veeam Community Edition (free)](https://www.veeam.com/virtual-machine-backup-solution-free.html)
+- [S3 Object Lock — AWS Docs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html)
+- [3-2-1-1-0 Rule (extended)](https://www.veeam.com/blog/321-backup-rule.html)

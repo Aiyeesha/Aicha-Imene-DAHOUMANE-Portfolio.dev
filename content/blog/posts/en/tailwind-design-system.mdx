@@ -1,0 +1,285 @@
+---
+title: "Building a Design System with Tailwind CSS and shadcn/ui"
+excerpt: "Build a scalable design system with Tailwind CSS — design tokens, component variants with CVA, dark mode, shadcn/ui integration, and keeping it consistent across a team."
+date: "2026-04-30"
+tags: ["Next.js", "Tailwind", "Design System", "UI"]
+featured: false
+---
+
+A design system is not a component library — it's a set of decisions about spacing, color, typography, and behavior that make your UI feel consistent. Here's how to build one that scales with your team.
+
+---
+
+## Prerequisites
+
+- Next.js project with Tailwind CSS
+- shadcn/ui installed (or willing to install it)
+- TypeScript (required for CVA variants)
+
+---
+
+## Design Tokens in Tailwind Config
+
+All design decisions should live in `tailwind.config.ts`, not scattered across class strings:
+
+```typescript
+// tailwind.config.ts
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        // Semantic color tokens (not raw colors)
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        border: 'hsl(var(--border))',
+        ring: 'hsl(var(--ring))',
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+      },
+    },
+  },
+};
+
+export default config;
+```
+
+**CSS variables in globals.css:**
+```css
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    /* ... */
+  }
+}
+```
+
+---
+
+## Component Variants with CVA
+
+Class Variance Authority (CVA) makes component variants type-safe and readable:
+
+```bash
+npm install class-variance-authority clsx tailwind-merge
+```
+
+```typescript
+// lib/utils.ts
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+```typescript
+// components/ui/button.tsx
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+
+const buttonVariants = cva(
+  // Base classes (always applied)
+  'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+export function Button({ className, variant, size, ...props }: ButtonProps) {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
+}
+
+export { buttonVariants };
+```
+
+Usage:
+```tsx
+<Button>Default</Button>
+<Button variant="destructive" size="sm">Delete</Button>
+<Button variant="outline" size="lg">Learn More</Button>
+```
+
+---
+
+## shadcn/ui: The Fast Starting Point
+
+shadcn/ui gives you unstyled, accessible components you own (not a dependency):
+
+```bash
+# Initialize
+npx shadcn@latest init
+
+# Add components as needed
+npx shadcn@latest add button
+npx shadcn@latest add dialog
+npx shadcn@latest add form
+npx shadcn@latest add table
+```
+
+Components are copied into your project at `components/ui/`. You own the code — customize freely.
+
+---
+
+## Typography Scale
+
+```typescript
+// Define your type scale in Tailwind config
+theme: {
+  fontSize: {
+    xs: ['0.75rem', { lineHeight: '1rem' }],
+    sm: ['0.875rem', { lineHeight: '1.25rem' }],
+    base: ['1rem', { lineHeight: '1.5rem' }],
+    lg: ['1.125rem', { lineHeight: '1.75rem' }],
+    xl: ['1.25rem', { lineHeight: '1.75rem' }],
+    '2xl': ['1.5rem', { lineHeight: '2rem' }],
+    '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+    '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+  }
+}
+```
+
+```typescript
+// components/ui/typography.tsx — typed heading/text components
+type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4';
+
+const headingClasses: Record<HeadingLevel, string> = {
+  h1: 'scroll-m-20 text-4xl font-bold tracking-tight',
+  h2: 'scroll-m-20 text-3xl font-semibold tracking-tight',
+  h3: 'scroll-m-20 text-2xl font-semibold tracking-tight',
+  h4: 'scroll-m-20 text-xl font-semibold tracking-tight',
+};
+
+export function Heading({ level = 'h2', children, className }: {
+  level?: HeadingLevel;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const Tag = level;
+  return <Tag className={cn(headingClasses[level], className)}>{children}</Tag>;
+}
+```
+
+---
+
+## Dark Mode
+
+```typescript
+// components/ThemeProvider.tsx
+'use client';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </NextThemesProvider>
+  );
+}
+
+// components/ThemeToggle.tsx
+'use client';
+import { useTheme } from 'next-themes';
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      Toggle theme
+    </button>
+  );
+}
+```
+
+---
+
+## Common Pitfalls
+
+- **Raw color values instead of tokens**: `text-blue-600` directly doesn't adapt to dark mode — `text-primary` does
+- **No `twMerge`**: without it, `cn('px-4', className)` and `className="px-8"` will both apply — the last one wins in Tailwind but the order matters
+- **Duplicating variants**: if you have `Button`, `LinkButton`, and `IconButton` with similar styles, consolidate with CVA
+- **Overriding shadcn/ui too deeply**: if you're fighting the component heavily, it's easier to build your own from primitives (Radix UI)
+
+---
+
+## Resources
+
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Class Variance Authority](https://cva.style/docs)
+- [Radix UI Primitives](https://www.radix-ui.com/)

@@ -1,0 +1,166 @@
+---
+title: "Salesforce Security Model: Profiles, Permission Sets, and OWD"
+excerpt: "Master the Salesforce security model — organization-wide defaults, role hierarchy, profiles vs. permission sets, field-level security, and sharing rules explained clearly."
+date: "2026-04-30"
+tags: ["Salesforce", "Security", "Admin", "Permissions"]
+featured: false
+---
+
+The Salesforce security model has five distinct layers. Most admins understand one or two of them well and patch the rest with full system admin workarounds. Understanding how they interact prevents over-permissioning and support requests like "I can't see this record."
+
+---
+
+## The Five Layers
+
+```
+1. Organization-Wide Defaults (OWD) — baseline access for all records
+2. Role Hierarchy — managers see subordinates' records
+3. Sharing Rules — open up access to groups or roles
+4. Profiles — object/field/tab permissions per user type
+5. Permission Sets — additive permissions on top of profiles
+```
+
+Salesforce evaluates them in order. If OWD blocks access, sharing rules can open it. Profiles can never grant access to records OWD has locked — only record sharing does that.
+
+---
+
+## Organization-Wide Defaults
+
+OWD sets the **minimum** level of access for every user on every record they don't own.
+
+| OWD Setting | What It Means |
+|-------------|--------------|
+| Private | Only the owner and hierarchy above can see the record |
+| Public Read Only | Everyone can read, only owner can edit |
+| Public Read/Write | Everyone can read and edit |
+| Controlled by Parent | Child record follows parent OWD (detail in M-D relationships) |
+
+**Rule of thumb:** Start with Private for sensitive objects (Opportunity, Contract), Public Read Only for reference objects (Product, Pricebook).
+
+```
+Setup → Security → Sharing Settings → Organization-Wide Defaults
+```
+
+---
+
+## Role Hierarchy
+
+When OWD is Private, the role hierarchy grants managers read (and optionally edit) access to records owned by users below them.
+
+```
+CEO
+├── VP Sales
+│   ├── Regional Manager West
+│   │   ├── Sales Rep 1 (owns Opp A)
+│   │   └── Sales Rep 2 (owns Opp B)
+│   └── Regional Manager East
+```
+
+With Private OWD:
+- Sales Rep 1 sees only Opp A
+- Regional Manager West sees Opp A + Opp B
+- VP Sales sees all Opportunities in their subtree
+
+**Important:** Role hierarchy doesn't apply to custom objects unless "Grant Access Using Hierarchies" is enabled for that object.
+
+---
+
+## Sharing Rules
+
+When OWD is Private but you need groups of users to share access, use Sharing Rules:
+
+```
+Setup → Security → Sharing Settings → [Object] Sharing Rules → New
+```
+
+**Ownership-based sharing rule:**
+- Records owned by: *Role: Sales Rep West Coast*
+- Shared with: *Public Group: Ops Team*
+- Access: Read Only
+
+**Criteria-based sharing rule:**
+- Records where: `Region__c = 'EMEA'`
+- Shared with: *Role: EMEA Manager*
+- Access: Read/Write
+
+Sharing rules can only **expand** access beyond OWD. They cannot restrict access.
+
+---
+
+## Profiles vs. Permission Sets
+
+**Profiles** define the baseline: what objects a user can access, what tabs are visible, what record types are assigned, what apps appear in the App Launcher.
+
+**Permission Sets** (and Permission Set Groups) add on top of the profile. They are the preferred way to grant additional access.
+
+```
+Profile = job function baseline (Sales User, Service Agent)
+Permission Set = additional capability (View All Accounts, Run Reports)
+```
+
+```
+// Best practice org structure:
+Standard Profile (minimal permissions)
+  + Permission Set: Core Sales Access
+  + Permission Set: Advanced Reporting (only for senior reps)
+  + Permission Set: Integration API Access (only for integration users)
+```
+
+**Never use System Administrator profile as a workaround.** Create a specific permission set with the exact permissions needed.
+
+---
+
+## Field-Level Security
+
+Even if a user has object access, individual fields can be hidden or read-only via field-level security (FLS):
+
+```
+Setup → Object Manager → [Object] → Fields & Relationships → [Field] → Set Field-Level Security
+```
+
+Or via Profile/Permission Set directly:
+```
+Profile → Field Permissions → [Object] → check Read/Edit per field
+```
+
+**FLS is enforced on:**
+- Standard page layouts (automatically)
+- Apex code with `WITH SECURITY_ENFORCED` or `Security.stripInaccessible()`
+- LWC using `getRecord` wire adapter (only requested fields are returned)
+
+**FLS is NOT automatically enforced in:**
+- Raw SOQL in Apex (you must enforce it manually)
+- Reports (reporters see all fields they can access via profile)
+
+---
+
+## Quick Troubleshooting
+
+When a user can't see a record or field:
+
+```
+1. Check their profile: does it have Read on the object?
+2. Check OWD: is it Private? Do they own the record or are they in the hierarchy above the owner?
+3. Check sharing rules: is there a rule covering their role/group?
+4. Check if there's a manual share on the specific record
+5. For fields: check FLS on their profile or relevant permission set
+```
+
+Use the **Why Can't I See This?** button on records (gear menu) and **Permission Analyzer** in Setup for systematic debugging.
+
+---
+
+## Common Pitfalls
+
+- **Too-broad OWD**: Public Read/Write is almost never correct for business data — start Private
+- **Profiles with everything enabled**: creates a security audit nightmare and blocks future hardening
+- **Sharing rules not covering new groups**: when you add a new role or group, existing sharing rules don't auto-apply — you must create new rules or use criteria-based rules
+- **APEX bypassing FLS**: always use `WITH SECURITY_ENFORCED` or `Security.stripInaccessible()` in production Apex code
+
+---
+
+## Resources
+
+- [Salesforce Security Guide](https://developer.salesforce.com/docs/atlas.en-us.securityImplGuide.meta/securityImplGuide/)
+- [Trailhead: Data Security](https://trailhead.salesforce.com/content/learn/modules/data_security)
+- [Permission Set Groups](https://help.salesforce.com/s/articleView?id=sf.perm_set_groups.htm)

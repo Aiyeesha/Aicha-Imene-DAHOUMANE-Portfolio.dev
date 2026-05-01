@@ -1,0 +1,165 @@
+---
+title: "Déploiement Salesforce : Change Sets vs CLI vs DevOps Center"
+excerpt: "Comparez les trois méthodes de déploiement Salesforce — quand utiliser les Change Sets, Salesforce CLI (SFDX) ou DevOps Center selon votre projet."
+date: "2026-04-30"
+tags: ["Salesforce", "DevOps", "CI/CD", "Deployment"]
+featured: false
+---
+
+Déployer en production est l'un des moments les plus risqués dans tout projet Salesforce. Choisir le mauvais outil — ou utiliser le bon outil incorrectement — mène à des métadonnées manquantes, des dépendances cassées et des rollbacks d'urgence. Voici une comparaison pratique des trois options principales.
+
+---
+
+## Les trois méthodes en un coup d'œil
+
+| Méthode | Idéal pour | Courbe d'apprentissage | Prêt CI/CD |
+|---------|-----------|------------------------|------------|
+| Change Sets | Petites orgs, déploiements occasionnels | Faible | ❌ |
+| Salesforce CLI (SFDX) | Développeurs, automatisation | Moyenne | ✅ |
+| DevOps Center | Équipes, pipelines, sans code | Faible–Moyenne | ✅ |
+
+---
+
+## Change Sets — Simple mais limité
+
+Les Change Sets sont l'outil de déploiement natif de Salesforce, accessible directement depuis Setup. Vous sélectionnez les composants à déployer, vous les ajoutez à un outbound change set, et vous les déployez vers une org cible connectée.
+
+**Quand les utiliser :**
+- Petites équipes sans processus CI/CD formel
+- Déploiements ponctuels de 5 à 20 composants
+- Environnements où le CLI n'est pas autorisé
+
+**Limites critiques :**
+- Aucune gestion de version (pas de Git)
+- Pas de déploiement automatisable (zéro scripting)
+- Pas de rollback automatique
+- Dépendances non résolues automatiquement → erreurs de déploiement fréquentes
+
+```bash
+# Pas de CLI pour les Change Sets — tout se fait dans l'interface Salesforce
+# Setup → Deploy → Outbound Change Sets → New
+```
+
+---
+
+## Salesforce CLI (SFDX) — La force des développeurs
+
+La Salesforce CLI transforme le déploiement en commandes scriptables et intégrables dans n'importe quel pipeline CI/CD.
+
+**Installation et initialisation :**
+
+```bash
+# Installation (macOS/Linux)
+npm install -g @salesforce/cli
+
+# Authentification à une org
+sf org login web --alias mon-org-prod
+
+# Récupérer les métadonnées localement
+sf project retrieve start \
+  --metadata ApexClass,CustomObject,Layout \
+  --target-org mon-org-dev
+
+# Déployer avec validation des tests
+sf project deploy start \
+  --source-dir force-app \
+  --target-org mon-org-prod \
+  --test-level RunLocalTests \
+  --dry-run  # validation sans déploiement effectif
+```
+
+**Déploiement depuis un pipeline GitHub Actions :**
+
+```yaml
+# .github/workflows/deploy-prod.yml
+name: Deploy to Production
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate Production Org
+        run: |
+          echo "${{ secrets.SF_AUTH_URL }}" > auth.txt
+          sf org login sfdx-url --sfdx-url-file auth.txt --alias prod
+
+      - name: Run Tests & Deploy
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org prod \
+            --test-level RunLocalTests \
+            --wait 30
+```
+
+---
+
+## DevOps Center — Le pipeline sans code
+
+DevOps Center est la réponse de Salesforce aux équipes qui veulent du CI/CD sans maîtriser le CLI. Il s'intègre nativement avec GitHub et offre une interface graphique pour gérer les pipelines.
+
+**Quand l'utiliser :**
+- Équipes mixtes (admins + développeurs)
+- Projets où vous voulez Git sans apprendre le CLI
+- Organisations qui standardisent sur l'écosystème Salesforce
+
+**Flux typique :**
+1. Créer un Work Item dans DevOps Center
+2. Associer les modifications à ce Work Item
+3. Promouvoir vers l'environnement suivant (Dev → UAT → Prod)
+4. DevOps Center gère les commits Git automatiquement
+
+---
+
+## Quelle méthode choisir ?
+
+```
+Équipe de 1-2 personnes, pas de Git ?
+  → Change Sets
+
+Développeur solo ou petite équipe technique ?
+  → Salesforce CLI + pipeline simple
+
+Équipe mixte admins/devs, besoin de gouvernance ?
+  → DevOps Center
+
+Grande organisation avec CI/CD existant (Jenkins, GitHub Actions) ?
+  → Salesforce CLI intégré au pipeline d'entreprise
+```
+
+---
+
+## Pièges courants
+
+- **Déployer sans valider** : toujours utiliser `--dry-run` avant un déploiement en production
+- **Oublier les tests** : ne jamais déployer avec `--test-level NoTestRun` en production
+- **Change Sets pour des projets complexes** : les dépendances non résolues causent des erreurs en cascade
+- **Ignorer le `.forceignore`** : comme `.gitignore`, il exclut les fichiers non pertinents du déploiement
+
+---
+
+## Récapitulatif
+
+| Critère | Change Sets | CLI | DevOps Center |
+|---------|------------|-----|---------------|
+| Git natif | ❌ | ✅ | ✅ |
+| Automatisable | ❌ | ✅ | Partiel |
+| Adapté aux admins | ✅ | ❌ | ✅ |
+| Rollback | Manuel | Manuel | Via Git |
+| Coût | Inclus | Inclus | Inclus |
+
+---
+
+## Ressources
+
+- [Salesforce CLI Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
+- [DevOps Center Documentation](https://help.salesforce.com/s/articleView?id=sf.devops_center.htm)
+- [Trailhead : DevOps pour Salesforce](https://trailhead.salesforce.com/content/learn/trails/develop-a-salesforce-devops-strategy)

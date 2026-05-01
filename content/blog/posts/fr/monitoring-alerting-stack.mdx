@@ -1,0 +1,275 @@
+---
+title: "Stack de monitoring et d'alerting : Prometheus, Grafana et AlertManager"
+excerpt: "Construisez une stack de monitoring de production depuis zéro — scraping de métriques Prometheus, tableaux de bord Grafana, routage AlertManager et escalade d'astreinte avec PagerDuty."
+date: "2026-04-30"
+tags: ["IT Ops", "Monitoring", "Prometheus", "DevOps"]
+featured: false
+---
+
+Faire tourner des services sans monitoring, c'est piloter à l'aveugle. Le premier signe d'un problème ne devrait pas être une plainte client. Voici comment construire une stack de monitoring qui vous donne de la visibilité avant que les choses ne cassent.
+
+---
+
+## Prérequis
+
+- Docker et Docker Compose installés
+- Un serveur Linux ou VPS
+- Au moins un service à monitorer (app Node.js, PostgreSQL, Nginx)
+
+---
+
+## Vue d'ensemble de la stack
+
+```
+Métriques applicatives → Prometheus (scrape & stockage)
+                               ↓
+                          Grafana (visualisation)
+                               ↓
+                        AlertManager (routage des alertes)
+                               ↓
+                  Slack / PagerDuty / Email
+```
+
+---
+
+## Configuration Docker Compose
+
+```yaml
+# compose.yml
+services:
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "127.0.0.1:9093:9093"
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SERVER_ROOT_URL: https://grafana.votredomaine.com
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "127.0.0.1:3001:3000"
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - '--path.rootfs=/host'
+
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://monitor:${DB_MONITOR_PASSWORD}@db:5432/appdb?sslmode=disable"
+
+volumes:
+  prometheus_data:
+  grafana_data:
+```
+
+---
+
+## Configuration Prometheus
+
+```yaml
+# prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - 'alerts/*.yml'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node_exporter:9100']
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+
+  - job_name: 'app'
+    static_configs:
+      - targets: ['app:3000']  # Votre app doit exposer /metrics
+    metrics_path: '/metrics'
+```
+
+---
+
+## Règles d'alerte
+
+```yaml
+# prometheus/alerts/infrastructure.yml
+groups:
+  - name: infrastructure
+    rules:
+      - alert: HauteCPU
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Haute utilisation CPU sur {{ $labels.instance }}"
+          description: "L'utilisation CPU est de {{ $value | humanize }}% depuis plus de 5 minutes."
+
+      - alert: EspaceDisqueFaible
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Espace disque faible sur {{ $labels.instance }}"
+          description: "Le disque est rempli à {{ $value | humanize }}%."
+
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL est hors service"
+
+      - alert: HauteMemoire
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Haute utilisation mémoire sur {{ $labels.instance }}"
+```
+
+---
+
+## Routage AlertManager
+
+```yaml
+# alertmanager/alertmanager.yml
+global:
+  resolve_timeout: 5m
+  slack_api_url: 'https://hooks.slack.com/services/VOTRE/WEBHOOK/URL'
+
+route:
+  receiver: 'slack-notifications'
+  group_by: ['alertname', 'instance']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  routes:
+    # Alertes critiques → PagerDuty
+    - receiver: 'pagerduty-critical'
+      match:
+        severity: critical
+      continue: true  # Aussi envoyer sur Slack
+
+    # Alertes warning → Slack uniquement
+    - receiver: 'slack-notifications'
+      match:
+        severity: warning
+
+receivers:
+  - name: 'slack-notifications'
+    slack_configs:
+      - channel: '#alertes'
+        title: '{{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  - name: 'pagerduty-critical'
+    pagerduty_configs:
+      - routing_key: 'VOTRE_CLE_PAGERDUTY'
+        description: '{{ .GroupLabels.alertname }}: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+```
+
+---
+
+## Exposer les métriques depuis votre app
+
+```typescript
+// Node.js avec prom-client
+import { Registry, Counter, Histogram, collectDefaultMetrics } from 'prom-client';
+import express from 'express';
+
+const register = new Registry();
+collectDefaultMetrics({ register });
+
+// Métriques personnalisées
+const dureeRequeteHTTP = new Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Durée des requêtes HTTP en secondes',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.01, 0.05, 0.1, 0.5, 1, 2, 5],
+  registers: [register],
+});
+
+// Middleware
+app.use((req, res, next) => {
+  const debut = Date.now();
+  res.on('finish', () => {
+    const duree = (Date.now() - debut) / 1000;
+    const route = req.route?.path ?? req.path;
+    dureeRequeteHTTP.labels(req.method, route, res.statusCode.toString()).observe(duree);
+  });
+  next();
+});
+
+// Endpoint métriques
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
+```
+
+---
+
+## Pièges courants
+
+- **Alerter sur chaque pic** : utilisez `for: 5m` dans les règles d'alerte pour éviter les tempêtes d'alertes sur des pics brefs
+- **Pas de liens runbook dans les annotations** : ajoutez une annotation `runbook_url` à chaque alerte — les ingénieurs doivent savoir quoi faire avant d'être appelés
+- **Rétention Prometheus trop courte** : la valeur par défaut est 15 jours — définissez `--storage.tsdb.retention.time=30d` minimum
+- **Grafana non provisionné** : la création manuelle de tableaux de bord ne survit pas aux redémarrages des conteneurs — provisionnez toujours depuis le code
+
+---
+
+## Ressources
+
+- [Documentation Prometheus](https://prometheus.io/docs/)
+- [Documentation Grafana](https://grafana.com/docs/)
+- [Configuration AlertManager](https://prometheus.io/docs/alerting/latest/configuration/)
+- [prom-client pour Node.js](https://github.com/siimon/prom-client)

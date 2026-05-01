@@ -1,0 +1,187 @@
+---
+title: "Network Segmentation with VLANs: Design, Configuration, and Security"
+excerpt: "Design and implement network segmentation with VLANs — traffic isolation, inter-VLAN routing, firewall rules, and protecting sensitive systems from lateral movement."
+date: "2026-04-30"
+tags: ["IT Ops", "Networking", "Security", "VLAN"]
+featured: false
+---
+
+A flat network where every device can reach every other device is a security disaster waiting to happen. VLANs let you segment traffic logically without running separate physical cables. Here's how to design and implement segmentation that actually improves security.
+
+---
+
+## Prerequisites
+
+- Managed switch (Cisco, Juniper, HP Aruba, or Netgear)
+- Router or firewall with VLAN support
+- Basic understanding of subnetting
+
+---
+
+## VLAN Design Principles
+
+**Rule 1: Segment by trust level, not just function**
+
+```
+VLAN 10 — Management (switch/router management interfaces, monitoring)
+  Subnet: 192.168.10.0/24
+  Trusted: IT admins only, strict ACLs
+
+VLAN 20 — Servers (production servers, databases)
+  Subnet: 192.168.20.0/24
+  Trusted: Only necessary inter-service traffic
+
+VLAN 30 — Workstations (employee laptops and desktops)
+  Subnet: 192.168.30.0/24
+  Trusted: Internet access, limited server access
+
+VLAN 40 — IoT / Printers (cameras, printers, smart devices)
+  Subnet: 192.168.40.0/24
+  Untrusted: Internet access only, isolated from everything else
+
+VLAN 50 — Guest WiFi
+  Subnet: 192.168.50.0/24
+  Untrusted: Internet only, no internal access
+
+VLAN 99 — Native VLAN (untagged traffic)
+  Used for: trunk ports only, no devices assigned here
+```
+
+**Rule 2: Never put sensitive devices on the same VLAN as workstations**
+
+If a workstation is compromised, an attacker shouldn't be able to directly reach your database server. Segmentation limits lateral movement.
+
+---
+
+## Switch Configuration (Cisco IOS)
+
+```
+! Create VLANs
+vlan 10
+ name Management
+vlan 20
+ name Servers
+vlan 30
+ name Workstations
+vlan 40
+ name IoT
+vlan 50
+ name Guest
+vlan 99
+ name Native
+
+! Access port for a workstation
+interface GigabitEthernet0/1
+ switchport mode access
+ switchport access vlan 30
+ switchport nonegotiate
+ spanning-tree portfast
+
+! Access port for a server
+interface GigabitEthernet0/10
+ switchport mode access
+ switchport access vlan 20
+ switchport nonegotiate
+ spanning-tree portfast
+
+! Trunk port to router/firewall
+interface GigabitEthernet0/24
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+ switchport trunk native vlan 99
+```
+
+---
+
+## Inter-VLAN Routing with a Firewall
+
+Don't let inter-VLAN traffic route freely. Route it through a firewall and apply rules:
+
+**pfSense/OPNsense configuration:**
+
+```
+Interfaces → Assign → Add each VLAN sub-interface
+  igb0.10 → VLAN 10 Management (192.168.10.1/24)
+  igb0.20 → VLAN 20 Servers (192.168.20.1/24)
+  igb0.30 → VLAN 30 Workstations (192.168.30.1/24)
+  igb0.40 → VLAN 40 IoT (192.168.40.0/24)
+  igb0.50 → VLAN 50 Guest (192.168.50.1/24)
+```
+
+**Firewall rules (least-privilege):**
+
+```
+# VLAN 50 Guest — Internet only, nothing internal
+Block: src=192.168.50.0/24, dst=192.168.0.0/16 (block all RFC1918)
+Allow: src=192.168.50.0/24, dst=any (internet)
+
+# VLAN 40 IoT — Internet only (for cloud services), block all internal
+Block: src=192.168.40.0/24, dst=192.168.0.0/16
+Allow: src=192.168.40.0/24, dst=any, port=80,443
+
+# VLAN 30 Workstations — Internet + specific server access
+Allow: src=192.168.30.0/24, dst=192.168.20.10, port=443  # App server only
+Allow: src=192.168.30.0/24, dst=any (internet)
+Block: src=192.168.30.0/24, dst=192.168.20.0/24  # Block rest of servers
+
+# VLAN 20 Servers — Outbound internet for updates, limited cross-server
+Allow: src=192.168.20.0/24, dst=192.168.20.0/24, port=5432  # DB within server VLAN
+Allow: src=192.168.20.0/24, dst=any, port=443  # Updates
+
+# VLAN 10 Management — Full access (admin only)
+Allow: src=192.168.10.0/24, dst=any
+```
+
+---
+
+## WiFi with Multiple SSIDs per VLAN
+
+On an access point (Ubiquiti UniFi example):
+
+```
+SSID: CorpNet       → VLAN 30 (WPA2-Enterprise, 802.1X auth)
+SSID: IoT-Devices   → VLAN 40 (WPA2-PSK, isolated clients)
+SSID: Guest-WiFi    → VLAN 50 (WPA2-PSK, client isolation, captive portal)
+```
+
+**Client isolation on IoT/Guest SSIDs** prevents devices on the same SSID from communicating with each other — critical for IoT and guest networks.
+
+---
+
+## Monitoring VLAN Traffic
+
+```bash
+# On a Linux server with a VLAN interface
+ip link add link eth0 name eth0.20 type vlan id 20
+ip addr add 192.168.20.100/24 dev eth0.20
+ip link set eth0.20 up
+
+# Capture traffic on VLAN 20 only
+tcpdump -i eth0.20 -n
+
+# With ntopng for flow analysis — runs on a SPAN/mirror port
+```
+
+**Mirror port on Cisco for monitoring:**
+```
+monitor session 1 source vlan 20
+monitor session 1 destination interface GigabitEthernet0/23
+```
+
+---
+
+## Common Pitfalls
+
+- **VLAN 1 as native VLAN**: VLAN 1 is the default and is often used for management — move management traffic to a dedicated VLAN and make VLAN 1 unused
+- **No firewall between VLANs**: routing between VLANs on the switch itself (Layer 3 switch) without a firewall means no traffic filtering — route through a firewall
+- **Too many VLANs**: more VLANs = more management complexity. Start with 4–6, add more only when needed
+- **Forgetting printer/IoT exceptions**: printers need to reach workstations for printing — create specific rules rather than putting printers on the workstation VLAN
+
+---
+
+## Resources
+
+- [VLAN Configuration Guide — Cisco](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swvlan.html)
+- [pfSense VLAN Documentation](https://docs.netgate.com/pfsense/en/latest/vlan/index.html)
+- [CIS Controls — Network Segmentation](https://www.cisecurity.org/controls/)

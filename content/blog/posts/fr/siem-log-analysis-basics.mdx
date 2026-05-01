@@ -1,0 +1,239 @@
+---
+title: "Bases du SIEM et de l'analyse de logs : détecter les menaces avec Elastic Stack"
+excerpt: "Mettez en place des capacités SIEM basiques avec Elastic Stack — collecte de logs avec Filebeat, règles de détection, alertes sur les patterns suspects et construction de tableaux de bord de sécurité."
+date: "2026-04-30"
+tags: ["IT Ops", "Security", "SIEM", "Elastic"]
+featured: false
+---
+
+Un SIEM (Security Information and Event Management) centralise les logs de toute votre infrastructure et aide à détecter les menaces automatiquement. Les SIEM d'entreprise coûtent une fortune, mais vous pouvez construire des capacités basiques avec Elastic Stack gratuitement. Voici comment.
+
+---
+
+## Prérequis
+
+- Docker Compose (pour une installation locale/VPS)
+- Serveurs Linux à monitorer
+- 8 Go+ de RAM pour le serveur Elastic Stack
+
+---
+
+## Installation d'Elastic Stack
+
+```yaml
+# compose.yml
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+    ports:
+      - "127.0.0.1:5601:5601"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.0
+    restart: unless-stopped
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"   # Entrée Beats
+      - "514:514/udp" # Entrée Syslog
+
+volumes:
+  es_data:
+```
+
+---
+
+## Filebeat sur les serveurs monitorés
+
+Installez Filebeat sur chaque serveur à monitorer :
+
+```bash
+# Installation sur Ubuntu/Debian
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.13.0-amd64.deb
+sudo dpkg -i filebeat-8.13.0-amd64.deb
+```
+
+```yaml
+# /etc/filebeat/filebeat.yml
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/auth.log
+      - /var/log/syslog
+    tags: ["linux", "auth"]
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/access.log
+      - /var/log/nginx/error.log
+    tags: ["nginx"]
+    json.keys_under_root: true
+
+# Utiliser les modules pour le parsing structuré
+filebeat.modules:
+  - module: system
+    auth:
+      enabled: true
+    syslog:
+      enabled: true
+  - module: nginx
+    access:
+      enabled: true
+    error:
+      enabled: true
+
+output.logstash:
+  hosts: ["serveur-siem:5044"]
+```
+
+```bash
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+```
+
+---
+
+## Pipeline Logstash
+
+```ruby
+# logstash/pipeline/main.conf
+input {
+  beats {
+    port => 5044
+  }
+  udp {
+    port => 514
+    codec => plain
+    tags => ["syslog"]
+  }
+}
+
+filter {
+  # Parser les échecs d'auth SSH
+  if "auth" in [tags] {
+    grok {
+      match => { "message" => "Failed password for %{USER:ssh_user} from %{IP:src_ip} port %{INT:src_port}" }
+      tag_on_failure => []
+    }
+
+    if [src_ip] {
+      geoip { source => "src_ip" }
+    }
+  }
+
+  # Parser les logs d'accès nginx
+  if "nginx" in [tags] and [log][file][path] =~ "access" {
+    grok {
+      match => { "message" => "%{COMBINEDAPACHELOG}" }
+    }
+    mutate {
+      convert => { "response" => "integer" }
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["elasticsearch:9200"]
+    user => "elastic"
+    password => "${ELASTIC_PASSWORD}"
+    index => "siem-%{[tags][0]}-%{+YYYY.MM.dd}"
+  }
+}
+```
+
+---
+
+## Règles de détection dans Kibana
+
+Naviguez vers **Security → Rules → Créer une nouvelle règle**
+
+**Règle 1 : Détection de brute force SSH**
+```json
+{
+  "name": "Tentative de brute force SSH",
+  "type": "threshold",
+  "query": "message: \"Failed password\" AND tags: auth",
+  "threshold": {
+    "field": "src_ip",
+    "value": 10
+  },
+  "time_window": "5m",
+  "severity": "high"
+}
+```
+
+**Règle 2 : Connexion réussie après plusieurs échecs**
+```
+Séquence : 5 échecs d'authentification suivis d'un succès en moins de 5 min
+Sévérité : Critique
+```
+
+**Règle 3 : Escalade de privilèges**
+```
+Requête : message: "sudo" AND message: "COMMAND"
+Alerte quand : > 3 événements en 10 min par utilisateur
+```
+
+---
+
+## Tableaux de bord de sécurité à construire
+
+Dans les Dashboards Kibana, créez des visualisations pour :
+
+1. **Événements d'auth dans le temps** — graphique en barres succès vs. échecs
+2. **Top IPs sources pour les échecs d'auth** — table de données, triée par nombre
+3. **Carte géographique des tentatives SSH** — avec l'enrichissement geoip
+4. **Codes d'erreur HTTP dans le temps** — taux de 4xx/5xx depuis les logs nginx
+5. **Nouveaux processus lancés** — si vous utilisez Elastic Agent avec le monitoring de processus
+
+---
+
+## Ce qu'il faut monitorer (SIEM minimum viable)
+
+| Source de log | Événements clés à alerter |
+|--------------|--------------------------|
+| SSH (`/var/log/auth.log`) | >10 échecs en 5min, connexion réussie depuis un nouveau pays |
+| Sudo (`/var/log/auth.log`) | Toute commande `sudo` par des non-admins |
+| Nginx access | Pic de 4xx (>100/min), erreurs 5xx |
+| Cron (`/var/log/syslog`) | Nouvelles entrées crontab par non-root |
+| Gestionnaire de paquets | `apt install` en dehors des heures de bureau |
+| Pare-feu (`ufw.log`) | Scans de ports (>20 IPs bloquées par minute) |
+
+---
+
+## Pièges courants
+
+- **Elasticsearch sans authentification** : activez toujours `xpack.security.enabled=true`
+- **Pas de rotation des logs** : les index Elasticsearch grossissent indéfiniment — configurez des politiques ILM
+- **Trop d'alertes de faible sévérité** : la fatigue d'alerte = alertes ignorées. Commencez avec seulement high/critique
+- **Nœud unique sans réplication** : votre SIEM ne peut pas se protéger contre une panne disque — configurez des snapshots vers S3/GCS
+
+---
+
+## Ressources
+
+- [Documentation Elastic Security](https://www.elastic.co/guide/en/security/current/index.html)
+- [Modules Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-modules.html)
+- [EQL (Event Query Language)](https://www.elastic.co/guide/en/elasticsearch/reference/current/eql.html)

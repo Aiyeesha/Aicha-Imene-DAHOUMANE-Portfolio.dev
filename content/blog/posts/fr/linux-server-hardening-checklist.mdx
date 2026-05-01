@@ -1,0 +1,224 @@
+---
+title: "Checklist de durcissement serveur Linux (Ubuntu/Debian production)"
+excerpt: "Une checklist de durcissement pratique étape par étape pour serveurs Ubuntu et Debian — verrouillage SSH, pare-feu, mises à jour automatiques et protections système."
+date: "2026-04-30"
+tags: ["IT Ops", "Linux", "Security", "Hardening"]
+featured: false
+---
+
+Un VPS Ubuntu ou Debian fraîchement installé est ouvert par défaut. En quelques minutes après la mise en ligne, des bots automatisés scannent les mots de passe SSH faibles, les ports ouverts et les services non patchés. Cette checklist couvre les étapes essentielles de durcissement pour un serveur de production.
+
+---
+
+## Prérequis
+
+- Ubuntu 22.04 LTS ou Debian 12 (installation fraîche)
+- Accès root ou sudo
+- Un utilisateur non-root déjà créé
+
+---
+
+## 1. Durcissement SSH
+
+L'étape la plus importante — désactiver l'authentification par mot de passe et la connexion root :
+
+```bash
+# Éditer la configuration SSH
+sudo nano /etc/ssh/sshd_config
+```
+
+Modifier ou ajouter ces lignes :
+
+```bash
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+X11Forwarding no
+AllowTcpForwarding no
+MaxAuthTries 3
+LoginGraceTime 30
+```
+
+```bash
+# Redémarrer SSH (gardez la session courante ouverte !)
+sudo systemctl restart sshd
+
+# Vérifiez que votre clé fonctionne dans un NOUVEAU terminal avant de fermer l'actuel
+```
+
+> **Ne fermez jamais votre seule session SSH avant d'avoir vérifié que la nouvelle fonctionne.**
+
+---
+
+## 2. Pare-feu avec UFW
+
+```bash
+# Installer UFW
+sudo apt install ufw -y
+
+# Refuser tout le trafic entrant, autoriser le sortant
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Autoriser SSH (utilisez votre port personnalisé si modifié)
+sudo ufw allow 22/tcp
+
+# Autoriser le trafic web si nécessaire
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Activer le pare-feu
+sudo ufw enable
+
+# Vérifier l'état
+sudo ufw status verbose
+```
+
+---
+
+## 3. Fail2Ban — Protection contre le brute force
+
+```bash
+sudo apt install fail2ban -y
+
+# Créer la config locale (ne jamais modifier /etc/fail2ban/jail.conf directement)
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo nano /etc/fail2ban/jail.local
+```
+
+Modifier la section `[sshd]` :
+
+```ini
+[sshd]
+enabled = true
+port    = ssh
+filter  = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime  = 3600
+findtime = 600
+```
+
+```bash
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Vérifier les IPs bannies
+sudo fail2ban-client status sshd
+```
+
+---
+
+## 4. Mises à jour de sécurité automatiques
+
+```bash
+sudo apt install unattended-upgrades -y
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
+
+Éditer `/etc/apt/apt.conf.d/50unattended-upgrades` :
+
+```bash
+Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}-security";
+};
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Automatic-Reboot "false";  // Mettre true uniquement si acceptable
+Unattended-Upgrade::Mail "vous@exemple.com";
+```
+
+---
+
+## 5. Durcissement du noyau avec sysctl
+
+```bash
+sudo nano /etc/sysctl.d/99-hardening.conf
+```
+
+```bash
+# Désactiver le transfert IP (sauf si c'est un routeur)
+net.ipv4.ip_forward = 0
+
+# Ignorer les broadcasts ICMP
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+# Protection contre les attaques SYN flood
+net.ipv4.tcp_syncookies = 1
+
+# Désactiver le source routing
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv6.conf.all.accept_source_route = 0
+
+# Journaliser les paquets martiens
+net.ipv4.conf.all.log_martians = 1
+
+# Désactiver IPv6 si non utilisé
+net.ipv6.conf.all.disable_ipv6 = 1
+```
+
+```bash
+sudo sysctl -p /etc/sysctl.d/99-hardening.conf
+```
+
+---
+
+## 6. Supprimer les services inutiles
+
+```bash
+# Lister les services en écoute
+sudo ss -tlnp
+
+# Désactiver les services inutilisés
+sudo systemctl disable --now avahi-daemon
+sudo systemctl disable --now cups
+sudo systemctl disable --now bluetooth
+
+# Supprimer les paquets inutiles
+sudo apt autoremove --purge
+```
+
+---
+
+## 7. Intégrité des fichiers avec auditd
+
+```bash
+sudo apt install auditd -y
+sudo systemctl enable auditd
+
+# Surveiller les modifications de fichiers sensibles
+sudo auditctl -w /etc/passwd -p wa -k identity
+sudo auditctl -w /etc/sudoers -p wa -k sudoers
+sudo auditctl -w /etc/ssh/sshd_config -p wa -k sshd_config
+
+# Consulter le journal d'audit
+sudo ausearch -k sshd_config
+```
+
+---
+
+## Checklist de durcissement
+
+- [ ] SSH : auth par clé uniquement, pas de connexion root, `MaxAuthTries 3`
+- [ ] UFW : refus par défaut, seuls les ports nécessaires ouverts
+- [ ] Fail2ban : activé sur SSH avec `maxretry 3`
+- [ ] Mises à jour automatiques : mises à jour de sécurité appliquées automatiquement
+- [ ] sysctl : SYN cookies, pas de transfert IP, pas de source routing
+- [ ] Services inutiles : désactivés et supprimés
+- [ ] auditd : surveillance de `/etc/passwd`, `/etc/sudoers`, config SSH
+- [ ] Dernière étape : exécuter `lynis audit system` pour un rapport de score
+
+```bash
+# Optionnel : outil d'audit de sécurité Lynis
+sudo apt install lynis -y
+sudo lynis audit system
+```
+
+---
+
+## Ressources
+
+- [CIS Ubuntu Linux Benchmark](https://www.cisecurity.org/benchmark/ubuntu_linux)
+- [Documentation UFW](https://help.ubuntu.com/community/UFW)
+- [Manuel Fail2ban](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
+- [Audit de sécurité Lynis](https://cisofy.com/lynis/)
