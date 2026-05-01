@@ -1,0 +1,206 @@
+---
+title: "Next.js Caching Strategies: Data Cache, Full Route Cache, and Revalidation"
+excerpt: "Master Next.js caching — understand the four caching layers, when each applies, how to revalidate on demand, and how to debug what's actually cached."
+date: "2026-04-30"
+tags: ["Next.js", "Performance", "Caching", "App Router"]
+featured: false
+---
+
+Next.js App Router has four independent caching layers. Most developers discover them through surprising behavior — pages that don't update, or server costs that spike from uncached fetches. Understanding each layer lets you cache aggressively where it's safe and bypass it where you need fresh data.
+
+---
+
+## The Four Caching Layers
+
+```
+1. Request Memoization  — deduplicates fetch() calls within a single render
+2. Data Cache           — persists fetch() results across requests (CDN-style)
+3. Full Route Cache     — caches entire rendered HTML at build time
+4. Router Cache         — client-side cache of visited routes (in-memory)
+```
+
+They compose: a request that hits the Full Route Cache never even reaches the Data Cache. Understanding the order matters.
+
+---
+
+## 1. Data Cache: Controlling fetch() Behavior
+
+Every `fetch()` in Server Components opts into the Data Cache by default:
+
+```typescript
+// Cached forever until explicitly revalidated (default)
+const data = await fetch('https://api.example.com/posts');
+
+// Revalidate every 3600 seconds (time-based)
+const data = await fetch('https://api.example.com/posts', {
+  next: { revalidate: 3600 }
+});
+
+// Never cache — always fetch fresh
+const data = await fetch('https://api.example.com/posts', {
+  cache: 'no-store'
+});
+
+// Tag for on-demand revalidation
+const data = await fetch('https://api.example.com/posts', {
+  next: { tags: ['posts'] }
+});
+```
+
+**For non-fetch data sources** (Supabase, Prisma, Redis), use `unstable_cache`:
+
+```typescript
+import { unstable_cache } from 'next/cache';
+
+const getCachedPosts = unstable_cache(
+  async (locale: string) => {
+    const { data } = await supabase.from('posts').select('*').eq('locale', locale);
+    return data;
+  },
+  ['posts'], // cache key base
+  {
+    revalidate: 3600,
+    tags: ['posts'],
+  }
+);
+
+// Usage in Server Component
+const posts = await getCachedPosts('en');
+```
+
+---
+
+## 2. Full Route Cache: Static vs. Dynamic Routes
+
+Next.js pre-renders pages at build time when possible. A page is **dynamic** (not cached) when it:
+- Uses `cookies()`, `headers()`, or `searchParams`
+- Calls `fetch()` with `cache: 'no-store'`
+- Uses `noStore()` explicitly
+
+```typescript
+import { unstable_noStore as noStore } from 'next/cache';
+
+export default async function LiveDashboard() {
+  noStore(); // Opts this entire route out of Full Route Cache
+  const data = await getDashboardData();
+  return <Dashboard data={data} />;
+}
+```
+
+**Force static generation:**
+```typescript
+export const dynamic = 'force-static';
+export const revalidate = 3600; // ISR: regenerate every hour
+```
+
+---
+
+## 3. On-Demand Revalidation
+
+Trigger revalidation from Server Actions or Route Handlers when data changes:
+
+```typescript
+// app/api/webhook/route.ts
+import { revalidateTag, revalidatePath } from 'next/cache';
+import { NextRequest } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
+  // Verify webhook signature first!
+  if (body.event === 'post.published') {
+    revalidateTag('posts'); // Revalidate all fetches tagged with 'posts'
+  }
+
+  if (body.event === 'homepage.updated') {
+    revalidatePath('/'); // Revalidate the homepage
+    revalidatePath('/en'); // And the localized version
+  }
+
+  return Response.json({ revalidated: true });
+}
+```
+
+```typescript
+// Server Action in a form
+'use server';
+import { revalidatePath } from 'next/cache';
+
+export async function publishPost(postId: string) {
+  await db.post.update({ where: { id: postId }, data: { published: true } });
+  revalidatePath('/blog');
+  revalidateTag('posts');
+}
+```
+
+---
+
+## 4. Router Cache: Client-Side Prefetching
+
+The Router Cache stores RSC payloads on the client for instant navigation. It's automatic — but understanding its behavior prevents confusion:
+
+- Links prefetch the target route when they enter the viewport
+- Cached for 30 seconds by default (dynamic routes) or 5 minutes (static)
+- Not controlled by your server-side cache settings
+
+```typescript
+// Disable prefetching for expensive or auth-gated routes
+<Link href="/dashboard" prefetch={false}>Dashboard</Link>
+
+// Force revalidation on navigation (bypasses Router Cache)
+import { useRouter } from 'next/navigation';
+const router = useRouter();
+router.refresh(); // Refreshes server data without full navigation
+```
+
+---
+
+## Debugging What's Cached
+
+```bash
+# Build output shows Static/Dynamic classification
+npm run build
+
+# .next/cache/fetch-cache/ — Data Cache entries (filesystem)
+# Each entry is a JSON file with the cached response
+
+# Development: caching is disabled for Data Cache by default
+# Enable it for local testing:
+# NEXT_PRIVATE_SKIP_SIZE_LIMIT=1 npm run dev
+```
+
+**In the build output:**
+```
+○ /blog          — Static (Full Route Cache)
+● /dashboard     — Dynamic (no cache)
+◐ /blog/[slug]  — ISR (revalidated every 3600s)
+```
+
+---
+
+## Caching Strategy by Page Type
+
+| Page Type | Recommended Strategy |
+|-----------|---------------------|
+| Marketing homepage | `revalidate: 3600`, tagged revalidation on CMS update |
+| Blog post | `revalidate: 86400` or ISR + on-publish webhook |
+| User dashboard | `noStore()` or `cache: 'no-store'` on all fetches |
+| Product listing | `revalidate: 300` + tag-based on inventory change |
+| Search results | `cache: 'no-store'` (unique query per user) |
+
+---
+
+## Common Pitfalls
+
+- **Caching authed data**: never cache responses that include user-specific data — use `noStore()` on all auth-gated pages
+- **Tag mismatch**: `revalidateTag('posts')` only works if the fetch also uses `next: { tags: ['posts'] }` — they must match exactly
+- **Development vs. production**: Data Cache is bypassed in `next dev` — don't assume dev behavior matches production
+- **Router Cache after mutation**: after a Server Action mutates data, call `revalidatePath` or the user will see stale data until the Router Cache expires
+
+---
+
+## Resources
+
+- [Next.js Caching Documentation](https://nextjs.org/docs/app/building-your-application/caching)
+- [unstable_cache API](https://nextjs.org/docs/app/api-reference/functions/unstable_cache)
+- [On-Demand Revalidation](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration)

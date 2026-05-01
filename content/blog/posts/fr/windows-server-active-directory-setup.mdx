@@ -1,0 +1,273 @@
+---
+title: "Windows Server & Active Directory : guide pratique d'installation"
+excerpt: "Déployez Windows Server, promouvez-le en contrôleur de domaine, configurez DNS, UO, stratégies de groupe et renforcez AD contre les attaques courantes — étape par étape."
+date: "2026-05-01"
+tags: ["IT Ops", "Windows Server", "Active Directory", "Security"]
+featured: false
+---
+
+Active Directory est l'épine dorsale de la plupart des environnements d'entreprise. Un paramétrage correct dès le départ évite des années de remédiation douloureuse. Voici comment construire des fondations AD solides — installation, DNS, structure d'UO, GPOs et durcissement.
+
+---
+
+## Prérequis
+
+- Windows Server 2022 (Standard ou Datacenter)
+- IP statique assignée avant la promotion
+- 4 Go+ de RAM, 60 Go+ de disque pour le DC
+- Notions de base en DNS et LDAP
+
+---
+
+## Étape 1 : installer les rôles Windows Server
+
+```powershell
+# Installer les rôles AD DS et Serveur DNS
+Install-WindowsFeature -Name AD-Domain-Services, DNS -IncludeManagementTools
+
+# Vérifier l'installation
+Get-WindowsFeature AD-Domain-Services, DNS
+```
+
+---
+
+## Étape 2 : promouvoir en contrôleur de domaine
+
+```powershell
+# Installer une nouvelle forêt (premier DC de l'environnement)
+Import-Module ADDSDeployment
+
+Install-ADDSForest `
+  -DomainName "corp.exemple.com" `
+  -DomainNetBIOSName "CORP" `
+  -ForestMode "WinThreshold" `
+  -DomainMode "WinThreshold" `
+  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+  -InstallDns `
+  -Force
+
+# Le serveur redémarre automatiquement
+```
+
+**Après le redémarrage — vérifier la promotion :**
+
+```powershell
+Get-ADDomain
+Get-ADForest
+(Get-ADDomainController).HostName
+```
+
+---
+
+## Étape 3 : configuration DNS
+
+AD repose entièrement sur DNS — faites-le bien.
+
+```powershell
+# Vérifier que les zones DNS ont été créées
+Get-DnsServerZone
+
+# Zones attendues :
+# corp.exemple.com          (Recherche directe, intégrée AD)
+# _msdcs.corp.exemple.com   (Enregistrements SRV pour les DCs)
+# 10.168.192.in-addr.arpa   (Recherche inversée)
+
+# Créer la zone de recherche inversée si absente
+Add-DnsServerPrimaryZone -NetworkID "192.168.10.0/24" -ReplicationScope "Forest"
+
+# Définir les redirecteurs (FAI ou 8.8.8.8 en secours)
+Set-DnsServerForwarder -IPAddress "8.8.8.8", "1.1.1.1"
+```
+
+**Configuration DNS des clients :** tous les clients joints au domaine doivent pointer sur l'IP du DC comme DNS principal — pas le routeur ni un résolveur externe.
+
+---
+
+## Étape 4 : structure d'unités organisationnelles
+
+Planifiez la hiérarchie d'UO avant de créer des utilisateurs. Groupez les objets par **fonction et localisation**, pas par type d'objet.
+
+```
+corp.exemple.com
+├── _Corp (UO racine pour tous les objets gérés)
+│   ├── Utilisateurs
+│   │   ├── Employes
+│   │   ├── Comptes de service
+│   │   └── Prestataires
+│   ├── Ordinateurs
+│   │   ├── PostesTravail
+│   │   │   ├── Paris
+│   │   │   └── Lyon
+│   │   └── Serveurs
+│   ├── Groupes
+│   │   ├── Securite
+│   │   └── Distribution
+│   └── Desactives (UO de quarantaine pour les comptes off-boardés)
+└── Domain Controllers (défaut, laisser ici)
+```
+
+```powershell
+# Créer la structure d'UO
+$base = "DC=corp,DC=exemple,DC=com"
+
+New-ADOrganizationalUnit -Name "_Corp" -Path $base
+$corp = "OU=_Corp,$base"
+
+New-ADOrganizationalUnit -Name "Utilisateurs" -Path $corp
+New-ADOrganizationalUnit -Name "Ordinateurs" -Path $corp
+New-ADOrganizationalUnit -Name "Groupes" -Path $corp
+New-ADOrganizationalUnit -Name "Desactives" -Path $corp
+
+New-ADOrganizationalUnit -Name "Employes" -Path "OU=Utilisateurs,$corp"
+New-ADOrganizationalUnit -Name "Comptes de service" -Path "OU=Utilisateurs,$corp"
+New-ADOrganizationalUnit -Name "PostesTravail" -Path "OU=Ordinateurs,$corp"
+New-ADOrganizationalUnit -Name "Serveurs" -Path "OU=Ordinateurs,$corp"
+```
+
+---
+
+## Étape 5 : stratégies de groupe essentielles
+
+**GPO 1 — Politique de mot de passe (Default Domain Policy) :**
+
+```powershell
+# Politique de mot de passe affinée pour les groupes spécifiques
+New-ADFineGrainedPasswordPolicy `
+  -Name "PolitiqueAdmins" `
+  -Precedence 10 `
+  -MinPasswordLength 16 `
+  -PasswordHistoryCount 24 `
+  -MaxPasswordAge "90.00:00:00" `
+  -LockoutThreshold 5 `
+  -LockoutDuration "00:30:00" `
+  -LockoutObservationWindow "00:30:00" `
+  -ComplexityEnabled $true `
+  -ReversibleEncryptionEnabled $false
+
+# Appliquer au groupe Admins du domaine
+Add-ADFineGrainedPasswordPolicySubject -Identity "PolitiqueAdmins" -Subjects "Domain Admins"
+```
+
+**GPO 2 — Baseline de sécurité postes (via la Console Gestion des stratégies de groupe) :**
+
+Paramètres clés à configurer sous `Configuration ordinateur → Stratégies` :
+
+| Paramètre | Chemin | Valeur |
+|-----------|--------|--------|
+| Désactiver SMBv1 | Paramètres Windows → Sécurité → Services | Désactivé |
+| Exiger NLA pour RDP | Modèles admin → Composants → Services Bureau | Activé |
+| Désactiver LLMNR | Modèles admin → Réseau → Client DNS | Désactivé |
+| Auditer les ouvertures de session | Paramètres Windows → Sécurité → Audit | Succès + Échec |
+| Pare-feu Windows | Paramètres Windows → Sécurité → Pare-feu | Profil domaine ACTIVÉ |
+| Délai de verrouillage | Modèles admin → Panneau de config → Perso | 900 secondes |
+
+---
+
+## Étape 6 : durcissement d'Active Directory
+
+### Modèle d'administration à niveaux
+
+```
+Niveau 0 — Contrôleurs de domaine, AD lui-même
+  → Admins : Domain Admins, connexion uniquement aux DCs
+
+Niveau 1 — Serveurs (production, application, base de données)
+  → Admins : groupe Admins Serveurs, jamais de connexion aux postes
+
+Niveau 2 — Postes de travail
+  → Admins : groupe Helpdesk, pas d'accès serveurs
+```
+
+Ne jamais utiliser un compte Niveau 0 pour se connecter à un poste — un vol de credentials donnerait un compromis total du domaine.
+
+### Protéger les comptes privilégiés
+
+```powershell
+# Désactiver le compte Administrateur intégré (créer un admin nommé à la place)
+Disable-ADAccount -Identity "Administrator"
+
+# Activer le groupe de sécurité Protected Users pour tous les comptes admin
+# Les membres ne peuvent pas utiliser NTLM, DES, RC4 ; pas de mise en cache des credentials
+Add-ADGroupMember -Identity "Protected Users" -Members "admin-jean", "admin-marie"
+
+# Activer la Corbeille AD (évite les suppressions accidentelles)
+Enable-ADOptionalFeature -Identity "Recycle Bin Feature" `
+  -Scope ForestOrConfigurationSet `
+  -Target "corp.exemple.com" `
+  -Confirm:$false
+```
+
+### Auditer les événements critiques
+
+```powershell
+# Activer les stratégies d'audit avancées
+auditpol /set /subcategory:"Ouverture de session" /success:enable /failure:enable
+auditpol /set /subcategory:"Verrouillage du compte" /success:enable /failure:enable
+auditpol /set /subcategory:"Modifications des services d'annuaire" /success:enable /failure:enable
+auditpol /set /subcategory:"Validation des informations d'identification" /success:enable /failure:enable
+
+# IDs d'événements clés à surveiller :
+# 4625 — Échec d'ouverture de session
+# 4768 — Demande de TGT Kerberos (échec = 4771)
+# 4728 — Membre ajouté à un groupe global avec sécurité activée
+# 4672 — Privilèges spéciaux attribués (connexion admin)
+# 4648 — Connexion avec credentials explicites (indicateur pass-the-hash)
+```
+
+---
+
+## Étape 7 : ajouter un second contrôleur de domaine
+
+Un seul DC est un point de défaillance unique. Ajoutez une réplique dès que possible.
+
+```powershell
+# Sur le second serveur — joindre le domaine d'abord, puis promouvoir
+Add-Computer -DomainName "corp.exemple.com" -Restart
+
+# Après le redémarrage, promouvoir en DC supplémentaire
+Install-ADDSDomainController `
+  -DomainName "corp.exemple.com" `
+  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+  -InstallDns `
+  -Force
+```
+
+---
+
+## Pièges courants
+
+- **IP statique configurée après la promotion** : AD inscrit l'IP du DC dans les enregistrements SRV DNS — la changer casse la réplication et l'authentification
+- **Utiliser le compte Admin par défaut** : il ne peut pas être verrouillé et est ciblé par tous les scripts d'attaque — renommez-le et désactivez-le
+- **Tous les utilisateurs dans le conteneur "Users"** : les GPOs ne s'appliquent pas au conteneur Users par défaut — déplacez les comptes dans des UOs immédiatement
+- **Oublier un second DC** : redémarrer votre seul DC met tout le domaine hors service — faites toujours tourner 2+ DCs
+- **SYSVOL ne se réplique pas** : vérifiez avec `repadmin /showrepl` et `dcdiag /test:netlogons` — les problèmes de réplication cassent silencieusement les GPOs et les ouvertures de session
+
+---
+
+## Commandes de diagnostic utiles
+
+```powershell
+# Santé de la réplication
+repadmin /showrepl
+repadmin /replsummary
+
+# Diagnostics DC
+dcdiag /v
+
+# Vérifier la réplication SYSVOL
+Get-DfsrState
+
+# Vérifier les rôles FSMO
+netdom query fsmo
+
+# Tester la connectivité au domaine depuis un client
+nltest /dsgetdc:corp.exemple.com
+```
+
+---
+
+## Ressources
+
+- [Bonnes pratiques Active Directory — Microsoft](https://docs.microsoft.com/fr-fr/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+- [Modèle d'administration à niveaux](https://docs.microsoft.com/fr-fr/security/compass/privileged-access-access-model)

@@ -1,0 +1,246 @@
+---
+title: "TypeScript Best Practices in 2026: Types That Actually Help"
+excerpt: "Write TypeScript that catches real bugs — discriminated unions, branded types, satisfies operator, template literal types, and patterns that survive team growth."
+date: "2026-04-30"
+tags: ["Next.js", "TypeScript", "JavaScript", "Best Practices"]
+featured: false
+---
+
+TypeScript's value isn't type annotations — it's catching bugs before runtime. Most TypeScript codebases have types, but they're too loose to catch the bugs that matter. These patterns tighten the type system around your actual business logic.
+
+---
+
+## Prerequisites
+
+- TypeScript 5.0+
+- Node.js project with `strict: true` in tsconfig
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
+  }
+}
+```
+
+---
+
+## Discriminated Unions: Model State Machines
+
+Instead of optional properties that can be in inconsistent combinations, use discriminated unions:
+
+```typescript
+// ❌ Loose — too many invalid states are representable
+interface Request {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  data?: User;
+  error?: string;
+}
+// status: 'success', data: undefined — invalid, but allowed by the type
+
+// ✅ Discriminated union — only valid states are representable
+type RequestState<T> =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success'; data: T }
+  | { status: 'error'; error: string };
+
+// TypeScript narrows correctly in switch statements
+function render(state: RequestState<User>) {
+  switch (state.status) {
+    case 'success':
+      return state.data.name; // TypeScript knows data exists here
+    case 'error':
+      return state.error; // TypeScript knows error exists here
+    case 'loading':
+      return 'Loading...';
+    case 'idle':
+      return null;
+  }
+}
+```
+
+---
+
+## Branded Types: Prevent Primitive Confusion
+
+When you have multiple IDs of different types, branded types prevent mixing them up:
+
+```typescript
+// Without branding: these are all just strings — easy to pass the wrong one
+function getOrder(userId: string, orderId: string) { ... }
+getOrder(orderId, userId); // TypeScript allows this — it's a bug
+
+// With branded types
+type UserId = string & { readonly __brand: 'UserId' };
+type OrderId = string & { readonly __brand: 'OrderId' };
+
+function createUserId(id: string): UserId {
+  return id as UserId;
+}
+
+function getOrder(userId: UserId, orderId: OrderId) { ... }
+
+const userId = createUserId('usr_123');
+const orderId = 'ord_456' as OrderId;
+
+getOrder(orderId, userId); // TypeScript error — wrong order!
+getOrder(userId, orderId); // OK
+```
+
+---
+
+## The `satisfies` Operator: Infer and Validate
+
+`satisfies` validates a value against a type without widening it to that type:
+
+```typescript
+type Route = {
+  path: string;
+  component: React.ComponentType;
+  auth?: boolean;
+};
+
+// ❌ Type annotation — TypeScript loses the specific route names
+const routes: Record<string, Route> = {
+  home: { path: '/', component: HomePage },
+  dashboard: { path: '/dashboard', component: DashboardPage, auth: true },
+};
+routes.home; // type: Route (not specific)
+routes.nonExistent; // No error — Record allows any string key
+
+// ✅ satisfies — validates the shape but keeps specific key types
+const routes = {
+  home: { path: '/', component: HomePage },
+  dashboard: { path: '/dashboard', component: DashboardPage, auth: true },
+} satisfies Record<string, Route>;
+
+routes.home.path; // type: '/' (preserved!)
+routes.nonExistent; // TypeScript error — key doesn't exist
+```
+
+---
+
+## Template Literal Types: String Patterns as Types
+
+```typescript
+type Locale = 'en' | 'fr';
+type BlogPath = `/blog/${string}`;
+type LocalizedPath = `/${Locale}${BlogPath}`;
+// type: '/en/blog/${string}' | '/fr/blog/${string}'
+
+// Useful for event names, API routes, CSS custom properties
+type EventName = `on${Capitalize<string>}`;
+// 'onClick', 'onChange', 'onSubmit' — matches the pattern
+
+type CSSVar = `--${string}`;
+function setCSSVar(name: CSSVar, value: string) {
+  document.documentElement.style.setProperty(name, value);
+}
+setCSSVar('--primary-color', '#0ea5e9'); // OK
+setCSSVar('primary-color', '#0ea5e9');  // Error: missing '--'
+```
+
+---
+
+## Utility Types That Actually Help
+
+```typescript
+// DeepReadonly — prevents mutation of nested objects
+type DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];
+};
+
+// RequireAtLeastOne — ensure at least one property is provided
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Omit<T, Keys> &
+  { [K in Keys]-?: Required<Pick<T, K>> & Partial<Omit<T, K>> }[Keys];
+
+type SearchFilters = RequireAtLeastOne<{
+  name?: string;
+  email?: string;
+  id?: string;
+}>;
+// Must provide at least one of name, email, or id
+
+// Awaited — extract the resolved type of a Promise
+type PostData = Awaited<ReturnType<typeof fetchPost>>;
+```
+
+---
+
+## Type Guards for Runtime Validation
+
+```typescript
+// Type guard with explicit return type
+function isUser(value: unknown): value is User {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'email' in value &&
+    typeof (value as User).email === 'string'
+  );
+}
+
+// Use with API responses
+async function fetchUser(id: string): Promise<User> {
+  const response = await fetch(`/api/users/${id}`);
+  const data: unknown = await response.json();
+
+  if (!isUser(data)) {
+    throw new Error(`Invalid user response: ${JSON.stringify(data)}`);
+  }
+
+  return data; // TypeScript knows this is User
+}
+
+// Or use a validation library (Zod, Valibot) for complex schemas
+import { z } from 'zod';
+
+const UserSchema = z.object({
+  id: z.string(),
+  email: z.string().email(),
+  role: z.enum(['admin', 'user']),
+});
+
+type User = z.infer<typeof UserSchema>;
+```
+
+---
+
+## `noUncheckedIndexedAccess`: The Hidden Gold Flag
+
+With `noUncheckedIndexedAccess: true`, array/object index access returns `T | undefined`:
+
+```typescript
+const users = ['Alice', 'Bob'];
+const first = users[0]; // type: string | undefined (not string)
+
+// Forces you to handle the case where the index doesn't exist
+if (first !== undefined) {
+  console.log(first.toUpperCase()); // Safe
+}
+
+// Also applies to Record types
+const config: Record<string, number> = {};
+const value = config['missing']; // type: number | undefined
+```
+
+---
+
+## Common Pitfalls
+
+- **`as` casting bypasses type safety**: `data as User` lies to TypeScript — use type guards or validation instead
+- **`any` spreading**: once any enters a type, it infects everything it touches — ban it with ESLint's `@typescript-eslint/no-explicit-any`
+- **Optional chains hiding real nulls**: `data?.user?.name` returning `undefined` silently — decide whether the null is expected or a bug
+- **`interface` vs. `type` for unions**: `interface` can't express union types — use `type` for discriminated unions and `interface` for object shapes
+
+---
+
+## Resources
+
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [TypeScript 5.x Release Notes](https://devblogs.microsoft.com/typescript/)
+- [Total TypeScript — Matt Pocock](https://www.totaltypescript.com/)

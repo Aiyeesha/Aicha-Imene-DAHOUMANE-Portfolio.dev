@@ -1,0 +1,192 @@
+---
+title: "Platform Events & CDC : intégrations Salesforce en temps réel"
+excerpt: "Créez des intégrations temps réel avec Platform Events et Change Data Capture — publication, abonnement et replay avec des exemples Apex et LWC concrets."
+date: "2026-04-30"
+tags: ["Salesforce", "Integration", "Events", "Apex"]
+featured: false
+---
+
+Quand vous avez besoin de communication en temps réel entre Salesforce et des systèmes externes — ou entre composants dans Salesforce lui-même — Platform Events et Change Data Capture (CDC) sont les bons outils. Voici comment ils fonctionnent et quand utiliser chacun.
+
+---
+
+## Platform Events vs CDC vs Streaming API
+
+| Fonctionnalité | Platform Events | Change Data Capture | PushTopic (déprécié) |
+|----------------|----------------|--------------------|-----------------------|
+| Déclenché par | Votre code Apex/Flow | Tout DML sur les objets suivis | Requête SOQL |
+| Payload personnalisé | ✅ Oui | ❌ Non (schéma fixe) | ❌ Non |
+| Replay supporté | ✅ Oui (-1, -2, ou replayId) | ✅ Oui | ❌ Non |
+| Cas d'usage | Messagerie app-to-app | Sync vers systèmes externes | Déprécié |
+
+---
+
+## Définir et publier un Platform Event
+
+**Étape 1 — Créer l'événement dans Setup :**
+
+Setup → Platform Events → New Platform Event  
+Nom : `Order_Placed__e`  
+Champs : `Order_Id__c` (Texte), `Customer_Email__c` (Texte), `Total_Amount__c` (Nombre)
+
+**Étape 2 — Publier depuis Apex :**
+
+```apex
+public class OrderService {
+
+    public static void placeOrder(Order__c order) {
+        // Logique métier...
+        insert order;
+
+        // Publier l'événement
+        Order_Placed__e event = new Order_Placed__e(
+            Order_Id__c = order.Id,
+            Customer_Email__c = order.Customer_Email__c,
+            Total_Amount__c = order.Total_Amount__c
+        );
+
+        Database.SaveResult result = EventBus.publish(event);
+
+        if (!result.isSuccess()) {
+            for (Database.Error err : result.getErrors()) {
+                System.debug('Erreur publication événement : ' + err.getMessage());
+            }
+        }
+    }
+}
+```
+
+**Publier depuis un Flow :** ajoutez l'action "Créer des enregistrements" pointant vers votre événement `__e`.
+
+---
+
+## S'abonner à un Platform Event
+
+**Abonnement Apex (Trigger) :**
+
+```apex
+trigger OrderPlacedTrigger on Order_Placed__e (after insert) {
+    List<Task> tasksToCreate = new List<Task>();
+
+    for (Order_Placed__e event : Trigger.New) {
+        // Chaque événement reçu crée une tâche de suivi
+        tasksToCreate.add(new Task(
+            Subject = 'Suivre commande : ' + event.Order_Id__c,
+            Description = 'Email client : ' + event.Customer_Email__c,
+            ActivityDate = Date.today().addDays(1),
+            Status = 'Not Started',
+            Priority = 'Normal'
+        ));
+    }
+
+    insert tasksToCreate;
+}
+```
+
+**Abonnement LWC (temps réel dans l'interface) :**
+
+```javascript
+import { LightningElement, wire } from 'lwc';
+import { subscribe, MessageContext } from 'lightning/empApi';
+
+export default class OrderMonitor extends LightningElement {
+    subscription = {};
+
+    connectedCallback() {
+        this.subscribeToEvents();
+    }
+
+    subscribeToEvents() {
+        const channel = '/event/Order_Placed__e';
+        subscribe(channel, -1, (message) => {
+            const event = message.data.payload;
+            console.log('Nouvelle commande reçue :', event.Order_Id__c);
+            this.handleNewOrder(event);
+        }).then(sub => {
+            this.subscription = sub;
+        });
+    }
+
+    handleNewOrder(event) {
+        // Mettre à jour l'interface utilisateur...
+    }
+
+    disconnectedCallback() {
+        // Se désabonner proprement
+        if (this.subscription.id) {
+            unsubscribe(this.subscription, () => {});
+        }
+    }
+}
+```
+
+---
+
+## Change Data Capture (CDC)
+
+CDC vous permet de recevoir automatiquement les changements DML (insert/update/delete/undelete) sur n'importe quel objet Salesforce, sans écrire de code de publication.
+
+**Activer CDC pour un objet :**
+Setup → Change Data Capture → sélectionnez `Account` → Save
+
+**S'abonner aux changements :**
+
+```javascript
+// Canal CDC : /data/AccountChangeEvent
+import { subscribe } from 'lightning/empApi';
+
+subscribeToAccountChanges() {
+    subscribe('/data/AccountChangeEvent', -1, (message) => {
+        const changeType = message.data.payload.ChangeEventHeader.changeType;
+        // changeType : CREATE | UPDATE | DELETE | UNDELETE
+
+        if (changeType === 'UPDATE') {
+            const changedFields = message.data.payload.ChangeEventHeader.changedFields;
+            console.log('Champs modifiés :', changedFields);
+        }
+    });
+}
+```
+
+---
+
+## Replay : ne pas perdre d'événements
+
+Le replay permet de récupérer des événements passés (jusqu'à 72 h) si votre abonné était hors ligne :
+
+```javascript
+// -1 : depuis le début de la fenêtre de replay (72h)
+// -2 : uniquement les nouveaux événements
+// 12345 : reprendre depuis le replayId 12345
+subscribe('/event/Order_Placed__e', -1, callback);
+```
+
+En production, persistez le dernier `replayId` reçu pour reprendre exactement là où vous vous êtes arrêté.
+
+---
+
+## Pièges courants
+
+- **Ne pas gérer les erreurs de publication** : vérifiez toujours `Database.SaveResult` après `EventBus.publish()`
+- **Traitement dans le trigger d'abonnement** : les triggers CDC/Event sont asynchrones — ils ne partagent pas la transaction avec le code qui a déclenché l'événement
+- **Ordre non garanti** : Platform Events sont livrés dans l'ordre, mais pas nécessairement traités dans l'ordre si plusieurs triggers sont abonnés
+- **Limites de volume** : vérifiez vos allocations d'événements dans Setup → Company Information
+
+---
+
+## Récapitulatif
+
+| Besoin | Solution recommandée |
+|--------|---------------------|
+| Notifier un système externe d'un événement métier | Platform Event |
+| Synchroniser les données SF vers une base externe | Change Data Capture |
+| Communication entre composants LWC | Platform Event + `lightning/empApi` |
+| Remplacer PushTopic | Platform Event ou CDC selon le cas |
+
+---
+
+## Ressources
+
+- [Documentation Platform Events](https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/)
+- [Change Data Capture Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/)
+- [Trailhead : Platform Events](https://trailhead.salesforce.com/content/learn/modules/platform_events_basics)

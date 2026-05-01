@@ -1,0 +1,290 @@
+---
+title: "Virtualisation Hyper-V : installation, commutateurs virtuels et bonnes pratiques VM"
+excerpt: "Déployez et configurez Hyper-V sur Windows Server — commutateurs virtuels, création de VMs, mémoire dynamique, points de contrôle, migration en direct et conseils de durcissement en production."
+date: "2026-05-01"
+tags: ["IT Ops", "Hyper-V", "Virtualization", "Windows Server"]
+featured: false
+---
+
+Hyper-V est l'hyperviseur de type 1 de Microsoft intégré à Windows Server. Il est prêt pour la production, gratuit avec la licence Server, et s'intègre étroitement avec Active Directory et System Center. Voici comment le configurer correctement.
+
+---
+
+## Prérequis
+
+- Windows Server 2019 ou 2022 (Standard ou Datacenter)
+- CPU avec extensions de virtualisation (Intel VT-x ou AMD-V), activées dans le BIOS
+- 16 Go+ de RAM (32 Go recommandé pour plusieurs VMs)
+- Disque(s) séparé(s) pour le stockage des VMs — pas le disque OS
+
+**Vérifier la compatibilité matérielle :**
+
+```powershell
+# Vérifier la prise en charge de la virtualisation
+systeminfo | Select-String "Configuration requise pour Hyper-V"
+
+# Sortie attendue (tout doit être Oui) :
+# Extensions du mode moniteur de VM : Oui
+# Virtualisation activée dans le microprogramme : Oui
+# Conversion d'adresses de second niveau : Oui
+# Prévention de l'exécution des données disponible : Oui
+```
+
+---
+
+## Installer Hyper-V
+
+```powershell
+# Installer le rôle Hyper-V et les outils de gestion
+Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+
+# Après redémarrage — vérifier
+Get-WindowsFeature Hyper-V
+Get-Command -Module Hyper-V | Measure-Object  # Doit afficher 200+ cmdlets
+```
+
+---
+
+## Configuration des commutateurs virtuels
+
+Les commutateurs virtuels contrôlent la connectivité réseau des VMs. Créez-les avant de déployer des VMs.
+
+### Commutateur externe (VMs accèdent au réseau physique)
+
+```powershell
+# Obtenir le nom de la carte réseau physique
+Get-NetAdapter | Where-Object Status -eq "Up"
+
+# Créer un commutateur externe lié à la carte réseau physique
+New-VMSwitch -Name "Externe-Production" `
+  -NetAdapterName "Ethernet 2" `
+  -AllowManagementOS $true  # L'hôte a aussi accès via ce commutateur
+
+# AllowManagementOS: false si vous voulez des cartes réseau dédiées pour les VMs uniquement
+```
+
+### Commutateur interne (VMs communiquent entre elles + hôte, pas d'externe)
+
+```powershell
+New-VMSwitch -Name "Interne-Lab" -SwitchType Internal
+
+# Assigner une IP à la carte virtuelle de l'hôte pour le réseau interne
+$adapter = Get-NetAdapter | Where-Object Name -like "*Interne-Lab*"
+New-NetIPAddress -InterfaceIndex $adapter.InterfaceIndex `
+  -IPAddress "10.10.10.1" -PrefixLength 24
+```
+
+### Commutateur privé (VMs uniquement, pas d'accès hôte)
+
+```powershell
+New-VMSwitch -Name "Prive-Isole" -SwitchType Private
+```
+
+**En production :** utilisez le teaming de cartes réseau avant de créer les commutateurs externes :
+
+```powershell
+# Agréger deux cartes réseau physiques pour la redondance
+New-NetLbfoTeam -Name "Equipe-NIC-Prod" `
+  -TeamMembers "Ethernet 1","Ethernet 2" `
+  -TeamingMode SwitchIndependent `
+  -LoadBalancingAlgorithm Dynamic
+
+# Créer ensuite le commutateur externe sur l'équipe
+New-VMSwitch -Name "Externe-Production" -NetAdapterName "Equipe-NIC-Prod"
+```
+
+---
+
+## Créer des machines virtuelles
+
+### New-VM avec les bonnes pratiques
+
+```powershell
+# Créer une VM Génération 2 (UEFI, Démarrage sécurisé — pour Windows 10+ et Linux)
+$NomVM = "web-prod-01"
+$CheminVM = "D:\VMs"
+$CheminVHD = "D:\VMs\$NomVM\$NomVM-OS.vhdx"
+
+New-VM -Name $NomVM `
+  -Path $CheminVM `
+  -Generation 2 `
+  -MemoryStartupBytes 4GB `
+  -SwitchName "Externe-Production"
+
+# Ajouter le disque OS (VHDX pré-créé ou depuis une ISO)
+New-VHD -Path $CheminVHD -SizeBytes 80GB -Dynamic
+Add-VMHardDiskDrive -VMName $NomVM -Path $CheminVHD -ControllerType SCSI
+
+# Ajouter l'ISO pour l'installation
+$LecteurDVD = Add-VMDvdDrive -VMName $NomVM -Path "D:\ISOs\windows-server-2022.iso"
+
+# Définir l'ordre de démarrage (DVD en premier pour l'installation)
+$ordreDemarrage = Get-VMFirmware -VMName $NomVM
+Set-VMFirmware -VMName $NomVM -FirstBootDevice $LecteurDVD
+
+# Configurer CPU et mémoire
+Set-VM -Name $NomVM -ProcessorCount 4
+
+# Activer la mémoire dynamique
+Set-VMMemory -VMName $NomVM `
+  -DynamicMemoryEnabled $true `
+  -MinimumBytes 1GB `
+  -StartupBytes 4GB `
+  -MaximumBytes 8GB `
+  -Buffer 20  # Garder 20% de marge disponible
+
+Start-VM -Name $NomVM
+```
+
+### Disque de données séparé
+
+Mettez toujours les données d'application sur un VHD séparé du disque OS :
+
+```powershell
+$VHDDonnees = "D:\VMs\$NomVM\$NomVM-Donnees.vhdx"
+New-VHD -Path $VHDDonnees -SizeBytes 500GB -Dynamic
+Add-VMHardDiskDrive -VMName $NomVM -Path $VHDDonnees -ControllerType SCSI
+
+# Dans la VM : initialiser, formater et assigner une lettre de lecteur
+# Get-Disk | Where-Object PartitionStyle -eq RAW | Initialize-Disk -PartitionStyle GPT
+# New-Partition -DiskNumber 1 -UseMaximumSize -DriveLetter E
+# Format-Volume -DriveLetter E -FileSystem NTFS -NewFileSystemLabel "DonneesApp"
+```
+
+---
+
+## Points de contrôle (snapshots)
+
+Utilisez les points de contrôle avec parcimonie — ils sont pour les tests et la restauration, pas pour la sauvegarde.
+
+```powershell
+# Créer un point de contrôle avant un changement risqué
+Checkpoint-VM -Name "web-prod-01" -SnapshotName "Avant-Patch-Juin-2026"
+
+# Lister les points de contrôle
+Get-VMSnapshot -VMName "web-prod-01"
+
+# Restaurer vers un point de contrôle
+Restore-VMSnapshot -VMName "web-prod-01" -Name "Avant-Patch-Juin-2026" -Confirm:$false
+
+# Supprimer un point de contrôle (fusionne le delta)
+Remove-VMSnapshot -VMName "web-prod-01" -Name "Avant-Patch-Juin-2026"
+```
+
+**Règle de production :** supprimez les points de contrôle dans les 24–48 heures. Les points de contrôle de longue durée fragmentent les chaînes VHD, ralentissent les E/S et compliquent les sauvegardes.
+
+---
+
+## Migration en direct
+
+Déplacez des VMs entre hôtes Hyper-V sans interruption (nécessite un stockage partagé ou SMB 3.0).
+
+```powershell
+# Activer la migration en direct sur les deux hôtes
+Enable-VMMigration
+
+Set-VMHost -UseAnyNetworkForMigration $false
+Set-VMHost -VirtualMachineMigrationAuthenticationType Kerberos
+
+# Configurer les réseaux de migration (utiliser une carte réseau dédiée si possible)
+Add-VMMigrationNetwork -IP "10.20.0.10" -Subnet "255.255.255.0" -Priority 1
+
+# Migrer une VM vers un autre hôte (stockage partagé)
+Move-VM -Name "web-prod-01" -DestinationHost "hyper-v-noeud-02"
+
+# Migrer VM + stockage (pas de stockage partagé requis — plus lent)
+Move-VM -Name "web-prod-01" `
+  -DestinationHost "hyper-v-noeud-02" `
+  -DestinationStoragePath "\\hyper-v-noeud-02\VMs\web-prod-01"
+```
+
+---
+
+## Services d'intégration et configuration des invités
+
+Assurez-vous que les services d'intégration Hyper-V sont installés et à jour dans chaque VM.
+
+**Sur les VMs Windows :** fournis via Windows Update automatiquement.
+
+**Sur les VMs Linux :**
+
+```bash
+# Ubuntu/Debian
+sudo apt install linux-virtual linux-cloud-tools-virtual linux-tools-virtual
+
+# RHEL/CentOS
+sudo yum install hyperv-daemons
+
+# Vérifier que les services tournent
+systemctl status hv_fcopy_daemon hv_kvp_daemon hv_vss_daemon
+```
+
+**Services d'intégration clés :**
+- **Pulsations** : l'hôte détecte si la VM répond
+- **Synchronisation de l'heure** : maintient l'horloge de la VM synchronisée avec l'hôte
+- **VSS** : active les sauvegardes avec cohérence applicative
+- **Échange de paires clé-valeur** : transmettre des données entre l'hôte et la VM
+- **Copie de fichiers** : copier des fichiers dans la VM depuis l'hôte
+
+---
+
+## Gouvernance des ressources
+
+Évitez que les VMs bruyantes consomment toutes les ressources :
+
+```powershell
+# CPU — limiter la VM à 50% max du CPU total de l'hôte
+Set-VMProcessor -VMName "dev-test-01" -Maximum 50
+
+# Mémoire — le poids contrôle la priorité en cas de contention
+Set-VMMemory -VMName "web-prod-01" -Priority 80  # Haute priorité (1-100)
+Set-VMMemory -VMName "dev-test-01" -Priority 20  # Basse priorité
+
+# QoS stockage — limiter les IOPS (nécessite Windows Server 2016+)
+Set-VMHardDiskDrive -VMName "dev-test-01" `
+  -Path "D:\VMs\dev-test-01\dev-test-01-OS.vhdx" `
+  -MaximumIOPS 500 `
+  -MinimumIOPS 100
+```
+
+---
+
+## Surveillance
+
+```powershell
+# Résumé de l'utilisation des ressources des VMs
+Get-VM | Select-Object Name, State, CPUUsage, MemoryAssigned, Status
+
+# Compteurs de performance détaillés
+Get-Counter "\Hyper-V Hypervisor Virtual Processor(*)\% Guest Run Time" |
+  Select-Object -ExpandProperty CounterSamples |
+  Where-Object CookedValue -gt 80
+
+# Vérifier la santé de la réplication VM (Réplica Hyper-V)
+Get-VMReplication | Select-Object VMName, State, Health, LastReplicationTime
+
+# Trouver les VMs avec des snapshots vieux de plus de 7 jours
+Get-VM | ForEach-Object {
+    Get-VMSnapshot -VMName $_.Name | Where-Object {
+        $_.CreationTime -lt (Get-Date).AddDays(-7)
+    }
+} | Select-Object VMName, Name, CreationTime
+```
+
+---
+
+## Pièges courants
+
+- **Génération 1 vs Génération 2** : utilisez Gen 2 pour tous les OS modernes — UEFI, Démarrage sécurisé, démarrage plus rapide ; Gen 1 uniquement pour les anciens OS (Windows Server 2008 R2 ou plus ancien)
+- **VHDs dynamiques vs fixes** : les VHDs dynamiques économisent de l'espace mais ont des E/S légèrement moins bonnes — pour les VMs de base de données, utilisez des VHDs de taille fixe sur SSD
+- **Snapshots en production** : les snapshots de longue durée créent des chaînes de disques fragmentées — utilisez Veeam ou la Sauvegarde Windows Server pour la sauvegarde, pas les points de contrôle
+- **Surengagement de la mémoire** : Hyper-V gère mieux le surengagement mémoire que VMware, mais provoque quand même de la pagination sur l'hôte — surveillez avec `Get-VMMemory`
+- **Pas de services d'intégration sur Linux** : sans hyperv-daemons, les sauvegardes VSS échouent silencieusement et la dérive d'horloge s'accumule
+
+---
+
+## Ressources
+
+- [Hyper-V sur Windows Server — Microsoft Docs](https://docs.microsoft.com/fr-fr/windows-server/virtualization/hyper-v/hyper-v-on-windows-server)
+- [Bonnes pratiques Hyper-V](https://docs.microsoft.com/fr-fr/windows-server/virtualization/hyper-v/best-practices-for-running-linux-on-hyper-v)
+- [Référence PowerShell Hyper-V](https://docs.microsoft.com/fr-fr/powershell/module/hyper-v/)

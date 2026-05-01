@@ -1,0 +1,221 @@
+---
+title: "Optimisation des images Next.js : next/image, formats et stratégie CDN"
+excerpt: "Tirez le maximum de performances de next/image — dimensionnement responsive, priorité des formats, placeholders floutés, patterns distants et quand utiliser un CDN séparé vs. l'optimiseur intégré de Vercel."
+date: "2026-04-30"
+tags: ["Next.js", "Performance", "Images", "Web"]
+featured: false
+---
+
+Les images sont les actifs les plus lourds sur la plupart des pages. Mal gérées, elles sont la principale raison d'échec des Core Web Vitals. Bien gérées, elles sont invisibles — se chargeant instantanément avec une qualité parfaite. Voici tout ce que vous devez savoir sur l'optimisation des images dans Next.js.
+
+---
+
+## Prérequis
+
+- Next.js 13+ avec App Router
+- Images hébergées en local, sur Supabase Storage ou sur un CDN
+
+---
+
+## Les bases : utilisez toujours `next/image`
+
+```typescript
+import Image from 'next/image';
+
+// Image locale — Next.js connaît les dimensions au moment du build
+import maPhoto from '@/public/photo.jpg';
+
+<Image
+  src={maPhoto}
+  alt="Description de l'image"
+  // Pas besoin de width/height pour les imports locaux — déduits du fichier
+  priority  // Pour les images au-dessus de la ligne de flottaison (candidat LCP)
+/>
+
+// Image distante — doit spécifier width et height
+<Image
+  src="https://storage.exemple.com/images/photo.webp"
+  alt="Description"
+  width={800}
+  height={600}
+/>
+```
+
+---
+
+## Images responsives avec `fill` et `sizes`
+
+Pour les images qui remplissent leur conteneur de façon responsive :
+
+```typescript
+<div className="relative aspect-video w-full">
+  <Image
+    src={post.coverImage}
+    alt={post.title}
+    fill
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    className="object-cover"
+    priority={isFirstPost}
+  />
+</div>
+```
+
+**`sizes` est l'attribut le plus important** — sans lui, Next.js génère une image 100vw pour chaque breakpoint, chargeant des fichiers inutilement grands sur mobile.
+
+Lecture de `sizes` :
+- `(max-width: 768px) 100vw` → sur mobile, l'image occupe 100% de la largeur du viewport
+- `(max-width: 1200px) 50vw` → sur tablette, l'image occupe 50% de la largeur du viewport
+- `33vw` → sur desktop, l'image occupe ~33% de la largeur du viewport
+
+---
+
+## Optimisation des formats et qualité
+
+Next.js sert automatiquement du WebP (et AVIF quand supporté) plutôt que JPEG/PNG :
+
+```typescript
+// next.config.ts
+import type { NextConfig } from 'next';
+
+const config: NextConfig = {
+  images: {
+    formats: ['image/avif', 'image/webp'], // Préférer AVIF, fallback WebP
+    minimumCacheTTL: 86400, // Mettre en cache les images optimisées 24h (défaut : 60s)
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920], // Breakpoints pour srcset
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Pour fill/tailles fixes
+  },
+};
+
+export default config;
+```
+
+**Qualité :**
+```typescript
+// La qualité par défaut est 75 — généralement suffisante
+<Image src={img} alt="..." quality={85} />  // Plus élevée pour les images héros
+<Image src={vignette} alt="..." quality={60} />  // Plus basse pour de nombreuses vignettes
+```
+
+---
+
+## Placeholders floutés
+
+Évitez les décalages de mise en page et affichez un placeholder pendant le chargement :
+
+```typescript
+// Pour les images locales — Next.js génère automatiquement le flou
+import imageHero from '@/public/hero.jpg';
+
+<Image
+  src={imageHero}
+  alt="Héros"
+  placeholder="blur"  // Utilise une URI de données de flou générée
+  priority
+/>
+
+// Pour les images distantes — vous devez fournir blurDataURL
+<Image
+  src={post.coverImage}
+  alt={post.title}
+  placeholder="blur"
+  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+  width={800}
+  height={450}
+/>
+```
+
+**Générer blurDataURL automatiquement :**
+
+```typescript
+// Au moment du build ou dans un server component
+import { getPlaiceholder } from 'plaiceholder';
+
+async function getImageWithBlur(src: string) {
+  const { base64 } = await getPlaiceholder(src);
+  return base64;
+}
+
+const blurDataURL = await getImageWithBlur(post.coverImage);
+```
+
+---
+
+## Remote Patterns : autoriser les domaines externes
+
+```typescript
+// next.config.ts
+const config: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'sxcwkbuvtxxdfpfdaukk.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.githubusercontent.com', // Wildcards supportés
+      },
+    ],
+  },
+};
+```
+
+---
+
+## Quand utiliser un CDN séparé vs. l'optimiseur Vercel
+
+**Utilisez l'optimiseur intégré de Vercel quand :**
+- Vous êtes sur Vercel (zéro config, WebP/AVIF automatique)
+- Les images sont stockées localement ou viennent d'un petit ensemble de domaines fiables
+- Le trafic est modéré (les requêtes d'optimisation d'images comptent dans les limites de votre plan)
+
+**Utilisez un CDN dédié (Cloudflare Images, Imgix, Cloudinary) quand :**
+- Site à fort trafic avec de nombreuses images uniques
+- Besoin de transformations avancées (recadrage, redimensionnement, filigrane)
+- Vous voulez éviter la facturation d'optimisation d'images Vercel à grande échelle
+
+```typescript
+// Loader personnalisé pour Cloudinary
+function cloudinaryLoader({ src, width, quality }: ImageLoaderProps) {
+  return `https://res.cloudinary.com/votre-cloud/image/fetch/f_auto,q_${quality ?? 75},w_${width}/${src}`;
+}
+
+<Image
+  loader={cloudinaryLoader}
+  src="https://origine.exemple.com/photo.jpg"
+  alt="Optimisé par Cloudinary"
+  width={800}
+  height={600}
+/>
+```
+
+---
+
+## Core Web Vitals : ce qu'il faut surveiller
+
+**LCP (Largest Contentful Paint)** — le temps de chargement de l'image héros :
+- Ajoutez `priority` à l'image au-dessus de la ligne de flottaison — cela la précharge
+- Évitez le lazy-loading de l'image LCP (comportement par défaut sans `priority`)
+- Gardez l'image LCP sous 200Ko après optimisation
+
+**CLS (Cumulative Layout Shift)** — images qui sautent pendant le chargement :
+- Spécifiez toujours `width`/`height` ou utilisez `fill` avec un conteneur dimensionné
+- Utilisez `placeholder="blur"` pour maintenir l'espace pendant le chargement
+
+---
+
+## Pièges courants
+
+- **`<img>` au lieu de `<Image>`** : les balises `<img>` brutes ne sont pas optimisées — la règle ESLint `@next/next/no-img-element` détecte ça
+- **`fill` sans parent positionné** : `fill` nécessite que le parent ait `position: relative` (ou absolute/fixed) et des dimensions explicites
+- **`sizes` manquant avec `fill`** : sans `sizes`, Next.js suppose 100vw et génère de grands srcsets
+- **`priority` sur chaque image** : seule l'image LCP (visible sans scroll) doit être priority — trop en ajoute sur tout
+
+---
+
+## Ressources
+
+- [Référence API next/image](https://nextjs.org/docs/app/api-reference/components/image)
+- [Core Web Vitals](https://web.dev/vitals/)
+- [plaiceholder — Générateur de placeholder flou](https://plaiceholder.co/)

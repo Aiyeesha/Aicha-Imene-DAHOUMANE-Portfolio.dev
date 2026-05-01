@@ -1,0 +1,218 @@
+---
+title: "Docker Compose for Production: Networks, Volumes, Health Checks"
+excerpt: "Set up a robust Docker Compose stack for production — named networks, persistent volumes, health checks, secrets, resource limits, and zero-downtime restarts."
+date: "2026-04-30"
+tags: ["IT Ops", "Docker", "DevOps"]
+featured: false
+---
+
+Docker Compose is excellent for multi-service deployments on a single VPS. But the default examples you find online skip everything that matters in production: health checks, restart policies, resource limits, and secrets. Here's a production-ready setup.
+
+---
+
+## Prerequisites
+
+- Docker Engine 24+ and Docker Compose v2
+- A Linux server (Ubuntu 22.04 recommended)
+- Basic understanding of containers
+
+---
+
+## A Production-Ready compose.yml
+
+```yaml
+# compose.yml
+services:
+
+  app:
+    image: your-app:${APP_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://app:${DB_PASSWORD}@db:5432/appdb
+    secrets:
+      - db_password
+      - jwt_secret
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "127.0.0.1:3000:3000"   # Only bind to localhost — Nginx handles external
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: appdb
+    secrets:
+      - db_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    networks:
+      - frontend
+    depends_on:
+      - app
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true   # No external access to backend network
+
+volumes:
+  postgres_data:
+    driver: local
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+```
+
+---
+
+## Environment Variables and .env Files
+
+```bash
+# .env (committed — no secrets)
+APP_VERSION=1.2.0
+POSTGRES_PORT=5432
+
+# .env.production (NOT committed — gitignored)
+DB_PASSWORD=your-strong-password-here
+```
+
+```bash
+# .gitignore
+.env.production
+secrets/
+```
+
+> **Rule:** Never put real secrets in `compose.yml` or `.env`. Use Docker secrets (file-based) or an external secret manager.
+
+---
+
+## Health Checks — Why They Matter
+
+Without health checks, `depends_on` only waits for the container to *start*, not for the service to be *ready*. With `condition: service_healthy`, Docker waits until the healthcheck passes.
+
+```yaml
+# Minimal health check patterns
+
+# HTTP API
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+# PostgreSQL
+healthcheck:
+  test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+  interval: 10s
+  timeout: 5s
+  retries: 5
+
+# Redis
+healthcheck:
+  test: ["CMD", "redis-cli", "ping"]
+  interval: 10s
+  timeout: 3s
+  retries: 3
+```
+
+---
+
+## Restart Policies
+
+```yaml
+restart: no              # Never restart (development)
+restart: always          # Always restart — even after docker daemon restart
+restart: unless-stopped  # Restart unless explicitly stopped (recommended for prod)
+restart: on-failure      # Only restart on non-zero exit code
+```
+
+Use `unless-stopped` for most production services. It survives server reboots without restarting containers you intentionally stopped for maintenance.
+
+---
+
+## Zero-Downtime Updates
+
+```bash
+# Pull new image version
+docker compose pull app
+
+# Recreate only the app service (db stays up)
+docker compose up -d --no-deps app
+
+# Verify health
+docker compose ps
+docker compose logs app --tail 50
+```
+
+For true zero-downtime, use Docker Swarm or Kubernetes, or put Nginx in front and update containers one at a time.
+
+---
+
+## Common Pitfalls
+
+- **Binding to 0.0.0.0**: Always bind app ports to `127.0.0.1` and let Nginx/Caddy handle external traffic
+- **No resource limits**: A misbehaving container can consume all server memory — always set limits
+- **Volumes on tmpfs hosts**: Some cloud providers put `/tmp` on tmpfs — always use named volumes for databases
+- **Missing `--no-deps`**: `docker compose up -d` without `--no-deps` recreates ALL services, causing unnecessary downtime
+
+---
+
+## Resources
+
+- [Docker Compose File Reference](https://docs.docker.com/compose/compose-file/)
+- [Docker Secrets](https://docs.docker.com/engine/swarm/secrets/)
+- [Compose Healthchecks](https://docs.docker.com/compose/compose-file/05-services/#healthcheck)

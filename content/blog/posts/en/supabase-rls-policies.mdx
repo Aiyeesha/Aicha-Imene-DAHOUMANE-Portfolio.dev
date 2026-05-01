@@ -1,0 +1,240 @@
+---
+title: "Supabase Row Level Security: Policies That Actually Work"
+excerpt: "Write RLS policies that secure your data without killing performance — user isolation, multi-tenant patterns, service role bypasses, and policy debugging."
+date: "2026-04-30"
+tags: ["Next.js", "Supabase", "Database", "Security"]
+featured: false
+---
+
+Row Level Security is the most important security feature in Supabase — and the most commonly misconfigured. Enabled but with no policies? Everyone is blocked. Wrong policy logic? Users see each other's data. Here's how to write policies that are both secure and fast.
+
+---
+
+## Prerequisites
+
+- Supabase project with a PostgreSQL database
+- Tables with data you want to protect
+- Authentication configured (users must exist to write meaningful RLS)
+
+---
+
+## Enable RLS and Understand the Default
+
+```sql
+-- Enable RLS on a table (disabled by default)
+ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
+
+-- With RLS enabled and NO policies: all access is denied (for non-superusers)
+-- With RLS enabled and policies: only rows matching a policy are accessible
+```
+
+The `anon` role (unauthenticated) and `authenticated` role (logged-in user) are what your policies target. The service role bypasses RLS entirely.
+
+---
+
+## Basic User Isolation Pattern
+
+The most common pattern — users can only access their own rows:
+
+```sql
+-- Allow users to read only their own rows
+CREATE POLICY "users_read_own" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+-- Allow users to insert only rows with their own user_id
+CREATE POLICY "users_insert_own" ON posts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to update only their own rows
+CREATE POLICY "users_update_own" ON posts
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to delete only their own rows
+CREATE POLICY "users_delete_own" ON posts
+  FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+```
+
+`USING` controls which rows are **visible** (SELECT, UPDATE, DELETE).
+`WITH CHECK` controls which rows can be **written** (INSERT, UPDATE).
+
+---
+
+## Public Read, Authenticated Write
+
+Blog posts or products that are public to read but protected to write:
+
+```sql
+-- Anyone (including unauthenticated) can read published posts
+CREATE POLICY "public_read_published" ON posts
+  FOR SELECT
+  TO anon, authenticated
+  USING (published = true);
+
+-- Only the author can read their unpublished drafts
+CREATE POLICY "author_read_drafts" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id AND published = false);
+
+-- Only authenticated users can insert
+CREATE POLICY "authenticated_insert" ON posts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+```
+
+---
+
+## Multi-Tenant Pattern with Organizations
+
+When users belong to organizations and can see all data within their org:
+
+```sql
+-- Helper function for cleaner policies
+CREATE OR REPLACE FUNCTION auth.user_org_id()
+RETURNS uuid AS $$
+  SELECT org_id FROM user_profiles WHERE user_id = auth.uid()
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
+
+-- Users can see all rows belonging to their organization
+CREATE POLICY "org_members_read" ON projects
+  FOR SELECT
+  TO authenticated
+  USING (org_id = auth.user_org_id());
+
+-- Only owners can delete
+CREATE POLICY "org_owners_delete" ON projects
+  FOR DELETE
+  TO authenticated
+  USING (
+    org_id = auth.user_org_id() AND
+    EXISTS (
+      SELECT 1 FROM org_members
+      WHERE org_id = projects.org_id
+      AND user_id = auth.uid()
+      AND role = 'owner'
+    )
+  );
+```
+
+---
+
+## Admin Override with Custom Claims
+
+Sometimes you need an admin user to see all rows. Use JWT custom claims:
+
+```sql
+-- Check if user has admin claim in their JWT
+CREATE POLICY "admins_read_all" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (
+    auth.uid() = user_id  -- user's own posts
+    OR
+    (auth.jwt() ->> 'user_role') = 'admin'  -- OR is admin
+  );
+```
+
+Set the custom claim in a Supabase Function or Edge Function after user creation:
+
+```typescript
+// supabase/functions/set-user-role/index.ts
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+Deno.serve(async (req) => {
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
+
+  const { userId, role } = await req.json();
+
+  await supabase.auth.admin.updateUserById(userId, {
+    app_metadata: { user_role: role }
+  });
+
+  return new Response(JSON.stringify({ success: true }));
+});
+```
+
+---
+
+## Performance: Index the Columns in USING Clauses
+
+RLS policies run on every row. If your `USING` clause filters on `user_id`, that column must be indexed:
+
+```sql
+-- Without this index, every SELECT scans the full table for RLS
+CREATE INDEX idx_posts_user_id ON posts(user_id);
+CREATE INDEX idx_projects_org_id ON projects(org_id);
+```
+
+For complex policies with subqueries, test with `EXPLAIN ANALYZE`:
+
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM posts WHERE true;
+-- The WHERE true triggers RLS evaluation — check for Seq Scans on large tables
+```
+
+---
+
+## Bypass RLS from Server (Service Role)
+
+Your Next.js server-side code can bypass RLS using the service role key:
+
+```typescript
+// Use service role only in server-side code (API routes, server actions)
+import { createClient } from '@supabase/supabase-js';
+
+const adminClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // NOT NEXT_PUBLIC — server only
+);
+
+// This bypasses RLS — use only for admin operations
+const { data } = await adminClient.from('posts').select('*');
+```
+
+---
+
+## Debugging Policies
+
+```sql
+-- Test as a specific user
+SET LOCAL role TO authenticated;
+SET LOCAL request.jwt.claims TO '{"sub": "user-uuid-here"}';
+SELECT * FROM posts; -- Should return only that user's rows
+
+-- See all policies on a table
+SELECT * FROM pg_policies WHERE tablename = 'posts';
+
+-- Check which rows the current user can see
+SELECT * FROM posts; -- Run as authenticated user in Supabase dashboard
+```
+
+---
+
+## Common Pitfalls
+
+- **RLS enabled with no policies**: blocks ALL access including your app — always create at least a SELECT policy before enabling
+- **Not indexing filtered columns**: `USING (user_id = auth.uid())` on a 1M-row table without an index is a full table scan on every query
+- **Using anon key on the server**: the anon key is subject to RLS — your server code should use service role for admin operations
+- **Forgetting WITH CHECK on INSERT**: `USING` only applies to existing rows — INSERT needs `WITH CHECK` to prevent users from inserting rows they don't own
+
+---
+
+## Resources
+
+- [Supabase RLS Documentation](https://supabase.com/docs/guides/database/postgres/row-level-security)
+- [PostgreSQL RLS Reference](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
+- [Supabase Auth Helpers](https://supabase.com/docs/guides/auth/auth-helpers)

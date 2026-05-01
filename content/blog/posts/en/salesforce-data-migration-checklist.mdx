@@ -1,0 +1,169 @@
+---
+title: "Salesforce Data Migration Checklist: From Legacy System to Org"
+excerpt: "A practical checklist for migrating data into Salesforce — mapping, deduplication, data loader strategy, validation rules, and rollback planning."
+date: "2026-04-30"
+tags: ["Salesforce", "Data", "Migration", "Admin"]
+featured: false
+---
+
+Data migrations are where Salesforce projects fail. Not in design, not in development — in the moment when 50,000 Accounts land in production with the wrong owner, blank required fields, or duplicated records. This checklist covers what actually needs to happen before, during, and after a migration.
+
+---
+
+## Prerequisites
+
+- Salesforce org with the target schema ready
+- Source data exported (CSV, SQL dump, or API)
+- Admin access and a sandbox to test against
+
+---
+
+## Phase 1 — Analyze and Map
+
+Before touching any tool, answer these questions:
+
+**Object inventory:**
+- What objects need to be migrated? (Accounts, Contacts, Opportunities, custom objects?)
+- What are the relationships? (lookup, master-detail, many-to-many via junction?)
+- Are there objects with external IDs from the source system?
+
+**Data quality:**
+- What percentage of records have missing required fields?
+- Are there duplicates? What's the deduplication key?
+- What encoding is the source data? (UTF-8 vs. latin-1 can break accented characters)
+
+**Field mapping table:**
+
+| Source Field | Salesforce Field | Transform Needed |
+|-------------|-----------------|-----------------|
+| customer_name | Account.Name | None |
+| email | Contact.Email | Lowercase |
+| created_date | Account.CreatedDate | ISO 8601 format |
+| account_type | Account.Type | Enum mapping |
+
+---
+
+## Phase 2 — Prepare the Org
+
+```apex
+// Temporarily disable validation rules and triggers for bulk load
+// In Setup: deactivate validation rules for migrated objects
+// In Apex triggers: add a bypass mechanism
+
+public class TriggerUtils {
+    public static Boolean isMigrationMode = false;
+}
+
+trigger AccountTrigger on Account (before insert, before update) {
+    if (TriggerUtils.isMigrationMode) return;
+    // Normal trigger logic...
+}
+```
+
+**Also disable:**
+- Workflow rules that send emails
+- Process Builder / Flow automation that creates child records
+- Duplicate rules (temporarily, with logging)
+
+---
+
+## Phase 3 — Load Order Matters
+
+Always load in dependency order:
+
+```
+1. Users (if migrating owners — match by email)
+2. Accounts (parent objects)
+3. Contacts (requires Account lookup)
+4. Opportunities (requires Account lookup)
+5. Opportunity Contact Roles (requires both Opp and Contact)
+6. Custom junction objects last
+```
+
+---
+
+## Phase 4 — Data Loader Strategy
+
+```bash
+# Use Salesforce CLI for large volumes
+sf data import bulk \
+  --sobject Account \
+  --file accounts.csv \
+  --external-id External_Id__c \
+  --wait 10
+
+# Or Data Loader with upsert mode (recommended over insert)
+# Upsert: insert if new, update if external ID matches
+```
+
+**Key settings:**
+- Use **Upsert** not Insert (idempotent — safe to re-run)
+- Set a meaningful **External ID** field for every object (store source system ID)
+- Batch size: 200 for most objects, 10 for complex objects with many lookups
+- Run during off-hours if possible
+
+---
+
+## Phase 5 — Validate
+
+```soql
+-- Check for records with missing required lookups
+SELECT Id, Name, AccountId FROM Contact WHERE AccountId = null
+
+-- Count by owner to spot assignment issues
+SELECT Owner.Name, COUNT(Id) cnt FROM Account GROUP BY Owner.Name ORDER BY cnt DESC
+
+-- Verify total counts match source
+SELECT COUNT(Id) FROM Account  -- should match source system count
+```
+
+**Post-load checks:**
+- [ ] Record counts match source system (±0)
+- [ ] Spot-check 10–20 records manually against source
+- [ ] Relationships resolve correctly (no broken lookups)
+- [ ] Required fields populated on all records
+- [ ] Page layouts display as expected
+
+---
+
+## Phase 6 — Re-enable and Go Live
+
+```
+1. Re-enable validation rules
+2. Re-enable triggers (remove migration bypass)
+3. Re-enable workflow/flows
+4. Run duplicate detection scan
+5. Assign record ownership if batch-loaded as admin
+6. Notify users and run smoke tests
+```
+
+---
+
+## Rollback Plan
+
+- Keep the source system read-only for 30 days post-migration
+- Export all migrated records with their new Salesforce IDs before go-live
+- Document the delete query in case you need to wipe and re-run:
+
+```apex
+// Delete all records with External_Id__c populated (migrated records)
+List<Account> toDelete = [SELECT Id FROM Account WHERE External_Id__c != null];
+delete toDelete;
+```
+
+---
+
+## Common Pitfalls
+
+- **Loading without External IDs**: you can't safely re-run the migration, every re-run creates duplicates
+- **Ignoring timezones**: date/datetime fields shift based on org locale — always use UTC in your source files
+- **Forgetting record types**: records loaded without a RecordTypeId get the default, which may not be correct
+- **Owner mapping**: Salesforce user IDs differ between orgs — always map by email, not ID
+
+---
+
+## Resources
+
+- [Salesforce Data Loader Guide](https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/)
+- [sf data import CLI Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
+- [External ID Best Practices](https://help.salesforce.com/s/articleView?id=sf.faq_import_general_what_is_an_external.htm)

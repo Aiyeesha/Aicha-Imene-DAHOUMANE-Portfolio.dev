@@ -1,0 +1,193 @@
+---
+title: "LWC Performance: Wire Adapters, Lazy Loading, and Rendering Pitfalls"
+excerpt: "Speed up Lightning Web Components — understand wire adapter caching, avoid unnecessary re-renders, lazy load heavy components, and measure with Chrome DevTools."
+date: "2026-04-30"
+tags: ["Salesforce", "LWC", "Performance", "JavaScript"]
+featured: false
+---
+
+A slow Lightning page is a support ticket waiting to happen. Most LWC performance problems fall into three categories: too many server round-trips, unnecessary re-renders, and heavy components blocking the initial paint. Here's how to diagnose and fix each.
+
+---
+
+## Prerequisites
+
+- Basic LWC knowledge (components, decorators, wire)
+- Chrome DevTools familiarity
+- Access to a Salesforce org with Lightning Experience
+
+---
+
+## Wire Adapters: Caching and When It Helps You
+
+`@wire` caches results automatically — but only for the same parameters. When params change, LWC fires a new server call.
+
+```javascript
+import { LightningElement, wire, api } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+import { NAME_FIELD, EMAIL_FIELD } from '@salesforce/schema/Contact';
+
+export default class ContactCard extends LightningElement {
+    @api recordId;
+
+    // ✅ Wire cache works: same recordId = no server call
+    @wire(getRecord, { recordId: '$recordId', fields: [NAME_FIELD, EMAIL_FIELD] })
+    contact;
+
+    // ❌ Object literal in template = new reference every render = cache miss every time
+    // Don't do: @wire(getRecord, { recordId: '$recordId', fields: [{ objectApiName: 'Contact', fieldApiName: 'Name' }] })
+}
+```
+
+**Use string field references** (imported from `@salesforce/schema`) instead of object literals — they're stable references that play well with wire caching.
+
+---
+
+## Avoiding Unnecessary Re-renders
+
+LWC re-renders a component when tracked state changes. The problem is over-tracking.
+
+```javascript
+import { LightningElement, track } from 'lwc';
+
+export default class FilterPanel extends LightningElement {
+    // ❌ @track on a primitive — unnecessary, primitives are reactive by default
+    @track searchTerm = '';
+
+    // ❌ @track on the whole object — any nested property change = full re-render
+    @track filters = { status: 'Open', priority: 'High', assignee: null };
+
+    // ✅ Only track what the template actually reads
+    // For simple properties, @track is not needed since LWC 2.x
+    searchTerm = '';
+    filterStatus = 'Open';
+    filterPriority = 'High';
+}
+```
+
+**Batch state updates** — instead of three separate assignments (three re-renders), compute the new state in one shot:
+
+```javascript
+// ❌ Three re-renders
+this.status = 'Closed';
+this.priority = 'Low';
+this.assignee = userId;
+
+// ✅ One re-render (spread creates a new object reference, LWC diffs the result)
+this.filters = { ...this.filters, status: 'Closed', priority: 'Low', assignee: userId };
+```
+
+---
+
+## Lazy Loading Heavy Components
+
+Don't import everything at the top of a component file. Load on demand with dynamic imports:
+
+```javascript
+import { LightningElement } from 'lwc';
+
+export default class Dashboard extends LightningElement {
+    chartLoaded = false;
+    chartModule;
+
+    async handleShowChart() {
+        if (!this.chartModule) {
+            // Load only when user clicks
+            const module = await import('c/heavyChartComponent');
+            this.chartModule = module;
+        }
+        this.chartLoaded = true;
+    }
+}
+```
+
+```html
+<!-- dashboard.html -->
+<template>
+    <lightning-button label="Show Chart" onclick={handleShowChart}></lightning-button>
+    <template if:true={chartLoaded}>
+        <c-heavy-chart-component></c-heavy-chart-component>
+    </template>
+</template>
+```
+
+---
+
+## Pagination Instead of Loading Everything
+
+Never wire a SOQL result that can return hundreds of records into a single table.
+
+```javascript
+import { LightningElement, wire } from 'lwc';
+import getContacts from '@salesforce/apex/ContactController.getContacts';
+
+const PAGE_SIZE = 20;
+
+export default class ContactList extends LightningElement {
+    page = 1;
+
+    @wire(getContacts, { pageSize: PAGE_SIZE, pageNumber: '$page' })
+    contacts;
+
+    get hasPrevious() { return this.page > 1; }
+    get hasNext() { return this.contacts?.data?.hasMore; }
+
+    previousPage() { this.page -= 1; }
+    nextPage() { this.page += 1; }
+}
+```
+
+```apex
+@AuraEnabled(cacheable=true)
+public static Map<String, Object> getContacts(Integer pageSize, Integer pageNumber) {
+    Integer offset = (pageNumber - 1) * pageSize;
+    List<Contact> records = [
+        SELECT Id, Name, Email FROM Contact
+        LIMIT :pageSize OFFSET :offset
+    ];
+    Integer total = [SELECT COUNT() FROM Contact];
+    return new Map<String, Object>{
+        'records' => records,
+        'hasMore' => (offset + pageSize) < total
+    };
+}
+```
+
+---
+
+## Measuring with Chrome DevTools
+
+1. Open the record page in Salesforce
+2. Open DevTools → **Performance** tab
+3. Click **Record**, interact with your component, stop recording
+4. Look for:
+   - Long tasks (red bars > 50ms) — usually JS execution or large DOM updates
+   - Repeated network calls to `/aura` or `/apex` — wire cache misses
+   - Layout thrash — reading then writing DOM properties in a loop
+
+**For Apex call timing:**
+```javascript
+// Add timing in dev/sandbox only
+connectedCallback() {
+    const start = performance.now();
+    // ... after wire resolves
+    console.log(`Data load: ${performance.now() - start}ms`);
+}
+```
+
+---
+
+## Common Pitfalls
+
+- **`cacheable=true` missing on Apex**: wire adapter results are not cached unless the method is annotated `@AuraEnabled(cacheable=true)`
+- **Iterating with `key` on index**: always use a stable record ID as the `key` in `for:each` — using array index causes full re-render on any list change
+- **Large HTML templates**: split complex templates into child components — smaller components re-render independently
+- **Fetching in `connectedCallback`**: prefer `@wire` so Salesforce can cache and prefetch
+
+---
+
+## Resources
+
+- [LWC Performance Best Practices](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.performance)
+- [Wire Service Documentation](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.data_wire_service_about)
+- [LWC Recipes — GitHub](https://github.com/trailheadapps/lwc-recipes)

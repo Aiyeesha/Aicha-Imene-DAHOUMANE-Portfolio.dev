@@ -1,0 +1,213 @@
+---
+title: "Incident Response Runbook Template for IT Teams"
+excerpt: "A practical incident response runbook — severity classification, communication templates, escalation paths, war room setup, and post-incident review process."
+date: "2026-04-30"
+tags: ["IT Ops", "Incident Response", "SRE", "Operations"]
+featured: false
+---
+
+An incident at 2 AM is not the time to figure out your process. A runbook gives any on-call engineer the steps, contacts, and communication templates they need to handle incidents consistently — regardless of their experience level.
+
+---
+
+## Severity Levels
+
+Define severity upfront so everyone uses the same language:
+
+| Level | Definition | Response Time | Examples |
+|-------|-----------|--------------|---------|
+| SEV-1 | Complete outage or data loss | Immediate (< 15 min) | DB down, auth broken, payment failure |
+| SEV-2 | Major feature degraded | 30 minutes | Slow API, 50% error rate, emails not sending |
+| SEV-3 | Minor issue, workaround available | 4 hours | Single user affected, cosmetic bug, slow page |
+| SEV-4 | Low priority, no user impact | Next business day | Warning alert, deprecated endpoint used |
+
+---
+
+## Incident Declaration
+
+**Who can declare an incident?** Anyone on the team. It's easier to stand down a false alarm than to delay a real incident.
+
+**How to declare:**
+1. Post in `#incidents` Slack channel: `[INCIDENT] SEV-X — Brief description`
+2. Create an incident ticket in your tracking system
+3. Assign an Incident Commander (IC) — the single person coordinating the response
+
+---
+
+## Roles
+
+```
+Incident Commander (IC)
+  — Coordinates the response, NOT the one fixing the issue
+  — Runs the war room / incident channel
+  — Makes escalation decisions
+  — Communicates with stakeholders
+
+Technical Lead
+  — Leads the investigation and fix
+  — Reports findings to the IC
+  — Does NOT handle communications
+
+Communications Lead (SEV-1/2 only)
+  — Writes status page updates
+  — Responds to customer escalations
+  — Coordinates with CX/CS team
+```
+
+---
+
+## War Room Setup (SEV-1/2)
+
+```
+1. Open a Zoom/Meet bridge — share the link in #incidents
+2. Create a dedicated Slack channel: #inc-YYYY-MM-DD-description
+3. Start a shared document (Google Doc / Notion) for the incident timeline
+4. Pin the channel: Zoom link, dashboard links, runbook link
+```
+
+**Timeline document template:**
+```
+INCIDENT: [Title]
+DECLARED: [Time] by [Name]
+SEVERITY: SEV-X
+IC: [Name]
+TECH LEAD: [Name]
+
+=== TIMELINE ===
+14:32 — [Name] detected elevated error rate on /api/payments (Datadog alert)
+14:35 — [Name] declared incident, assigned IC
+14:38 — Investigation started, DB query times identified as root cause
+14:52 — Temporary fix deployed (increased connection pool)
+15:10 — Error rate back to normal, monitoring
+15:30 — Incident resolved
+```
+
+---
+
+## Investigation Checklist
+
+For each incident, check these in order:
+
+```
+Infrastructure:
+  [ ] Recent deployments in the last 2 hours?
+  [ ] Infrastructure changes (scaling events, config changes)?
+  [ ] Cloud provider status page (AWS, GCP, Azure)?
+  [ ] Resource exhaustion (CPU, memory, disk, DB connections)?
+
+Application:
+  [ ] Error rate in application monitoring (Sentry, Datadog)?
+  [ ] Specific endpoints or services affected?
+  [ ] Logs showing root cause?
+  [ ] Database query performance?
+
+External:
+  [ ] Third-party service dependencies (Stripe, Twilio, etc.)?
+  [ ] DNS issues?
+  [ ] CDN/proxy issues?
+```
+
+---
+
+## Communication Templates
+
+**Status page update (incident declared):**
+```
+[Investigating] We are investigating reports of [issue description].
+Our team has been alerted and is working to identify the cause.
+We will provide an update in 30 minutes.
+```
+
+**Status page update (cause identified):**
+```
+[Identified] We have identified the cause of [issue]: [brief explanation].
+Our team is working on a fix. We estimate resolution by [time].
+```
+
+**Status page update (resolved):**
+```
+[Resolved] The issue affecting [feature] has been resolved as of [time].
+Root cause: [brief explanation]. We will publish a full post-mortem within 48 hours.
+```
+
+**Internal stakeholder update (Slack):**
+```
+Status update for #inc-[date]-[description]:
+- Current status: [Investigating/Identified/Mitigating/Resolved]
+- Impact: [What's affected and how many users]
+- Root cause: [Known/Unknown]
+- Next action: [What's being done now]
+- ETA: [Time or "unknown"]
+- Next update: [In X minutes]
+```
+
+---
+
+## Escalation Path
+
+```
+SEV-3/4:
+  On-call engineer → resolve independently or escalate to Tech Lead
+
+SEV-2:
+  On-call → Tech Lead → Engineering Manager (if not resolved in 2h)
+
+SEV-1:
+  On-call → Tech Lead + Engineering Manager immediately
+  → VP Engineering / CTO if not mitigated in 30 min
+  → CPO/CEO if customer data involved or > 1h outage
+```
+
+---
+
+## Post-Incident Review (PIR)
+
+Every SEV-1 and SEV-2 requires a PIR within 5 business days:
+
+**PIR Template:**
+```markdown
+## Incident Summary
+- Date/Time: 
+- Duration: 
+- Severity: 
+- Impact: [X users affected, $Y revenue impact]
+
+## Timeline
+[Copy from the incident timeline document]
+
+## Root Cause
+[The actual technical root cause — not "human error"]
+
+## Contributing Factors
+[What made this possible? Missing monitoring? No circuit breaker?]
+
+## What Went Well
+[Things that helped limit impact or speed recovery]
+
+## Action Items
+| Action | Owner | Due Date |
+|--------|-------|---------|
+| Add circuit breaker to payment service | @engineer | 2026-05-07 |
+| Alert threshold for DB connections | @sre | 2026-05-05 |
+| Update runbook with DB recovery steps | @ic | 2026-05-03 |
+
+## Blameless Principle
+This review focuses on systems and processes, not individuals.
+```
+
+---
+
+## Common Pitfalls
+
+- **No IC assigned**: without a coordinator, engineers talk over each other and nobody watches the big picture
+- **IC also doing the technical work**: the IC should be asking questions and synthesizing, not debugging
+- **Skipping the PIR**: recurring incidents usually have the same root cause — PIRs are how you break the cycle
+- **Vague action items**: "improve monitoring" is not actionable — "add Datadog alert for DB connection pool > 80% for 5 minutes" is
+
+---
+
+## Resources
+
+- [PagerDuty Incident Response Guide](https://response.pagerduty.com/)
+- [Google SRE Book: Managing Incidents](https://sre.google/sre-book/managing-incidents/)
+- [Blameless PIR Process](https://www.atlassian.com/incident-management/postmortem/blameless)

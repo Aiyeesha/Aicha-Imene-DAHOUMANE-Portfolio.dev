@@ -1,0 +1,149 @@
+---
+title: "Rapports et tableaux de bord Salesforce : au-delà des bases"
+excerpt: "Allez au-delà des rapports simples — cross filters, bucket columns, joined reports, tableaux de bord dynamiques et abonnements aux rapports pour une distribution automatisée."
+date: "2026-04-30"
+tags: ["Salesforce", "Reports", "Analytics", "Admin"]
+featured: false
+---
+
+La plupart des utilisateurs Salesforce savent créer un rapport tabulaire basique. Mais les vrais gains de productivité viennent de fonctionnalités que la plupart des admins ne configurent jamais : cross filters, joined reports et tableaux de bord dynamiques qui s'adaptent par utilisateur. Voici ce que vous manquez.
+
+---
+
+## Prérequis
+
+- Org Salesforce avec accès au Report Builder
+- Compréhension de base des objets et des relations
+- App Rapports et tableaux de bord visible dans l'App Launcher
+
+---
+
+## Cross Filters : "Afficher les Accounts SANS Opportunités ouvertes"
+
+Les cross filters vous permettent de filtrer un objet principal en fonction de la présence ou l'absence d'enregistrements liés — sans écrire une formule ou du code Apex.
+
+**Cas d'usage :** Trouver les Accounts sans Opportunités ouvertes (comptes à risque à cibler pour l'upsell).
+
+```
+Type de rapport : Accounts
+Ajouter un Cross Filter : Accounts SANS Opportunities
+  Filtre supplémentaire : Étape Opportunity ÉGALE "Ouverte"
+```
+
+C'est impossible avec un filtre de champ standard car vous ne pouvez pas filtrer sur "l'absence" d'un enregistrement enfant.
+
+**Autres exemples :**
+- Contacts SANS Cases dans les 30 derniers jours (contacts inactifs)
+- Leads AVEC Activités mais NON Convertis
+- Opportunities SANS Tâches (affaires sans suivi)
+
+---
+
+## Bucket Columns : regroupement inline sans champ de formule
+
+Les bucket columns vous permettent de regrouper des valeurs à la volée dans le rapport sans créer un champ de formule sur l'objet.
+
+**Exemple :** Regrouper les Opportunities par catégorie de taille d'affaire :
+
+```
+Ajouter une Bucket Column sur : Montant
+  < 10 000    → "Petite"
+  10 000–50 000 → "Mid-Market"
+  > 50 000    → "Entreprise"
+```
+
+La colonne buckétisée apparaît comme une nouvelle colonne sur laquelle vous pouvez grouper, ajouter des graphiques ou utiliser dans des formules de synthèse.
+
+**Cas d'usage :**
+- Tranches d'âge sur la date de naissance du Contact
+- Niveaux de score de Lead (froid/tiède/chaud)
+- Regroupements par délai de clôture (< 30, 30–90, > 90 jours)
+
+---
+
+## Joined Reports : plusieurs types de rapport en un
+
+Les joined reports vous permettent de combiner des données de différents types de rapport côte à côte. Exemple classique : entonnoir leads vs. opportunities dans un seul rapport.
+
+```
+Nouveau rapport → Type : Opportunities
+Ajouter un bloc → Type : Cases
+Grouper les deux blocs par : Nom du compte
+```
+
+Chaque bloc exécute son propre SOQL sur son type d'objet. Vous pouvez ensuite ajouter des formules de synthèse entre blocs :
+
+```
+Synthèse Bloc 1 : COUNT(Opportunity ID) → Affaires ouvertes
+Synthèse Bloc 2 : COUNT(Case ID) → Cases ouverts
+Formule inter-blocs : Affaires ouvertes / Cases ouverts → Ratio Affaires/Cases
+```
+
+---
+
+## Tableaux de bord dynamiques : données par utilisateur
+
+Les tableaux de bord standard s'exécutent sous un seul utilisateur (l'"utilisateur exécutant"). Tout le monde voit les mêmes données indépendamment de leur propre accès aux enregistrements.
+
+Les **tableaux de bord dynamiques** s'exécutent sous l'*utilisateur connecté*. Un commercial voit uniquement son pipeline ; son manager voit le pipeline de toute son équipe — depuis le même tableau de bord.
+
+```
+Modifier le tableau de bord → Propriétés → Afficher le tableau de bord en tant que
+  → "L'utilisateur connecté" (Tableau de bord dynamique)
+```
+
+Limites :
+- Maximum 5 tableaux de bord dynamiques par org en édition Enterprise
+- Le rapport sous-jacent ne doit pas utiliser "Exécuter en tant qu'utilisateur spécifié"
+- Ne fonctionne pas avec l'app mobile Salesforce1 (Lightning uniquement)
+
+---
+
+## Abonnements aux rapports : distribution automatisée
+
+Au lieu d'exécuter et d'envoyer manuellement un rapport chaque lundi, utilisez les abonnements aux rapports :
+
+```
+Rapport → S'abonner
+  Fréquence : Hebdomadaire, lundi 8h00
+  Condition : Envoyer uniquement si "Nombre d'enregistrements" > 0
+  Destinataires : vous-même + un groupe public
+  Message : "Voici les comptes à risque de cette semaine."
+```
+
+**Conseil :** Utilisez des conditions pour n'envoyer l'email que lorsqu'il est actionnable — évitez les rapports vides qui entraînent les utilisateurs à les ignorer.
+
+---
+
+## Champs de formule de synthèse
+
+Les formules de synthèse s'exécutent au niveau du regroupement, pas au niveau de l'enregistrement. C'est le moyen de calculer des métriques comme le "taux de victoire" ou la "taille moyenne des affaires par étape" :
+
+```
+Rapport : Opportunities groupées par Étape
+Formule de synthèse : CLOSE_WIN / COUNT(Id)
+  Libellé : Taux de victoire
+  Format : Pourcentage, 1 décimale
+```
+
+Patterns courants :
+- `SUM(Montant) / COUNT(Id)` → Taille moyenne des affaires
+- `[Bloc1:COUNT] / [Bloc2:COUNT]` → Ratio inter-blocs (joined reports)
+- `PARENTGROUPVAL(SUM(Montant), ROW_GRAND_SUMMARY)` → Pourcentage du total général
+
+---
+
+## Conseils de performance des rapports
+
+- **Filtrer sur des champs indexés** : Nom du compte, Propriétaire, Date de création sont indexés — filtrer sur des champs de formule est lent
+- **Limiter les plages de dates** : ne lancez jamais un rapport "Toutes les dates" en production — bornez toujours par une date
+- **Éviter les dépassements de limite de lignes** : les rapports sont limités à 2 000 lignes dans l'interface ; exportez si vous en avez besoin de plus
+- **Utiliser la synthèse plutôt que le détail** : si vous n'avez besoin que de totaux, passez au type Rapport de synthèse — c'est plus rapide
+
+---
+
+## Ressources
+
+- [Trailhead Report Builder](https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards)
+- [Documentation Joined Reports](https://help.salesforce.com/s/articleView?id=sf.reports_joined_format.htm)
+- [Tableaux de bord dynamiques](https://help.salesforce.com/s/articleView?id=sf.dashboards_dynamic_intro.htm)

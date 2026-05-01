@@ -1,0 +1,177 @@
+---
+title: "Salesforce Deployment: Change Sets vs CLI vs DevOps Center"
+excerpt: "Compare the three main Salesforce deployment methods — when to use Change Sets, Salesforce CLI (SFDX), or DevOps Center for your project."
+date: "2026-04-30"
+tags: ["Salesforce", "DevOps", "CI/CD", "Deployment"]
+featured: false
+---
+
+Deploying to production is one of the riskiest moments in any Salesforce project. Choosing the wrong tool — or using the right tool incorrectly — leads to missed metadata, broken dependencies, and emergency rollbacks. Here's a practical breakdown of the three main options.
+
+---
+
+## The Three Deployment Methods at a Glance
+
+| Method | Best for | Learning curve | CI/CD ready |
+|--------|----------|---------------|-------------|
+| Change Sets | Small orgs, occasional deploys | Low | ❌ |
+| Salesforce CLI (SFDX) | Developers, automation | Medium | ✅ |
+| DevOps Center | Teams, pipelines, no-code | Low–Medium | ✅ |
+
+---
+
+## Change Sets — Simple but Limited
+
+Change sets are point-and-click: you add components in the source org, upload, then deploy from the target. No terminal required.
+
+**When to use them:**
+- Small org with infrequent deployments
+- Non-technical admin making config changes
+- One-off emergency hotfix
+
+**Hard limits to know:**
+- No rollback mechanism — you must manually undo changes
+- No diff view — you don't know what changed vs. the target
+- Can't deploy destructive changes (field/object deletions)
+- No automation — every deploy is manual
+
+```bash
+# There's no CLI equivalent — Change Sets are UI-only in Setup > Deployment
+```
+
+> **Tip:** If you're doing more than one deployment per sprint, Change Sets will slow you down. It's time to move to SFDX.
+
+---
+
+## Salesforce CLI (SFDX) — Developer Standard
+
+SFDX treats your org metadata as source code stored in a Git repository. You deploy using the `sf` command (v2 CLI).
+
+**Setup:**
+
+```bash
+# Install SF CLI
+npm install -g @salesforce/cli
+
+# Authenticate to your org
+sf org login web --alias my-sandbox
+
+# Pull metadata from org to local project
+sf project retrieve start --target-org my-sandbox
+
+# Deploy local source to org
+sf project deploy start --target-org my-sandbox
+
+# Validate without deploying (dry run)
+sf project deploy validate --target-org my-sandbox --test-level RunLocalTests
+```
+
+**Project structure:**
+```
+force-app/
+  main/
+    default/
+      classes/        ← Apex classes
+      triggers/       ← Apex triggers
+      lwc/            ← Lightning Web Components
+      objects/        ← Custom objects/fields
+      flows/          ← Flows
+      permissionsets/ ← Permission Sets
+```
+
+**Destructive changes** (deleting metadata):
+
+```bash
+# Create destructiveChanges.xml then deploy
+sf project deploy start \
+  --manifest destructiveChanges.xml \
+  --target-org production \
+  --test-level RunLocalTests
+```
+
+**When to use SFDX:**
+- Any team using Git
+- Projects with a CI/CD pipeline (GitHub Actions, GitLab CI)
+- When you need reproducible, auditable deployments
+
+---
+
+## DevOps Center — Team Pipelines Without Code
+
+DevOps Center is Salesforce's built-in pipeline tool (available since Winter '23). It creates a Git-backed pipeline with environments (Dev → QA → UAT → Production) and tracks work items.
+
+**Key features:**
+- Visual pipeline UI inside Salesforce Setup
+- Automatic Git integration (GitHub, GitLab, Bitbucket)
+- Promotes changes through stages with one click
+- Conflict detection between parallel branches
+
+**When to use DevOps Center:**
+- Teams mixing developers and admins
+- You want GitHub integration without writing YAML
+- Multiple sandboxes with a formal promotion process
+
+**Limitation:** It doesn't replace a full CI/CD pipeline — there's no automated testing gate built-in. You still need GitHub Actions or similar for test enforcement.
+
+---
+
+## CI/CD Pipeline with SFDX + GitHub Actions
+
+For serious projects, combine SFDX with GitHub Actions:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to Sandbox
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SF CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to sandbox
+        run: |
+          echo "${{ secrets.SF_AUTH_URL }}" > auth.txt
+          sf org login sfdx-url --sfdx-url-file auth.txt --alias sandbox
+
+      - name: Validate and deploy
+        run: |
+          sf project deploy start \
+            --target-org sandbox \
+            --test-level RunLocalTests \
+            --wait 30
+```
+
+---
+
+## Common Pitfalls
+
+- **Missing dependencies**: Always check `sf project deploy validate` before pushing to production — it catches missing references
+- **Profile conflicts**: Profiles are notoriously hard to merge; use Permission Sets instead and exclude profiles from deploys when possible
+- **Deploying too much**: Scope your deploys to changed components only using `--manifest package.xml`, not `force-app/` entirely
+- **No rollback plan**: Document a rollback script before every production deploy. Salesforce doesn't have a one-click rollback
+
+---
+
+## Decision Checklist
+
+- [ ] Solo admin, small org, rare deploys → **Change Sets**
+- [ ] Developer, Git-based project, any size → **SFDX**
+- [ ] Team with mixed technical levels, formal stages → **DevOps Center**
+- [ ] Any production deploy → run `--test-level RunLocalTests` at minimum
+- [ ] Large teams → enforce `RunAllTestsInOrg` in CI
+
+---
+
+## Resources
+
+- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
+- [DevOps Center Documentation](https://help.salesforce.com/s/articleView?id=sf.devops_center.htm)
+- [Unlocked Packages Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm)

@@ -1,0 +1,235 @@
+---
+title: "PowerShell Active Directory Automation: User Lifecycle Scripts"
+excerpt: "Automate AD user management with PowerShell — bulk provisioning, group assignments, license sync, account disabling workflows, and scheduled audit reports."
+date: "2026-04-30"
+tags: ["IT Ops", "PowerShell", "Active Directory", "Automation"]
+featured: false
+---
+
+Manual Active Directory management doesn't scale. When onboarding takes 30 minutes per user or offboarding is inconsistent, it's time to automate. These PowerShell scripts handle the full user lifecycle reliably.
+
+---
+
+## Prerequisites
+
+- Windows Server with AD DS role (or RSAT on Windows 10/11)
+- PowerShell 5.1+ with ActiveDirectory module
+- Domain admin or delegated OU admin rights
+
+```powershell
+# Verify the AD module is available
+Import-Module ActiveDirectory
+Get-Module ActiveDirectory
+```
+
+---
+
+## User Provisioning: Onboarding Script
+
+```powershell
+# New-ADUserFromTemplate.ps1
+param(
+    [Parameter(Mandatory)]
+    [string]$FirstName,
+
+    [Parameter(Mandatory)]
+    [string]$LastName,
+
+    [Parameter(Mandatory)]
+    [string]$Department,
+
+    [Parameter(Mandatory)]
+    [string]$Title,
+
+    [string]$Manager,
+    [string]$OU = "OU=Users,OU=Company,DC=contoso,DC=com"
+)
+
+$SamAccountName = ($FirstName.Substring(0,1) + $LastName).ToLower() -replace '[^a-z0-9]', ''
+$UPN = "$SamAccountName@contoso.com"
+$DisplayName = "$FirstName $LastName"
+
+# Check for duplicate
+if (Get-ADUser -Filter "SamAccountName -eq '$SamAccountName'" -ErrorAction SilentlyContinue) {
+    Write-Error "User $SamAccountName already exists"
+    exit 1
+}
+
+# Generate secure initial password
+$InitialPassword = [System.Web.Security.Membership]::GeneratePassword(12, 2)
+$SecurePassword = ConvertTo-SecureString $InitialPassword -AsPlainText -Force
+
+# Create user
+New-ADUser `
+    -SamAccountName $SamAccountName `
+    -UserPrincipalName $UPN `
+    -Name $DisplayName `
+    -GivenName $FirstName `
+    -Surname $LastName `
+    -DisplayName $DisplayName `
+    -Department $Department `
+    -Title $Title `
+    -Manager $Manager `
+    -Path $OU `
+    -AccountPassword $SecurePassword `
+    -ChangePasswordAtLogon $true `
+    -Enabled $true
+
+# Add to department group
+$GroupName = "GRP_$Department"
+if (Get-ADGroup -Filter "Name -eq '$GroupName'" -ErrorAction SilentlyContinue) {
+    Add-ADGroupMember -Identity $GroupName -Members $SamAccountName
+}
+
+Write-Host "Created user: $UPN | Initial password: $InitialPassword" -ForegroundColor Green
+```
+
+---
+
+## Bulk Provisioning from CSV
+
+```powershell
+# bulk-provision.ps1
+$Users = Import-Csv -Path ".\new-hires.csv"
+# CSV columns: FirstName, LastName, Department, Title, Manager
+
+$Results = foreach ($User in $Users) {
+    try {
+        .\New-ADUserFromTemplate.ps1 `
+            -FirstName $User.FirstName `
+            -LastName $User.LastName `
+            -Department $User.Department `
+            -Title $User.Title `
+            -Manager $User.Manager
+        [PSCustomObject]@{
+            Name   = "$($User.FirstName) $($User.LastName)"
+            Status = 'Success'
+            Error  = ''
+        }
+    } catch {
+        [PSCustomObject]@{
+            Name   = "$($User.FirstName) $($User.LastName)"
+            Status = 'Failed'
+            Error  = $_.Exception.Message
+        }
+    }
+}
+
+$Results | Export-Csv -Path ".\provisioning-results.csv" -NoTypeInformation
+$Results | Format-Table -AutoSize
+```
+
+---
+
+## Offboarding: Account Disabling Workflow
+
+```powershell
+# Disable-ADUserOffboard.ps1
+param(
+    [Parameter(Mandatory)]
+    [string]$SamAccountName,
+
+    [string]$DisabledOU = "OU=Disabled,OU=Company,DC=contoso,DC=com"
+)
+
+$User = Get-ADUser -Identity $SamAccountName -Properties MemberOf, Description
+
+# 1. Disable the account
+Disable-ADAccount -Identity $SamAccountName
+
+# 2. Reset password to something random (prevent re-enabling without IT)
+$RandomPass = [System.Web.Security.Membership]::GeneratePassword(24, 4)
+Set-ADAccountPassword -Identity $SamAccountName `
+    -NewPassword (ConvertTo-SecureString $RandomPass -AsPlainText -Force) `
+    -Reset
+
+# 3. Remove from all groups (keep a record first)
+$Groups = $User.MemberOf | ForEach-Object { (Get-ADGroup $_).Name }
+$Groups | ForEach-Object {
+    Remove-ADGroupMember -Identity $_ -Members $SamAccountName -Confirm:$false
+}
+
+# 4. Update description with offboard date
+Set-ADUser -Identity $SamAccountName `
+    -Description "Disabled $(Get-Date -Format 'yyyy-MM-dd') | Was member of: $($Groups -join ', ')"
+
+# 5. Move to disabled OU
+Move-ADObject -Identity $User.DistinguishedName -TargetPath $DisabledOU
+
+Write-Host "Offboarded $SamAccountName. Removed from $($Groups.Count) groups." -ForegroundColor Yellow
+```
+
+---
+
+## Scheduled Audit: Stale Accounts Report
+
+```powershell
+# Get-StaleAccountsReport.ps1
+$ThresholdDays = 90
+$Threshold = (Get-Date).AddDays(-$ThresholdDays)
+
+$StaleUsers = Get-ADUser -Filter {
+    Enabled -eq $true -and LastLogonDate -lt $Threshold
+} -Properties LastLogonDate, Department, Manager | Where-Object {
+    $_.LastLogonDate -ne $null
+} | Select-Object `
+    SamAccountName, Name, Department,
+    @{N='Manager'; E={ (Get-ADUser $_.Manager -ErrorAction SilentlyContinue).Name }},
+    LastLogonDate,
+    @{N='DaysSinceLogin'; E={ ((Get-Date) - $_.LastLogonDate).Days }}
+
+$ReportPath = ".\stale-accounts-$(Get-Date -Format 'yyyyMMdd').csv"
+$StaleUsers | Sort-Object DaysSinceLogin -Descending | Export-Csv $ReportPath -NoTypeInformation
+
+Write-Host "Found $($StaleUsers.Count) stale accounts. Report: $ReportPath"
+
+# Send by email (requires SMTP configured)
+Send-MailMessage `
+    -To "it-team@contoso.com" `
+    -Subject "Stale AD Accounts Report - $(Get-Date -Format 'yyyy-MM-dd')" `
+    -Body "Attached: accounts with no login in $ThresholdDays+ days." `
+    -Attachments $ReportPath `
+    -SmtpServer "smtp.contoso.com"
+```
+
+---
+
+## Password Expiry Notification
+
+```powershell
+# Send-PasswordExpiryWarning.ps1
+$MaxAge = (Get-ADDefaultDomainPasswordPolicy).MaxPasswordAge.Days
+$WarningDays = 14
+
+Get-ADUser -Filter { Enabled -eq $true -and PasswordNeverExpires -eq $false } `
+    -Properties PasswordLastSet, EmailAddress | ForEach-Object {
+
+    $ExpiresIn = $MaxAge - ((Get-Date) - $_.PasswordLastSet).Days
+
+    if ($ExpiresIn -le $WarningDays -and $ExpiresIn -gt 0 -and $_.EmailAddress) {
+        Send-MailMessage `
+            -To $_.EmailAddress `
+            -Subject "Your password expires in $ExpiresIn day(s)" `
+            -Body "Please change your password at https://account.contoso.com before it expires." `
+            -SmtpServer "smtp.contoso.com"
+        Write-Host "Notified: $($_.SamAccountName) ($ExpiresIn days left)"
+    }
+}
+```
+
+---
+
+## Common Pitfalls
+
+- **Running without testing**: always test scripts in a non-production OU first — use `-WhatIf` on destructive cmdlets
+- **No error logging**: wrap bulk operations in try/catch and export results to CSV for audit
+- **Hardcoded credentials**: use stored credentials or Windows Credential Manager, never plaintext passwords in scripts
+- **Missing replication wait**: after creating a user, add `Start-Sleep -Seconds 5` before adding to groups to allow AD replication
+
+---
+
+## Resources
+
+- [ActiveDirectory PowerShell Module](https://docs.microsoft.com/en-us/powershell/module/activedirectory/)
+- [AD Automation Best Practices](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/executive-summary)
+- [PowerShell Gallery AD Scripts](https://www.powershellgallery.com/)

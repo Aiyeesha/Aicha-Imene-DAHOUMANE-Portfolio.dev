@@ -1,0 +1,222 @@
+---
+title: "Apex Test Classes: 85%+ Coverage Without Cheating"
+excerpt: "Write meaningful Apex tests that actually catch bugs — TestDataFactory, async testing, callout mocks, and the anti-patterns that inflate coverage without value."
+date: "2026-04-30"
+tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
+featured: false
+---
+
+Salesforce requires 75% code coverage to deploy. But there's a difference between *coverage* and *tests that catch bugs*. Most Apex projects have plenty of the first and very little of the second. Here's how to write tests that actually matter.
+
+---
+
+## Prerequisites
+
+- Basic Apex knowledge
+- Understanding of Apex trigger/class structure
+- Familiarity with Salesforce DML operations
+
+---
+
+## The TestDataFactory Pattern
+
+Never create test data ad hoc inside test methods. Centralise everything in a `TestDataFactory` utility class:
+
+```apex
+@isTest
+public class TestDataFactory {
+
+    public static Account createAccount(String name, Boolean doInsert) {
+        Account acc = new Account(
+            Name = name,
+            Phone = '0123456789',
+            BillingCountry = 'France'
+        );
+        if (doInsert) insert acc;
+        return acc;
+    }
+
+    public static List<Contact> createContacts(Id accountId, Integer count, Boolean doInsert) {
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i = 0; i < count; i++) {
+            contacts.add(new Contact(
+                FirstName = 'Test',
+                LastName = 'Contact ' + i,
+                AccountId = accountId,
+                Email = 'test' + i + '@example.com'
+            ));
+        }
+        if (doInsert) insert contacts;
+        return contacts;
+    }
+}
+```
+
+**Benefits:** One place to update when validation rules change, reusable across all test classes, forces you to think about required fields.
+
+---
+
+## @TestSetup — Shared Setup Without Overhead
+
+Use `@TestSetup` to create data once per class instead of repeating setup in every method:
+
+```apex
+@isTest
+private class AccountServiceTest {
+
+    @TestSetup
+    static void setup() {
+        Account acc = TestDataFactory.createAccount('Test Corp', true);
+        TestDataFactory.createContacts(acc.Id, 5, true);
+    }
+
+    @isTest
+    static void testGetActiveContacts() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Test.startTest();
+        List<Contact> result = AccountService.getActiveContacts(acc.Id);
+        Test.stopTest();
+
+        System.assertEquals(5, result.size(), 'Should return 5 contacts');
+    }
+
+    @isTest
+    static void testDeactivateContacts() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Test.startTest();
+        AccountService.deactivateContacts(acc.Id);
+        Test.stopTest();
+
+        List<Contact> active = [SELECT Id FROM Contact WHERE AccountId = :acc.Id AND IsActive__c = true];
+        System.assertEquals(0, active.size(), 'All contacts should be deactivated');
+    }
+}
+```
+
+> **Important:** `@TestSetup` data is rolled back and re-created for each test method. DML changes made in one method don't affect another.
+
+---
+
+## Testing Async Code with Test.startTest() / stopTest()
+
+`Test.startTest()` resets governor limits and forces async execution (future methods, queueable, batch) to run synchronously when `Test.stopTest()` is called:
+
+```apex
+@isTest
+static void testFutureMethod() {
+    Account acc = TestDataFactory.createAccount('Async Test', true);
+
+    Test.startTest();
+    AccountService.recalculateMetricsAsync(acc.Id); // @future method
+    Test.stopTest(); // Forces async execution here
+
+    // Now query results — the @future has run
+    Account updated = [SELECT Metric_Score__c FROM Account WHERE Id = :acc.Id];
+    System.assertNotEquals(null, updated.Metric_Score__c, 'Score should be calculated');
+}
+```
+
+---
+
+## Mocking HTTP Callouts
+
+Tests that make real HTTP callouts will fail. Use `HttpCalloutMock`:
+
+```apex
+// Mock class
+@isTest
+global class SalesforceApiMock implements HttpCalloutMock {
+    global HTTPResponse respond(HTTPRequest req) {
+        HTTPResponse res = new HTTPResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody('{"id": "12345", "status": "success"}');
+        res.setStatusCode(200);
+        return res;
+    }
+}
+
+// Test method
+@isTest
+static void testCalloutSuccess() {
+    Test.setMock(HttpCalloutMock.class, new SalesforceApiMock());
+
+    Test.startTest();
+    String result = ExternalApiService.createRecord('Test Data');
+    Test.stopTest();
+
+    System.assertEquals('12345', result, 'Should return the created ID');
+}
+```
+
+For error scenarios, create a second mock that returns 4xx/5xx and test your error handling path too.
+
+---
+
+## Writing Meaningful Assertions
+
+Bad assertions inflate coverage without catching bugs:
+
+```apex
+// ❌ Useless — always passes
+System.assert(true);
+System.assertNotEquals(null, result);
+
+// ✅ Meaningful — will catch regressions
+System.assertEquals(3, result.size(),
+    'Expected 3 records after filtering by active status');
+System.assertEquals('ESCALATED', ticket.Status__c,
+    'Ticket should be escalated when SLA is breached');
+System.assert(result.contains(expectedId),
+    'Result set must include the account we just created');
+```
+
+Always use the third parameter (message) — it tells you *what* failed when the assertion breaks.
+
+---
+
+## Anti-Patterns to Avoid
+
+- **`SeeAllData=true`**: Exposes your tests to real org data, making them environment-dependent and unreliable. Never use it.
+- **Inserting in every test method**: Costs DML limits and slows runs. Use `@TestSetup` or `TestDataFactory`.
+- **Testing only the happy path**: Write at least one negative test — what happens with null input, missing fields, or invalid data?
+- **Ignoring bulk tests**: Add a test with 200 records to verify your code is properly bulkified.
+
+```apex
+@isTest
+static void testBulk200Records() {
+    List<Account> accounts = new List<Account>();
+    for (Integer i = 0; i < 200; i++) {
+        accounts.add(new Account(Name = 'Bulk ' + i));
+    }
+    insert accounts;
+
+    Test.startTest();
+    AccountService.processAll(accounts);
+    Test.stopTest();
+
+    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed']);
+}
+```
+
+---
+
+## Summary
+
+| Practice | Why it matters |
+|----------|---------------|
+| `TestDataFactory` | Single source of truth for test data |
+| `@TestSetup` | Avoids repeated DML, cleaner test methods |
+| `Test.startTest/stopTest` | Forces async execution, resets limits |
+| `HttpCalloutMock` | Tests callout logic without external calls |
+| Meaningful assertions | Actually catches regressions |
+| Bulk test (200 records) | Verifies bulkification |
+
+---
+
+## Resources
+
+- [Apex Testing Documentation](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing.htm)
+- [Test.setMock Reference](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_test.htm)
+- [Trailhead: Apex Testing](https://trailhead.salesforce.com/content/learn/modules/apex_testing)

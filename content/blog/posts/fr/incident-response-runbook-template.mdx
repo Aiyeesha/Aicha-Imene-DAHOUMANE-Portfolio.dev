@@ -1,0 +1,213 @@
+---
+title: "Modèle de runbook de réponse aux incidents pour les équipes IT"
+excerpt: "Un runbook de réponse aux incidents pratique — classification de la sévérité, templates de communication, chemins d'escalade, organisation de la war room et processus de revue post-incident."
+date: "2026-04-30"
+tags: ["IT Ops", "Incident Response", "SRE", "Operations"]
+featured: false
+---
+
+Un incident à 2h du matin n'est pas le moment de définir votre processus. Un runbook donne à chaque ingénieur d'astreinte les étapes, les contacts et les templates de communication nécessaires pour gérer les incidents de façon cohérente — quel que soit son niveau d'expérience.
+
+---
+
+## Niveaux de sévérité
+
+Définissez la sévérité en amont pour que tout le monde utilise le même langage :
+
+| Niveau | Définition | Temps de réponse | Exemples |
+|--------|-----------|-----------------|---------|
+| SEV-1 | Panne complète ou perte de données | Immédiat (< 15 min) | DB hors service, auth cassée, paiements en échec |
+| SEV-2 | Fonctionnalité majeure dégradée | 30 minutes | API lente, 50% taux d'erreur, emails non envoyés |
+| SEV-3 | Problème mineur, contournement disponible | 4 heures | Utilisateur unique affecté, bug cosmétique, page lente |
+| SEV-4 | Faible priorité, pas d'impact utilisateur | Prochain jour ouvré | Alerte d'avertissement, endpoint déprécié utilisé |
+
+---
+
+## Déclaration d'incident
+
+**Qui peut déclarer un incident ?** Tout membre de l'équipe. Il est plus facile de déclarer une fausse alarme que de retarder un vrai incident.
+
+**Comment déclarer :**
+1. Poster dans le canal Slack `#incidents` : `[INCIDENT] SEV-X — Description courte`
+2. Créer un ticket d'incident dans votre système de suivi
+3. Désigner un Incident Commander (IC) — la personne unique qui coordonne la réponse
+
+---
+
+## Rôles
+
+```
+Incident Commander (IC)
+  — Coordonne la réponse, ne résout PAS le problème lui-même
+  — Anime la war room / canal d'incident
+  — Prend les décisions d'escalade
+  — Communique avec les parties prenantes
+
+Responsable Technique
+  — Mène l'investigation et le correctif
+  — Rapporte les conclusions à l'IC
+  — Ne gère PAS les communications
+
+Responsable Communication (SEV-1/2 uniquement)
+  — Rédige les mises à jour de la page de statut
+  — Répond aux escalades clients
+  — Coordonne avec l'équipe CX/CS
+```
+
+---
+
+## Organisation de la War Room (SEV-1/2)
+
+```
+1. Ouvrir un pont Zoom/Meet — partager le lien dans #incidents
+2. Créer un canal Slack dédié : #inc-AAAA-MM-JJ-description
+3. Commencer un document partagé (Google Doc / Notion) pour la chronologie
+4. Épingler dans le canal : lien Zoom, liens dashboard, lien runbook
+```
+
+**Template de document de chronologie :**
+```
+INCIDENT : [Titre]
+DÉCLARÉ : [Heure] par [Nom]
+SÉVÉRITÉ : SEV-X
+IC : [Nom]
+RESPONSABLE TECHNIQUE : [Nom]
+
+=== CHRONOLOGIE ===
+14h32 — [Nom] détecte un taux d'erreur élevé sur /api/paiements (alerte Datadog)
+14h35 — [Nom] déclare l'incident, désigne l'IC
+14h38 — Investigation démarrée, temps de requête DB identifiés comme cause racine
+14h52 — Correctif temporaire déployé (pool de connexions augmenté)
+15h10 — Taux d'erreur revenu à la normale, surveillance en cours
+15h30 — Incident résolu
+```
+
+---
+
+## Checklist d'investigation
+
+Pour chaque incident, vérifiez dans l'ordre :
+
+```
+Infrastructure :
+  [ ] Déploiements récents dans les 2 dernières heures ?
+  [ ] Changements d'infrastructure (événements de scaling, changements de config) ?
+  [ ] Page de statut du fournisseur cloud (AWS, GCP, Azure) ?
+  [ ] Épuisement des ressources (CPU, mémoire, disque, connexions DB) ?
+
+Application :
+  [ ] Taux d'erreur dans la surveillance applicative (Sentry, Datadog) ?
+  [ ] Endpoints ou services spécifiques affectés ?
+  [ ] Logs montrant la cause racine ?
+  [ ] Performance des requêtes DB ?
+
+Externe :
+  [ ] Dépendances de services tiers (Stripe, Twilio, etc.) ?
+  [ ] Problèmes DNS ?
+  [ ] Problèmes CDN/proxy ?
+```
+
+---
+
+## Templates de communication
+
+**Mise à jour page de statut (incident déclaré) :**
+```
+[En cours d'investigation] Nous enquêtons sur des signalements de [description du problème].
+Notre équipe a été alertée et travaille à identifier la cause.
+Nous fournirons une mise à jour dans 30 minutes.
+```
+
+**Mise à jour page de statut (cause identifiée) :**
+```
+[Identifié] Nous avons identifié la cause de [problème] : [explication courte].
+Notre équipe travaille sur un correctif. Nous estimons une résolution pour [heure].
+```
+
+**Mise à jour page de statut (résolu) :**
+```
+[Résolu] Le problème affectant [fonctionnalité] a été résolu à [heure].
+Cause racine : [explication courte]. Nous publierons un post-mortem complet sous 48 heures.
+```
+
+**Mise à jour interne aux parties prenantes (Slack) :**
+```
+Mise à jour de statut pour #inc-[date]-[description] :
+- Statut actuel : [En investigation/Identifié/En mitigation/Résolu]
+- Impact : [Ce qui est affecté et combien d'utilisateurs]
+- Cause racine : [Connue/Inconnue]
+- Action suivante : [Ce qui est fait maintenant]
+- ETA : [Heure ou "inconnue"]
+- Prochaine mise à jour : [Dans X minutes]
+```
+
+---
+
+## Chemin d'escalade
+
+```
+SEV-3/4 :
+  Ingénieur d'astreinte → résoudre indépendamment ou escalader au Tech Lead
+
+SEV-2 :
+  Astreinte → Tech Lead → Engineering Manager (si non résolu en 2h)
+
+SEV-1 :
+  Astreinte → Tech Lead + Engineering Manager immédiatement
+  → VP Engineering / CTO si pas de mitigation en 30 min
+  → DPO/DG si données clients impliquées ou > 1h de panne
+```
+
+---
+
+## Revue Post-Incident (PIR)
+
+Chaque SEV-1 et SEV-2 nécessite une PIR sous 5 jours ouvrés :
+
+**Template de PIR :**
+```markdown
+## Résumé de l'incident
+- Date/Heure :
+- Durée :
+- Sévérité :
+- Impact : [X utilisateurs affectés, Y€ d'impact revenu]
+
+## Chronologie
+[Copier depuis le document de chronologie de l'incident]
+
+## Cause racine
+[La vraie cause technique racine — pas "erreur humaine"]
+
+## Facteurs contribuants
+[Qu'est-ce qui a rendu cela possible ? Surveillance manquante ? Pas de circuit breaker ?]
+
+## Ce qui a bien fonctionné
+[Ce qui a aidé à limiter l'impact ou à accélérer la résolution]
+
+## Actions
+| Action | Responsable | Échéance |
+|--------|-------------|---------|
+| Ajouter un circuit breaker au service de paiement | @ingénieur | 2026-05-07 |
+| Seuil d'alerte pour les connexions DB | @sre | 2026-05-05 |
+| Mettre à jour le runbook avec les étapes de récupération DB | @ic | 2026-05-03 |
+
+## Principe sans blâme
+Cette revue se concentre sur les systèmes et les processus, pas sur les individus.
+```
+
+---
+
+## Pièges courants
+
+- **Pas d'IC désigné** : sans coordinateur, les ingénieurs se coupent la parole et personne ne surveille la vue d'ensemble
+- **L'IC fait aussi le travail technique** : l'IC doit poser des questions et synthétiser, pas déboguer
+- **Ignorer la PIR** : les incidents récurrents ont généralement la même cause racine — les PIR sont le moyen de briser ce cycle
+- **Actions vagues** : "améliorer la surveillance" n'est pas actionnable — "ajouter une alerte Datadog pour le pool de connexions DB > 80% pendant 5 minutes" l'est
+
+---
+
+## Ressources
+
+- [Guide de réponse aux incidents PagerDuty](https://response.pagerduty.com/)
+- [Livre SRE Google : Gérer les incidents](https://sre.google/sre-book/managing-incidents/)
+- [Processus PIR sans blâme](https://www.atlassian.com/incident-management/postmortem/blameless)

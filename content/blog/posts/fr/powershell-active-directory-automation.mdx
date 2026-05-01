@@ -1,0 +1,235 @@
+---
+title: "Automatisation Active Directory avec PowerShell : scripts de cycle de vie utilisateur"
+excerpt: "Automatisez la gestion des utilisateurs AD avec PowerShell — provisionnement en masse, affectation de groupes, workflows de désactivation de comptes et rapports d'audit planifiés."
+date: "2026-04-30"
+tags: ["IT Ops", "PowerShell", "Active Directory", "Automation"]
+featured: false
+---
+
+La gestion manuelle d'Active Directory ne passe pas à l'échelle. Quand l'onboarding prend 30 minutes par utilisateur ou que l'offboarding est incohérent, il est temps d'automatiser. Ces scripts PowerShell gèrent le cycle de vie complet des utilisateurs de façon fiable.
+
+---
+
+## Prérequis
+
+- Windows Server avec le rôle AD DS (ou RSAT sur Windows 10/11)
+- PowerShell 5.1+ avec le module ActiveDirectory
+- Droits d'admin de domaine ou d'admin d'OU délégué
+
+```powershell
+# Vérifier que le module AD est disponible
+Import-Module ActiveDirectory
+Get-Module ActiveDirectory
+```
+
+---
+
+## Provisionnement utilisateur : script d'onboarding
+
+```powershell
+# New-ADUserFromTemplate.ps1
+param(
+    [Parameter(Mandatory)]
+    [string]$Prenom,
+
+    [Parameter(Mandatory)]
+    [string]$Nom,
+
+    [Parameter(Mandatory)]
+    [string]$Departement,
+
+    [Parameter(Mandatory)]
+    [string]$Poste,
+
+    [string]$Manager,
+    [string]$OU = "OU=Utilisateurs,OU=Entreprise,DC=contoso,DC=com"
+)
+
+$SamAccountName = ($Prenom.Substring(0,1) + $Nom).ToLower() -replace '[^a-z0-9]', ''
+$UPN = "$SamAccountName@contoso.com"
+$DisplayName = "$Prenom $Nom"
+
+# Vérifier les doublons
+if (Get-ADUser -Filter "SamAccountName -eq '$SamAccountName'" -ErrorAction SilentlyContinue) {
+    Write-Error "L'utilisateur $SamAccountName existe déjà"
+    exit 1
+}
+
+# Générer un mot de passe initial sécurisé
+$InitialPassword = [System.Web.Security.Membership]::GeneratePassword(12, 2)
+$SecurePassword = ConvertTo-SecureString $InitialPassword -AsPlainText -Force
+
+# Créer l'utilisateur
+New-ADUser `
+    -SamAccountName $SamAccountName `
+    -UserPrincipalName $UPN `
+    -Name $DisplayName `
+    -GivenName $Prenom `
+    -Surname $Nom `
+    -DisplayName $DisplayName `
+    -Department $Departement `
+    -Title $Poste `
+    -Manager $Manager `
+    -Path $OU `
+    -AccountPassword $SecurePassword `
+    -ChangePasswordAtLogon $true `
+    -Enabled $true
+
+# Ajouter au groupe du département
+$NomGroupe = "GRP_$Departement"
+if (Get-ADGroup -Filter "Name -eq '$NomGroupe'" -ErrorAction SilentlyContinue) {
+    Add-ADGroupMember -Identity $NomGroupe -Members $SamAccountName
+}
+
+Write-Host "Utilisateur créé : $UPN | Mot de passe initial : $InitialPassword" -ForegroundColor Green
+```
+
+---
+
+## Provisionnement en masse depuis un CSV
+
+```powershell
+# bulk-provision.ps1
+$Utilisateurs = Import-Csv -Path ".\nouvelles-recrues.csv"
+# Colonnes CSV : Prenom, Nom, Departement, Poste, Manager
+
+$Resultats = foreach ($Util in $Utilisateurs) {
+    try {
+        .\New-ADUserFromTemplate.ps1 `
+            -Prenom $Util.Prenom `
+            -Nom $Util.Nom `
+            -Departement $Util.Departement `
+            -Poste $Util.Poste `
+            -Manager $Util.Manager
+        [PSCustomObject]@{
+            Nom    = "$($Util.Prenom) $($Util.Nom)"
+            Statut = 'Succès'
+            Erreur = ''
+        }
+    } catch {
+        [PSCustomObject]@{
+            Nom    = "$($Util.Prenom) $($Util.Nom)"
+            Statut = 'Échec'
+            Erreur = $_.Exception.Message
+        }
+    }
+}
+
+$Resultats | Export-Csv -Path ".\resultats-provisionnement.csv" -NoTypeInformation
+$Resultats | Format-Table -AutoSize
+```
+
+---
+
+## Offboarding : workflow de désactivation de compte
+
+```powershell
+# Disable-ADUserOffboard.ps1
+param(
+    [Parameter(Mandatory)]
+    [string]$SamAccountName,
+
+    [string]$OUDesactives = "OU=Desactives,OU=Entreprise,DC=contoso,DC=com"
+)
+
+$Utilisateur = Get-ADUser -Identity $SamAccountName -Properties MemberOf, Description
+
+# 1. Désactiver le compte
+Disable-ADAccount -Identity $SamAccountName
+
+# 2. Réinitialiser le mot de passe (empêche la réactivation sans le DSI)
+$MotDePasseAlea = [System.Web.Security.Membership]::GeneratePassword(24, 4)
+Set-ADAccountPassword -Identity $SamAccountName `
+    -NewPassword (ConvertTo-SecureString $MotDePasseAlea -AsPlainText -Force) `
+    -Reset
+
+# 3. Retirer de tous les groupes (garder un enregistrement d'abord)
+$Groupes = $Utilisateur.MemberOf | ForEach-Object { (Get-ADGroup $_).Name }
+$Groupes | ForEach-Object {
+    Remove-ADGroupMember -Identity $_ -Members $SamAccountName -Confirm:$false
+}
+
+# 4. Mettre à jour la description avec la date d'offboarding
+Set-ADUser -Identity $SamAccountName `
+    -Description "Désactivé le $(Get-Date -Format 'yyyy-MM-dd') | Était membre de : $($Groupes -join ', ')"
+
+# 5. Déplacer vers l'OU des comptes désactivés
+Move-ADObject -Identity $Utilisateur.DistinguishedName -TargetPath $OUDesactives
+
+Write-Host "Offboardé $SamAccountName. Retiré de $($Groupes.Count) groupes." -ForegroundColor Yellow
+```
+
+---
+
+## Audit planifié : rapport des comptes inactifs
+
+```powershell
+# Get-StaleAccountsReport.ps1
+$SeuilJours = 90
+$Seuil = (Get-Date).AddDays(-$SeuilJours)
+
+$UtilisateursInactifs = Get-ADUser -Filter {
+    Enabled -eq $true -and LastLogonDate -lt $Seuil
+} -Properties LastLogonDate, Department, Manager | Where-Object {
+    $_.LastLogonDate -ne $null
+} | Select-Object `
+    SamAccountName, Name, Department,
+    @{N='Manager'; E={ (Get-ADUser $_.Manager -ErrorAction SilentlyContinue).Name }},
+    LastLogonDate,
+    @{N='JoursDepuisConnexion'; E={ ((Get-Date) - $_.LastLogonDate).Days }}
+
+$CheminRapport = ".\comptes-inactifs-$(Get-Date -Format 'yyyyMMdd').csv"
+$UtilisateursInactifs | Sort-Object JoursDepuisConnexion -Descending | Export-Csv $CheminRapport -NoTypeInformation
+
+Write-Host "Trouvé $($UtilisateursInactifs.Count) comptes inactifs. Rapport : $CheminRapport"
+
+# Envoyer par email (nécessite un SMTP configuré)
+Send-MailMessage `
+    -To "equipe-it@contoso.com" `
+    -Subject "Rapport Comptes AD Inactifs - $(Get-Date -Format 'yyyy-MM-dd')" `
+    -Body "En pièce jointe : comptes sans connexion depuis $SeuilJours+ jours." `
+    -Attachments $CheminRapport `
+    -SmtpServer "smtp.contoso.com"
+```
+
+---
+
+## Notification d'expiration de mot de passe
+
+```powershell
+# Send-PasswordExpiryWarning.ps1
+$AgeMax = (Get-ADDefaultDomainPasswordPolicy).MaxPasswordAge.Days
+$JoursAvertissement = 14
+
+Get-ADUser -Filter { Enabled -eq $true -and PasswordNeverExpires -eq $false } `
+    -Properties PasswordLastSet, EmailAddress | ForEach-Object {
+
+    $ExpireDans = $AgeMax - ((Get-Date) - $_.PasswordLastSet).Days
+
+    if ($ExpireDans -le $JoursAvertissement -and $ExpireDans -gt 0 -and $_.EmailAddress) {
+        Send-MailMessage `
+            -To $_.EmailAddress `
+            -Subject "Votre mot de passe expire dans $ExpireDans jour(s)" `
+            -Body "Veuillez changer votre mot de passe sur https://account.contoso.com avant qu'il n'expire." `
+            -SmtpServer "smtp.contoso.com"
+        Write-Host "Notifié : $($_.SamAccountName) ($ExpireDans jours restants)"
+    }
+}
+```
+
+---
+
+## Pièges courants
+
+- **Exécuter sans tester** : testez toujours les scripts dans une OU non-production d'abord — utilisez `-WhatIf` sur les cmdlets destructives
+- **Pas de journalisation des erreurs** : encapsulez les opérations en masse dans try/catch et exportez les résultats en CSV pour audit
+- **Credentials codés en dur** : utilisez les credentials stockés ou le Gestionnaire de credentials Windows, jamais de mots de passe en clair dans les scripts
+- **Pas d'attente de réplication** : après avoir créé un utilisateur, ajoutez `Start-Sleep -Seconds 5` avant d'ajouter aux groupes pour laisser le temps à la réplication AD
+
+---
+
+## Ressources
+
+- [Module PowerShell ActiveDirectory](https://docs.microsoft.com/fr-fr/powershell/module/activedirectory/)
+- [Bonnes pratiques d'automatisation AD](https://docs.microsoft.com/fr-fr/windows-server/identity/ad-ds/manage/component-updates/executive-summary)
+- [PowerShell Gallery](https://www.powershellgallery.com/)
