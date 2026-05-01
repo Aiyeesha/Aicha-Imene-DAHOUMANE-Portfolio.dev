@@ -1,0 +1,251 @@
+---
+title: "SIEM and Log Analysis Basics: Detecting Threats with Elastic Stack"
+excerpt: "Set up basic SIEM capabilities with Elastic Stack — log collection with Filebeat, detection rules, alerting on suspicious patterns, and building security dashboards."
+date: "2026-04-30"
+tags: ["IT Ops", "Security", "SIEM", "Elastic"]
+featured: false
+---
+
+A SIEM (Security Information and Event Management) system centralizes logs from all your infrastructure and helps detect threats automatically. Enterprise SIEMs cost a fortune, but you can build basic capabilities with Elastic Stack for free. Here's how.
+
+---
+
+## Prerequisites
+
+- Docker Compose (for local/VPS setup)
+- Linux servers to monitor
+- 8GB+ RAM for the Elastic Stack server
+
+---
+
+## Elastic Stack Setup
+
+```yaml
+# compose.yml
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -su elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 30s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+    ports:
+      - "127.0.0.1:5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.0
+    restart: unless-stopped
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"   # Beats input
+      - "514:514/udp" # Syslog input
+
+volumes:
+  es_data:
+```
+
+---
+
+## Filebeat on Monitored Servers
+
+Install Filebeat on every server you want to monitor:
+
+```bash
+# Install on Ubuntu/Debian
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.13.0-amd64.deb
+sudo dpkg -i filebeat-8.13.0-amd64.deb
+```
+
+```yaml
+# /etc/filebeat/filebeat.yml
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/auth.log
+      - /var/log/syslog
+    tags: ["linux", "auth"]
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/access.log
+      - /var/log/nginx/error.log
+    tags: ["nginx"]
+    json.keys_under_root: true
+
+# Use modules for structured log parsing
+filebeat.modules:
+  - module: system
+    auth:
+      enabled: true
+    syslog:
+      enabled: true
+  - module: nginx
+    access:
+      enabled: true
+    error:
+      enabled: true
+
+output.logstash:
+  hosts: ["siem-server:5044"]
+```
+
+```bash
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+```
+
+---
+
+## Logstash Pipeline
+
+```ruby
+# logstash/pipeline/main.conf
+input {
+  beats {
+    port => 5044
+  }
+  udp {
+    port => 514
+    codec => plain
+    tags => ["syslog"]
+  }
+}
+
+filter {
+  # Parse SSH auth failures
+  if "auth" in [tags] {
+    grok {
+      match => { "message" => "Failed password for %{USER:ssh_user} from %{IP:src_ip} port %{INT:src_port}" }
+      tag_on_failure => []
+    }
+
+    if [src_ip] {
+      geoip { source => "src_ip" }
+    }
+  }
+
+  # Parse nginx access logs
+  if "nginx" in [tags] and [log][file][path] =~ "access" {
+    grok {
+      match => { "message" => "%{COMBINEDAPACHELOG}" }
+    }
+    mutate {
+      convert => { "response" => "integer" }
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["elasticsearch:9200"]
+    user => "elastic"
+    password => "${ELASTIC_PASSWORD}"
+    index => "siem-%{[tags][0]}-%{+YYYY.MM.dd}"
+  }
+}
+```
+
+---
+
+## Detection Rules in Kibana
+
+Navigate to **Security → Rules → Create new rule**
+
+**Rule 1: Brute force SSH detection**
+```json
+{
+  "name": "SSH Brute Force Attempt",
+  "type": "threshold",
+  "query": "message: \"Failed password\" AND tags: auth",
+  "threshold": {
+    "field": "src_ip",
+    "value": 10
+  },
+  "time_window": "5m",
+  "severity": "high",
+  "actions": ["slack-alert"]
+}
+```
+
+**Rule 2: Successful login after multiple failures**
+```json
+{
+  "name": "Successful Login After Brute Force",
+  "type": "eql",
+  "query": "sequence with maxspan=5m\n  [authentication where event.outcome == \"failure\"] with runs=5\n  [authentication where event.outcome == \"success\"]",
+  "severity": "critical"
+}
+```
+
+**Rule 3: Privilege escalation**
+```
+Query: message: "sudo" AND (message: "COMMAND" OR message: "authentication failure")
+Alert when: event count > 3 in 10m per user
+```
+
+---
+
+## Key Security Dashboards to Build
+
+In Kibana Dashboards, create visualizations for:
+
+1. **Auth events over time** — bar chart of login successes vs. failures
+2. **Top source IPs for auth failures** — data table, sort by count
+3. **Geographic map of SSH attempts** — using geoip enrichment
+4. **HTTP error codes over time** — 4xx/5xx rate from nginx logs
+5. **New processes spawned** — if using Elastic Agent with process monitoring
+
+---
+
+## What to Monitor (Minimum Viable SIEM)
+
+| Log Source | Key Events to Alert On |
+|-----------|------------------------|
+| SSH (`/var/log/auth.log`) | >10 failures in 5min, successful login from new country |
+| Sudo (`/var/log/auth.log`) | Any `sudo` command by non-admin users |
+| Nginx access | 4xx spike (>100/min), 5xx errors |
+| Cron (`/var/log/syslog`) | New crontab entries (`crontab -e` by non-root) |
+| Package manager | `apt install` / `yum install` during off-hours |
+| Firewall (`ufw.log`) | Port scans (>20 blocked IPs per minute) |
+
+---
+
+## Common Pitfalls
+
+- **Elasticsearch without authentication**: default is open in older versions — always enable `xpack.security.enabled=true`
+- **No log rotation**: Elasticsearch indices grow indefinitely — set up Index Lifecycle Management (ILM) policies
+- **Too many low-severity alerts**: alert fatigue = ignored alerts. Start with high/critical only
+- **Single node without replication**: your SIEM data can't protect itself from disk failure — use snapshots to S3/GCS
+
+---
+
+## Resources
+
+- [Elastic Security Documentation](https://www.elastic.co/guide/en/security/current/index.html)
+- [Filebeat Modules](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-modules.html)
+- [EQL (Event Query Language)](https://www.elastic.co/guide/en/elasticsearch/reference/current/eql.html)

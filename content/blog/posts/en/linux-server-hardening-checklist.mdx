@@ -1,0 +1,224 @@
+---
+title: "Linux Server Hardening Checklist (Ubuntu/Debian Production)"
+excerpt: "A practical step-by-step hardening checklist for Ubuntu and Debian servers — SSH lockdown, firewall, automatic updates, and system-level protections."
+date: "2026-04-30"
+tags: ["IT Ops", "Linux", "Security", "Hardening"]
+featured: false
+---
+
+A fresh Ubuntu or Debian VPS is open by default. Within minutes of going live, automated bots scan for weak SSH passwords, open ports, and unpatched services. This checklist covers the essential hardening steps for a production server.
+
+---
+
+## Prerequisites
+
+- Ubuntu 22.04 LTS or Debian 12 (fresh install)
+- Root or sudo access
+- A non-root user already created
+
+---
+
+## 1. SSH Hardening
+
+The most important step — disable password auth and root login:
+
+```bash
+# Edit SSH config
+sudo nano /etc/ssh/sshd_config
+```
+
+Change or add these lines:
+
+```bash
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+X11Forwarding no
+AllowTcpForwarding no
+MaxAuthTries 3
+LoginGraceTime 30
+```
+
+```bash
+# Restart SSH (keep current session open!)
+sudo systemctl restart sshd
+
+# Verify your key works in a NEW terminal before closing the current one
+```
+
+> **Never close your only SSH session before verifying the new one works.**
+
+---
+
+## 2. Firewall with UFW
+
+```bash
+# Install UFW
+sudo apt install ufw -y
+
+# Default deny all incoming, allow outgoing
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH (use your custom port if changed)
+sudo ufw allow 22/tcp
+
+# Allow web traffic if needed
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Enable firewall
+sudo ufw enable
+
+# Check status
+sudo ufw status verbose
+```
+
+---
+
+## 3. Fail2Ban — Brute Force Protection
+
+```bash
+sudo apt install fail2ban -y
+
+# Create local config (never edit /etc/fail2ban/jail.conf directly)
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo nano /etc/fail2ban/jail.local
+```
+
+Edit the `[sshd]` section:
+
+```ini
+[sshd]
+enabled = true
+port    = ssh
+filter  = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime  = 3600
+findtime = 600
+```
+
+```bash
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Check banned IPs
+sudo fail2ban-client status sshd
+```
+
+---
+
+## 4. Automatic Security Updates
+
+```bash
+sudo apt install unattended-upgrades -y
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
+
+Edit `/etc/apt/apt.conf.d/50unattended-upgrades`:
+
+```bash
+Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}-security";
+};
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Automatic-Reboot "false";  // Set true only if acceptable
+Unattended-Upgrade::Mail "you@example.com";
+```
+
+---
+
+## 5. Kernel and sysctl Hardening
+
+```bash
+sudo nano /etc/sysctl.d/99-hardening.conf
+```
+
+```bash
+# Disable IP forwarding (unless this is a router)
+net.ipv4.ip_forward = 0
+
+# Ignore ICMP broadcast
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+# Protect against SYN flood attacks
+net.ipv4.tcp_syncookies = 1
+
+# Disable source routing
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv6.conf.all.accept_source_route = 0
+
+# Log martian packets
+net.ipv4.conf.all.log_martians = 1
+
+# Disable IPv6 if not needed
+net.ipv6.conf.all.disable_ipv6 = 1
+```
+
+```bash
+sudo sysctl -p /etc/sysctl.d/99-hardening.conf
+```
+
+---
+
+## 6. Remove Unnecessary Services
+
+```bash
+# List listening services
+sudo ss -tlnp
+
+# Disable services you don't use
+sudo systemctl disable --now avahi-daemon
+sudo systemctl disable --now cups
+sudo systemctl disable --now bluetooth
+
+# Remove unused packages
+sudo apt autoremove --purge
+```
+
+---
+
+## 7. File Integrity with auditd
+
+```bash
+sudo apt install auditd -y
+sudo systemctl enable auditd
+
+# Watch for changes to sensitive files
+sudo auditctl -w /etc/passwd -p wa -k identity
+sudo auditctl -w /etc/sudoers -p wa -k sudoers
+sudo auditctl -w /etc/ssh/sshd_config -p wa -k sshd_config
+
+# View audit log
+sudo ausearch -k sshd_config
+```
+
+---
+
+## Hardening Checklist
+
+- [ ] SSH: key-only auth, no root login, `MaxAuthTries 3`
+- [ ] UFW: default deny, only necessary ports open
+- [ ] Fail2ban: enabled on SSH with `maxretry 3`
+- [ ] Unattended upgrades: security updates auto-applied
+- [ ] sysctl: SYN cookies, no IP forwarding, no source routing
+- [ ] Unused services: disabled and removed
+- [ ] auditd: watching `/etc/passwd`, `/etc/sudoers`, SSH config
+- [ ] Last step: run `lynis audit system` for a score report
+
+```bash
+# Optional: Lynis security audit tool
+sudo apt install lynis -y
+sudo lynis audit system
+```
+
+---
+
+## Resources
+
+- [CIS Ubuntu Linux Benchmark](https://www.cisecurity.org/benchmark/ubuntu_linux)
+- [UFW Documentation](https://help.ubuntu.com/community/UFW)
+- [Fail2ban Manual](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
+- [Lynis Security Auditing](https://cisofy.com/lynis/)

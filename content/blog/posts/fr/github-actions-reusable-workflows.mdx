@@ -1,0 +1,236 @@
+---
+title: "GitHub Actions : workflows réutilisables et composite actions"
+excerpt: "Arrêtez de dupliquer la config CI/CD entre les repos — construisez des workflows réutilisables, des composite actions et des stratégies de secrets partagés pour les organisations multi-dépôts."
+date: "2026-04-30"
+tags: ["IT Ops", "GitHub Actions", "CI/CD", "DevOps"]
+featured: false
+---
+
+Quand vous avez cinq dépôts qui exécutent tous des pipelines CI similaires, vous avez cinq endroits à mettre à jour chaque fois que vous changez une version de Node ou ajoutez un scan de sécurité. Les workflows réutilisables et les composite actions règlent ce problème.
+
+---
+
+## Prérequis
+
+- Organisation GitHub avec plusieurs dépôts
+- Connaissances de base en YAML et GitHub Actions
+- Accès admin à l'organisation ou aux dépôts
+
+---
+
+## Workflows réutilisables : appeler un workflow depuis un autre
+
+Un workflow réutilisable est un fichier workflow que d'autres workflows peuvent appeler comme une fonction. Il réside dans n'importe quel dépôt (typiquement un dépôt partagé `platform` ou `.github`).
+
+**Définir un workflow réutilisable :**
+
+```yaml
+# .github/workflows/deploy-node.yml (dans votre dépôt platform)
+name: Déployer App Node
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      node-version:
+        required: false
+        type: string
+        default: '20'
+    secrets:
+      DEPLOY_TOKEN:
+        required: true
+      AWS_ROLE_ARN:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurer Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+      - name: Configurer les credentials AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-1
+
+      - name: Déployer
+        run: |
+          aws s3 sync ./dist s3://my-app-${{ inputs.environment }} --delete
+```
+
+**L'appeler depuis un autre dépôt :**
+
+```yaml
+# .github/workflows/ci.yml dans n'importe quel dépôt
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-staging:
+    uses: my-org/platform/.github/workflows/deploy-node.yml@main
+    with:
+      environment: staging
+      node-version: '20'
+    secrets:
+      DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+      AWS_ROLE_ARN: ${{ secrets.STAGING_AWS_ROLE }}
+
+  deploy-prod:
+    needs: deploy-staging
+    uses: my-org/platform/.github/workflows/deploy-node.yml@main
+    with:
+      environment: production
+    secrets: inherit   # Transmettre tous les secrets du workflow appelant
+```
+
+---
+
+## Composite Actions : étapes réutilisables
+
+Les composite actions regroupent plusieurs étapes en une seule référence `uses:`. Contrairement aux workflows réutilisables, elles s'exécutent dans le même contexte de job.
+
+```yaml
+# my-org/actions/setup-node-app/action.yml
+name: 'Setup Node App'
+description: 'Installer les deps, cache et lint'
+
+inputs:
+  node-version:
+    description: 'Version Node'
+    default: '20'
+  run-lint:
+    description: 'Exécuter ESLint'
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Installer les dépendances
+      run: npm ci
+      shell: bash
+
+    - name: Lint
+      if: inputs.run-lint == 'true'
+      run: npm run lint
+      shell: bash
+```
+
+```yaml
+# N'importe quel workflow utilisant la composite action
+steps:
+  - uses: actions/checkout@v4
+  - uses: my-org/actions/setup-node-app@v1
+    with:
+      node-version: '22'
+      run-lint: 'false'
+  - run: npm test
+```
+
+---
+
+## Partager les secrets entre dépôts
+
+**Option 1 : Secrets d'organisation** (la plus simple)
+```
+Org GitHub → Settings → Secrets and variables → Actions → Nouveau secret d'organisation
+Accès : Sélectionner les dépôts → choisir lesquels peuvent l'utiliser
+```
+
+**Option 2 : OIDC avec les fournisseurs cloud** (pas de secrets de longue durée)
+```yaml
+permissions:
+  id-token: write
+  contents: read
+
+steps:
+  - name: Configurer les credentials AWS
+    uses: aws-actions/configure-aws-credentials@v4
+    with:
+      role-to-assume: arn:aws:iam::123456789:role/github-actions-role
+      aws-region: eu-west-1
+```
+
+OIDC est le standard : pas de rotation de secrets, pas d'exposition de credentials — GitHub échange un JWT signé contre un token cloud de courte durée à l'exécution.
+
+---
+
+## Stratégie de matrix pour les tests multi-environnements
+
+```yaml
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [18, 20, 22]
+        exclude:
+          - os: windows-latest
+            node: 18  # Ignorer Node 18 sur Windows
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+```
+
+---
+
+## Cache pour la vitesse
+
+```yaml
+- name: Cache node_modules
+  uses: actions/cache@v4
+  id: cache-npm
+  with:
+    path: node_modules
+    key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+    restore-keys: |
+      npm-${{ runner.os }}-
+
+- name: Installer (uniquement si cache manqué)
+  if: steps.cache-npm.outputs.cache-hit != 'true'
+  run: npm ci
+```
+
+Conseil clé : hashchez le lockfile, pas `package.json`. Le lockfile change quand les versions exactes changent ; `package.json` change quand les plages changent (ce qui n'implique pas toujours de nouvelles installations).
+
+---
+
+## Pièges courants
+
+- **Pas de `needs:` sur le job de production** : sans `needs: [staging]`, staging et production se déploient simultanément à chaque push
+- **Secrets de longue durée dans les variables d'environnement** : utilisez OIDC — les secrets qui n'expirent jamais sont une responsabilité sécuritaire
+- **Workflow réutilisable dans le même dépôt uniquement** : les workflows réutilisables appelés avec `uses:` doivent être dans un dépôt public ou la même organisation
+- **`shell: bash` manquant dans les composite actions** : chaque étape d'une composite action nécessite une déclaration `shell:` explicite
+
+---
+
+## Ressources
+
+- [Documentation Workflows réutilisables](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
+- [Documentation Composite Actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
+- [GitHub OIDC avec AWS](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)

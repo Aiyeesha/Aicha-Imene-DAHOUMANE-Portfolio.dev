@@ -1,0 +1,202 @@
+---
+title: "Bilan de santé de l'org Salesforce : checklist d'audit pour les admins"
+excerpt: "Une checklist d'audit pratique pour évaluer votre org Salesforce — dette technique, failles de sécurité, métadonnées inutilisées, risques de governor limits et signaux d'alarme de performance."
+date: "2026-04-30"
+tags: ["Salesforce", "Admin", "Audit", "Best Practices"]
+featured: false
+---
+
+La plupart des orgs Salesforce accumulent de la dette technique silencieusement. Champs inutilisés, automatisations en doublon, utilisateurs inactifs et requêtes destructrices pour les performances s'accumulent au fil des ans. Ce bilan de santé vous donne une méthode systématique pour auditer une org — qu'il s'agisse d'une org héritée ou que vous gérez depuis des années.
+
+---
+
+## Quand effectuer un bilan de santé
+
+- En prenant la responsabilité d'une org existante
+- Avant un projet ou une migration majeure
+- Annuellement dans le cadre d'une maintenance régulière
+- Après une croissance rapide ou une implémentation conséquente
+
+---
+
+## 1. Audit de sécurité
+
+**Utilisateurs et accès :**
+```
+[ ] Lister les utilisateurs actifs avec le profil Administrateur système
+    → SELECT Id, Name, Profile.Name FROM User WHERE IsActive = true 
+      AND Profile.Name = 'System Administrator'
+    → Doit être minimal — chaque sysadmin est un risque de sécurité
+
+[ ] Utilisateurs n'ayant pas de connexion depuis 90+ jours (désactiver ou investiguer)
+    → SELECT Id, Name, LastLoginDate FROM User 
+      WHERE IsActive = true AND LastLoginDate < LAST_N_DAYS:90
+
+[ ] Profils avec "Modifier toutes les données" ou "Afficher toutes les données"
+    → Vérifier Setup → Profils → rechercher les permissions larges
+
+[ ] Utilisateurs API-only sans restrictions IP
+    → Setup → Utilisateurs → filtrer par API-Enabled, vérifier les plages IP de connexion
+```
+
+**OWD et partage :**
+```
+[ ] Defaults au niveau de l'organisation définis sur Privé pour les objets sensibles
+    → Setup → Security → Sharing Settings
+
+[ ] Règles de partage revues pour cohérence avec la structure d'équipe actuelle
+[ ] Règles de partage Apex encore pertinentes (pas d'enregistrements de partage orphelins)
+```
+
+---
+
+## 2. Qualité des métadonnées
+
+**Objets personnalisés :**
+```sql
+-- Vérifier les noms API pour les patterns d'anciennes nomenclatures
+SELECT QualifiedApiName, DeveloperName FROM EntityDefinition 
+WHERE IsCustomSetting = false AND IsCustomizable = true
+ORDER BY DeveloperName
+```
+
+Recherchez :
+- `Old__c`, `Legacy__c`, `Temp__c`, `Test__c` — objets orphelins
+- Objets en doublon faisant la même chose
+- Objets avec 0 enregistrements (probablement inutilisés)
+
+**Champs personnalisés :**
+```
+[ ] Champs sans référence dans les rapports, formules ou code
+    → Utilisez Salesforce Optimizer (Setup → Optimizer) pour trouver les champs inutilisés
+    → Aussi : rapport d'utilisation des champs dans Setup
+
+[ ] Champs de formule qui référencent d'autres champs de formule profondément imbriqués
+    → Risque : limites de complexité des formules et governor limits CPU
+
+[ ] Champs avec des libellés vides ou des noms API comme "Champ1__c"
+```
+
+**Automatisations :**
+```
+[ ] Plusieurs triggers qui se chevauchent sur le même objet
+    → Pattern un trigger par objet : vérifier s'il y a des violations
+
+[ ] Workflows, process builders ET flows actifs sur le même objet
+    → L'ordre d'exécution est important — documentez-le
+
+[ ] Flows planifiés/jobs batch qui n'ont plus d'utilité
+    → Setup → Flows → filtrer par Planifié/Actif
+
+[ ] Jobs Apex planifiés
+    → SELECT Id, JobType, CronJobDetail.Name, State FROM CronTrigger
+```
+
+---
+
+## 3. Signaux d'alarme de performance
+
+**Requêtes SOQL :**
+```apex
+// Chercher des requêtes non sélectives en Apex (qui ralentissent avec la scale)
+// Pattern problématique :
+[SELECT Id FROM Account WHERE CreatedById = :userId]  // Non indexé
+[SELECT Id FROM Contact WHERE Name LIKE '%Dupont%']   // LIKE avec wildcard de tête
+
+// Vérifier le Query Optimizer dans Setup → Schema Builder
+```
+
+**Index à vérifier :**
+- Champs External ID utilisés pour les upserts — doivent être indexés
+- Champs de lookup utilisés dans les clauses WHERE des requêtes lourdes
+- Champs indexés personnalisés : Setup → Object Manager → Champ → [Détail du champ]
+
+**Limites Apex :**
+```soql
+-- Vérifier les violations de temps CPU Apex dans les logs
+SELECT Id, Operation, Status, StartedDate 
+FROM AsyncApexJob 
+WHERE Status = 'Failed' AND JobType = 'BatchApex'
+ORDER BY StartedDate DESC LIMIT 50
+```
+
+---
+
+## 4. Qualité des données
+
+```sql
+-- Accounts sans contacts (données orphelines)
+SELECT Id, Name FROM Account 
+WHERE Id NOT IN (SELECT AccountId FROM Contact WHERE AccountId != null)
+LIMIT 100
+
+-- Détection des doublons
+SELECT Name, COUNT(Id) nb FROM Account 
+GROUP BY Name HAVING COUNT(Id) > 1 
+ORDER BY nb DESC
+
+-- Contacts sans email (si l'email est critique pour votre processus)
+SELECT Id, FirstName, LastName FROM Contact 
+WHERE Email = null AND IsDeleted = false
+```
+
+**Métriques clés à capturer :**
+- Totaux d'enregistrements par objet majeur
+- % d'enregistrements avec les champs obligatoires remplis
+- Taux de doublons (configurer les règles de détection si absent)
+
+---
+
+## 5. Déploiement et gestion des changements
+
+```
+[ ] Change Sets ou CLI utilisés ? (Non ? Ajouter l'intégration Git)
+
+[ ] Calendrier de rafraîchissement de sandbox documenté ?
+    → Quand a eu lieu le dernier rafraîchissement ?
+    → Les sandboxes sont-ils utilisés pour les tests avant les déploiements en production ?
+
+[ ] Couverture des tests Apex dans l'org
+    → Setup → Apex Classes → Run All Tests
+    → Objectif : 85%+ (75% est le minimum — ne le traitez pas comme l'objectif)
+
+[ ] Historique des déploiements revu
+    → Rechercher les déploiements récents importants sans enregistrements d'exécution de tests
+```
+
+---
+
+## 6. Stockage
+
+```
+[ ] Utilisation du stockage de données (Setup → Informations sur la société → Stockage)
+    → > 80% du stockage alloué = zone de risque
+    [ ] Objets volumineux / pièces jointes utilisant l'ancien Attachments vs. Files
+    [ ] Anciens enregistrements ContentVersion d'enregistrements supprimés
+
+[ ] Stockage de fichiers
+    → ContentDocument sans enregistrement parent (fichiers orphelins)
+    SELECT Id FROM ContentDocument 
+    WHERE Id NOT IN (SELECT ContentDocumentId FROM ContentDocumentLink)
+```
+
+---
+
+## Présenter vos conclusions
+
+Structurez vos conclusions ainsi :
+
+| Catégorie | Constat | Sévérité | Recommandation |
+|-----------|---------|----------|----------------|
+| Sécurité | 12 Administrateurs système actifs | Élevée | Réduire à 3, utiliser des Permission Sets |
+| Performance | 3 triggers sur Account sans pattern handler | Moyenne | Consolider dans un TriggerFramework |
+| Données | 8 400 Contacts sans email | Faible | Campagne de nettoyage des données |
+| Métadonnées | 47 champs personnalisés inutilisés | Faible | Désactiver après analyse d'impact |
+
+---
+
+## Ressources
+
+- [Salesforce Optimizer](https://help.salesforce.com/s/articleView?id=sf.optimizer_kick_off.htm)
+- [Statut et limites Trust](https://status.salesforce.com/)
+- [Health Check dans Setup](https://help.salesforce.com/s/articleView?id=sf.security_health_check.htm)

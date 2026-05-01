@@ -1,0 +1,193 @@
+---
+title: "Performance LWC : wire adapters, lazy loading et pièges de rendu"
+excerpt: "Accélérez vos Lightning Web Components — comprenez le cache des wire adapters, évitez les re-rendus inutiles, chargez les composants lourds à la demande et mesurez avec Chrome DevTools."
+date: "2026-04-30"
+tags: ["Salesforce", "LWC", "Performance", "JavaScript"]
+featured: false
+---
+
+Une page Lightning lente est un ticket de support en attente. La plupart des problèmes de performance LWC appartiennent à trois catégories : trop d'allers-retours serveur, des re-rendus inutiles et des composants lourds qui bloquent l'affichage initial. Voici comment diagnostiquer et corriger chacun.
+
+---
+
+## Prérequis
+
+- Notions de base LWC (composants, décorateurs, wire)
+- Familiarité avec Chrome DevTools
+- Accès à une org Salesforce avec Lightning Experience
+
+---
+
+## Wire Adapters : cache et quand il vous aide
+
+`@wire` met les résultats en cache automatiquement — mais uniquement pour les mêmes paramètres. Quand les params changent, LWC déclenche un nouvel appel serveur.
+
+```javascript
+import { LightningElement, wire, api } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+import { NAME_FIELD, EMAIL_FIELD } from '@salesforce/schema/Contact';
+
+export default class ContactCard extends LightningElement {
+    @api recordId;
+
+    // ✅ Le cache wire fonctionne : même recordId = pas d'appel serveur
+    @wire(getRecord, { recordId: '$recordId', fields: [NAME_FIELD, EMAIL_FIELD] })
+    contact;
+
+    // ❌ Objet littéral dans le template = nouvelle référence à chaque rendu = cache miss à chaque fois
+    // Ne pas faire : @wire(getRecord, { recordId: '$recordId', fields: [{ objectApiName: 'Contact', fieldApiName: 'Name' }] })
+}
+```
+
+**Utilisez des références de champs en chaîne** (importées de `@salesforce/schema`) plutôt que des objets littéraux — ce sont des références stables qui s'intègrent bien avec le cache wire.
+
+---
+
+## Éviter les re-rendus inutiles
+
+LWC re-rend un composant quand son état tracké change. Le problème vient du sur-tracking.
+
+```javascript
+import { LightningElement, track } from 'lwc';
+
+export default class FilterPanel extends LightningElement {
+    // ❌ @track sur un primitif — inutile, les primitifs sont réactifs par défaut
+    @track searchTerm = '';
+
+    // ❌ @track sur tout l'objet — tout changement de propriété imbriquée = re-rendu complet
+    @track filters = { status: 'Open', priority: 'High', assignee: null };
+
+    // ✅ Ne trackez que ce que le template lit réellement
+    // Pour les propriétés simples, @track n'est pas nécessaire depuis LWC 2.x
+    searchTerm = '';
+    filterStatus = 'Open';
+    filterPriority = 'High';
+}
+```
+
+**Regroupez les mises à jour d'état** — au lieu de trois affectations séparées (trois re-rendus), calculez le nouvel état en une seule opération :
+
+```javascript
+// ❌ Trois re-rendus
+this.status = 'Closed';
+this.priority = 'Low';
+this.assignee = userId;
+
+// ✅ Un seul re-rendu (le spread crée une nouvelle référence d'objet, LWC diff le résultat)
+this.filters = { ...this.filters, status: 'Closed', priority: 'Low', assignee: userId };
+```
+
+---
+
+## Lazy loading des composants lourds
+
+N'importez pas tout en haut d'un fichier composant. Chargez à la demande avec des imports dynamiques :
+
+```javascript
+import { LightningElement } from 'lwc';
+
+export default class Dashboard extends LightningElement {
+    chartLoaded = false;
+    chartModule;
+
+    async handleShowChart() {
+        if (!this.chartModule) {
+            // Chargement uniquement au clic de l'utilisateur
+            const module = await import('c/heavyChartComponent');
+            this.chartModule = module;
+        }
+        this.chartLoaded = true;
+    }
+}
+```
+
+```html
+<!-- dashboard.html -->
+<template>
+    <lightning-button label="Afficher le graphique" onclick={handleShowChart}></lightning-button>
+    <template if:true={chartLoaded}>
+        <c-heavy-chart-component></c-heavy-chart-component>
+    </template>
+</template>
+```
+
+---
+
+## Pagination plutôt que tout charger
+
+Ne wirez jamais un résultat SOQL qui peut renvoyer des centaines d'enregistrements dans une seule table.
+
+```javascript
+import { LightningElement, wire } from 'lwc';
+import getContacts from '@salesforce/apex/ContactController.getContacts';
+
+const PAGE_SIZE = 20;
+
+export default class ContactList extends LightningElement {
+    page = 1;
+
+    @wire(getContacts, { pageSize: PAGE_SIZE, pageNumber: '$page' })
+    contacts;
+
+    get hasPrevious() { return this.page > 1; }
+    get hasNext() { return this.contacts?.data?.hasMore; }
+
+    previousPage() { this.page -= 1; }
+    nextPage() { this.page += 1; }
+}
+```
+
+```apex
+@AuraEnabled(cacheable=true)
+public static Map<String, Object> getContacts(Integer pageSize, Integer pageNumber) {
+    Integer offset = (pageNumber - 1) * pageSize;
+    List<Contact> records = [
+        SELECT Id, Name, Email FROM Contact
+        LIMIT :pageSize OFFSET :offset
+    ];
+    Integer total = [SELECT COUNT() FROM Contact];
+    return new Map<String, Object>{
+        'records' => records,
+        'hasMore' => (offset + pageSize) < total
+    };
+}
+```
+
+---
+
+## Mesurer avec Chrome DevTools
+
+1. Ouvrez la page d'enregistrement dans Salesforce
+2. Ouvrez DevTools → onglet **Performance**
+3. Cliquez sur **Enregistrer**, interagissez avec votre composant, arrêtez l'enregistrement
+4. Cherchez :
+   - Les tâches longues (barres rouges > 50ms) — généralement exécution JS ou grandes mises à jour DOM
+   - Les appels réseau répétés vers `/aura` ou `/apex` — cache wire manqué
+   - Le layout thrash — lecture puis écriture de propriétés DOM en boucle
+
+**Pour mesurer le temps des appels Apex :**
+```javascript
+// À ajouter uniquement en dev/sandbox
+connectedCallback() {
+    const start = performance.now();
+    // ... après la résolution du wire
+    console.log(`Chargement données : ${performance.now() - start}ms`);
+}
+```
+
+---
+
+## Pièges courants
+
+- **`cacheable=true` manquant sur Apex** : les résultats du wire adapter ne sont pas mis en cache sans l'annotation `@AuraEnabled(cacheable=true)`
+- **Itération avec `key` sur l'index** : utilisez toujours un ID d'enregistrement stable comme `key` dans `for:each` — l'index de tableau déclenche un re-rendu complet à chaque changement de liste
+- **Templates HTML trop grands** : découpez les templates complexes en composants enfants — les petits composants se re-rendent indépendamment
+- **Fetch dans `connectedCallback`** : préférez `@wire` pour que Salesforce puisse mettre en cache et précharger
+
+---
+
+## Ressources
+
+- [Bonnes pratiques de performance LWC](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.performance)
+- [Documentation Wire Service](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.data_wire_service_about)
+- [LWC Recipes — GitHub](https://github.com/trailheadapps/lwc-recipes)

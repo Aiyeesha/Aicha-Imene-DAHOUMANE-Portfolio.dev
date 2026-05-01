@@ -1,0 +1,276 @@
+---
+title: "Tester Next.js avec Playwright : E2E, authentification et CI"
+excerpt: "Écrivez des tests end-to-end fiables pour Next.js avec Playwright — réutilisation de l'état d'auth, pattern page object, mock d'API, régression visuelle et intégration GitHub Actions."
+date: "2026-04-30"
+tags: ["Next.js", "Testing", "Playwright", "CI/CD"]
+featured: false
+---
+
+Les tests unitaires vous disent que vos fonctions fonctionnent. Les tests E2E vous disent que votre application fonctionne. Playwright est le meilleur outil pour les tests E2E Next.js — il comprend le web, s'exécute rapidement et s'intègre proprement avec GitHub Actions.
+
+---
+
+## Prérequis
+
+- Projet Next.js avec un serveur de développement en cours d'exécution
+- Node.js 18+
+
+```bash
+npm install -D @playwright/test
+npx playwright install chromium firefox  # Installer les navigateurs
+```
+
+---
+
+## Configuration
+
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,  // Retry uniquement en CI
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [['html'], ['github']],
+
+  use: {
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+  },
+
+  projects: [
+    // Projet de configuration pour l'authentification
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'mobile',
+      use: { ...devices['iPhone 13'] },
+      dependencies: ['setup'],
+    },
+  ],
+
+  webServer: {
+    command: 'npm run build && npm run start',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
+});
+```
+
+---
+
+## Réutilisation de l'état d'authentification
+
+L'optimisation clé — s'authentifier une fois, réutiliser dans tous les tests :
+
+```typescript
+// tests/e2e/auth.setup.ts
+import { test as setup, expect } from '@playwright/test';
+import path from 'path';
+
+const authFile = path.join(__dirname, '.auth/user.json');
+
+setup('authenticate', async ({ page }) => {
+  await page.goto('/auth/connexion');
+
+  await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!);
+  await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!);
+  await page.click('button[type="submit"]');
+
+  // Attendre la redirection vers le dashboard
+  await page.waitForURL('/dashboard');
+  await expect(page.locator('h1')).toBeVisible();
+
+  // Sauvegarder l'état d'auth sur disque — réutilisé par tous les tests
+  await page.context().storageState({ path: authFile });
+});
+```
+
+---
+
+## Pattern Page Object
+
+N'écrivez pas les sélecteurs dans les fichiers de test — encapsulez-les dans des page objects :
+
+```typescript
+// tests/e2e/pages/ProjectsPage.ts
+import { Page, Locator, expect } from '@playwright/test';
+
+export class ProjectsPage {
+  readonly page: Page;
+  readonly heading: Locator;
+  readonly projectCards: Locator;
+  readonly searchInput: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.heading = page.getByRole('heading', { name: 'Projets' });
+    this.projectCards = page.locator('[data-testid="project-card"]');
+    this.searchInput = page.getByPlaceholder('Rechercher des projets...');
+  }
+
+  async goto() {
+    await this.page.goto('/projects');
+    await expect(this.heading).toBeVisible();
+  }
+
+  async search(query: string) {
+    await this.searchInput.fill(query);
+    await this.page.waitForTimeout(300); // Debounce
+  }
+
+  async getProjectCount() {
+    return this.projectCards.count();
+  }
+
+  async clickProject(name: string) {
+    await this.projectCards.filter({ hasText: name }).click();
+    await this.page.waitForURL(/\/projects\/.+/);
+  }
+}
+```
+
+```typescript
+// tests/e2e/projects.spec.ts
+import { test, expect } from '@playwright/test';
+import { ProjectsPage } from './pages/ProjectsPage';
+
+test.describe('Projets', () => {
+  test('affiche tous les projets', async ({ page }) => {
+    const projectsPage = new ProjectsPage(page);
+    await projectsPage.goto();
+
+    const count = await projectsPage.getProjectCount();
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('filtre les projets par recherche', async ({ page }) => {
+    const projectsPage = new ProjectsPage(page);
+    await projectsPage.goto();
+
+    await projectsPage.search('Salesforce');
+    const count = await projectsPage.getProjectCount();
+    expect(count).toBeGreaterThanOrEqual(1);
+  });
+});
+```
+
+---
+
+## Mock d'API pour l'isolation
+
+Mocker les APIs externes pour des tests rapides et fiables :
+
+```typescript
+// tests/e2e/blog.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('affiche les articles du blog depuis l\'API', async ({ page }) => {
+  // Mocker l'API avant la navigation
+  await page.route('/api/posts', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        { id: '1', title: 'Article Test', excerpt: 'Extrait test', date: '2026-01-01' },
+      ]),
+    });
+  });
+
+  await page.goto('/blog');
+  await expect(page.getByText('Article Test')).toBeVisible();
+});
+```
+
+---
+
+## Tests de régression visuelle
+
+```typescript
+test('la page d\'accueil correspond au snapshot', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+
+  // Masquer le contenu dynamique avant le snapshot
+  await page.locator('[data-testid="current-date"]').evaluate(el => el.remove());
+
+  await expect(page).toHaveScreenshot('homepage.png', {
+    maxDiffPixelRatio: 0.02,  // Autoriser 2% de différence de pixels
+    fullPage: true,
+  });
+});
+```
+
+Première exécution : `npx playwright test --update-snapshots` pour créer les baselines.
+
+---
+
+## Intégration GitHub Actions
+
+```yaml
+# .github/workflows/e2e.yml
+name: Tests E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Installer les navigateurs Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Exécuter les tests E2E
+        run: npx playwright test
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+```
+
+---
+
+## Pièges courants
+
+- **`waitForTimeout` partout** : utilisez `waitForURL`, `waitForLoadState` ou `waitFor` sur des éléments — les attentes basées sur le temps sont instables
+- **Pas d'attributs `data-testid`** : les sélecteurs de classes CSS se cassent quand les styles changent — ajoutez des attributs `data-testid` sémantiques aux éléments interactifs
+- **Exécuter tous les tests à chaque commit** : limitez les tests E2E lents aux PRs + pushs sur main, pas aux commits de branches de fonctionnalité
+- **État d'auth non ignoré par git** : le répertoire `.auth/` contient des tokens de session — ajoutez-le à `.gitignore`
+
+---
+
+## Ressources
+
+- [Documentation Playwright](https://playwright.dev/docs/intro)
+- [Exemple Playwright + Next.js](https://github.com/vercel/next.js/tree/canary/examples/with-playwright)
+- [Locators Playwright](https://playwright.dev/docs/locators)

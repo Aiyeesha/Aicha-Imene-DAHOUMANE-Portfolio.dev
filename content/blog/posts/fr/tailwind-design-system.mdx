@@ -1,0 +1,238 @@
+---
+title: "Construire un design system avec Tailwind CSS et shadcn/ui"
+excerpt: "Construisez un design system évolutif avec Tailwind CSS — tokens de design, variantes de composants avec CVA, mode sombre, intégration shadcn/ui et cohérence à l'échelle d'une équipe."
+date: "2026-04-30"
+tags: ["Next.js", "Tailwind", "Design System", "UI"]
+featured: false
+---
+
+Un design system n'est pas une bibliothèque de composants — c'est un ensemble de décisions sur l'espacement, la couleur, la typographie et le comportement qui donnent une sensation de cohérence à votre interface. Voici comment en construire un qui s'adapte à votre équipe.
+
+---
+
+## Prérequis
+
+- Projet Next.js avec Tailwind CSS
+- shadcn/ui installé (ou prêt à l'installer)
+- TypeScript (requis pour les variantes CVA)
+
+---
+
+## Tokens de design dans la config Tailwind
+
+Toutes les décisions de design doivent vivre dans `tailwind.config.ts`, pas dispersées dans des chaînes de classes :
+
+```typescript
+// tailwind.config.ts
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        // Tokens de couleur sémantiques (pas des couleurs brutes)
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        border: 'hsl(var(--border))',
+        ring: 'hsl(var(--ring))',
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+      },
+    },
+  },
+};
+
+export default config;
+```
+
+**Variables CSS dans globals.css :**
+```css
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    /* ... */
+  }
+}
+```
+
+---
+
+## Variantes de composants avec CVA
+
+Class Variance Authority (CVA) rend les variantes de composants typées et lisibles :
+
+```bash
+npm install class-variance-authority clsx tailwind-merge
+```
+
+```typescript
+// lib/utils.ts
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+```typescript
+// components/ui/button.tsx
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+
+const buttonVariants = cva(
+  // Classes de base (toujours appliquées)
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
+
+export function Button({ className, variant, size, ...props }: ButtonProps) {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
+}
+```
+
+Utilisation :
+```tsx
+<Button>Par défaut</Button>
+<Button variant="destructive" size="sm">Supprimer</Button>
+<Button variant="outline" size="lg">En savoir plus</Button>
+```
+
+---
+
+## shadcn/ui : le point de départ rapide
+
+shadcn/ui vous donne des composants non stylisés et accessibles que vous possédez (pas une dépendance) :
+
+```bash
+# Initialiser
+npx shadcn@latest init
+
+# Ajouter des composants au besoin
+npx shadcn@latest add button
+npx shadcn@latest add dialog
+npx shadcn@latest add form
+npx shadcn@latest add table
+```
+
+Les composants sont copiés dans votre projet dans `components/ui/`. Vous possédez le code — personnalisez librement.
+
+---
+
+## Mode sombre
+
+```typescript
+// components/ThemeProvider.tsx
+'use client';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </NextThemesProvider>
+  );
+}
+
+// components/ThemeToggle.tsx
+'use client';
+import { useTheme } from 'next-themes';
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      Basculer le thème
+    </button>
+  );
+}
+```
+
+---
+
+## Pièges courants
+
+- **Valeurs de couleur brutes au lieu de tokens** : `text-blue-600` directement ne s'adapte pas au mode sombre — `text-primary` si
+- **Pas de `twMerge`** : sans lui, `cn('px-4', className)` et `className="px-8"` s'appliquent tous les deux — l'ordre compte dans Tailwind
+- **Dupliquer les variantes** : si vous avez `Button`, `LinkButton` et `IconButton` avec des styles similaires, consolidez avec CVA
+- **Surcharger shadcn/ui trop profondément** : si vous combattez le composant fortement, il est plus facile de construire le vôtre depuis des primitives (Radix UI)
+
+---
+
+## Ressources
+
+- [Documentation Tailwind CSS](https://tailwindcss.com/docs)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Class Variance Authority](https://cva.style/docs)
+- [Radix UI Primitives](https://www.radix-ui.com/)

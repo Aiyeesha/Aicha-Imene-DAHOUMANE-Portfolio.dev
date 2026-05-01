@@ -1,0 +1,149 @@
+---
+title: "Salesforce Reports and Dashboards: Beyond the Basics"
+excerpt: "Go beyond simple reports — cross filters, bucket columns, joined reports, dynamic dashboards, and report subscriptions for automated distribution."
+date: "2026-04-30"
+tags: ["Salesforce", "Reports", "Analytics", "Admin"]
+featured: false
+---
+
+Most Salesforce users know how to create a basic tabular report. But the real productivity gains come from features most admins never configure: cross filters, joined reports, and dynamic dashboards that adapt per-viewer. Here's what you're missing.
+
+---
+
+## Prerequisites
+
+- Salesforce org with Report Builder access
+- Basic understanding of objects and relationships
+- Reports and Dashboards app visible in App Launcher
+
+---
+
+## Cross Filters: "Show Accounts WITHOUT Any Open Opportunities"
+
+Cross filters let you filter a primary object based on the presence or absence of related records — without writing a formula or Apex.
+
+**Example use case:** Find Accounts that have no Open Opportunities (at-risk accounts to target for upsell outreach).
+
+```
+Report Type: Accounts
+Add Cross Filter: Accounts WITHOUT Opportunities
+  Additional Filter: Opportunity Stage EQUALS "Open"
+```
+
+This is impossible with a standard field filter because you can't filter on "absence" of a child record.
+
+**More examples:**
+- Contacts WITHOUT Cases in the last 30 days (inactive contacts)
+- Leads WITH Activities but NOT Converted
+- Opportunities WITHOUT Tasks (deals with no follow-up)
+
+---
+
+## Bucket Columns: Inline Grouping Without a Formula Field
+
+Bucket columns let you group values on the fly in the report without creating a formula field on the object.
+
+**Example:** Group Opportunities by deal size category:
+
+```
+Add Bucket Column on: Amount
+  < 10,000   → "Small"
+  10,000–50,000 → "Mid-Market"
+  > 50,000   → "Enterprise"
+```
+
+The bucketed column appears as a new column you can group by, add to charts, or use in summary formulas.
+
+**Use cases:**
+- Age range buckets on Contact Date of Birth
+- Lead Score tiers (cold/warm/hot)
+- Days to Close groupings (< 30, 30–90, > 90)
+
+---
+
+## Joined Reports: Multiple Report Types in One
+
+Joined reports let you combine data from different report types side-by-side. Classic example: leads vs. opportunities funnel in a single report.
+
+```
+New Report → Report Type: Opportunities
+Add Block → Report Type: Cases
+Group both blocks by: Account Name
+```
+
+Each block runs its own SOQL against its object type. You can then add summary formulas across blocks:
+
+```
+Block 1 summary: COUNT(Opportunity ID) → Open Deals
+Block 2 summary: COUNT(Case ID) → Open Cases
+Cross-block formula: Open Deals / Open Cases → Deal-to-Case Ratio
+```
+
+---
+
+## Dynamic Dashboards: Per-Viewer Data
+
+Standard dashboards run as a single user (the "running user"). Everyone sees the same data regardless of their own record access.
+
+**Dynamic dashboards** run as the *logged-in user*. A sales rep sees only their pipeline; their manager sees their entire team's pipeline — all from the same dashboard.
+
+```
+Edit Dashboard → Properties → View Dashboard As
+  → "The logged-in user" (Dynamic Dashboard)
+```
+
+Limits:
+- Maximum 5 dynamic dashboards per org on Enterprise edition
+- The underlying report must not use "Run as Specified User"
+- Does not work with Salesforce1 mobile app (only Lightning)
+
+---
+
+## Report Subscriptions: Automated Distribution
+
+Instead of manually running and emailing a report every Monday, use Report Subscriptions:
+
+```
+Report → Subscribe
+  Frequency: Weekly, Monday 8:00 AM
+  Condition: Only send if "Count of Records" > 0
+  Recipients: yourself + a public group
+  Message: "Here are this week's at-risk accounts."
+```
+
+**Tip:** Use conditions to only send the email when it's actionable — avoid sending empty reports that train users to ignore them.
+
+---
+
+## Summary Formula Fields
+
+Summary formulas run at the grouping level, not the record level. They're the way to calculate things like "win rate" or "average deal size by stage":
+
+```
+Report: Opportunities grouped by Stage
+Summary Formula: CLOSE_WIN / COUNT(Id)
+  Label: Win Rate
+  Format: Percent, 1 decimal place
+```
+
+Common patterns:
+- `SUM(Amount) / COUNT(Id)` → Average deal size
+- `[Block1:COUNT] / [Block2:COUNT]` → Cross-block ratio (joined reports)
+- `PARENTGROUPVAL(SUM(Amount), ROW_GRAND_SUMMARY)` → Percent of grand total
+
+---
+
+## Report Performance Tips
+
+- **Filter on indexed fields**: Account Name, Owner, Created Date are indexed — filtering on formula fields is slow
+- **Limit date ranges**: never run a report "All Time" in production — always bound by date
+- **Avoid row limit overrides**: reports cap at 2,000 rows in the UI; export if you need more
+- **Use summary instead of detail**: if you only need totals, switch to Summary report type — it's faster
+
+---
+
+## Resources
+
+- [Report Builder Trailhead](https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards)
+- [Joined Reports Documentation](https://help.salesforce.com/s/articleView?id=sf.reports_joined_format.htm)
+- [Dynamic Dashboards](https://help.salesforce.com/s/articleView?id=sf.dashboards_dynamic_intro.htm)

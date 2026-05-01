@@ -1,0 +1,154 @@
+---
+title: "Segmentation réseau avec les VLANs : conception, configuration et sécurité"
+excerpt: "Concevez et implémentez la segmentation réseau avec les VLANs — isolation du trafic, routage inter-VLAN, règles de pare-feu et protection des systèmes sensibles contre les mouvements latéraux."
+date: "2026-04-30"
+tags: ["IT Ops", "Networking", "Security", "VLAN"]
+featured: false
+---
+
+Un réseau plat où chaque appareil peut atteindre chaque autre appareil est une catastrophe de sécurité en attente de se produire. Les VLANs vous permettent de segmenter le trafic logiquement sans tirer des câbles physiques séparés. Voici comment concevoir et implémenter une segmentation qui améliore réellement la sécurité.
+
+---
+
+## Prérequis
+
+- Switch géré (Cisco, Juniper, HP Aruba ou Netgear)
+- Routeur ou pare-feu avec support VLAN
+- Notions de base en sous-réseaux
+
+---
+
+## Principes de conception VLAN
+
+**Règle 1 : Segmenter par niveau de confiance, pas seulement par fonction**
+
+```
+VLAN 10 — Management (interfaces de gestion switch/routeur, monitoring)
+  Sous-réseau : 192.168.10.0/24
+  Confiance : Admins IT uniquement, ACLs strictes
+
+VLAN 20 — Serveurs (serveurs de production, bases de données)
+  Sous-réseau : 192.168.20.0/24
+  Confiance : Uniquement le trafic inter-services nécessaire
+
+VLAN 30 — Postes de travail (ordinateurs portables et fixes des employés)
+  Sous-réseau : 192.168.30.0/24
+  Confiance : Accès Internet, accès serveur limité
+
+VLAN 40 — IoT / Imprimantes (caméras, imprimantes, appareils connectés)
+  Sous-réseau : 192.168.40.0/24
+  Non fiable : Accès Internet uniquement, isolé de tout
+
+VLAN 50 — WiFi invité
+  Sous-réseau : 192.168.50.0/24
+  Non fiable : Internet uniquement, pas d'accès interne
+
+VLAN 99 — VLAN natif (trafic non tagué)
+  Utilisé pour : ports trunk uniquement, aucun appareil assigné
+```
+
+**Règle 2 : Ne jamais mettre des appareils sensibles sur le même VLAN que les postes de travail**
+
+Si un poste est compromis, un attaquant ne devrait pas pouvoir atteindre directement votre serveur de base de données. La segmentation limite les mouvements latéraux.
+
+---
+
+## Configuration du switch (Cisco IOS)
+
+```
+! Créer les VLANs
+vlan 10
+ name Management
+vlan 20
+ name Serveurs
+vlan 30
+ name PostesTravail
+vlan 40
+ name IoT
+vlan 50
+ name Invites
+vlan 99
+ name Natif
+
+! Port d'accès pour un poste de travail
+interface GigabitEthernet0/1
+ switchport mode access
+ switchport access vlan 30
+ switchport nonegotiate
+ spanning-tree portfast
+
+! Port d'accès pour un serveur
+interface GigabitEthernet0/10
+ switchport mode access
+ switchport access vlan 20
+ switchport nonegotiate
+ spanning-tree portfast
+
+! Port trunk vers routeur/pare-feu
+interface GigabitEthernet0/24
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+ switchport trunk native vlan 99
+```
+
+---
+
+## Routage inter-VLAN avec un pare-feu
+
+Ne laissez pas le trafic inter-VLAN circuler librement. Routez-le à travers un pare-feu et appliquez des règles :
+
+**Règles de pare-feu (moindre privilège) :**
+
+```
+# VLAN 50 Invités — Internet uniquement, rien d'interne
+Bloquer : src=192.168.50.0/24, dst=192.168.0.0/16 (bloquer tout RFC1918)
+Autoriser : src=192.168.50.0/24, dst=any (Internet)
+
+# VLAN 40 IoT — Internet uniquement, bloquer tout interne
+Bloquer : src=192.168.40.0/24, dst=192.168.0.0/16
+Autoriser : src=192.168.40.0/24, dst=any, port=80,443
+
+# VLAN 30 Postes — Internet + accès serveur spécifique
+Autoriser : src=192.168.30.0/24, dst=192.168.20.10, port=443  # Serveur app uniquement
+Autoriser : src=192.168.30.0/24, dst=any (Internet)
+Bloquer : src=192.168.30.0/24, dst=192.168.20.0/24  # Bloquer reste des serveurs
+
+# VLAN 20 Serveurs — Internet sortant pour mises à jour, inter-serveurs limité
+Autoriser : src=192.168.20.0/24, dst=192.168.20.0/24, port=5432  # DB intra VLAN
+Autoriser : src=192.168.20.0/24, dst=any, port=443  # Mises à jour
+
+# VLAN 10 Management — Accès complet (admin uniquement)
+Autoriser : src=192.168.10.0/24, dst=any
+```
+
+---
+
+## WiFi avec plusieurs SSIDs par VLAN
+
+Sur un point d'accès (exemple Ubiquiti UniFi) :
+
+```
+SSID : CorpNet      → VLAN 30 (WPA2-Enterprise, auth 802.1X)
+SSID : IoT-Devices  → VLAN 40 (WPA2-PSK, clients isolés)
+SSID : Wifi-Invites → VLAN 50 (WPA2-PSK, isolation clients, portail captif)
+```
+
+**L'isolation des clients** sur les SSIDs IoT/Invités empêche les appareils sur le même SSID de communiquer entre eux — critique pour les réseaux IoT et invités.
+
+---
+
+## Pièges courants
+
+- **VLAN 1 comme VLAN natif** : VLAN 1 est le défaut et souvent utilisé pour la gestion — déplacez le trafic de gestion vers un VLAN dédié et laissez VLAN 1 inutilisé
+- **Pas de pare-feu entre les VLANs** : router entre VLANs directement sur le switch (Layer 3) sans pare-feu signifie aucun filtrage — routez via un pare-feu
+- **Trop de VLANs** : plus de VLANs = plus de complexité. Commencez avec 4–6, ajoutez uniquement si nécessaire
+- **Oublier les exceptions imprimantes/IoT** : les imprimantes ont besoin d'atteindre les postes de travail — créez des règles spécifiques plutôt que de mettre les imprimantes dans le VLAN des postes
+
+---
+
+## Ressources
+
+- [Guide de configuration VLAN — Cisco](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swvlan.html)
+- [Documentation VLAN pfSense](https://docs.netgate.com/pfsense/en/latest/vlan/index.html)
+- [CIS Controls — Segmentation réseau](https://www.cisecurity.org/controls/)

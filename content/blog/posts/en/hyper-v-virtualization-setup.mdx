@@ -1,0 +1,290 @@
+---
+title: "Hyper-V Virtualization: Setup, Virtual Switching, and VM Best Practices"
+excerpt: "Deploy and configure Hyper-V on Windows Server — virtual switches, VM creation, dynamic memory, checkpoints, live migration, and production hardening tips."
+date: "2026-05-01"
+tags: ["IT Ops", "Hyper-V", "Virtualization", "Windows Server"]
+featured: false
+---
+
+Hyper-V is Microsoft's type-1 hypervisor built into Windows Server. It's production-ready, free with Server licensing, and integrates tightly with Active Directory and System Center. Here's how to set it up properly.
+
+---
+
+## Prerequisites
+
+- Windows Server 2019 or 2022 (Standard or Datacenter)
+- CPU with virtualization extensions (Intel VT-x or AMD-V), enabled in BIOS
+- 16GB+ RAM (32GB recommended for multiple VMs)
+- Separate disk(s) for VM storage — not the OS drive
+
+**Check hardware compatibility:**
+
+```powershell
+# Verify virtualization support
+systeminfo | Select-String "Hyper-V Requirements"
+
+# Expected output (all must be Yes):
+# VM Monitor Mode Extensions: Yes
+# Virtualization Enabled In Firmware: Yes
+# Second Level Address Translation: Yes
+# Data Execution Prevention Available: Yes
+```
+
+---
+
+## Install Hyper-V
+
+```powershell
+# Install Hyper-V role and management tools
+Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+
+# After reboot — verify
+Get-WindowsFeature Hyper-V
+Get-Command -Module Hyper-V | Measure-Object  # Should show 200+ cmdlets
+```
+
+---
+
+## Virtual Switch Configuration
+
+Virtual switches control VM network connectivity. Create before deploying VMs.
+
+### External Switch (VMs access physical network)
+
+```powershell
+# Get the physical NIC name
+Get-NetAdapter | Where-Object Status -eq "Up"
+
+# Create external switch bound to physical NIC
+New-VMSwitch -Name "External-Production" `
+  -NetAdapterName "Ethernet 2" `
+  -AllowManagementOS $true  # Host also gets access through this switch
+
+# AllowManagementOS: false if you want dedicated NICs for VMs only
+```
+
+### Internal Switch (VMs talk to each other + host, no external)
+
+```powershell
+New-VMSwitch -Name "Internal-Lab" -SwitchType Internal
+
+# Assign IP to the host's virtual NIC for the internal network
+$adapter = Get-NetAdapter | Where-Object Name -like "*Internal-Lab*"
+New-NetIPAddress -InterfaceIndex $adapter.InterfaceIndex `
+  -IPAddress "10.10.10.1" -PrefixLength 24
+```
+
+### Private Switch (VMs only, no host access)
+
+```powershell
+New-VMSwitch -Name "Private-Isolated" -SwitchType Private
+```
+
+**For production:** Use NIC teaming before creating external switches:
+
+```powershell
+# Team two physical NICs for redundancy
+New-NetLbfoTeam -Name "NIC-Team-Prod" `
+  -TeamMembers "Ethernet 1","Ethernet 2" `
+  -TeamingMode SwitchIndependent `
+  -LoadBalancingAlgorithm Dynamic
+
+# Then create external switch on the team
+New-VMSwitch -Name "External-Production" -NetAdapterName "NIC-Team-Prod"
+```
+
+---
+
+## Creating Virtual Machines
+
+### New-VM with Best Practices
+
+```powershell
+# Create a Generation 2 VM (UEFI, Secure Boot — for Windows 10+ and Linux)
+$VMName = "web-prod-01"
+$VMPath = "D:\VMs"
+$VHDPath = "D:\VMs\$VMName\$VMName-OS.vhdx"
+
+New-VM -Name $VMName `
+  -Path $VMPath `
+  -Generation 2 `
+  -MemoryStartupBytes 4GB `
+  -SwitchName "External-Production"
+
+# Add OS disk (pre-created VHDX or from ISO)
+New-VHD -Path $VHDPath -SizeBytes 80GB -Dynamic
+Add-VMHardDiskDrive -VMName $VMName -Path $VHDPath -ControllerType SCSI
+
+# Add ISO for installation
+$DVDDrive = Add-VMDvdDrive -VMName $VMName -Path "D:\ISOs\windows-server-2022.iso"
+
+# Set boot order (DVD first for installation)
+$bootOrder = Get-VMFirmware -VMName $VMName
+Set-VMFirmware -VMName $VMName -FirstBootDevice $DVDDrive
+
+# Configure CPU and memory
+Set-VM -Name $VMName -ProcessorCount 4
+
+# Enable Dynamic Memory
+Set-VMMemory -VMName $VMName `
+  -DynamicMemoryEnabled $true `
+  -MinimumBytes 1GB `
+  -StartupBytes 4GB `
+  -MaximumBytes 8GB `
+  -Buffer 20  # Keep 20% overhead available
+
+Start-VM -Name $VMName
+```
+
+### Separate Data Disk
+
+Always put application data on a separate VHD from the OS:
+
+```powershell
+$DataVHD = "D:\VMs\$VMName\$VMName-Data.vhdx"
+New-VHD -Path $DataVHD -SizeBytes 500GB -Dynamic
+Add-VMHardDiskDrive -VMName $VMName -Path $DataVHD -ControllerType SCSI
+
+# Inside the VM: initialize, format, and assign drive letter
+# Get-Disk | Where-Object PartitionStyle -eq RAW | Initialize-Disk -PartitionStyle GPT
+# New-Partition -DiskNumber 1 -UseMaximumSize -DriveLetter E
+# Format-Volume -DriveLetter E -FileSystem NTFS -NewFileSystemLabel "AppData"
+```
+
+---
+
+## Checkpoints (Snapshots)
+
+Use checkpoints sparingly — they're for testing and rollback, not backup.
+
+```powershell
+# Create a checkpoint before a risky change
+Checkpoint-VM -Name "web-prod-01" -SnapshotName "Before-June-2026-Patch"
+
+# List checkpoints
+Get-VMSnapshot -VMName "web-prod-01"
+
+# Restore to checkpoint
+Restore-VMSnapshot -VMName "web-prod-01" -Name "Before-June-2026-Patch" -Confirm:$false
+
+# Delete checkpoint (merges delta back)
+Remove-VMSnapshot -VMName "web-prod-01" -Name "Before-June-2026-Patch"
+```
+
+**Production rule:** Delete checkpoints within 24–48 hours. Long-running checkpoints fragment VHD chains, slow I/O, and complicate backups.
+
+---
+
+## Live Migration
+
+Move VMs between Hyper-V hosts without downtime (requires shared storage or SMB 3.0).
+
+```powershell
+# Enable Live Migration on both hosts
+Enable-VMMigration
+
+Set-VMHost -UseAnyNetworkForMigration $false
+Set-VMHost -VirtualMachineMigrationAuthenticationType Kerberos
+
+# Configure migration networks (use dedicated NIC if possible)
+Add-VMMigrationNetwork -IP "10.20.0.10" -Subnet "255.255.255.0" -Priority 1
+
+# Migrate a VM to another host (shared storage)
+Move-VM -Name "web-prod-01" -DestinationHost "hyper-v-node-02"
+
+# Migrate VM + storage (no shared storage required — slower)
+Move-VM -Name "web-prod-01" `
+  -DestinationHost "hyper-v-node-02" `
+  -DestinationStoragePath "\\hyper-v-node-02\VMs\web-prod-01"
+```
+
+---
+
+## Integration Services and Guest Configuration
+
+Ensure Hyper-V Integration Services are installed and up to date inside each VM.
+
+**On Windows VMs:** Delivered via Windows Update automatically.
+
+**On Linux VMs:**
+
+```bash
+# Ubuntu/Debian
+sudo apt install linux-virtual linux-cloud-tools-virtual linux-tools-virtual
+
+# RHEL/CentOS
+sudo yum install hyperv-daemons
+
+# Verify services running
+systemctl status hv_fcopy_daemon hv_kvp_daemon hv_vss_daemon
+```
+
+**Key integration services:**
+- **Heartbeat**: Host detects if VM is responsive
+- **Time Sync**: Keeps VM clock in sync with host
+- **VSS**: Enables application-consistent backups
+- **Key-Value Pair Exchange**: Pass data between host and VM
+- **File Copy**: Copy files into VM from host
+
+---
+
+## Resource Governance
+
+Prevent noisy-neighbor VMs from consuming all resources:
+
+```powershell
+# CPU — limit VM to max 50% of total host CPU
+Set-VMProcessor -VMName "dev-test-01" -Maximum 50
+
+# Memory — weight controls priority during contention
+Set-VMMemory -VMName "web-prod-01" -Priority 80  # High priority (1-100)
+Set-VMMemory -VMName "dev-test-01" -Priority 20  # Low priority
+
+# Storage QoS — limit IOPS (requires Windows Server 2016+)
+Set-VMHardDiskDrive -VMName "dev-test-01" `
+  -Path "D:\VMs\dev-test-01\dev-test-01-OS.vhdx" `
+  -MaximumIOPS 500 `
+  -MinimumIOPS 100
+```
+
+---
+
+## Monitoring
+
+```powershell
+# VM resource usage summary
+Get-VM | Select-Object Name, State, CPUUsage, MemoryAssigned, Status
+
+# Detailed performance counters
+Get-Counter "\Hyper-V Hypervisor Virtual Processor(*)\% Guest Run Time" |
+  Select-Object -ExpandProperty CounterSamples |
+  Where-Object CookedValue -gt 80
+
+# Check VM replication health (Hyper-V Replica)
+Get-VMReplication | Select-Object VMName, State, Health, LastReplicationTime
+
+# Find VMs with snapshots (checkpoints) older than 7 days
+Get-VM | ForEach-Object {
+    Get-VMSnapshot -VMName $_.Name | Where-Object {
+        $_.CreationTime -lt (Get-Date).AddDays(-7)
+    }
+} | Select-Object VMName, Name, CreationTime
+```
+
+---
+
+## Common Pitfalls
+
+- **Generation 1 vs Generation 2**: Use Gen 2 for all modern OSes — UEFI, Secure Boot, faster boot; Gen 1 only for old OSes (Windows Server 2008 R2 or older)
+- **Dynamic vs Fixed VHDs**: Dynamic saves space but has slightly worse I/O — for database VMs, use fixed-size VHDs on SSD
+- **Snapshots in production**: Long-lived snapshots create fragmented disk chains — use Veeam or Windows Server Backup for backup, not checkpoints
+- **Overcommitting memory**: Hyper-V handles memory overcommit better than VMware, but still causes paging on the host — monitor with `Get-VMMemory`
+- **No Integration Services on Linux**: Without hyperv-daemons, VSS backups fail silently and time drift compounds
+
+---
+
+## Resources
+
+- [Hyper-V on Windows Server — Microsoft Docs](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-on-windows-server)
+- [Hyper-V Best Practices](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/best-practices-for-running-linux-on-hyper-v)
+- [Hyper-V PowerShell Reference](https://docs.microsoft.com/en-us/powershell/module/hyper-v/)

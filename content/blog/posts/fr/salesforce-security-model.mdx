@@ -1,0 +1,166 @@
+---
+title: "Modèle de sécurité Salesforce : Profils, Permission Sets et OWD"
+excerpt: "Maîtrisez le modèle de sécurité Salesforce — defaults au niveau de l'organisation, hiérarchie des rôles, profils vs. permission sets, sécurité au niveau des champs et règles de partage."
+date: "2026-04-30"
+tags: ["Salesforce", "Security", "Admin", "Permissions"]
+featured: false
+---
+
+Le modèle de sécurité Salesforce comporte cinq couches distinctes. La plupart des admins en maîtrisent une ou deux et compensent le reste avec des droits d'administrateur système. Comprendre comment elles interagissent évite les sur-permissions et les tickets du type "je ne vois pas cet enregistrement".
+
+---
+
+## Les cinq couches
+
+```
+1. Organization-Wide Defaults (OWD) — accès de base pour tous les enregistrements
+2. Hiérarchie des rôles — les managers voient les enregistrements de leurs subordonnés
+3. Règles de partage — ouvrir l'accès à des groupes ou rôles
+4. Profils — permissions objet/champ/onglet par type d'utilisateur
+5. Permission Sets — permissions additives par-dessus les profils
+```
+
+Salesforce les évalue dans l'ordre. Si l'OWD bloque l'accès, les règles de partage peuvent l'ouvrir. Les profils ne peuvent jamais accorder l'accès aux enregistrements que l'OWD a verrouillés — seul le partage d'enregistrements le fait.
+
+---
+
+## Organization-Wide Defaults
+
+L'OWD définit le niveau **minimum** d'accès pour chaque utilisateur sur chaque enregistrement qu'il ne possède pas.
+
+| Paramètre OWD | Ce que ça signifie |
+|---------------|-------------------|
+| Privé | Seul le propriétaire et la hiérarchie au-dessus peuvent voir l'enregistrement |
+| Lecture seule publique | Tout le monde peut lire, seul le propriétaire peut modifier |
+| Lecture/écriture publique | Tout le monde peut lire et modifier |
+| Contrôlé par le parent | L'enregistrement enfant suit l'OWD du parent (relations M-D) |
+
+**Règle empirique :** Commencez par Privé pour les objets sensibles (Opportunity, Contract), Lecture seule publique pour les objets de référence (Product, Pricebook).
+
+```
+Setup → Security → Sharing Settings → Organization-Wide Defaults
+```
+
+---
+
+## Hiérarchie des rôles
+
+Quand l'OWD est Privé, la hiérarchie des rôles accorde aux managers un accès en lecture (et optionnellement en écriture) sur les enregistrements appartenant aux utilisateurs en dessous d'eux.
+
+```
+PDG
+├── VP Commercial
+│   ├── Responsable Région Ouest
+│   │   ├── Commercial 1 (possède l'Opp A)
+│   │   └── Commercial 2 (possède l'Opp B)
+│   └── Responsable Région Est
+```
+
+Avec OWD Privé :
+- Commercial 1 voit uniquement l'Opp A
+- Responsable Région Ouest voit l'Opp A + l'Opp B
+- VP Commercial voit toutes les Opportunities de son sous-arbre
+
+**Important :** La hiérarchie des rôles ne s'applique pas aux objets personnalisés à moins que "Grant Access Using Hierarchies" soit activé pour cet objet.
+
+---
+
+## Règles de partage
+
+Quand l'OWD est Privé mais que vous avez besoin que des groupes d'utilisateurs partagent l'accès, utilisez les Sharing Rules :
+
+```
+Setup → Security → Sharing Settings → [Objet] Sharing Rules → Nouveau
+```
+
+**Règle de partage basée sur la propriété :**
+- Enregistrements appartenant à : *Rôle : Commercial Côte Ouest*
+- Partagés avec : *Groupe public : Équipe Ops*
+- Accès : Lecture seule
+
+**Règle de partage basée sur des critères :**
+- Enregistrements où : `Region__c = 'EMEA'`
+- Partagés avec : *Rôle : Manager EMEA*
+- Accès : Lecture/Écriture
+
+Les règles de partage ne peuvent qu'**élargir** l'accès au-delà de l'OWD. Elles ne peuvent pas restreindre l'accès.
+
+---
+
+## Profils vs. Permission Sets
+
+Les **Profils** définissent la base : quels objets un utilisateur peut accéder, quels onglets sont visibles, quels types d'enregistrement sont attribués, quelles apps apparaissent dans l'App Launcher.
+
+Les **Permission Sets** (et Permission Set Groups) s'ajoutent par-dessus le profil. C'est la méthode privilégiée pour accorder des accès supplémentaires.
+
+```
+Profil = niveau de base pour la fonction (Commercial, Agent Service)
+Permission Set = capacité additionnelle (Voir tous les Accounts, Exécuter des rapports)
+```
+
+```
+// Structure org recommandée :
+Profil standard (permissions minimales)
+  + Permission Set : Accès Commercial Core
+  + Permission Set : Reporting avancé (uniquement pour les commerciaux seniors)
+  + Permission Set : Accès API Intégration (uniquement pour les utilisateurs d'intégration)
+```
+
+**N'utilisez jamais le profil Administrateur système comme contournement.** Créez un permission set spécifique avec exactement les permissions nécessaires.
+
+---
+
+## Sécurité au niveau des champs (FLS)
+
+Même si un utilisateur a accès à l'objet, les champs individuels peuvent être masqués ou en lecture seule via la sécurité au niveau des champs (FLS) :
+
+```
+Setup → Object Manager → [Objet] → Fields & Relationships → [Champ] → Set Field-Level Security
+```
+
+Ou directement via Profil/Permission Set :
+```
+Profil → Field Permissions → [Objet] → cocher Lecture/Écriture par champ
+```
+
+**La FLS est appliquée sur :**
+- Les page layouts standard (automatiquement)
+- Le code Apex avec `WITH SECURITY_ENFORCED` ou `Security.stripInaccessible()`
+- LWC utilisant le wire adapter `getRecord` (seuls les champs demandés sont renvoyés)
+
+**La FLS n'est PAS appliquée automatiquement dans :**
+- Le SOQL brut en Apex (vous devez l'appliquer manuellement)
+- Les rapports (les rapporteurs voient tous les champs accessibles via leur profil)
+
+---
+
+## Diagnostic rapide
+
+Quand un utilisateur ne voit pas un enregistrement ou un champ :
+
+```
+1. Vérifier le profil : a-t-il la permission Lecture sur l'objet ?
+2. Vérifier l'OWD : est-il Privé ? Possède-t-il l'enregistrement ou est-il dans la hiérarchie au-dessus du propriétaire ?
+3. Vérifier les règles de partage : y a-t-il une règle couvrant son rôle/groupe ?
+4. Vérifier s'il existe un partage manuel sur l'enregistrement spécifique
+5. Pour les champs : vérifier la FLS sur le profil ou le permission set concerné
+```
+
+Utilisez le bouton **Pourquoi je ne peux pas voir ça ?** sur les enregistrements (menu engrenage) et le **Permission Analyzer** dans Setup pour le débogage systématique.
+
+---
+
+## Pièges courants
+
+- **OWD trop large** : Lecture/écriture publique est rarement correct pour des données métier — commencez Privé
+- **Profils avec tout activé** : cauchemar pour les audits de sécurité et bloque le durcissement futur
+- **Règles de partage ne couvrant pas les nouveaux groupes** : quand vous ajoutez un nouveau rôle ou groupe, les règles de partage existantes ne s'appliquent pas automatiquement — créez de nouvelles règles ou utilisez des règles basées sur des critères
+- **APEX contournant la FLS** : utilisez toujours `WITH SECURITY_ENFORCED` ou `Security.stripInaccessible()` dans le code Apex de production
+
+---
+
+## Ressources
+
+- [Guide de sécurité Salesforce](https://developer.salesforce.com/docs/atlas.en-us.securityImplGuide.meta/securityImplGuide/)
+- [Trailhead : Sécurité des données](https://trailhead.salesforce.com/content/learn/modules/data_security)
+- [Permission Set Groups](https://help.salesforce.com/s/articleView?id=sf.perm_set_groups.htm)

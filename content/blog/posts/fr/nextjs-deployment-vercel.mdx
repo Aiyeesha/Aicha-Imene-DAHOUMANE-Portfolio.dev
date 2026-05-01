@@ -1,0 +1,209 @@
+---
+title: "Déploiement Next.js sur Vercel : variables d'environnement, branches preview et Edge Config"
+excerpt: "Déployez Next.js sur Vercel correctement — portée des variables d'environnement, déploiements preview par branche, Edge Config pour les feature flags, gestion des domaines et hooks de déploiement."
+date: "2026-04-30"
+tags: ["Next.js", "Vercel", "Deployment", "DevOps"]
+featured: false
+---
+
+Vercel est conçu spécifiquement pour Next.js et l'expérience de déploiement est excellente — mais il y a des paramètres non évidents qui comptent pour la production. Voici ce qu'il faut configurer au-delà du simple push sur `main`.
+
+---
+
+## Prérequis
+
+- Projet Next.js dans un dépôt GitHub/GitLab/Bitbucket
+- Compte Vercel (le plan gratuit suffit pour démarrer)
+- Nom de domaine (optionnel mais recommandé pour la production)
+
+---
+
+## Variables d'environnement : portée et sécurité
+
+Vercel a trois environnements, chacun avec des variables indépendantes :
+
+```
+Production   — s'exécute quand vous poussez sur main/branche de production
+Preview      — s'exécute sur chaque PR / branche de fonctionnalité
+Development  — utilisé avec vercel dev en local
+```
+
+**Types de variables :**
+
+| Préfixe | Exposé à | Utilisation |
+|---------|---------|-------------|
+| `NEXT_PUBLIC_` | Navigateur + Serveur | Valeurs publiques sûres (URL Supabase, ID analytics) |
+| (sans préfixe) | Serveur uniquement | Clés API, URLs de base de données, secrets |
+
+```bash
+# Ajouter via CLI
+vercel env add DATABASE_URL production
+vercel env add NEXT_PUBLIC_SUPABASE_URL production preview development
+
+# Ou dans le dashboard : Projet → Settings → Environment Variables
+```
+
+**Critique :** Ne mettez jamais un secret dans une variable `NEXT_PUBLIC_`. Elle sera intégrée dans le bundle JavaScript servi à chaque navigateur.
+
+---
+
+## Déploiements Preview : une URL par branche
+
+Chaque push sur n'importe quelle branche obtient une URL de déploiement unique :
+
+```
+main          → myapp.vercel.app (et votre domaine personnalisé)
+feature/auth  → myapp-git-feature-auth-votreequipe.vercel.app
+fix/bug-123   → myapp-git-fix-bug-123-votreequipe.vercel.app
+```
+
+**Utiliser un environnement spécifique aux previews :**
+- Définir `DATABASE_URL` pour `preview` pour pointer vers une DB de staging
+- Définir `NEXT_PUBLIC_API_URL` pour `preview` vers votre API de staging
+- Les variables de production ne sont jamais utilisées en preview
+
+---
+
+## Edge Config : feature flags à latence ultra-faible
+
+Edge Config est un store clé-valeur distribué globalement qui se lit à la périphérie avec ~1ms de latence — pas d'appel API, pas d'aller-retour base de données :
+
+```bash
+# Créer un Edge Config
+vercel edge-config create mes-feature-flags
+```
+
+```typescript
+// Lecture dans le middleware (s'exécute à la périphérie, avant le rendu de la page)
+import { NextRequest, NextResponse } from 'next/server';
+import { get } from '@vercel/edge-config';
+
+export async function middleware(request: NextRequest) {
+  const maintenanceMode = await get('maintenance_mode');
+
+  if (maintenanceMode && !request.nextUrl.pathname.startsWith('/maintenance')) {
+    return NextResponse.redirect(new URL('/maintenance', request.url));
+  }
+
+  return NextResponse.next();
+}
+```
+
+```typescript
+// Mettre à jour Edge Config depuis une Server Action ou un webhook
+import { createClient } from '@vercel/edge-config-client';
+
+const client = createClient(process.env.EDGE_CONFIG_ID!);
+
+await client.update([
+  { operation: 'update', key: 'maintenance_mode', value: false },
+  { operation: 'update', key: 'nouvelle_fonctionnalite', value: true },
+]);
+```
+
+---
+
+## Domaines personnalisés et HTTPS
+
+```
+Vercel Dashboard → Projet → Settings → Domains
+→ Ajouter : monapp.fr, www.monapp.fr
+→ Vercel fournit HTTPS automatique via Let's Encrypt
+→ Redirection automatique : www → apex ou apex → www (configurable)
+```
+
+**Pour un DNS existant :**
+```
+# Ajouter un CNAME pour www
+www  CNAME  cname.vercel-dns.com
+
+# Ajouter un enregistrement A pour le domaine apex
+@    A      76.76.21.21
+```
+
+---
+
+## Deploy Hooks : déclencher des déploiements depuis des événements externes
+
+Déclenchez un rebuild de production depuis un webhook CMS, une tâche cron ou un pipeline CI :
+
+```
+Vercel Dashboard → Projet → Settings → Git → Deploy Hooks
+→ Créer un hook : "Mise à jour contenu CMS" → branche : main
+→ Copier l'URL : https://api.vercel.com/v1/integrations/deploy/prj_xxx/yyy
+```
+
+```bash
+# Déclencher le déploiement depuis curl
+curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_xxx/yyy"
+```
+
+```typescript
+// Dans un handler de route webhook Next.js
+// app/api/webhook/cms/route.ts
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  // Vérifier la signature...
+
+  // Déclencher le redéploiement Vercel
+  await fetch(process.env.VERCEL_DEPLOY_HOOK_URL!, { method: 'POST' });
+
+  return Response.json({ declenche: true });
+}
+```
+
+---
+
+## vercel.json : configuration avancée
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/ancien-chemin",
+      "destination": "/nouveau-chemin",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/v1/:path*",
+      "destination": "https://api-legacy.exemple.com/v1/:path*"
+    }
+  ]
+}
+```
+
+---
+
+## Pièges courants
+
+- **`NEXT_PUBLIC_` pour les secrets** : toute variable avec ce préfixe est intégrée dans le JS client — visible par tout le monde
+- **Pas de base de données de staging pour les previews** : si les branches preview se connectent à la DB de production, une mauvaise PR peut corrompre de vraies données
+- **Invalidation du cache de build** : quand les builds sont mystérieusement cassés, vider le cache de build (`vercel --force`) résout souvent le problème
+- **Structure root vs. `src/`** : Vercel détecte automatiquement, mais définissez explicitement le preset de framework sur Next.js pour garantir la bonne commande de build
+
+---
+
+## Ressources
+
+- [Documentation Vercel](https://vercel.com/docs)
+- [Documentation Edge Config](https://vercel.com/docs/storage/edge-config)
+- [Guide des variables d'environnement](https://vercel.com/docs/projects/environment-variables)

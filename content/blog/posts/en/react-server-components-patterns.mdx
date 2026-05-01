@@ -1,0 +1,244 @@
+---
+title: "React Server Components Patterns: Composition, Streaming, and the Boundary"
+excerpt: "Master RSC composition — when to use Server vs. Client Components, streaming with Suspense, passing server data to client, and avoiding the common re-render traps."
+date: "2026-04-30"
+tags: ["Next.js", "React", "RSC", "Performance"]
+featured: false
+---
+
+React Server Components fundamentally change the composition model. The mistake most teams make is treating the Server/Client boundary as an either/or choice per file. In reality, you can interleave them — but the rules matter.
+
+---
+
+## Prerequisites
+
+- Next.js 14+ with App Router
+- Basic React component knowledge
+- Understanding that RSC is a server-side rendering model, not a new API
+
+---
+
+## The Mental Model
+
+```
+Server Component (default in App Router)
+  — Runs on the server only, never in the browser
+  — Can use async/await directly
+  — Can import server-only code (DB clients, secrets)
+  — Cannot use useState, useEffect, event handlers
+
+Client Component ("use client" directive)
+  — Runs on both server (for initial HTML) and client (for hydration)
+  — Can use hooks, event handlers, browser APIs
+  — Cannot import server-only code
+```
+
+The key insight: **Client Components can receive RSC as children.** A Server Component can render a Client Component and pass other Server Components as props/children to it.
+
+---
+
+## Pattern 1: Data Down, Interactivity Up
+
+Fetch data in Server Components, pass it to Client Components for interactivity:
+
+```typescript
+// app/dashboard/page.tsx — Server Component
+import { StatsChart } from './StatsChart'; // Client Component
+
+async function DashboardPage() {
+  // Data fetched on server — no client waterfall
+  const stats = await getStats();
+  const user = await getCurrentUser();
+
+  return (
+    <div>
+      <h1>Welcome, {user.name}</h1>
+      {/* Pass server-fetched data to client component */}
+      <StatsChart data={stats} />
+    </div>
+  );
+}
+```
+
+```typescript
+// StatsChart.tsx — Client Component
+'use client';
+import { useState } from 'react';
+
+export function StatsChart({ data }: { data: Stats[] }) {
+  const [view, setView] = useState<'week' | 'month'>('week');
+
+  return (
+    <div>
+      <button onClick={() => setView('week')}>Week</button>
+      <button onClick={() => setView('month')}>Month</button>
+      <Chart data={data.filter(d => d.period === view)} />
+    </div>
+  );
+}
+```
+
+---
+
+## Pattern 2: Children as Islands
+
+A Client Component wrapper can receive Server Component children:
+
+```typescript
+// Collapsible.tsx — Client Component (manages open/closed state)
+'use client';
+import { useState } from 'react';
+
+export function Collapsible({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode; // Server Components are valid here!
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setOpen(!open)}>{title}</button>
+      {open && <div>{children}</div>}
+    </div>
+  );
+}
+```
+
+```typescript
+// page.tsx — Server Component
+import { Collapsible } from './Collapsible';
+
+async function Page() {
+  const comments = await getComments(); // DB call — server only
+
+  return (
+    <Collapsible title="Comments">
+      {/* These are Server Components rendered inside a Client Component */}
+      {comments.map(c => (
+        <Comment key={c.id} comment={c} />
+      ))}
+    </Collapsible>
+  );
+}
+```
+
+---
+
+## Pattern 3: Streaming with Suspense
+
+Stream slow data to the client without blocking the fast parts:
+
+```typescript
+// app/product/[id]/page.tsx
+import { Suspense } from 'react';
+
+async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const product = await getProduct(id); // Fast — required for page structure
+
+  return (
+    <div>
+      <h1>{product.name}</h1>
+      <p>{product.description}</p>
+
+      {/* Reviews are slow — stream them separately */}
+      <Suspense fallback={<ReviewsSkeleton />}>
+        <Reviews productId={id} />
+      </Suspense>
+
+      {/* Recommendations are even slower — stream last */}
+      <Suspense fallback={<RecommendationsSkeleton />}>
+        <Recommendations productId={id} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function Reviews({ productId }: { productId: string }) {
+  const reviews = await getReviews(productId); // Slow external API
+  return <ReviewList reviews={reviews} />;
+}
+```
+
+With this pattern, the page shell renders immediately, then reviews stream in when ready, then recommendations.
+
+---
+
+## Pattern 4: Server Actions for Mutations
+
+Co-locate mutations with the component that triggers them:
+
+```typescript
+// components/ContactForm.tsx
+import { revalidatePath } from 'next/cache';
+
+async function submitContact(formData: FormData) {
+  'use server'; // This function runs on the server
+
+  const name = formData.get('name') as string;
+  const email = formData.get('email') as string;
+  const message = formData.get('message') as string;
+
+  await db.contact.create({ data: { name, email, message } });
+  revalidatePath('/contact');
+}
+
+export function ContactForm() {
+  return (
+    <form action={submitContact}>
+      <input name="name" required />
+      <input name="email" type="email" required />
+      <textarea name="message" required />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+No API route needed. The form submits directly to the server action.
+
+---
+
+## What Breaks the Boundary
+
+These patterns cause the `ServerComponentError` or silent failures:
+
+```typescript
+// ❌ Cannot export a Server Component from a Client Component module
+'use client';
+// Server functions (async with DB access) can't be in "use client" files
+
+// ❌ Cannot pass non-serializable props across the boundary
+// Functions, class instances, symbols — only JSON-serializable values
+function Parent() {
+  return <ClientChild onCustomEvent={() => { /* closure */ }} />; // OK — functions are serializable from Server to Client
+}
+// But: Server → Client cannot pass DB client instances, Promises
+
+// ✅ Pass serialized data, not live objects
+async function Page() {
+  const user = await getUser();
+  return <ClientComponent userId={user.id} name={user.name} />; // OK
+  // NOT: <ClientComponent user={user} /> if user has methods
+}
+```
+
+---
+
+## Common Pitfalls
+
+- **Marking everything as `use client`**: this turns off RSC benefits — only add it when you actually need interactivity
+- **Async Client Components**: you can't use `async` in Client Components — use Server Components for async data, pass via props
+- **Context across the boundary**: React Context only works in Client Component trees — create it in a `"use client"` provider
+- **Third-party components**: many npm packages aren't marked with `"use client"` — you may need to wrap them
+
+---
+
+## Resources
+
+- [Next.js Server Components Docs](https://nextjs.org/docs/app/building-your-application/rendering/server-components)
+- [React RFC: Server Components](https://github.com/reactjs/rfcs/blob/main/text/0188-server-components.md)
+- [RSC Deep Dive — Josh Comeau](https://www.joshwcomeau.com/react/server-components/)

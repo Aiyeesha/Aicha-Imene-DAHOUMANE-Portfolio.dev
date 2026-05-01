@@ -1,0 +1,219 @@
+---
+title: "SSL/TLS Certificate Management: Let's Encrypt, Renewal, and Monitoring"
+excerpt: "Manage TLS certificates at scale — automate Let's Encrypt renewal with Certbot and ACME, monitor expiry across multiple servers, and handle wildcard certificates."
+date: "2026-04-30"
+tags: ["IT Ops", "TLS", "Security", "Linux"]
+featured: false
+---
+
+Certificate expiry is still one of the most common causes of production outages — even in 2026. Automating renewal and adding expiry monitoring prevents the 3 AM alert when your site goes HTTPS-broken. Here's a complete setup.
+
+---
+
+## Prerequisites
+
+- Ubuntu/Debian server
+- Nginx or Apache installed
+- Domain pointing to your server IP
+- Port 80 open (for HTTP-01 challenge)
+
+---
+
+## Install Certbot and Get Your First Certificate
+
+```bash
+# Install Certbot with Nginx plugin
+sudo apt install certbot python3-certbot-nginx -y
+
+# Obtain certificate and auto-configure Nginx
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+
+# Or for Apache
+sudo certbot --apache -d yourdomain.com
+
+# Standalone mode (if no web server)
+sudo certbot certonly --standalone -d yourdomain.com
+```
+
+Certbot stores certificates in `/etc/letsencrypt/live/yourdomain.com/`:
+```
+cert.pem       — Your domain certificate
+chain.pem      — Intermediate certificates
+fullchain.pem  — cert.pem + chain.pem (use this in Nginx)
+privkey.pem    — Private key
+```
+
+---
+
+## Nginx Configuration with Strong TLS
+
+```nginx
+# /etc/nginx/sites-available/yourdomain.com
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name yourdomain.com www.yourdomain.com;
+
+    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+
+    # Strong TLS settings
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    # HSTS (enable only after testing — hard to undo)
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/yourdomain.com/chain.pem;
+    resolver 1.1.1.1 valid=300s;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+---
+
+## Automated Renewal
+
+Certbot installs a systemd timer (or cron job) automatically:
+
+```bash
+# Check the timer
+systemctl status certbot.timer
+systemctl list-timers | grep certbot
+
+# Test renewal without actually renewing
+sudo certbot renew --dry-run
+
+# Manual renewal (if needed)
+sudo certbot renew
+sudo systemctl reload nginx
+```
+
+If Certbot's auto-renewal isn't working, add a cron job:
+
+```bash
+# crontab -e
+0 12 * * * certbot renew --quiet --post-hook "systemctl reload nginx"
+```
+
+---
+
+## Wildcard Certificates with DNS-01 Challenge
+
+Wildcard certs (`*.yourdomain.com`) require DNS validation:
+
+```bash
+# Manual DNS challenge (not suitable for automation)
+sudo certbot certonly --manual --preferred-challenges dns \
+  -d "*.yourdomain.com" -d "yourdomain.com"
+```
+
+For automated wildcard renewal, use a DNS provider plugin:
+
+```bash
+# Cloudflare example
+sudo pip install certbot-dns-cloudflare
+
+# Create credentials file
+cat > /root/.cloudflare.ini << EOF
+dns_cloudflare_api_token = YOUR_CLOUDFLARE_API_TOKEN
+EOF
+chmod 600 /root/.cloudflare.ini
+
+# Get wildcard certificate
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /root/.cloudflare.ini \
+  -d "*.yourdomain.com" -d "yourdomain.com"
+```
+
+---
+
+## Certificate Expiry Monitoring Script
+
+```bash
+#!/bin/bash
+# check-cert-expiry.sh
+# Run via cron: 0 8 * * * /opt/scripts/check-cert-expiry.sh
+
+DOMAINS="yourdomain.com api.yourdomain.com app.yourdomain.com"
+WARNING_DAYS=30
+ALERT_EMAIL="ops@yourdomain.com"
+
+for DOMAIN in $DOMAINS; do
+    EXPIRY=$(echo | openssl s_client -servername "$DOMAIN" \
+        -connect "$DOMAIN":443 2>/dev/null | \
+        openssl x509 -noout -enddate 2>/dev/null | \
+        cut -d= -f2)
+
+    EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s)
+    NOW_EPOCH=$(date +%s)
+    DAYS_LEFT=$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
+
+    if [ $DAYS_LEFT -le $WARNING_DAYS ]; then
+        echo "WARNING: $DOMAIN expires in $DAYS_LEFT days ($EXPIRY)" | \
+            mail -s "CERT EXPIRY WARNING: $DOMAIN" $ALERT_EMAIL
+        echo "ALERT: $DOMAIN — $DAYS_LEFT days remaining"
+    else
+        echo "OK: $DOMAIN — $DAYS_LEFT days remaining"
+    fi
+done
+```
+
+---
+
+## Internal Certificates with a Private CA
+
+For internal services, create your own CA with OpenSSL:
+
+```bash
+# Create CA key and certificate
+openssl genrsa -out ca.key 4096
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt \
+  -subj "/C=FR/O=YourOrg/CN=Internal CA"
+
+# Create certificate for a service
+openssl genrsa -out service.key 2048
+openssl req -new -key service.key -out service.csr \
+  -subj "/C=FR/O=YourOrg/CN=internal-service.local"
+
+# Sign with your CA
+openssl x509 -req -days 365 -in service.csr \
+  -CA ca.crt -CAkey ca.key -CAcreateserial -out service.crt
+
+# Distribute ca.crt to all clients that need to trust the CA
+```
+
+---
+
+## Common Pitfalls
+
+- **HSTS without testing**: once enabled with a long max-age, HSTS is very hard to remove — test with a short value first
+- **Forgetting to reload Nginx after renewal**: add `--post-hook "systemctl reload nginx"` to your certbot renew cron
+- **Monitoring only your own server**: third-party services (CDN, load balancer) may have different certificate expiry dates
+- **Private key permissions**: `privkey.pem` must be readable only by root (mode 600) — Nginx reads it as root at startup
+
+---
+
+## Resources
+
+- [Certbot Documentation](https://certbot.eff.org/docs/)
+- [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/)
+- [SSL Labs Server Test](https://www.ssllabs.com/ssltest/)

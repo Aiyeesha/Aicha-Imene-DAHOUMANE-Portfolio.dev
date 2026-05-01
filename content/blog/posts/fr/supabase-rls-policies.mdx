@@ -1,0 +1,215 @@
+---
+title: "Row Level Security Supabase : des politiques qui fonctionnent vraiment"
+excerpt: "Écrivez des politiques RLS qui sécurisent vos données sans tuer les performances — isolation utilisateur, patterns multi-tenant, contournements service role et débogage des politiques."
+date: "2026-04-30"
+tags: ["Next.js", "Supabase", "Database", "Security"]
+featured: false
+---
+
+La Row Level Security est la fonctionnalité de sécurité la plus importante de Supabase — et la plus souvent mal configurée. Activée sans politiques ? Tout le monde est bloqué. Logique de politique incorrecte ? Les utilisateurs voient les données des autres. Voici comment écrire des politiques à la fois sécurisées et performantes.
+
+---
+
+## Prérequis
+
+- Projet Supabase avec une base de données PostgreSQL
+- Tables avec des données à protéger
+- Authentification configurée (les utilisateurs doivent exister pour écrire des politiques RLS pertinentes)
+
+---
+
+## Activer RLS et comprendre le comportement par défaut
+
+```sql
+-- Activer RLS sur une table (désactivé par défaut)
+ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
+
+-- Avec RLS activé et AUCUNE politique : tout accès est refusé (pour les non-superusers)
+-- Avec RLS activé et des politiques : seules les lignes correspondant à une politique sont accessibles
+```
+
+Le rôle `anon` (non authentifié) et le rôle `authenticated` (utilisateur connecté) sont ce que vos politiques ciblent. Le service role contourne entièrement RLS.
+
+---
+
+## Pattern d'isolation utilisateur basique
+
+Le pattern le plus courant — les utilisateurs n'accèdent qu'à leurs propres lignes :
+
+```sql
+-- Permettre aux utilisateurs de lire uniquement leurs propres lignes
+CREATE POLICY "users_read_own" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+-- Permettre aux utilisateurs d'insérer uniquement des lignes avec leur user_id
+CREATE POLICY "users_insert_own" ON posts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+-- Permettre aux utilisateurs de modifier uniquement leurs propres lignes
+CREATE POLICY "users_update_own" ON posts
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Permettre aux utilisateurs de supprimer uniquement leurs propres lignes
+CREATE POLICY "users_delete_own" ON posts
+  FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+```
+
+`USING` contrôle quelles lignes sont **visibles** (SELECT, UPDATE, DELETE).
+`WITH CHECK` contrôle quelles lignes peuvent être **écrites** (INSERT, UPDATE).
+
+---
+
+## Lecture publique, écriture authentifiée
+
+Articles de blog ou produits publics en lecture mais protégés en écriture :
+
+```sql
+-- Tout le monde (y compris non authentifié) peut lire les posts publiés
+CREATE POLICY "public_read_published" ON posts
+  FOR SELECT
+  TO anon, authenticated
+  USING (published = true);
+
+-- Seul l'auteur peut lire ses brouillons non publiés
+CREATE POLICY "author_read_drafts" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id AND published = false);
+
+-- Seuls les utilisateurs authentifiés peuvent insérer
+CREATE POLICY "authenticated_insert" ON posts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+```
+
+---
+
+## Pattern multi-tenant avec organisations
+
+Quand les utilisateurs appartiennent à des organisations et peuvent voir toutes les données de leur org :
+
+```sql
+-- Fonction helper pour des politiques plus lisibles
+CREATE OR REPLACE FUNCTION auth.user_org_id()
+RETURNS uuid AS $$
+  SELECT org_id FROM user_profiles WHERE user_id = auth.uid()
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
+
+-- Les membres peuvent voir toutes les lignes de leur organisation
+CREATE POLICY "org_members_read" ON projects
+  FOR SELECT
+  TO authenticated
+  USING (org_id = auth.user_org_id());
+
+-- Seuls les propriétaires peuvent supprimer
+CREATE POLICY "org_owners_delete" ON projects
+  FOR DELETE
+  TO authenticated
+  USING (
+    org_id = auth.user_org_id() AND
+    EXISTS (
+      SELECT 1 FROM org_members
+      WHERE org_id = projects.org_id
+      AND user_id = auth.uid()
+      AND role = 'owner'
+    )
+  );
+```
+
+---
+
+## Override admin avec des claims personnalisés
+
+Parfois vous avez besoin qu'un utilisateur admin voie toutes les lignes. Utilisez des claims JWT personnalisés :
+
+```sql
+-- Vérifier si l'utilisateur a un claim admin dans son JWT
+CREATE POLICY "admins_read_all" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (
+    auth.uid() = user_id  -- posts de l'utilisateur
+    OR
+    (auth.jwt() ->> 'user_role') = 'admin'  -- OU est admin
+  );
+```
+
+---
+
+## Performance : indexez les colonnes dans les clauses USING
+
+Les politiques RLS s'exécutent sur chaque ligne. Si votre clause `USING` filtre sur `user_id`, cette colonne doit être indexée :
+
+```sql
+-- Sans cet index, chaque SELECT parcourt toute la table pour RLS
+CREATE INDEX idx_posts_user_id ON posts(user_id);
+CREATE INDEX idx_projects_org_id ON projects(org_id);
+```
+
+Pour les politiques complexes avec des sous-requêtes, testez avec `EXPLAIN ANALYZE` :
+
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM posts WHERE true;
+-- WHERE true déclenche l'évaluation RLS — vérifiez les Seq Scans sur les grandes tables
+```
+
+---
+
+## Contourner RLS depuis le serveur (Service Role)
+
+Votre code Next.js côté serveur peut contourner RLS avec la clé service role :
+
+```typescript
+// Utilisez le service role uniquement dans le code côté serveur
+import { createClient } from '@supabase/supabase-js';
+
+const adminClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // PAS NEXT_PUBLIC — serveur uniquement
+);
+
+// Ceci contourne RLS — utilisez uniquement pour les opérations admin
+const { data } = await adminClient.from('posts').select('*');
+```
+
+---
+
+## Déboguer les politiques
+
+```sql
+-- Tester en tant qu'utilisateur spécifique
+SET LOCAL role TO authenticated;
+SET LOCAL request.jwt.claims TO '{"sub": "uuid-utilisateur-ici"}';
+SELECT * FROM posts; -- Devrait retourner uniquement les lignes de cet utilisateur
+
+-- Voir toutes les politiques sur une table
+SELECT * FROM pg_policies WHERE tablename = 'posts';
+```
+
+---
+
+## Pièges courants
+
+- **RLS activé sans politiques** : bloque TOUT accès y compris votre app — créez toujours au moins une politique SELECT avant d'activer
+- **Pas d'index sur les colonnes filtrées** : `USING (user_id = auth.uid())` sur une table de 1M de lignes sans index est un scan complet à chaque requête
+- **Utiliser la clé anon côté serveur** : la clé anon est soumise à RLS — votre code serveur doit utiliser le service role pour les opérations admin
+- **Oublier WITH CHECK sur INSERT** : `USING` ne s'applique qu'aux lignes existantes — INSERT nécessite `WITH CHECK` pour empêcher les utilisateurs d'insérer des lignes qu'ils ne possèdent pas
+
+---
+
+## Ressources
+
+- [Documentation RLS Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security)
+- [Référence RLS PostgreSQL](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
+- [Auth Helpers Supabase](https://supabase.com/docs/guides/auth/auth-helpers)

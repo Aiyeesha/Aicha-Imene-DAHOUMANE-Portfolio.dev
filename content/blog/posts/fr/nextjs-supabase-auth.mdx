@@ -1,0 +1,246 @@
+---
+title: "Next.js + Supabase Auth : sessions côté serveur avec App Router"
+excerpt: "Implémentez une authentification sécurisée dans Next.js App Router avec Supabase — validation de session côté serveur, routes protégées, middleware et fournisseurs OAuth."
+date: "2026-04-30"
+tags: ["Next.js", "Supabase", "Auth", "Security"]
+featured: false
+---
+
+L'erreur la plus fréquente avec l'auth Supabase dans Next.js App Router, c'est de ne faire l'auth que côté client. Les vérifications de session côté client sont facilement contournées. Voici comment le faire correctement — côté serveur, avec un middleware qui protège les routes avant même qu'elles ne s'affichent.
+
+---
+
+## Prérequis
+
+- Next.js 14+ avec App Router
+- Projet Supabase avec l'auth activée
+- Package `@supabase/ssr` (pas l'ancien `auth-helpers-nextjs`)
+
+```bash
+npm install @supabase/ssr @supabase/supabase-js
+```
+
+---
+
+## Configuration des clients Supabase
+
+Trois configurations différentes pour trois contextes différents :
+
+```typescript
+// lib/supabase/server.ts — pour les Server Components et Route Handlers
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+
+export async function createClient() {
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll(); },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+}
+```
+
+```typescript
+// lib/supabase/middleware.ts — pour le middleware (mutation de cookies dans les requêtes)
+import { createServerClient } from '@supabase/ssr';
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function updateSession(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return request.cookies.getAll(); },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          supabaseResponse = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+
+  // Rafraîchir la session — requis avant d'appeler getUser()
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return { supabaseResponse, user };
+}
+```
+
+---
+
+## Middleware : protéger les routes à la périphérie
+
+```typescript
+// middleware.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware';
+
+export async function middleware(request: NextRequest) {
+  const { supabaseResponse, user } = await updateSession(request);
+
+  const isPageAuth = request.nextUrl.pathname.startsWith('/auth');
+  const isProtege = request.nextUrl.pathname.startsWith('/dashboard') ||
+                    request.nextUrl.pathname.startsWith('/compte');
+
+  // Rediriger les utilisateurs non authentifiés hors des pages protégées
+  if (isProtege && !user) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/auth/connexion';
+    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // Rediriger les utilisateurs authentifiés hors des pages d'auth
+  if (isPageAuth && user) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  return supabaseResponse;
+}
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+---
+
+## Page de connexion avec Email + OAuth
+
+```typescript
+// app/auth/connexion/page.tsx
+import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
+
+export default async function ConnexionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirectTo?: string }>;
+}) {
+  const { redirectTo } = await searchParams;
+
+  async function connexionEmail(formData: FormData) {
+    'use server';
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+    });
+    if (error) redirect(`/auth/connexion?erreur=${encodeURIComponent(error.message)}`);
+    redirect(redirectTo ?? '/dashboard');
+  }
+
+  async function connexionGitHub() {
+    'use server';
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
+    });
+    if (data.url) redirect(data.url);
+  }
+
+  return (
+    <div className="mx-auto max-w-sm space-y-6">
+      <form action={connexionEmail} className="space-y-4">
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="password" type="password" placeholder="Mot de passe" required />
+        <button type="submit">Se connecter avec Email</button>
+      </form>
+
+      <form action={connexionGitHub}>
+        <button type="submit">Se connecter avec GitHub</button>
+      </form>
+    </div>
+  );
+}
+```
+
+---
+
+## Route de callback OAuth
+
+```typescript
+// app/auth/callback/route.ts
+import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get('code');
+  const next = searchParams.get('next') ?? '/dashboard';
+
+  if (code) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) return NextResponse.redirect(`${origin}${next}`);
+  }
+
+  return NextResponse.redirect(`${origin}/auth/erreur`);
+}
+```
+
+---
+
+## Lire l'utilisateur dans les Server Components
+
+```typescript
+// app/dashboard/page.tsx
+import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) redirect('/auth/connexion'); // Secours si le middleware a manqué
+
+  const { data: profil } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  return (
+    <div>
+      <h1>Bienvenue, {profil?.full_name ?? user.email}</h1>
+    </div>
+  );
+}
+```
+
+---
+
+## Pièges courants
+
+- **Utiliser `getSession()` au lieu de `getUser()`** : `getSession()` retourne le JWT depuis le cookie sans validation côté serveur — un attaquant peut le forger. Utilisez toujours `getUser()` pour les vérifications de sécurité.
+- **Ne pas appeler `updateSession()` dans le middleware** : sans ça, les cookies expirent et les utilisateurs sont déconnectés silencieusement
+- **Auth côté client uniquement** : vérifier `supabase.auth.onAuthStateChange` côté client n'est pas un contrôle de sécurité — c'est de l'UX
+- **Clés NEXT_PUBLIC vs. serveur uniquement** : ne mettez jamais votre clé service role dans une variable `NEXT_PUBLIC_`
+
+---
+
+## Ressources
+
+- [Supabase Auth avec Next.js SSR](https://supabase.com/docs/guides/auth/server-side/nextjs)
+- [Package @supabase/ssr](https://www.npmjs.com/package/@supabase/ssr)
+- [Guide Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)

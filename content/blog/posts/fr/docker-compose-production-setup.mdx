@@ -1,0 +1,218 @@
+---
+title: "Docker Compose en production : réseaux, volumes et health checks"
+excerpt: "Mettez en place un stack Docker Compose robuste pour la production — réseaux nommés, volumes persistants, health checks, secrets, limites de ressources et redémarrages sans interruption."
+date: "2026-04-30"
+tags: ["IT Ops", "Docker", "DevOps"]
+featured: false
+---
+
+Docker Compose est excellent pour les déploiements multi-services sur un VPS unique. Mais les exemples que vous trouvez en ligne ignorent tout ce qui compte vraiment en production : health checks, politiques de redémarrage, limites de ressources et secrets. Voici une configuration prête pour la production.
+
+---
+
+## Prérequis
+
+- Docker Engine 24+ et Docker Compose v2
+- Un serveur Linux (Ubuntu 22.04 recommandé)
+- Notions de base en conteneurs
+
+---
+
+## Un compose.yml prêt pour la production
+
+```yaml
+# compose.yml
+services:
+
+  app:
+    image: your-app:${APP_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://app:${DB_PASSWORD}@db:5432/appdb
+    secrets:
+      - db_password
+      - jwt_secret
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "127.0.0.1:3000:3000"   # Uniquement localhost — Nginx gère le trafic externe
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: appdb
+    secrets:
+      - db_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    networks:
+      - frontend
+    depends_on:
+      - app
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true   # Pas d'accès externe au réseau backend
+
+volumes:
+  postgres_data:
+    driver: local
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+```
+
+---
+
+## Variables d'environnement et fichiers .env
+
+```bash
+# .env (commité — sans secrets)
+APP_VERSION=1.2.0
+POSTGRES_PORT=5432
+
+# .env.production (NON commité — dans .gitignore)
+DB_PASSWORD=votre-mot-de-passe-fort
+```
+
+```bash
+# .gitignore
+.env.production
+secrets/
+```
+
+> **Règle :** Ne mettez jamais de vrais secrets dans `compose.yml` ou `.env`. Utilisez les secrets Docker (fichiers) ou un gestionnaire de secrets externe.
+
+---
+
+## Health Checks — Pourquoi c'est indispensable
+
+Sans health checks, `depends_on` attend seulement que le conteneur *démarre*, pas que le service soit *prêt*. Avec `condition: service_healthy`, Docker attend que le healthcheck réussisse.
+
+```yaml
+# Patterns de health check minimaux
+
+# API HTTP
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+# PostgreSQL
+healthcheck:
+  test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+  interval: 10s
+  timeout: 5s
+  retries: 5
+
+# Redis
+healthcheck:
+  test: ["CMD", "redis-cli", "ping"]
+  interval: 10s
+  timeout: 3s
+  retries: 3
+```
+
+---
+
+## Politiques de redémarrage
+
+```yaml
+restart: no              # Ne jamais redémarrer (développement)
+restart: always          # Toujours redémarrer — même après redémarrage du démon Docker
+restart: unless-stopped  # Redémarre sauf si arrêté explicitement (recommandé en prod)
+restart: on-failure      # Redémarre uniquement sur code de sortie non nul
+```
+
+Utilisez `unless-stopped` pour la plupart des services de production. Il survit aux redémarrages serveur sans relancer les conteneurs intentionnellement arrêtés pour maintenance.
+
+---
+
+## Mises à jour sans interruption
+
+```bash
+# Télécharger la nouvelle version de l'image
+docker compose pull app
+
+# Recréer uniquement le service app (db reste actif)
+docker compose up -d --no-deps app
+
+# Vérifier l'état
+docker compose ps
+docker compose logs app --tail 50
+```
+
+Pour un vrai zéro downtime, utilisez Docker Swarm ou Kubernetes, ou mettez Nginx en façade et mettez à jour les conteneurs un par un.
+
+---
+
+## Pièges courants
+
+- **Écouter sur 0.0.0.0** : liez toujours les ports applicatifs à `127.0.0.1` et laissez Nginx/Caddy gérer le trafic externe
+- **Pas de limites de ressources** : un conteneur défaillant peut consommer toute la mémoire serveur — définissez toujours des limites
+- **Volumes sur hôtes tmpfs** : certains hébergeurs montent `/tmp` en tmpfs — utilisez toujours des volumes nommés pour les bases de données
+- **Oublier `--no-deps`** : `docker compose up -d` sans `--no-deps` recrée TOUS les services, provoquant des interruptions inutiles
+
+---
+
+## Ressources
+
+- [Référence Docker Compose](https://docs.docker.com/compose/compose-file/)
+- [Docker Secrets](https://docs.docker.com/engine/swarm/secrets/)
+- [Healthchecks Compose](https://docs.docker.com/compose/compose-file/05-services/#healthcheck)

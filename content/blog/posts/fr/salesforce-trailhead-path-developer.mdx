@@ -1,0 +1,183 @@
+---
+title: "Parcours Trailhead Salesforce pour les développeurs : de zéro à Platform Developer I"
+excerpt: "Un parcours Trailhead curé pour les développeurs visant la certification Platform Developer I — le bon ordre, ce qu'il faut ignorer et ce qu'il faut vraiment pratiquer dans une dev org."
+date: "2026-04-30"
+tags: ["Salesforce", "Trailhead", "Learning", "Certification"]
+featured: false
+---
+
+Trailhead compte plus de 1 000 modules. Le défi n'est pas de trouver du contenu — c'est de savoir dans quel ordre progresser et ce qui prépare vraiment à l'examen Platform Developer I (et au travail sur de vrais projets). Voici le parcours qui fonctionne.
+
+---
+
+## Pour qui
+
+- Développeurs avec une expérience de programmation (tout langage) nouveaux sur Salesforce
+- Admins en transition vers des rôles de développement
+- Candidats au Platform Developer I cherchant une préparation structurée
+
+**Estimation de temps :** 120–160 heures d'étude focalisée + pratique dans une dev org
+
+---
+
+## Phase 1 — Fondamentaux Salesforce (Semaines 1–2)
+
+Avant d'écrire une ligne d'Apex, comprenez la plateforme :
+
+| Module | Trail | Pourquoi c'est important |
+|--------|-------|--------------------------|
+| Salesforce Platform Basics | Get Started with Salesforce Platform | Modèle mental de la plateforme |
+| Data Modeling | Data Modeling | Objets, champs, relations |
+| Gestion des utilisateurs | Admin Beginner | Profils, permission sets, orgs |
+| Rapports et tableaux de bord | Reports & Dashboards for Lightning | Comprendre la visibilité des données |
+
+**Pratique dans la dev org :**
+- Créer un objet personnalisé avec 5+ champs
+- Configurer une relation de lookup entre deux objets personnalisés
+- Construire un rapport de base sur votre objet personnalisé
+
+---
+
+## Phase 2 — Fondamentaux Apex (Semaines 3–5)
+
+```
+Apex Basics & Database
+  → Apex Triggers
+  → Apex Testing
+  → Asynchronous Apex
+```
+
+**Apex Basics — concentrez-vous sur :**
+- SOQL vs. SOSL (quand utiliser chacun)
+- Opérations DML (insert, update, upsert, delete)
+- Governor limits — mémorisez les principales
+- Collections : List, Set, Map (et quand chacune s'applique)
+
+**Pattern de code clé à maîtriser :**
+
+```apex
+// Handler de trigger bulkifié — ce pattern apparaît partout
+public class AccountHandler {
+    public static void handleBeforeInsert(List<Account> newAccounts) {
+        // Collecter les données d'abord (pas de DML dans les boucles)
+        Set<String> domaines = new Set<String>();
+        for (Account acc : newAccounts) {
+            if (acc.Website != null) {
+                domaines.add(acc.Website.toLowerCase());
+            }
+        }
+
+        // Une seule requête pour tous les enregistrements (pas N+1)
+        Map<String, List<Contact>> existingByDomaine = new Map<String, List<Contact>>();
+        for (Contact c : [SELECT Id, Email FROM Contact WHERE Email != null]) {
+            String domaine = c.Email.substringAfter('@').toLowerCase();
+            if (!existingByDomaine.containsKey(domaine)) {
+                existingByDomaine.put(domaine, new List<Contact>());
+            }
+            existingByDomaine.get(domaine).add(c);
+        }
+
+        // Traitement
+        for (Account acc : newAccounts) {
+            if (acc.Website != null) {
+                List<Contact> matches = existingByDomaine.get(acc.Website.toLowerCase());
+                if (matches != null && !matches.isEmpty()) {
+                    acc.Rating = 'Hot';
+                }
+            }
+        }
+    }
+}
+```
+
+**Modules Trailhead :**
+1. Apex Basics & Database
+2. Apex Triggers
+3. Apex Testing
+4. Asynchronous Apex (future, batch, queueable, scheduled)
+
+---
+
+## Phase 3 — Visualforce et LWC (Semaines 6–8)
+
+L'examen teste encore les bases de Visualforce. Ne les ignorez pas.
+
+**Visualforce — connaissances minimales :**
+- `<apex:page>`, `<apex:form>`, `<apex:inputField>`, `<apex:commandButton>`
+- Contrôleurs standard vs. contrôleurs personnalisés
+- View state et ses limites
+- Quand Visualforce est encore approprié (templates d'email, génération de PDF)
+
+**LWC — c'est le présent et le futur :**
+```
+Lightning Web Components Basics
+  → Build a Bear Force One (projet pratique)
+  → LWC and Salesforce Data
+  → Lightning Web Components Specialist Superbadge
+```
+
+Le Superbadge prend 6–10 heures mais vaut chaque minute. C'est ce que Trailhead propose de plus proche d'un vrai projet.
+
+---
+
+## Phase 4 — Intégration et sécurité (Semaines 9–10)
+
+```
+Apex Integration Services
+  → REST API Basics
+  → Salesforce Security Basics
+  → Identity and Access Management Architect (modules sélectifs)
+```
+
+**Points de focus :**
+- Callouts REST et SOAP depuis Apex
+- Named Credentials (testé à l'examen)
+- HttpCalloutMock pour tester les callouts
+- Flux OAuth (user-agent, web server, JWT bearer)
+- Profils vs. Permission Sets vs. Sharing
+
+---
+
+## Phase 5 — Préparation à l'examen (Semaines 11–12)
+
+**Matériels d'étude officiels :**
+- [Guide d'étude Platform Developer I](https://trailhead.salesforce.com/credentials/platformdeveloperi) — téléchargez le PDF, il liste les sujets exacts
+- Focus Trailmix : Platform Developer I Exam Preparation
+
+**Poids des sujets d'examen :**
+```
+Fondamentaux Salesforce : 7%
+Automatisation des processus et logique : 38%  ← section la plus lourde
+Interface utilisateur : 25%
+Tests, débogage, déploiement : 17%
+Intégration et gestion des données : 13%
+```
+
+---
+
+## Projets pratiques dans la dev org
+
+Ne faites pas que des badges Trailhead. Construisez de vraies choses :
+
+1. **Système d'escalade de cases** — trigger qui passe un case en haute priorité après 48h, envoie un email
+2. **Déduplication de contacts** — job batch qui fusionne les contacts en double par email
+3. **Intégration API externe** — callout vers une API REST publique (météo, devises), affichage des résultats dans un LWC
+4. **Interface basée sur des permissions personnalisées** — LWC qui affiche différents contenus selon une permission personnalisée
+
+---
+
+## Erreurs courantes
+
+- **Faire des badges sans dev org persistante** : les playgrounds Trailhead se réinitialisent — utilisez une dev org persistante pour vos projets
+- **Ignorer le Superbadge** : il révèle des lacunes de connaissances que les badges ne détectent pas
+- **Mémoriser sans comprendre** : l'examen PDI teste des scénarios, pas la mémorisation de syntaxe
+- **Ignorer la qualité de la couverture de tests** : l'examen demande spécifiquement TestDataFactory, `@TestSetup` et des assertions significatives
+
+---
+
+## Ressources
+
+- [Org développeur Salesforce (Gratuite)](https://developer.salesforce.com/signup)
+- [Guide d'examen Platform Developer I](https://trailhead.salesforce.com/credentials/platformdeveloperi)
+- [Guide du développeur Apex](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/)
+- [Guide du développeur LWC](https://developer.salesforce.com/docs/component-library/documentation/en/lwc)
