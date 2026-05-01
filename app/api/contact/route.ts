@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { contactRatelimit } from "@/lib/ratelimit";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { log } from "@/lib/logger";
 
 type Payload = {
   name: string;
@@ -96,8 +97,7 @@ async function saveToSupabase(input: {
   try {
     supabase = createAdminSupabaseClient();
   } catch {
-    // SUPABASE_SERVICE_ROLE_KEY non configurée — non bloquant, Formspree prend le relais.
-    console.warn("[CONTACT] Admin Supabase client unavailable, skipping DB insert");
+    log.warn("contact/admin-client-unavailable", { hint: "SUPABASE_SERVICE_ROLE_KEY missing" });
     return;
   }
 
@@ -114,7 +114,7 @@ async function saveToSupabase(input: {
   });
 
   if (error) {
-    console.error("[CONTACT] Supabase insert failed", error);
+    log.error("contact/supabase-insert-failed", { code: error.code, hint: error.hint });
   }
 }
 
@@ -189,20 +189,16 @@ export async function POST(req: Request) {
     });
 
     if (!resp.ok) {
-      // Try parse Formspree error payload
-      const data = (await resp.json().catch(() => null)) as any;
-      console.error("[FORMSPREE_ERROR]", resp.status, data);
-
-      // Map to a stable error code for UI
-      // (We keep it generic; full details remain server-side)
+      const data = (await resp.json().catch(() => null)) as Record<string, unknown> | null;
+      log.error("contact/formspree-failed", { status: resp.status, body: data });
       return NextResponse.json({ ok: false, error: "upstream_failed" }, { status: 502 });
     }
 
+    log.info("contact/sent-via-formspree", { topic, locale: clientLocale });
     return NextResponse.json({ ok: true }, { status: 200 });
   }
 
-  // Dev fallback
-  // Avoid logging sensitive personal information (email/message). Log only the sender name.
-  console.log("[CONTACT] Message received from", name);
+  // Dev fallback — log uniquement le topic, pas de PII
+  log.info("contact/received", { topic, locale: clientLocale });
   return NextResponse.json({ ok: true }, { status: 200 });
 }

@@ -272,6 +272,37 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
   if (!project) return notFound();
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+  const isFrPage = locale === "fr";
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: isFrPage ? "Accueil" : "Home",
+        item: `${siteUrl}/${locale}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: isFrPage ? "Projets" : "Projects",
+        item: `${siteUrl}/${locale}/projects`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: project.title,
+        item: `${siteUrl}/${locale}/projects/${slug}`,
+      },
+    ],
+  };
+
   const assets      = (project.project_assets ?? []) as ProjectAsset[];
   const badge       = project.badge ?? null;
   const tags        = (project.tags ?? []) as string[];
@@ -300,6 +331,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <main className="py-10 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="container mx-auto max-w-6xl px-4">
 
         {/* ── BACK ─────────────────────────────────────────────────────────── */}
