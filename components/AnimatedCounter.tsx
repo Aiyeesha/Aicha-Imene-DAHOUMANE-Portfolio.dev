@@ -35,24 +35,29 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   const mv = useMotionValue(0);
   const spring = useSpring(mv, { stiffness: 60, damping: 18 });
 
-  // Valeur affichée (entier arrondi)
-  const [display, setDisplay] = useState(() => (shouldReduce ? value : 0));
+  // SSR émet la valeur finale → Google indexe les vrais chiffres, pas "0".
+  // L'animation repart de 0 → value quand l'élément entre dans le viewport.
+  const [display, setDisplay] = useState(value);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
-  // Synchronisation spring → display
+  // Synchronisation spring → display (actif dès le premier rendu client)
   useEffect(() => {
     return spring.on("change", (v) => setDisplay(Math.round(v)));
   }, [spring]);
 
-  // Démarrage de l'animation quand le composant est visible
+  // Démarrage de l'animation quand le composant est visible (une seule fois)
   useEffect(() => {
     if (shouldReduce) {
       setDisplay(value);
       return;
     }
-    if (inView) {
-      mv.set(value);
+    if (inView && !hasAnimated) {
+      setHasAnimated(true);
+      setDisplay(0); // remet display à 0 avant que le spring prenne la main
+      mv.set(0);     // s'assure que mv est à 0 (valeur initiale)
+      mv.set(value); // spring anime 0 → value
     }
-  }, [inView, shouldReduce, value, mv]);
+  }, [inView, shouldReduce, value, mv, hasAnimated]);
 
   // aria-label expose la valeur finale statique aux lecteurs d'écran.
   // Sans cela, le SR lirait "0" au chargement (valeur initiale de l'animation)

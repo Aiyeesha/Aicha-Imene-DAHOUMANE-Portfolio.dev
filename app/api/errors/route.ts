@@ -19,6 +19,7 @@
 
 import { type NextRequest, NextResponse } from "next/server";
 import { errorRatelimit } from "@/lib/ratelimit";
+import { log } from "@/lib/logger";
 
 // ── Type du payload client ────────────────────────────────────────────────────
 type ErrorReport = {
@@ -70,21 +71,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 400 });
   }
 
-  // ── Log structuré → Vercel Runtime Logs (ou agrégateur homelab futur) ────
-  // Préfixe [CLIENT-ERROR] pour filtrer dans les logs.
-  // Stack en dernier car potentiellement long.
-  console.error(
-    "[CLIENT-ERROR]",
-    JSON.stringify({
-      type:    body.type,
-      message: body.message,
-      url:     body.url,
-      line:    body.line,
-      col:     body.col,
-      env:     process.env.NODE_ENV,
-      stack:   body.stack,
-    })
-  );
+  // Log structuré → Vercel Runtime Logs (filtre: msg = "client-error")
+  log.error("client-error", {
+    type:    body.type,
+    message: body.message,
+    url:     body.url,
+    line:    body.line,
+    col:     body.col,
+    stack:   body.stack,
+  });
 
   // 202 Accepted — sendBeacon n'attend pas et ignore le corps de la réponse
   return new NextResponse(null, { status: 202 });

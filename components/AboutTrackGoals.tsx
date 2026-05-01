@@ -75,10 +75,9 @@ export default function AboutTrackGoals({ goals }: Props) {
   const isFr = locale === "fr";
   const isSalesforce = track === "salesforce";
 
-  const title = t("goals2026Title");
-
   // Filtrer les goals du track actif depuis Supabase
-  const trackGoals = goals.filter((g) => g.track === track)
+  const trackGoals = goals
+    .filter((g) => g.track === track)
     .sort((a, b) => a.sort_order - b.sort_order);
 
   // Fallback : si Supabase vide, utiliser les traductions statiques (status = not_started)
@@ -87,10 +86,26 @@ export default function AboutTrackGoals({ goals }: Props) {
     ? (t.raw(isSalesforce ? "goals2026Salesforce" : "goals2026Itops") as string[])
     : [];
 
+  // Titre + badge spécifiques au track
+  const trackLabel = isSalesforce ? "Salesforce" : "IT Ops";
+  const trackAccent = isSalesforce
+    ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 ring-1 ring-cyan-500/20"
+    : "bg-violet-500/10 text-violet-600 dark:text-violet-300 ring-1 ring-violet-500/20";
+
+  const sectionTitle = isFr
+    ? `Objectifs ${trackLabel} 2026`
+    : `${trackLabel} 2026 Goals`;
+
   return (
     <section className="rounded-2xl border p-6">
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-semibold">{sectionTitle}</h2>
+          {/* Badge track — rappel visuel du mode actif */}
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${trackAccent}`}>
+            {trackLabel}
+          </span>
+        </div>
 
         {/* Légende des statuts — visible uniquement si données Supabase présentes */}
         {!useFallback && (
@@ -111,7 +126,9 @@ export default function AboutTrackGoals({ goals }: Props) {
         )}
       </div>
 
-      <ul className="mt-5 space-y-3">
+      {/* key={track} force le re-mount de la liste quand le track change
+          → les items réapparaissent avec l'animation CSS native */}
+      <ul key={track} className="mt-5 space-y-3 animate-[fadeIn_0.3s_ease_forwards]">
         {useFallback
           ? /* Fallback statique — tous en "not_started" */
             fallbackGoals.map((text, i) => (
