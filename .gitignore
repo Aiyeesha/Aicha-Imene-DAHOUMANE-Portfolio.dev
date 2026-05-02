@@ -6,6 +6,7 @@ dist
 .DS_Store
 
 .vercel
-tsconfig.tsbuildinfo
 /.claude
 *.tsbuildinfo
+test-results/
+playwright-report/
