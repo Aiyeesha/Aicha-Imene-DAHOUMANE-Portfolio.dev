@@ -197,6 +197,8 @@
     "readingTime": "min de lecture",
     "author": "À propos de l'auteure",
     "authorRole": "Développeuse Salesforce · Administratrice systèmes",
+    "authorBio": "Développeuse Salesforce avec un background en infrastructures IT — je construis des solutions fiables et maintenables avec Apex, Flows, LWC et CI/CD.",
+    "authorProfileLink": "Voir le profil complet →",
     "backToTop": "Retour en haut",
     "related": "Articles connexes",
     "share": "Partager",
