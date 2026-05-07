@@ -197,7 +197,7 @@ useEffect(() => {
 }, [mobileOpen]);
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources"]);
+  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources", "blog"]);
 
   // Pour le menu mobile — suit le scroll-spy complet
   const linkClass = (id: string) =>
@@ -471,7 +471,7 @@ useEffect(() => {
                   onClick={() => setMobileOpen(false)}
                   title={!calendlyUrl ? t("contact.bookCallMissing") : undefined}
                 >
-                  {t("cta.call15")}
+                  {t("contact.bookCall")}
                 </a>
               </div>
             </div>

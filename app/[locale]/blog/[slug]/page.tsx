@@ -17,6 +17,7 @@ import { getPrevNext } from "@/content/blog/navigation";
 import { formatDate } from "@/lib/blog-utils";
 import { getSeriePosition } from "@/content/blog/series";
 import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
+import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 
 type Params = { locale: "en" | "fr"; slug: string };
 
@@ -113,8 +114,13 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
   const { default: Post } = await import(`@/content/blog/posts/${locale}/${slug}.mdx`);
 
-  const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const avatarUrl = process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.jpg";
+  const authorName   = process.env.NEXT_PUBLIC_OG_NAME    || "Aïcha Imène DAHOUMANE";
+  const avatarUrl    = process.env.NEXT_PUBLIC_AVATAR_URL  || "/avatar.webp";
+  const linkedInUrl  = process.env.NEXT_PUBLIC_LINKEDIN_URL
+    ? (process.env.NEXT_PUBLIC_LINKEDIN_URL.startsWith("http")
+        ? process.env.NEXT_PUBLIC_LINKEDIN_URL
+        : `https://${process.env.NEXT_PUBLIC_LINKEDIN_URL}`)
+    : "";
 
   // ── JSON-LD ────────────────────────────────────────────────────────────────
   const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -227,22 +233,13 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
             />
           </article>
 
-          {/* Author card */}
-          <div className="mt-8 card p-6 flex items-center gap-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={avatarUrl}
-              alt={authorName}
-              width={56}
-              height={56}
-              className="h-14 w-14 rounded-full object-cover shrink-0"
-            />
-            <div>
-              <div className="text-xs text-muted-2 uppercase tracking-wider">{t("author")}</div>
-              <div className="mt-0.5 font-semibold text-strong">{authorName}</div>
-              <div className="text-sm text-muted">{t("authorRole")}</div>
-            </div>
-          </div>
+          {/* Author card — track-aware (Salesforce → cyan / IT Ops → violet) */}
+          <BlogAuthorCard
+            authorName={authorName}
+            avatarUrl={avatarUrl}
+            locale={locale}
+            linkedInUrl={linkedInUrl}
+          />
 
           {/* Share buttons — LinkedIn + copier le lien */}
           <ShareButtons

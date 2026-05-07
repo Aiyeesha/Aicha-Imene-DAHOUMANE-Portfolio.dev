@@ -73,6 +73,8 @@ export default function ContactForm() {
   // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
   const [topic,   setTopic]   = useState("general");
   const [subject, setSubject] = useState("");
+  const [msgLen,  setMsgLen]  = useState(0);
+  const MSG_MAX = 2000;
 
   // Listener pour l'événement custom `contact:prefill` dispatché par TrackAwareServices.
   // Quand l'utilisateur clique "Discuter de ce service", le formulaire se pré-remplit
@@ -206,6 +208,8 @@ export default function ContactForm() {
             name="name"
             autoComplete="name"
             required
+            minLength={2}
+            maxLength={80}
             className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.namePlaceholder")}
           />
@@ -260,15 +264,23 @@ export default function ContactForm() {
         <input name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
         <div>
-          <label htmlFor="contact-message" className="text-xs text-muted-2">{t("contact.messageLabel")}</label>
+          <div className="flex items-baseline justify-between">
+            <label htmlFor="contact-message" className="text-xs text-muted-2">{t("contact.messageLabel")}</label>
+            <span className={`text-xs tabular-nums ${msgLen > MSG_MAX ? "text-red-500" : "text-muted-2"}`}>
+              {msgLen}/{MSG_MAX}
+            </span>
+          </div>
           <textarea
             id="contact-message"
             name="message"
             autoComplete="off"
             required
+            minLength={10}
+            maxLength={MSG_MAX}
             rows={5}
             className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.messagePlaceholder")}
+            onChange={(e) => setMsgLen(e.target.value.length)}
           />
         </div>
 

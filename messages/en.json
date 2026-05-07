@@ -197,6 +197,8 @@
     "readingTime": "min read",
     "author": "About the author",
     "authorRole": "Salesforce Developer · Systems Administrator",
+    "authorBio": "Salesforce developer with a background in IT infrastructure — building reliable, maintainable solutions with Apex, Flows, LWC, and CI/CD.",
+    "authorProfileLink": "Full profile →",
     "backToTop": "Back to top",
     "related": "Related posts",
     "share": "Share",
