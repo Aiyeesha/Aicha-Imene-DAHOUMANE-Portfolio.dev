@@ -233,59 +233,104 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
             />
           </article>
 
-          {/* Author card */}
-          <div className="mt-8 card p-6">
-            <div className="flex items-start gap-4">
-              {/* Avatar avec bordure gradient cyan→violet */}
-              <div className="shrink-0 rounded-full bg-gradient-to-br from-cyan-400 via-sky-500 to-violet-500 p-[2px] shadow-lg shadow-cyan-500/15">
-                <div className="rounded-full overflow-hidden">
-                  <Image
-                    src={avatarUrl}
-                    alt={authorName}
-                    width={64}
-                    height={64}
-                    className="h-16 w-16 rounded-full object-cover object-top"
-                  />
-                </div>
-              </div>
+          {/* Author card — style OG image (fond sombre, halo, badges catégorie) */}
+          {(() => {
+            // Palette identique à l'OG image de l'article
+            const haystack = [...meta.tags, slug].join(" ").toLowerCase();
+            const itOpsRe  = /\b(it.?ops|windows|linux|docker|network|vlan|powershell|backup|veeam|hyper.?v|active.directory|monitoring|siem|elastic|firewall|pfsense|hardening|ssl|tls|incident|runbook|automation|scripting|server|sysadmin|infra|securit|prometheus|grafana|alertmanager|rds|rmm|datto|autotask|acronis|malware)\b/i;
+            const webRe    = /\b(next\.?js|react|typescript|tailwind|supabase|vercel|framer|animation|design.system|rsc|server.component|playwright|jest|testing|web|seo|image.optim|caching|deployment|shadcn)\b/i;
+            const accent       = itOpsRe.test(haystack) ? "#a78bfa" : webRe.test(haystack) ? "#f97316" : "#22d3ee";
+            const accentBg     = itOpsRe.test(haystack) ? "rgba(167,139,250,0.15)" : webRe.test(haystack) ? "rgba(249,115,22,0.15)" : "rgba(34,211,238,0.15)";
+            const accentBorder = itOpsRe.test(haystack) ? "rgba(167,139,250,0.35)" : webRe.test(haystack) ? "rgba(249,115,22,0.35)" : "rgba(34,211,238,0.35)";
+            const glow         = itOpsRe.test(haystack) ? "rgba(167,139,250,0.12)" : webRe.test(haystack) ? "rgba(249,115,22,0.10)" : "rgba(34,211,238,0.10)";
+            const authorTags   = meta.tags.slice(0, 3);
 
-              <div className="min-w-0 flex-1">
-                <div className="text-xs font-medium text-muted-2 uppercase tracking-wider">
-                  {t("author")}
-                </div>
-                <div className="mt-0.5 font-semibold text-strong">{authorName}</div>
-                <div className="text-sm text-cyan-700 dark:text-cyan-400">{t("authorRole")}</div>
-              </div>
-            </div>
-
-            {/* Bio */}
-            <p className="mt-4 text-sm leading-relaxed text-muted">
-              {t("authorBio")}
-            </p>
-
-            {/* Liens — profil + LinkedIn */}
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <Link
-                href={`/${locale}/about`}
-                className="inline-flex items-center gap-1 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-xs font-medium hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+            return (
+              <div
+                className="relative mt-8 overflow-hidden rounded-2xl p-6 text-white"
+                style={{ background: "linear-gradient(135deg, #0c1425 0%, #070B1A 60%, #060914 100%)" }}
               >
-                {t("authorProfileLink")}
-              </Link>
-              {linkedInUrl && (
-                <a
-                  href={linkedInUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-xs font-medium hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+                {/* Halo décoratif — couleur de la catégorie de l'article */}
+                <div
+                  className="pointer-events-none absolute -bottom-16 -right-16 h-64 w-64 rounded-full"
+                  style={{ background: `radial-gradient(circle, ${glow} 0%, transparent 70%)` }}
+                />
+
+                {/* HAUT — Avatar + nom + rôle */}
+                <div className="relative flex items-center gap-4">
+                  <div
+                    className="shrink-0 rounded-full p-[2.5px] shadow-lg"
+                    style={{ background: `linear-gradient(135deg, ${accent}, #0ea5e9 50%, #a78bfa)` }}
+                  >
+                    <Image
+                      src={avatarUrl}
+                      alt={authorName}
+                      width={64}
+                      height={64}
+                      className="h-16 w-16 rounded-full object-cover object-top"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.45)" }}>
+                      {t("author")}
+                    </div>
+                    <div className="mt-0.5 text-lg font-bold leading-tight">{authorName}</div>
+                    <div className="mt-0.5 text-sm font-medium" style={{ color: accent }}>
+                      {t("authorRole")}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bio */}
+                <p className="relative mt-4 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
+                  {t("authorBio")}
+                </p>
+
+                {/* Tags de l'article (mêmes que l'OG image) */}
+                {authorTags.length > 0 && (
+                  <div className="relative mt-4 flex flex-wrap gap-2">
+                    {authorTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full px-3 py-1 text-xs font-medium"
+                        style={{ background: accentBg, border: `1px solid ${accentBorder}`, color: accent }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Séparateur + liens */}
+                <div
+                  className="relative mt-5 flex flex-wrap items-center gap-3 border-t pt-4"
+                  style={{ borderColor: "rgba(255,255,255,0.08)" }}
                 >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5 opacity-60">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                  LinkedIn
-                </a>
-              )}
-            </div>
-          </div>
+                  <Link
+                    href={`/${locale}/about`}
+                    className="inline-flex items-center gap-1 rounded-full px-4 py-1.5 text-xs font-medium transition-opacity hover:opacity-80"
+                    style={{ background: accentBg, border: `1px solid ${accentBorder}`, color: accent }}
+                  >
+                    {t("authorProfileLink")}
+                  </Link>
+                  {linkedInUrl && (
+                    <a
+                      href={linkedInUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-opacity hover:opacity-80"
+                      style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.70)" }}
+                    >
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      </svg>
+                      LinkedIn
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Share buttons — LinkedIn + copier le lien */}
           <ShareButtons
