@@ -181,6 +181,9 @@ export default function TrackAwareHero() {
               <span className="block animate-gradient-x bg-gradient-to-r from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white bg-clip-text text-transparent">
                 {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
               </span>
+              {/* Séparateur invisible pour les lecteurs d'écran et les moteurs de recherche
+                  — évite la concaténation des deux spans en un seul texte sans espace */}
+              <span className="sr-only"> — </span>
               <span className="mt-1 block text-xl sm:text-2xl font-medium text-cyan-700 dark:text-cyan-300">
                 {track === "salesforce" ? t("hero.subtitle_salesforce") : t("hero.subtitle_itops")}
               </span>
