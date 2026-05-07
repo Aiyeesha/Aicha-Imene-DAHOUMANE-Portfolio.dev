@@ -58,7 +58,9 @@ export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedIn
             {t("author")}
           </div>
           <div className="mt-0.5 font-semibold text-strong leading-tight">{authorName}</div>
-          <div className={`text-sm font-medium ${roleClass}`}>{t("authorRole")}</div>
+          <div className={`text-sm font-medium ${roleClass}`}>
+            {isSalesforce ? t("authorRoleSalesforce") : t("authorRoleItops")}
+          </div>
         </div>
 
         {/* Badge track — même style qu'AboutTrackIntro */}
@@ -68,7 +70,9 @@ export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedIn
       </div>
 
       {/* Bio track-aware */}
-      <p className="text-sm leading-relaxed text-muted">{t("authorBio")}</p>
+      <p className="text-sm leading-relaxed text-muted">
+        {isSalesforce ? t("authorBioSalesforce") : t("authorBioItops")}
+      </p>
 
       {/* Liens */}
       <div className="flex flex-wrap items-center gap-2 pt-1">
