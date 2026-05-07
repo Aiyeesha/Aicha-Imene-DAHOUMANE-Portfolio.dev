@@ -127,7 +127,7 @@ function buildJsonLd(locale: string) {
       {
         "@type": "ProfessionalService",
         "@id": `${siteUrl}/#service`,
-        name: siteName,
+        name: personName,
         url: siteUrl,
         provider: { "@id": personId },
         // Catégories de services
