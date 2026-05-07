@@ -13,6 +13,7 @@
 // ProfileNarrative a été remplacé par AboutTrackIntro pour éliminer la redondance
 // avec le contenu Supabase (journey, goals) et mieux adapter l'intro au track.
 
+import type { Metadata } from "next";
 import { getAboutPageCached } from "@/lib/data/about.cached";
 import { getGoals2026 } from "@/lib/data/goals";
 import Link from "next/link";
@@ -27,6 +28,24 @@ import CareerTimeline from "@/components/CareerTimeline";
 type PageProps = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isFr = locale === "fr";
+
+  const name  = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
+  const title = isFr ? `À propos — ${name}` : `About — ${name}`;
+  const description = isFr
+    ? "De l'administration systèmes & réseaux au développement Salesforce. Développeuse Salesforce & IT Ops Engineer disponible en CDI, CDD, freelance ou portage."
+    : "From systems & network administration to Salesforce development. Salesforce Developer & IT Ops Engineer — open to permanent, fixed-term, freelance, or contract roles.";
+
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    twitter:   { title, description },
+  };
+}
 
 type AboutBody = {
   introduction?: string;
@@ -115,6 +134,10 @@ export default async function AboutPage({ params }: PageProps) {
           Adapté au track actif (Salesforce → cyan / IT Ops → violet).
           p4 exclu volontairement (objectif 2026 → déjà dans la section goals ci-dessous). */}
       <section className="mt-10">
+        <SectionTitle>
+          {safeLocale === "fr" ? "Positionnement" : "Positioning"}
+        </SectionTitle>
+        <div className="mt-4">
         <Suspense fallback={
           <div className="rounded-2xl border p-6 space-y-3">
             <div className="h-3 w-16 rounded-full bg-black/5 dark:bg-white/5 animate-pulse" />
@@ -124,6 +147,7 @@ export default async function AboutPage({ params }: PageProps) {
         }>
           <AboutTrackIntro />
         </Suspense>
+        </div>
       </section>
 
       {/* ── TECH STACK GRID ──────────────────────────────────────────────────── */}
