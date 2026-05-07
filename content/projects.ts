@@ -446,6 +446,73 @@ export const projects: Project[] = [
   tags: ["Python", "FastAPI", "WebSocket", "React", "Vite", "Network Security"],
   badge: { label: "PERSONAL PROJECT", tone: "personal" },
 },
+
+// ── CYBERSECURITY DELIVERABLES ───────────────────────────────────────────────
+
+{
+  slug: "security-monitoring-dashboard",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Network Security Monitoring Dashboard",
+  excerpt: "Designed and configured a real-time security monitoring dashboard: KPI widgets for patch status, threat indicators, and vulnerability trends across the infrastructure.",
+  highlights: [
+    "Real-time KPI widgets: open vulnerabilities, patch coverage, critical alerts",
+    "Trend charts for threat indicators and security event history",
+    "Centralized posture view for analyst and management reporting"
+  ],
+  track: "itops",
+  categories: ["Security", "IT Ops", "Monitoring"],
+  tags: ["Dashboard", "SIEM", "Monitoring", "Network Security", "Reporting"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+  repoUrl: "https://github.com/Aiyeesha/security-monitoring-dashboard",
+},
+{
+  slug: "vulnerability-assessment-report",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Vulnerability Assessment Report (Tenable SecurityCenter)",
+  excerpt: "Structured vulnerability scan with Tenable SecurityCenter: executive summary, severity-ranked findings, port vulnerability details, and CVE-mapped remediation recommendations.",
+  highlights: [
+    "Tenable SecurityCenter scan — findings ranked by CVSS severity",
+    "Executive summary + port vulnerability details report",
+    "CVE-mapped remediation priorities with actionable guidance"
+  ],
+  track: "itops",
+  categories: ["Security", "IT Ops"],
+  tags: ["Vulnerability Assessment", "Tenable", "CVE", "CVSS", "Reporting"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+  repoUrl: "https://github.com/Aiyeesha/vulnerability-assessment-report",
+},
+{
+  slug: "incident-response-playbook",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Incident Response Playbook (Phishing)",
+  excerpt: "Step-by-step phishing incident response playbook: detection, triage, containment, eradication, and recovery — with a decision flowchart for analyst guidance and escalation paths.",
+  highlights: [
+    "End-to-end IR flowchart: detect → triage → contain → eradicate → recover",
+    "Decision logic at each stage for analyst triage",
+    "Escalation paths and stakeholder communication guidelines"
+  ],
+  track: "itops",
+  categories: ["Security", "IT Ops"],
+  tags: ["Incident Response", "Phishing", "Playbook", "SOC", "Security"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+  repoUrl: "https://github.com/Aiyeesha/incident-response-playbook",
+},
+{
+  slug: "risk-assessment-matrix",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Risk Assessment Matrix (5×5)",
+  excerpt: "Structured 5×5 risk assessment matrix: likelihood × impact scoring, color-coded severity zones (low/medium/high/critical), and a risk register template for IT and compliance use.",
+  highlights: [
+    "5×5 likelihood × impact matrix with color-coded severity zones",
+    "Risk register template for tracking and prioritizing threats",
+    "Applicable to IT infrastructure, cloud, and compliance assessments"
+  ],
+  track: "itops",
+  categories: ["Security", "Risk Management"],
+  tags: ["Risk Assessment", "GRC", "Compliance", "Risk Matrix", "Security"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+  repoUrl: "https://github.com/Aiyeesha/risk-assessment-matrix",
+},
 ];
 
 
