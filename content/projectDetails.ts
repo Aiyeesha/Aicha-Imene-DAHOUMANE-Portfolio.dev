@@ -2762,4 +2762,401 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
   }
 },
 
+// ── CYBERSECURITY DELIVERABLES ───────────────────────────────────────────────
+
+{
+  slug: "security-monitoring-dashboard",
+  locales: {
+    en: {
+      heroSubtitle: "Real-time security monitoring dashboard — KPIs, threat indicators, and vulnerability trends.",
+      sections: [
+        {
+          type: "text",
+          title: "Context",
+          paragraphs: [
+            "Designed and configured a network security monitoring dashboard to give security teams and management a centralised, real-time view of the infrastructure's security posture.",
+            "The dashboard surfaces the metrics that matter most — open vulnerabilities, patch coverage gaps, active alerts — and visualises trends over time to support informed decision-making."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "What I built",
+          items: [
+            "KPI widgets tracking open vulnerabilities, critical alerts, patched vs. unpatched endpoints, and mean time to remediate.",
+            "Trend charts for security events, vulnerability severity distribution, and patch compliance over rolling periods.",
+            "Severity-filtered views (critical / high / medium / low) to allow rapid analyst triage.",
+            "Executive-facing summary panel for management reporting without raw technical noise."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Key indicators covered",
+          items: [
+            { label: "Vulnerability KPIs", value: "Open, patched, critical — live counts" },
+            { label: "Trend window", value: "Rolling 30-day event and patch history" },
+            { label: "Severity views", value: "4 levels: critical / high / medium / low" },
+            { label: "Audience", value: "Analyst triage + management reporting" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Tools & stack",
+          items: [
+            "Security dashboard platform (SIEM-style layout).",
+            "Data sources: vulnerability scanner feeds, endpoint patch status, alert logs.",
+            "Design principles: information hierarchy, severity colour coding, drill-down capability."
+          ]
+        }
+      ]
+    },
+    fr: {
+      heroSubtitle: "Tableau de bord de surveillance sécurité en temps réel — KPIs, indicateurs de menaces et tendances de vulnérabilités.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexte",
+          paragraphs: [
+            "Conception et configuration d'un tableau de bord de surveillance sécurité réseau offrant aux équipes et à la direction une vue centralisée et temps réel de la posture de sécurité de l'infrastructure.",
+            "Le dashboard met en avant les métriques essentielles — vulnérabilités ouvertes, couverture de patchs, alertes actives — et visualise les tendances pour faciliter la prise de décision."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Ce que j'ai réalisé",
+          items: [
+            "Widgets KPI : vulnérabilités ouvertes, alertes critiques, endpoints patchés vs. non patchés, MTTR.",
+            "Graphiques de tendances : événements sécurité, distribution des sévérités, conformité des patchs sur des fenêtres glissantes.",
+            "Vues filtrées par sévérité (critique / élevée / moyenne / faible) pour le triage rapide des analystes.",
+            "Panneau de synthèse exécutif pour les rapports de direction, sans bruit technique brut."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Indicateurs couverts",
+          items: [
+            { label: "KPIs vulnérabilités", value: "Ouvertes, patchées, critiques — compteurs live" },
+            { label: "Fenêtre de tendance", value: "Historique événements & patchs sur 30 jours glissants" },
+            { label: "Vues par sévérité", value: "4 niveaux : critique / élevé / moyen / faible" },
+            { label: "Public cible", value: "Triage analyste + reporting direction" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Outils & stack",
+          items: [
+            "Plateforme de tableau de bord sécurité (disposition de type SIEM).",
+            "Sources de données : flux scanner de vulnérabilités, statut de patch endpoints, journaux d'alertes.",
+            "Principes de conception : hiérarchie de l'information, code couleur sévérité, capacité de drill-down."
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  slug: "vulnerability-assessment-report",
+  locales: {
+    en: {
+      heroSubtitle: "Tenable SecurityCenter vulnerability scan — executive summary, severity rankings, and CVE-mapped remediation.",
+      sections: [
+        {
+          type: "text",
+          title: "Context",
+          paragraphs: [
+            "Conducted a structured vulnerability assessment using Tenable SecurityCenter to evaluate the security posture of a target network segment.",
+            "The output covered two layers: an executive summary for stakeholders, and a technical port vulnerability details report for the remediation team, with every finding tied to CVE references and CVSS scores."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "What I delivered",
+          items: [
+            "Scoped and ran a Tenable SecurityCenter scan against the target environment.",
+            "Executive Summary report: top-level risk score, critical/high/medium/low finding counts, and trending comparison.",
+            "Port Vulnerability Details report: per-host, per-port breakdown with CVE IDs, CVSS scores, and plugin output.",
+            "Remediation priority list: critical and high findings ranked by exploitability, with recommended fixes."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Assessment snapshot",
+          items: [
+            { label: "Tool", value: "Tenable SecurityCenter" },
+            { label: "Report layers", value: "Executive summary + port vulnerability details" },
+            { label: "Scoring", value: "CVSS v3 — critical / high / medium / low" },
+            { label: "Output", value: "CVE-mapped findings with remediation guidance" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Skills demonstrated",
+          items: [
+            "Vulnerability scanner configuration and scan policy scoping.",
+            "Interpreting CVSS scores and mapping findings to business risk.",
+            "Producing dual-audience reports (executive + technical).",
+            "Prioritising remediation by exploitability and asset criticality."
+          ]
+        }
+      ]
+    },
+    fr: {
+      heroSubtitle: "Évaluation de vulnérabilités Tenable SecurityCenter — synthèse exécutive, classement par sévérité et remédiation mappée CVE.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexte",
+          paragraphs: [
+            "Réalisation d'une évaluation structurée des vulnérabilités avec Tenable SecurityCenter afin d'évaluer la posture de sécurité d'un segment réseau cible.",
+            "Le livrable couvre deux niveaux : une synthèse exécutive pour les parties prenantes, et un rapport technique de détails de vulnérabilités par port pour l'équipe de remédiation — chaque finding étant lié à des références CVE et des scores CVSS."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Ce que j'ai livré",
+          items: [
+            "Définition du périmètre et exécution d'un scan Tenable SecurityCenter sur l'environnement cible.",
+            "Rapport de synthèse exécutive : score de risque global, compteurs critique/élevé/moyen/faible, comparaison de tendances.",
+            "Rapport de détails de vulnérabilités par port : décomposition par hôte et par port avec CVE, scores CVSS et sortie des plugins.",
+            "Liste de priorités de remédiation : findings critiques et élevés classés par exploitabilité, avec les correctifs recommandés."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Aperçu de l'évaluation",
+          items: [
+            { label: "Outil", value: "Tenable SecurityCenter" },
+            { label: "Couches de rapport", value: "Synthèse exécutive + détails vulnérabilités par port" },
+            { label: "Scoring", value: "CVSS v3 — critique / élevé / moyen / faible" },
+            { label: "Livrable", value: "Findings mappés CVE avec guidance de remédiation" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Compétences démontrées",
+          items: [
+            "Configuration du scanner de vulnérabilités et définition de la politique de scan.",
+            "Interprétation des scores CVSS et mapping des findings sur le risque métier.",
+            "Production de rapports à double audience (exécutif + technique).",
+            "Priorisation de la remédiation par exploitabilité et criticité des actifs."
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  slug: "incident-response-playbook",
+  locales: {
+    en: {
+      heroSubtitle: "Phishing incident response playbook — detect, triage, contain, eradicate, recover.",
+      sections: [
+        {
+          type: "text",
+          title: "Context",
+          paragraphs: [
+            "Phishing remains one of the most common initial access vectors. This playbook provides analysts with a structured, decision-driven workflow to handle phishing incidents consistently and efficiently.",
+            "It covers the full incident lifecycle — from initial detection through post-incident review — with explicit decision points, escalation paths, and communication guidelines at each stage."
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Playbook stages",
+          steps: [
+            {
+              title: "Detection & reporting",
+              description: "Alert generated via email security gateway, SIEM rule, or user report. Initial triage: confirm phishing indicators (sender, links, attachments, headers)."
+            },
+            {
+              title: "Containment",
+              description: "Block malicious sender/domain at gateway. Quarantine affected mailboxes. Isolate any endpoint that opened a link or attachment. Reset credentials if compromise is suspected."
+            },
+            {
+              title: "Eradication",
+              description: "Remove phishing emails from all mailboxes (admin purge). Revoke active sessions. Scan endpoints for malware dropped by any clicked payload."
+            },
+            {
+              title: "Recovery",
+              description: "Restore accounts and endpoint access after verification. Re-enable services progressively. Confirm no persistence mechanisms remain."
+            },
+            {
+              title: "Post-incident review",
+              description: "Document timeline, root cause, and lessons learned. Update detection rules and user awareness training. Produce incident report for stakeholders."
+            }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Playbook features",
+          items: [
+            "Decision flowchart with diamond gates at each triage checkpoint (Is it phishing? Was a link clicked? Were credentials entered?).",
+            "Escalation matrix: L1 analyst → SOC lead → CISO depending on scope and confirmed compromise.",
+            "Communication templates for user notifications and management updates.",
+            "Evidence collection checklist for forensic handoff or legal requirements."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Skills demonstrated",
+          items: [
+            "Incident response lifecycle design (NIST SP 800-61 aligned).",
+            "Threat modelling for phishing attack vectors.",
+            "Process flowchart design for analyst decision support.",
+            "Stakeholder communication and escalation planning."
+          ]
+        }
+      ]
+    },
+    fr: {
+      heroSubtitle: "Playbook de réponse aux incidents phishing — détecter, trier, contenir, éradiquer, récupérer.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexte",
+          paragraphs: [
+            "Le phishing reste l'un des vecteurs d'accès initial les plus fréquents. Ce playbook fournit aux analystes un workflow structuré et guidé par des décisions pour traiter les incidents phishing de manière cohérente et efficace.",
+            "Il couvre le cycle de vie complet de l'incident — de la détection initiale à la revue post-incident — avec des points de décision explicites, des chemins d'escalade et des lignes directrices de communication à chaque étape."
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Étapes du playbook",
+          steps: [
+            {
+              title: "Détection & signalement",
+              description: "Alerte générée par la passerelle email, une règle SIEM ou un signalement utilisateur. Triage initial : confirmer les indicateurs phishing (expéditeur, liens, pièces jointes, en-têtes)."
+            },
+            {
+              title: "Confinement",
+              description: "Bloquer l'expéditeur/domaine malveillant au niveau de la passerelle. Mettre en quarantaine les boîtes aux lettres concernées. Isoler tout endpoint ayant ouvert un lien ou une pièce jointe. Réinitialiser les identifiants si une compromission est suspectée."
+            },
+            {
+              title: "Éradication",
+              description: "Supprimer les emails phishing de toutes les boîtes aux lettres (purge admin). Révoquer les sessions actives. Scanner les endpoints à la recherche de malwares déposés par un payload cliqué."
+            },
+            {
+              title: "Rétablissement",
+              description: "Restaurer l'accès aux comptes et endpoints après vérification. Réactiver les services progressivement. Confirmer l'absence de mécanismes de persistance."
+            },
+            {
+              title: "Revue post-incident",
+              description: "Documenter la chronologie, la cause racine et les leçons apprises. Mettre à jour les règles de détection et la formation de sensibilisation. Produire un rapport d'incident pour les parties prenantes."
+            }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Caractéristiques du playbook",
+          items: [
+            "Organigramme de décision avec des portes losange à chaque point de triage (Est-ce du phishing ? Un lien a-t-il été cliqué ? Des identifiants ont-ils été saisis ?).",
+            "Matrice d'escalade : analyste L1 → responsable SOC → RSSI selon la portée et la compromission confirmée.",
+            "Modèles de communication pour les notifications aux utilisateurs et les mises à jour à la direction.",
+            "Checklist de collecte de preuves pour transfert forensique ou exigences légales."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Compétences démontrées",
+          items: [
+            "Conception du cycle de vie de réponse aux incidents (aligné NIST SP 800-61).",
+            "Modélisation des menaces pour les vecteurs d'attaque phishing.",
+            "Conception d'organigrammes de processus pour l'aide à la décision des analystes.",
+            "Planification des communications parties prenantes et de l'escalade."
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  slug: "risk-assessment-matrix",
+  locales: {
+    en: {
+      heroSubtitle: "5×5 risk assessment matrix — likelihood × impact scoring with color-coded severity zones and risk register template.",
+      sections: [
+        {
+          type: "text",
+          title: "Context",
+          paragraphs: [
+            "Built a structured 5×5 risk assessment matrix as a reusable tool for evaluating IT, infrastructure, and compliance risks across an organisation.",
+            "The matrix maps likelihood (1–5) against impact (1–5) to produce a risk score, with color-coded zones (green / yellow / orange / red) to guide prioritisation and treatment decisions."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "What I built",
+          items: [
+            "5×5 matrix: likelihood (1 = rare → 5 = almost certain) × impact (1 = negligible → 5 = catastrophic).",
+            "Color-coded severity zones: Low (1–4), Medium (5–9), High (10–16), Critical (17–25).",
+            "Risk register template: risk ID, description, likelihood, impact, score, owner, treatment, and review date.",
+            "Example risk entries covering infrastructure, access control, data exposure, and business continuity scenarios."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Matrix structure",
+          items: [
+            { label: "Dimensions", value: "5×5 — likelihood × impact" },
+            { label: "Score range", value: "1 (low) → 25 (critical)" },
+            { label: "Severity zones", value: "Low / Medium / High / Critical" },
+            { label: "Use cases", value: "IT infrastructure, cloud, GRC, compliance audits" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Skills demonstrated",
+          items: [
+            "Risk identification, scoring, and treatment planning (ISO 27005 / NIST RMF aligned).",
+            "GRC tooling: risk register design and lifecycle management.",
+            "Translating technical risks into business-impact language for stakeholders.",
+            "Applicable across infrastructure risk, cloud security, and compliance frameworks (ISO 27001, NIS2, GDPR)."
+          ]
+        }
+      ]
+    },
+    fr: {
+      heroSubtitle: "Matrice de risques 5×5 — scoring probabilité × impact, zones de sévérité colorées et modèle de registre des risques.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexte",
+          paragraphs: [
+            "Construction d'une matrice de risques 5×5 structurée comme outil réutilisable pour évaluer les risques IT, d'infrastructure et de conformité au sein d'une organisation.",
+            "La matrice croise la probabilité (1–5) avec l'impact (1–5) pour produire un score de risque, avec des zones colorées (vert / jaune / orange / rouge) pour guider la priorisation et les décisions de traitement."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Ce que j'ai réalisé",
+          items: [
+            "Matrice 5×5 : probabilité (1 = rare → 5 = quasi-certaine) × impact (1 = négligeable → 5 = catastrophique).",
+            "Zones de sévérité colorées : Faible (1–4), Moyen (5–9), Élevé (10–16), Critique (17–25).",
+            "Modèle de registre des risques : ID, description, probabilité, impact, score, propriétaire, traitement et date de révision.",
+            "Exemples de risques couvrant l'infrastructure, le contrôle d'accès, l'exposition des données et la continuité d'activité."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Structure de la matrice",
+          items: [
+            { label: "Dimensions", value: "5×5 — probabilité × impact" },
+            { label: "Plage de scores", value: "1 (faible) → 25 (critique)" },
+            { label: "Zones de sévérité", value: "Faible / Moyen / Élevé / Critique" },
+            { label: "Cas d'usage", value: "Infrastructure IT, cloud, GRC, audits de conformité" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Compétences démontrées",
+          items: [
+            "Identification, scoring et planification du traitement des risques (aligné ISO 27005 / NIST RMF).",
+            "Outillage GRC : conception de registre des risques et gestion du cycle de vie.",
+            "Traduction des risques techniques en langage d'impact métier pour les parties prenantes.",
+            "Applicable sur les risques d'infrastructure, la sécurité cloud et les référentiels de conformité (ISO 27001, NIS2, RGPD)."
+          ]
+        }
+      ]
+    }
+  }
+},
+
 ];
