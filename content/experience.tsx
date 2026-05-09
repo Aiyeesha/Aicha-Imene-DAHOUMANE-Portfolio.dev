@@ -14,6 +14,9 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
         rightMeta: "Oct. 2025 — Aujourd’hui",
         content: (
           <ul className="list-disc pl-5 space-y-2">
+            <li className="italic text-sm text-slate-500 dark:text-slate-400">
+              CDI proposé à l&apos;issue de l&apos;alternance, sans période d&apos;essai.
+            </li>
             <li>
               Conception et mise en œuvre de solutions Salesforce avancées en collaboration
               avec les équipes métier.
@@ -120,6 +123,9 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
       rightMeta: "Oct 2025 — Present",
       content: (
         <ul className="list-disc pl-5 space-y-2">
+          <li className="italic text-sm text-slate-500 dark:text-slate-400">
+            Direct conversion from apprenticeship — no probation period.
+          </li>
           <li>
             Designed and delivered advanced Salesforce solutions in close collaboration with
             business stakeholders.

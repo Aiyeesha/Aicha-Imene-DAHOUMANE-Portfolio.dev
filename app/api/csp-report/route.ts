@@ -65,8 +65,14 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success } = await cspReportRatelimit.limit(ip);
-  if (!success) {
+  let rateLimitOk = true;
+  try {
+    const { success } = await cspReportRatelimit.limit(ip);
+    rateLimitOk = success;
+  } catch {
+    // Upstash WRONGTYPE ou autre erreur Redis — fail-open (rapport ignoré, pas de 500)
+  }
+  if (!rateLimitOk) {
     // 204 plutôt que 429 — le navigateur n'a pas besoin de savoir qu'il est limité
     return new NextResponse(null, { status: 204 });
   }
