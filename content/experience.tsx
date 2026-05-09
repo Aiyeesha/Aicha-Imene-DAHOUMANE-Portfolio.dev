@@ -66,6 +66,19 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
               Support migrations de données (CSV / assistants d’import), avec contrôle qualité
               et intégrité des données.
             </li>
+            <li>
+              Développement d’applications web (Java, JavaScript) en complément des
+              projets Salesforce — intégrations, scripts d’automatisation et interfaces
+              légères.
+            </li>
+            <li>
+              Administration et requêtage de bases de données relationnelles (PostgreSQL,
+              MySQL) pour les besoins d’intégration et de reporting.
+            </li>
+            <li>
+              Déploiement et gestion d’applications sur Heroku (pipelines, variables
+              d’environnement, logs de production).
+            </li>
           </ul>
         )
       },
@@ -156,6 +169,18 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
             Supported data migrations (CSV/import tools) with strong focus on quality and
             integrity.
           </li>
+          <li>
+            Built web application features in Java and JavaScript alongside Salesforce
+            work — integrations, automation scripts, and lightweight interfaces.
+          </li>
+          <li>
+            Queried and administered relational databases (PostgreSQL, MySQL) for
+            integration and reporting needs.
+          </li>
+          <li>
+            Deployed and managed applications on Heroku (pipelines, environment
+            variables, production logs).
+          </li>
         </ul>
       )
     },
@@ -216,9 +241,11 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
         rightMeta: "2026",
         content: (
           <ul className="list-disc pl-5 space-y-2">
-            <li>Salesforce Certified Administrator — préparation active</li>
-            <li>Salesforce Platform Developer I — préparation active</li>
-            <li>ISC2 CC (Certified in Cybersecurity) — préparation en cours</li>
+            <li>Salesforce Platform Foundations + Sales Foundations — mai 2026</li>
+            <li>Salesforce Certified Administrator (ADM-201) — juin 2026</li>
+            <li>Salesforce Certified App Builder — juillet 2026</li>
+            <li>Salesforce CPQ Admin + Marketing Cloud Engagement Admin — juillet–août 2026</li>
+            <li>ISC2 CC (Certified in Cybersecurity) — préparation en parallèle</li>
           </ul>
         )
       }
@@ -258,9 +285,11 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
       rightMeta: "2026",
       content: (
         <ul className="list-disc pl-5 space-y-2">
-          <li>Salesforce Certified Administrator — actively preparing</li>
-          <li>Salesforce Platform Developer I — actively preparing</li>
-          <li>ISC2 CC (Certified in Cybersecurity) — in progress</li>
+          <li>Salesforce Platform Foundations + Sales Foundations — May 2026</li>
+          <li>Salesforce Certified Administrator (ADM-201) — June 2026</li>
+          <li>Salesforce Certified App Builder — July 2026</li>
+          <li>Salesforce CPQ Admin + Marketing Cloud Engagement Admin — July–August 2026</li>
+          <li>ISC2 CC (Certified in Cybersecurity) — ongoing parallel preparation</li>
         </ul>
       )
     }

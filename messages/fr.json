@@ -297,18 +297,18 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "Disponible immédiatement — ouverte à un CDI, CDD, freelance ou mission Salesforce, à Paris / Marseille ou en full remote.",
+    "p4_salesforce": "Actuellement en CDI chez LD Digitales, avec un projet de transition vers le consulting indépendant (portage salarial) début 2027, en parallèle du développement de deux SaaS Salesforce : OrgDocs et SFRelease.",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
     "p4_itops": "Disponible immédiatement — ouverte à un CDI, CDD, freelance ou mission IT Ops / DevOps / SRE, à Paris / Marseille ou en full remote.",
     "goals2026Title": "Objectifs 2026",
     "goals2026Salesforce": [
-      "Décrocher un poste ou une mission Salesforce (CDI · CDD · Freelance) en France ou en full remote",
-      "Obtenir la certification Salesforce Platform Developer II",
-      "Contribuer à des projets open source Salesforce (AppExchange packages, outils DevOps)",
-      "Publier régulièrement des articles techniques sur le blog et Medium",
-      "Participer à des événements Salesforce (Dreamin', TrailheaDX) pour développer le réseau"
+      "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
+      "Lancer mon activité de consultante indépendante (portage salarial) début 2027",
+      "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
+      "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
+      "Développer une clientèle internationale (France, UK, marché européen en remote)"
     ],
     "goals2026Itops": [
       "Décrocher un poste ou une mission IT Ops / SRE / DevOps (CDI · CDD · Freelance) en France ou en full remote",

@@ -9,8 +9,6 @@ export const aboutContent = {
 
         `D'octobre 2022 à juin 2023, j'ai suivi la formation TSSR (Technicienne Supérieure Systèmes & Réseaux, niveau 5 RNCP) au GRETA du Val d'Oise, complétée par un stage de quatre mois chez MIDRANGE GROUP (février – mai 2023). J'y ai assuré le support technique de plus de 50 postes, déployé 200 workstations Dell (Optiplex et Latitude) via Windows Autopilot, administré un environnement Windows Server 2022 complet (AD DS, DNS, DHCP, WDS, GPO, PXE), mis en place un pare-feu PfSense avec proxy Squid, géré les sauvegardes avec Acronis Cyber Protect Cloud, et utilisé Datto RMM, Blancco, Autotask et Splashtop au quotidien.`,
 
-        `J'ai commencé ma carrière côté infrastructure en tant qu'administratrice systèmes et réseaux junior (expérience confidentielle — accord de non-divulgation). J'ai assuré le support aux utilisateurs, géré des environnements Windows ainsi que Linux, surveillé des réseaux et géré des incidents de sécurité. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité, comment les équipes collaborent sous pression et pourquoi des fondations robustes sont essentielles.`,
-
         `En parallèle de ma formation TSSR, j'ai commencé à explorer Salesforce de façon autonome dès 2022 — Trailhead, documentation, projets personnels. C'est cette curiosité qui m'a convaincue de me spécialiser. D'octobre 2023 à octobre 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (en remote), en parallèle du titre Développeur Concepteur Logiciel chez OpenClassrooms (niveau 6 RNCP). J'ai développé et maintenu plus de 10 classes Apex et batch jobs, créé plus de 20 Flows d'automatisation métier (réduction de 30% de la charge manuelle), conçu des composants Lightning Web Components réutilisables, géré des environnements sandbox et mis en place des pipelines CI/CD avec Salesforce CLI et GitHub Actions. Au total, c'est plus de 3 ans de pratique sur la plateforme Salesforce.`
       ]
     },
@@ -51,11 +49,11 @@ export const aboutContent = {
     goals2026: {
       title: "Objectifs 2026",
       items: [
-        "Décrocher un poste ou une mission Salesforce (CDI · CDD · Freelance) en France ou en full remote",
-        "Salesforce Certified Administrator — préparation active en cours",
-        "Salesforce Platform Developer I — préparation active en cours",
-        "Contribuer activement à des projets open source Salesforce (AppExchange packages, outils DevOps)",
-        "Publier régulièrement des articles techniques sur mon blog"
+        "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
+        "Lancer mon activité de consultante indépendante (portage salarial) début 2027",
+        "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
+        "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
+        "Développer une clientèle internationale (France, UK, marché européen en remote)"
       ]
     }
   },
@@ -69,8 +67,6 @@ export const aboutContent = {
         `I obtained my TAI diploma (IT Support Technician, RNCP Level 4) at GRETA du Val d'Oise in July 2022, following practical training at Lycée Louis Jouvet in Taverny. There I developed skills in user support, Windows installation, VirtualBox virtualization, network configuration, and Active Directory management.`,
 
         `From October 2022 to June 2023, I completed the TSSR program (Higher Technician in Systems & Networks, RNCP Level 5) at GRETA du Val d'Oise, including a four-month internship at MIDRANGE GROUP (February – May 2023). I provided technical support for 50+ workstations, deployed 200 Dell machines (Optiplex and Latitude) via Windows Autopilot, administered a full Windows Server 2022 environment (AD DS, DNS, DHCP, WDS, GPO, PXE), set up a PfSense firewall with Squid proxy, managed backups with Acronis Cyber Protect Cloud, and used Datto RMM, Blancco, Autotask, and Splashtop daily.`,
-
-        `I started my career on the infrastructure side as a junior systems and network administrator (confidential experience — non-disclosure agreement). I provided user support, managed Windows and Linux environments, monitored networks, and handled security incidents. This hands-on experience taught me how systems behave in the real world, how teams collaborate under pressure, and why solid foundations are essential.`,
 
         `Alongside my TSSR training, I began exploring Salesforce independently from 2022 — Trailhead, documentation, personal projects. That self-driven curiosity led me to specialize. From October 2023 to October 2025, I worked as a Salesforce Developer at LD Digitales (remote), alongside the Développeur Concepteur Logiciel title from OpenClassrooms (RNCP Level 6). I built and maintained 10+ Apex classes and batch jobs, created 20+ automation Flows (reducing manual workload by 30%), designed reusable Lightning Web Components, managed sandbox environments, and implemented CI/CD pipelines with Salesforce CLI and GitHub Actions. In total, that's over 3 years of hands-on experience on the Salesforce platform.`
       ]
@@ -112,11 +108,11 @@ export const aboutContent = {
     goals2026: {
       title: "2026 Goals",
       items: [
-        "Land a Salesforce role or project (permanent · fixed-term · freelance) in France or fully remote",
-        "Salesforce Certified Administrator — actively preparing",
-        "Salesforce Platform Developer I — actively preparing",
-        "Actively contribute to Salesforce open source projects (AppExchange packages, DevOps tools)",
-        "Regularly publish technical articles on my blog"
+        "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
+        "Launch independent consulting activity (portage salarial) in early 2027",
+        "Ship first versions of OrgDocs and SFRelease — two SaaS products in the Salesforce ecosystem",
+        "Actively contribute to the Salesforce community: technical blog, Trailblazer Community, open source",
+        "Build an international client base (France, UK, European market — remote)"
       ]
     }
   }
