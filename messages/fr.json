@@ -181,6 +181,11 @@
     "trackFilter": {
       "label": "Filtrer par thématique"
     },
+    "tabs": {
+      "all": "Tous",
+      "salesforce": "Salesforce",
+      "itops": "IT Ops"
+    },
     "readCta": "Lire",
     "featured": "À la une",
     "readingTime": "min de lecture",
@@ -276,7 +281,7 @@
   "profile": {
     "kicker": "Profil",
     "title": "Des systèmes & réseaux au développement Salesforce",
-    "p1": "Un profil technique avec un solide background en infrastructures IT, désormais pleinement orienté vers le conseil Salesforce et cloud.",
+    "p1": "Développeuse Salesforce avec 2 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
     "p2": "J'ai commencé ma carrière côté infrastructure — stage chez MIDRANGE GROUP (fév – mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 200 workstations Dell via Windows Autopilot, administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
     "p3": "D'oct. 2023 à oct. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction de 30% de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l'international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
@@ -300,11 +305,11 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "Actuellement en CDI chez LD Digitales, avec un projet de transition vers le consulting indépendant (portage salarial) début 2027, en parallèle du développement de deux SaaS Salesforce : OrgDocs et SFRelease.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. En parallèle : développement de deux SaaS Salesforce (OrgDocs et SFRelease) et lancement d'une activité de conseil indépendant (portage salarial) prévu début 2027.",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
-    "p4_itops": "Actuellement en CDI Salesforce (LD Digitales) — les compétences IT Ops & DevOps acquises en formation et en production restent mobilisables pour des missions ponctuelles ou une orientation future vers ce domaine.",
+    "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, forgées en contexte de production réel, restent pleinement mobilisables pour des missions ciblées.",
     "goals2026Title": "Objectifs 2026",
     "goals2026Salesforce": [
       "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",

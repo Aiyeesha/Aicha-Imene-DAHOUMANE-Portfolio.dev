@@ -56,8 +56,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success } = await errorRatelimit.limit(ip);
-  if (!success) return new NextResponse(null, { status: 429 });
+  let rateLimitOk = true;
+  try {
+    const { success } = await errorRatelimit.limit(ip);
+    rateLimitOk = success;
+  } catch {
+    // Upstash WRONGTYPE ou autre erreur Redis — fail-open
+  }
+  if (!rateLimitOk) return new NextResponse(null, { status: 429 });
 
   // ── Parse ─────────────────────────────────────────────────────────────────
   let body: unknown;
