@@ -93,7 +93,7 @@ const MILESTONES: Milestone[] = [
     ],
   },
   {
-    period: "2023 – 2025",
+    period: "2023 – sept. 2025",
     type: "alternance",
     title: {
       en: "Salesforce Developer & Administrator (Work-study)",
@@ -101,8 +101,8 @@ const MILESTONES: Milestone[] = [
     },
     org: "LD Digitales × OpenClassrooms",
     description: {
-      en: "Full-stack Salesforce development (Apex, Flows, LWC, SOQL), CI/CD with GitHub Actions, security, deployments, and client support.",
-      fr: "Développement Salesforce full-stack (Apex, Flows, LWC, SOQL), CI/CD GitHub Actions, sécurité, déploiements et support client.",
+      en: "Full-stack Salesforce development (Apex, Flows, LWC, SOQL), CI/CD with GitHub Actions, security, deployments, and delivery of LD Digitales' internal Salesforce application.",
+      fr: "Développement Salesforce full-stack (Apex, Flows, LWC, SOQL), CI/CD GitHub Actions, sécurité, déploiements et livraison de l'application Salesforce interne de LD Digitales.",
     },
     tags: ["Apex", "LWC", "Flows", "SOQL", "GitHub Actions", "Salesforce CLI"],
     logos: [
