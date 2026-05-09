@@ -23,8 +23,10 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         {
           title: "Programmation & plateformes",
           items: [
-            "Bases de Java, JavaScript / TypeScript",
-            "Concepts d’API REST / SOAP",
+            "Java · JavaScript / TypeScript (expérience production)",
+            "PostgreSQL · MySQL — requêtage et administration",
+            "Heroku — déploiement et gestion d’applications",
+            "API REST / SOAP — conception et intégration",
             "Tests unitaires & assertions",
             "Git & workflows GitHub",
             "VS Code, développement piloté par la CLI"
@@ -114,8 +116,10 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       {
         title: "Programming & platforms",
         items: [
-          "Java, JavaScript / TypeScript fundamentals",
-          "REST / SOAP API concepts",
+          "Java · JavaScript / TypeScript (production experience)",
+          "PostgreSQL · MySQL — querying & administration",
+          "Heroku — application deployment & management",
+          "REST / SOAP API design and integration",
           "Unit tests & assertions",
           "Git & GitHub workflows",
           "VS Code, CLI-driven development"
