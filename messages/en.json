@@ -181,6 +181,11 @@
     "trackFilter": {
       "label": "Filter by topic"
     },
+    "tabs": {
+      "all": "All",
+      "salesforce": "Salesforce",
+      "itops": "IT Ops"
+    },
     "readCta": "Read",
     "featured": "Featured",
     "readingTime": "min read",
@@ -276,18 +281,18 @@
   "profile": {
     "kicker": "Profile",
     "title": "From systems & networks to Salesforce development",
-    "p1": "A technical profile with a strong IT infrastructure background, now fully focused on Salesforce and cloud consulting.",
+    "p1": "Salesforce developer with 2 years of professional experience and a strong IT infrastructure background — foundations that make a real difference on complex projects.",
     "p2": "I started my career on the infrastructure side — internship at MIDRANGE GROUP (Feb – May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 200 Dell machines via Windows Autopilot, Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
     "p3": "From Oct. 2023 to Oct. 2025, I worked as a Salesforce Developer at LD Digitales (remote) while earning the Développeur Concepteur Logiciel title (RNCP Level 6) from OpenClassrooms. I built and maintained 10+ Apex classes, created 20+ automation Flows (reducing manual workload by 30%), designed reusable LWC components, and implemented CI/CD pipelines with Salesforce CLI.",
     "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My 2026 goal is to work internationally as a freelance Salesforce developer & consultant, collaborating with distributed teams and clients in France and abroad.",
     "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
-    "p4_salesforce": "Currently full-time at LD Digitales, with a planned transition to independent consulting (portage salarial) in early 2027, alongside building two Salesforce SaaS products: OrgDocs and SFRelease.",
+    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, with 2 years of production Salesforce experience. In parallel: building two Salesforce SaaS products (OrgDocs and SFRelease) and launching an independent consulting practice (portage salarial) in early 2027.",
     "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
-    "p4_itops": "Currently in a Salesforce CDI (LD Digitales) — IT Ops & DevOps skills built during training and production remain available for occasional projects or a future pivot toward this field.",
+    "p4_itops": "Full-time Salesforce Developer at LD Digitales — IT Ops & DevOps skills, built through real production environments, remain fully available for targeted projects.",
     "goals2026Title": "2026 Goals",
     "goals2026Salesforce": [
       "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",

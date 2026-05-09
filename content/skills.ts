@@ -24,8 +24,8 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
           title: "Programmation & plateformes",
           items: [
             "Java · JavaScript / TypeScript (expérience production)",
-            "PostgreSQL · MySQL — requêtage et administration",
-            "Heroku — déploiement et gestion d’applications",
+            "PostgreSQL (avancé · 2 ans) · MySQL (intermédiaire · 1 an) — requêtes complexes, administration, intégrations Salesforce via Heroku Connect",
+            "Heroku (avancé · 2 ans) — déploiements d’applications connectées à Salesforce via Heroku Connect, gestion de dynos et variables d’environnement",
             "API REST / SOAP — conception et intégration",
             "Tests unitaires & assertions",
             "Git & workflows GitHub",
@@ -117,8 +117,8 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         title: "Programming & platforms",
         items: [
           "Java · JavaScript / TypeScript (production experience)",
-          "PostgreSQL · MySQL — querying & administration",
-          "Heroku — application deployment & management",
+          "PostgreSQL (advanced · 2 yrs) · MySQL (intermediate · 1 yr) — complex queries, administration, Salesforce integrations via Heroku Connect",
+          "Heroku (advanced · 2 yrs) — Salesforce-connected app deployments via Heroku Connect, dynos & environment variables",
           "REST / SOAP API design and integration",
           "Unit tests & assertions",
           "Git & GitHub workflows",
