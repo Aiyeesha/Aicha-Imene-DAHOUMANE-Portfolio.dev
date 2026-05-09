@@ -36,7 +36,7 @@
     "proof1": "Security-first",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
-    "availability": "Available · Open to new opportunities",
+    "availability": "CDI · Independent consulting from 2027",
     "startHere": "Start here:",
     "switchToSalesforce": "View Salesforce profile →",
     "switchToItops": "View IT Ops profile →"
@@ -151,7 +151,7 @@
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
-    "availability": "Available · open to new opportunities"
+    "availability": "CDI · Independent consulting from 2027"
   },
   "blog": {
     "card_tutorials_kicker": "New",
@@ -177,6 +177,9 @@
     "tags": {
       "all": "All",
       "allTags": "All tags"
+    },
+    "trackFilter": {
+      "label": "Filter by topic"
     },
     "readCta": "Read",
     "featured": "Featured",
@@ -284,7 +287,7 @@
     "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
-    "p4_itops": "Available immediately — open to a permanent, fixed-term, freelance, or contract IT Ops / DevOps / SRE role, in Paris / Marseille or fully remote.",
+    "p4_itops": "Currently in a Salesforce CDI (LD Digitales) — IT Ops & DevOps skills built during training and production remain available for occasional projects or a future pivot toward this field.",
     "goals2026Title": "2026 Goals",
     "goals2026Salesforce": [
       "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
@@ -310,9 +313,9 @@
     "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant",
     "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Immediate · Permanent · Fixed-term · Freelance · Contract",
+    "availabilityValue": "CDI at LD Digitales · Consulting from 2027",
     "goalLabel": "Goal",
-    "goalValue": "Join a team or project (permanent, fixed-term, freelance, or contract) in Salesforce or IT Ops / DevOps — in France (Paris / Marseille) or fully remote.",
+    "goalValue": "Deepen Salesforce expertise in my current CDI (LD Digitales), complete 2026 certifications, and launch independent consulting (portage salarial) in early 2027.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Quality · Security",
     "focusValueItOps": "Monitoring · Runbooks · Automation · Security",
@@ -353,8 +356,8 @@
     "subtitle": "Everything you need to know before reaching out.",
     "items": [
       {
-        "q": "Are you open to permanent roles, or only freelance?",
-        "a": "I'm open to all forms of collaboration: permanent, fixed-term, freelance, or contract. Available immediately, I can join a team in Paris / Île-de-France, Marseille / PACA, or work fully remote from anywhere."
+        "q": "Are you available immediately?",
+        "a": "I'm currently in a permanent role (CDI) at LD Digitales since Oct. 2025. I plan to launch independent consulting (portage salarial) in early 2027. In the meantime, I'm open to occasional projects or complementary missions depending on availability."
       },
       {
         "q": "Do you work remotely?",
@@ -384,12 +387,12 @@
     "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email."
   },
   "availModal": {
-    "badge": "Available · Open to new opportunities",
+    "badge": "CDI · Independent consulting from 2027",
     "title": "My availability",
-    "delay": "Availability",
-    "delayValue": "Immediate",
-    "contracts": "Contract types",
-    "contractValues": "Permanent · Fixed-term · Freelance · Contract",
+    "delay": "Current status",
+    "delayValue": "CDI at LD Digitales since Oct. 2025",
+    "contracts": "Next step",
+    "contractValues": "Consulting / portage salarial from early 2027",
     "workMode": "Work modes",
     "workModeValues": "Full remote · Hybrid · On-site",
     "sector": "Sectors",
