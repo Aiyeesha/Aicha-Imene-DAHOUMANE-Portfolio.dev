@@ -40,7 +40,7 @@ export const aboutContent = {
       paragraphs: [
         `Quand je ne code pas, vous me trouverez probablement en train de lire des blogs techniques, de contribuer à des forums d'entraide, ou de travailler sur des projets perso en Python ou TypeScript.`,
 
-        `Je suis également passionnée par la cybersécurité — une passion héritée de mes années en administration systèmes. Je participe régulièrement à des CTF (Capture The Flag) et j'essaie de rester à jour sur les dernières menaces et bonnes pratiques.`,
+        `Je suis également passionnée par la cybersécurité — une passion héritée de mes années en administration systèmes. Je m'intéresse activement aux publications MITRE ATT&CK, aux advisories et aux bonnes pratiques défensives. Je prépare un parcours structuré Blue Team que je mènerai en parallèle de mes certifications Salesforce.`,
 
         `En dehors du numérique, j'aime la mode — dessiner des silhouettes, imaginer des créations, suivre les défilés. Je pratique aussi les arts martiaux et la danse, deux disciplines qui m'apprennent autant sur la discipline et la précision que sur l'écoute de l'autre. Enfin, j'aime voyager et découvrir de nouvelles cultures.`
       ]
@@ -99,7 +99,7 @@ export const aboutContent = {
       paragraphs: [
         `When I'm not coding, you'll likely find me reading technical blogs, contributing to help forums, or tinkering with personal projects in Python or TypeScript.`,
 
-        `I'm also passionate about cybersecurity — a passion inherited from my years in systems administration. I regularly participate in CTFs (Capture The Flag) and try to stay updated on the latest threats and best practices.`,
+        `I'm also passionate about cybersecurity — a passion inherited from my years in systems administration. I actively follow MITRE ATT&CK publications, advisories and defensive best practices. I'm preparing a structured Blue Team learning path that I'll run alongside my Salesforce certifications.`,
 
         `Outside of tech, I'm drawn to fashion — sketching silhouettes, imagining designs, following runway shows. I also practice martial arts and dance, two disciplines that teach as much about discipline and precision as they do about reading the other person. I love traveling and discovering new cultures too.`
       ]

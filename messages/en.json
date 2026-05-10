@@ -16,13 +16,13 @@
     "home": "Home"
   },
   "hero": {
-    "title": "Salesforce Developer & Consultant",
-    "subtitle": "with a Systems & DevOps background",
+    "title": "Salesforce Developer & IT Consultant",
+    "subtitle": "Apex · LWC · Integrations · Systems",
     "intro_salesforce": "I build Salesforce solutions that actually work — secure, tested, and designed to last. From Apex to CI/CD, I handle every layer of the delivery.",
     "intro_itops": "From infrastructure to deployment, I automate, secure, and document IT operations so teams can focus on what matters.",
     "avatar_alt": "Profile photo",
-    "title_salesforce": "Salesforce Developer & Consultant",
-    "subtitle_salesforce": "Systems & DevOps background",
+    "title_salesforce": "Salesforce Developer & IT Consultant",
+    "subtitle_salesforce": "Apex · LWC · Integrations · Systems",
     "title_itops": "Systems & IT Ops Engineer",
     "subtitle_itops": "Infrastructure · DevOps · Security",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
