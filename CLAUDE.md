@@ -118,3 +118,11 @@ The build succeeds without Redis/Supabase (falls back to empty arrays / direct f
 - **No cookies for locale** — the middleware intentionally strips `NEXT_LOCALE` to preserve ISR caching; locale comes from the URL segment only.
 - **Framer Motion** — all animations must respect `prefers-reduced-motion` (use `useReducedMotion()` or `motion` variants with `reducedMotion: "user"`).
 - **Path alias** — `@/` maps to the project root (configured in `tsconfig.json` and `jest.config.cjs`).
+
+## Changelog
+
+### 10 May 2026
+- **Certifications** — Moved "Salesforce Platform Foundations" and "Salesforce Sales Foundations" from completed (Apr 2026) to upcoming (May 2026, `isActive: true`) in `app/[locale]/certifications/page.tsx`
+- **About bio** — Replaced CTF paragraph with MITRE ATT&CK / Blue Team paragraph (FR + EN) in `content/about.ts`
+- **Goals** — Set "international freelance" and "Platform Developer II" goals to `not_started` (À venir · 2027) in Supabase `goals_2026` table
+- **Timeline** — Added Global Info internship (TAI end-of-training stage, 2022) to `components/CareerTimeline.tsx`

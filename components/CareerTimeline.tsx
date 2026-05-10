@@ -58,22 +58,18 @@ const MILESTONES: Milestone[] = [
     ],
   },
   {
-    period: "2023",
+    period: "2022",
     type: "stage",
     title: {
-      en: "Systems & Networks Internship",
-      fr: "Stage Systèmes & Réseaux",
+      en: "IT Support Technician (Internship)",
+      fr: "Technicienne Assistance Informatique (stage)",
     },
-    org: "Midrange Group",
+    org: "Global Info — Back Market partner",
     description: {
-      en: "Required internship as part of the TSSR program (GRETA du Val d'Oise). Deployment of 200+ workstations via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
-      fr: "Stage de fin de formation TSSR (GRETA du Val d'Oise). Déploiement de 200+ postes via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      en: "End-of-training internship (TAI). Hardware and software support, IT asset management.",
+      fr: "Stage de fin de formation TAI. Support matériel et logiciel, gestion de parc informatique.",
     },
-    tags: ["Windows Server 2022", "Autopilot", "PfSense", "Acronis", "Datto RMM"],
-    logos: [
-      { src: "/companies/midrange.webp", alt: "Midrange Group" },
-      { src: "/companies/greta.svg", alt: "GRETA du Val d'Oise" },
-    ],
+    tags: ["Windows 10", "User Support", "IT Asset Management"],
   },
   {
     period: "2023",
@@ -89,6 +85,24 @@ const MILESTONES: Milestone[] = [
     },
     tags: ["RNCP 5", "Windows Server", "VMware", "GPO", "Supervision"],
     logos: [
+      { src: "/companies/greta.svg", alt: "GRETA du Val d'Oise" },
+    ],
+  },
+  {
+    period: "2023",
+    type: "stage",
+    title: {
+      en: "Systems & Networks Internship",
+      fr: "Stage Systèmes & Réseaux",
+    },
+    org: "Midrange Group",
+    description: {
+      en: "Required internship as part of the TSSR program (GRETA du Val d'Oise). Deployment of 200+ workstations via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      fr: "Stage de fin de formation TSSR (GRETA du Val d'Oise). Déploiement de 200+ postes via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+    },
+    tags: ["Windows Server 2022", "Autopilot", "PfSense", "Acronis", "Datto RMM"],
+    logos: [
+      { src: "/companies/midrange.webp", alt: "Midrange Group" },
       { src: "/companies/greta.svg", alt: "GRETA du Val d'Oise" },
     ],
   },

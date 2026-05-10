@@ -223,40 +223,6 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-rose-700",
       logoUrl: "/certifications/linguaskill.svg",
     },
-    {
-      id: "sf-platform-foundations",
-      name: "Salesforce Platform Foundations",
-      issuer: "Salesforce",
-      earnedDate: isFr ? "Avr. 2026" : "Apr 2026",
-      level: "Salesforce Associate",
-      description: isFr
-        ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
-        : "Salesforce platform fundamentals: navigation, standard objects, basic security and simple automations.",
-      skills: isFr
-        ? ["Salesforce CRM", "Navigation", "Objets standard", "Sécurité", "Automatisation"]
-        : ["Salesforce CRM", "Navigation", "Standard Objects", "Security", "Automation"],
-      credentialUrl: undefined,
-      initials: "PF",
-      color: "bg-sky-700",
-      logoUrl: "/certifications/salesforce.svg",
-    },
-    {
-      id: "sf-sales-foundations",
-      name: "Salesforce Sales Foundations",
-      issuer: "Salesforce",
-      earnedDate: isFr ? "Avr. 2026" : "Apr 2026",
-      level: "Salesforce Associate",
-      description: isFr
-        ? "Fondamentaux Sales Cloud : gestion des leads, opportunités, comptes, contacts et prévisions commerciales."
-        : "Sales Cloud fundamentals: lead management, opportunities, accounts, contacts and sales forecasting.",
-      skills: isFr
-        ? ["Sales Cloud", "Leads", "Opportunités", "Comptes", "Prévisions"]
-        : ["Sales Cloud", "Leads", "Opportunities", "Accounts", "Forecasting"],
-      credentialUrl: undefined,
-      initials: "SF",
-      color: "bg-sky-700",
-      logoUrl: "/certifications/salesforce.svg",
-    },
   ];
 
   // Certifications en préparation — groupées par domaine
@@ -275,6 +241,34 @@ export default async function CertificationsPage({ params }: PageProps) {
 
   const upcomingItems: UpcomingItem[] = [
     // ── Salesforce track (sprint Avr. → Juil. 2026) ──────────────────────────
+    {
+      id: "sf-platform-foundations",
+      name: "Salesforce Platform Foundations",
+      issuer: "Salesforce",
+      target: isFr ? "Mai 2026" : "May 2026",
+      description: isFr
+        ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
+        : "Salesforce platform fundamentals: navigation, standard objects, basic security and simple automations.",
+      initials: "PF",
+      color: "bg-sky-700",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+      isActive: true,
+    },
+    {
+      id: "sf-sales-foundations",
+      name: "Salesforce Sales Foundations",
+      issuer: "Salesforce",
+      target: isFr ? "Mai 2026" : "May 2026",
+      description: isFr
+        ? "Fondamentaux Sales Cloud : gestion des leads, opportunités, comptes, contacts et prévisions commerciales."
+        : "Sales Cloud fundamentals: lead management, opportunities, accounts, contacts and sales forecasting.",
+      initials: "SF",
+      color: "bg-sky-700",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+      isActive: true,
+    },
     {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator",
