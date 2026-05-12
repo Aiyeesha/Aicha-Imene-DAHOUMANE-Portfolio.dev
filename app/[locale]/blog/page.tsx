@@ -45,12 +45,14 @@ export async function generateMetadata(
   };
 }
 
+const POSTS_PER_PAGE = 12;
+
 export default async function BlogIndexPage({
   params,
   searchParams
 }: {
   params: Promise<Params>;
-  searchParams: Promise<{ tag?: string }>;
+  searchParams: Promise<{ tag?: string; page?: string }>;
 }) {
   const { locale } = await params;
   const sp = await searchParams;
@@ -60,13 +62,27 @@ export default async function BlogIndexPage({
 
   const allRaw = readAllPosts(locale);
 
+  // Top 8 tags calculé sur TOUS les articles — cohérent quelle que soit la page ou le tag actif
+  const topTags = getTopTags(allRaw.map((p) => p.tags), 8);
+
+  // Filtrage par tag server-side avant pagination — garantit que tous les articles
+  // correspondant au tag sont accessibles quelle que soit la page courante
+  const tagFiltered = selectedTag
+    ? allRaw.filter((p) => p.tags.includes(selectedTag))
+    : allRaw;
+
+  const totalPosts = tagFiltered.length;
+  const totalPages = Math.max(1, Math.ceil(totalPosts / POSTS_PER_PAGE));
+
+  const requestedPage = Math.max(1, Number(sp.page ?? "1") || 1);
+  const currentPage = Math.min(requestedPage, totalPages);
+
+  const start = (currentPage - 1) * POSTS_PER_PAGE;
+
   // Sérialisation : on exclut `file` (chemin absolu serveur) avant de passer au Client Component
-  const posts: PostCard[] = allRaw.map(({ slug, locale: l, title, excerpt, date, tags, readingTime }) => ({
+  const posts: PostCard[] = tagFiltered.slice(start, start + POSTS_PER_PAGE).map(({ slug, locale: l, title, excerpt, date, tags, readingTime }) => ({
     slug, locale: l, title, excerpt, date, tags, readingTime
   }));
-
-  // Top 8 tags par fréquence (filtrage URL — reste server-side)
-  const topTags = getTopTags(allRaw.map((p) => p.tags), 8);
 
   return (
     <section className="py-12">
@@ -111,7 +127,14 @@ export default async function BlogIndexPage({
       </div>
 
       {/* Onglets track + grille d'articles (Client Component) */}
-      <BlogTrackFilter posts={posts} locale={locale} selectedTag={selectedTag || undefined} />
+      <BlogTrackFilter
+        posts={posts}
+        locale={locale}
+        selectedTag={selectedTag || undefined}
+        totalPosts={totalPosts}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </section>
   );
 }
