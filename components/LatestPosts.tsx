@@ -50,11 +50,11 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
     ? all.filter((p) => { const pt = detectTrack(p.tags); return pt === null || pt === track; })
     : all;
 
-  const posts = (filtered.length > 0 ? filtered : all).slice(0, 2);
+  const posts = (filtered.length > 0 ? filtered : all).slice(0, 3);
 
   return (
     <div className={className}>
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="mt-8 grid gap-4 md:grid-cols-3">
         {posts.length ? (
           posts.map((p) => {
             const mins = readingTimeMinutes(p.file);
@@ -90,7 +90,7 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
             );
           })
         ) : (
-          <div className="card p-6 text-muted md:col-span-2">{t("blog.latest_empty")}</div>
+          <div className="card p-6 text-muted md:col-span-3">{t("blog.latest_empty")}</div>
         )}
       </div>
 

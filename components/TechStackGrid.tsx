@@ -131,7 +131,9 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
         </div>
 
         {/* Années d'expérience */}
-        <p className="mt-1 text-xs text-muted-2">{yearsLabel} of experience</p>
+        <p className="mt-1 text-xs text-muted-2">
+          {locale === "fr" ? `${yearsLabel} d'expérience` : `${yearsLabel} of experience`}
+        </p>
 
         {/* Contexte / usage */}
         <p className="mt-1.5 text-xs text-muted leading-relaxed">{context}</p>
