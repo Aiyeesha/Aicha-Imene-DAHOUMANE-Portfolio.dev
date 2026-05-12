@@ -43,9 +43,20 @@ type Props = {
   posts: PostCard[];
   locale: string;
   selectedTag?: string;
+  totalPosts: number;
+  currentPage: number;
+  totalPages: number;
 };
 
-export default function BlogTrackFilter({ posts, locale, selectedTag }: Props) {
+function pageHref(page: number, locale: string, tag?: string): string {
+  const params = new URLSearchParams();
+  if (page > 1) params.set("page", String(page));
+  if (tag) params.set("tag", tag);
+  const qs = params.toString();
+  return `/${locale}/blog${qs ? `?${qs}` : ""}`;
+}
+
+export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts, currentPage, totalPages }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("all");
   const t = useTranslations("blogIndex");
 
@@ -62,7 +73,7 @@ export default function BlogTrackFilter({ posts, locale, selectedTag }: Props) {
     return pt === null || pt === activeTab;
   });
 
-  const featuredPost = !selectedTag ? filtered[0] ?? null : null;
+  const featuredPost = !selectedTag && currentPage === 1 ? filtered[0] ?? null : null;
   const gridItems = featuredPost ? filtered.slice(1) : filtered;
 
   const tabs: { id: Tab; label: string }[] = [
@@ -169,10 +180,38 @@ export default function BlogTrackFilter({ posts, locale, selectedTag }: Props) {
         </div>
       )}
 
-      {/* Compteur */}
-      <p className="mt-8 text-sm text-muted-2 text-center">
-        {filtered.length} {t("articleCount")}
-      </p>
+      {/* Compteur + pagination */}
+      <div className="mt-8 flex flex-col items-center gap-4">
+        <p className="text-sm text-muted-2">
+          {totalPosts} {t("articleCount")}
+        </p>
+
+        {totalPages > 1 && (
+          <div className="flex items-center gap-4">
+            {currentPage > 1 && (
+              <Link
+                href={pageHref(currentPage - 1, safeLocale, selectedTag)}
+                className="rounded-full border border-black/10 bg-black/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+              >
+                ← {t("pagination.prev")}
+              </Link>
+            )}
+
+            <span className="text-sm text-muted-2">
+              {t("pagination.page")} {currentPage} / {totalPages}
+            </span>
+
+            {currentPage < totalPages && (
+              <Link
+                href={pageHref(currentPage + 1, safeLocale, selectedTag)}
+                className="rounded-full border border-black/10 bg-black/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("pagination.next")} →
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 }
