@@ -42,6 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const urlPath = `${siteUrl}/${locale}/about`;
 
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
     title,
     description,
@@ -52,8 +53,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         fr: `${siteUrl}/fr/about`,
       }
     },
-    openGraph: { title, description, url: urlPath },
-    twitter:   { title, description },
+    openGraph: {
+      title,
+      description,
+      url: urlPath,
+      type: "website",
+      locale,
+      siteName,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/opengraph-image`],
+    },
   };
 }
 
