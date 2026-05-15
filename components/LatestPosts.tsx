@@ -44,13 +44,26 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
 
   const all = readAllPosts(locale);
 
-  // Si un track est fourni, filtrer les articles du track actif (ou sans track = neutres).
-  // Fallback : si aucun article ne correspond, afficher les 2 derniers sans filtre.
-  const filtered = track
-    ? all.filter((p) => { const pt = detectTrack(p.tags); return pt === null || pt === track; })
-    : all;
-
-  const posts = (filtered.length > 0 ? filtered : all).slice(0, 3);
+  // Sélection des posts à afficher
+  const posts = (() => {
+    if (track) {
+      // Track spécifié → filtrer par track (les neutres passent aussi)
+      const filtered = all.filter((p) => { const pt = detectTrack(p.tags); return pt === null || pt === track; });
+      return (filtered.length > 0 ? filtered : all).slice(0, 3);
+    }
+    // Sans track → garantir au moins 1 article Salesforce + 1 IT Ops pour la diversité
+    const sfPost = all.find((p) => detectTrack(p.tags) === "salesforce");
+    const itPost = all.find((p) => detectTrack(p.tags) === "itops");
+    const diverse: typeof all = [];
+    if (sfPost) diverse.push(sfPost);
+    if (itPost && itPost.slug !== sfPost?.slug) diverse.push(itPost);
+    const used = new Set(diverse.map((p) => p.slug));
+    for (const p of all) {
+      if (diverse.length >= 3) break;
+      if (!used.has(p.slug)) { diverse.push(p); used.add(p.slug); }
+    }
+    return diverse;
+  })();
 
   return (
     <div className={className}>

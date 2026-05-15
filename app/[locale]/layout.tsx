@@ -59,6 +59,7 @@ export async function generateMetadata({
       locale: locale,
       title,
       description,
+      siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [
         {
           // URL absolue requise : certains crawlers OG (LinkedIn, Slack, WhatsApp)
