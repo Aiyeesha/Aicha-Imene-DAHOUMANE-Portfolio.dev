@@ -150,7 +150,8 @@ export default function CommandPalette() {
     process.env.NEXT_PUBLIC_CV_URL ||
     `/cv/cv-${locale}-${track}.pdf`;
 
-  const linkedInUrl = process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com";
+  const rawLinkedInUrl = process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com";
+  const linkedInUrl = encodeURI(rawLinkedInUrl.startsWith("http") ? rawLinkedInUrl : `https://${rawLinkedInUrl}`);
 
   // ── Labels bilingues ─────────────────────────────────────────────────────────
   const isFr = locale === "fr";
