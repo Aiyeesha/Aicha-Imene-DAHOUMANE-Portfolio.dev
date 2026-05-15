@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
+import SafeImage from "@/components/SafeImage";
 
 export type GalleryImage = { src: string; alt: string };
 
@@ -33,19 +33,12 @@ export default function ImageGallery({
     <div className={className}>
       <div className="card overflow-hidden">
         <div className="relative aspect-[16/9] w-full">
-          <Image
+          <SafeImage
             src={current.src}
             alt={current.alt}
-            fill
             sizes="(max-width: 768px) 100vw, 900px"
             className="object-contain bg-white/90 dark:bg-white/10"
-            /*
-             * Only prioritize the first image to improve perceived loading performance (LCP).
-             * When idx === 0 the first image is visible, so we set priority to true.
-             * Subsequent images will not be preloaded unnecessarily.
-             */
             priority={idx === 0}
-            unoptimized
           />
         </div>
       </div>
@@ -65,7 +58,7 @@ export default function ImageGallery({
               ].join(" ")}
               aria-label={t("a11y.showImage", { index: i + 1 })}
             >
-              <Image src={img.src} alt={img.alt} fill sizes="112px" className="object-contain" unoptimized />
+              <SafeImage src={img.src} alt={img.alt} sizes="112px" className="object-contain" />
             </button>
           ))}
         </div>
