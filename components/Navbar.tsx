@@ -30,7 +30,7 @@ function CommandPaletteTrigger() {
   );
 }
 
-const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
+const SECTION_IDS = ["skills","experience","services","projects","blog","contact"] as const;
 const PAGE_IDS = ["about","certifications","resources"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
@@ -39,7 +39,7 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 
 // IDs visibles dans le desktop nav — défini au niveau module pour être accessible
 // depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
-const DESKTOP_IDS_STATIC = new Set(["about", "skills", "certifications", "projects", "contact"]);
+const DESKTOP_IDS_STATIC = new Set(["about", "skills", "certifications", "projects", "blog", "contact"]);
 
 
 export default function Navbar() {
@@ -238,15 +238,13 @@ useEffect(() => {
     { id: "certifications", label: t("nav.certifications") },
     { id: "resources", label: t("nav.resources") },
     { id: "services", label: t("nav.services") },
-    { id: "testimonials", label: t("nav.testimonials") },
     { id: "projects", label: t("nav.projects") },
     { id: "blog", label: t("nav.blog") },
     { id: "contact", label: t("nav.contact") }
   ];
 
-  // Desktop nav : 5 items pour tenir confortablement à xl (1280px).
-  // Expérience, Services et Blog restent accessibles via le menu mobile et la palette ⌘K.
-  // Témoignages retiré (section remplacée par TrustedBy, pas d'ancre dédiée).
+  // Desktop nav : 6 items à xl (1280px) — About, Compétences, Certifications, Projets, Blog, Contact.
+  // Expérience et Services restent accessibles via le menu mobile et la palette ⌘K.
   const DESKTOP_IDS = DESKTOP_IDS_STATIC;
   const desktopSections = sections.filter((s) => DESKTOP_IDS.has(s.id));
 

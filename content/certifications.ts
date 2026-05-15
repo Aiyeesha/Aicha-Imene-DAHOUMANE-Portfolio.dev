@@ -59,9 +59,14 @@ export const upcomingCertifications: string[] = [
 ];
 
 export const trailheadProfile = {
+  rank: "Expeditioner",
   badges: 90,
   points: 57375,
   trails: 15,
   superbadges: 0,
-  profileUrl: 'https://trailblazer.me/id/aidahoumane'
+  profileUrl: 'https://trailblazer.me/id/aidahoumane',
+  nextRank: {
+    name: "Ranger",
+    badgesNeeded: 10,
+  },
 };

@@ -30,8 +30,8 @@ export async function generateMetadata({
       ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
       : "Certifications & Diplomas — Aïcha Imène DAHOUMANE",
     description: isFr
-      ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Ranger) et plan de 12 certifications Salesforce + CompTIA (2026–2027)."
-      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Ranger) and a 12-certification roadmap across Salesforce + CompTIA (2026–2027).",
+      ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et plan de 12 certifications Salesforce + CompTIA (2026–2027)."
+      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + CompTIA (2026–2027).",
     alternates: {
       canonical: `${siteUrl}/${locale}/certifications`,
       languages: {
@@ -141,8 +141,8 @@ export default async function CertificationsPage({ params }: PageProps) {
     trailheadTrails: isFr ? "parcours" : "trails",
     trailheadProfile: isFr ? "Voir le profil Trailhead" : "View Trailhead profile",
     trailheadHint: isFr
-      ? "Classement Trailhead : Ranger — vérifiable en ligne"
-      : "Trailhead rank: Ranger — verifiable online",
+      ? "Classement Trailhead : Expeditioner — vérifiable en ligne · 10 badges pour atteindre Ranger"
+      : "Trailhead rank: Expeditioner — verifiable online · 10 badges to reach Ranger",
     activelyPreparing: isFr ? "Préparation active" : "Actively preparing",
     backHome: isFr ? "Retour à l'accueil" : "Back to home",
     credentialLink: isFr ? "Voir le justificatif" : "View credential",
@@ -536,7 +536,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {/* Texte */}
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">Trailhead Ranger</h3>
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">Trailhead Expeditioner</h3>
                 </div>
                 <p className="mt-0.5 text-sm text-muted">Salesforce Trailhead</p>
                 <p className="mt-2 text-sm text-muted leading-relaxed">{labels.trailheadHint}</p>
@@ -563,8 +563,35 @@ export default async function CertificationsPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                {/* Lien profil */}
+                {/* Progression vers Ranger */}
                 <div className="mt-5">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-muted-2">
+                      {isFr
+                        ? `Progression vers Ranger — ${trailheadProfile.badges}/100 badges`
+                        : `Progress to Ranger — ${trailheadProfile.badges}/100 badges`}
+                    </span>
+                    <span className="text-xs font-medium text-cyan-700 dark:text-cyan-300">
+                      {trailheadProfile.badges}%
+                    </span>
+                  </div>
+                  <div
+                    role="progressbar"
+                    aria-valuenow={trailheadProfile.badges}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={isFr ? "Progression vers Ranger" : "Progress to Ranger"}
+                    className="h-1.5 w-full rounded-full bg-black/10 dark:bg-white/10 overflow-hidden"
+                  >
+                    <div
+                      className="h-full rounded-full bg-cyan-500"
+                      style={{ width: `${trailheadProfile.badges}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Lien profil */}
+                <div className="mt-4">
                   <a
                     href={trailheadProfile.profileUrl}
                     target="_blank"

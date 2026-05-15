@@ -236,7 +236,7 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
         rightMeta: "—",
         content: (
           <ul className="list-disc pl-5 space-y-2">
-            <li>Trailhead Ranger — Salesforce Trailhead</li>
+            <li>Trailhead Expeditioner — Salesforce Trailhead</li>
           </ul>
         )
       },
@@ -280,7 +280,7 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
       rightMeta: "—",
       content: (
         <ul className="list-disc pl-5 space-y-2">
-          <li>Trailhead Ranger — Salesforce Trailhead</li>
+          <li>Trailhead Expeditioner — Salesforce Trailhead</li>
         </ul>
       )
     },

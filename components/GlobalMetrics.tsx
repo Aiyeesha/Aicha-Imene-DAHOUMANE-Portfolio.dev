@@ -24,7 +24,7 @@ const METRICS = [
   { value: 10, suffix: "+", labelKey: "metrics.apex"      },
   { value: 20, suffix: "+", labelKey: "metrics.flows"     },
   { value: 30, suffix: "%", labelKey: "metrics.workload"  },
-  { value: 5,  suffix: "+", labelKey: "metrics.projects"  },
+  { value: 10, suffix: "+", labelKey: "metrics.projects"  },
 ] as const;
 
 export default function GlobalMetrics() {
