@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import type React from "react";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { detectTrack, formatDate } from "@/lib/blog-utils";
 
@@ -15,8 +14,6 @@ export type PostCard = {
   tags: string[];
   readingTime: number;
 };
-
-type Tab = "all" | "salesforce" | "itops";
 
 function TrackBadge({ track }: { track: "salesforce" | "itops" | null }) {
   if (!track) return null;
@@ -57,7 +54,6 @@ function pageHref(page: number, locale: string, tag?: string): string {
 }
 
 export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts, currentPage, totalPages }: Props) {
-  const [activeTab, setActiveTab] = useState<Tab>("all");
   const t = useTranslations("blogIndex");
 
   // Locale validé à "en" | "fr" ; slug restreint à [a-z0-9-_] pour éliminer
@@ -65,47 +61,16 @@ export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts
   const safeLocale: "en" | "fr" = locale === "fr" ? "fr" : "en";
   const safeSlug = (slug: string) => slug.replace(/[^a-z0-9-_]/gi, "");
 
-  // Filtrage : tag URL + tab active
-  const filtered = posts.filter((p) => {
-    if (selectedTag && !p.tags.includes(selectedTag)) return false;
-    if (activeTab === "all") return true;
-    const pt = detectTrack(p.tags);
-    return pt === null || pt === activeTab;
-  });
+  // Filtrage par tag URL uniquement (le toggle global de la navbar gère le track)
+  const filtered = posts.filter((p) =>
+    !selectedTag || p.tags.includes(selectedTag)
+  );
 
   const featuredPost = !selectedTag && currentPage === 1 ? filtered[0] ?? null : null;
   const gridItems = featuredPost ? filtered.slice(1) : filtered;
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: "all",        label: t("tabs.all") },
-    { id: "salesforce", label: t("tabs.salesforce") },
-    { id: "itops",      label: t("tabs.itops") },
-  ];
-
   return (
     <>
-      {/* Tabs Salesforce / IT Ops / Tous */}
-      <div role="group" aria-label={t("trackFilter.label")} className="mt-6 flex flex-wrap gap-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            aria-pressed={activeTab === tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={[
-              "rounded-full px-4 py-1.5 text-sm font-medium transition-colors soft-ring",
-              activeTab === tab.id
-                ? tab.id === "itops"
-                  ? "bg-violet-600 text-white dark:bg-violet-600"
-                  : "bg-cyan-700 text-white dark:bg-cyan-700"
-                : "bg-black/5 text-slate-700 dark:bg-white/10 dark:text-slate-200 hover:bg-black/10 dark:hover:bg-white/15"
-            ].join(" ")}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
       {/* Article mis en avant — premier de la liste filtrée, page sans tag */}
       {featuredPost && (
         <Link
