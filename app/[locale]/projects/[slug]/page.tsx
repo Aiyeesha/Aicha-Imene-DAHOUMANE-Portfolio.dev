@@ -224,7 +224,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
   if (!project) return { title: "Project not found" };
 
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
