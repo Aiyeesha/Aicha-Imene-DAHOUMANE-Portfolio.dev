@@ -39,7 +39,7 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 
 // IDs visibles dans le desktop nav — défini au niveau module pour être accessible
 // depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
-const DESKTOP_IDS_STATIC = new Set(["about", "skills", "certifications", "projects", "blog", "contact"]);
+const DESKTOP_IDS_STATIC = new Set(["about", "skills", "experience", "certifications", "resources", "services", "projects", "blog", "contact"]);
 
 
 export default function Navbar() {
@@ -243,8 +243,8 @@ useEffect(() => {
     { id: "contact", label: t("nav.contact") }
   ];
 
-  // Desktop nav : 6 items à xl (1280px) — About, Compétences, Certifications, Projets, Blog, Contact.
-  // Expérience et Services restent accessibles via le menu mobile et la palette ⌘K.
+  // Desktop nav : 9 items à xl (1280px) — About, Compétences, Expérience, Certifications, Ressources, Services, Projets, Blog, Contact.
+  // Le conteneur est scrollable (overflow-x-auto) pour les écrans compacts.
   const DESKTOP_IDS = DESKTOP_IDS_STATIC;
   const desktopSections = sections.filter((s) => DESKTOP_IDS.has(s.id));
 

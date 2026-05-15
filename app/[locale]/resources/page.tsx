@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : "Tools, stacks, and learning resources used in Salesforce development, IT Ops, and web development.";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const urlPath = `${siteUrl}/${locale}/resources`;
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
     title,
     description,
@@ -37,8 +38,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         fr: `${siteUrl}/fr/resources`,
       }
     },
-    openGraph: { title, description, url: urlPath },
-    twitter: { title, description },
+    openGraph: {
+      title,
+      description,
+      url: urlPath,
+      type: "website",
+      locale,
+      siteName,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/opengraph-image`],
+    },
   };
 }
 
