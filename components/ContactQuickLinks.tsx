@@ -1,8 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { useLocale } from "next-intl";
-import { useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 
 export default function ContactQuickLinks() {
@@ -15,13 +13,7 @@ export default function ContactQuickLinks() {
   const linkedInHref = linkedIn
     ? (linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`)
     : "";
-  const cvUrl = useMemo(
-    () =>
-      process.env.NEXT_PUBLIC_CV_PDF_URL ||
-      process.env.NEXT_PUBLIC_CV_URL ||
-      `/cv/cv-{locale}-{track}.pdf`,
-    [locale, track]
-  );
+  const cvUrl = `/cv/cv-${locale}-${track}.pdf`;
 
   return (
     <div className="card p-6">

@@ -103,13 +103,7 @@ export default function ContactForm() {
     return () => clearTimeout(timer);
   }, [status]);
 
-  const cvUrl = useMemo(
-    () =>
-      process.env.NEXT_PUBLIC_CV_PDF_URL ||
-      process.env.NEXT_PUBLIC_CV_URL ||
-      `/cv/cv-{locale}-{track}.pdf`,
-    [locale, track]
-  );
+  const cvUrl = `/cv/cv-${locale}-${track}.pdf`;
 
   // Show configuration hints only in non-production builds.
   // The page should not display internal setup instructions to visitors.

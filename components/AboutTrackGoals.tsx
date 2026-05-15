@@ -49,7 +49,7 @@ function StatusBadge({ status, isFr }: { status: GoalStatus; isFr: boolean }) {
   const config = {
     completed:   { label: isFr ? "Atteint"       : "Completed",   cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" },
     in_progress: { label: isFr ? "En cours"       : "In progress", cls: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300" },
-    not_started: { label: isFr ? "Non démarré"    : "Not started", cls: "bg-black/5 text-muted-2 dark:bg-white/5" },
+    not_started: { label: isFr ? "À venir"         : "Upcoming",   cls: "bg-black/5 text-muted-2 dark:bg-white/5" },
   };
   const { label, cls } = config[status];
   return (

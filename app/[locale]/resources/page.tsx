@@ -19,13 +19,26 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const title = isFr
+    ? "Ressources & Outils — Aïcha Imène DAHOUMANE"
+    : "Resources & Toolbox — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Outils, stacks et ressources d'apprentissage utilisés en développement Salesforce, IT Ops et développement web."
+    : "Tools, stacks, and learning resources used in Salesforce development, IT Ops, and web development.";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/resources`;
   return {
-    title: isFr
-      ? "Ressources & Outils — Aïcha Imène DAHOUMANE"
-      : "Resources & Toolbox — Aïcha Imène DAHOUMANE",
-    description: isFr
-      ? "Outils, stacks et ressources d'apprentissage utilisés en développement Salesforce, IT Ops et développement web."
-      : "Tools, stacks, and learning resources used in Salesforce development, IT Ops, and web development.",
+    title,
+    description,
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/resources`,
+        fr: `${siteUrl}/fr/resources`,
+      }
+    },
+    openGraph: { title, description, url: urlPath },
+    twitter: { title, description },
   };
 }
 
