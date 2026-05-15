@@ -36,8 +36,8 @@ export const certifications: Certification[] = [
     issuer: 'GRETA du Val d\'Oise — Lycée Louis Jouvet',
     badgeUrl: '/certifications/tai-badge.png',
     earnedDate: 'Jul 2022',
-    description: 'RNCP Level 4 (Bac) in IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Covers Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, and hardware/software support.',
-    skills: ['Windows 10', 'VirtualBox', 'Active Directory', 'Roaming Profiles', 'WiFi Configuration', 'AOMEI Partition Assistant', 'Hardware Diagnosis', 'User Support', 'Messaging Configuration']
+    description: 'RNCP Level 4 (Bac) in IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Covers Windows 10 installation, VirtualBox virtualization (training 2022), TP-Link network configuration, Active Directory roaming profiles, and hardware/software support.',
+    skills: ['Windows 10', 'VirtualBox (formation 2022)', 'Active Directory', 'Roaming Profiles', 'WiFi Configuration', 'AOMEI Partition Assistant', 'Hardware Diagnosis', 'User Support', 'Messaging Configuration']
   },
   {
     id: 'linguaskill-cambridge',
