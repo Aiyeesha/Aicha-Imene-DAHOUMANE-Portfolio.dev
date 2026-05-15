@@ -41,7 +41,8 @@ export async function generateMetadata(
       description,
       url: urlPath,
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio"
-    }
+    },
+    twitter: { title, description },
   };
 }
 

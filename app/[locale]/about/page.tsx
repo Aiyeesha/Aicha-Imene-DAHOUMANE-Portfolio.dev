@@ -39,10 +39,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "De l'administration systèmes & réseaux au développement Salesforce. Développeuse Salesforce & IT Ops Engineer disponible en CDI, CDD, freelance ou portage."
     : "From systems & network administration to Salesforce development. Salesforce Developer & IT Ops Engineer — open to permanent, fixed-term, freelance, or contract roles.";
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/about`;
+
   return {
     title,
     description,
-    openGraph: { title, description },
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/about`,
+        fr: `${siteUrl}/fr/about`,
+      }
+    },
+    openGraph: { title, description, url: urlPath },
     twitter:   { title, description },
   };
 }

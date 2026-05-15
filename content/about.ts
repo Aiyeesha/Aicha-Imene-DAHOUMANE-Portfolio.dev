@@ -5,7 +5,7 @@ export const aboutContent = {
     journey: {
       title: "Mon parcours",
       paragraphs: [
-        `J'ai obtenu mon titre TAI (Technicien d'Assistance Informatique, niveau 4 RNCP) au GRETA du Val d'Oise en juillet 2022, après une formation pratique au Lycée Louis Jouvet à Taverny. J'y ai acquis les bases du support utilisateur, de l'installation Windows, de la virtualisation avec VirtualBox, de la configuration réseau et de la gestion Active Directory.`,
+        `J'ai obtenu mon titre TAI (Technicien d'Assistance Informatique, niveau 4 RNCP) au GRETA du Val d'Oise en juillet 2022, après une formation pratique au Lycée Louis Jouvet à Taverny. J'y ai acquis les bases du support utilisateur, de l'installation Windows, de la virtualisation avec VirtualBox (formation initiale 2022), de la configuration réseau et de la gestion Active Directory.`,
 
         `D'octobre 2022 à juin 2023, j'ai suivi la formation TSSR (Technicienne Supérieure Systèmes & Réseaux, niveau 5 RNCP) au GRETA du Val d'Oise, complétée par un stage de quatre mois chez MIDRANGE GROUP (février – mai 2023). J'y ai assuré le support technique de plus de 50 postes, déployé 200 workstations Dell (Optiplex et Latitude) via Windows Autopilot, administré un environnement Windows Server 2022 complet (AD DS, DNS, DHCP, WDS, GPO, PXE), mis en place un pare-feu PfSense avec proxy Squid, géré les sauvegardes avec Acronis Cyber Protect Cloud, et utilisé Datto RMM, Blancco, Autotask et Splashtop au quotidien.`,
 
@@ -64,7 +64,7 @@ export const aboutContent = {
     journey: {
       title: "My Journey",
       paragraphs: [
-        `I obtained my TAI diploma (IT Support Technician, RNCP Level 4) at GRETA du Val d'Oise in July 2022, following practical training at Lycée Louis Jouvet in Taverny. There I developed skills in user support, Windows installation, VirtualBox virtualization, network configuration, and Active Directory management.`,
+        `I obtained my TAI diploma (IT Support Technician, RNCP Level 4) at GRETA du Val d'Oise in July 2022, following practical training at Lycée Louis Jouvet in Taverny. There I developed skills in user support, Windows installation, VirtualBox virtualization (initial training, 2022), network configuration, and Active Directory management.`,
 
         `From October 2022 to June 2023, I completed the TSSR program (Higher Technician in Systems & Networks, RNCP Level 5) at GRETA du Val d'Oise, including a four-month internship at MIDRANGE GROUP (February – May 2023). I provided technical support for 50+ workstations, deployed 200 Dell machines (Optiplex and Latitude) via Windows Autopilot, administered a full Windows Server 2022 environment (AD DS, DNS, DHCP, WDS, GPO, PXE), set up a PfSense firewall with Squid proxy, managed backups with Acronis Cyber Protect Cloud, and used Datto RMM, Blancco, Autotask, and Splashtop daily.`,
 
