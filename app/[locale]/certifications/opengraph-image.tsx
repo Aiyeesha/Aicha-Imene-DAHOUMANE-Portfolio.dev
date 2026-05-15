@@ -19,8 +19,8 @@ export default async function Image({ params }: Props) {
 
   const title    = isFr ? "Certifications & Diplômes"  : "Certifications & Diplomas";
   const subtitle = isFr
-    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Ranger · Salesforce Admin · Platform Developer I"
-    : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Ranger · Salesforce Admin · Platform Developer I";
+    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I"
+    : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I";
 
   const badges = [
     { label: isFr ? "✓ Obtenu" : "✓ Completed",       color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
