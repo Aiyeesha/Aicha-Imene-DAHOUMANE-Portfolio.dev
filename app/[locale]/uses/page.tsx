@@ -138,8 +138,8 @@ const USES: UseCategory[] = [
       {
         name: "Trailhead",
         description: {
-          en: "Salesforce's learning platform. Ranger-level — 90+ badges, 57 000+ points, 15+ trails completed.",
-          fr: "Plateforme d'apprentissage Salesforce. Niveau Ranger — 90+ badges, 57 000+ points, 15+ parcours.",
+          en: "Salesforce's learning platform. Expeditioner-level — 90+ badges, 57 000+ points, 15+ trails completed.",
+          fr: "Plateforme d'apprentissage Salesforce. Niveau Expeditioner — 90+ badges, 57 000+ points, 15+ parcours.",
         },
         url: "https://trailhead.salesforce.com",
       },
