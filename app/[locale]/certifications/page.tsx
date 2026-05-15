@@ -25,19 +25,37 @@ export async function generateMetadata({
   const { locale } = await params;
   const isFr = locale === "fr";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
+  const title = isFr
+    ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
+    : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et plan de 12 certifications Salesforce + CompTIA (2026–2027)."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + CompTIA (2026–2027).";
+  const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
-    title: isFr
-      ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
-      : "Certifications & Diplomas — Aïcha Imène DAHOUMANE",
-    description: isFr
-      ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et plan de 12 certifications Salesforce + CompTIA (2026–2027)."
-      : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + CompTIA (2026–2027).",
+    title,
+    description,
     alternates: {
-      canonical: `${siteUrl}/${locale}/certifications`,
+      canonical: urlPath,
       languages: {
         en: `${siteUrl}/en/certifications`,
         fr: `${siteUrl}/fr/certifications`,
       }
+    },
+    openGraph: {
+      title,
+      description,
+      url: urlPath,
+      type: "website",
+      locale,
+      siteName,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/opengraph-image`],
     },
   };
 }

@@ -30,7 +30,7 @@ export async function generateMetadata(
       title,
       description,
       url: urlPath,
-      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio"
+      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops"
     }
   };
 }
