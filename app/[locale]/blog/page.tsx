@@ -40,9 +40,15 @@ export async function generateMetadata(
       title,
       description,
       url: urlPath,
-      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio"
+      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio",
+      images: [{ url: `${siteUrl}/og-default.png` }],
     },
-    twitter: { title, description },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/og-default.png`],
+    },
   };
 }
 

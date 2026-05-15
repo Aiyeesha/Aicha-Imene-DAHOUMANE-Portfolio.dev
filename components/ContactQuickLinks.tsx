@@ -11,7 +11,7 @@ export default function ContactQuickLinks() {
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
   const linkedIn = process.env.NEXT_PUBLIC_LINKEDIN_URL || "";
   const linkedInHref = linkedIn
-    ? (linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`)
+    ? encodeURI(linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`)
     : "";
   const cvUrl = `/cv/cv-${locale}-${track}.pdf`;
 
