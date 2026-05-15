@@ -2,6 +2,7 @@ import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectByS
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -398,14 +399,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                   return (
                     <div key={a.id} className="card overflow-hidden">
                       <div className="relative w-full aspect-video">
-                        <Image
+                        <SafeImage
                           src={href}
                           alt={a.title ?? ""}
-                          fill
                           sizes="(max-width: 640px) 100vw, 50vw"
                           className="object-contain"
                           loading="lazy"
-                          unoptimized
                         />
                       </div>
                       {a.title && (
