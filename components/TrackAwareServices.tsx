@@ -164,6 +164,22 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               ))}
             </ul>
 
+            {/* Livrable + durée typique */}
+            <div className="mt-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 space-y-1.5 text-sm">
+              <p className="text-muted dark:text-slate-400">
+                <span className="font-medium text-slate-700 dark:text-slate-200">
+                  {locale === "fr" ? "Livrable :" : "You'll receive:"}
+                </span>{" "}
+                {c.deliverable}
+              </p>
+              <p className="text-muted dark:text-slate-400">
+                <span className="font-medium text-slate-700 dark:text-slate-200">
+                  {locale === "fr" ? "Durée typique :" : "Typical timeline:"}
+                </span>{" "}
+                {c.duration}
+              </p>
+            </div>
+
             {/* CTA — pré-remplit le formulaire de contact avec ce service */}
             <div className="mt-4 pt-4 border-t border-black/8 dark:border-white/8">
               <button
