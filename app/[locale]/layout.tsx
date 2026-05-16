@@ -132,6 +132,12 @@ export default async function LocaleLayout({
                   <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-4">
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/work-with-me`}
+                    >
+                      {t("footer.workWithMe")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/colophon`}
                     >
                       Colophon
