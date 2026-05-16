@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type React from "react";
 import { useTranslations } from "next-intl";
-import { detectTrack, formatDate } from "@/lib/blog-utils";
+import { detectTrack, formatDate, translateTag } from "@/lib/blog-utils";
 
 export type PostCard = {
   slug: string;
@@ -94,7 +94,7 @@ export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {featuredPost.tags.slice(0, 4).map((tag) => (
-              <span key={tag} className="chip">{tag}</span>
+              <span key={tag} className="chip">{translateTag(tag, locale)}</span>
             ))}
           </div>
           <div className="mt-5 text-sm text-cyan-700 dark:text-cyan-200">{t("readCta")} →</div>
@@ -123,7 +123,7 @@ export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts
                 <div className="mt-2 text-muted line-clamp-2">{p.excerpt}</div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {p.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="chip">{tag}</span>
+                    <span key={tag} className="chip">{translateTag(tag, locale)}</span>
                   ))}
                 </div>
                 <div className="mt-4 text-sm text-cyan-700 dark:text-cyan-200">{t("readCta")} →</div>
