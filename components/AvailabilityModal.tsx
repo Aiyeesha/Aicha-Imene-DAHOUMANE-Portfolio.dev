@@ -115,7 +115,7 @@ export default function AvailabilityModal() {
           className="text-[10px] text-emerald-600/60 dark:text-emerald-400/50
             group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors"
         >
-          ↗
+          ℹ
         </span>
       </button>
 
