@@ -16,13 +16,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/colophon`;
+  const title = isFr
+    ? "Colophon — Comment ce site est construit"
+    : "Colophon — How this site is built";
   return {
-    title: isFr
-      ? "Colophon — Comment ce site est construit"
-      : "Colophon — How this site is built",
+    title,
     description: isFr
       ? "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js."
       : "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio.",
+    alternates: {
+      canonical: urlPath,
+      languages: { en: `${siteUrl}/en/colophon`, fr: `${siteUrl}/fr/colophon` },
+    },
+    openGraph: { url: urlPath, type: "website", locale, title },
   };
 }
 
