@@ -1,27 +1,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { readAllPosts } from "@/content/blog/fs";
-import { detectTrack } from "@/lib/blog-utils";
-import matter from "gray-matter";
-import fs from "node:fs";
+import { detectTrack, translateTag } from "@/lib/blog-utils";
 import type React from "react";
-
-function readingTimeMinutes(mdxFileAbsPath: string): number {
-  try {
-    const raw = fs.readFileSync(mdxFileAbsPath, "utf-8");
-    const parsed = matter(raw);
-    const text = String(parsed.content || "")
-      // remove markdown symbols roughly
-      .replace(/[`*_>#\-\[\]\(\)!]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    const words = text ? text.split(" ").length : 0;
-    // 200 wpm baseline
-    return Math.max(1, Math.round(words / 200));
-  } catch {
-    return 1;
-  }
-}
 
 type LatestPostsProps = {
   locale: "en" | "fr";
@@ -70,8 +51,6 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {posts.length ? (
           posts.map((p) => {
-            const mins = readingTimeMinutes(p.file);
-
             const postTrack = detectTrack(p.tags);
 
             return (
@@ -85,7 +64,7 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
                   <span>{p.date}</span>
                   <span aria-hidden="true">·</span>
                   <span>
-                    {mins} {t("blog.readingTime")}
+                    {p.readingTime} {t("blog.readingTime")}
                   </span>
                 </div>
 
@@ -95,7 +74,7 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
                 <div className="mt-4 flex flex-wrap gap-2">
                   {p.tags.slice(0, 4).map((tag) => (
                     <span key={tag} className="chip">
-                      {tag}
+                      {translateTag(tag, locale)}
                     </span>
                   ))}
                 </div>

@@ -1,4 +1,25 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/legal`;
+  const title = isFr
+    ? "Mentions légales — Aïcha Imène DAHOUMANE"
+    : "Legal Notice — Aïcha Imène DAHOUMANE";
+  return {
+    title,
+    alternates: {
+      canonical: urlPath,
+      languages: { en: `${siteUrl}/en/legal`, fr: `${siteUrl}/fr/legal` },
+    },
+    openGraph: { url: urlPath, type: "website", locale, title },
+  };
+}
 
 export default async function LegalPage({
   params

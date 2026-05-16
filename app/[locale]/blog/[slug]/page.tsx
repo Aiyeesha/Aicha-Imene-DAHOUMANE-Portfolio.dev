@@ -73,7 +73,7 @@ export async function generateMetadata(
       // article:published_time — indexed by Google and social platforms (LinkedIn, Twitter)
       publishedTime: meta.date,
       // article:author — links to the author's profile page
-      authors: [`${siteUrl}/en/about`],
+      authors: [`${siteUrl}/${locale}/about`],
     },
     twitter: {
       card: "summary_large_image",
