@@ -153,9 +153,15 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <h3 className="font-semibold leading-snug pt-1.5 text-slate-900 dark:text-white">{c.title}</h3>
             </div>
 
+            {/* Pitch client — problème + solution en 2 phrases */}
+            <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{c.pitch}</p>
+
+            {/* Détail technique — repliable visuellement par un séparateur discret */}
+            <div className="mt-3 border-t border-black/8 dark:border-white/8 pt-3">
+
             {/* Description courte */}
             {/* dark:text-slate-400 : explicit color breaks inheritance from transitioning body */}
-            <p className="mt-3 text-sm text-muted dark:text-slate-400">{c.description}</p>
+            <p className="text-sm text-muted dark:text-slate-400">{c.description}</p>
 
             {/* Bullets des prestations incluses */}
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted dark:text-slate-400">
@@ -163,6 +169,8 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
                 <li key={b}>{b}</li>
               ))}
             </ul>
+
+            </div>{/* fin du bloc technique */}
 
             {/* Livrable + durée typique */}
             <div className="mt-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 space-y-1.5 text-sm">
