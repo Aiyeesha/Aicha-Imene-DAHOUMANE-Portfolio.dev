@@ -17,6 +17,37 @@ export function detectTrack(tags: string[]): "salesforce" | "itops" | null {
   return null;
 }
 
+/**
+ * Traductions FR des tags anglais présents dans les frontmatters MDX.
+ * Permet d'afficher les tags en français sans modifier les fichiers source.
+ */
+const TAG_FR: Record<string, string> = {
+  "Security":         "Sécurité",
+  "Backup":           "Sauvegarde",
+  "Monitoring":       "Supervision",
+  "Hardening":        "Durcissement",
+  "Networking":       "Réseau",
+  "Incident Response":"Gestion des incidents",
+  "Virtualization":   "Virtualisation",
+  "Performance":      "Performances",
+  "Caching":          "Cache",
+  "Deployment":       "Déploiement",
+  "Testing":          "Tests",
+  "Best Practices":   "Bonnes pratiques",
+  "Database":         "Base de données",
+  "Automation":       "Automatisation",
+  "Animation":        "Animation",
+  "Web":              "Web",
+  "UI":               "Interface",
+  "Scripts":          "Scripts",
+};
+
+/** Translate a tag to the target locale (passthrough for EN, maps known tags for FR). */
+export function translateTag(tag: string, locale: string): string {
+  if (locale !== "fr") return tag;
+  return TAG_FR[tag] ?? tag;
+}
+
 /** Count tag frequency from a list of posts and return sorted pairs [tag, count]. */
 export function getTopTags(
   allTags: string[][],
