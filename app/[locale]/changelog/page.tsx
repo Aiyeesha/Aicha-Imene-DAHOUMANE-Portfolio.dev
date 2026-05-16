@@ -25,13 +25,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/changelog`;
+  const title = "Changelog — Aïcha Imène DAHOUMANE";
   return {
-    title: isFr
-      ? "Changelog — Aïcha Imène DAHOUMANE"
-      : "Changelog — Aïcha Imène DAHOUMANE",
+    title,
     description: isFr
       ? "Historique des versions et des améliorations du portfolio."
       : "Version history and improvements of the portfolio.",
+    alternates: {
+      canonical: urlPath,
+      languages: { en: `${siteUrl}/en/changelog`, fr: `${siteUrl}/fr/changelog` },
+    },
+    openGraph: { url: urlPath, type: "website", locale, title },
   };
 }
 
