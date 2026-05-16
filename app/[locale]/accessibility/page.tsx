@@ -1,4 +1,25 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/accessibility`;
+  const title = isFr
+    ? "Accessibilité — Aïcha Imène DAHOUMANE"
+    : "Accessibility — Aïcha Imène DAHOUMANE";
+  return {
+    title,
+    alternates: {
+      canonical: urlPath,
+      languages: { en: `${siteUrl}/en/accessibility`, fr: `${siteUrl}/fr/accessibility` },
+    },
+    openGraph: { url: urlPath, type: "website", locale, title },
+  };
+}
 
 export default async function AccessibilityPage({
   params
