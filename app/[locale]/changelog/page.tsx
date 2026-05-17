@@ -174,7 +174,14 @@ export default async function ChangelogPage({
       {/* ── En-tête ─────────────────────────────────────────────────────────── */}
       <h1 className="text-3xl font-semibold">{l.title}</h1>
       <p className="mt-2 text-sm text-muted-2">{l.subtitle}</p>
-      <p className="mt-1 text-xs text-muted-2">
+
+      {safeLocale === "fr" && (
+        <p className="mt-3 rounded-lg border border-black/10 bg-black/5 px-4 py-2.5 text-xs text-muted-2 dark:border-white/10 dark:bg-white/5">
+          Ce changelog est rédigé en anglais, langue de référence du code source.
+        </p>
+      )}
+
+      <p className="mt-2 text-xs text-muted-2">
         {l.format}{" "}
         <a
           href="https://keepachangelog.com/en/1.1.0/"
