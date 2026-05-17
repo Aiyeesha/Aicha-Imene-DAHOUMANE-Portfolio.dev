@@ -14,7 +14,7 @@ import SeriesBanner from "@/components/blog/SeriesBanner";
 import ScrollProgress from "@/components/ScrollProgress";
 import ShareButtons from "@/components/blog/ShareButtons";
 import { getPrevNext } from "@/content/blog/navigation";
-import { formatDate } from "@/lib/blog-utils";
+import { formatDate, detectTrack } from "@/lib/blog-utils";
 import { getSeriePosition } from "@/content/blog/series";
 import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
@@ -65,14 +65,13 @@ export async function generateMetadata(
     alternates: { canonical: urlPath, languages },
     openGraph: {
       type: "article",
+      locale,
       title,
       description,
       url: urlPath,
       siteName,
       images: [{ url: ogImage }],
-      // article:published_time — indexed by Google and social platforms (LinkedIn, Twitter)
       publishedTime: meta.date,
-      // article:author — links to the author's profile page
       authors: [`${siteUrl}/${locale}/about`],
     },
     twitter: {
@@ -233,12 +232,12 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
             />
           </article>
 
-          {/* Author card — track-aware (Salesforce → cyan / IT Ops → violet) */}
           <BlogAuthorCard
             authorName={authorName}
             avatarUrl={avatarUrl}
             locale={locale}
             linkedInUrl={linkedInUrl}
+            articleTrack={detectTrack(meta.tags) ?? "salesforce"}
           />
 
           {/* Share buttons — LinkedIn + copier le lien */}
@@ -259,37 +258,31 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
           )}
 
           {/* Prev / Next */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {nav.prev ? (
-              <Link
-                href={`/${locale}/blog/${nav.prev.slug}`}
-                className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring"
-              >
-                <div className="text-xs text-muted-2">{t("previous")}</div>
-                <div className="mt-1 font-medium text-strong">{nav.prev.title}</div>
-              </Link>
-            ) : (
-              <div className="card p-5 opacity-40">
-                <div className="text-xs text-muted-2">{t("previous")}</div>
-                <div className="mt-1 text-muted">—</div>
-              </div>
-            )}
+          {(nav.prev || nav.next) && (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {nav.prev ? (
+                <Link
+                  href={`/${locale}/blog/${nav.prev.slug}`}
+                  className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring"
+                >
+                  <div className="text-xs text-muted-2">{t("previous")}</div>
+                  <div className="mt-1 font-medium text-strong">{nav.prev.title}</div>
+                </Link>
+              ) : (
+                <div />
+              )}
 
-            {nav.next ? (
-              <Link
-                href={`/${locale}/blog/${nav.next.slug}`}
-                className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring text-right"
-              >
-                <div className="text-xs text-muted-2">{t("next")}</div>
-                <div className="mt-1 font-medium text-strong">{nav.next.title}</div>
-              </Link>
-            ) : (
-              <div className="card p-5 opacity-40 text-right">
-                <div className="text-xs text-muted-2">{t("next")}</div>
-                <div className="mt-1 text-muted">—</div>
-              </div>
-            )}
-          </div>
+              {nav.next && (
+                <Link
+                  href={`/${locale}/blog/${nav.next.slug}`}
+                  className="card p-5 hover:bg-black/10 dark:hover:bg-white/5 soft-ring text-right sm:col-start-2"
+                >
+                  <div className="text-xs text-muted-2">{t("next")}</div>
+                  <div className="mt-1 font-medium text-strong">{nav.next.title}</div>
+                </Link>
+              )}
+            </div>
+          )}
         </div>
 
         <TableOfContents items={toc} />
