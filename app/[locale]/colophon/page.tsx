@@ -17,20 +17,22 @@ export async function generateMetadata({
   const { locale } = await params;
   const isFr = locale === "fr";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/colophon`;
   const title = isFr
     ? "Colophon — Comment ce site est construit"
     : "Colophon — How this site is built";
+  const description = isFr
+    ? "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js."
+    : "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio.";
   return {
     title,
-    description: isFr
-      ? "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js."
-      : "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio.",
+    description,
     alternates: {
       canonical: urlPath,
       languages: { en: `${siteUrl}/en/colophon`, fr: `${siteUrl}/fr/colophon` },
     },
-    openGraph: { url: urlPath, type: "website", locale, title },
+    openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
   };
 }
 

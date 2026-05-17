@@ -26,18 +26,20 @@ export async function generateMetadata({
   const { locale } = await params;
   const isFr = locale === "fr";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/changelog`;
   const title = "Changelog — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Historique des versions et des améliorations du portfolio."
+    : "Version history and improvements of the portfolio.";
   return {
     title,
-    description: isFr
-      ? "Historique des versions et des améliorations du portfolio."
-      : "Version history and improvements of the portfolio.",
+    description,
     alternates: {
       canonical: urlPath,
       languages: { en: `${siteUrl}/en/changelog`, fr: `${siteUrl}/fr/changelog` },
     },
-    openGraph: { url: urlPath, type: "website", locale, title },
+    openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
   };
 }
 
