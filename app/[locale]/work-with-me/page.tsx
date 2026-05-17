@@ -54,9 +54,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
 
-const AVAILABILITY: { status: AvailabilityStatus; since: string } = {
+const AVAILABILITY: { status: AvailabilityStatus; since: Record<"en" | "fr", string> } = {
   status: "open",
-  since: "Juin 2026",
+  since: { en: "June 2026", fr: "Juin 2026" },
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
     availOpen:      isFr ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : "Limited availability",
     availNo:        isFr ? "Non disponible" : "Not available",
-    availSince:     isFr ? `À partir de ${AVAILABILITY.since}` : `From ${AVAILABILITY.since}`,
+    availSince:     isFr ? `À partir de ${AVAILABILITY.since.fr}` : `From ${AVAILABILITY.since.en}`,
     availContracts: isFr ? "Freelance · Mission · CDD" : "Freelance · Contract · Fixed-term",
     availMode:      isFr ? "100 % remote · Déplacements ponctuels Europe" : "100% remote · Occasional travel in Europe",
 
