@@ -30,8 +30,17 @@ export async function generateMetadata(
       title,
       description,
       url: urlPath,
-      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops"
-    }
+      type: "website",
+      locale,
+      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
+      images: [{ url: `${siteUrl}/${locale}/blog/opengraph-image`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/${locale}/blog/opengraph-image`],
+    },
   };
 }
 

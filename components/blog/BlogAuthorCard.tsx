@@ -12,18 +12,20 @@ import { useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 
 type Props = {
-  authorName: string;
-  avatarUrl:  string;
-  locale:     string;
-  linkedInUrl?: string;
+  authorName:    string;
+  avatarUrl:     string;
+  locale:        string;
+  linkedInUrl?:  string;
+  articleTrack?: "salesforce" | "itops";
 };
 
-export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedInUrl }: Props) {
+export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedInUrl, articleTrack }: Props) {
   const t            = useTranslations("blogPost");
   const { track }    = useTrack();
+  // Styling follows the user's track preference; badge label follows the article's topic.
   const isSalesforce = track === "salesforce";
+  const badgeIsSalesforce = (articleTrack ?? track) === "salesforce";
 
-  // Styles selon le track — miroir exact d'AboutTrackIntro
   const badgeClass = isSalesforce
     ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300"
     : "border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-300";
@@ -36,7 +38,7 @@ export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedIn
     ? "text-cyan-700 dark:text-cyan-400"
     : "text-violet-700 dark:text-violet-400";
 
-  const trackLabel = isSalesforce ? "Salesforce" : "IT Ops";
+  const trackLabel = badgeIsSalesforce ? "Salesforce" : "IT Ops";
 
   return (
     <div className={`rounded-2xl border p-6 space-y-4 ${borderClass}`}>
