@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       title,
       description,
-      images: [`${siteUrl}/opengraph-image`],
+      images: [`${siteUrl}/${locale}/about/opengraph-image`],
     },
   };
 }
