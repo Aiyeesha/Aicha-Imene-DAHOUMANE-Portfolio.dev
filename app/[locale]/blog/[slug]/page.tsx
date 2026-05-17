@@ -115,10 +115,9 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
   const authorName   = process.env.NEXT_PUBLIC_OG_NAME    || "Aïcha Imène DAHOUMANE";
   const avatarUrl    = process.env.NEXT_PUBLIC_AVATAR_URL  || "/avatar.webp";
-  const linkedInUrl  = process.env.NEXT_PUBLIC_LINKEDIN_URL
-    ? (process.env.NEXT_PUBLIC_LINKEDIN_URL.startsWith("http")
-        ? process.env.NEXT_PUBLIC_LINKEDIN_URL
-        : `https://${process.env.NEXT_PUBLIC_LINKEDIN_URL}`)
+  const linkedInRaw  = process.env.NEXT_PUBLIC_LINKEDIN_URL;
+  const linkedInUrl  = linkedInRaw
+    ? encodeURI(linkedInRaw.startsWith("http") ? linkedInRaw : `https://${linkedInRaw}`)
     : "";
 
   // ── JSON-LD ────────────────────────────────────────────────────────────────
