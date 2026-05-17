@@ -8,13 +8,33 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
+  const urlPath = `${siteUrl}/${locale}/privacy`;
+  const title = isFr
+    ? "Politique de confidentialité — Aïcha Imène DAHOUMANE"
+    : "Privacy policy — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Données collectées, cookies, durée de conservation et vos droits RGPD."
+    : "Data collected, cookies, retention period, and your GDPR rights.";
   return {
-    title: isFr
-      ? "Politique de confidentialité — Aïcha Imène DAHOUMANE"
-      : "Privacy policy — Aïcha Imène DAHOUMANE",
-    description: isFr
-      ? "Données collectées, cookies, durée de conservation et vos droits RGPD."
-      : "Data collected, cookies, retention period, and your GDPR rights.",
+    title,
+    description,
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/privacy`,
+        fr: `${siteUrl}/fr/privacy`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: urlPath,
+      type: "website",
+      locale,
+      siteName,
+    },
   };
 }
 

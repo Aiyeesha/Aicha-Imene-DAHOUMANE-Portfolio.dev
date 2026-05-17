@@ -49,7 +49,7 @@ export async function generateMetadata(
   const description = meta.excerpt || meta.title;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const urlPath = `${siteUrl}/${locale}/blog/${slug}`;
-  const cover = meta.cover || "/opengraph-image";
+  const cover = meta.cover || `/${locale}/blog/${slug}/opengraph-image`;
   const ogImage = cover.startsWith("http://") || cover.startsWith("https://") ? cover : `${siteUrl}${cover.startsWith("/") ? cover : `/${cover}`}`;
 
   const languages: Record<string, string> = {};
