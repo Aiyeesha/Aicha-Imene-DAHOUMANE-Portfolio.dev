@@ -79,6 +79,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...biEntry(base, "/colophon", { priority: 0.3, changeFrequency: "yearly" }),
     ...biEntry(base, "/changelog", { priority: 0.4, changeFrequency: "monthly" }),
 
+    // ── Freelance ─────────────────────────────────────────────────────────────
+    ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
+
     // ── Pages légales (faible priorité SEO, peu de changements) ──────────────
     ...biEntry(base, "/legal", { priority: 0.2, changeFrequency: "yearly" }),
     ...biEntry(base, "/privacy", { priority: 0.2, changeFrequency: "yearly" }),

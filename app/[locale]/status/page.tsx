@@ -79,14 +79,17 @@ export async function generateMetadata({
   const { locale } = await params;
   const isFr = locale === "fr";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/status`;
+  const title = isFr
+    ? "Statut du site — Aïcha Imène DAHOUMANE"
+    : "Site Status — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "État opérationnel en temps réel du site et de ses services."
+    : "Real-time operational status of the site and its services.";
   return {
-    title: isFr
-      ? "Statut du site — Aïcha Imène DAHOUMANE"
-      : "Site Status — Aïcha Imène DAHOUMANE",
-    description: isFr
-      ? "État opérationnel en temps réel du site et de ses services."
-      : "Real-time operational status of the site and its services.",
+    title,
+    description,
     alternates: {
       canonical: urlPath,
       languages: {
@@ -94,6 +97,21 @@ export async function generateMetadata({
         fr: `${siteUrl}/fr/status`,
         "x-default": `${siteUrl}/en/status`,
       },
+    },
+    openGraph: {
+      title,
+      description,
+      url: urlPath,
+      type: "website",
+      locale: isFr ? "fr_FR" : "en_US",
+      siteName,
+      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/twitter-image`],
     },
     robots: { index: false }, // page technique, pas d'intérêt SEO
   };

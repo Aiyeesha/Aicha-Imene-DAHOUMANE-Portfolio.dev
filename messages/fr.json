@@ -222,8 +222,8 @@
   },
   "blogTags": {
     "meta": {
-      "title": "Tags du blog",
-      "description": "Parcourir les articles par thème."
+      "title": "Blog — Tags | Aïcha Imène DAHOUMANE",
+      "description": "Parcourir tous les thèmes du blog — Salesforce, IT Ops, développement web et plus. Filtrer les articles par tag."
     },
     "kicker": "Thèmes",
     "title": "Tous les tags",
