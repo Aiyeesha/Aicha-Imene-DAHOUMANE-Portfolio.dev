@@ -11,13 +11,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = isFr
     ? "Mentions légales — Aïcha Imène DAHOUMANE"
     : "Legal Notice — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Éditeur, hébergement, propriété intellectuelle et politique des données personnelles."
+    : "Publisher, hosting, intellectual property, and personal data policy.";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
     title,
+    description,
     alternates: {
       canonical: urlPath,
       languages: { en: `${siteUrl}/en/legal`, fr: `${siteUrl}/fr/legal` },
     },
-    openGraph: { url: urlPath, type: "website", locale, title },
+    openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
+    twitter: { card: "summary", title, description },
   };
 }
 

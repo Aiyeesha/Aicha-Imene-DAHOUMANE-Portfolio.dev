@@ -40,6 +40,7 @@ export async function generateMetadata({
       languages: { en: `${siteUrl}/en/changelog`, fr: `${siteUrl}/fr/changelog` },
     },
     openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
+    twitter: { card: "summary", title, description },
   };
 }
 

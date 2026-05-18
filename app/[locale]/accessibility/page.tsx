@@ -11,13 +11,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = isFr
     ? "Accessibilité — Aïcha Imène DAHOUMANE"
     : "Accessibility — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Engagement WCAG 2.2 (niveau AA), limites connues et contact pour signaler un problème d'accessibilité."
+    : "WCAG 2.2 (Level AA) commitment, known limitations, and contact to report an accessibility issue.";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
     title,
+    description,
     alternates: {
       canonical: urlPath,
       languages: { en: `${siteUrl}/en/accessibility`, fr: `${siteUrl}/fr/accessibility` },
     },
-    openGraph: { url: urlPath, type: "website", locale, title },
+    openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
+    twitter: { card: "summary", title, description },
   };
 }
 
