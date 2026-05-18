@@ -58,6 +58,8 @@ export async function generateMetadata(
 
   if (enExists) languages.en = `${siteUrl}/en/blog/${slug}`;
   if (frExists) languages.fr = `${siteUrl}/fr/blog/${slug}`;
+  if (enExists) languages["x-default"] = `${siteUrl}/en/blog/${slug}`;
+  else if (frExists) languages["x-default"] = `${siteUrl}/fr/blog/${slug}`;
 
   return {
     title: `${title} | ${siteName}`,
@@ -65,7 +67,7 @@ export async function generateMetadata(
     alternates: { canonical: urlPath, languages },
     openGraph: {
       type: "article",
-      locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       title,
       description,
       url: urlPath,

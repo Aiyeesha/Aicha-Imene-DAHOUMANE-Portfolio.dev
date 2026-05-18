@@ -56,7 +56,7 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       url: canonical,
-      locale: locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       title,
       description,
       siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
