@@ -33,6 +33,7 @@ export async function generateMetadata({
       languages: { en: `${siteUrl}/en/colophon`, fr: `${siteUrl}/fr/colophon` },
     },
     openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
+    twitter: { card: "summary", title, description },
   };
 }
 
