@@ -26,6 +26,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return {
     title: isFr
@@ -33,6 +34,8 @@ export async function generateMetadata({
       : "Share your testimonial — Aïcha Imène DAHOUMANE",
     // Exclure des moteurs de recherche et de l'indexation
     robots: { index: false, follow: false },
+    // Canonical propre pour ne pas hériter celui du layout (qui pointe vers la homepage)
+    alternates: { canonical: `${siteUrl}/${locale}/testimonial-submit` },
   };
 }
 
