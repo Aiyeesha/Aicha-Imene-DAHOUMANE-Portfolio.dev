@@ -122,6 +122,11 @@ The build succeeds without Redis/Supabase (falls back to empty arrays / direct f
 ## Changelog
 
 ### 18 May 2026
+- **Audit intégral Vercel (PR #55)** — Audit complet de toutes les routes (`portfolio-next-one-gold.vercel.app`) : 25+ pages EN+FR, metadata, robots.txt, sitemap, sécurité, feature flags, CV, manifest. Résultat : 3 findings mineurs, 1 correctif appliqué :
+  - **F-01 (corrigé)** — `testimonial-submit/page.tsx` : ajout de `alternates.canonical` pour ne plus hériter le canonical du layout (qui pointait vers la homepage). Impact nul (page noindex + robots.txt), mais techniquement propre.
+  - **F-02 (framework)** — `og:image` sur `/about` a un hash de cache Next.js (`?4c2201d09a96a4ee`) absent sur `twitter:image` — comportement intrinsèque du framework, sans impact.
+  - **F-03 (framework)** — HTTP `Link` header `x-default` → `/` ; HTML hreflang `x-default` → `/en` — divergence générée par `next-intl`, sans impact SEO réel.
+  - **Bilan global** : canonical ✓, hreflang ✓, og:locale ✓, JSON-LD (WebSite/Person/BlogPosting/SoftwareApplication) ✓, CSP nonce ✓, sitemap 194 URLs ✓, robots.txt ✓, manifest PWA ✓, 4 CV track×locale ✓.
 - **SEO audit (PRs #35–49)** — Correction complète des 8 findings de l'audit portfolio :
   - **F-01 (P0)** — Pages `/privacy`, `/legal`, `/accessibility` : contenu et `generateMetadata()` avec canonical corrects ajoutés
   - **F-02 (P1)** — Canonical URLs corrigées sur `/resources`, `/colophon`, `/changelog`, `/privacy`, `/accessibility` (pointaient vers la homepage)
