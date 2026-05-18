@@ -20,10 +20,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description,
     alternates: {
       canonical: urlPath,
-      languages: { en: `${siteUrl}/en/legal`, fr: `${siteUrl}/fr/legal` },
+      languages: {
+        en: `${siteUrl}/en/legal`,
+        fr: `${siteUrl}/fr/legal`,
+        "x-default": `${siteUrl}/en/legal`,
+      },
     },
-    openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
-    twitter: { card: "summary", title, description },
+    openGraph: {
+      url: urlPath,
+      type: "website",
+      locale: locale === "fr" ? "fr_FR" : "en_US",
+      title,
+      description,
+      siteName,
+      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/twitter-image`],
+    },
   };
 }
 

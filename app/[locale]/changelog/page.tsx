@@ -37,10 +37,27 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: urlPath,
-      languages: { en: `${siteUrl}/en/changelog`, fr: `${siteUrl}/fr/changelog` },
+      languages: {
+        en: `${siteUrl}/en/changelog`,
+        fr: `${siteUrl}/fr/changelog`,
+        "x-default": `${siteUrl}/en/changelog`,
+      },
     },
-    openGraph: { url: urlPath, type: "website", locale, title, description, siteName },
-    twitter: { card: "summary", title, description },
+    openGraph: {
+      url: urlPath,
+      type: "website",
+      locale: locale === "fr" ? "fr_FR" : "en_US",
+      title,
+      description,
+      siteName,
+      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/twitter-image`],
+    },
   };
 }
 
