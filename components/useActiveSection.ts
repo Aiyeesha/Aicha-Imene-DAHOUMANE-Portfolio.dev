@@ -13,11 +13,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
  * - Tune rootMargin / thresholds for your header height and desired feel.
  */
 export default function useActiveSection(sectionIds: string[]) {
-  const [activeId, setActiveId] = useState<string>(sectionIds[0] ?? "");
+  const [activeId, setActiveId] = useState<string>("");
   const ids = useMemo(() => sectionIds.filter(Boolean), [sectionIds]);
 
   // Keep last known IO result; helps avoid flicker during fast scroll.
-  const lastIoId = useRef<string>(activeId);
+  const lastIoId = useRef<string>("");
 
   useEffect(() => {
     if (ids.length === 0) return;
@@ -63,8 +63,13 @@ export default function useActiveSection(sectionIds: string[]) {
     // ---- Scroll fallback (secondary) ----
     // Picks the section whose top is the closest to a target line.
     const onScroll = () => {
+      // Au sommet de la page (hero visible) → aucune section active dans la navbar.
+      if (window.scrollY < 50) {
+        setActiveId("");
+        return;
+      }
       const targetY = 120; // px from viewport top (below fixed navbar)
-      let bestId = lastIoId.current || ids[0];
+      let bestId = lastIoId.current || "";
       let bestDist = Number.POSITIVE_INFINITY;
 
       for (const el of elements) {
