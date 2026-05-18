@@ -304,6 +304,31 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     ],
   };
 
+  const projectDescription = project.hero_subtitle ?? project.summary ?? project.title;
+  const projectCoverSrc = project.gallery?.[0]?.src;
+  const projectCoverUrl = projectCoverSrc
+    ? projectCoverSrc.startsWith("http") ? projectCoverSrc : `${siteUrl}${projectCoverSrc}`
+    : undefined;
+
+  const softwareSchema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.title,
+    description: projectDescription,
+    url: `${siteUrl}/${locale}/projects/${slug}`,
+    inLanguage: locale,
+    author: {
+      "@type": "Person",
+      name: "Aïcha Imène Dahoumane",
+      url: `${siteUrl}/${locale}/about`,
+    },
+    applicationCategory: "BusinessApplication",
+    ...(projectCoverUrl && { image: projectCoverUrl }),
+    ...(project.repo_url && { codeRepository: project.repo_url }),
+    ...(project.live_url && { installUrl: project.live_url }),
+    ...((project.tags ?? []).length > 0 && { keywords: (project.tags as string[]).join(", ") }),
+  };
+
   const assets      = (project.project_assets ?? []) as ProjectAsset[];
   const badge       = project.badge ?? null;
   const tags        = (project.tags ?? []) as string[];
@@ -335,6 +360,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
       <div className="container mx-auto max-w-6xl px-4">
 
