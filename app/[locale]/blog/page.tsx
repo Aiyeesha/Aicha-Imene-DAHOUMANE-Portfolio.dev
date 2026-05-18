@@ -34,6 +34,7 @@ export async function generateMetadata(
       languages: {
         en: `${siteUrl}/en/blog`,
         fr: `${siteUrl}/fr/blog`,
+        "x-default": `${siteUrl}/en/blog`,
       }
     },
     openGraph: {
@@ -41,7 +42,7 @@ export async function generateMetadata(
       description,
       url: urlPath,
       type: "website",
-      locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [{ url: `${urlPath}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

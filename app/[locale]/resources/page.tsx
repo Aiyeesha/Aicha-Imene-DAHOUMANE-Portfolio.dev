@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: {
         en: `${siteUrl}/en/resources`,
         fr: `${siteUrl}/fr/resources`,
+        "x-default": `${siteUrl}/en/resources`,
       }
     },
     openGraph: {
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName,
       images: [{ url: `${urlPath}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

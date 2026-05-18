@@ -25,6 +25,7 @@ export async function generateMetadata({
       languages: {
         en: `${siteUrl}/en/privacy`,
         fr: `${siteUrl}/fr/privacy`,
+        "x-default": `${siteUrl}/en/privacy`,
       },
     },
     openGraph: {
@@ -32,10 +33,16 @@ export async function generateMetadata({
       description,
       url: urlPath,
       type: "website",
-      locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName,
+      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
-    twitter: { card: "summary", title, description },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/twitter-image`],
+    },
   };
 }
 
