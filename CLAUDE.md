@@ -121,6 +121,18 @@ The build succeeds without Redis/Supabase (falls back to empty arrays / direct f
 
 ## Changelog
 
+### 18 May 2026
+- **SEO audit (PRs #35–49)** — Correction complète des 8 findings de l'audit portfolio :
+  - **F-01 (P0)** — Pages `/privacy`, `/legal`, `/accessibility` : contenu et `generateMetadata()` avec canonical corrects ajoutés
+  - **F-02 (P1)** — Canonical URLs corrigées sur `/resources`, `/colophon`, `/changelog`, `/privacy`, `/accessibility` (pointaient vers la homepage)
+  - **F-03 (P1)** — `generateMetadata()` complet (OG + Twitter + canonical + hreflang) sur `/projects/[slug]` ; JSON-LD `SoftwareApplication` ajouté en complément du `BreadcrumbList` existant
+  - **F-04 (P2)** — Lien "Travaillons ensemble" uniformisé dans le footer via le layout partagé (`app/[locale]/layout.tsx`)
+  - **F-05 (P2)** — Lien "Témoignages" supprimé du menu mobile (respecte `NEXT_PUBLIC_SHOW_TESTIMONIALS`)
+  - **F-06 (P2)** — Page `/status` : `revalidate = 60` (ISR, données fraîches toutes les 60 s)
+  - **F-07 (P3)** — Page `/blog` (liste) : metadata OG complétée (`og:image`, `og:locale`, `og:site_name`, `twitter:card`)
+  - **F-08 (P3)** — Page `/certifications` : `twitter:image` aligné sur `og:image`
+  - **Bonus** — `twitter:card` + `description` + `siteName` OG ajoutés sur `/privacy`, `/legal`, `/accessibility`, `/colophon`, `/changelog`
+
 ### 10 May 2026
 - **Certifications** — Moved "Salesforce Platform Foundations" and "Salesforce Sales Foundations" from completed (Apr 2026) to upcoming (May 2026, `isActive: true`) in `app/[locale]/certifications/page.tsx`
 - **About bio** — Replaced CTF paragraph with MITRE ATT&CK / Blue Team paragraph (FR + EN) in `content/about.ts`
