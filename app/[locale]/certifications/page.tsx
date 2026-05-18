@@ -41,6 +41,7 @@ export async function generateMetadata({
       languages: {
         en: `${siteUrl}/en/certifications`,
         fr: `${siteUrl}/fr/certifications`,
+        "x-default": `${siteUrl}/en/certifications`,
       }
     },
     openGraph: {
@@ -48,7 +49,7 @@ export async function generateMetadata({
       description,
       url: urlPath,
       type: "website",
-      locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName,
       images: [{ url: `${siteUrl}/${locale}/certifications/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

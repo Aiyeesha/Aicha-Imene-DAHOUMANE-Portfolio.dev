@@ -294,7 +294,7 @@ useEffect(() => {
                   <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
                     strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
-                    <title>Ouvre une page dédiée</title>
+                    <title>{t("a11y.opensPage")}</title>
                     <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
                   </svg>
                 ) : null;

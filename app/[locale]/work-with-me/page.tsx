@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: {
         en: `${siteUrl}/en/work-with-me`,
         fr: `${siteUrl}/fr/work-with-me`,
+        "x-default": `${siteUrl}/en/work-with-me`,
       },
     },
     openGraph: {
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
