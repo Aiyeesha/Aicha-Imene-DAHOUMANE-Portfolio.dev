@@ -5,7 +5,7 @@
 // pour que Google indexe correctement les deux versions linguistiques.
 //
 // Pages statiques : accueil, about, certifications, blog, tags, resources, uses,
-//                   colophon, changelog, legal, privacy, accessibility
+//                   work-with-me, colophon, changelog, legal, privacy, accessibility
 // Pages dynamiques : articles de blog (MDX) + pages projets (Supabase)
 //
 // Mettre à jour NEXT_PUBLIC_SITE_LASTMOD (format ISO 8601) après chaque déploiement majeur.
