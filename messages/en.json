@@ -243,7 +243,8 @@
     "chooseTrack": "Choose a track",
     "chooseItOps": "Switch to IT Ops track",
     "chooseSalesforce": "Switch to Salesforce track",
-    "scrollToTop": "Back to top"
+    "scrollToTop": "Back to top",
+    "opensPage": "Opens a dedicated page"
   },
   "tracks": {
     "itops": "IT Ops",

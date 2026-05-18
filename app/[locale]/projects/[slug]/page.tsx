@@ -243,6 +243,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const languages: Record<string, string> = {
     en: `${siteUrl}/en/projects/${slug}`,
     fr: `${siteUrl}/fr/projects/${slug}`,
+    "x-default": `${siteUrl}/en/projects/${slug}`,
   };
 
   return {

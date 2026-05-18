@@ -78,6 +78,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const urlPath = `${siteUrl}/${locale}/status`;
   return {
     title: isFr
       ? "Statut du site — Aïcha Imène DAHOUMANE"
@@ -85,6 +87,14 @@ export async function generateMetadata({
     description: isFr
       ? "État opérationnel en temps réel du site et de ses services."
       : "Real-time operational status of the site and its services.",
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/status`,
+        fr: `${siteUrl}/fr/status`,
+        "x-default": `${siteUrl}/en/status`,
+      },
+    },
     robots: { index: false }, // page technique, pas d'intérêt SEO
   };
 }
