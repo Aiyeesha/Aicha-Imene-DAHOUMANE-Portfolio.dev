@@ -243,7 +243,8 @@
     "chooseTrack": "Choisir un parcours",
     "chooseItOps": "Passer sur le parcours IT Ops",
     "chooseSalesforce": "Passer sur le parcours Salesforce",
-    "scrollToTop": "Retour en haut de page"
+    "scrollToTop": "Retour en haut de page",
+    "opensPage": "Ouvre une page dédiée"
   },
   "tracks": {
     "itops": "IT Ops",

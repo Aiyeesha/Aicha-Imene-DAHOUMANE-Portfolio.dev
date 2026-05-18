@@ -18,13 +18,41 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
+  const urlPath = `${siteUrl}/${locale}/uses`;
+  const title = isFr
+    ? "Setup & Outils — Aïcha Imène DAHOUMANE"
+    : "Uses & Setup — Aïcha Imène DAHOUMANE";
+  const description = isFr
+    ? "Mon environnement de développement, mes outils Salesforce et IT Ops, et ce que j'utilise au quotidien."
+    : "My development environment, Salesforce & IT Ops tools, and what I use daily.";
   return {
-    title: isFr
-      ? "Setup & Outils — Aïcha Imène DAHOUMANE"
-      : "Uses & Setup — Aïcha Imène DAHOUMANE",
-    description: isFr
-      ? "Mon environnement de développement, mes outils Salesforce et IT Ops, et ce que j'utilise au quotidien."
-      : "My development environment, Salesforce & IT Ops tools, and what I use daily.",
+    title,
+    description,
+    alternates: {
+      canonical: urlPath,
+      languages: {
+        en: `${siteUrl}/en/uses`,
+        fr: `${siteUrl}/fr/uses`,
+        "x-default": `${siteUrl}/en/uses`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: urlPath,
+      type: "website",
+      locale: locale === "fr" ? "fr_FR" : "en_US",
+      siteName,
+      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/twitter-image`],
+    },
   };
 }
 
