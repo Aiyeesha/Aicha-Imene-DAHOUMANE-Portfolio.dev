@@ -5,7 +5,7 @@
 // pour que Google indexe correctement les deux versions linguistiques.
 //
 // Pages statiques : accueil, about, certifications, blog, tags, resources, uses,
-//                   colophon, changelog, legal, privacy, accessibility
+//                   work-with-me, colophon, changelog, legal, privacy, accessibility
 // Pages dynamiques : articles de blog (MDX) + pages projets (Supabase)
 //
 // Mettre à jour NEXT_PUBLIC_SITE_LASTMOD (format ISO 8601) après chaque déploiement majeur.
@@ -68,6 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...biEntry(base, "", { priority: 1.0, changeFrequency: "weekly" }),
     ...biEntry(base, "/about", { priority: 0.9, changeFrequency: "monthly" }),
     ...biEntry(base, "/certifications", { priority: 0.8, changeFrequency: "monthly" }),
+    ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
 
     // ── Blog ─────────────────────────────────────────────────────────────────
     ...biEntry(base, "/blog", { priority: 0.8, changeFrequency: "weekly" }),
