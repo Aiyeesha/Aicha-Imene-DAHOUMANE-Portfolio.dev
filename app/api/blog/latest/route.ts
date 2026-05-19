@@ -7,7 +7,7 @@
 // En l'absence de Redis configuré, le limiteur no-op laisse tout passer.
 
 import { NextResponse } from "next/server";
-import { blogRatelimit } from "@/lib/ratelimit";
+import { blogRatelimit, safeLimit } from "@/lib/ratelimit";
 import { readAllPosts } from "@/content/blog/fs";
 
 // Extrait l'IP réelle du client depuis les headers Vercel / proxy standard.
@@ -22,7 +22,7 @@ function getClientIp(req: Request): string {
 export async function GET(req: Request) {
   // ── Rate limiting ─────────────────────────────────────────────────────
   const ip = getClientIp(req);
-  const rl = await blogRatelimit.limit(`blog:ip:${ip}`);
+  const rl = await safeLimit(blogRatelimit, `blog:ip:${ip}`);
 
   if (!rl.success) {
     const now = Date.now();
