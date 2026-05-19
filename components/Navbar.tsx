@@ -30,7 +30,7 @@ function CommandPaletteTrigger() {
   );
 }
 
-const SECTION_IDS = ["skills","experience","services","projects","blog","contact"] as const;
+const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
 const PAGE_IDS = ["about","certifications","resources"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
@@ -39,7 +39,7 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 
 // IDs visibles dans le desktop nav — défini au niveau module pour être accessible
 // depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
-const DESKTOP_IDS_STATIC = new Set(["about", "skills", "experience", "certifications", "resources", "services", "projects", "blog", "contact"]);
+const DESKTOP_IDS_STATIC = new Set(["about", "skills", "experience", "certifications", "resources", "services", "testimonials", "projects", "blog", "contact"]);
 
 
 export default function Navbar() {
@@ -231,6 +231,8 @@ useEffect(() => {
     return `/${locale}/#${id}`;
   };
 
+  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
+
   const sections: { id: NavId; label: string }[] = [
     { id: "about", label: t("nav.about") },
     { id: "skills", label: t("nav.skills") },
@@ -238,6 +240,7 @@ useEffect(() => {
     { id: "certifications", label: t("nav.certifications") },
     { id: "resources", label: t("nav.resources") },
     { id: "services", label: t("nav.services") },
+    ...(showTestimonials ? [{ id: "testimonials" as NavId, label: t("nav.testimonials") }] : []),
     { id: "projects", label: t("nav.projects") },
     { id: "blog", label: t("nav.blog") },
     { id: "contact", label: t("nav.contact") }
