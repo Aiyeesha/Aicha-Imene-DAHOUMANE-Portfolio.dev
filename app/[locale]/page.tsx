@@ -28,10 +28,12 @@ const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
   loading: () => <div className="mt-8 grid gap-4 md:grid-cols-2"><SkeletonCard lines={2} /><SkeletonCard lines={2} /></div>,
 });
 const ContactForm        = dynamic(() => import("@/components/ContactForm"));
+const Testimonials       = dynamic(() => import("@/components/Testimonials"));
 // PresentationMode utilise ssr: false → doit passer par un wrapper Client Component
 import PresentationModeLoader from "@/components/PresentationModeLoader";
 import ScrollToHash from "@/components/ScrollToHash";
 import { getExperienceItems } from "@/content/experience";
+import { testimonials } from "@/content/testimonials";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
@@ -143,7 +145,7 @@ export default async function Home({ params }: Props) {
               <p className="mt-3 text-muted">{t("sections.testimonials_subtitle")}</p>
             </Reveal>
             <div className="mt-8">
-              {/* Testimonials sera réactivé quand is_published=true dans Supabase */}
+              <Testimonials items={testimonials} />
             </div>
           </>
         ) : (
