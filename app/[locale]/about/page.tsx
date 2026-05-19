@@ -61,6 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
       locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName,
+      images: [{ url: `${siteUrl}/${locale}/about/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: "summary_large_image",

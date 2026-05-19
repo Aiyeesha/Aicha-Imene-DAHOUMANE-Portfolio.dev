@@ -170,6 +170,8 @@ export default function CommandPalette() {
     about:       "About",
     certifications: "Certifications",
     resources:   isFr ? "Ressources" : "Resources",
+    workWithMe:  isFr ? "Travaillons ensemble" : "Work with me",
+    colophon:    "Colophon",
     switchToSf:  isFr ? "Voir le profil Salesforce →" : "View Salesforce profile →",
     switchToOps: isFr ? "Voir le profil IT Ops →" : "View IT Ops profile →",
     lightMode:   isFr ? "Passer en mode clair" : "Switch to light mode",
@@ -248,6 +250,8 @@ export default function CommandPalette() {
                 { href: `/${locale}/resources`,       label: L.resources,        icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
                 { href: `/${locale}/blog`,            label: "Blog →",           icon: "M4 6h16M4 12h8m-8 6h16" },
                 { href: `/${locale}/uses`,            label: isFr ? "Setup & Outils" : "Uses & Setup", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },
+                { href: `/${locale}/work-with-me`,   label: L.workWithMe,       icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
+                { href: `/${locale}/colophon`,        label: L.colophon,         icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" },
               ].map(({ href, label, icon }) => (
                 <Command.Item
                   key={href}
