@@ -18,7 +18,7 @@
 //   400 Bad Request — payload invalide
 
 import { type NextRequest, NextResponse } from "next/server";
-import { errorRatelimit } from "@/lib/ratelimit";
+import { errorRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
 
 // ── Type du payload client ────────────────────────────────────────────────────
@@ -56,13 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  let rateLimitOk = true;
-  try {
-    const { success } = await errorRatelimit.limit(ip);
-    rateLimitOk = success;
-  } catch {
-    // Upstash WRONGTYPE ou autre erreur Redis — fail-open
-  }
+  const { success: rateLimitOk } = await safeLimit(errorRatelimit, ip);
   if (!rateLimitOk) return new NextResponse(null, { status: 429 });
 
   // ── Parse ─────────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { timingSafeEqual } from "crypto";
 import { redis } from "@/lib/redis";
-import { cacheInvalidateRatelimit } from "@/lib/ratelimit";
+import { cacheInvalidateRatelimit, safeLimit } from "@/lib/ratelimit";
 
 /**
  * POST /api/cache/invalidate
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
 
-  const { success: rateLimitOk } = await cacheInvalidateRatelimit.limit(ip);
+  const { success: rateLimitOk } = await safeLimit(cacheInvalidateRatelimit, ip);
   if (!rateLimitOk) {
     return NextResponse.json(
       { ok: false, error: "Too many requests" },
