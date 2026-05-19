@@ -17,7 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, createHash } from "crypto";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { testimonialRatelimit } from "@/lib/ratelimit";
+import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
 
 // ── Champs autorisés pour relation_type ──────────────────────────────────────
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
 
-  const { success: rateLimitOk } = await testimonialRatelimit.limit(ip);
+  const { success: rateLimitOk } = await safeLimit(testimonialRatelimit, ip);
   if (!rateLimitOk) {
     return NextResponse.json(
       { error: "Too many submissions. Please try again later." },

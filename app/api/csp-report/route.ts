@@ -16,7 +16,7 @@
 //   serverless (contrairement à un compteur in-memory).
 
 import { type NextRequest, NextResponse } from "next/server";
-import { cspReportRatelimit } from "@/lib/ratelimit";
+import { cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -65,13 +65,7 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  let rateLimitOk = true;
-  try {
-    const { success } = await cspReportRatelimit.limit(ip);
-    rateLimitOk = success;
-  } catch {
-    // Upstash WRONGTYPE ou autre erreur Redis — fail-open (rapport ignoré, pas de 500)
-  }
+  const { success: rateLimitOk } = await safeLimit(cspReportRatelimit, ip);
   if (!rateLimitOk) {
     // 204 plutôt que 429 — le navigateur n'a pas besoin de savoir qu'il est limité
     return new NextResponse(null, { status: 204 });

@@ -17,7 +17,7 @@
 
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateRatelimit } from "@/lib/ratelimit";
+import { revalidateRatelimit, safeLimit } from "@/lib/ratelimit";
 
 // Locales supportées par le site
 const LOCALES = ["en", "fr"] as const;
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-real-ip") ??
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
-  const { success: rateLimitOk } = await revalidateRatelimit.limit(ip);
+  const { success: rateLimitOk } = await safeLimit(revalidateRatelimit, ip);
   if (!rateLimitOk) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

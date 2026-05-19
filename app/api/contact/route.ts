@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { contactRatelimit } from "@/lib/ratelimit";
+import { contactRatelimit, safeLimit } from "@/lib/ratelimit";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { log } from "@/lib/logger";
 
@@ -143,7 +143,7 @@ export async function POST(req: Request) {
   const ip = getClientIp(req);
   const identifier = `contact:ip:${ip}`;
 
-  const rl = await contactRatelimit.limit(identifier);
+  const rl = await safeLimit(contactRatelimit, identifier);
 
   if (!rl.success) {
     // rl.reset is typically a timestamp (ms). Compute retry-after defensively.
