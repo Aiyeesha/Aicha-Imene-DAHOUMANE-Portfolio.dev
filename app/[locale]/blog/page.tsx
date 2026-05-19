@@ -5,6 +5,7 @@ import { readAllPosts } from "@/content/blog/fs";
 import { getTopTags } from "@/lib/blog-utils";
 import BlogTrackFilter from "@/components/blog/BlogTrackFilter";
 import type { PostCard } from "@/components/blog/BlogTrackFilter";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // ISR : revalide la liste des articles toutes les heures.
 // Permet d'intégrer de nouveaux posts sans rebuild complet
@@ -21,7 +22,7 @@ export async function generateMetadata(
 
   const title = t("meta.title");
   const description = t("meta.description");
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/blog`;
 
   return {

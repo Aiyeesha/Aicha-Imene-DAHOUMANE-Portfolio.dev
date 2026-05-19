@@ -18,6 +18,7 @@ import { formatDate, detectTrack } from "@/lib/blog-utils";
 import { getSeriePosition } from "@/content/blog/series";
 import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type Params = { locale: "en" | "fr"; slug: string };
 
@@ -47,7 +48,7 @@ export async function generateMetadata(
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const title = meta.title;
   const description = meta.excerpt || meta.title;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/blog/${slug}`;
   const cover = meta.cover || `/${locale}/blog/${slug}/opengraph-image`;
   const ogImage = cover.startsWith("http://") || cover.startsWith("https://") ? cover : `${siteUrl}${cover.startsWith("/") ? cover : `/${cover}`}`;
@@ -123,7 +124,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     : "";
 
   // ── JSON-LD ────────────────────────────────────────────────────────────────
-  const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl  = getSiteUrl();
   const postUrl  = `${siteUrl}/${locale}/blog/${slug}`;
   const blogUrl  = `${siteUrl}/${locale}/blog`;
 

@@ -6,11 +6,11 @@
 
 import { readAllPosts } from "@/content/blog/fs";
 import { NextResponse } from "next/server";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // ── Configuration ─────────────────────────────────────────────────────────────
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://portfolio-next-one-gold.vercel.app";
+const SITE_URL = getSiteUrl();
 
 const FEED_META = {
   title: "Aïcha Imène DAHOUMANE — Blog (FR)",
