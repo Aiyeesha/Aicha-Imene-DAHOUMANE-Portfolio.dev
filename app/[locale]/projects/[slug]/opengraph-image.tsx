@@ -12,6 +12,7 @@
 
 import { ImageResponse } from "next/og";
 import { getPublishedProjectBySlugWithAssets } from "@/lib/data/projectBySlug";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -33,7 +34,7 @@ export default async function Image({ params }: Props) {
   const tags       = (project?.tech_stack ?? project?.tags ?? []).slice(0, 4);
   const track      = project?.track    || "salesforce";
 
-  const siteUrl    = (process.env.NEXT_PUBLIC_SITE_URL || "portfolio-next-one-gold.vercel.app")
+  const siteUrl    = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
 

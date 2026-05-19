@@ -5,6 +5,7 @@ import Image from "next/image";
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // ── URL safety helper ─────────────────────────────────────────────────────────
 function safeHref(url: string | null | undefined): string | null {
@@ -225,9 +226,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!project) return { title: "Project not found" };
 
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const siteUrl = getSiteUrl();
 
   const title = `${project.title} | ${siteName}`;
   const description = project.hero_subtitle ?? project.summary ?? project.title;
@@ -274,9 +273,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
   if (!project) return notFound();
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const siteUrl = getSiteUrl();
 
   const isFrPage = locale === "fr";
 

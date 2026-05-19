@@ -12,6 +12,7 @@ import fs   from "node:fs";
 import path from "node:path";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // SSG : le changelog ne change qu'à chaque déploiement
 export const dynamic = "force-static";
@@ -25,7 +26,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/changelog`;
   const title = isFr
