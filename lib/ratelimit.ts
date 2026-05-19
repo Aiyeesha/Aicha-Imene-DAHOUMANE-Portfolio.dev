@@ -46,7 +46,10 @@ function createRatelimit(redis: Redis, maxReq: number, windowSec: number, prefix
   return new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(maxReq, `${windowSec} s`),
-    prefix
+    prefix,
+    // timeout : si Redis ne répond pas en 500 ms, la requête passe
+    // (fail-open sur les lenteurs réseau).
+    timeout: 500,
   });
 }
 
@@ -124,3 +127,19 @@ export const errorRatelimit = redis
 export const revalidateRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:revalidate")
   : createNoOpRatelimit(10, 60_000);
+
+// ── Helper fail-open pour les erreurs Redis immédiates ────────────────
+// Quand Redis est KO (quota épuisé, connexion refusée, token expiré),
+// `.limit()` peut throw même avec timeout. Ce wrapper retourne
+// `success: true` dans ce cas pour ne pas bloquer les utilisateurs légitimes.
+export async function safeLimit(
+  limiter: { limit: (key: string) => Promise<{ success: boolean; reset?: number }> },
+  key: string
+): Promise<{ success: boolean; reset: number }> {
+  try {
+    const result = await limiter.limit(key);
+    return { success: result.success, reset: result.reset ?? Date.now() + 10_000 };
+  } catch {
+    return { success: true, reset: Date.now() + 10_000 };
+  }
+}
