@@ -11,7 +11,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import DevConsoleMessage from "@/components/DevConsoleMessage";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import GlobalErrorHandler from "@/components/GlobalErrorHandler";
-import { getSiteUrl } from "@/lib/siteUrl";
 
 // ── Polices premium ────────────────────────────────────────────────────────────
 // Space Grotesk : display/titres — distinctive, géométrique, moderne
