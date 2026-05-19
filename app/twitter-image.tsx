@@ -5,6 +5,7 @@
 // revalidate = 86400 : recalculée au maximum 1×/jour, mise en cache par Next.js CDN.
 
 import { ImageResponse } from "next/og";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export const size        = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -14,7 +15,7 @@ export const revalidate  = 86400;
 export default function Image() {
   const name     = process.env.NEXT_PUBLIC_OG_NAME     || "Aïcha Imène DAHOUMANE";
   const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce Developer & Consultant";
-  const siteUrl  = (process.env.NEXT_PUBLIC_SITE_URL   || "portfolio-next-one-gold.vercel.app")
+  const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 

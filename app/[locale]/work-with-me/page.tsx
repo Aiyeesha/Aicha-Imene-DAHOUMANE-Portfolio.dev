@@ -1,10 +1,11 @@
 // app/[locale]/work-with-me/page.tsx
 // ------------------------------------
-// Page "Travaillons ensemble" — positionnement freelance 2027.
+// Page "Travaillons ensemble" — positionnement freelance juillet 2026.
 // Présente la disponibilité, les types de missions, le process et un CTA contact.
 
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
@@ -13,7 +14,7 @@ type PageProps = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/work-with-me`;
   const title = isFr
     ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
@@ -57,7 +58,7 @@ type AvailabilityStatus = "open" | "limited" | "unavailable";
 
 const AVAILABILITY: { status: AvailabilityStatus; since: Record<"en" | "fr", string> } = {
   status: "open",
-  since: { en: "Early 2027", fr: "Début 2027" },
+  since: { en: "July 2026", fr: "Juillet 2026" },
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────

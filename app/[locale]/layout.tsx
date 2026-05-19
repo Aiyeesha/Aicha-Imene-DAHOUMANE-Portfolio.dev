@@ -9,6 +9,7 @@ import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
 import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 import CursorSpotlight from "@/components/CursorSpotlight";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 /**
  * Locale layout
@@ -31,14 +32,7 @@ export async function generateMetadata({
   const title = t("metadata.title");
   const description = t("metadata.description");
 
-  // NEXT_PUBLIC_SITE_URL est prioritaire (domaine custom).
-  // VERCEL_URL n'est utilisé qu'en production Vercel — en preview, chaque déploiement
-  // a une URL éphémère différente qui ne doit pas polluer les canonicals et og:url.
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_ENV === "production" && process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
+  const siteUrl = getSiteUrl();
 
   const canonical = `${siteUrl}/${locale}`;
 

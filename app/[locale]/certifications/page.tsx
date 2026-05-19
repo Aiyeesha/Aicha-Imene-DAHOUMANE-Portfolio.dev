@@ -14,6 +14,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -24,7 +25,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const title = isFr
     ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
@@ -427,7 +428,7 @@ export default async function CertificationsPage({ params }: PageProps) {
   const comptaCerts = upcomingItems.filter((c) => c.track === "comptia");
 
   // ── JSON-LD — BreadcrumbList ──────────────────────────────────────────────
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const jsonLdBreadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
