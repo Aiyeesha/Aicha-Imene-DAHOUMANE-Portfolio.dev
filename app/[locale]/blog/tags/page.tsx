@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getAllTags } from "@/content/blog/navigation";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type Params = { locale: "en" | "fr" };
 
@@ -13,7 +14,7 @@ export async function generateMetadata(
 
   const title = t("meta.title");
   const description = t("meta.description");
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/blog/tags`;
 
   return {

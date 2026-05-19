@@ -15,6 +15,7 @@ import { runHealthChecks } from "@/lib/health";
 import type { ServiceStatus } from "@/lib/health";
 import { getUptimeStats, getLatencyHistory } from "@/lib/uptime";
 import LatencySparkline from "@/components/LatencySparkline";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // ISR : revalide toutes les 60 secondes
 export const revalidate = 60;
@@ -78,7 +79,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/status`;
   const title = isFr

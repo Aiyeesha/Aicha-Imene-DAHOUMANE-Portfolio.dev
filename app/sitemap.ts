@@ -13,6 +13,7 @@
 import type { MetadataRoute } from "next";
 import { readAllPosts } from "@/content/blog/fs";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // Rendu à la requête — le sitemap appelle Supabase (getPublishedProjectsWithAssetsCached)
 // qui ne doit pas être appelé au build time (credentials absentes en CI pour les PRs Dependabot).
@@ -61,7 +62,7 @@ function biEntry(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const base = getSiteUrl();
 
   const pages: MetadataRoute.Sitemap = [
     // ── Pages principales ────────────────────────────────────────────────────

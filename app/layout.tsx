@@ -3,6 +3,7 @@ import { getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 import { Space_Grotesk, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
@@ -43,9 +44,7 @@ const inter = Inter({
 // Analytics Vercel + Speed Insights uniquement en production.
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
-  ),
+  metadataBase: new URL(getSiteUrl()),
   // Icônes PWA — déclarées ici pour que Next.js injecte les <link> dans <head>
   icons: {
     icon: [
@@ -77,7 +76,7 @@ export const metadata: Metadata = {
  * Configurable via variables d'environnement (pas de secrets nécessaires).
  */
 function buildJsonLd(locale: string) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const personName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce Developer & Consultant";
