@@ -18,7 +18,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { runHealthChecks } from "@/lib/health";
-import { blogRatelimit } from "@/lib/ratelimit";
+import { blogRatelimit, safeLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic"; // jamais mis en cache par Next.js
 
@@ -30,8 +30,7 @@ export async function GET(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success } = await blogRatelimit.limit(`health:${ip}`);
-  if (!success) {
+  if (!await safeLimit(blogRatelimit, `health:${ip}`)) {
     return NextResponse.json(
       { error: "too_many_requests" },
       { status: 429, headers: { "Retry-After": "60" } }
