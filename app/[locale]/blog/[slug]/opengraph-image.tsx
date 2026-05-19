@@ -12,6 +12,7 @@
 
 import { ImageResponse } from "next/og";
 import { readAllPosts, readPostMeta } from "@/content/blog/fs";
+import { getSiteUrl } from "@/lib/siteUrl";
 import type { BlogLocale } from "@/content/blog/fs";
 
 export const size = { width: 1200, height: 630 };
@@ -98,7 +99,7 @@ export default async function Image({ params }: Props) {
   const readingTime = post?.readingTime ?? null;
   const isFr        = safeLocale === "fr";
 
-  const siteUrl    = (process.env.NEXT_PUBLIC_SITE_URL || "portfolio-next-one-gold.vercel.app")
+  const siteUrl    = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
 

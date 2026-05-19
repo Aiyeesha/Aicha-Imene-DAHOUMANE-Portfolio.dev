@@ -17,6 +17,7 @@
 import type { Metadata } from "next";
 import { createHmac } from "crypto";
 import TestimonialSubmitForm from "@/components/TestimonialSubmitForm";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // ── Métadonnées — noindex obligatoire (page privée) ───────────────────────────
 export async function generateMetadata({
@@ -26,7 +27,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   return {
     title: isFr
