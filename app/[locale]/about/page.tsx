@@ -24,6 +24,7 @@ import AboutTrackGoals from "@/components/AboutTrackGoals";
 import TechStackGrid from "@/components/TechStackGrid";
 import VisualTimeline from "@/components/VisualTimeline";
 import CareerTimeline from "@/components/CareerTimeline";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "De l'administration systèmes & réseaux au développement Salesforce. Développeuse Salesforce & IT Ops Engineer disponible en CDI, CDD, freelance ou portage."
     : "From systems & network administration to Salesforce development. Salesforce Developer & IT Ops Engineer — open to permanent, fixed-term, freelance, or contract roles.";
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/about`;
 
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";

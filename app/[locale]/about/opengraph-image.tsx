@@ -5,6 +5,7 @@
 // Design dual-track cohérent avec l'OG de la homepage.
 
 import { ImageResponse } from "next/og";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -17,7 +18,7 @@ export default async function Image({ params }: Props) {
   const isFr = locale === "fr";
 
   const name     = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const siteUrl  = (process.env.NEXT_PUBLIC_SITE_URL || "portfolio-next-one-gold.vercel.app")
+  const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
