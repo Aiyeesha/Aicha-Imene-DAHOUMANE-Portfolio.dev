@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
@@ -42,6 +42,15 @@ const inter = Inter({
 //   - Validable sur : https://validator.schema.org/
 //
 // Analytics Vercel + Speed Insights uniquement en production.
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)",  color: "#0c1425" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),

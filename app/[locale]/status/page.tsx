@@ -209,17 +209,17 @@ export default async function StatusPage({
             return (
               <div
                 key={service.name}
-                className="flex items-center justify-between gap-4 bg-white dark:bg-white/[0.02] px-6 py-4"
+                className="flex items-center justify-between gap-2 bg-white dark:bg-white/[0.02] px-4 py-4 sm:gap-4 sm:px-6"
               >
-                <div>
-                  <p className="text-sm font-medium">{service.name}</p>
-                  <p className="text-xs text-muted-2">{desc}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{service.name}</p>
+                  <p className="truncate text-xs text-muted-2">{desc}</p>
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
-                  {/* Sparkline latence 7 jours — affiché si historique disponible */}
+                <div className="flex items-center gap-2 shrink-0 sm:gap-3">
+                  {/* Sparkline latence 7 jours — masquée sur petits écrans (<sm) */}
                   {(latencyHistory[service.name]?.length ?? 0) >= 2 && (
-                    <span title={labels.sparklineLabel}>
+                    <span title={labels.sparklineLabel} className="hidden sm:inline">
                       <LatencySparkline data={latencyHistory[service.name]} />
                     </span>
                   )}
