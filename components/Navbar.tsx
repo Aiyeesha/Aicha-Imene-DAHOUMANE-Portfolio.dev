@@ -381,7 +381,7 @@ useEffect(() => {
             onClick={() => setMobileOpen(false)}
           />
           <div
-            className={`absolute right-0 top-0 h-full w-[85%] max-w-sm border-l border-black/10 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-[#070B1A] transition-transform duration-300 ease-out ${
+            className={`absolute right-0 top-0 h-full w-[85%] max-w-sm border-l border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-[#070B1A] transition-transform duration-300 ease-out flex flex-col overflow-hidden ${
               mobileOpen ? "translate-x-0" : "translate-x-full"
             }`}
             id={MENU_ID}
@@ -389,7 +389,8 @@ useEffect(() => {
             aria-modal="true"
             aria-label={t("nav.menu")}
             ref={menuRef}>
-            <div className="flex items-center justify-between">
+            {/* En-tête fixe — toujours visible en haut du drawer */}
+            <div className="flex flex-shrink-0 items-center justify-between px-5 pt-5 pb-0">
               <div className="text-sm font-semibold">{t("nav.menu")}</div>
               <button
                 type="button"
@@ -401,8 +402,11 @@ useEffect(() => {
               </button>
             </div>
 
+            {/* Zone défilable — contient les contrôles, les liens et les CTAs */}
+            <div className="flex-1 overflow-y-auto px-5 pb-5 pt-5">
+
             {/* Controls on mobile (track / theme / language) */}
-            <div className="mt-5 rounded-2xl border border-black/10 bg-black/5 p-3 dark:border-white/10 dark:bg-white/5">
+            <div className="rounded-2xl border border-black/10 bg-black/5 p-3 dark:border-white/10 dark:bg-white/5">
               <div className="flex flex-wrap items-center gap-2">
                 <TrackToggle />
                 <ThemeToggle />
@@ -476,6 +480,7 @@ useEffect(() => {
                 </a>
               </div>
             </div>
+            </div>{/* fin zone défilable */}
           </div>
       </div>
     </>
