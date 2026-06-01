@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -444,7 +445,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }}
       />
 
       {/* ── Breadcrumb ─────────────────────────────────────────────────────── */}

@@ -6,6 +6,7 @@ import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 // ── URL safety helper ─────────────────────────────────────────────────────────
 function safeHref(url: string | null | undefined): string | null {
@@ -357,11 +358,11 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     <main className="py-10 md:py-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify(breadcrumbSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify(softwareSchema) }}
       />
       <div className="container mx-auto max-w-6xl px-4">
 
