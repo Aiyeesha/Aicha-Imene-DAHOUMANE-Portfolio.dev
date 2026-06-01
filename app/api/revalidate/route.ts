@@ -18,30 +18,10 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateRatelimit, safeLimit } from "@/lib/ratelimit";
+import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 
 // Locales supportées par le site
 const LOCALES = ["en", "fr"] as const;
-
-// timingSafeEqual n'est pas dans les types W3C standard de SubtleCrypto —
-// on étend le type localement comme dans proxy.ts.
-type SubtleCryptoWithTimingSafe = SubtleCrypto & {
-  timingSafeEqual(a: BufferSource, b: BufferSource): Promise<boolean>;
-};
-
-// Comparaison timing-safe pour éviter les attaques par oracle temporel
-async function timingSafeEqual(a: string, b: string): Promise<boolean> {
-  const enc = new TextEncoder();
-  const bufA = enc.encode(a);
-  const bufB = enc.encode(b);
-  // Longueurs différentes → faux, mais on compare quand même pour masquer le timing
-  const len = Math.max(bufA.length, bufB.length);
-  const paddedA = new Uint8Array(len);
-  const paddedB = new Uint8Array(len);
-  paddedA.set(bufA);
-  paddedB.set(bufB);
-  const equal = await (crypto.subtle as SubtleCryptoWithTimingSafe).timingSafeEqual(paddedA, paddedB);
-  return equal && bufA.length === bufB.length;
-}
 
 export async function POST(request: NextRequest) {
   // ── 0. Rate-limit par IP ──────────────────────────────────────────────────
@@ -62,7 +42,7 @@ export async function POST(request: NextRequest) {
   }
 
   const provided = request.headers.get("x-revalidate-secret") ?? "";
-  const valid = await timingSafeEqual(provided, secret);
+  const valid = await timingSafeStringEqual(provided, secret);
   if (!valid) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
