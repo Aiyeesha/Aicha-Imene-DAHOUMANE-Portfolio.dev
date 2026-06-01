@@ -70,9 +70,9 @@ export default function Testimonials({ items }: { items: Testimonial[] }) {
         <div className="card p-6">
           <div className="text-sm text-muted-2">{t("testimonials.all")}</div>
           <div className="mt-4 space-y-2">
-            {items.map((t, i) => (
+            {items.map((item, i) => (
               <button
-                key={t.id}
+                key={item.id}
                 type="button"
                 onClick={() => setIndex(i)}
                 className={[
@@ -82,10 +82,10 @@ export default function Testimonials({ items }: { items: Testimonial[] }) {
                     : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white/10 soft-ring"
                 ].join(" ")}
               >
-                <div className="text-sm font-semibold">{t.name}</div>
+                <div className="text-sm font-semibold">{item.name}</div>
                 <div className="text-xs text-muted-2">
-                  {t.role}
-                  {t.company ? ` · ${t.company}` : ""}
+                  {item.role}
+                  {item.company ? ` · ${item.company}` : ""}
                 </div>
               </button>
             ))}

@@ -13,9 +13,70 @@
 
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { cacheGetOrSet }              from "@/lib/cache";
+import type { ServiceStatus, HealthReport } from "@/lib/health";
 
 // Minimum de pings pour afficher un %, évite "100%" après le 1er déploiement
 const MIN_PINGS = 3;
+
+// ── Dernier rapport de statut (depuis uptime_pings) ───────────────────────────
+// Reconstruit un HealthReport à partir du dernier ping stocké par le cron.
+// Évite tout appel sortant en direct lors du rendu de /status.
+
+export async function getLatestPingReport(): Promise<HealthReport | null> {
+  return cacheGetOrSet<HealthReport | null>(
+    "portfolio:uptime:latest",
+    300,
+    fetchLatestPingsFromSupabase
+  );
+}
+
+async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {
+  try {
+    const supabase = createServerSupabaseClient();
+
+    // Récupère le dernier ping de chaque service (1 requête)
+    const { data, error } = await supabase
+      .from("uptime_pings")
+      .select("service, status, latency_ms, checked_at")
+      .order("checked_at", { ascending: false })
+      .limit(50); // assez pour couvrir tous les services du dernier batch
+
+    if (error || !data || data.length === 0) {
+      console.error("[uptime] latest pings fetch error:", error?.message);
+      return null;
+    }
+
+    // Garder seulement le ping le plus récent par service
+    const seen = new Set<string>();
+    const latest: typeof data = [];
+    for (const row of data) {
+      if (!seen.has(row.service)) {
+        seen.add(row.service);
+        latest.push(row);
+      }
+    }
+
+    // Le timestamp du rapport = le plus récent parmi tous les services
+    const checkedAt = latest[0].checked_at as string;
+
+    const services = latest.map((row) => ({
+      name:      row.service as string,
+      status:    row.status  as ServiceStatus,
+      latencyMs: row.latency_ms as number | null,
+    }));
+
+    // Statut global : outage si au moins un est en panne, degraded si dégradé
+    const overall: ServiceStatus =
+      services.some((s) => s.status === "outage")    ? "outage"      :
+      services.some((s) => s.status === "degraded")  ? "degraded"    :
+                                                       "operational";
+
+    return { checkedAt, overall, services };
+  } catch (e) {
+    console.error("[uptime] latest pings unexpected error:", e);
+    return null;
+  }
+}
 
 export type UptimeStats = Record<string, number | null>;
 

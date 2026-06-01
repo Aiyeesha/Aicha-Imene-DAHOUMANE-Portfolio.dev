@@ -11,9 +11,10 @@
 //   CRON_SECRET           — secret partagé avec Vercel (arbitraire, min 32 chars)
 //   NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY — déjà nécessaires ailleurs
 
-import { NextResponse }            from "next/server";
-import { runHealthChecks }          from "@/lib/health";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { NextResponse }                from "next/server";
+import { runHealthChecks }             from "@/lib/health";
+import { createAdminSupabaseClient }   from "@/lib/supabase/admin";
+import { timingSafeStringEqual }       from "@/lib/security/timingSafeEqual";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs"; // Supabase JS ne supporte pas l'Edge runtime
@@ -27,8 +28,8 @@ export async function GET(req: Request) {
     console.error("[CRON/PING] CRON_SECRET is not configured — request blocked.");
     return NextResponse.json({ ok: false, error: "Service unavailable" }, { status: 503 });
   }
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${cronSecret}`) {
+  const auth = req.headers.get("authorization") ?? "";
+  if (!await timingSafeStringEqual(auth, `Bearer ${cronSecret}`)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 

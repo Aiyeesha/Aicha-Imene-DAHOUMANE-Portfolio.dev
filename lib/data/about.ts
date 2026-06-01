@@ -1,4 +1,4 @@
-import { createPublicServerSupabaseClient } from "@/lib/supabase/public-server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export type AboutPageRow = {
   locale: "fr" | "en";
@@ -10,7 +10,7 @@ export type AboutPageRow = {
 };
 
 export async function getAboutPage(locale: "fr" | "en") {
-  const supabase = createPublicServerSupabaseClient();
+  const supabase = createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("about_pages")
