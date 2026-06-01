@@ -9,7 +9,12 @@ export type Testimonial = {
   quote: string;
 };
 
+// POLITIQUE : n'afficher que des avis réels et attribuables.
+// Les entrées marquées [PLACEHOLDER] ne doivent JAMAIS être publiées —
+// elles servent de gabarit uniquement. Activer NEXT_PUBLIC_SHOW_TESTIMONIALS=true
+// uniquement lorsque toutes les entrées sont réelles et vérifiées.
 export const testimonials: Testimonial[] = [
+  // ── Avis réels (à compléter avec des informations d'attribution vérifiées) ──
   {
     id: "t1",
     name: "Product Owner — Retail (EU)",
@@ -37,6 +42,7 @@ export const testimonials: Testimonial[] = [
     quote:
       "Très rigoureux sur la maintenabilité et la réduction des risques. Une approche structurée (checklists, doc, validation) qui sécurise la mise en production."
   },
+  // ── [PLACEHOLDER] — gabarits à remplacer par de vrais avis avant publication ──
   {
     id: "t4",
     name: "[Prénom Nom]",
