@@ -23,8 +23,8 @@ export default defineConfig({
   // 1 retry en CI pour absorber les flakiness réseau
   retries: process.env.CI ? 1 : 0,
 
-  // 1 worker en CI, auto en local
-  workers: process.env.CI ? 1 : undefined,
+  // 2 workers en CI (parallélisme léger sans conflits — serveur partagé stateless)
+  workers: process.env.CI ? 2 : undefined,
 
   // Reporter adapté à l'environnement
   reporter: process.env.CI ? "github" : "list",
