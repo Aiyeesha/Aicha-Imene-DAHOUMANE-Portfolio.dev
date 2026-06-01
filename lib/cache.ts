@@ -16,11 +16,11 @@ export async function cacheGetOrSet<T>(
   try {
     const cached = await redis.get<T>(key);
     if (cached !== null && cached !== undefined) {
-      console.log("[CACHE HIT]", key);
+      if (process.env.NODE_ENV === "development") console.log("[CACHE HIT]", key);
       return cached;
     }
 
-    console.log("[CACHE MISS]", key);
+    if (process.env.NODE_ENV === "development") console.log("[CACHE MISS]", key);
     const fresh = await fetcher();
     await redis.set(key, fresh, { ex: ttlSeconds }).catch(() => {});
     return fresh;

@@ -99,31 +99,27 @@ const nextConfig = {
           {
             key: "Permissions-Policy",
             value: [
-              "camera=()",
-              "microphone=()",
-              "geolocation=()",
-              "payment=()",
-              "usb=()",
-              "bluetooth=()",
-              "midi=()",
               "accelerometer=()",
+              "ambient-light-sensor=()",
+              "battery=()",
+              "bluetooth=()",
+              "camera=()",
+              "clipboard-read=()",
+              "display-capture=()",
+              "document-domain=()",
+              "encrypted-media=()",
+              "fullscreen=(self)",
+              "geolocation=()",
               "gyroscope=()",
+              "interest-cohort=()",
               "magnetometer=()",
-              "interest-cohort=()",    // désactive FLoC/Topics API Google
-              "document-domain=()",    // bloque les attaques de réassignation de document.domain
-              "display-capture=()",    // bloque getDisplayMedia() (capture d'écran)
-              "clipboard-read=()",     // bloque l'accès en lecture au presse-papiers
-              "xr-spatial-tracking=()", // bloque WebXR (AR/VR)
-              'ambient-light-sensor=()',
-    'battery=()',
-    'display-capture=()',
-    'document-domain=()',
-    'encrypted-media=()',
-    'fullscreen=(self)',
-    
-    'serial=()',
-    
-    'web-share=(self)'
+              "microphone=()",
+              "midi=()",
+              "payment=()",
+              "serial=()",
+              "usb=()",
+              "web-share=(self)",
+              "xr-spatial-tracking=()",
             ].join(", ")
           },
           
