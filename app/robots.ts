@@ -13,7 +13,9 @@ export default function robots(): MetadataRoute.Robots {
       // /admin/         : panneau d'administration — jamais indexé.
       // /api/           : routes API — pas de pages lisibles; couvre aussi /api/health, /api/cron…
       // /*/testimonial-submit/ : formulaire privé token-gated — pas d'indexation.
-      disallow: ["/cv/", "/admin/", "/api/", "/*/testimonial-submit", "/*/status"],
+      // /*/status       : retiré du Disallow (F4) — la page porte robots: noindex dans ses métadonnées,
+      //                   ce qui suffit. Disallow + noindex simultané empêchait Google de lire le noindex.
+      disallow: ["/cv/", "/admin/", "/api/", "/*/testimonial-submit"],
     },
     sitemap: `${base}/sitemap.xml`,
   };

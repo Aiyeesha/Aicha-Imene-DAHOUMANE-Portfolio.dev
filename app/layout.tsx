@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { getLocale } from "next-intl/server";
-import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 import { Space_Grotesk, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
@@ -157,39 +157,27 @@ function buildJsonLd(locale: string) {
 
 // ── NOTE ARCHITECTURALE : tension CSP nonce ↔ cache CDN ──────────────────────
 //
-// Ce layout appelle headers() à deux endroits :
-//   1. getLocale()         → next-intl lit x-next-intl-locale via headers() en interne
-//   2. headers().get("x-nonce") → lecture du nonce CSP injecté par proxy.ts
+// Ce layout appelle headers() via getLocale() (next-intl lit x-next-intl-locale
+// en interne). En Next.js App Router, cet appel opt toute la route en rendu
+// dynamique (per-request) : Cache-Control: no-store, ISR ignoré, TTFB ~1.5–2s.
 //
-// En Next.js App Router, tout appel à headers() dans l'arbre de rendu opt le
-// ROUTE ENTIER en rendu dynamique (per-request), ce qui force :
-//   - Cache-Control: private, no-cache, no-store (posé par Next.js)
-//   - X-Vercel-Cache: MISS sur toutes les requêtes (CDN ne cache pas)
-//   - ISR (revalidate: 3600 dans page.tsx) ignoré — la page est re-rendue à chaque req.
-//   - TTFB = cold start serverless (~1.5–2s sur Vercel Hobby)
+// L'appel explicite à headers().get("x-nonce") a été supprimé (F3) car
+// <script type="application/ld+json"> n'est pas un script exécutable — la
+// directive CSP script-src ne s'y applique pas, le nonce y était superflu.
+// Next.js applique le nonce à ses propres scripts internes via l'en-tête
+// x-nonce posé par proxy.ts, sans que le layout ait à le lire.
 //
-// CE COMPORTEMENT EST INTENTIONNEL. La sécurité prime sur la performance CDN :
-//   - Nonce unique par requête + 'strict-dynamic' = CSP niveau 3 (gold standard)
-//   - Régresser vers 'unsafe-inline' pour gagner du cache CDN serait une
-//     dégradation de sécurité inacceptable.
+// Blocage résiduel : getLocale() est nécessaire pour <html lang> et le JSON-LD
+// (inLanguage, mainEntityOfPage). Le supprimer exigerait de refactoriser
+// complètement la hiérarchie des layouts et d'utiliser PPR — hors périmètre.
 //
 // RÉSOLUTION PRÉVUE — migration homelab (fin 2026) :
 //   Nginx / Caddy en reverse proxy peut mettre en cache le HTML rendu à sa couche
-//   (proxy_cache / Cache directive), indépendamment du Cache-Control applicatif.
-//   Séparation des responsabilités : l'app reste dynamique + sécurisée,
-//   le cache est géré par l'infra. TTFB cible : ~5–20ms sur cache HIT.
-//
-//   Exemple Nginx (à configurer côté homelab) :
-//     proxy_cache_valid 200 1h;
-//     proxy_ignore_headers Cache-Control;   # ignore le no-store de l'app
-//     proxy_cache_bypass $http_pragma;      # bypass sur Ctrl+F5
+//   indépendamment du Cache-Control applicatif. TTFB cible : ~5–20ms sur HIT.
 // ─────────────────────────────────────────────────────────────────────────────
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale(); // "en" | "fr" — lit x-next-intl-locale via headers()
   const jsonLd = buildJsonLd(locale);
-  // Lire le nonce injecté par proxy.ts dans les headers de requête.
-  // undefined si le middleware ne tourne pas (build statique, tests).
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html
       lang={locale}
@@ -220,13 +208,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           href={process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp"}
           fetchPriority="high"
         />
-        {/* nonce : autorise ce script inline dans la CSP sans 'unsafe-inline' */}
+        {/* type="application/ld+json" est une donnée, pas un script exécutable —
+            pas besoin de nonce (CSP script-src ne s'applique pas à ce type). */}
         <script
           type="application/ld+json"
-          nonce={nonce}
           suppressHydrationWarning
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLd) }}
         />
       </head>
       <body>
@@ -234,7 +222,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <GlobalErrorHandler />
         <DevConsoleMessage />
         <ServiceWorkerRegistration />
-        {/* nonce transmis pour que les scripts Vercel respectent la CSP */}
         {process.env.NODE_ENV === "production" && <Analytics />}
         {process.env.NODE_ENV === "production" && <SpeedInsights />}
       </body>
