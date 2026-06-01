@@ -19,6 +19,7 @@ import { getSeriePosition } from "@/content/blog/series";
 import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 type Params = { locale: "en" | "fr"; slug: string };
 
@@ -179,7 +180,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdBlogPosting, jsonLdBreadcrumb]) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify([jsonLdBlogPosting, jsonLdBreadcrumb]) }}
       />
       <ScrollProgress />
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
