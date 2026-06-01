@@ -133,8 +133,16 @@ jobs:
           name: next-build
           path: .
 
+      # Séparé en deux étapes pour éviter le blocage apt-get de --with-deps :
+      # 1) install-deps : apt-get avec DEBIAN_FRONTEND=noninteractive (non-bloquant)
+      # 2) install      : téléchargement des binaires via HTTPS (pas d'apt)
+      - name: Install Playwright system dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: npx playwright install-deps chromium firefox
+
       - name: Install Playwright browsers (Chromium + Firefox)
-        run: npx playwright install --with-deps chromium firefox
+        run: npx playwright install chromium firefox
 
       - name: Run E2E tests
         run: npm run test:e2e
