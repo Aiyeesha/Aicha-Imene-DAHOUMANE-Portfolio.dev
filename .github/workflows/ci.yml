@@ -102,7 +102,7 @@ jobs:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
     needs: build-test
-    timeout-minutes: 45
+    timeout-minutes: 60
     permissions:
       contents: read
     env:
@@ -134,16 +134,15 @@ jobs:
           path: .
 
       # CI : Chromium uniquement (Firefox testé en local).
-      # Séparé en deux étapes : apt (install-deps) puis HTTPS (install).
-      # timeout-minutes par étape évite les gels réseau infinis sur le runner.
+      # Pas de timeout par step — le job-level timeout (60 min) est le filet de sécurité.
+      # Des step timeouts trop courts tuaient le job avant que le download CDN (~167 MiB)
+      # ne termine sur un runner lent.
       - name: Install Playwright system dependencies
-        timeout-minutes: 5
         env:
           DEBIAN_FRONTEND: noninteractive
         run: npx playwright install-deps chromium
 
       - name: Install Playwright browsers (Chromium)
-        timeout-minutes: 15
         run: npx playwright install chromium
 
       - name: Run E2E tests
