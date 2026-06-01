@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  if (!await safeLimit(blogRatelimit, `health:${ip}`)) {
+  const { success: rateLimitOk } = await safeLimit(blogRatelimit, `health:${ip}`);
+  if (!rateLimitOk) {
     return NextResponse.json(
       { error: "too_many_requests" },
       { status: 429, headers: { "Retry-After": "60" } }

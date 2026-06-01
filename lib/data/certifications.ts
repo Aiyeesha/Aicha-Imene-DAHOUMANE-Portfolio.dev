@@ -1,4 +1,4 @@
-import { createPublicServerSupabaseClient } from "@/lib/supabase/public-server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export type CertificationRow = {
   id: string;
@@ -17,7 +17,7 @@ export type CertificationRow = {
 };
 
 export async function getCertifications(locale: "fr" | "en") {
-  const supabase = createPublicServerSupabaseClient();
+  const supabase = createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("certifications")
