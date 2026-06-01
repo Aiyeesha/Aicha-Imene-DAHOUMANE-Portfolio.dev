@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { timingSafeEqual } from "crypto";
 import { redis } from "@/lib/redis";
 import { cacheInvalidateRatelimit, safeLimit } from "@/lib/ratelimit";
+import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 
 /**
  * POST /api/cache/invalidate
@@ -29,20 +29,11 @@ export async function POST(req: Request) {
   }
 
   // ── 2. Vérification du secret (comparaison timing-safe) ─────────────────────
-  // Une comparaison simple `!==` est vulnérable à une attaque de timing :
-  // un attaquant peut déduire le secret en mesurant les temps de réponse.
-  // timingSafeEqual garantit un temps constant quelle que soit la valeur comparée.
   const secret = req.headers.get("x-cache-secret");
   const expected = process.env.CACHE_INVALIDATE_SECRET;
 
-  const secretValid = (() => {
-    if (!expected || !secret) return false;
-    const a = Buffer.from(secret);
-    const b = Buffer.from(expected);
-    // timingSafeEqual exige des buffers de même longueur
-    if (a.length !== b.length) return false;
-    return timingSafeEqual(a, b);
-  })();
+  const secretValid =
+    !!expected && !!secret && await timingSafeStringEqual(secret, expected);
 
   if (!secretValid) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
