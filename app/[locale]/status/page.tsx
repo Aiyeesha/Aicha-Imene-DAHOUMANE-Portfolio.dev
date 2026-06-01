@@ -1,19 +1,15 @@
 // status/page.tsx
 // ----------------
-// Page de statut publique — affiche l'état opérationnel réel du site.
-// Les statuts sont vérifiés en temps réel via lib/health.ts :
-//   - Supabase : requête REST légère (SELECT 1 row)
-//   - Upstash Redis : commande PING
-//   - Formspree : HEAD sur l'endpoint
-//   - Website, Blog, PWA : opérationnels si le serveur répond
+// Page de statut publique — affiche l'état opérationnel du site.
+// Les données proviennent de uptime_pings (Supabase), alimenté par le cron
+// quotidien app/api/cron/ping. Aucun appel sortant en direct au rendu (F5).
 //
 // Revalidation ISR : 60 secondes — statuts frais sans rebuild complet.
 
 import Link from "next/link";
 import type { Metadata } from "next";
-import { runHealthChecks } from "@/lib/health";
 import type { ServiceStatus } from "@/lib/health";
-import { getUptimeStats, getLatencyHistory } from "@/lib/uptime";
+import { getUptimeStats, getLatencyHistory, getLatestPingReport } from "@/lib/uptime";
 import LatencySparkline from "@/components/LatencySparkline";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -129,19 +125,20 @@ export default async function StatusPage({
   const safeLocale: Locale = locale === "fr" ? "fr" : "en";
   const isFr = safeLocale === "fr";
 
-  // Health checks réels + uptime stats + historique latence en parallèle
+  // Lit le dernier rapport stocké par le cron + stats uptime + historique latence.
+  // Aucun appel sortant en direct — données issues de uptime_pings (Supabase).
   const [report, uptimeStats, latencyHistory] = await Promise.all([
-    runHealthChecks(),
+    getLatestPingReport(),
     getUptimeStats(),
     getLatencyHistory(),
   ]);
 
-  const global   = report.overall;
+  // Fallback si aucun ping n'a encore été enregistré (déploiement initial)
+  const global   = report?.overall ?? "operational";
   const cfg      = STATUS_CONFIG[global];
-  const checkedAt = new Date(report.checkedAt).toLocaleString(
-    isFr ? "fr-FR" : "en-US",
-    { dateStyle: "medium", timeStyle: "short" }
-  );
+  const checkedAt = report
+    ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : "en-US", { dateStyle: "medium", timeStyle: "short" })
+    : "—";
 
   const labels = {
     headline:      isFr ? "Statut du site"           : "Site Status",
@@ -203,7 +200,7 @@ export default async function StatusPage({
         </h2>
 
         <div className="divide-y divide-black/5 dark:divide-white/5 rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden">
-          {report.services.map((service) => {
+          {(report?.services ?? []).map((service) => {
             const s = STATUS_CONFIG[service.status];
             const desc = SERVICE_DESCRIPTIONS[service.name]?.[safeLocale] ?? "";
             return (
