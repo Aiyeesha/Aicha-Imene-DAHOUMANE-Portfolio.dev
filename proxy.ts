@@ -32,6 +32,7 @@ import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 import { adminRatelimit } from "./lib/ratelimit";
+import { timingSafeStringEqual } from "./lib/security/timingSafeEqual";
 
 const intlHandler = createMiddleware({
   locales: routing.locales,
@@ -104,34 +105,6 @@ function buildCSPReportOnly(): string {
   ].join("; ");
 }
 
-// ── Comparaison de strings en temps constant (timing-safe) ───────────────────
-// crypto.subtle.timingSafeEqual() est disponible dans l'Edge Runtime.
-// La comparaison == en JS peut court-circuiter sur le premier caractère différent,
-// créant un timing oracle : un attaquant peut déduire le bon credential caractère
-// par caractère en mesurant le temps de réponse (même si le rate-limit atténue
-// fortement le risque ici, la correction a un coût quasi nul).
-//
-// Technique : on encode les deux chaînes en UTF-8 et on les pad à la même longueur
-// avant la comparaison pour éviter un oracle sur la longueur. La longueur est
-// comparée séparément avant de retourner le résultat final.
-// crypto.subtle.timingSafeEqual() est disponible dans l'Edge Runtime (Node.js ≥ 15 / Web Crypto),
-// mais absent des types TypeScript standard de SubtleCrypto (non spécifié dans le W3C).
-// On étend localement le type plutôt que d'utiliser `any`.
-type SubtleCryptoWithTimingSafe = SubtleCrypto & {
-  timingSafeEqual(a: BufferSource, b: BufferSource): Promise<boolean>;
-};
-
-async function timingSafeStringEqual(a: string, b: string): Promise<boolean> {
-  const enc = new TextEncoder();
-  const maxLen = Math.max(a.length, b.length);
-  // Pad pour que les buffers soient identiques en longueur avant timingSafeEqual
-  const aBuf = enc.encode(a.padEnd(maxLen, "\0"));
-  const bBuf = enc.encode(b.padEnd(maxLen, "\0"));
-  // timingSafeEqual compare les deux buffers octet par octet sans court-circuit
-  const equal = await (crypto.subtle as SubtleCryptoWithTimingSafe).timingSafeEqual(aBuf, bBuf);
-  // Vérifier aussi la longueur originale pour rejeter les paddings faussement égaux
-  return equal && a.length === b.length;
-}
 
 // ── HTTP Basic Auth pour /admin ───────────────────────────────────────────────
 // Retourne null si les credentials sont valides, NextResponse sinon.
