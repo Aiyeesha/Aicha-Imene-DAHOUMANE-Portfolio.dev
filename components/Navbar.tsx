@@ -52,7 +52,9 @@ export default function Navbar() {
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const spyActiveId = useActiveSection(isHome ? [...SECTION_IDS] : []);
 
-  const routeActiveId: NavId = pathname.startsWith(`/${locale}/blog`)
+  // null pour les pages non mappées dans la nav (status, colophon, legal, uses…)
+  // Évite un faux aria-current="page" sur "Compétences" par défaut.
+  const routeActiveId: NavId | null = pathname.startsWith(`/${locale}/blog`)
     ? "blog"
     : pathname.startsWith(`/${locale}/projects`)
       ? "projects"
@@ -62,23 +64,25 @@ export default function Navbar() {
           ? "certifications"
           : pathname.startsWith(`/${locale}/resources`)
             ? "resources"
-            : "skills";
+            : null;
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
   // Desktop nav : mappe les sections non affichées (experience, services, blog…)
   // vers la section desktop précédente la plus proche, pour que la pill reste
-  // toujours ancrée sur un item visible.
+  // toujours ancrée sur un item visible. Sur les pages non mappées (activeId null),
+  // aucun item n'est mis en évidence.
   const SECTION_ORDER = [...SECTION_IDS] as string[];
   const desktopActiveId: string = (() => {
+    if (activeId === null) return "";
     const id = activeId;
     if (DESKTOP_IDS_STATIC.has(id)) return id;
     const idx = SECTION_ORDER.indexOf(id);
-    if (idx === -1) return "skills";
+    if (idx === -1) return "";
     for (let i = idx - 1; i >= 0; i--) {
       if (DESKTOP_IDS_STATIC.has(SECTION_ORDER[i])) return SECTION_ORDER[i];
     }
-    return "skills";
+    return "";
   })();
 
   // Hash sync actif sur la home uniquement — l'URL reflète la section visible au scroll.
