@@ -38,17 +38,22 @@ function formatViolations(violations: Result[]) {
   }));
 }
 
+// ── Helper d'attente robuste ──────────────────────────────────────────────
+// networkidle est préférable (hydration React complète) mais peut ne jamais
+// se résoudre en CI : Vercel Analytics (NODE_ENV=production) fait des requêtes
+// continues qui empêchent l'idle. On tente networkidle 8s max, puis on continue.
+async function waitForReady(page: Page) {
+  await page.waitForLoadState("networkidle", { timeout: 8_000 }).catch(() => {});
+  // Laisser les transitions CSS color/background (200-250ms) se terminer avant l'audit
+  await page.waitForTimeout(350);
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 test.describe("WCAG 2.2 AA — Audit automatisé", () => {
   test("Page d'accueil /en — aucune violation critique", async ({ page }) => {
     await page.goto("/en");
-    // Attendre que la page soit interactive (hydration React complète)
-    await page.waitForLoadState("networkidle");
-    // Laisser les transitions CSS color/background (200-250ms) se terminer avant l'audit
-    // axe scanne sinon des couleurs interpolées (ex: slate-900→white en cours) qui
-    // échouent WCAG AA sur fond sombre — ratio ~1.08 au lieu de 4.5:1 attendu.
-    await page.waitForTimeout(350);
+    await waitForReady(page);
 
     const results = await runAxe(page);
 
@@ -67,8 +72,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
 
   test("Page About /en/about — aucune violation critique/sérieuse", async ({ page }) => {
     await page.goto("/en/about");
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(350);
+    await waitForReady(page);
 
     const results = await runAxe(page);
 
@@ -81,8 +85,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
 
   test("Blog liste /en/blog — aucune violation critique/sérieuse", async ({ page }) => {
     await page.goto("/en/blog");
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(350);
+    await waitForReady(page);
 
     const results = await runAxe(page);
 
@@ -95,8 +98,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
 
   test("Article blog — aucune violation critique/sérieuse", async ({ page }) => {
     await page.goto("/en/blog/apex-triggers-best-practices");
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(350);
+    await waitForReady(page);
 
     const results = await runAxe(page);
 
@@ -111,8 +113,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
     page,
   }) => {
     await page.goto("/en/certifications");
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(350);
+    await waitForReady(page);
 
     const results = await runAxe(page);
 
@@ -125,8 +126,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
 
   test("Page d'accueil FR /fr — aucune violation critique/sérieuse", async ({ page }) => {
     await page.goto("/fr");
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(350);
+    await waitForReady(page);
 
     const results = await runAxe(page);
 
