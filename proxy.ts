@@ -234,6 +234,11 @@ export async function proxy(request: NextRequest) {
       if (!value.startsWith("NEXT_LOCALE=")) {
         response.headers.append(key, value);
       }
+    } else if (key === "link") {
+      // Le Link header hreflang généré par next-intl contient un x-default sans préfixe
+      // de locale (ex: /legal au lieu de /en/legal), incohérent avec les balises <link>
+      // dans <head> HTML (qui sont correctes). On filtre ce header ; Google utilise les
+      // balises HTML en priorité — elles font autorité.
     } else if (!response.headers.has(key)) {
       response.headers.set(key, value);
     }
