@@ -194,10 +194,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
         )}
-        {/* Upstash Redis : cache API rate-limiting */}
-        {process.env.UPSTASH_REDIS_REST_URL && (
-          <link rel="dns-prefetch" href={new URL(process.env.UPSTASH_REDIS_REST_URL).origin} />
-        )}
         {/* Formspree : formulaire de contact (chargé à la demande) */}
         <link rel="dns-prefetch" href="https://formspree.io" />
         {/* Preload avatar — candidat LCP (Largest Contentful Paint) sur le hero.
