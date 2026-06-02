@@ -49,7 +49,7 @@
     "message": "Message",
     "call15": "Call 30 min",
     "downloadProfile": "Download my profile (PDF)",
-    "cvOnRequest": "CV available on request (set NEXT_PUBLIC_CV_PDF_URL)"
+    "cvOnRequest": "CV available on request"
   },
   "projects": {
     "search": "Search a project...",
