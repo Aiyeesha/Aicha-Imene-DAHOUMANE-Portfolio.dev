@@ -326,7 +326,7 @@ export default async function ColophonPage({ params }: PageProps) {
             {labels.learnMore}<span aria-hidden="true"> ↗</span>
           </a>
           <a
-            href="https://portfolio-next-one-gold.vercel.app/en"
+            href={`/${locale}`}
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
