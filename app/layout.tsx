@@ -91,10 +91,13 @@ function buildJsonLd(locale: string) {
   const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce Developer & Consultant";
 
   // Liste des profils sociaux/professionnels (LinkedIn, GitHub…) — séparés par des virgules dans l'env var
+  // encodeURI normalise les caractères non-ASCII dans les URLs (ex: ï, è dans le
+  // profil LinkedIn) — requis pour la validité JSON-LD Schema.org.
   const sameAs = (process.env.NEXT_PUBLIC_SAME_AS || "")
     .split(",")
     .map((s) => s.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((url) => { try { return new URL(url).href; } catch { return url; } });
 
   // Identifiant unique de la personne dans le graphe JSON-LD
   const personId = `${siteUrl}/#person`;
