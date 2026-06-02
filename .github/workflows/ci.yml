@@ -67,6 +67,12 @@ jobs:
           cache: npm
 
       - name: Install
+        # PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD : évite que le postinstall de @playwright/test
+        # télécharge/extrait partiellement le navigateur dans ~/.cache/ms-playwright.
+        # Un zip partiel corrompt l'état et fait geler `playwright install` sur l'extraction.
+        # L'installation explicite dans le job e2e démarre sur un état propre.
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         run: npm ci
 
       # Audit de sécurité des dépendances npm.
@@ -124,6 +130,8 @@ jobs:
           cache: npm
 
       - name: Install
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         run: npm ci
 
       # Télécharge le build produit par build-test — évite un second `npm run build`
