@@ -2,7 +2,10 @@
 // --------------------
 // Configuration Playwright pour les tests E2E du portfolio.
 //
-// Navigateurs : Chromium + Firefox (couverture multi-moteur).
+// Navigateurs :
+//   - CI    : channel:'chrome' — utilise Google Chrome pré-installé sur ubuntu-latest
+//             (/usr/bin/google-chrome). Évite tout téléchargement CDN qui gelait l'extraction.
+//   - Local : Chromium + Firefox (couverture multi-moteur)
 // En local : réutilise un serveur de dev déjà actif (reuseExistingServer).
 // En CI   : démarre le serveur de production (npm run start, après build).
 //
@@ -23,8 +26,8 @@ export default defineConfig({
   // 1 retry en CI pour absorber les flakiness réseau
   retries: process.env.CI ? 1 : 0,
 
-  // 1 worker en CI, auto en local
-  workers: process.env.CI ? 1 : undefined,
+  // 2 workers en CI (parallélisme léger sans conflits — serveur partagé stateless)
+  workers: process.env.CI ? 2 : undefined,
 
   // Reporter adapté à l'environnement
   reporter: process.env.CI ? "github" : "list",
@@ -37,17 +40,19 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
 
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      // Firefox — moteur Gecko, comportements CSP/crypto parfois différents de Blink
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-  ],
+  // CI : channel:'chrome' — Google Chrome pré-installé sur ubuntu-latest, sans téléchargement.
+  // `npx playwright install` gelait systématiquement sur l'extraction du zip (CDN → extraction hang).
+  // Firefox testé en local uniquement.
+  projects: process.env.CI
+    ? [{ name: "chromium", use: { ...devices["Desktop Chrome"], channel: "chrome" } }]
+    : [
+        { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+        {
+          // Firefox — moteur Gecko, comportements CSP/crypto parfois différents de Blink
+          name: "firefox",
+          use: { ...devices["Desktop Firefox"] },
+        },
+      ],
 
   // Serveur web automatique
   webServer: {
