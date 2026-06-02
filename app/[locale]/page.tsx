@@ -29,8 +29,6 @@ const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
 });
 const ContactForm        = dynamic(() => import("@/components/ContactForm"));
 const Testimonials       = dynamic(() => import("@/components/Testimonials"));
-// PresentationMode utilise ssr: false → doit passer par un wrapper Client Component
-import PresentationModeLoader from "@/components/PresentationModeLoader";
 import ScrollToHash from "@/components/ScrollToHash";
 import { getExperienceItems } from "@/content/experience";
 import { testimonials } from "@/content/testimonials";
@@ -59,9 +57,6 @@ export default async function Home({ params }: Props) {
     <>
       {/* Scroll vers ancre (#hash) sur navigation SPA inter-pages */}
       <ScrollToHash />
-
-      {/* MODE PRÉSENTATION — bouton flottant + contrôles (Alt+P pour activer) */}
-      <PresentationModeLoader locale={locale} />
 
       {/* HERO — simplifié (photo + titre + badges + 2 CTAs)
           ProfileNarrative et ProfileFactsCard ont été déplacés vers /about
