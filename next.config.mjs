@@ -33,6 +33,11 @@ const withBundleAnalyzer = bundleAnalyzer({
   openAnalyzer: true,
 });
 
+// URL absolue requise par la spec W3C Reporting API (Report-To + Reporting-Endpoints).
+// Les URLs relatives sont ignorées silencieusement par Firefox et Safari.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-next-one-gold.vercel.app";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Supprime le header X-Powered-By: Next.js — évite le fingerprinting du framework
@@ -167,12 +172,12 @@ const nextConfig = {
             value: JSON.stringify({
               group: "csp-endpoint",
               max_age: 86400,
-              endpoints: [{ url: "/api/csp-report" }],
+              endpoints: [{ url: `${SITE_URL}/api/csp-report` }],
             })
           },
           {
             key: "Reporting-Endpoints",
-            value: 'csp-endpoint="/api/csp-report"'
+            value: `csp-endpoint="${SITE_URL}/api/csp-report"`,
           },
         ]
       }
