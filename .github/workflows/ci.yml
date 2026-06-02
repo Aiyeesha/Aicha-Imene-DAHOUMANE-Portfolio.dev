@@ -91,6 +91,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify SW version injection
+        run: |
+          if grep -q 'CACHE_VERSION = "v1"' public/sw.js; then
+            echo "ERREUR : inject-sw-version n'a pas remplacé CACHE_VERSION dans sw.js" && exit 1
+          fi
+          echo "sw.js CACHE_VERSION OK : $(grep 'CACHE_VERSION' public/sw.js)"
+
   e2e:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
