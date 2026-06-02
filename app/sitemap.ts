@@ -8,7 +8,8 @@
 //                   work-with-me, colophon, changelog, legal, privacy, accessibility
 // Pages dynamiques : articles de blog (MDX) + pages projets (Supabase)
 //
-// Mettre à jour NEXT_PUBLIC_SITE_LASTMOD (format ISO 8601) après chaque déploiement majeur.
+// NEXT_PUBLIC_SITE_LASTMOD (optionnel) — permet de figer la date si nécessaire.
+// Si absent, la date du jour est utilisée (acceptable pour un portfolio).
 
 import type { MetadataRoute } from "next";
 import { readAllPosts } from "@/content/blog/fs";
@@ -19,7 +20,11 @@ import { getSiteUrl } from "@/lib/siteUrl";
 // qui ne doit pas être appelé au build time (credentials absentes en CI pour les PRs Dependabot).
 export const dynamic = "force-dynamic";
 
-const STATIC_LAST_MODIFIED = new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD ?? "2026-02-04");
+// Si NEXT_PUBLIC_SITE_LASTMOD n'est pas défini, on utilise la date du jour.
+// La valeur est correcte au déploiement (Vercel injecte la variable via les Settings).
+const STATIC_LAST_MODIFIED = process.env.NEXT_PUBLIC_SITE_LASTMOD
+  ? new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD)
+  : new Date();
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
