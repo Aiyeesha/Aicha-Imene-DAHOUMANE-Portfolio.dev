@@ -7,7 +7,8 @@
  *   - Pages HTML                       : Network First → Cache → Offline fallback
  *   - Routes API (/api/*)              : Network Only (jamais mis en cache)
  *
- * Mise à jour : incrémenter CACHE_VERSION à chaque déploiement majeur.
+ * CACHE_VERSION est injecté automatiquement en postbuild (scripts/inject-sw-version.mjs)
+ * avec le hash court du commit Git — ne pas modifier manuellement.
  * L'ancienne version est supprimée automatiquement à l'activation.
  */
 
