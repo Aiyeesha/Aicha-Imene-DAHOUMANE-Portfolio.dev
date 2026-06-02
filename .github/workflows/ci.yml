@@ -141,18 +141,9 @@ jobs:
           name: next-build
           path: .
 
-      # CI : Chromium uniquement (Firefox testé en local).
-      # Pas de timeout par step — le job-level timeout (60 min) est le filet de sécurité.
-      # Des step timeouts trop courts tuaient le job avant que le download CDN (~167 MiB)
-      # ne termine sur un runner lent.
-      - name: Install Playwright system dependencies
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: npx playwright install-deps chromium
-
-      - name: Install Playwright browsers (Chromium)
-        run: npx playwright install chromium
-
+      # CI : channel:'chrome' dans playwright.config.ts — Google Chrome pré-installé sur
+      # ubuntu-latest (/usr/bin/google-chrome). Plus besoin de télécharger le Chromium
+      # de Playwright (le CDN causait un gel systématique sur l'extraction).
       - name: Run E2E tests
         run: npm run test:e2e
 
