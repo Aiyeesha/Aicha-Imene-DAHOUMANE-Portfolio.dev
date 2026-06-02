@@ -91,12 +91,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify SW version injection
+      - name: Verify SW route exists
         run: |
-          if grep -q 'CACHE_VERSION = "v1"' public/sw.js; then
-            echo "ERREUR : inject-sw-version n'a pas remplacé CACHE_VERSION dans sw.js" && exit 1
-          fi
-          echo "sw.js CACHE_VERSION OK : $(grep 'CACHE_VERSION' public/sw.js)"
+          test -f app/sw.js/route.ts || (echo "ERREUR : app/sw.js/route.ts manquant" && exit 1)
+          test -f public/sw-template.js || (echo "ERREUR : public/sw-template.js manquant" && exit 1)
+          echo "SW route OK"
 
   e2e:
     name: E2E (Playwright)
