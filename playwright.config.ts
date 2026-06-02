@@ -3,7 +3,8 @@
 // Configuration Playwright pour les tests E2E du portfolio.
 //
 // Navigateurs :
-//   - CI    : Chromium uniquement (téléchargement plus petit, runner GitHub plus fiable)
+//   - CI    : channel:'chrome' — utilise Google Chrome pré-installé sur ubuntu-latest
+//             (/usr/bin/google-chrome). Évite tout téléchargement CDN qui gelait l'extraction.
 //   - Local : Chromium + Firefox (couverture multi-moteur)
 // En local : réutilise un serveur de dev déjà actif (reuseExistingServer).
 // En CI   : démarre le serveur de production (npm run start, après build).
@@ -39,10 +40,11 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
 
-  // CI : Chromium uniquement — Firefox testé en local uniquement.
-  // Le runner GitHub gèle sur le téléchargement des binaires Firefox (~300 MB).
+  // CI : channel:'chrome' — Google Chrome pré-installé sur ubuntu-latest, sans téléchargement.
+  // `npx playwright install` gelait systématiquement sur l'extraction du zip (CDN → extraction hang).
+  // Firefox testé en local uniquement.
   projects: process.env.CI
-    ? [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }]
+    ? [{ name: "chromium", use: { ...devices["Desktop Chrome"], channel: "chrome" } }]
     : [
         { name: "chromium", use: { ...devices["Desktop Chrome"] } },
         {
