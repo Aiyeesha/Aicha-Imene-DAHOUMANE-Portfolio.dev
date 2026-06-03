@@ -11,7 +11,7 @@
 //
 // Note : Map n'est pas sérialisable en JSON → on utilise un objet plain.
 
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { cacheGetOrSet }              from "@/lib/cache";
 import type { ServiceStatus, HealthReport } from "@/lib/health";
 
@@ -32,7 +32,7 @@ export async function getLatestPingReport(): Promise<HealthReport | null> {
 
 async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = createAdminSupabaseClient();
 
     // Récupère le dernier ping de chaque service (1 requête)
     const { data, error } = await supabase
@@ -107,7 +107,7 @@ async function fetchLatencyFromSupabase(): Promise<LatencyHistory> {
   const history: LatencyHistory = {};
 
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = createAdminSupabaseClient();
     const since    = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
     const { data, error } = await supabase
@@ -153,7 +153,7 @@ async function fetchFromSupabase(): Promise<UptimeStats> {
   const stats: UptimeStats = {};
 
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = createAdminSupabaseClient();
     const since    = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
     const { data, error } = await supabase

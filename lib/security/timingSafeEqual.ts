@@ -2,24 +2,43 @@
 // --------------------------------
 // Comparaison de chaînes en temps constant — compatible Edge Runtime et Node.js.
 //
-// Utilise crypto.subtle.timingSafeEqual() (Web Crypto API, disponible dans
-// Node.js ≥ 15 et dans l'Edge Runtime Vercel). Évite le timing oracle : un
-// attaquant ne peut pas déduire le secret en mesurant les temps de réponse.
+// Implémentation via HMAC-SHA256 éphémère (Web Crypto API standard) :
+//   1. Génère une clé HMAC aléatoire par appel (non extractible)
+//   2. Signe les deux buffers (padded à la même longueur) avec cette clé
+//   3. XOR les deux signatures de taille fixe (32 octets) — temps constant
+//   4. Vérifie aussi l'égalité des longueurs originales
 //
-// Technique : on encode les deux chaînes en UTF-8 et on les pad à la même
-// longueur avant la comparaison pour masquer un oracle sur la longueur.
-// La longueur originale est vérifiée séparément avant de retourner le résultat.
-
-// crypto.subtle.timingSafeEqual n'est pas dans les types W3C standard de SubtleCrypto.
-type SubtleCryptoWithTimingSafe = SubtleCrypto & {
-  timingSafeEqual(a: BufferSource, b: BufferSource): Promise<boolean>;
-};
+// Cette approche évite crypto.subtle.timingSafeEqual qui n'est pas standard
+// W3C et absent de certains environnements Node.js (auto-hébergement local).
+// HMAC + generateKey sont disponibles dans Edge Runtime et Node.js ≥ 15.
 
 export async function timingSafeStringEqual(a: string, b: string): Promise<boolean> {
-  const enc = new TextEncoder();
-  const maxLen = Math.max(a.length, b.length);
-  const aBuf = enc.encode(a.padEnd(maxLen, "\0"));
-  const bBuf = enc.encode(b.padEnd(maxLen, "\0"));
-  const equal = await (crypto.subtle as SubtleCryptoWithTimingSafe).timingSafeEqual(aBuf, bBuf);
-  return equal && a.length === b.length;
+  try {
+    const enc = new TextEncoder();
+    const maxLen = Math.max(a.length, b.length);
+    const aBuf = enc.encode(a.padEnd(maxLen, "\0"));
+    const bBuf = enc.encode(b.padEnd(maxLen, "\0"));
+
+    // Clé HMAC éphémère par appel — empêche tout oracle de timing sur les données
+    const key = await crypto.subtle.generateKey(
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+
+    const [sigA, sigB] = await Promise.all([
+      crypto.subtle.sign("HMAC", key, aBuf),
+      crypto.subtle.sign("HMAC", key, bBuf),
+    ]);
+
+    // Comparaison XOR sur des tableaux de taille fixe (32 octets) — temps constant
+    const va = new Uint8Array(sigA);
+    const vb = new Uint8Array(sigB);
+    let diff = 0;
+    for (let i = 0; i < va.length; i++) diff |= va[i] ^ vb[i];
+
+    return diff === 0 && a.length === b.length;
+  } catch {
+    return false; // fail-closed
+  }
 }
