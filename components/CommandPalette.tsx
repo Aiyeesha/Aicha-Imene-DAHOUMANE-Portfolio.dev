@@ -150,8 +150,8 @@ export default function CommandPalette() {
     process.env.NEXT_PUBLIC_CV_URL ||
     `/cv/cv-${locale}-${track}.pdf`;
 
-  const rawLinkedInUrl = process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com";
-  const linkedInUrl = encodeURI(rawLinkedInUrl.startsWith("http") ? rawLinkedInUrl : `https://${rawLinkedInUrl}`);
+  const rawLinkedInUrl = (process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com").split(",")[0].trim();
+  const linkedInUrl = (() => { try { return new URL(rawLinkedInUrl.startsWith("http") ? rawLinkedInUrl : `https://${rawLinkedInUrl}`).href; } catch { return "https://www.linkedin.com"; } })();
 
   // ── Labels bilingues ─────────────────────────────────────────────────────────
   const isFr = locale === "fr";
