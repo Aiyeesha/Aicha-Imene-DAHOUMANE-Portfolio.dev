@@ -373,7 +373,7 @@ useEffect(() => {
           le backdrop fade en opacity — aucune dépendance Framer Motion pour
           ne pas charger ~25 KB gzip sur toutes les pages. */}
       <div
-        className={`fixed inset-0 z-[80] lg:hidden transition-opacity duration-200 ease-out ${
+        className={`fixed inset-0 z-[80] xl:hidden transition-opacity duration-200 ease-out ${
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!mobileOpen}

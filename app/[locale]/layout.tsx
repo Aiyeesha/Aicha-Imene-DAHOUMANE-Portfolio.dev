@@ -91,7 +91,8 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages} locale={locale}>
       {/* initialTrack defaults to "salesforce"; Providers restores the saved
           preference from localStorage on mount (see providers.tsx useEffect).
-          Removing cookies() here enables ISR and CDN caching for all pages. */}
+          Note : le cache CDN reste inopérant car le nonce CSP de proxy.ts force
+          Cache-Control: no-store sur toutes les routes HTML (rendu dynamique). */}
       <Providers initialTrack="salesforce">
         <CursorSpotlight />
         <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070B1A] dark:text-white">

@@ -9,9 +9,9 @@ export default function ContactQuickLinks() {
   const { track } = useTrack();
 
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
-  const linkedIn = process.env.NEXT_PUBLIC_LINKEDIN_URL || "";
+  const linkedIn = (process.env.NEXT_PUBLIC_LINKEDIN_URL || "").split(",")[0].trim();
   const linkedInHref = linkedIn
-    ? encodeURI(linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`)
+    ? (() => { try { return new URL(linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`).href; } catch { return ""; } })()
     : "";
   const cvUrl = `/cv/cv-${locale}-${track}.pdf`;
 
