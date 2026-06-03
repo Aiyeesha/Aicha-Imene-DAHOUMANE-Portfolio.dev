@@ -23,9 +23,9 @@ function formatCountdown(seconds: number): string {
 }
 
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
-const LINKEDIN_URL = process.env.NEXT_PUBLIC_LINKEDIN_URL || "";
+const LINKEDIN_URL = (process.env.NEXT_PUBLIC_LINKEDIN_URL || "").split(",")[0].trim();
 const LINKEDIN_HREF = LINKEDIN_URL
-  ? encodeURI(LINKEDIN_URL.startsWith("http") ? LINKEDIN_URL : `https://${LINKEDIN_URL}`)
+  ? (() => { try { return new URL(LINKEDIN_URL.startsWith("http") ? LINKEDIN_URL : `https://${LINKEDIN_URL}`).href; } catch { return ""; } })()
   : "";
 
 // Convert API error codes into i18n keys
