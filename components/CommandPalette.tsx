@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useLocale } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
+import { LINKEDIN_URL } from "@/lib/social";
 
 // ── Styles injectés une seule fois via <style> ────────────────────────────────
 // L'overlay et le panel sont stylés ici car cmdk accepte seulement des classNames.
@@ -150,8 +151,7 @@ export default function CommandPalette() {
     process.env.NEXT_PUBLIC_CV_URL ||
     `/cv/cv-${locale}-${track}.pdf`;
 
-  const rawLinkedInUrl = (process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com").split(",")[0].trim();
-  const linkedInUrl = (() => { try { return new URL(rawLinkedInUrl.startsWith("http") ? rawLinkedInUrl : `https://${rawLinkedInUrl}`).href; } catch { return "https://www.linkedin.com"; } })();
+  const linkedInUrl = LINKEDIN_URL || "https://www.linkedin.com";
 
   // ── Labels bilingues ─────────────────────────────────────────────────────────
   const isFr = locale === "fr";
