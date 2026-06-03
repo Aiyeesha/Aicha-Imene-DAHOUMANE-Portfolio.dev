@@ -2,6 +2,7 @@
 
 import { useTranslations, useLocale } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
+import { LINKEDIN_URL } from "@/lib/social";
 
 export default function ContactQuickLinks() {
   const t = useTranslations();
@@ -9,10 +10,7 @@ export default function ContactQuickLinks() {
   const { track } = useTrack();
 
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
-  const linkedIn = (process.env.NEXT_PUBLIC_LINKEDIN_URL || "").split(",")[0].trim();
-  const linkedInHref = linkedIn
-    ? (() => { try { return new URL(linkedIn.startsWith("http") ? linkedIn : `https://${linkedIn}`).href; } catch { return ""; } })()
-    : "";
+  const linkedInHref = LINKEDIN_URL;
   const cvUrl = `/cv/cv-${locale}-${track}.pdf`;
 
   return (
