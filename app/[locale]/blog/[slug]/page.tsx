@@ -19,6 +19,7 @@ import { getSeriePosition } from "@/content/blog/series";
 import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { LINKEDIN_URL } from "@/lib/social";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 type Params = { locale: "en" | "fr"; slug: string };
@@ -119,10 +120,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
   const authorName   = process.env.NEXT_PUBLIC_OG_NAME    || "Aïcha Imène DAHOUMANE";
   const avatarUrl    = process.env.NEXT_PUBLIC_AVATAR_URL  || "/avatar.webp";
-  const linkedInRaw  = (process.env.NEXT_PUBLIC_LINKEDIN_URL || "").split(",")[0].trim();
-  const linkedInUrl  = linkedInRaw
-    ? (() => { try { return new URL(linkedInRaw.startsWith("http") ? linkedInRaw : `https://${linkedInRaw}`).href; } catch { return ""; } })()
-    : "";
+  const linkedInUrl  = LINKEDIN_URL;
 
   // ── JSON-LD ────────────────────────────────────────────────────────────────
   const siteUrl  = getSiteUrl();
