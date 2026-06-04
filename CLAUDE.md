@@ -58,8 +58,8 @@ The pattern in `lib/data/` is always two files:
 `lib/cache.ts` is a thin wrapper: on cache miss it calls the fetcher and writes to Redis; on Redis unavailability it falls back to direct Supabase calls silently.
 
 **Supabase client selection** — there are four clients in `lib/supabase/`:
-- `server.ts` — service role, for server components reading protected data
-- `admin.ts` — service role, for admin routes
+- `server.ts` — **anon key**, for server components reading RLS-protected data (the name is misleading — it is NOT service_role)
+- `admin.ts` — **service_role** + `import "server-only"`, for admin routes and any bypassing of RLS (e.g. `lib/uptime.ts`)
 - `client.ts` — anon key, for client components
 - `public-server.ts` — anon key, for server components that only need public data
 
@@ -97,6 +97,9 @@ All API routes are in `app/api/`. Key ones:
 - `'unsafe-inline'` is only present in development (webpack HMR); production uses `nonce-{nonce} 'strict-dynamic'`
 - `/api/redis-test` returns 404 in production (debug route)
 - All Supabase tables use RLS; `project_assets` restricts to published projects only
+- **Env validation** — `instrumentation.ts` runs `lib/env.ts` at server startup (Node.js runtime only). Validates all required env vars via Zod schemas (`publicSchema` + `serverSchema`). Skipped when `CI=true` or `NODE_ENV=test`. Logs missing/invalid vars without crashing.
+- **Timing-safe comparison** — `lib/security/timingSafeEqual.ts` uses HMAC-SHA256 via Web Crypto API (Edge Runtime compatible). Replaces the non-standard `crypto.subtle.timingSafeEqual` that doesn't exist in the Edge Runtime.
+- **Social URL sanitization** — `lib/social.ts` exports `LINKEDIN_URL` (parsed from `NEXT_PUBLIC_LINKEDIN_URL`, which may be comma-separated). All components must import from this module instead of re-parsing the env var inline.
 
 ## Environment Variables
 
@@ -118,8 +121,26 @@ The build succeeds without Redis/Supabase (falls back to empty arrays / direct f
 - **No cookies for locale** — the middleware intentionally strips `NEXT_LOCALE` to preserve ISR caching; locale comes from the URL segment only.
 - **Framer Motion** — all animations must respect `prefers-reduced-motion` (use `useReducedMotion()` or `motion` variants with `reducedMotion: "user"`).
 - **Path alias** — `@/` maps to the project root (configured in `tsconfig.json` and `jest.config.cjs`).
+- **LinkedIn URL** — always import `LINKEDIN_URL` from `lib/social.ts`; never re-parse `process.env.NEXT_PUBLIC_LINKEDIN_URL` inline (it may contain multiple comma-separated values).
+- **Supabase admin access** — use `createAdminSupabaseClient()` from `lib/supabase/admin.ts` whenever you need to bypass RLS (e.g. writing to `uptime_pings`, reading admin-only data). Never use `createServerSupabaseClient()` for service_role operations — it uses the anon key.
 
 ## Changelog
+
+### 04 June 2026
+- **Audit sécurité + qualité codebase (PRs #71, #72, #73)** — Audit complet de la codebase, de la base de données Supabase et du pipeline CI/CD. 13 findings résolus :
+  - **F-01** — `lib/uptime.ts` : passage de `createServerSupabaseClient()` (anon key) à `createAdminSupabaseClient()` (service_role) ; la section Services de `/status` était vide car RLS sur `uptime_pings` bloquait l'anon key
+  - **F-02** — `lib/security/timingSafeEqual.ts` : remplacement de `crypto.subtle.timingSafeEqual` (non-standard, absent de l'Edge Runtime) par comparaison HMAC-SHA256 via Web Crypto API
+  - **F-03** — `components/Navbar.tsx` : breakpoint du tiroir mobile corrigé `lg:hidden` → `xl:hidden` (zone morte à 1024–1279 px où le hamburger était visible mais le tiroir ne s'ouvrait pas)
+  - **F-04** — `app/[locale]/layout.tsx` : commentaire trompeur supprimé (le `Cache-Control: no-store` vient du nonce CSP généré dans `proxy.ts`, pas des cookies)
+  - **F-A** — `lib/social.ts` (nouveau) : centralisation du parsing de `NEXT_PUBLIC_LINKEDIN_URL` (la variable peut contenir plusieurs URLs séparées par des virgules) ; `ContactForm`, `ContactQuickLinks`, `CommandPalette` et `blog/[slug]/page.tsx` importent désormais `LINKEDIN_URL` depuis ce module
+  - **F-B** — `lib/env.ts` (nouveau) + `instrumentation.ts` (nouveau) : validation Zod de toutes les variables d'environnement au démarrage du serveur (Node.js runtime uniquement) ; détecte les tokens avec espaces/saut de ligne, les URLs invalides, les secrets trop courts ; skippé en CI et test
+  - **F-C** — README : badge OpenSSF Scorecard ajouté
+  - **S-01 (DB)** — `is_admin()` : `REVOKE EXECUTE FROM PUBLIC` — la fonction était accessible à `anon` et `authenticated` via le grant `PUBLIC`
+  - **S-02 (DB)** — `update_goals_updated_at`, `update_updated_at_column`, `set_updated_at` : `SET search_path = ''` ajouté (mutable search_path corrigé, anti-pattern Supabase documenté)
+  - **DB-2 (DB)** — `admins_read_self` RLS policy : `auth.uid()` → `(select auth.uid())` (anti-pattern per-row évité)
+  - **DB-3 (DB)** — `uptime_pings` : `COMMENT ON TABLE` ajouté documentant l'intent deny-all-sauf-service_role
+  - **CI** — étape depcheck ajoutée (détection des ghost dependencies, `--ignores server-only,playwright,mdx`) ; `@radix-ui/react-dialog`, `sharp`, `axe-core` déclarés explicitement ; `zod` aligné sur `^4.0.0` (le lock file résolvait déjà `4.3.6` en transitif)
+  - **CLAUDE.md** — correction de la documentation erronée : `lib/supabase/server.ts` utilise l'anon key (pas le service_role)
 
 ### 18 May 2026
 - **Audit intégral Vercel (PR #55)** — Audit complet de toutes les routes (`portfolio-next-one-gold.vercel.app`) : 25+ pages EN+FR, metadata, robots.txt, sitemap, sécurité, feature flags, CV, manifest. Résultat : 3 findings mineurs, 1 correctif appliqué :
