@@ -1,6 +1,7 @@
 # Aïcha Imène DAHOUMANE — Portfolio
 
 [![CI](https://github.com/Aiyeesha/portfolio-next/actions/workflows/ci.yml/badge.svg)](https://github.com/Aiyeesha/portfolio-next/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Aiyeesha/portfolio-next/badge)](https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/portfolio-next)
 [![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://portfolio-next-one-gold.vercel.app/en)
 [![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://portfolio-next-one-gold.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
