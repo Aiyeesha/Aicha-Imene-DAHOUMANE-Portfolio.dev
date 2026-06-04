@@ -233,7 +233,10 @@ portfolio/
 ├── messages/
 │   ├── en.json                 # English translations (~400 keys)
 │   └── fr.json                 # French translations (~400 keys)
-├── supabase/                   # SQL migration files
+├── supabase/
+│   ├── migrations/             # DDL + RLS (numérotés, appliqués par db:migrate)
+│   ├── seeds/                  # Données initiales des projets
+│   └── scripts/                # Correctifs one-off déjà appliqués (référence)
 ├── scripts/                    # Utility scripts (db:migrate, CV generation)
 └── public/
     ├── .well-known/
