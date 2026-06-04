@@ -172,6 +172,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 
 ```
 portfolio/
+├── instrumentation.ts          # Next.js server startup hook — runs lib/env.ts validation
 ├── app/
 │   ├── [locale]/               # Locale-scoped pages (App Router)
 │   │   ├── page.tsx            # One-page landing (home)
@@ -225,11 +226,17 @@ portfolio/
 ├── lib/
 │   ├── data/                   # Supabase data fetchers (cached via Redis)
 │   ├── supabase/               # Supabase client helpers (anon + service_role)
+│   ├── security/               # timingSafeEqual.ts — HMAC-SHA256 via Web Crypto API
+│   ├── env.ts                  # Zod env validation (called from instrumentation.ts)
+│   ├── social.ts               # NEXT_PUBLIC_LINKEDIN_URL sanitization (comma-separated)
 │   └── ratelimit.ts / redis.ts / cache.ts / analytics.ts
 ├── messages/
 │   ├── en.json                 # English translations (~400 keys)
 │   └── fr.json                 # French translations (~400 keys)
-├── supabase/                   # SQL migration files
+├── supabase/
+│   ├── migrations/             # DDL + RLS (numérotés, appliqués par db:migrate)
+│   ├── seeds/                  # Données initiales des projets
+│   └── scripts/                # Correctifs one-off déjà appliqués (référence)
 ├── scripts/                    # Utility scripts (db:migrate, CV generation)
 └── public/
     ├── .well-known/
@@ -268,10 +275,12 @@ npm test             # Jest unit tests
 | Layer | Measure |
 |-------|---------|
 | HTTP headers | CSP, HSTS (2 yr + preload), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — `X-Powered-By` suppressed |
-| Database | Supabase RLS on all tables — `project_assets` restricted to published projects only |
+| Database | Supabase RLS on all tables — `project_assets` restricted to published projects only; `is_admin()` REVOKE'd from PUBLIC; trigger functions have `search_path = ''` |
 | Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/newsletter`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/revalidate`, `/api/health`, `/api/errors`, and `/admin` (brute-force protection) |
 | Admin panel | HTTP Basic Auth + middleware rate-limit (10 req / 5 min / IP) |
 | Contact form | Honeypot, origin check, server-side input validation, dual submission |
+| Env validation | `instrumentation.ts` → `lib/env.ts` validates all env vars via Zod at server startup — catches missing secrets, invalid URLs, tokens with whitespace |
+| Credential comparison | `lib/security/timingSafeEqual.ts` — HMAC-SHA256 timing-safe comparison (Web Crypto API, Edge Runtime compatible) |
 | Debug routes | `/api/redis-test` returns 404 in production |
 | Crawlers | `robots.txt` disallows `/cv/` and `/admin/` |
 
