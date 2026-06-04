@@ -119,6 +119,14 @@ export const errorRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:errors")
   : createNoOpRatelimit(10, 60_000);
 
+// ── Limiteur pour /api/storage/redirect ──────────────────────────────
+// 30 requêtes par 60 secondes par IP.
+// Route non authentifiée — sans ce plafond, toute IP peut épuiser les
+// invocations Vercel et solliciter Supabase Storage sans friction.
+export const storageRatelimit = redis
+  ? createRatelimit(redis, 30, 60, "portfolio:rl:storage")
+  : createNoOpRatelimit(30, 60_000);
+
 // ── Limiteur pour /api/revalidate ─────────────────────────────────────
 // 10 requêtes par 60 secondes par IP.
 // Protège contre le flood de l'endpoint ISR en cas de fuite/bruteforce du

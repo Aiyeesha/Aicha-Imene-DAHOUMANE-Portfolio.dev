@@ -52,7 +52,8 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Dev : 'unsafe-inline' + 'unsafe-eval' nécessaires — webpack HMR injecte de nombreux
     // inline scripts sans nonce (hot-update chunks, error overlay, source maps).
     // Ces directives ne s'appliquent JAMAIS en production (isDev = false → branche else).
-    // Prod : nonce uniquement — Next.js applique automatiquement x-nonce aux RSC scripts.
+    // Prod : nonce uniquement — Next.js lit le header CSP de la requête (pas x-nonce)
+    // pour injecter nonce= sur ses propres <script> (chunks d'hydratation, bootstrap webpack).
     isDev
       ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com`
       // 'strict-dynamic' (CSP3) : seuls les scripts chargés par un script noncé
@@ -176,10 +177,14 @@ export async function proxy(request: NextRequest) {
     const deny = await adminAuth(request);
     if (deny) return deny;
 
-    // Injecter le nonce dans les headers de requête (lisible par Server Components
-    // via headers().get('x-nonce')) et dans la réponse (header CSP).
+    // Injecter le nonce dans les headers de requête :
+    //   - x-nonce         → lu par les Server Components via headers().get('x-nonce')
+    //   - Content-Security-Policy → lu par Next.js pour injecter nonce= sur ses propres
+    //     <script> (chunks d'hydratation, bootstrap webpack). Sans ce header REQUEST,
+    //     Next.js ne tague pas ses scripts et strict-dynamic les bloque.
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-nonce", nonce);
+    requestHeaders.set("Content-Security-Policy", csp);
 
     const response = NextResponse.next({
       request: { headers: requestHeaders },
@@ -200,8 +205,13 @@ export async function proxy(request: NextRequest) {
   // Pass-through : la page va être rendue — injecter le nonce.
   // On crée un nouveau NextResponse.next() avec x-nonce dans les headers de
   // requête, puis on copie les headers de intlHandler (cookies de locale, etc.).
+  //   - x-nonce         → lu par les Server Components via headers().get('x-nonce')
+  //   - Content-Security-Policy → lu par Next.js pour injecter nonce= sur ses propres
+  //     <script> (chunks d'hydratation, bootstrap webpack). Sans ce header REQUEST,
+  //     Next.js ne tague pas ses scripts et strict-dynamic les bloque.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
 
   // Transmettre la locale détectée par next-intl aux Server Components.
   // getLocale() lit x-next-intl-locale depuis les request headers.

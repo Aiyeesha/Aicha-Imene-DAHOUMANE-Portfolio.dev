@@ -240,7 +240,9 @@ export default async function ChangelogPage({
                       {s.items.map((item, i) => (
                         <li key={i} className="flex gap-2 text-sm text-muted">
                           <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-50" />
-                          {/* Mise en gras du texte entre ** */}
+                          {/* Mise en gras du texte entre ** — contenu statique committé (auteur contrôlé),
+                              pas de donnée externe. Les caractères dangereux &, <, > sont échappés
+                              avant le remplacement Markdown → surface XSS nulle. */}
                           <span
                             dangerouslySetInnerHTML={{
                               __html: item

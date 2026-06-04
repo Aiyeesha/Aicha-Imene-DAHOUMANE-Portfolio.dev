@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { safeLimit, storageRatelimit } from "@/lib/ratelimit";
 
 /**
  * Redirect to a signed URL for a PRIVATE Supabase Storage object.
@@ -25,6 +26,23 @@ function isSafePath(path: string) {
 }
 
 export async function GET(req: NextRequest) {
+  // Rate-limit : 30 req/min par IP — route non authentifiée
+  const ip =
+    req.headers.get("x-real-ip") ??
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown";
+
+  const { success, reset } = await safeLimit(storageRatelimit, ip);
+  if (!success) {
+    return NextResponse.json(
+      { ok: false, error: "rate_limited" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil((reset - Date.now()) / 1000)) },
+      }
+    );
+  }
+
   const bucket = req.nextUrl.searchParams.get("bucket") ?? "";
   const path = req.nextUrl.searchParams.get("path") ?? "";
 
