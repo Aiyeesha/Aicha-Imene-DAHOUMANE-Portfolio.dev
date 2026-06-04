@@ -4,10 +4,11 @@ out
 dist
 .env*
 .DS_Store
-
+.claude
 .vercel
 /.claude
 *.tsbuildinfo
 test-results/
 playwright-report/
 claude
+claude.md
