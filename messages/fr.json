@@ -290,7 +290,7 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l'international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Paris / Île-de-France · Marseille / PACA — Full remote · Hybride · Sur site",
+    "basedInValue": "Paris / Île-de-France · Marseille / PACA — Full remote · Hybride · Sur site — Mobilité France & international (Europe + pays anglophones)",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
@@ -369,7 +369,7 @@
       },
       {
         "q": "Travaillez-vous à distance ?",
-        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée en France et mobilisable sur Paris / Île-de-France et Marseille / PACA. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
+        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée en France (Paris / Île-de-France et Marseille / PACA) et ouverte à la relocalisation en France et à l'international : Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte, et tout autre contexte anglophone. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
       },
       {
         "q": "Quels sont vos délais habituels ?",
@@ -408,7 +408,7 @@
     "roles": "Postes ciblés",
     "rolesValues": "Administratrice systèmes & réseaux · DevOps · Administratrice Salesforce · Développeuse Salesforce · Consultante IT · Consultante Salesforce",
     "location": "Localisation",
-    "locationValues": "Paris / Île-de-France · Marseille / Provence-Alpes-Côte d'Azur",
+    "locationValues": "Paris / Île-de-France · Marseille / PACA · Mobilité France & international (BE, LU, DE, IT, ES, UK, IE, MT + pays anglophones)",
     "cta": "Prendre contact →"
   }
 }
