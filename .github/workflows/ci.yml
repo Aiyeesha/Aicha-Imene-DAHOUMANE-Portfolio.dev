@@ -78,7 +78,7 @@ jobs:
       # packages de config (tailwind, eslint…). Exemple détecté : @radix-ui/react-dialog.
       - name: Ghost dependency check (depcheck)
         run: |
-          npx --yes depcheck --json 2>/dev/null > /tmp/depcheck.json || true
+          npx --yes depcheck --ignores="server-only,playwright,mdx" --json 2>/dev/null > /tmp/depcheck.json || true
           node -e "
             const r = require('/tmp/depcheck.json');
             const missing = Object.keys(r.missing || {});
