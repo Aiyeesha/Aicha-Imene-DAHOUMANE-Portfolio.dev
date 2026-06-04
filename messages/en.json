@@ -313,7 +313,7 @@
     ],
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
-    "basedInValue": "Paris / Île-de-France · Marseille / PACA — Full remote · Hybrid · On-site",
+    "basedInValue": "Paris / Île-de-France · Marseille / PACA — Full remote · Hybrid · On-site — Open to relocation (Europe & English-speaking countries)",
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
@@ -369,7 +369,7 @@
       },
       {
         "q": "Do you work remotely?",
-        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in France and available in Paris / Île-de-France and Marseille / PACA. Video calls, async communication, and documented handovers are part of my standard workflow."
+        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in France (Paris / Île-de-France and Marseille / PACA) and open to relocation in France and internationally: Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta, and any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
       },
       {
         "q": "What are your typical timelines?",
@@ -408,7 +408,7 @@
     "roles": "Target roles",
     "rolesValues": "Systems & Network Admin · DevOps · Salesforce Admin · Salesforce Developer · IT Consultant · Salesforce Consultant",
     "location": "Location",
-    "locationValues": "Paris / Île-de-France · Marseille / Provence-Alpes-Côte d'Azur",
+    "locationValues": "Paris / Île-de-France · Marseille / PACA · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
     "cta": "Get in touch →"
   }
 }
