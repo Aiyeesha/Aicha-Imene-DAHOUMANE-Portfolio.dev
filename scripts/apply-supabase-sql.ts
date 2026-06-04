@@ -10,8 +10,9 @@
  *   3. 003_uptime.sql               — table uptime_pings
  *   4. 004_testimonial_submissions  — table testimonial_submissions
  *   5. 005_goals_2026.sql           — table goals_2026
- *   6. 006_security_hardening.sql   — durcissement sécurité (audit 2026-06-04)
- *   7. 007_projects_schema.sql      — schéma complet projects + project_assets
+ *   6. 006_security_hardening.sql               — durcissement sécurité (audit 2026-06-04)
+ *   7. 007_projects_schema.sql                  — schéma complet projects + project_assets
+ *   8. 008_about_goals_certifications_schema.sql — about_pages, goals_2026, certifications
  *
  * Variables d'environnement requises (dans .env.local) :
  *   SUPABASE_PROJECT_REF    — ID du projet (Settings > General > Reference ID)
@@ -222,6 +223,7 @@ async function main() {
     path.resolve(process.cwd(), "supabase/migrations/005_goals_2026.sql"),
     path.resolve(process.cwd(), "supabase/migrations/006_security_hardening.sql"),
     path.resolve(process.cwd(), "supabase/migrations/007_projects_schema.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/008_about_goals_certifications_schema.sql"),
   ];
 
   let totalOk = 0, totalSkipped = 0, totalFailed = 0;
