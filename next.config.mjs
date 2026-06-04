@@ -15,7 +15,7 @@
 // IMPORTANT CSP :
 //   - 'unsafe-inline' et 'unsafe-eval' sont nécessaires pour next-intl et Tailwind en développement.
 //   - Calendly requiert frame-src et script-src supplémentaires.
-//   - Supabase et Upstash requièrent connect-src *.supabase.co et *.upstash.io.
+//   - Supabase requiert connect-src *.supabase.co (Upstash est server-side uniquement — absent de connect-src).
 //   - Formspree requiert connect-src formspree.io.
 //   - Si vous ajoutez Google Analytics / Plausible / autres, mettez à jour script-src et connect-src.
 
@@ -67,9 +67,9 @@ const nextConfig = {
     return [
       // ── Assets statiques publics (logo, avatar, CV PDF…) ──────────────────────
       // Vercel cache déjà /_next/static/ avec immutable.
-      // Les fichiers dans /public/ n'ont pas de Cache-Control par défaut → on fixe 1 an.
+      // Les fichiers dans /public/ n'ont pas de Cache-Control par défaut → on fixe 1 jour (86400 s).
       // Ils n'ont pas de hash dans leur URL, donc on ne met pas "immutable"
-      // (sinon une mise à jour de /avatar.webp ne serait pas récupérée avant 1 an).
+      // (sinon une mise à jour de /avatar.webp ne serait pas récupérée avant expiration).
       {
         source: "/(:path*\\.(?:webp|png|jpg|jpeg|svg|ico|gif|avif|woff2|woff|ttf|otf|pdf))",
         headers: [
