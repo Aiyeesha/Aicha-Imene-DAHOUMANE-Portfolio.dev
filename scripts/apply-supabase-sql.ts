@@ -4,9 +4,15 @@
  * Applique les fichiers SQL de /supabase/ sur la base Supabase distante
  * via l'API Management Supabase (aucune dépendance supplémentaire, fetch natif Node 18+).
  *
- * Fichiers exécutés dans l'ordre :
- *   1. supabase/testimonials.sql  — création de la table testimonials
- *   2. supabase/policies.sql      — RLS pour toutes les tables
+ * Fichiers exécutés dans l'ordre (supabase/migrations/) :
+ *   1. 001_testimonials.sql         — table testimonials
+ *   2. 002_policies.sql             — RLS toutes tables
+ *   3. 003_uptime.sql               — table uptime_pings
+ *   4. 004_testimonial_submissions  — table testimonial_submissions
+ *   5. 005_goals_2026.sql           — table goals_2026
+ *   6. 006_security_hardening.sql               — durcissement sécurité (audit 2026-06-04)
+ *   7. 007_projects_schema.sql                  — schéma complet projects + project_assets
+ *   8. 008_about_goals_certifications_schema.sql — about_pages, goals_2026, certifications
  *
  * Variables d'environnement requises (dans .env.local) :
  *   SUPABASE_PROJECT_REF    — ID du projet (Settings > General > Reference ID)
@@ -208,13 +214,16 @@ async function main() {
   console.log(`\n🚀 apply-supabase-sql — projet : ${PROJECT_REF}`);
   console.log("──────────────────────────────────────────────────────────");
 
-  // Fichiers à appliquer dans l'ordre
+  // Fichiers à appliquer dans l'ordre (supabase/migrations/)
   const SQL_FILES = [
-    path.resolve(process.cwd(), "supabase/testimonials.sql"),
-    path.resolve(process.cwd(), "supabase/policies.sql"),
-    path.resolve(process.cwd(), "supabase/uptime.sql"),
-    path.resolve(process.cwd(), "supabase/testimonial-submissions.sql"),
-    path.resolve(process.cwd(), "supabase/goals-2026.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/001_testimonials.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/002_policies.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/003_uptime.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/004_testimonial_submissions.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/005_goals_2026.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/006_security_hardening.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/007_projects_schema.sql"),
+    path.resolve(process.cwd(), "supabase/migrations/008_about_goals_certifications_schema.sql"),
   ];
 
   let totalOk = 0, totalSkipped = 0, totalFailed = 0;
