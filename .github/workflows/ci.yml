@@ -72,6 +72,24 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         run: npm ci
 
+      # Détection des dépendances fantômes : imports directs dans le code source
+      # non déclarés dans package.json, résolus uniquement en transitif.
+      # Uniquement "missing" (pas "unused") pour éviter les faux positifs sur les
+      # packages de config (tailwind, eslint…). Exemple détecté : @radix-ui/react-dialog.
+      - name: Ghost dependency check (depcheck)
+        run: |
+          npx --yes depcheck --ignores="server-only,playwright,mdx" --json 2>/dev/null > /tmp/depcheck.json || true
+          node -e "
+            const r = require('/tmp/depcheck.json');
+            const missing = Object.keys(r.missing || {});
+            if (missing.length > 0) {
+              console.error('Dépendances fantômes détectées (importées mais absentes de package.json) :');
+              missing.forEach(m => console.error(' •', m));
+              process.exit(1);
+            }
+            console.log('Aucune dépendance fantôme.');
+          "
+
       # Audit de sécurité des dépendances npm.
       # --audit-level=high : échoue uniquement sur les vulnérabilités HIGH et CRITICAL.
       # --production : ignore les devDependencies (non déployées sur Vercel).
