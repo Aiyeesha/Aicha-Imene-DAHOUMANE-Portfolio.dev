@@ -79,7 +79,9 @@ export default async function WorkWithMePage({ params }: PageProps) {
     availLimited:   isFr ? "Disponibilité limitée" : "Limited availability",
     availNo:        isFr ? "Non disponible" : "Not available",
     availSince:     isFr ? `À partir de ${AVAILABILITY.since.fr}` : `From ${AVAILABILITY.since.en}`,
-    availContracts: isFr ? "Freelance · Mission · CDD" : "Freelance · Contract · Fixed-term",
+    availContracts: isFr
+      ? "Freelance direct · Portage salarial · Mission · CDD"
+      : "Direct freelance · Portage salarial · Contract · Fixed-term",
     availMode:      isFr
       ? "100 % remote · Paris / IDF · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
       : "100% remote · Paris / IDF · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
@@ -113,6 +115,10 @@ export default async function WorkWithMePage({ params }: PageProps) {
     faqs: isFr
       ? [
           {
+            q: "Sous quel statut intervenez-vous ?",
+            a: "Je travaille en freelance direct (auto-entreprise) ou en portage salarial selon ce qui convient le mieux à votre organisation. Les deux formules sont possibles, pour des missions courtes, longues ou ponctuelles — sans contrainte de minimum.",
+          },
+          {
             q: "Travaillez-vous en CDI ?",
             a: "J'étudie les propositions en CDI pour des postes Salesforce ou IT Ops bien positionnés — contactez-moi pour en discuter.",
           },
@@ -126,6 +132,10 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
         ]
       : [
+          {
+            q: "What billing arrangement do you work under?",
+            a: "I work as a direct freelance (sole trader / auto-entrepreneur) or through portage salarial, whichever suits your organisation best. Both arrangements are available for short, long, or ad-hoc missions — no minimum commitment required.",
+          },
           {
             q: "Are you open to permanent positions?",
             a: "I consider well-positioned Salesforce or IT Ops permanent roles — reach out and let's talk.",
