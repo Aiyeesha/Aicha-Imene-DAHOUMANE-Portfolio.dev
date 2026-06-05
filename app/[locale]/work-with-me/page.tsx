@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
     : "Work with me — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Disponible pour des missions freelance Salesforce et IT Ops — 100 % remote depuis Paris / Marseille, avec mobilité en France et à l'international. Découvrez mes conditions, mon process et comment démarrer."
-    : "Available for freelance Salesforce and IT Ops missions — 100% remote from Paris / Marseille, open to relocation in France and internationally. Find out about my terms, process, and how to get started.";
+    ? "Disponible pour des missions freelance Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones. Découvrez mes conditions, mon process et comment démarrer."
+    : "Available for freelance Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide. Find out about my terms, process, and how to get started.";
   return {
     title,
     description,
@@ -68,21 +68,23 @@ export default async function WorkWithMePage({ params }: PageProps) {
   const isFr = locale === "fr";
 
   const labels = {
-    kicker:         isFr ? "Freelance · Remote · Europe" : "Freelance · Remote · Europe",
+    kicker:         isFr ? "Freelance · Remote · Mobilité & Relocalisation" : "Freelance · Remote · Open to Relocation",
     h1:             isFr ? "Travaillons ensemble" : "Work with me",
     subtitle:       isFr
-      ? "Je suis disponible pour des missions freelance en Salesforce et IT Ops — à distance, en Europe. Voici comment on peut collaborer."
-      : "I'm available for freelance Salesforce and IT Ops missions — remote, in Europe. Here's how we can work together.",
+      ? "Je suis disponible pour des missions freelance en Salesforce et IT Ops — 100 % à distance, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
+      : "I'm available for freelance Salesforce and IT Ops missions — 100% remote, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
 
     availTitle:     isFr ? "Disponibilité" : "Availability",
     availOpen:      isFr ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : "Limited availability",
     availNo:        isFr ? "Non disponible" : "Not available",
     availSince:     isFr ? `À partir de ${AVAILABILITY.since.fr}` : `From ${AVAILABILITY.since.en}`,
-    availContracts: isFr ? "Freelance · Mission · CDD" : "Freelance · Contract · Fixed-term",
+    availContracts: isFr
+      ? "Freelance direct · Portage salarial · Mission · CDD"
+      : "Direct freelance · Portage salarial · Contract · Fixed-term",
     availMode:      isFr
-      ? "100 % remote · Paris / Île-de-France · Marseille / PACA · Mobilité France & international"
-      : "100% remote · Paris / Île-de-France · Marseille / PACA · Open to relocation (France & international)",
+      ? "100 % remote · Paris / IDF · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
+      : "100% remote · Paris / IDF · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : "Domains",
@@ -93,8 +95,8 @@ export default async function WorkWithMePage({ params }: PageProps) {
       : ["Short term (1–3 months)", "Long term (3–12 months)", "Ongoing engagement"],
     modeLabel:      isFr ? "Mode" : "Mode",
     modes:          isFr
-      ? ["100 % Remote", "Remote + déplacements ponctuels", "Europe uniquement"]
-      : ["100% Remote", "Remote + occasional travel", "Europe only"],
+      ? ["100 % Remote", "Hybride · Sur site", "Mobilité & relocalisation envisageables"]
+      : ["100% Remote", "Hybrid · On-site", "Open to mobility & relocation"],
 
     processTitle:   isFr ? "Mon process" : "My process",
     steps: isFr
@@ -113,6 +115,10 @@ export default async function WorkWithMePage({ params }: PageProps) {
     faqs: isFr
       ? [
           {
+            q: "Sous quel statut intervenez-vous ?",
+            a: "Je travaille en freelance direct ou en portage salarial selon ce qui convient le mieux à votre organisation. Les deux formules sont possibles, pour des missions courtes, longues ou ponctuelles — sans contrainte de minimum.",
+          },
+          {
             q: "Travaillez-vous en CDI ?",
             a: "J'étudie les propositions en CDI pour des postes Salesforce ou IT Ops bien positionnés — contactez-moi pour en discuter.",
           },
@@ -122,10 +128,14 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
           {
             q: "Quelle est votre zone géographique ?",
-            a: "Je travaille 100 % à distance, depuis Paris / Île-de-France ou Marseille / PACA. Des déplacements ponctuels en Europe sont possibles, et je suis ouverte à la mobilité / relocalisation en France et à l'international (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte et tout contexte anglophone).",
+            a: "Je travaille 100 % à distance depuis Paris / Île-de-France ou Marseille / PACA. Je suis pleinement ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout pays ou contexte anglophone, en Europe ou hors d'Europe.",
           },
         ]
       : [
+          {
+            q: "What billing arrangement do you work under?",
+            a: "I work as a direct freelance or through portage salarial, whichever suits your organisation best. Both arrangements are available for short, long, or ad-hoc missions — no minimum commitment required.",
+          },
           {
             q: "Are you open to permanent positions?",
             a: "I consider well-positioned Salesforce or IT Ops permanent roles — reach out and let's talk.",
@@ -136,7 +146,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
           {
             q: "Where are you based?",
-            a: "I work 100% remotely, from Paris / Île-de-France or Marseille / PACA. Occasional travel within Europe is possible, and I'm open to relocation in France and internationally (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta, and any English-speaking context).",
+            a: "I work 100% remotely, from Paris / Île-de-France or Marseille / PACA. I'm fully open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking country or context, within or outside Europe.",
           },
         ],
 
