@@ -116,7 +116,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
       ? [
           {
             q: "Sous quel statut intervenez-vous ?",
-            a: "Je travaille en freelance direct (auto-entreprise) ou en portage salarial selon ce qui convient le mieux à votre organisation. Les deux formules sont possibles, pour des missions courtes, longues ou ponctuelles — sans contrainte de minimum.",
+            a: "Je travaille en freelance direct ou en portage salarial selon ce qui convient le mieux à votre organisation. Les deux formules sont possibles, pour des missions courtes, longues ou ponctuelles — sans contrainte de minimum.",
           },
           {
             q: "Travaillez-vous en CDI ?",
@@ -134,7 +134,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
       : [
           {
             q: "What billing arrangement do you work under?",
-            a: "I work as a direct freelance (sole trader / auto-entrepreneur) or through portage salarial, whichever suits your organisation best. Both arrangements are available for short, long, or ad-hoc missions — no minimum commitment required.",
+            a: "I work as a direct freelance or through portage salarial, whichever suits your organisation best. Both arrangements are available for short, long, or ad-hoc missions — no minimum commitment required.",
           },
           {
             q: "Are you open to permanent positions?",
