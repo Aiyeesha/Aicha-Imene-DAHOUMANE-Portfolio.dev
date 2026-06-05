@@ -69,8 +69,7 @@ export default function ContactForm() {
   const startedRef = useRef(false);
 
   // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
-  const [topic,   setTopic]   = useState("general");
-  const [subject, setSubject] = useState("");
+  const [topic, setTopic] = useState("general");
   const [msgLen,  setMsgLen]  = useState(0);
   const MSG_MAX = 2000;
 
@@ -79,9 +78,8 @@ export default function ContactForm() {
   // automatiquement avec le bon topic (salesforce/itops) et le titre du service.
   useEffect(() => {
     function handlePrefill(e: Event) {
-      const { topic: t, subject: s } = (e as CustomEvent<{ topic: string; subject: string }>).detail;
+      const { topic: t } = (e as CustomEvent<{ topic: string }>).detail;
       if (t) setTopic(t);
-      if (s) setSubject(s);
     }
     window.addEventListener("contact:prefill", handlePrefill);
     return () => window.removeEventListener("contact:prefill", handlePrefill);
@@ -135,7 +133,6 @@ export default function ContactForm() {
       name: String(form.get("name") || ""),
       email: String(form.get("email") || ""),
       topic: String(form.get("topic") || "general"),
-      subject: String(form.get("subject") || ""),
       message: String(form.get("message") || ""),
       // Explicit RGPD consent (required)
       acceptedPolicy: Boolean(form.get("acceptedPolicy")),
@@ -174,7 +171,6 @@ export default function ContactForm() {
       // Reset le formulaire (champs non contrôlés) + réinitialise les états contrôlés.
       formEl.reset();
       setTopic("general");
-      setSubject("");
       setStatus({ kind: "success" });
     } catch (err: any) {
       setStatus({ kind: "error", message: err?.message || t("contact.errors.generic") });
@@ -237,19 +233,6 @@ export default function ContactForm() {
             <option value="availability">{t("contact.topicAvailability")}</option>
             <option value="other">{t("contact.topicOther")}</option>
           </select>
-        </div>
-
-        <div>
-          <label htmlFor="contact-subject" className="text-xs text-muted-2">{t("contact.subjectLabel")}</label>
-          <input
-            id="contact-subject"
-            name="subject"
-            autoComplete="off"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
-            placeholder={t("contact.subjectPlaceholder")}
-          />
         </div>
 
         {/* Honeypot (hidden for humans) */}
