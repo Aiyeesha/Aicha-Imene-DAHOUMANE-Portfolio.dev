@@ -407,6 +407,8 @@
     "sectorValues": "Salesforce · IT Ops / DevOps",
     "roles": "Postes ciblés",
     "rolesValues": "Administratrice systèmes & réseaux · DevOps · Administratrice Salesforce · Développeuse Salesforce · Consultante IT · Consultante Salesforce",
+    "rolesValuesSalesforce": "Administratrice Salesforce · Développeuse Salesforce · Consultante Salesforce",
+    "rolesValuesItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT",
     "location": "Localisation",
     "locationValues": "Paris / Île-de-France · Marseille / Provence-Alpes-Côte d'Azur",
     "cta": "Prendre contact →"
