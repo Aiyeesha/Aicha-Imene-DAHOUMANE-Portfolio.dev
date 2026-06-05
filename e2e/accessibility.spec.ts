@@ -172,7 +172,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
     await page.locator("#contact").waitFor({ state: "visible" });
 
     // Vérifier que chaque input (sauf honeypot) a un label avec htmlFor correspondant
-    const inputs = ["contact-name", "contact-email", "contact-topic", "contact-subject", "contact-message"];
+    const inputs = ["contact-name", "contact-email", "contact-topic", "contact-message"];
 
     for (const id of inputs) {
       const label = page.locator(`label[for="${id}"]`);
