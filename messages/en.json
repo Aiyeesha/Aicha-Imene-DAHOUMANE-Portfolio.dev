@@ -407,6 +407,8 @@
     "sectorValues": "Salesforce · IT Ops / DevOps",
     "roles": "Target roles",
     "rolesValues": "Systems & Network Admin · DevOps · Salesforce Admin · Salesforce Developer · IT Consultant · Salesforce Consultant",
+    "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant",
+    "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant",
     "location": "Location",
     "locationValues": "Paris / Île-de-France · Marseille / Provence-Alpes-Côte d'Azur",
     "cta": "Get in touch →"
