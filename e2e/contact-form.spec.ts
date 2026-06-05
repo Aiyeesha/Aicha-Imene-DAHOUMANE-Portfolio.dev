@@ -63,12 +63,11 @@ test.describe("Formulaire de contact", () => {
     expect(valid).toBe(false);
   });
 
-  test("le pré-remplissage via contact:prefill met à jour le champ sujet", async ({
+  test("le pré-remplissage via contact:prefill met à jour le topic", async ({
     page,
   }) => {
-    // Attendre que le champ sujet soit rendu et que React ait attaché les useEffect
-    const subjectInput = page.locator("#contact-subject");
-    await subjectInput.waitFor({ state: "visible" });
+    const topicSelect = page.locator("#contact-topic");
+    await topicSelect.waitFor({ state: "visible" });
     // Délai court pour laisser les useEffect React se monter (hydration → effects)
     await page.waitForTimeout(500);
 
@@ -76,12 +75,12 @@ test.describe("Formulaire de contact", () => {
     await page.evaluate(() => {
       window.dispatchEvent(
         new CustomEvent("contact:prefill", {
-          detail: { topic: "salesforce", subject: "Flow Builder automation" },
+          detail: { topic: "salesforce" },
         })
       );
     });
 
-    // Le champ sujet doit être pré-rempli avec la valeur passée
-    await expect(subjectInput).toHaveValue("Flow Builder automation");
+    // Le select topic doit être pré-rempli avec la valeur passée
+    await expect(topicSelect).toHaveValue("salesforce");
   });
 });
