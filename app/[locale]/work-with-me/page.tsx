@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
     : "Work with me — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Disponible pour des missions freelance Salesforce et IT Ops — à distance, en Europe. Découvrez mes conditions, mon process et comment démarrer."
-    : "Available for freelance Salesforce and IT Ops missions — remote, in Europe. Find out about my terms, process, and how to get started.";
+    ? "Disponible pour des missions freelance Salesforce et IT Ops — 100 % remote depuis Paris / Marseille, avec mobilité en France et à l'international. Découvrez mes conditions, mon process et comment démarrer."
+    : "Available for freelance Salesforce and IT Ops missions — 100% remote from Paris / Marseille, open to relocation in France and internationally. Find out about my terms, process, and how to get started.";
   return {
     title,
     description,
@@ -80,7 +80,9 @@ export default async function WorkWithMePage({ params }: PageProps) {
     availNo:        isFr ? "Non disponible" : "Not available",
     availSince:     isFr ? `À partir de ${AVAILABILITY.since.fr}` : `From ${AVAILABILITY.since.en}`,
     availContracts: isFr ? "Freelance · Mission · CDD" : "Freelance · Contract · Fixed-term",
-    availMode:      isFr ? "100 % remote · Déplacements ponctuels Europe" : "100% remote · Occasional travel in Europe",
+    availMode:      isFr
+      ? "100 % remote · Paris / Île-de-France · Marseille / PACA · Mobilité France & international"
+      : "100% remote · Paris / Île-de-France · Marseille / PACA · Open to relocation (France & international)",
 
     lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : "Domains",
@@ -120,7 +122,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
           {
             q: "Quelle est votre zone géographique ?",
-            a: "Je travaille 100 % à distance. Des déplacements ponctuels en Europe sont possibles selon la mission.",
+            a: "Je travaille 100 % à distance, depuis Paris / Île-de-France ou Marseille / PACA. Des déplacements ponctuels en Europe sont possibles, et je suis ouverte à la mobilité / relocalisation en France et à l'international (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte et tout contexte anglophone).",
           },
         ]
       : [
@@ -134,7 +136,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
           {
             q: "Where are you based?",
-            a: "I work 100% remotely. Occasional travel within Europe is possible depending on the mission.",
+            a: "I work 100% remotely, from Paris / Île-de-France or Marseille / PACA. Occasional travel within Europe is possible, and I'm open to relocation in France and internationally (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta, and any English-speaking context).",
           },
         ],
 

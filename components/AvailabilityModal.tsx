@@ -82,7 +82,7 @@ export default function AvailabilityModal() {
     { icon: <IconBriefcase />, label: t("contracts"), value: t("contractValues") },
     { icon: <IconMonitor />,   label: t("workMode"),  value: t("workModeValues") },
     { icon: <IconSector />,    label: t("sector"),    value: t("sectorValues")   },
-    { icon: <IconTarget />,    label: t("roles"),     value: t("rolesValues")    },
+    { icon: <IconTarget />,    label: t("roles"),     value: track === "salesforce" ? t("rolesValuesSalesforce") : t("rolesValuesItops") },
     { icon: <IconLocation />,  label: t("location"),  value: t("locationValues") },
   ];
 
