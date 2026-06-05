@@ -122,7 +122,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
 
     // Notifier ContactForm via un event DOM (pas de state global nécessaire)
     window.dispatchEvent(
-      new CustomEvent("contact:prefill", { detail: { topic, subject: title } })
+      new CustomEvent("contact:prefill", { detail: { topic } })
     );
 
     // Scroll vers la section contact avec smooth

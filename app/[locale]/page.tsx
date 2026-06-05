@@ -189,14 +189,6 @@ export default async function Home({ params }: Props) {
               La personnalisation par track était bloquante pour le SSR. */}
           <LatestPosts locale={locale} />
         </div>
-        <div className="mt-6">
-          <Link
-            className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-            href={`/${locale}/blog`}
-          >
-            {t("blogIndex.ctaAllPosts")} →
-          </Link>
-        </div>
       </section>
 
       {/* CONTACT — section-stripe (fond alterné) */}
