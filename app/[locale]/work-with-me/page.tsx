@@ -58,7 +58,7 @@ type AvailabilityStatus = "open" | "limited" | "unavailable";
 
 const AVAILABILITY: { status: AvailabilityStatus; since: Record<"en" | "fr", string> } = {
   status: "open",
-  since: { en: "July 2026", fr: "Juillet 2026" },
+  since: { en: "June 2026", fr: "Juin 2026" },
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
