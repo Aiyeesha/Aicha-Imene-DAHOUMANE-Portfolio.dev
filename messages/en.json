@@ -341,13 +341,15 @@
     "formBody": "When you submit the contact form, the following data is collected: name, email, topic, message, IP address, and User-Agent. This data is used solely to process and respond to your request. If Formspree is enabled as a fallback, message content is forwarded to Formspree (a third-party email delivery service based in the United States).",
     "retention": "Retention: contact messages are kept for a maximum of 90 days, then deleted. You may request early deletion by contacting us.",
     "rightsTitle": "Your rights",
-    "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, and request deletion of your personal data.",
-    "contact": "To exercise your rights: {email}"
+    "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, request deletion of, and obtain portability of your personal data.",
+    "contact": "To exercise your rights: {email}",
+    "processorsTitle": "Data processors",
+    "processorsBody": "Data collected through this website is processed by the following sub-processors: Supabase (storage of contact messages and availability data — hosted in the United States with GDPR compliance via Standard Contractual Clauses), Vercel (hosting and CDN — United States), Formspree (contact email delivery — United States, if enabled). These providers act as data processors within the meaning of Article 28 of the GDPR."
   },
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. SIRET: not applicable (activity carried out via portage salarial). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
@@ -404,7 +406,6 @@
     "sector": "Sectors",
     "sectorValues": "Salesforce · IT Ops / DevOps",
     "roles": "Target roles",
-    "rolesValues": "Systems & Network Admin · DevOps · Salesforce Admin · Salesforce Developer · IT Consultant · Salesforce Consultant",
     "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant",
     "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant",
     "location": "Location",

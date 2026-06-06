@@ -89,7 +89,7 @@ Browser
 - **Dedicated pages** — `/about`, `/certifications`, `/blog`, `/projects`, `/status`, `/resources`, `/colophon`, `/changelog`, `/uses`
 - **Career timeline** — visual timeline (2022 → present) on the About page
 - **2026 Goals** — checkable objectives with `not_started / in_progress / completed` status (Supabase)
-- **Blog** — 19 MDX articles (EN + FR), syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
+- **Blog** — 55 MDX articles (EN + FR), syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
 - **Article series** — 6 curated reading paths (Salesforce DevOps, LWC, Windows Server, IT Ops Monitoring…)
 - **Certifications page** — 3 sections: Completed, Active (Trailhead animated counters), In preparation
 - **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
@@ -214,7 +214,7 @@ portfolio/
 ├── components/                 # 47 reusable React components (Server + Client)
 ├── content/
 │   ├── blog/
-│   │   ├── posts/{en,fr}/      # 19 MDX articles × 2 locales
+│   │   ├── posts/{en,fr}/      # 55 MDX articles × 2 locales
 │   │   ├── registry.ts         # Article metadata registry
 │   │   ├── series.ts           # Article series definitions
 │   │   └── toc.ts              # Table of contents utilities
