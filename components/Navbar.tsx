@@ -296,7 +296,7 @@ useEffect(() => {
               {desktopSections.map((s) => {
                 const href = hrefFor(s.id);
                 const cls = `${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`;
-                const isPageLink = PAGE_LINKS.has(s.id);
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -421,7 +421,7 @@ useEffect(() => {
             <div className="mt-4 space-y-2">
               {sections.map((s) => {
                 const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
-                const isPageLink = PAGE_LINKS.has(s.id);
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
