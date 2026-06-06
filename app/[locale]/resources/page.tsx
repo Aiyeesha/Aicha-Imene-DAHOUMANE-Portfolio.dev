@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const urlPath = `${siteUrl}/${locale}/resources`;
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
+    metadataBase: new URL(siteUrl),
     title,
     description,
     alternates: {

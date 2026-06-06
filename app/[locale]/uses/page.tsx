@@ -180,13 +180,13 @@ const USES: UseCategory[] = [
     title: { en: "IT Ops & Systems", fr: "IT Ops & Systèmes" },
     items: [
       {
-        name: "VirtualBox",
+        name: "VMware Workstation Pro 17",
         description: {
-          en: "Hypervisor for local lab environments — Windows Server, pfSense, Linux VMs.",
-          fr: "Hyperviseur pour les environnements de lab locaux — Windows Server, pfSense, VMs Linux.",
+          en: "Primary hypervisor for local lab environments — snapshots, nested virtualization, Windows Server, pfSense, Linux VMs.",
+          fr: "Hyperviseur principal pour les lab locaux — snapshots, virtualisation imbriquée, Windows Server, pfSense, VMs Linux.",
         },
-        url:   "https://www.virtualbox.org",
-        badge: "open-source",
+        url:   "https://www.vmware.com/products/workstation-pro.html",
+        badge: "commercial",
       },
       {
         name: "pfSense",
