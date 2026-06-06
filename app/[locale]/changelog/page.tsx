@@ -36,6 +36,7 @@ export async function generateMetadata({
     ? "Historique des versions et des améliorations du portfolio."
     : "Version history and improvements of the portfolio.";
   return {
+    metadataBase: new URL(siteUrl),
     title,
     description,
     alternates: {
