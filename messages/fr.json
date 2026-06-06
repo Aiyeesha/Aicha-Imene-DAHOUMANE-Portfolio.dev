@@ -146,8 +146,6 @@
     "topicOther": "Autre",
     "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
     "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment.",
-    "subjectLabel": "Sujet (optionnel)",
-    "subjectPlaceholder": "De quoi s'agit-il ?",
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",

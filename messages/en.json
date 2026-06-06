@@ -146,8 +146,6 @@
     "topicOther": "Other",
     "envHint": "Missing configuration: some contact information is not set.",
     "linkedInMissing": "The LinkedIn link is not available right now.",
-    "subjectLabel": "Subject (optional)",
-    "subjectPlaceholder": "What is this about?",
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
