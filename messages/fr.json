@@ -36,7 +36,7 @@
     "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
-    "availability": "En CDI · Consulting indépendant dès juillet 2026",
+    "availability": "En CDI · Consulting indépendant dès juin 2026",
     "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
     "switchToItops": "Voir le profil IT Ops →"
@@ -151,7 +151,7 @@
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",
-    "availability": "En CDI · Consulting indépendant dès juillet 2026"
+    "availability": "En CDI · Consulting indépendant dès juin 2026"
   },
   "blog": {
     "card_tutorials_kicker": "Nouveau",
@@ -298,9 +298,9 @@
     "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT",
     "rolesValueItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "En CDI chez LD Digitales · Consulting dès juillet 2026",
+    "availabilityValue": "En CDI chez LD Digitales · Consulting dès juin 2026",
     "goalLabel": "Objectif",
-    "goalValue": "Approfondir mon expertise Salesforce en CDI (LD Digitales), préparer les certifications 2026 et lancer une activité de consulting indépendant (portage salarial) à partir de juillet 2026.",
+    "goalValue": "Approfondir mon expertise Salesforce en CDI (LD Digitales), préparer les certifications 2026 et lancer une activité de consulting indépendant (portage salarial) à partir de juin 2026.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
@@ -308,7 +308,7 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. En parallèle : développement de deux SaaS Salesforce (OrgDocs et SFRelease) et lancement d'une activité de conseil indépendant (portage salarial) prévu à partir de juillet 2026.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. En parallèle : développement de deux SaaS Salesforce (OrgDocs et SFRelease) et lancement d'une activité de conseil indépendant (portage salarial) prévu à partir de juin 2026.",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
@@ -316,7 +316,7 @@
     "goals2026Title": "Objectifs 2026",
     "goals2026Salesforce": [
       "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-      "Lancer mon activité de consultante indépendante (portage salarial) à partir de juillet 2026",
+      "Lancer mon activité de consultante indépendante (portage salarial) à partir de juin 2026",
       "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
       "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
       "Développer une clientèle internationale (France, UK, marché européen en remote)"
@@ -365,7 +365,7 @@
     "items": [
       {
         "q": "Êtes-vous disponible immédiatement ?",
-        "a": "Je suis actuellement en CDI chez LD Digitales (depuis oct. 2025). Je lance mon activité de consultante indépendante en portage salarial à partir de juillet 2026. En attendant, je peux intervenir sur des missions ponctuelles ou des projets complémentaires selon les disponibilités."
+        "a": "Je suis actuellement en CDI chez LD Digitales (depuis oct. 2025). Je lance mon activité de consultante indépendante en portage salarial à partir de juin 2026. En attendant, je peux intervenir sur des missions ponctuelles ou des projets complémentaires selon les disponibilités."
       },
       {
         "q": "Travaillez-vous à distance ?",
@@ -395,12 +395,12 @@
     "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email."
   },
   "availModal": {
-    "badge": "En CDI · Consulting indépendant dès juillet 2026",
+    "badge": "En CDI · Consulting indépendant dès juin 2026",
     "title": "Mes disponibilités",
     "delay": "Statut actuel",
     "delayValue": "En CDI chez LD Digitales depuis oct. 2025",
     "contracts": "Prochaine étape",
-    "contractValues": "Consulting / portage salarial dès juillet 2026",
+    "contractValues": "Consulting / portage salarial dès juin 2026",
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site · Full remote",
     "sector": "Secteurs",
