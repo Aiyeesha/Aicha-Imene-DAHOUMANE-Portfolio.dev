@@ -8,6 +8,9 @@ import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
+// ISR : revalide les pages projet toutes les 5 minutes
+export const revalidate = 300;
+
 // ── URL safety helper ─────────────────────────────────────────────────────────
 function safeHref(url: string | null | undefined): string | null {
   if (!url) return null;
@@ -255,6 +258,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       title: project.title,
       description,
       url: canonical,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       siteName,
       images: [{ url: ogImage, width: 1200, height: 630, alt: project.title }],
     },
