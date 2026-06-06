@@ -341,13 +341,15 @@
     "formBody": "Lorsque vous envoyez le formulaire de contact, les données suivantes sont collectées : nom, email, sujet, message, adresse IP et User-Agent. Ces données sont utilisées uniquement pour traiter et répondre à votre demande. Si Formspree est activé en solution de secours, le contenu du message est transmis à Formspree (service tiers d’acheminement d’emails basé aux États-Unis).",
     "retention": "Conservation : les messages de contact sont conservés au maximum 90 jours, puis supprimés. Vous pouvez demander une suppression anticipée en nous contactant.",
     "rightsTitle": "Vos droits",
-    "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d’un droit d’accès, de rectification et de suppression de vos données personnelles.",
-    "contact": "Pour exercer vos droits : {email}"
+    "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données personnelles.",
+    "contact": "Pour exercer vos droits : {email}",
+    "processorsTitle": "Sous-traitants",
+    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Supabase (stockage des messages de contact et données de disponibilité — hébergé aux États-Unis, conformité RGPD via Standard Contractual Clauses), Vercel (hébergement et CDN — États-Unis), Formspree (acheminement des emails de contact — États-Unis, si activé). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD."
   },
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. SIRET : non applicable (activité exercée en portage salarial). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
@@ -404,7 +406,6 @@
     "sector": "Secteurs",
     "sectorValues": "Salesforce · IT Ops / DevOps",
     "roles": "Postes ciblés",
-    "rolesValues": "Administratrice systèmes & réseaux · DevOps · Administratrice Salesforce · Développeuse Salesforce · Consultante IT · Consultante Salesforce",
     "rolesValuesSalesforce": "Administratrice Salesforce · Développeuse Salesforce · Consultante Salesforce",
     "rolesValuesItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT",
     "location": "Localisation",
