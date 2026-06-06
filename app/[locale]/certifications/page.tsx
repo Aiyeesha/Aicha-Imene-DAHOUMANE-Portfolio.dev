@@ -32,8 +32,8 @@ export async function generateMetadata({
     ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et plan de 12 certifications Salesforce + CompTIA (2026–2027)."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + CompTIA (2026–2027).";
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et plan de 12 certifications Salesforce + CompTIA (juil. 2026 – juil. 2027)."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + CompTIA (Jul 2026 – Jul 2027).";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -267,7 +267,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Mai 2026" : "May 2026",
+      target: isFr ? "Juil. 2026" : "Jul 2026",
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : "Salesforce platform fundamentals: navigation, standard objects, basic security and simple automations.",
@@ -281,7 +281,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-sales-foundations",
       name: "Salesforce Sales Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Mai 2026" : "May 2026",
+      target: isFr ? "Juil. 2026" : "Jul 2026",
       description: isFr
         ? "Fondamentaux Sales Cloud : gestion des leads, opportunités, comptes, contacts et prévisions commerciales."
         : "Sales Cloud fundamentals: lead management, opportunities, accounts, contacts and sales forecasting.",
@@ -295,7 +295,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator",
       issuer: "Salesforce",
-      target: isFr ? "Juin 2026" : "Jun 2026",
+      target: isFr ? "Juil. 2026" : "Jul 2026",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : "Advanced administration: configuration, security, Flow automations, user management and org maintenance.",
@@ -303,13 +303,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      isActive: true,
+      isActive: false,
     },
     {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Juil. 2026" : "Jul 2026",
+      target: isFr ? "Août 2026" : "Aug 2026",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
         : "Design and deployment of custom applications on the Salesforce platform using low-code tools.",
@@ -322,7 +322,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-cpq-administrator",
       name: "Salesforce CPQ Administrator",
       issuer: "Salesforce",
-      target: isFr ? "Août 2026" : "Aug 2026",
+      target: isFr ? "Sept. 2026" : "Sep 2026",
       description: isFr
         ? "Configuration Salesforce CPQ : catalogues produits, règles de prix, bundles et processus de devis complexes."
         : "Salesforce CPQ configuration: product catalogs, pricing rules, bundles and complex quoting processes.",
@@ -335,7 +335,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-marketing-cloud-admin",
       name: "Marketing Cloud Engagement Admin",
       issuer: "Salesforce",
-      target: isFr ? "Sept. 2026" : "Sep 2026",
+      target: isFr ? "Oct. 2026" : "Oct 2026",
       description: isFr
         ? "Administration Marketing Cloud : Email Studio, Journey Builder, segmentation des abonnés et reporting."
         : "Marketing Cloud administration: Email Studio, Journey Builder, subscriber segmentation and reporting.",
@@ -348,7 +348,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-developer-i",
       name: "Salesforce Platform Developer I",
       issuer: "Salesforce",
-      target: isFr ? "Oct. 2026" : "Oct 2026",
+      target: isFr ? "Nov. 2026" : "Nov 2026",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
         : "Salesforce development: Apex, SOQL, Lightning Web Components, unit testing and best practices.",
@@ -362,7 +362,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-network-plus",
       name: "CompTIA Network+",
       issuer: "CompTIA",
-      target: isFr ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Jan. 2027" : "Jan 2027",
       description: isFr
         ? "Fondamentaux des réseaux : protocoles TCP/IP, infrastructure, sécurité réseau, dépannage et virtualisation."
         : "Networking fundamentals: TCP/IP protocols, infrastructure, network security, troubleshooting and virtualization.",
@@ -375,7 +375,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-security-plus",
       name: "CompTIA Security+",
       issuer: "CompTIA",
-      target: isFr ? "Jan. 2027" : "Jan 2027",
+      target: isFr ? "Mars 2027" : "Mar 2027",
       description: isFr
         ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
         : "Industry-standard cybersecurity cert: threats, security architecture, identity management and incident response.",
@@ -388,7 +388,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-linux-plus",
       name: "CompTIA Linux+",
       issuer: "CompTIA",
-      target: isFr ? "Fév. 2027" : "Feb 2027",
+      target: isFr ? "Avr. 2027" : "Apr 2027",
       description: isFr
         ? "Administration Linux : ligne de commande, scripts shell, gestion des utilisateurs, sécurité et automatisation système."
         : "Linux administration: command line, shell scripting, user management, security and system automation.",
@@ -401,7 +401,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-cysa-plus",
       name: "CompTIA CySA+",
       issuer: "CompTIA",
-      target: isFr ? "Avr. 2027" : "Apr 2027",
+      target: isFr ? "Juin 2027" : "Jun 2027",
       description: isFr
         ? "Analyse cybersécurité : threat intelligence, SIEM, analyse comportementale et gestion des vulnérabilités."
         : "Cybersecurity analysis: threat intelligence, SIEM, behavioral analysis and vulnerability management.",
@@ -414,7 +414,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-pentest-plus",
       name: "CompTIA PenTest+",
       issuer: "CompTIA",
-      target: isFr ? "Mai 2027" : "May 2027",
+      target: isFr ? "Juil. 2027" : "Jul 2027",
       description: isFr
         ? "Tests de pénétration : planification, reconnaissance, exploitation, post-exploitation et rapport de vulnérabilités."
         : "Penetration testing: planning, reconnaissance, exploitation, post-exploitation and vulnerability reporting.",
@@ -648,7 +648,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               Salesforce
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint Avr. → Oct. 2026" : "— sprint Apr. → Oct. 2026"}
+              {isFr ? "— sprint Juil. → Nov. 2026" : "— sprint Jul. → Nov. 2026"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -689,7 +689,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               CompTIA
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint Oct. 2026 → Mai 2027" : "— sprint Oct. 2026 → May 2027"}
+              {isFr ? "— sprint Jan. 2027 → Juil. 2027" : "— sprint Jan. 2027 → Jul. 2027"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
