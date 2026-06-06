@@ -130,7 +130,7 @@ export default async function Home({ params }: Props) {
       {/* TÉMOIGNAGES / LOGOS ENTREPRISES — fond par défaut
           Feature flag : NEXT_PUBLIC_SHOW_TESTIMONIALS=true pour activer les témoignages réels.
           Par défaut : section "Ils m'ont fait confiance" (logos uniquement, aucun placeholder). */}
-      <section id="testimonials" className="py-14">
+      <section id={process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true" ? "testimonials" : "trusted-by"} className="py-14">
         {process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true" ? (
           <>
             <Reveal>
