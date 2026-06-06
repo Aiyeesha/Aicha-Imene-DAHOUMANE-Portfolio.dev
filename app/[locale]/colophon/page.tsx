@@ -27,6 +27,7 @@ export async function generateMetadata({
     ? "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js."
     : "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio.";
   return {
+    metadataBase: new URL(siteUrl),
     title,
     description,
     alternates: {
