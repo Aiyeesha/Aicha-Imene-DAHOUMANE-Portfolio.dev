@@ -25,7 +25,7 @@ const MIN_PINGS = 3;
 export async function getLatestPingReport(): Promise<HealthReport | null> {
   return cacheGetOrSet<HealthReport | null>(
     "portfolio:uptime:latest",
-    300,
+    60,
     fetchLatestPingsFromSupabase
   );
 }
