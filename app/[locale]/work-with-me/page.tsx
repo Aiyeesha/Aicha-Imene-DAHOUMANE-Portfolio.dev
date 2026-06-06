@@ -1,6 +1,6 @@
 // app/[locale]/work-with-me/page.tsx
 // ------------------------------------
-// Page "Travaillons ensemble" — positionnement freelance juillet 2026.
+// Page "Travaillons ensemble" — positionnement freelance juin 2026.
 // Présente la disponibilité, les types de missions, le process et un CTA contact.
 
 import Link from "next/link";
