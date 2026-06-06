@@ -22,8 +22,8 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 type MilestoneType = "formation" | "stage" | "alternance" | "emploi";
 
 type Milestone = {
-  /** Période affichée (ex: "2022", "2023 – 2025") */
-  period: string;
+  /** Période affichée (ex: "2022", "2023 – 2025"). Peut être bilingue { en, fr }. */
+  period: string | { en: string; fr: string };
   type: MilestoneType;
   /** Titre du poste ou de la formation */
   title: { en: string; fr: string };
@@ -107,7 +107,7 @@ const MILESTONES: Milestone[] = [
     ],
   },
   {
-    period: "2023 – sept. 2025",
+    period: { en: "2023 – Sep. 2025", fr: "2023 – sept. 2025" },
     type: "alternance",
     title: {
       en: "Salesforce Developer & Administrator (Work-study)",
@@ -234,7 +234,7 @@ function TimelineItem({
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="mb-1.5 rounded-full bg-black/5 dark:bg-white/8 px-2 py-0.5 text-xs font-mono font-medium text-muted-2 whitespace-nowrap"
         >
-          {milestone.period}
+          {typeof milestone.period === "string" ? milestone.period : (isFr ? milestone.period.fr : milestone.period.en)}
         </motion.div>
 
         {/* Point coloré */}
@@ -336,7 +336,7 @@ export default function CareerTimeline({ locale }: { locale: string }) {
     <ol className="mt-6 list-none space-y-0" aria-label={isFr ? "Frise de carrière" : "Career timeline"}>
       {MILESTONES.map((m, i) => (
         <TimelineItem
-          key={`${m.period}-${m.type}`}
+          key={`${typeof m.period === "string" ? m.period : m.period.en}-${m.type}`}
           milestone={m}
           isLast={i === MILESTONES.length - 1}
           isFr={isFr}
