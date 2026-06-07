@@ -204,6 +204,19 @@ export default async function Home({ params }: Props) {
             <ContactForm />
           </Reveal>
         </div>
+        {process.env.TESTIMONIAL_SUBMIT_TOKEN && (
+          <Reveal delayMs={150}>
+            <p className="mt-6 text-sm text-muted-2 text-center">
+              {locale === "fr" ? "Vous avez travaillé avec moi ? " : "Have you worked with me? "}
+              <Link
+                href={`/${locale}/testimonial-submit?token=${process.env.TESTIMONIAL_SUBMIT_TOKEN}`}
+                className="underline underline-offset-4 hover:opacity-80"
+              >
+                {locale === "fr" ? "Laissez un témoignage →" : "Leave a testimonial →"}
+              </Link>
+            </p>
+          </Reveal>
+        )}
       </section>
     </>
   );

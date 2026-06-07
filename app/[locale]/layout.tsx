@@ -120,7 +120,7 @@ export default async function LocaleLayout({
               <div className="mx-auto max-w-6xl px-6 text-sm text-muted-2">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <span>
-                    © {new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
+                    © 2025–{new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
                   </span>
                   {/* Link (Next.js) pour la navigation SPA — évite le rechargement de page
                       complet que <a href> provoque sur les routes locales. */}
