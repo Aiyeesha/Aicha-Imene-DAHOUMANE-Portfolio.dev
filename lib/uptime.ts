@@ -13,6 +13,7 @@
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { cacheGetOrSet }              from "@/lib/cache";
+import { redis }                      from "@/lib/redis";
 import type { ServiceStatus, HealthReport } from "@/lib/health";
 
 // Minimum de pings pour afficher un %, évite "100%" après le 1er déploiement
