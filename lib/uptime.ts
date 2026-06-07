@@ -23,11 +23,26 @@ const MIN_PINGS = 3;
 // Évite tout appel sortant en direct lors du rendu de /status.
 
 export async function getLatestPingReport(): Promise<HealthReport | null> {
-  return cacheGetOrSet<HealthReport | null>(
-    "portfolio:uptime:latest",
-    60,
-    fetchLatestPingsFromSupabase
-  );
+  if (!redis) {
+    return fetchLatestPingsFromSupabase();
+  }
+
+  try {
+    const cached = await redis.get<HealthReport | null>("portfolio:uptime:latest");
+    if (cached && cached.checkedAt) {
+      // Guard: if cached data is older than 10 min the key is stale (e.g. set
+      // manually without TTL). Delete it and fall through to a fresh fetch.
+      const ageMs = Date.now() - new Date(cached.checkedAt).getTime();
+      if (ageMs < 10 * 60 * 1000) return cached;
+      await redis.del("portfolio:uptime:latest").catch(() => {});
+    }
+  } catch {}
+
+  const fresh = await fetchLatestPingsFromSupabase();
+  if (fresh) {
+    await redis.set("portfolio:uptime:latest", fresh, { ex: 60 }).catch(() => {});
+  }
+  return fresh;
 }
 
 async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {

@@ -74,6 +74,9 @@ export async function POST(req: Request) {
       "about:en",
       "certifications:fr",
       "certifications:en",
+      "portfolio:uptime:latest",
+      "portfolio:uptime:stats:30d",
+      "portfolio:uptime:latency:7d",
     ];
     await redis.del(...keys);
     deleted.push(...keys);
