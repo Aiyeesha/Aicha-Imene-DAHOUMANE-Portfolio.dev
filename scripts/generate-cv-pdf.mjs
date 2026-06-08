@@ -18,10 +18,10 @@ const CV_DIR     = join(__dirname, "../public/cv");
 
 // Liste des CV à générer : source HTML → PDF cible
 const CV_FILES = [
-  { html: "cv-en-itops.html",      pdf: "cv-en-itops.pdf",      scale: 1.05 },
-  { html: "cv-en-salesforce.html", pdf: "cv-en-salesforce.pdf", scale: 1.02 },
-  { html: "cv-fr-itops.html",      pdf: "cv-fr-itops.pdf",      scale: 1.05 },
-  { html: "cv-fr-salesforce.html", pdf: "cv-fr-salesforce.pdf", scale: 1.02 },
+  { html: "cv-en-itops.html",      pdf: "cv-en-itops.pdf",      scale: 1.1  },
+  { html: "cv-en-salesforce.html", pdf: "cv-en-salesforce.pdf", scale: 1.04 },
+  { html: "cv-fr-itops.html",      pdf: "cv-fr-itops.pdf",      scale: 1.1  },
+  { html: "cv-fr-salesforce.html", pdf: "cv-fr-salesforce.pdf", scale: 1.04 },
 ];
 
 async function generatePdf(browser, htmlFile, pdfFile, scale) {
