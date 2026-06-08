@@ -18,13 +18,13 @@ const CV_DIR     = join(__dirname, "../public/cv");
 
 // Liste des CV à générer : source HTML → PDF cible
 const CV_FILES = [
-  { html: "cv-en-itops.html",      pdf: "cv-en-itops.pdf"      },
-  { html: "cv-en-salesforce.html", pdf: "cv-en-salesforce.pdf" },
-  { html: "cv-fr-itops.html",      pdf: "cv-fr-itops.pdf"      },
-  { html: "cv-fr-salesforce.html", pdf: "cv-fr-salesforce.pdf" },
+  { html: "cv-en-itops.html",      pdf: "cv-en-itops.pdf",      scale: 1.05 },
+  { html: "cv-en-salesforce.html", pdf: "cv-en-salesforce.pdf", scale: 1.02 },
+  { html: "cv-fr-itops.html",      pdf: "cv-fr-itops.pdf",      scale: 1.05 },
+  { html: "cv-fr-salesforce.html", pdf: "cv-fr-salesforce.pdf", scale: 1.02 },
 ];
 
-async function generatePdf(browser, htmlFile, pdfFile) {
+async function generatePdf(browser, htmlFile, pdfFile, scale) {
   const htmlPath = join(CV_DIR, htmlFile);
   const pdfPath  = join(CV_DIR, pdfFile);
 
@@ -38,12 +38,11 @@ async function generatePdf(browser, htmlFile, pdfFile) {
   // Charger le fichier HTML local (file:// URI)
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
 
-  // Générer le PDF en format A4, marges incluses dans le HTML.
   await page.pdf({
     path:              pdfPath,
     format:            "A4",
     printBackground:   true,
-    scale:             1.05,
+    scale,
     margin:            { top: "0", right: "0", bottom: "0", left: "0" },
   });
 
@@ -61,9 +60,9 @@ async function main() {
 
   let success = 0;
 
-  for (const { html, pdf } of CV_FILES) {
+  for (const { html, pdf, scale } of CV_FILES) {
     process.stdout.write(`  Génération de ${pdf}...`);
-    const ok = await generatePdf(browser, html, pdf);
+    const ok = await generatePdf(browser, html, pdf, scale);
     if (ok) {
       console.log(" ✓");
       success++;
