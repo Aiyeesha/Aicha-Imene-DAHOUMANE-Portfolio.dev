@@ -39,12 +39,11 @@ async function generatePdf(browser, htmlFile, pdfFile) {
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
 
   // Générer le PDF en format A4, marges incluses dans le HTML.
-  // scale: 0.88 garantit que tout le contenu tient sur 1 page A4.
   await page.pdf({
     path:              pdfPath,
     format:            "A4",
     printBackground:   true,
-    scale:             0.88,
+    scale:             1.0,
     margin:            { top: "0", right: "0", bottom: "0", left: "0" },
   });
 
