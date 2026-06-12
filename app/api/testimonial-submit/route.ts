@@ -15,7 +15,7 @@
 //   SUPABASE_SERVICE_KEY       — clé service_role (jamais NEXT_PUBLIC_)
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac, createHash } from "crypto";
+import { createHmac, createHash, timingSafeEqual } from "crypto";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
@@ -75,7 +75,16 @@ export async function POST(req: NextRequest) {
     createHmac("sha256", expectedToken).update(bucket.toString()).digest("hex")
   );
 
-  if (!validKeys.includes(submittedKey)) {
+  // Comparaison timing-safe — toujours évaluer les deux clés (pas de court-circuit)
+  // HMAC-SHA256 produit 32 octets = 64 hex chars ; toute autre longueur est invalide.
+  const HMAC_HEX_LEN = 64;
+  const submittedBuf = Buffer.from(submittedKey, "utf8");
+  const [key0Buf, key1Buf] = validKeys.map((k) => Buffer.from(k, "utf8"));
+  const lenOk  = submittedBuf.length === HMAC_HEX_LEN;
+  const match0 = lenOk && timingSafeEqual(submittedBuf, key0Buf);
+  const match1 = lenOk && timingSafeEqual(submittedBuf, key1Buf);
+
+  if (!(match0 || match1)) {
     return NextResponse.json(
       { error: "Invalid or missing access token." },
       { status: 403 }
