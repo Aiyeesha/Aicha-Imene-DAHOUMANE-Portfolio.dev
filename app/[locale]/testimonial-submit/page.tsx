@@ -1,21 +1,23 @@
 // app/[locale]/testimonial-submit/page.tsx
 // -----------------------------------------
 // Page de soumission de témoignage professionnel.
-// Accessible uniquement via lien privé : /[locale]/testimonial-submit?token=SECRET
+// Accessible uniquement via lien d'invitation HMAC à durée limitée.
 //
 // Sécurité :
-//   - Le token est validé côté serveur (TESTIMONIAL_SUBMIT_TOKEN env var, jamais côté client)
-//   - Si le token est absent ou incorrect → page d'erreur 403 (pas d'info sur le token attendu)
+//   - Le token brut (TESTIMONIAL_SUBMIT_TOKEN) n'est JAMAIS exposé dans les URLs publiques.
+//   - L'accès se fait via un lien signé HMAC généré par POST /api/admin/testimonial-invite.
+//   - Format du lien : /[locale]/testimonial-submit?invite=<hmac-hex>&exp=<unix-timestamp>
+//   - Si le lien est absent, invalide ou expiré → page d'erreur (pas d'info sur le secret)
 //   - noindex dans les métadonnées (ne doit pas apparaître dans les moteurs de recherche)
 //
 // Utilisation :
 //   1. Définir TESTIMONIAL_SUBMIT_TOKEN dans les variables d'environnement Vercel
-//   2. Partager le lien : https://votresite.com/en/testimonial-submit?token=VOTRE_TOKEN
-//   3. Les soumissions apparaissent dans la table `testimonial_submissions` (Supabase)
-//      avec approved = false — à valider manuellement avant publication
+//   2. Appeler POST /api/admin/testimonial-invite (Bearer ADMIN_PASSWORD) pour obtenir le lien
+//   3. Partager le lien privément avec le collaborateur
+//   4. Les soumissions apparaissent dans `testimonial_submissions` (Supabase), approved = false
 
 import type { Metadata } from "next";
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 import TestimonialSubmitForm from "@/components/TestimonialSubmitForm";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -56,12 +58,33 @@ export default async function TestimonialSubmitPage({
   const locale                = rawLocale === "fr" ? "fr" : "en";
   const isFr                  = locale === "fr";
 
-  // ── Validation du token côté serveur ──────────────────────────────────────
-  const expectedToken  = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
-  const submittedToken = typeof sp.token === "string" ? sp.token : "";
+  // ── Validation du lien d'invitation HMAC ──────────────────────────────────
+  // Format : ?invite=<hmac-sha256-hex>&exp=<unix-timestamp-seconds>
+  // Le HMAC est calculé comme : HMAC-SHA256(TESTIMONIAL_SUBMIT_TOKEN, "testimonial-invite:" + exp)
+  // Le token brut n'est jamais dans l'URL — seul un dérivé HMAC à durée limitée est partagé.
+  const secret     = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
+  const invite     = typeof sp.invite === "string" ? sp.invite.trim() : "";
+  const expStr     = typeof sp.exp    === "string" ? sp.exp.trim()    : "";
+  const expUnix    = parseInt(expStr, 10);
+  // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
+  const nowSec     = Math.floor(Date.now() / 1000);
 
-  // Si la feature n'est pas configurée ou si le token est invalide → accès refusé
-  const isAuthorized = expectedToken.length > 0 && submittedToken === expectedToken;
+  const HMAC_HEX_LENGTH = 64; // SHA-256 produit 32 octets = 64 caractères hex
+
+  let isAuthorized = false;
+  if (
+    secret.length > 0 &&
+    invite.length === HMAC_HEX_LENGTH &&
+    /^[0-9a-f]+$/.test(invite) &&
+    !isNaN(expUnix) &&
+    expUnix > nowSec // lien non expiré
+  ) {
+    const expectedHmac = createHmac("sha256", secret)
+      .update(`testimonial-invite:${expUnix}`)
+      .digest(); // Buffer 32 octets
+    const inviteBuf = Buffer.from(invite, "hex"); // Buffer 32 octets
+    isAuthorized = timingSafeEqual(expectedHmac, inviteBuf);
+  }
 
   if (!isAuthorized) {
     return (
@@ -82,11 +105,11 @@ export default async function TestimonialSubmitPage({
   // ── Génération d'une clé de session HMAC à durée limitée (30 min) ─────────
   // On ne passe JAMAIS le token brut au composant client — il serait sérialisé
   // dans le payload RSC (visible dans le HTML source). À la place, on génère un
-  // HMAC(token, bucket_temps) valable 30 min. Le composant client l'envoie
+  // HMAC(secret, bucket_temps) valable 30 min. Le composant client l'envoie
   // à l'API, qui le revalide côté serveur sans exposer le secret d'origine.
   // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
   const timeBucket = Math.floor(Date.now() / (30 * 60 * 1000)).toString();
-  const sessionKey  = createHmac("sha256", expectedToken).update(timeBucket).digest("hex");
+  const sessionKey  = createHmac("sha256", secret).update(timeBucket).digest("hex");
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
