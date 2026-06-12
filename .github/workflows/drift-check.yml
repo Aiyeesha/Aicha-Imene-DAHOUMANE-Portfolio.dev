@@ -1,0 +1,150 @@
+name: Drift Check
+
+# ── Objectif ──────────────────────────────────────────────────────────────────
+# Vérifie quotidiennement que la production Vercel est bien déployée sur le
+# commit HEAD de main (pas de dérive). Alerte aussi si les données de monitoring
+# (cron uptime) sont obsolètes (> 48 h).
+#
+# Secrets requis dans les paramètres du dépôt :
+#   VERCEL_TOKEN           — token Vercel (scope : read deployments)
+#   NEXT_PUBLIC_SITE_URL   — URL du site (ex: https://portfolio-next-one-gold.vercel.app)
+#
+# Le check monitoring (step 3) consomme le champ `lastStoredCheckAt` exposé
+# par GET /api/health — ajouté par T2. Si NEXT_PUBLIC_SITE_URL n'est pas
+# configuré, le step est ignoré silencieusement.
+
+on:
+  schedule:
+    # Quotidien à 06:00 UTC — après le cron uptime (08:00 UTC) décalé de 2 h.
+    # Change to 0 8 * * * if the uptime cron runs at 06:00 UTC.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: "Print raw API responses for debugging"
+        type: boolean
+        default: false
+
+# Permissions minimales — principe du moindre privilège (Scorecard).
+# Ce workflow n'écrit rien dans le dépôt — read-all suffit.
+permissions: read-all
+
+jobs:
+  drift:
+    name: Prod ↔ main drift check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      # ── 1. Récupération du SHA HEAD de main ──────────────────────────────
+      - name: Get main HEAD SHA
+        id: main
+        run: |
+          SHA=$(git ls-remote \
+            https://github.com/Aiyeesha/portfolio-next.git \
+            refs/heads/main | cut -f1)
+          if [ -z "$SHA" ]; then
+            echo "::error::Could not retrieve main HEAD SHA."
+            exit 1
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "main HEAD: $SHA"
+
+      # ── 2. Récupération du SHA du dernier déploiement de production ───────
+      - name: Get prod deployment SHA (Vercel)
+        id: prod
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::warning::VERCEL_TOKEN is not configured — prod SHA check skipped."
+            echo "sha=unknown" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Identifiants du projet Vercel (non sensibles — visibles dans l'API Vercel).
+          PROJECT_ID="prj_tIRHa7TOHDBWWgyfnmLvBbBL3afG"
+          TEAM_ID="team_ZSG4hmgl8QcadBdckxlLi7ls"
+
+          RESPONSE=$(curl -sf \
+            "https://api.vercel.com/v6/deployments?projectId=${PROJECT_ID}&teamId=${TEAM_ID}&target=production&state=READY&limit=1" \
+            -H "Authorization: Bearer ${VERCEL_TOKEN}")
+
+          if [ "${{ inputs.debug }}" = "true" ]; then
+            echo "Vercel API response: $RESPONSE"
+          fi
+
+          SHA=$(echo "$RESPONSE" | jq -r '.deployments[0].meta.githubCommitSha // empty')
+          if [ -z "$SHA" ]; then
+            echo "::error::Could not parse prod SHA from Vercel API response."
+            exit 1
+          fi
+
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "prod SHA: $SHA"
+
+      # ── 3. Comparaison prod ↔ main ────────────────────────────────────────
+      - name: Compare prod ↔ main
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "Skipped (VERCEL_TOKEN not configured)."
+            exit 0
+          fi
+
+          MAIN="${{ steps.main.outputs.sha }}"
+          PROD="${{ steps.prod.outputs.sha }}"
+
+          if [ "$PROD" = "unknown" ]; then
+            echo "Skipped (prod SHA unavailable)."
+            exit 0
+          fi
+
+          if [ "$MAIN" != "$PROD" ]; then
+            echo "::error::DRIFT DETECTED — prod ($PROD) != main ($MAIN)"
+            echo "Production is not on main HEAD. Check the Vercel dashboard."
+            exit 1
+          fi
+
+          echo "OK: prod == main ($MAIN)"
+
+      # ── 4. Contrôle fraîcheur du monitoring (uptime cron) ─────────────────
+      # Consomme le champ lastStoredCheckAt de GET /api/health (ajouté par T2).
+      # Si les données sont > 48 h, émet un avertissement (pas d'échec bloquant).
+      - name: Check monitoring freshness
+        env:
+          SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          if [ -z "$SITE_URL" ]; then
+            echo "::warning::NEXT_PUBLIC_SITE_URL not configured — monitoring freshness check skipped."
+            exit 0
+          fi
+
+          HEALTH=$(curl -sf --max-time 10 "${SITE_URL}/api/health" || echo "{}")
+
+          if [ "${{ inputs.debug }}" = "true" ]; then
+            echo "Health API response: $HEALTH"
+          fi
+
+          LAST_CHECK=$(echo "$HEALTH" | jq -r '.lastStoredCheckAt // empty')
+
+          if [ -z "$LAST_CHECK" ]; then
+            echo "::warning::lastStoredCheckAt absent from /api/health — cron may never have run."
+            exit 0
+          fi
+
+          # Calcul de l'âge en heures (Linux date)
+          LAST_CHECK_SEC=$(date -d "$LAST_CHECK" +%s 2>/dev/null || echo "0")
+          NOW_SEC=$(date +%s)
+          AGE_HOURS=$(( (NOW_SEC - LAST_CHECK_SEC) / 3600 ))
+
+          echo "lastStoredCheckAt: $LAST_CHECK (${AGE_HOURS} h ago)"
+
+          if [ "$AGE_HOURS" -gt 48 ]; then
+            echo "::warning::Monitoring data is ${AGE_HOURS} h old (threshold: 48 h). The uptime cron may not have run recently."
+          else
+            echo "OK: monitoring data is ${AGE_HOURS} h old — within threshold."
+          fi

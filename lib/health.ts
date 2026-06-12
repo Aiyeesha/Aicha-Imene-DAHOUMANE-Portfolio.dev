@@ -109,7 +109,7 @@ async function checkContactForm(): Promise<ServiceHealth> {
 
     const res = await withTimeout(
       fetch(endpoint, { method: "HEAD", cache: "no-store" }),
-      4000
+      2000 // 2 s max — Formspree ne doit pas retarder le cron au-delà de 2 s
     );
 
     const latencyMs = Date.now() - start;
