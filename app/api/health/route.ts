@@ -18,6 +18,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { runHealthChecks } from "@/lib/health";
+import { getLatestPingReport } from "@/lib/uptime";
 import { blogRatelimit, safeLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic"; // jamais mis en cache par Next.js
@@ -38,7 +39,11 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const report = await runHealthChecks();
+  // Run live checks + read last cron-stored ping in parallel
+  const [report, storedPing] = await Promise.all([
+    runHealthChecks(),
+    getLatestPingReport(),
+  ]);
 
   // Code HTTP basé sur le statut global
   const httpStatus =
@@ -56,6 +61,9 @@ export async function GET(req: NextRequest) {
   const publicReport = {
     ...report,
     services: report.services.map(({ latencyMs: _l, message: _m, ...rest }) => rest),
+    // lastStoredCheckAt : timestamp du dernier run de cron (null si aucun run enregistré).
+    // Utilisé par le workflow drift-check (T4) pour détecter un monitoring stale.
+    lastStoredCheckAt: storedPing?.checkedAt ?? null,
   };
 
   const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? "";

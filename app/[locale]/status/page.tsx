@@ -140,6 +140,15 @@ export default async function StatusPage({
     ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : "en-US", { dateStyle: "medium", timeStyle: "short" })
     : "—";
 
+  // Garde de fraîcheur : avertissement si les données dépassent 48 h
+  const STALE_THRESHOLD_HOURS = 48;
+  // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
+  const nowMs = Date.now();
+  const ageHours = report
+    ? (nowMs - new Date(report.checkedAt).getTime()) / (1000 * 3600)
+    : null;
+  const isStale = ageHours !== null && ageHours > STALE_THRESHOLD_HOURS;
+
   const labels = {
     headline:      isFr ? "Statut du site"           : "Site Status",
     breadcrumb:    isFr ? "Statut"                   : "Status",
@@ -159,6 +168,9 @@ export default async function StatusPage({
       : "No incidents reported. Everything is running normally.",
     incidentTitle: isFr ? "Historique des incidents" : "Incident history",
     apiLink:       isFr ? "Endpoint JSON brut ↗"    : "Raw JSON endpoint ↗",
+    staleWarning:  isFr
+      ? `Avertissement : données de monitoring potentiellement obsolètes (${Math.floor(ageHours ?? 0)} h). Le cron de vérification n'a peut-être pas tourné récemment.`
+      : `Warning: monitoring data may be stale (${Math.floor(ageHours ?? 0)} h old). The check cron may not have run recently.`,
   };
 
   const globalMessage =
@@ -178,6 +190,17 @@ export default async function StatusPage({
         <span aria-hidden="true">›</span>
         <span className="text-muted">{labels.breadcrumb}</span>
       </nav>
+
+      {/* ── Garde de fraîcheur — avertissement si données > 48 h ─────────── */}
+      {isStale && (
+        <div
+          role="alert"
+          className="mb-6 flex items-start gap-3 rounded-xl border border-amber-400/30 bg-amber-400/8 px-4 py-3 text-sm text-amber-700 dark:text-amber-300"
+        >
+          <span aria-hidden="true" className="mt-0.5 flex-none text-base">⚠</span>
+          <span>{labels.staleWarning}</span>
+        </div>
+      )}
 
       {/* ── Bannière statut global ────────────────────────────────────────── */}
       <div className={`mb-10 flex items-center gap-4 rounded-2xl border p-6 ${cfg.banner}`}>

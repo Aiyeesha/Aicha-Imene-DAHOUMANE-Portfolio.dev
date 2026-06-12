@@ -6,6 +6,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
@@ -179,8 +180,57 @@ export default async function WorkWithMePage({ params }: PageProps) {
       ? "bg-amber-500"
       : "bg-red-500";
 
+  // ── JSON-LD ProfessionalService ───────────────────────────────────────────
+  // Pas de priceRange ni offers.price (décision D2 — aucun tarif publié).
+  const siteUrl = getSiteUrl();
+  const ownerName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
+  const professionalServiceSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": siteName,
+    "url": `${siteUrl}/${locale}/work-with-me`,
+    "description": isFr
+      ? "Missions freelance Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
+      : "Freelance Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
+    "serviceType": [
+      "Salesforce Development",
+      "Salesforce Administration",
+      "IT Operations",
+      "DevOps / CI·CD",
+      "Web Development",
+    ],
+    "provider": {
+      "@type": "Person",
+      "name": ownerName,
+      "url": siteUrl,
+    },
+    "areaServed": [
+      { "@type": "Country", "name": "France" },
+      { "@type": "Country", "name": "Algeria" },
+      { "@type": "Country", "name": "Belgium" },
+      { "@type": "Country", "name": "Switzerland" },
+      { "@type": "Country", "name": "Luxembourg" },
+      { "@type": "Country", "name": "Canada" },
+      { "@type": "Country", "name": "United Kingdom" },
+      { "@type": "Country", "name": "Ireland" },
+      { "@type": "Country", "name": "Malta" },
+      "Worldwide",
+    ],
+    "availableLanguage": ["French", "English"],
+    "workLocation": { "@type": "VirtualLocation" },
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
+
+      {/* ── JSON-LD — type="application/ld+json" est une donnée, pas un script
+           exécutable. Pas de nonce requis ; jsonLdStringify échappe < > & pour
+           éviter le script breakout. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify(professionalServiceSchema) }}
+      />
 
       {/* ── Breadcrumb ───────────────────────────────────────────────────── */}
       <nav aria-label={labels.breadLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">

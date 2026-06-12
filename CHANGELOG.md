@@ -9,6 +9,19 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **T1 — HMAC invite tokens pour les témoignages** — Le lien d'invitation témoignage n'apparaît plus dans le HTML public. Le `TESTIMONIAL_SUBMIT_TOKEN` n'est jamais exposé dans une URL. Le système utilise désormais un jeton HMAC dérivé (`HMAC-SHA256(secret, "testimonial-invite:" + exp)`) avec date d'expiration. Un endpoint admin (`POST /api/admin/testimonial-invite`, auth Bearer `ADMIN_PASSWORD`) génère les liens privés à durée limitée (défaut 7 j, max 30 j). La page `/testimonial-submit` valide le token HMAC côté serveur avec `timingSafeEqual`.
+
+### Added
+
+- **T3 — JSON-LD `ProfessionalService` sur `/work-with-me`** — Données structurées Schema.org pour le référencement freelance. Inclut `serviceType`, `areaServed` (pays + « Worldwide »), `availableLanguage`, `workLocation: VirtualLocation`. Sans `priceRange` ni `offers.price` (décision D2).
+- **T4 — Workflow GitHub Actions `drift-check.yml`** — Vérification quotidienne (06:00 UTC) + déclenchement manuel : (1) compare le SHA HEAD de main avec le déploiement de production Vercel, (2) contrôle la fraîcheur des données de monitoring (champ `lastStoredCheckAt` de `/api/health`, seuil 48 h). Émet `::error::` si dérive détectée, `::warning::` si monitoring stale. Gracieusement inactif si `VERCEL_TOKEN` ou `NEXT_PUBLIC_SITE_URL` ne sont pas configurés.
+
+### Changed
+
+- **T2 — Garde de fraîcheur sur la page Statut** — Bannière d'avertissement amber si les données de monitoring dépassent 48 h (`/status`). Timeout Formspree réduit de 4 s à 2 s dans `lib/health.ts` pour ne pas retarder le cron. `/api/health` expose un nouveau champ `lastStoredCheckAt` (timestamp du dernier run du cron stocké en Supabase/Redis) — consommé par T4.
+
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
 
