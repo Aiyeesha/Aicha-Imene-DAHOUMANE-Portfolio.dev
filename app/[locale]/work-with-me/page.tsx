@@ -84,8 +84,8 @@ export default async function WorkWithMePage({ params }: PageProps) {
       ? "Freelance direct · Portage salarial · Mission · CDD"
       : "Direct freelance · Portage salarial · Contract · Fixed-term",
     availMode:      isFr
-      ? "100 % remote · Paris / IDF · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
-      : "100% remote · Paris / IDF · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
+      ? "100 % remote · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
+      : "100% remote · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : "Domains",
@@ -129,7 +129,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
           {
             q: "Quelle est votre zone géographique ?",
-            a: "Je travaille 100 % à distance depuis Paris / Île-de-France ou Marseille / PACA. Je suis pleinement ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout pays ou contexte anglophone, en Europe ou hors d'Europe.",
+            a: "Je travaille 100 % à distance depuis Marseille / PACA. Je suis pleinement ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout pays ou contexte anglophone, en Europe ou hors d'Europe.",
           },
         ]
       : [
@@ -147,7 +147,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
           },
           {
             q: "Where are you based?",
-            a: "I work 100% remotely, from Paris / Île-de-France or Marseille / PACA. I'm fully open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking country or context, within or outside Europe.",
+            a: "I work 100% remotely, from Marseille / PACA. I'm fully open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking country or context, within or outside Europe.",
           },
         ],
 
