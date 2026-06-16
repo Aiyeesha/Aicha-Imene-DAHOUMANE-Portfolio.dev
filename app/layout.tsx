@@ -170,9 +170,25 @@ function buildJsonLd(locale: string) {
 // Next.js applique le nonce à ses propres scripts internes via l'en-tête
 // x-nonce posé par proxy.ts, sans que le layout ait à le lire.
 //
-// Blocage résiduel : getLocale() est nécessaire pour <html lang> et le JSON-LD
-// (inLanguage, mainEntityOfPage). Le supprimer exigerait de refactoriser
-// complètement la hiérarchie des layouts et d'utiliser PPR — hors périmètre.
+// CONCLUSION SPIKE TICKET-03 (setRequestLocale) :
+//   Deux barrières cumulatives empêchent l'ISR, même avec setRequestLocale :
+//
+//   1. BARRIÈRE LAYOUT : getLocale() ici est le seul endroit qui lit headers().
+//      L'hypothèse était de déplacer <html lang> dans app/[locale]/layout.tsx et
+//      d'y appeler setRequestLocale(locale) avant tout appel async. En pratique,
+//      Next.js exige que le root layout rende <html>/<body> ; imbriquer une seconde
+//      balise <html> dans le locale layout provoque une hydration break (vérifié).
+//      Supprimer getLocale() ici nécessite PPR (Partial Pre-Rendering, expérimental).
+//
+//   2. BARRIÈRE CSP : même si le blocage layout était levé, le nonce CSP généré
+//      par requête dans proxy.ts resterait incompatible avec le cache HTML CDN.
+//      Un HTML mis en cache par Vercel CDN embarquerait un nonce périmé ; le
+//      navigateur bloquerait tous les scripts inline sur chaque cache hit.
+//      Abandon du nonce au profit de hash-based CSP serait requis (refacto majeur).
+//
+//   → setRequestLocale est conservé dans app/[locale]/layout.tsx pour ses bénéfices
+//     sur les composants enfants (pas de lecture headers() dans le sous-arbre), mais
+//     le Cache-Control: no-store sur les routes HTML reste inchangé.
 //
 // RÉSOLUTION PRÉVUE — migration homelab (fin 2026) :
 //   Nginx / Caddy en reverse proxy peut mettre en cache le HTML rendu à sa couche
