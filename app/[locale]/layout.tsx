@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import Providers from "./providers";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import Navbar from "@/components/Navbar";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -18,7 +18,24 @@ import { getSiteUrl } from "@/lib/siteUrl";
  * - Wraps the app with NextIntlClientProvider and client Providers (theme + track)
  *
  * IMPORTANT: Do NOT render <html>/<body> here (only in app/layout.tsx), otherwise hydration breaks.
+ *
+ * TICKET-03 SPIKE — setRequestLocale :
+ * setRequestLocale(locale) est appelé en premier dans ce layout. Cela permet à next-intl
+ * d'utiliser le segment d'URL comme source de vérité (pas les headers()) pour tous les
+ * composants enfants qui appelleront getLocale()/getTranslations(). Cela active aussi
+ * generateStaticParams pour la pré-génération statique des deux locales.
+ *
+ * CONCLUSION DU SPIKE : ISR reste inopérant malgré ce changement. Le root layout
+ * (app/layout.tsx) appelle toujours getLocale() pour <html lang> — seul endroit où
+ * les headers() sont lus. Déplacer <html> dans ce layout provoquerait une hydration
+ * break (deux balises <html> imbriquées). De plus, même si getLocale() était supprimé,
+ * le nonce CSP par requête de proxy.ts reste incompatible avec le cache HTML CDN.
+ * Résolution : reverse-proxy homelab (fin 2026). Voir app/layout.tsx.
  */
+
+export function generateStaticParams() {
+  return [{ locale: "fr" }, { locale: "en" }];
+}
 
 export async function generateMetadata({
   params
@@ -83,7 +100,9 @@ export default async function LocaleLayout({
 }) {
   const { locale: rawLocale } = await params;
   const locale = rawLocale === "fr" ? "fr" : "en";
-  // next-intl resolves the current locale from the segment automatically.
+  // Stocker la locale dans l'AsyncLocalStorage de next-intl AVANT tout appel async.
+  // Permet aux composants enfants d'appeler getLocale()/getTranslations() sans lire headers().
+  setRequestLocale(locale);
   const messages = await getMessages({ locale: locale });
   const t = await getTranslations({ locale });
 
