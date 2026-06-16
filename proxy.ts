@@ -166,8 +166,14 @@ export async function proxy(request: NextRequest) {
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
 
-    const { success } = await adminRatelimit.limit(ip);
-    if (!success) {
+    let rlSuccess = false;
+    try {
+      ({ success: rlSuccess } = await adminRatelimit.limit(ip));
+    } catch (err) {
+      // Panne Redis : fail-closed volontaire sur /admin (endpoint sensible).
+      console.error("[admin] rate-limit error → fail-closed", err);
+    }
+    if (!rlSuccess) {
       return new NextResponse("Too many requests.", {
         status: 429,
         headers: { "Retry-After": "300" },

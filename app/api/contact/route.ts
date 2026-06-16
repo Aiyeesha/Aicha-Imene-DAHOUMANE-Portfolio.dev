@@ -131,7 +131,8 @@ export async function POST(req: Request) {
   // et corresponde à l'origine du site. Les navigateurs envoient toujours Origin
   // sur les requêtes POST cross-site ; les bots automatisés l'omettent souvent.
   // Rejeter aussi les requêtes sans Origin pour bloquer curl/scripts directs.
-  if (process.env.NODE_ENV === "production" && ALLOWED_ORIGIN) {
+  const isPreview = process.env.VERCEL_ENV === "preview";
+  if (!isPreview && process.env.NODE_ENV === "production" && ALLOWED_ORIGIN) {
     const origin = req.headers.get("origin") || "";
     if (!origin || origin !== ALLOWED_ORIGIN) {
       return NextResponse.json({ ok: false, error: "forbidden_origin" }, { status: 403 });
