@@ -169,12 +169,14 @@ export default async function ColophonPage({ params }: PageProps) {
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
+        "**ISR (pages HTML)** : inopérant sur Vercel CDN. Deux barrières cumulatives : le nonce CSP généré par requête dans le middleware Edge est incompatible avec un HTML mis en cache (le nonce serait périmé) ; et le root layout doit lire les en-têtes pour `<html lang>`, ce qui force le rendu dynamique. Résolution prévue : reverse-proxy homelab (fin 2026) qui peut cacher le HTML à sa couche, indépendamment du `Cache-Control` applicatif.",
       ]
     : [
         "**Upstash Redis** stores Supabase query responses (projects, certifications, about) with a 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",
+        "**ISR (HTML pages)**: inactive on Vercel CDN. Two cumulative barriers: the per-request CSP nonce generated in the Edge middleware is incompatible with cached HTML (the nonce would be stale on cache hits); and the root layout must read headers for `<html lang>`, forcing dynamic rendering. Planned resolution: homelab reverse proxy (end of 2026) that can cache HTML at its layer, independently of the application `Cache-Control`.",
       ];
 
   // ── Security ──────────────────────────────────────────────────────────────
