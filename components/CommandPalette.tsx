@@ -16,7 +16,7 @@
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
 import * as RadixDialog from "@radix-ui/react-dialog";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useLocale } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
@@ -121,6 +121,7 @@ export default function CommandPalette() {
   const { setTheme, resolvedTheme } = useTheme();
   const locale = useLocale();
   const router = useRouter();
+  const pathname = usePathname();
 
   // ── Raccourci clavier ⌘K / Ctrl+K ──────────────────────────────────────────
   useEffect(() => {
@@ -141,8 +142,15 @@ export default function CommandPalette() {
     setTimeout(fn, 60);
   };
 
-  const scrollTo = (id: string) =>
-    run(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }));
+  const onHome = pathname === `/${locale}` || pathname === `/${locale}/`;
+
+  const scrollTo = (id: string) => {
+    if (onHome) {
+      run(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }));
+    } else {
+      run(() => router.push(`/${locale}/#${id}`));
+    }
+  };
 
   const navigate = (href: string) => run(() => router.push(href));
 
@@ -170,6 +178,7 @@ export default function CommandPalette() {
     about:       "About",
     certifications: "Certifications",
     resources:   isFr ? "Ressources" : "Resources",
+    allProjects: isFr ? "Tous les projets" : "All projects",
     workWithMe:  isFr ? "Travaillons ensemble" : "Work with me",
     colophon:    "Colophon",
     legal:       isFr ? "Mentions légales" : "Legal",
@@ -253,6 +262,7 @@ export default function CommandPalette() {
               {[
                 { href: `/${locale}/about`,           label: L.about,           icon: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" },
                 { href: `/${locale}/certifications`,  label: L.certifications,  icon: "M12 15l8-8-3-3-5 5-2-2-3 3z M20 7l-8 8-4-4" },
+                { href: `/${locale}/projects`,        label: L.allProjects,     icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
                 { href: `/${locale}/resources`,       label: L.resources,        icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
                 { href: `/${locale}/blog`,            label: "Blog →",           icon: "M4 6h16M4 12h8m-8 6h16" },
                 { href: `/${locale}/uses`,            label: isFr ? "Setup & Outils" : "Uses & Setup", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },

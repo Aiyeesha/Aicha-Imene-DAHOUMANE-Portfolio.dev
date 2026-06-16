@@ -60,7 +60,13 @@ export default async function Home({ params }: Props) {
 
       {/* HERO — simplifié (photo + titre + badges + 2 CTAs)
           ProfileNarrative et ProfileFactsCard ont été déplacés vers /about
-          pour que le hero tienne en un seul écran sur desktop 1440px et mobile 375px. */}
+          pour que le hero tienne en un seul écran sur desktop 1440px et mobile 375px.
+          BAIL-OUT NOTE : TrackAwareHero est "use client" — il lit le cookie `track`
+          via useTrack() (Providers) et s'anime avec Framer Motion. Ce composant
+          client à la racine de la page fait apparaître BAILOUT_TO_CLIENT_SIDE_RENDERING
+          dans le HTML streamé ; c'est intentionnel : le contenu du hero dépend d'un
+          état cookie côté client (Salesforce / IT Ops) qui n'est pas disponible en SSR.
+          Si TICKET-03 réactive l'ISR, cette section restera hydratée côté client. */}
       {/* min-h prevents height collapse during Framer Motion opacity:0 entrance */}
       <section id="hero" className="py-8 md:py-10 min-h-[320px] sm:min-h-[400px]">
         <div className="pt-4 md:pt-6">
@@ -169,6 +175,15 @@ export default async function Home({ params }: Props) {
           </Reveal>
           <div className="mt-5">
             <FeaturedProjects projects={supabaseProjects} />
+          </div>
+          <div className="mt-6 flex justify-end">
+            <Link
+              href={`/${locale}/projects`}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              aria-label={locale === "fr" ? "Voir tous les projets" : "View all projects"}
+            >
+              {locale === "fr" ? "Voir tous les projets →" : "View all projects →"}
+            </Link>
           </div>
           <div className="mt-10">
             <ProjectsSection locale={locale} projects={supabaseProjects} />
