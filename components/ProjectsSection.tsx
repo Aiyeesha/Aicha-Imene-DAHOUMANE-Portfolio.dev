@@ -70,9 +70,11 @@ const tones: Record<string, string> = {
 type ProjectsSectionProps = {
   locale?: "en" | "fr";
   projects: ProjectWithAssets[];
+  /** Sur la page /projects, afficher aussi les projets featured (pas de FeaturedProjects au-dessus) */
+  includeFeatured?: boolean;
 };
 
-export default function ProjectsSection({ locale: localeProp, projects }: ProjectsSectionProps) {
+export default function ProjectsSection({ locale: localeProp, projects, includeFeatured = false }: ProjectsSectionProps) {
   const t = useTranslations("projects");
   const { track, setTrack } = useTrack();
   const pathname = usePathname();
@@ -82,20 +84,20 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
   const [q, setQ] = useState("");
   const [active, setActive] = useState<string>("All");
 
-  // ── Compteur de projets par track (non-featured uniquement) ──────
+  // ── Compteur de projets par track ────────────────────────────────
   const trackCounts = useMemo(() => ({
-    salesforce: projects.filter((p) => p.track === "salesforce" && !p.featured).length,
-    itops:      projects.filter((p) => p.track === "itops"       && !p.featured).length
-  }), [projects]);
+    salesforce: projects.filter((p) => p.track === "salesforce" && (includeFeatured || !p.featured)).length,
+    itops:      projects.filter((p) => p.track === "itops"       && (includeFeatured || !p.featured)).length
+  }), [projects, includeFeatured]);
 
   // ── Catégories disponibles pour le track actif ───────────────────
   const categories = useMemo(() => {
     const set = new Set<string>();
     projects
-      .filter((p) => p.track === track && !p.featured)
+      .filter((p) => p.track === track && (includeFeatured || !p.featured))
       .forEach((p) => (p.categories ?? []).forEach((c) => set.add(c)));
     return ["All", ...Array.from(set)];
-  }, [track, projects]);
+  }, [track, projects, includeFeatured]);
 
   // Refs pour les boutons d'onglets (navigation au clavier ← →)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -123,14 +125,14 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
 
   // ── Filtrage : track + catégorie + recherche texte ───────────────
   const filtered = useMemo(() => {
-    const base = projects.filter((p) => p.track === track && !p.featured);
+    const base = projects.filter((p) => p.track === track && (includeFeatured || !p.featured));
     return base.filter((p) => {
       const inCat = active === "All" ? true : (p.categories ?? []).includes(active);
       const text = ((p.title ?? "") + " " + (p.summary ?? "") + " " + (p.tags ?? []).join(" ")).toLowerCase();
       const inQ  = q.trim() === "" ? true : text.includes(q.trim().toLowerCase());
       return inCat && inQ;
     });
-  }, [track, active, q, projects]);
+  }, [track, active, q, projects, includeFeatured]);
 
   return (
     <div>
@@ -200,13 +202,13 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
 
       {/* ── Filtres par catégorie ───────────────────────────────── */}
       {categories.length > 1 && (
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-8 flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar">
           {categories.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setActive(c)}
-              className={`rounded-full border px-4 py-2 text-sm soft-ring ${
+              className={`shrink-0 rounded-full border px-4 py-2 text-sm soft-ring ${
                 active === c
                   ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
                   : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white/10"
@@ -266,7 +268,7 @@ export default function ProjectsSection({ locale: localeProp, projects }: Projec
               </div>
 
               {/* Résumé */}
-              <p className="mt-3 text-sm text-muted">{p.summary}</p>
+              <p className="mt-3 text-sm text-muted line-clamp-2">{p.summary}</p>
 
               {/* Tags techniques */}
               <div className="mt-4 flex flex-wrap gap-2">

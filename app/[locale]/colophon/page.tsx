@@ -139,6 +139,16 @@ export default async function ColophonPage({ params }: PageProps) {
         { name: "Vercel Speed Insights", role: isFr ? "Analyse des performances en production" : "Production performance analysis" },
       ],
     },
+    {
+      title: isFr ? "CI/CD & Qualité" : "CI/CD & Quality",
+      items: [
+        { name: "GitHub Actions", role: isFr ? "Pipeline CI : build, lint, typecheck, tests unitaires, audit sécurité npm, E2E Playwright, Lighthouse CI" : "CI pipeline: build, lint, typecheck, unit tests, npm security audit, Playwright E2E, Lighthouse CI" },
+        { name: "Lighthouse CI", role: isFr ? "Budgets performance & accessibilité sur chaque PR — accessibilité ≥ 95 (bloquant), performance ≥ 65 (avertissement)" : "Performance & accessibility budgets on every PR — accessibility ≥ 95 (blocking), performance ≥ 65 (warning)", link: "https://github.com/GoogleChrome/lighthouse-ci" },
+        { name: "axe-core / Playwright", role: isFr ? "Audit WCAG 2.2 AA automatisé sur 6 routes — zéro tolérance pour les violations critiques" : "Automated WCAG 2.2 AA audit on 6 routes — zero tolerance for critical violations", link: "https://github.com/dequelabs/axe-core" },
+        { name: "Dependabot", role: isFr ? "Mises à jour npm hebdomadaires (8 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle" : "Weekly npm updates (8 groups), monthly Actions — next-intl/framer-motion majors require manual review" },
+        { name: "OpenSSF Scorecard", role: isFr ? "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits" : "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits", link: "https://securityscorecard.com" },
+      ],
+    },
   ];
 
   // ── Architecture decisions ────────────────────────────────────────────────
@@ -193,6 +203,7 @@ export default async function ColophonPage({ params }: PageProps) {
         "**CORS restreint** : `/api/health` scoped à l'origine du site uniquement — les outils de monitoring opèrent en serveur-à-serveur.",
         "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116) — contact de divulgation responsable.",
         "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (service role, token Redis, credentials admin) restent strictement côté serveur.",
+        "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=portfolio-next-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/portfolio-next-one-gold.vercel.app) — posture HTTP vérifiée indépendamment du site.",
       ]
     : [
         "**HTTP headers** in `next.config.mjs`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Framework fingerprinting suppressed via `poweredByHeader: false`.",
@@ -204,17 +215,28 @@ export default async function ColophonPage({ params }: PageProps) {
         "**CORS restricted**: `/api/health` scoped to the site origin only — monitoring tools call server-to-server, no browser CORS needed.",
         "**security.txt** at `/.well-known/security.txt` (RFC 9116) — responsible disclosure contact.",
         "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (service role, Redis token, admin credentials) remain strictly server-side.",
+        "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=portfolio-next-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/portfolio-next-one-gold.vercel.app) — HTTP security posture verified independently from the site.",
       ];
 
-  // ── Helpers — rendu texte Markdown minimal (gras uniquement) ──────────────
+  // ── Helpers — rendu Markdown minimal (gras + liens) ──────────────────────
 
-  function renderBold(text: string): React.ReactNode[] {
-    const parts = text.split(/\*\*(.*?)\*\*/g);
-    return parts.map((part, i) =>
-      i % 2 === 1
-        ? <strong key={i} className="font-semibold text-slate-900 dark:text-white">{part}</strong>
-        : <span key={i}>{part}</span>
-    );
+  function renderMarkdown(text: string): React.ReactNode[] {
+    const regex = /\*\*(.*?)\*\*|\[([^\]]+)\]\(([^)]+)\)/g;
+    const result: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+    let key = 0;
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) result.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
+      if (match[1] !== undefined) {
+        result.push(<strong key={key++} className="font-semibold text-slate-900 dark:text-white">{match[1]}</strong>);
+      } else {
+        result.push(<a key={key++} href={match[3]} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70 soft-ring rounded">{match[2]}</a>);
+      }
+      lastIndex = regex.lastIndex;
+    }
+    if (lastIndex < text.length) result.push(<span key={key++}>{text.slice(lastIndex)}</span>);
+    return result;
   }
 
   return (
@@ -284,7 +306,7 @@ export default async function ColophonPage({ params }: PageProps) {
           {archDecisions.map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-muted leading-relaxed">
               <span className="mt-1 shrink-0 text-cyan-500 dark:text-cyan-400">→</span>
-              <span>{renderBold(d)}</span>
+              <span>{renderMarkdown(d)}</span>
             </li>
           ))}
         </ul>
@@ -297,7 +319,7 @@ export default async function ColophonPage({ params }: PageProps) {
           {cachePoints.map((p, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-muted leading-relaxed">
               <span className="mt-1 shrink-0 text-cyan-500 dark:text-cyan-400">→</span>
-              <span>{renderBold(p)}</span>
+              <span>{renderMarkdown(p)}</span>
             </li>
           ))}
         </ul>
@@ -310,7 +332,7 @@ export default async function ColophonPage({ params }: PageProps) {
           {secPoints.map((p, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-muted leading-relaxed">
               <span className="mt-1 shrink-0 text-emerald-500 dark:text-emerald-400">→</span>
-              <span>{renderBold(p)}</span>
+              <span>{renderMarkdown(p)}</span>
             </li>
           ))}
         </ul>

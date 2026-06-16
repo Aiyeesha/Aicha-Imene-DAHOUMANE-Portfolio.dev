@@ -35,6 +35,9 @@ html {
   scrollbar-gutter: stable;
 }
 
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
 /* Native form controls (select, date, etc.) follow the active theme */
 html { color-scheme: light; }
 html.dark { color-scheme: dark; }

@@ -48,7 +48,7 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
 
   return (
     <div className={className}>
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {posts.length ? (
           posts.map((p) => {
             const postTrack = detectTrack(p.tags);
