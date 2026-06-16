@@ -29,6 +29,25 @@ const customBase = {
   },
 };
 
-const flatConfig = [customBase, ...restConfig];
+// restConfig peut contenir des configs qui surchargent nos règles (flat config : dernier gagne).
+// On patch chaque config de restConfig qui déclare react-hooks ou react pour ré-appliquer
+// nos assouplissements dans le même objet (ESLint flat config exige plugin + règles dans le même objet).
+const patchedRestConfig = restConfig.map((cfg) => {
+  const hasReactHooks = cfg.plugins?.["react-hooks"];
+  const hasReact      = cfg.plugins?.["react"];
+  if (!hasReactHooks && !hasReact) return cfg;
+
+  const ruleOverrides = {};
+  if (hasReactHooks) {
+    ruleOverrides["react-hooks/set-state-in-effect"] = "warn";
+    ruleOverrides["react-hooks/static-components"]   = "warn";
+  }
+  if (hasReact) {
+    ruleOverrides["react/no-unescaped-entities"] = "warn";
+  }
+  return { ...cfg, rules: { ...cfg.rules, ...ruleOverrides } };
+});
+
+const flatConfig = [customBase, ...patchedRestConfig];
 
 export default flatConfig;
