@@ -61,7 +61,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
     return projects
       .filter((p) => p.featured && p.track === track)
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .slice(0, 4);
+      .slice(0, 5);
   }, [projects, track]);
 
   // ── Empty state ─────────────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {featured.map((p, i) => (
         <Reveal key={p.slug} delayMs={i * 80}>
           <GlowCard className="card overflow-hidden">
