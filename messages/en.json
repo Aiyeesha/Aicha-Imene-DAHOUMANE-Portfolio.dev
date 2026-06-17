@@ -87,7 +87,7 @@
     "projects_title": "Projects",
     "projects_subtitle": "Use the search and filters. The IT Ops / Salesforce toggle changes the list.",
     "contact_title": "Contact",
-    "contact_subtitle": "Prefer email or the form below (protected against spam).",
+    "contact_subtitle": "I prefer to be contacted by email — the form below is also available (spam-protected).",
     "blog_title": "Blog / Tutorials",
     "blog_subtitle": "Short, practical guides you can apply immediately.",
     "profile_title": "Profile",
@@ -130,7 +130,7 @@
       "policy_not_accepted": "You must accept the privacy policy to send a message.",
       "too_many_links": "Too many links in the message."
     },
-    "homeIntro": "You can reach me by email or use the secure form. Anti-spam and rate limiting are enabled.",
+    "homeIntro": "I prefer to be contacted by email. You can also use the secure form below. Anti-spam and rate limiting are enabled.",
     "homeMethodsTitle": "Quick links",
     "homeCv": "Download CV",
     "homeLinkedIn": "LinkedIn",
