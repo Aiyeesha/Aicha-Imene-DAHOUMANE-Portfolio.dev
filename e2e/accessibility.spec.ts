@@ -169,7 +169,8 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
 
   test("Tous les champs du formulaire ont un label associé", async ({ page }) => {
     await page.goto("/en");
-    await page.locator("#contact").waitFor({ state: "visible" });
+    await waitForReady(page);
+    await page.locator("section#contact").waitFor({ state: "visible" });
 
     // Vérifier que chaque input (sauf honeypot) a un label avec htmlFor correspondant
     const inputs = ["contact-name", "contact-email", "contact-topic", "contact-message"];
