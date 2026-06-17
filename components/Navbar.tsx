@@ -121,12 +121,46 @@ export default function Navbar() {
   
   const menuRef = useRef<HTMLDivElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
-// Close on Escape + prevent background scroll when menu is open
+// Single keydown handler: Escape closes menu + Tab focus-trap + scroll-lock.
+  // Fusionné depuis deux useEffect distincts pour éviter le double listener keydown.
   useEffect(() => {
     if (!mobileOpen) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMobileOpen(false);
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+
+      const container = menuRef.current;
+      if (!container) return;
+
+      const focusables = Array.from(
+        container.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.hasAttribute("disabled"));
+
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (e.shiftKey) {
+        if (active === first || !container.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
 
     document.addEventListener("keydown", onKeyDown);
@@ -138,53 +172,6 @@ export default function Navbar() {
       document.body.style.overflow = prev;
     };
   }, [mobileOpen]);
-
-  
-useEffect(() => {
-  // Focus management for mobile menu: trap focus when open and restore focus when closed.
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (!mobileOpen) return;
-
-    if (e.key === "Escape") {
-      e.preventDefault();
-      // Close by clicking the menu button if present, so state stays consistent.
-      menuButtonRef.current?.click();
-      return;
-    }
-
-    if (e.key !== "Tab") return;
-
-    const container = menuRef.current;
-    if (!container) return;
-
-    const focusables = Array.from(
-      container.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-      )
-    ).filter((el) => !el.hasAttribute("disabled"));
-
-    if (focusables.length === 0) return;
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    const active = document.activeElement as HTMLElement | null;
-
-    if (e.shiftKey) {
-      if (active === first || !container.contains(active)) {
-        e.preventDefault();
-        last.focus();
-      }
-    } else {
-      if (active === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-  };
-
-  document.addEventListener("keydown", onKeyDown);
-  return () => document.removeEventListener("keydown", onKeyDown);
-}, [mobileOpen]);
 
 useEffect(() => {
   if (mobileOpen) {

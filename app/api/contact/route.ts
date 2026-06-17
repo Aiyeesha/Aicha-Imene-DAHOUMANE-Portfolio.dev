@@ -139,8 +139,26 @@ export async function POST(req: Request) {
     }
   }
 
+  // Parse body early so the honeypot can fire before the rate limiter.
+  // Honeypot-triggered requests shouldn't consume rate limit tokens: they're bots,
+  // and the silent-200 lure should work even when Redis is unavailable.
+  const body = (await req.json().catch(() => null)) as Payload | null;
+  if (!body) return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+
+  const name = (body.name || "").trim();
+  const email = (body.email || "").trim();
+  const topic = String(body.topic || "general").trim();
+  const subject = String(body.subject || "").trim();
+  const message = (body.message || "").trim();
+  const company = (body.company || "").trim(); // honeypot
+  const acceptedPolicy = Boolean(body.acceptedPolicy);
+  const clientLocale = String(body.locale || "").trim() || null;
+  const userAgent = req.headers.get("user-agent") || null;
+
+  // Bot check — before rate limiter so bots don't consume tokens
+  if (company) return NextResponse.json({ ok: true }, { status: 200 });
+
   // --- Upstash Rate Limit ---
-  // We keep it early to protect CPU, but you can move it after honeypot if you prefer.
   const ip = getClientIp(req);
   const identifier = `contact:ip:${ip}`;
 
@@ -158,22 +176,6 @@ export async function POST(req: Request) {
     );
   }
   // --- End Rate Limit ---
-
-  const body = (await req.json().catch(() => null)) as Payload | null;
-  if (!body) return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
-
-  const name = (body.name || "").trim();
-  const email = (body.email || "").trim();
-  const topic = String(body.topic || "general").trim();
-  const subject = String(body.subject || "").trim();
-  const message = (body.message || "").trim();
-  const company = (body.company || "").trim(); // honeypot
-  const acceptedPolicy = Boolean(body.acceptedPolicy);
-  const clientLocale = String(body.locale || "").trim() || null;
-  const userAgent = req.headers.get("user-agent") || null;
-
-  // Bot check
-  if (company) return NextResponse.json({ ok: true }, { status: 200 });
 
   const v = validate({ name, email, message, topic, acceptedPolicy });
   if (v) return NextResponse.json({ ok: false, error: v }, { status: 400 });

@@ -32,6 +32,7 @@ import { testimonials } from "@/content/testimonials";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 type Props = { params: Promise<{ locale: "en" | "fr" }> };
 
@@ -50,8 +51,27 @@ export default async function Home({ params }: Props) {
   const experienceItems = getExperienceItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
 
+  // FAQPage JSON-LD — généré côté serveur depuis les traductions i18n (même source que ServicesFaq).
+  // Pattern identique à app/[locale]/blog/[slug]/page.tsx:138-181.
+  const tFaq = await getTranslations({ locale, namespace: "faq" });
+  const faqItems = tFaq.raw("items") as { q: string; a: string }[];
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
   return (
     <>
+      {/* FAQPage JSON-LD — potentiel rich result FAQ dans les SERP Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify(faqJsonLd) }}
+      />
       {/* Scroll vers ancre (#hash) sur navigation SPA inter-pages */}
       <ScrollToHash />
 

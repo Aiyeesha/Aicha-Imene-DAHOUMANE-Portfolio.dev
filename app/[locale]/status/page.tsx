@@ -13,7 +13,12 @@ import { getUptimeStats, getLatencyHistory, getLatestPingReport } from "@/lib/up
 import LatencySparkline from "@/components/LatencySparkline";
 import { getSiteUrl } from "@/lib/siteUrl";
 
-// ISR : revalide toutes les 60 secondes
+// ISR — revalidation toutes les 60 secondes.
+// ⚠️ Actuellement sans effet : app/layout.tsx appelle headers() pour lire le nonce
+// CSP (x-nonce), ce qui opt toute la route en rendu dynamique (Cache-Control: no-store).
+// Conserver cette valeur : elle redeviendra opérationnelle lors de la migration
+// homelab (reverse proxy cache indépendant du Cache-Control applicatif — cf. §6).
+// La fraîcheur des données est déjà assurée par le cache Redis dans lib/uptime.ts.
 export const revalidate = 60;
 
 // ── Types locaux ─────────────────────────────────────────────────────────────
