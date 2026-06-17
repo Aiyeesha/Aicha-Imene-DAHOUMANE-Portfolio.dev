@@ -87,7 +87,7 @@
     "projects_title": "Projets",
     "projects_subtitle": "Utilise la recherche et les filtres. Le switch IT Ops / Salesforce modifie la liste.",
     "contact_title": "Contact",
-    "contact_subtitle": "Email ou formulaire ci-dessous (protégé contre le spam).",
+    "contact_subtitle": "Je préfère être contactée par email — le formulaire ci-dessous est aussi disponible (anti-spam activé).",
     "blog_title": "Blog / Tutoriels",
     "blog_subtitle": "Guides courts et concrets, applicables immédiatement.",
     "profile_title": "Profil",
@@ -130,7 +130,7 @@
       "policy_not_accepted": "Vous devez accepter la politique de confidentialité pour envoyer un message.",
       "too_many_links": "Trop de liens dans le message."
     },
-    "homeIntro": "Vous pouvez me contacter par email ou via le formulaire sécurisé. Anti-spam et limitation de débit activés.",
+    "homeIntro": "Je préfère être contactée par email. Vous pouvez aussi utiliser le formulaire sécurisé ci-dessous. Anti-spam et limitation de débit activés.",
     "homeMethodsTitle": "Liens rapides",
     "homeCv": "Télécharger le CV",
     "homeLinkedIn": "LinkedIn",
