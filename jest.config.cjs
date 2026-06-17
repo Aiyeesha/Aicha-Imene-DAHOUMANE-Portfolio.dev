@@ -20,5 +20,16 @@ module.exports = {
   // On les exclut de transformIgnorePatterns pour que ts-jest les traite.
   transformIgnorePatterns: [
     "/node_modules/(?!(next-intl|@vercel/analytics|use-intl)/).*"
-  ]
+  ],
+  // Seuil de couverture plancher — aligné sur la couverture actuelle (fichiers importés par les tests).
+  // Augmenter progressivement au fil des nouvelles suites de tests.
+  coverageDirectory: "coverage",
+  coverageThreshold: {
+    global: {
+      statements: 50,
+      branches: 30,
+      functions: 50,
+      lines: 50,
+    },
+  },
 };

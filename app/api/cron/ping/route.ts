@@ -103,6 +103,17 @@ export async function GET(req: Request) {
     .eq("approved", false);
   if (submPurgeError) console.warn("[CRON/PING] Testimonial submissions purge warning:", submPurgeError.message);
 
+  // ── 7. Heartbeat externe (dead-man's switch) ─────────────────────────────
+  // Si HEALTHCHECK_URL est configuré, un GET est envoyé après chaque exécution
+  // réussie. L'absence de ping pendant une fenêtre configurable déclenche une
+  // alerte côté service externe (ex. healthchecks.io) — indépendante de GitHub
+  // et de Vercel. Non bloquant : une erreur ici ne fait pas échouer la réponse.
+  const healthcheckUrl = process.env.HEALTHCHECK_URL;
+  if (healthcheckUrl) {
+    fetch(healthcheckUrl, { method: "GET" })
+      .catch((e) => console.warn("[CRON/PING] Heartbeat failed:", String(e)));
+  }
+
   return NextResponse.json({
     ok:             true,
     checkedAt:      report.checkedAt,
