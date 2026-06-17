@@ -85,6 +85,7 @@ function LogoItem({ company }: { company: (typeof companies)[0] }) {
         loading="lazy"
         className="object-contain"
         style={{ height: "auto", width: "auto" }}
+        unoptimized={company.logo.endsWith(".svg")}
       />
     </div>
   );
