@@ -21,9 +21,6 @@ const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
 const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"), {
   loading: () => <div className="mt-5 grid gap-4 md:grid-cols-2"><SkeletonCard /><SkeletonCard /></div>,
 });
-const ProjectsSection    = dynamic(() => import("@/components/ProjectsSection"), {
-  loading: () => <div className="mt-10 grid gap-4 md:grid-cols-2"><SkeletonCard /><SkeletonCard /></div>,
-});
 const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
   loading: () => <div className="mt-8 grid gap-4 md:grid-cols-2"><SkeletonCard lines={2} /><SkeletonCard lines={2} /></div>,
 });
@@ -184,9 +181,6 @@ export default async function Home({ params }: Props) {
             >
               {locale === "fr" ? "Voir tous les projets →" : "View all projects →"}
             </Link>
-          </div>
-          <div className="mt-10">
-            <ProjectsSection locale={locale} projects={supabaseProjects} />
           </div>
         </div>
       </section>
