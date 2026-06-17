@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+# Pre-commit hook — scan des changements stagés pour détecter des secrets.
+# Nécessite gitleaks (https://github.com/gitleaks/gitleaks).
+#
+# Installation :
+#   macOS  : brew install gitleaks
+#   Linux  : voir https://github.com/gitleaks/gitleaks#installing
+#
+# Pour bypasser temporairement (déconseillé) : SKIP=gitleaks git commit ...
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact --no-banner
+else
+  echo "⚠️  gitleaks non trouvé — scan de secrets ignoré."
+  echo "   Installez-le pour activer la protection : https://github.com/gitleaks/gitleaks"
+fi
