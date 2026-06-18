@@ -16,7 +16,7 @@
 //   serverless (contrairement à un compteur in-memory).
 
 import { type NextRequest, NextResponse } from "next/server";
-import { cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
+import { cspAlertRatelimit, cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +53,28 @@ function getSeverity(violatedDirective: string | undefined): "critical" | "high"
   if (directive === "object-src" || directive === "base-uri" || directive === "form-action") return "high";
   if (directive.startsWith("connect-src") || directive.startsWith("frame-src")) return "medium";
   return "low";
+}
+
+// ── Alerte webhook sur violation critique ─────────────────────────────────
+// Non bloquant — une erreur ici ne doit jamais faire échouer la réponse 204.
+// Rate-limité globalement (5/10 min) pour éviter le spam du webhook.
+async function sendCriticalAlert(data: {
+  violatedDirective: string;
+  blockedUri: string;
+  documentUri: string;
+}) {
+  const webhookUrl = process.env.CSP_ALERT_WEBHOOK_URL;
+  if (!webhookUrl) return;
+
+  const { success } = await safeLimit(cspAlertRatelimit, "global");
+  if (!success) return;
+
+  const msg = `🚨 CSP Critical Violation\nDirective: ${data.violatedDirective}\nBlocked: ${data.blockedUri}\nDocument: ${data.documentUri}`;
+  fetch(webhookUrl, {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify({ content: msg, text: msg, message: msg }),
+  }).catch((e) => console.warn("[CSP-VIOLATION] Alert webhook failed:", String(e)));
 }
 
 export async function POST(req: NextRequest) {
@@ -105,6 +127,14 @@ export async function POST(req: NextRequest) {
       referrer:           referrer || undefined,
       original_policy:    report["original-policy"] ?? report["originalPolicy"] ?? undefined,
     }));
+
+    // ── Alerte webhook pour les violations critiques (hors report-only) ──
+    // Les violations report-only ne sont pas bloquées — pas encore actives.
+    // Les violations actives sur script-src ou require-trusted-types-for
+    // signalent une injection potentielle ou une régression CSP.
+    if (severity === "critical" && !isReportOnly) {
+      await sendCriticalAlert({ violatedDirective, blockedUri, documentUri });
+    }
   } catch {
     // Corps mal formé — ignorer silencieusement
   }
