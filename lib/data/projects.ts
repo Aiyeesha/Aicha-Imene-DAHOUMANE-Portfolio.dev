@@ -40,6 +40,25 @@ export async function getPublishedProjectsWithAssets(locale: string) {
   }));
 }
 
+// Requête légère pour la navbar — uniquement slug/title/track des projets featured.
+// Appelée dans le layout (serveur) pour passer les données au composant Navbar (client).
+export async function getFeaturedProjectsForNav(locale: string) {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("projects")
+    .select("slug, title, track")
+    .in("locale", [locale, "multi"])
+    .eq("status", "published")
+    .eq("featured", true)
+    .order("sort_order", { ascending: true })
+    .limit(6);
+  if (error) {
+    console.error("[projects/nav] Supabase error:", error.message);
+    return [] as { slug: string; title: string; track: string | null }[];
+  }
+  return (data ?? []) as { slug: string; title: string; track: string | null }[];
+}
+
 export function getAssetUrl(
   supabase: ReturnType<typeof createServerSupabaseClient>,
   asset: {
