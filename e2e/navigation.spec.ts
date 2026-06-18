@@ -65,4 +65,18 @@ test.describe("Navigation de base", () => {
     // Balise lang HTML en français
     await expect(page.locator("html")).toHaveAttribute("lang", /fr/);
   });
+
+  // UX-01 : /projects accessible depuis la navigation primaire
+  test("un lien vers /projects est présent dans le desktop nav (hors home)", async ({ page }) => {
+    await page.goto("/en/about");
+    // Sur une page non-home, Projects doit apparaître comme lien de page (/en/projects)
+    const projectsLink = page.locator('a[href="/en/projects"]').first();
+    await expect(projectsLink).toBeAttached();
+  });
+
+  test("la page Projects est accessible via URL directe", async ({ page }) => {
+    await page.goto("/en/projects");
+    await expect(page).toHaveURL(/\/en\/projects/);
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
+  });
 });

@@ -1,0 +1,18 @@
+title = "gitleaks config — portfolio-next"
+
+[allowlist]
+  description = "Known false positives"
+
+  # Valeurs placeholder hardcodées dans ci.yml pour les PRs Dependabot.
+  # Ces chaînes ne sont pas des secrets — elles remplacent les vraies valeurs
+  # d'environnement absentes des forks/PRs externes.
+  regexes = [
+    '''placeholder-anon-key''',
+    '''placeholder\.supabase\.co''',
+  ]
+
+  # Fichiers exclus du scan
+  paths = [
+    '''(^|/)package-lock\.json$''',
+    '''(^|/)\.gitleaks\.toml$''',
+  ]

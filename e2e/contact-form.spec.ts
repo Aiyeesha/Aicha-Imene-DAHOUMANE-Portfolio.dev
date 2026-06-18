@@ -21,8 +21,9 @@ test.describe("Formulaire de contact", () => {
   });
 
   test("les champs nom et email ont l'attribut required", async ({ page }) => {
-    const nameInput = page.locator("#contact input[name='name']");
-    const emailInput = page.locator("#contact input[type='email']");
+    const contact = page.locator("#contact").first();
+    const nameInput = contact.locator("input[name='name']");
+    const emailInput = contact.locator("input[type='email']");
 
     await expect(nameInput).toHaveAttribute("required");
     await expect(emailInput).toHaveAttribute("required");
@@ -51,8 +52,9 @@ test.describe("Formulaire de contact", () => {
   test("le champ email rejette un format invalide via l'API HTML5", async ({
     page,
   }) => {
-    const nameInput = page.locator("#contact input[name='name']");
-    const emailInput = page.locator("#contact input[type='email']");
+    const contact = page.locator("#contact").first();
+    const nameInput = contact.locator("input[name='name']");
+    const emailInput = contact.locator("input[type='email']");
 
     await nameInput.fill("Test User");
     await emailInput.fill("not-an-email");

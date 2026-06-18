@@ -136,6 +136,13 @@ export const revalidateRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:revalidate")
   : createNoOpRatelimit(10, 60_000);
 
+// ── Limiteur global pour les alertes CSP critiques ────────────────────
+// 5 alertes par 10 minutes — clé GLOBALE (non par IP) pour éviter le spam
+// du webhook quand plusieurs origines différentes génèrent la même violation.
+export const cspAlertRatelimit = redis
+  ? createRatelimit(redis, 5, 600, "portfolio:rl:csp-alert")
+  : createNoOpRatelimit(5, 600_000);
+
 // ── Helper fail-open pour les erreurs Redis immédiates ────────────────
 // Quand Redis est KO (quota épuisé, connexion refusée, token expiré),
 // `.limit()` peut throw même avec timeout. Ce wrapper retourne
