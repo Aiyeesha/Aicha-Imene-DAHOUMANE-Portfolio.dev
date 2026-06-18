@@ -50,7 +50,10 @@ export default function Navbar() {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
 
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
-  const spyActiveId = useActiveSection(isHome ? [...SECTION_IDS] : []);
+  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
+  const spyActiveId = useActiveSection(
+    isHome ? SECTION_IDS.filter((id) => id !== "testimonials" || showTestimonials) : []
+  );
 
   // null pour les pages non mappées dans la nav (status, colophon, legal, uses…)
   // Évite un faux aria-current="page" sur "Compétences" par défaut.
@@ -188,7 +191,7 @@ useEffect(() => {
 }, [mobileOpen]);
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources", "blog"]);
+  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources", "blog", "projects"]);
 
   // Pour le menu mobile — suit le scroll-spy complet
   const linkClass = (id: string) =>
@@ -219,10 +222,9 @@ useEffect(() => {
     if (id === "resources") return `/${locale}/resources`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
+    if (id === "projects") return `/${locale}/projects`;
     return `/${locale}/#${id}`;
   };
-
-  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
 
   const sections: { id: NavId; label: string }[] = [
     { id: "about", label: t("nav.about") },
@@ -283,7 +285,7 @@ useEffect(() => {
               {desktopSections.map((s) => {
                 const href = hrefFor(s.id);
                 const cls = `${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`;
-                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && (s.id === "blog" || s.id === "projects"));
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -408,7 +410,7 @@ useEffect(() => {
             <div className="mt-4 space-y-2">
               {sections.map((s) => {
                 const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
-                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && (s.id === "blog" || s.id === "projects"));
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
