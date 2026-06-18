@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { contactRatelimit, safeLimit } from "@/lib/ratelimit";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { log } from "@/lib/logger";
+
+const emailSchema = z.string().email();
 
 type Payload = {
   name: string;
@@ -65,7 +68,7 @@ function validate({
   if (name.length > MAX_NAME_LEN) return "name_too_long";
 
   if (email.length > MAX_EMAIL_LEN) return "email_too_long";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "invalid_email";
+  if (!emailSchema.safeParse(email).success) return "invalid_email";
 
   if (!ALLOWED_TOPICS.has(topic)) return "invalid_topic";
 
