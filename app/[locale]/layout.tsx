@@ -10,6 +10,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { getFeaturedProjectsForNav } from "@/lib/data/projects";
 
 /**
  * Locale layout
@@ -105,6 +106,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages({ locale: locale });
   const t = await getTranslations({ locale });
+  const featuredProjectsForNav = await getFeaturedProjectsForNav(locale);
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
@@ -119,7 +121,7 @@ export default async function LocaleLayout({
 
           <div className="relative z-10">
             <SkipToContent targetId="main" label={t("a11y.skip")} />
-            <Navbar />
+            <Navbar featuredProjects={featuredProjectsForNav} />
             {/* Palette de commandes globale — ⌘K / Ctrl+K */}
             <CommandPaletteLoader />
 

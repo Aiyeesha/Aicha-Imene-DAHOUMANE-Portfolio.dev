@@ -41,8 +41,9 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 // depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
 const DESKTOP_IDS_STATIC = new Set(["about", "skills", "experience", "certifications", "resources", "services", "testimonials", "projects", "blog", "contact"]);
 
+type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
 
-export default function Navbar() {
+export default function Navbar({ featuredProjects = [] }: { featuredProjects?: FeaturedProjectForNav[] }) {
   const t = useTranslations();
   const pathname = usePathname();
   const locale = (pathname.split("/")[1] || "en") as "en" | "fr";
@@ -50,7 +51,10 @@ export default function Navbar() {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
 
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
-  const spyActiveId = useActiveSection(isHome ? [...SECTION_IDS] : []);
+  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
+  const spyActiveId = useActiveSection(
+    isHome ? SECTION_IDS.filter((id) => id !== "testimonials" || showTestimonials) : []
+  );
 
   // null pour les pages non mappées dans la nav (status, colophon, legal, uses…)
   // Évite un faux aria-current="page" sur "Compétences" par défaut.
@@ -117,8 +121,10 @@ export default function Navbar() {
   }, [pathname]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false);
+  const projectsDropdownRef = useRef<HTMLDivElement | null>(null);
+  const projectsTriggerRef = useRef<HTMLButtonElement | null>(null);
 
-  
   const menuRef = useRef<HTMLDivElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 // Single keydown handler: Escape closes menu + Tab focus-trap + scroll-lock.
@@ -186,9 +192,31 @@ useEffect(() => {
     menuButtonRef.current?.focus();
   }
 }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!projectsDropdownOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setProjectsDropdownOpen(false);
+        projectsTriggerRef.current?.focus();
+      }
+    };
+    const onClickOutside = (e: MouseEvent) => {
+      if (projectsDropdownRef.current && !projectsDropdownRef.current.contains(e.target as Node)) {
+        setProjectsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onClickOutside);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("mousedown", onClickOutside);
+    };
+  }, [projectsDropdownOpen]);
+
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources", "blog"]);
+  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources", "blog", "projects"]);
 
   // Pour le menu mobile — suit le scroll-spy complet
   const linkClass = (id: string) =>
@@ -219,10 +247,9 @@ useEffect(() => {
     if (id === "resources") return `/${locale}/resources`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
+    if (id === "projects") return `/${locale}/projects`;
     return `/${locale}/#${id}`;
   };
-
-  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
 
   const sections: { id: NavId; label: string }[] = [
     { id: "about", label: t("nav.about") },
@@ -281,6 +308,71 @@ useEffect(() => {
             >
               <NavbarPill activeId={desktopActiveId} containerId="desktop-nav" />
               {desktopSections.map((s) => {
+                // Projects: dropdown with featured projects + "see all" link
+                if (s.id === "projects") {
+                  return (
+                    <div key="projects" className="relative" ref={projectsDropdownRef}>
+                      <button
+                        ref={projectsTriggerRef}
+                        type="button"
+                        data-section="projects"
+                        aria-expanded={projectsDropdownOpen}
+                        aria-haspopup="true"
+                        onClick={() => setProjectsDropdownOpen((v) => !v)}
+                        className={`${desktopLinkClass("projects")} whitespace-nowrap inline-flex items-center gap-1`}
+                      >
+                        {s.label}
+                        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                          stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                          className={`transition-transform duration-200 ${projectsDropdownOpen ? "rotate-180" : ""}`}>
+                          <path d="M2 3.5 L5 6.5 L8 3.5" />
+                        </svg>
+                      </button>
+                      {projectsDropdownOpen && (
+                        <div
+                          role="menu"
+                          className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-[60]"
+                        >
+                          {featuredProjects.length > 0 && (
+                            <>
+                              {featuredProjects.map((p) => (
+                                <Link
+                                  key={p.slug}
+                                  href={`/${locale}/projects/${p.slug}`}
+                                  role="menuitem"
+                                  className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-700 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                                  onClick={() => setProjectsDropdownOpen(false)}
+                                >
+                                  <span className="truncate">{p.title}</span>
+                                  {p.track && (
+                                    <span className="ml-2 shrink-0 rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs text-cyan-700 dark:text-cyan-300 capitalize">
+                                      {p.track}
+                                    </span>
+                                  )}
+                                </Link>
+                              ))}
+                              <div className="my-1 border-t border-black/10 dark:border-white/10" />
+                            </>
+                          )}
+                          <Link
+                            href={`/${locale}/projects`}
+                            role="menuitem"
+                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-cyan-700 dark:text-cyan-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                            onClick={() => setProjectsDropdownOpen(false)}
+                          >
+                            {t("nav.seeAllProjects")}
+                            <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9" fill="none"
+                              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                              className="opacity-60">
+                              <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
+                            </svg>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
                 const href = hrefFor(s.id);
                 const cls = `${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`;
                 const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
@@ -408,7 +500,7 @@ useEffect(() => {
             <div className="mt-4 space-y-2">
               {sections.map((s) => {
                 const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
-                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && (s.id === "blog" || s.id === "projects"));
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
