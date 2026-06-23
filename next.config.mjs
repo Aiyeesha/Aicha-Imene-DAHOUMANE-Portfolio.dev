@@ -43,6 +43,11 @@ const nextConfig = {
   // Supprime le header X-Powered-By: Next.js — évite le fingerprinting du framework
   poweredByHeader: false,
 
+  // Désactive explicitement les source maps en production.
+  // Par défaut Next.js ne les génère pas, mais on le force pour satisfaire
+  // les scanners de sécurité et éviter toute régression de configuration.
+  productionBrowserSourceMaps: false,
+
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
   images: {
