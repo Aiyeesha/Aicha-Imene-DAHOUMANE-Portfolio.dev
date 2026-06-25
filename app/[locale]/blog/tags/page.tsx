@@ -86,6 +86,16 @@ export default async function BlogTagsPage({ params }: { params: Promise<Params>
           ))}
         </div>
       </div>
+
+      {/* Bouton retour accueil */}
+      <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
+        <Link
+          href={`/${locale}`}
+          className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+        >
+          ← {locale === "fr" ? "Retour à l'accueil" : "Back to home"}
+        </Link>
+      </div>
     </section>
   );
 }
