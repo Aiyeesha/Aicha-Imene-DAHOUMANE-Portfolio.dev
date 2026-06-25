@@ -154,10 +154,11 @@ export default function CommandPalette() {
 
   const navigate = (href: string) => run(() => router.push(href));
 
-  const cvUrl =
+  const cvUrl = (
     process.env.NEXT_PUBLIC_CV_PDF_URL ||
     process.env.NEXT_PUBLIC_CV_URL ||
-    `/cv/cv-${locale}-${track}.pdf`;
+    `/cv/cv-{locale}-{track}.pdf`
+  ).replace("{locale}", locale).replace("{track}", track);
 
   const linkedInUrl = LINKEDIN_URL || "https://www.linkedin.com";
 
