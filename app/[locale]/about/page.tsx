@@ -15,12 +15,10 @@
 
 import type { Metadata } from "next";
 import { getAboutPageCached } from "@/lib/data/about.cached";
-import { getGoals2026 } from "@/lib/data/goals";
 import Link from "next/link";
 import { Suspense } from "react";
 import ProfileFactsCard from "@/components/ProfileFactsCard";
 import AboutTrackIntro from "@/components/AboutTrackIntro";
-import AboutTrackGoals from "@/components/AboutTrackGoals";
 import TechStackGrid from "@/components/TechStackGrid";
 import VisualTimeline from "@/components/VisualTimeline";
 import CareerTimeline from "@/components/CareerTimeline";
@@ -89,10 +87,7 @@ export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = locale === "fr" ? "fr" : "en";
 
-  const [about, goals] = await Promise.all([
-    getAboutPageCached(safeLocale),
-    getGoals2026(),
-  ]);
+  const about = await getAboutPageCached(safeLocale);
 
   if (!about) {
     return (
@@ -260,22 +255,6 @@ export default async function AboutPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        {/* OBJECTIFS 2026 — track-aware via AboutTrackGoals (Client Component)
-            Salesforce : freelance SF, PDII, open source, blog, événements
-            IT Ops     : missions SRE/DevOps, IaC, certif cloud, homelab, open source */}
-        <Suspense fallback={
-          <div className="rounded-2xl border p-6 space-y-3">
-            <div className="h-4 w-32 rounded bg-black/5 dark:bg-white/5 animate-pulse" />
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex gap-3">
-                <div className="mt-0.5 h-5 w-5 rounded-full bg-black/5 dark:bg-white/5 animate-pulse shrink-0" />
-                <div className="h-4 rounded bg-black/5 dark:bg-white/5 animate-pulse flex-1" />
-              </div>
-            ))}
-          </div>
-        }>
-          <AboutTrackGoals goals={goals} />
-        </Suspense>
       </div>
 
 {/* Bouton retour accueil — navigation alternative en bas de page */}
