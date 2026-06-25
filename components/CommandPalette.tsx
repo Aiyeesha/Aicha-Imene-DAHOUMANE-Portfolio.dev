@@ -347,7 +347,14 @@ export default function CommandPalette() {
             {/* ── Liens externes ──────────────────────────────────────── */}
             <Command.Group heading={L.links}>
               <Command.Item
-                onSelect={() => run(() => window.open(cvUrl, "_blank", "noreferrer"))}
+                onSelect={() => run(() => {
+                  const a = document.createElement("a");
+                  a.href = cvUrl;
+                  a.download = `cv-${locale}-${track}.pdf`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                })}
                 className={itemCls}
               >
                 <Icon d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3" />
