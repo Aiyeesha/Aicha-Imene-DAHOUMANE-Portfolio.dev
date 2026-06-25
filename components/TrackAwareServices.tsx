@@ -143,7 +143,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
                 className={`flex-shrink-0 grid h-10 w-10 place-items-center rounded-xl ${
                   track === "salesforce"
                     ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
-                    : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                    : "bg-violet-500/10 text-violet-700 dark:text-violet-300"
                 }`}
                 aria-hidden="true"
               >
@@ -193,11 +193,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <button
                 type="button"
                 onClick={() => handleDiscuss(c.title)}
-                className="
-                  text-sm font-medium text-cyan-700 dark:text-cyan-300
-                  hover:underline underline-offset-4
-                  soft-ring rounded transition-opacity hover:opacity-80
-                "
+                className={`text-sm font-medium ${track === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"} hover:underline underline-offset-4 soft-ring rounded transition-opacity hover:opacity-80`}
               >
                 {t("services.discuss")} →
               </button>
