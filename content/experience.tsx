@@ -10,7 +10,7 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
         logoSrc: "/companies/ld-digitales.webp",
         logoAlt: "LD Digitales",
         title: "Développeuse Salesforce (CDI) — LD Digitales",
-        subtitle: "Remote · Contexte international",
+        subtitle: "Remote",
         rightMeta: "Oct. 2025 — Aujourd’hui",
         content: (
           <ul className="list-disc pl-5 space-y-2">
@@ -45,7 +45,7 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
         logoSrc: "/companies/ld-digitales.webp",
         logoAlt: "LD Digitales",
         title: "Développeuse Salesforce (alternance) — LD Digitales",
-        subtitle: "Remote · Contexte international",
+        subtitle: "Remote",
         rightMeta: "Oct. 2023 — Sept. 2025",
         content: (
           <ul className="list-disc pl-5 space-y-2">
@@ -119,7 +119,7 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
       logoSrc: "/companies/ld-digitales.webp",
       logoAlt: "LD Digitales",
       title: "Salesforce Developer (Full-time) — LD Digitales",
-      subtitle: "Remote · International context",
+      subtitle: "Remote",
       rightMeta: "Oct 2025 — Present",
       content: (
         <ul className="list-disc pl-5 space-y-2">
@@ -151,7 +151,7 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
       logoSrc: "/companies/ld-digitales.webp",
       logoAlt: "LD Digitales",
       title: "Salesforce Developer (Apprenticeship) — LD Digitales",
-      subtitle: "Remote · International context",
+      subtitle: "Remote",
       rightMeta: "Oct 2023 — Sep 2025",
       content: (
         <ul className="list-disc pl-5 space-y-2">
