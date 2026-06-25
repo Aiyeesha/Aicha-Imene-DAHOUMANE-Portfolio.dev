@@ -79,7 +79,6 @@ export default function AvailabilityModal() {
 
   const rows = [
     { icon: <IconClock />,     label: t("delay"),     value: t("delayValue")     },
-    { icon: <IconBriefcase />, label: t("contracts"), value: t("contractValues") },
     { icon: <IconMonitor />,   label: t("workMode"),  value: t("workModeValues") },
     { icon: <IconSector />,    label: t("sector"),    value: t("sectorValues")   },
     { icon: <IconTarget />,    label: t("roles"),     value: track === "salesforce" ? t("rolesValuesSalesforce") : t("rolesValuesItops") },
