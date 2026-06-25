@@ -136,7 +136,7 @@ export default function TrackAwareHero() {
         variants={shouldReduce ? {} : avatarVariants}
         style={shouldReduce ? undefined : { y: parallaxY }}
       >
-        <div className="rounded-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 p-[3px] shadow-xl shadow-cyan-500/20 dark:shadow-cyan-400/15">
+        <div className={`rounded-2xl p-[3px] shadow-xl ${track === "salesforce" ? "bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 shadow-cyan-500/20 dark:shadow-cyan-400/15" : "bg-gradient-to-br from-violet-400 via-violet-500 to-purple-700 shadow-violet-500/20 dark:shadow-violet-400/15"}`}>
           <div className="relative h-[240px] w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
             <Image
               src={src}
@@ -169,7 +169,7 @@ export default function TrackAwareHero() {
             transition={{ duration: 0.22, ease: "easeInOut" }}
           >
             {/* Accroche courte — typing effect */}
-            <p className="text-sm font-medium text-cyan-800 dark:text-cyan-300">
+            <p className={`text-sm font-medium ${track === "salesforce" ? "text-cyan-800 dark:text-cyan-300" : "text-violet-800 dark:text-violet-300"}`}>
               <TypingText
                 text={track === "salesforce" ? t("hero.value_salesforce") : t("hero.value_itops")}
                 speed={28}
@@ -178,13 +178,13 @@ export default function TrackAwareHero() {
 
             {/* Titre H1 — gradient animé */}
             <h1 className="mt-2 font-display text-4xl sm:text-5xl font-semibold leading-tight tracking-tight">
-              <span className="block animate-gradient-x bg-gradient-to-r from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white bg-clip-text text-transparent">
+              <span className={`block animate-gradient-x bg-clip-text text-transparent bg-gradient-to-r ${track === "salesforce" ? "from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white" : "from-slate-900 via-violet-600 to-slate-900 dark:from-white dark:via-violet-300 dark:to-white"}`}>
                 {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
               </span>
               {/* Séparateur invisible pour les lecteurs d'écran et les moteurs de recherche
                   — évite la concaténation des deux spans en un seul texte sans espace */}
               <span className="sr-only"> — </span>
-              <span className="mt-1 block text-xl sm:text-2xl font-medium text-cyan-700 dark:text-cyan-300">
+              <span className={`mt-1 block text-xl sm:text-2xl font-medium ${track === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"}`}>
                 {track === "salesforce" ? t("hero.subtitle_salesforce") : t("hero.subtitle_itops")}
               </span>
             </h1>
@@ -207,7 +207,7 @@ export default function TrackAwareHero() {
         <div className="mt-6 flex flex-wrap items-center gap-3">
           {/* CTA primaire : scroll vers la section contact */}
           <a
-            className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity"
+            className={`rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
             href="#contact"
             onClick={() => trackEvent("contact_click", { locale, track })}
           >
