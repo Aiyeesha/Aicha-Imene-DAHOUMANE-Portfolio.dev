@@ -43,6 +43,12 @@ function formatViolations(violations: Result[]) {
 // se résoudre en CI : Vercel Analytics (NODE_ENV=production) fait des requêtes
 // continues qui empêchent l'idle. On tente networkidle 8s max, puis on continue.
 async function waitForReady(page: Page) {
+  // Émule prefers-reduced-motion: reduce — les composants Framer Motion (useReducedMotion())
+  // basculent directement à l'état final (opacity: 1), éliminant la race condition entre
+  // le scan axe-core et les animations d'entrée du Hero (fade-in 690ms).
+  // Contraste réel de la CTA "Work with me" à l'état stable : 8,65:1 (AA conforme).
+  // Réf. : run CI #473 (28155979835) — faux-positif color-contrast.
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForLoadState("networkidle", { timeout: 8_000 }).catch(() => {});
   // Laisser les transitions CSS color/background (200-250ms) se terminer avant l'audit
   await page.waitForTimeout(350);
