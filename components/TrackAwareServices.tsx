@@ -98,17 +98,18 @@ const ITOPS_ICONS      = [<IconShield key="a" />, <IconServer key="b" />, <IconG
 export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const { track } = useTrack();
   const t = useTranslations();
-  const cards = getServices(locale, track);
 
-  // Différer le rendu des icônes après le montage pour éviter le mismatch
-  // d'hydratation : le chunk dynamique peut se charger après que Providers ait
-  // déjà lu localStorage et mis à jour le track (salesforce → itops), ce qui
-  // crée une divergence entre le HTML serveur (salesforce) et le rendu client.
+  // Defer all track-dependent rendering until after mount.
+  // The server always renders with "salesforce" (initialTrack); Providers then
+  // reads localStorage on mount and may switch to "itops", causing a hydration
+  // mismatch for both card data and CSS classes. Using the SSR default until
+  // mounted keeps server and first-client render identical.
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
-  // Sélectionner le jeu d'icônes selon le parcours actif
-  const icons = track === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
+  const effectiveTrack = mounted ? track : "salesforce";
+  const cards = getServices(locale, effectiveTrack);
+  const icons = effectiveTrack === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
   /**
    * handleDiscuss — bouton "Discuter de ce service"
@@ -141,7 +142,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             <div className="flex items-start gap-3">
               <div
                 className={`flex-shrink-0 grid h-10 w-10 place-items-center rounded-xl ${
-                  track === "salesforce"
+                  effectiveTrack === "salesforce"
                     ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
                     : "bg-violet-500/10 text-violet-700 dark:text-violet-300"
                 }`}
@@ -193,7 +194,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <button
                 type="button"
                 onClick={() => handleDiscuss(c.title)}
-                className={`text-sm font-medium ${track === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"} hover:underline underline-offset-4 soft-ring rounded transition-opacity hover:opacity-80`}
+                className={`text-sm font-medium ${effectiveTrack === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"} hover:underline underline-offset-4 soft-ring rounded transition-opacity hover:opacity-80`}
               >
                 {t("services.discuss")} →
               </button>
