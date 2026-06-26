@@ -97,7 +97,7 @@ function parseHocrWords(hocr) {
   let m;
   while ((m = re.exec(hocr)) !== null) {
     const [, x0, y0, x1, y1, conf, rawText] = m;
-    const text = rawText.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim();
+    const text = rawText.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").trim();
     if (!text) continue;
     words.push({
       text,
