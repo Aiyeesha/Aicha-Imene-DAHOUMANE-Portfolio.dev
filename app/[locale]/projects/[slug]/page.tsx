@@ -52,6 +52,10 @@ function getPublicStorageUrl(bucket?: string | null, path?: string | null) {
 }
 
 function looksLikeImage(asset: ProjectAsset) {
+  // Deliverables are never displayed as images, regardless of file extension.
+  // A .png data-model or .svg diagram in the deliverables bucket belongs in the
+  // download sidebar, not the image grid.
+  if (asset.type === "deliverable") return false;
   if (asset.type === "image") return true;
   if (asset.mime_type?.startsWith("image/")) return true;
   const p = asset.storage_path ?? "";
