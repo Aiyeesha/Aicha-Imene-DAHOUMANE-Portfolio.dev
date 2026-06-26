@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { redis } from "@/lib/redis";
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
     await redis.del(...keys);
     deleted.push(...keys);
   } else {
-    const keys = [
+    const staticKeys = [
       "projects_with_assets:fr",
       "projects_with_assets:en",
       "about:fr",
@@ -78,8 +79,20 @@ export async function POST(req: Request) {
       "portfolio:uptime:stats:30d",
       "portfolio:uptime:latency:7d",
     ];
-    await redis.del(...keys);
-    deleted.push(...keys);
+    await redis.del(...staticKeys);
+    deleted.push(...staticKeys);
+
+    // Supprimer aussi toutes les clés de détail projet (project:{locale}:{slug})
+    const projectKeys = await redis.keys("project:*");
+    if (projectKeys.length > 0) {
+      await redis.del(...(projectKeys as string[]));
+      deleted.push(...(projectKeys as string[]));
+    }
+
+    // Invalider le cache ISR Next.js pour toutes les pages projet
+    revalidatePath("/[locale]/projects/[slug]", "page");
+    revalidatePath("/en", "page");
+    revalidatePath("/fr", "page");
   }
 
   // ── 5. Log de l'opération ───────────────────────────────────────────────────
