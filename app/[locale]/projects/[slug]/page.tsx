@@ -46,7 +46,9 @@ function getPublicStorageUrl(bucket?: string | null, path?: string | null) {
   if (/^https?:\/\//i.test(path)) return path;
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!base || !bucket) return null;
-  return `${base}/storage/v1/object/public/${bucket}/${path}`;
+  // Encoder chaque segment du chemin pour gérer les espaces et caractères spéciaux
+  const encodedPath = path.split("/").map(encodeURIComponent).join("/");
+  return `${base}/storage/v1/object/public/${bucket}/${encodedPath}`;
 }
 
 function looksLikeImage(asset: ProjectAsset) {
@@ -341,7 +343,40 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const heroSubtitle = project.hero_subtitle ?? project.summary ?? null;
   const gallery     = project.gallery ?? [];
 
-  const imageAssets = assets.filter(looksLikeImage);
+  // Construire un ensemble des URLs déjà représentées dans gallery pour éviter
+  // qu'un même fichier apparaisse à la fois dans la galerie ET dans la grille d'images.
+  const galleryUrlSet = new Set<string>(
+    gallery.flatMap((g) => {
+      const urls: string[] = [g.src];
+      // Ajouter aussi la version avec chemin encodé pour matcher les assets relatifs
+      try {
+        const u = new URL(g.src);
+        // Extraire uniquement le nom de fichier encodé et non-encodé
+        urls.push(decodeURIComponent(u.pathname));
+        urls.push(u.pathname);
+      } catch {
+        // pas une URL absolue valide, ignorer
+      }
+      return urls;
+    })
+  );
+
+  function assetAlreadyInGallery(asset: ProjectAsset): boolean {
+    const href = getAssetHref(asset);
+    if (href && galleryUrlSet.has(href)) return true;
+    // Comparer le storage_path (relatif) avec les URL de gallery
+    if (asset.storage_path && !/^https?:\/\//i.test(asset.storage_path)) {
+      return gallery.some((g) => {
+        try {
+          const pathname = new URL(g.src).pathname;
+          return decodeURIComponent(pathname).endsWith(asset.storage_path!);
+        } catch { return false; }
+      });
+    }
+    return false;
+  }
+
+  const imageAssets = assets.filter(looksLikeImage).filter((a) => !assetAlreadyInGallery(a));
   const fileAssets  = assets.filter((a) => !looksLikeImage(a));
 
   const badgeClass =
