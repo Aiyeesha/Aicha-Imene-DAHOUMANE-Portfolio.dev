@@ -286,7 +286,7 @@ export default function ContactForm() {
             type="submit"
             disabled={status.kind === "sending" || status.kind === "rate_limited"}
             aria-describedby="contact-form-status"
-            className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring disabled:opacity-60 disabled:cursor-not-allowed"
+            className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring disabled:opacity-60 disabled:cursor-not-allowed ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
           >
             {status.kind === "sending" && (
               /* Spinner CSS — aucune dépendance JS, animate-spin est natif Tailwind */
@@ -343,7 +343,7 @@ export default function ContactForm() {
           <p className="mt-2 text-sm text-muted-2">{t("contact.homeIntro")}</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              className="rounded-full bg-cyan-500 px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
+              className={`rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
               href={CONTACT_EMAIL ? `mailto:${CONTACT_EMAIL}` : "#"}
               aria-disabled={!CONTACT_EMAIL ? true : undefined}
               onClick={(e) => { if (!CONTACT_EMAIL) e.preventDefault(); }}
