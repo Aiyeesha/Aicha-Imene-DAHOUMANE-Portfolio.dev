@@ -4,8 +4,10 @@ import { usePathname } from "next/navigation";
 import { routing, type AppLocale } from "@/i18n/routing";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTrack } from "@/app/[locale]/providers";
 
 export default function LocaleSwitcher({ current }: { current: AppLocale }) {
+  const { track } = useTrack();
   const pathname = usePathname();
   // Map locale → alternate URL discovered from <link rel="alternate" hreflang> tags.
   // Falls back to constructing the URL from pathname when no alternate is present.
@@ -41,7 +43,9 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
           href={hrefFor(l)}
           className={`rounded-full border px-3 py-1.5 text-sm ${
             l === current
-              ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
+              ? track === "salesforce"
+                ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
+                : "border-violet-400/40 bg-violet-500/10 text-violet-700 dark:text-violet-200"
               : "border-black/10 dark:border-white/10 text-muted hover:text-white"
           }`}
         >
