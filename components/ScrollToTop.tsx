@@ -10,9 +10,11 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useTrack } from "@/app/[locale]/providers";
 
 export default function ScrollToTop() {
   const t = useTranslations("a11y");
+  const { track } = useTrack();
   // Visible uniquement si l'utilisateur a scrollé de plus de 300px
   const [visible, setVisible] = useState(false);
 
@@ -42,7 +44,9 @@ export default function ScrollToTop() {
         "border border-black/10 dark:border-white/10",
         "bg-white/80 dark:bg-[#070B1A]/80 backdrop-blur",
         "shadow-md text-slate-700 dark:text-white/70",
-        "hover:bg-cyan-500 hover:text-black hover:border-cyan-500",
+        track === "salesforce"
+          ? "hover:bg-cyan-500 hover:text-black hover:border-cyan-500"
+          : "hover:bg-violet-500 hover:text-black hover:border-violet-500",
         "transition-all duration-300 soft-ring",
         // Visible/caché avec transition CSS
         visible

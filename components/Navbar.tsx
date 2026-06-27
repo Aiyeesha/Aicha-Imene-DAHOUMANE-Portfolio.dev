@@ -12,6 +12,7 @@ import ThemeToggle from "./ThemeToggle";
 import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
+import { useTrack } from "@/app/[locale]/providers";
 
 /** Petit bouton discret ⌘K pour rappeler le raccourci palette de commandes. */
 function CommandPaletteTrigger() {
@@ -45,6 +46,7 @@ type FeaturedProjectForNav = { slug: string; title: string; track: string | null
 
 export default function Navbar({ featuredProjects = [] }: { featuredProjects?: FeaturedProjectForNav[] }) {
   const t = useTranslations();
+  const { track } = useTrack();
   const pathname = usePathname();
   const locale = (pathname.split("/")[1] || "en") as "en" | "fr";
 
@@ -542,7 +544,7 @@ useEffect(() => {
               <div className="grid gap-2">
                 <Link
                   href={hrefFor("contact")}
-                  className="inline-flex w-full justify-center rounded-xl bg-cyan-500 px-5 py-3 text-sm font-medium text-black hover:opacity-90 soft-ring"
+                  className={`inline-flex w-full justify-center rounded-xl px-5 py-3 text-sm font-medium text-black hover:opacity-90 soft-ring ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("cta.workWithMe")}

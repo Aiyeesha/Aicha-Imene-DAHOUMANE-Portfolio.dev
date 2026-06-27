@@ -294,7 +294,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 {p.status === "published" && (
                   <Link
                     href={`/${locale}/projects/${p.slug}`}
-                    className="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
+                    className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
                     onClick={() => trackEvent("project_view", { slug: p.slug, track: p.track ?? track })}
                   >
                     {t("details")}

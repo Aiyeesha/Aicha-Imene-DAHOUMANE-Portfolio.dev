@@ -43,6 +43,11 @@ export default function Providers({
     }
   }, []);
 
+  // Sync data-track on <html> so CSS can target it for the page gradient.
+  useEffect(() => {
+    document.documentElement.setAttribute("data-track", track);
+  }, [track]);
+
   const setTrack = (t: Track) => {
     setTrackState(t);
     window.localStorage.setItem("track", t);
