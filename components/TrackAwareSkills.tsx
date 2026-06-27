@@ -114,7 +114,7 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
                 className={`grid h-8 w-8 place-items-center rounded-lg flex-shrink-0 ${
                   track === "salesforce"
                     ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
-                    : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                    : "bg-violet-500/10 text-violet-700 dark:text-violet-300"
                 }`}
                 aria-hidden="true"
                 suppressHydrationWarning
