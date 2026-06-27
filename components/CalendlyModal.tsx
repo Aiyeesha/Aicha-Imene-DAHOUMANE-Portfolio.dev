@@ -13,6 +13,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Modal from "./Modal";
+import { useTrack } from "@/app/[locale]/providers";
 
 // Récupération de l'URL Calendly depuis l'env var (côté client uniquement)
 const CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
@@ -27,6 +28,7 @@ type Props = {
 
 export default function CalendlyModal({ variant = "contact" }: Props) {
   const t = useTranslations();
+  const { track } = useTrack();
   const [open, setOpen] = useState(false);
   // Suivi de l'état de chargement de l'iframe pour afficher le skeleton
   const [loaded, setLoaded] = useState(false);
@@ -114,7 +116,7 @@ export default function CalendlyModal({ variant = "contact" }: Props) {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring"
+                className={`rounded-full px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
               >
                 {t("contact.close")}
               </button>
