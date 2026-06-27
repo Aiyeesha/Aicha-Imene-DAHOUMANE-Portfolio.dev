@@ -405,9 +405,9 @@ export const CATEGORY_COLORS: Record<TechCategory, {
     border: "border-orange-500/20",
   },
   systems: {
-    bg:     "bg-emerald-500/15 dark:bg-emerald-400/10",
-    text:   "text-emerald-800 dark:text-emerald-300",
-    border: "border-emerald-500/20",
+    bg:     "bg-violet-500/15 dark:bg-violet-400/10",
+    text:   "text-violet-800 dark:text-violet-300",
+    border: "border-violet-500/20",
   },
   data: {
     bg:     "bg-amber-500/15 dark:bg-amber-400/10",

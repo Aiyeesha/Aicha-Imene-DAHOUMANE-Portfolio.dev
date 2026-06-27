@@ -28,7 +28,7 @@ export default function TrackToggle() {
         aria-label={t("a11y.chooseItOps")}
         className={`rounded-full px-3 py-1.5 text-sm ${
           track === "itops"
-            ? "bg-cyan-500/20 text-cyan-700 dark:text-cyan-200"
+            ? "bg-violet-500/20 text-violet-700 dark:text-violet-200"
             : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
         }`}
       >
