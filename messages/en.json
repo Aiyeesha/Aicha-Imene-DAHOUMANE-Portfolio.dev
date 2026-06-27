@@ -406,7 +406,7 @@
     "workModeValues": "Hybrid · On-site · Full remote",
     "sector": "Sectors",
     "sectorValues": "Salesforce · IT Ops / DevOps",
-    "roles": "Target roles",
+    "roles": "Areas of expertise",
     "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant",
     "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant",
     "location": "Location",
