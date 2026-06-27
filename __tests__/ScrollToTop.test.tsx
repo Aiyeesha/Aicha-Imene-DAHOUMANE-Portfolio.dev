@@ -4,8 +4,27 @@
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ScrollToTop from "@/components/ScrollToTop";
+import Providers from "@/app/[locale]/providers";
+
+const renderWithProviders = (ui: React.ReactElement) =>
+  render(<Providers initialTrack="salesforce">{ui}</Providers>);
 
 // ── Setup window mocks ────────────────────────────────────────────────────────
+
+// matchMedia n'existe pas dans jsdom (requis par next-themes)
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  }),
+});
 
 // scrollTo n'est pas implémenté dans jsdom — on le mocke
 const mockScrollTo = jest.fn();
@@ -27,19 +46,19 @@ describe("ScrollToTop", () => {
   });
 
   it("rend le bouton dans le DOM", () => {
-    render(<ScrollToTop />);
+    renderWithProviders(<ScrollToTop />);
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
   it("le bouton est initialement invisible (opacity-0) avant 300px de scroll", () => {
-    render(<ScrollToTop />);
+    renderWithProviders(<ScrollToTop />);
     const btn = screen.getByRole("button");
     // La classe CSS opacity-0 est appliquée quand visible=false
     expect(btn.className).toContain("opacity-0");
   });
 
   it("le bouton devient visible après plus de 300px de scroll", () => {
-    render(<ScrollToTop />);
+    renderWithProviders(<ScrollToTop />);
     act(() => {
       simulateScroll(400);
     });
@@ -48,7 +67,7 @@ describe("ScrollToTop", () => {
   });
 
   it("le bouton redevient invisible si on remonte sous 300px", () => {
-    render(<ScrollToTop />);
+    renderWithProviders(<ScrollToTop />);
     act(() => { simulateScroll(500); });
     act(() => { simulateScroll(100); });
     const btn = screen.getByRole("button");
@@ -56,14 +75,14 @@ describe("ScrollToTop", () => {
   });
 
   it("a un aria-label en français", () => {
-    render(<ScrollToTop />);
+    renderWithProviders(<ScrollToTop />);
     const btn = screen.getByRole("button");
     expect(btn).toHaveAttribute("aria-label", "Retour en haut de page");
   });
 
   it("appelle window.scrollTo({top:0, behavior:'smooth'}) au clic", async () => {
     const user = userEvent.setup();
-    render(<ScrollToTop />);
+    renderWithProviders(<ScrollToTop />);
     act(() => { simulateScroll(400); });
     const btn = screen.getByRole("button");
     await user.click(btn);
