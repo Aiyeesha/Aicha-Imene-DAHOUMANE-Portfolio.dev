@@ -68,6 +68,17 @@ const nextConfig = {
     ],
   },
 
+  async redirects() {
+    return [
+      // Slug blog incorrectement référencé (audit 2026-06-27) — le fichier MDX est visualforce-to-lwc-migration
+      {
+        source: "/:locale(en|fr)/blog/migration-visualforce-to-lwc",
+        destination: "/:locale/blog/visualforce-to-lwc-migration",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       // ── Assets statiques publics (logo, avatar, CV PDF…) ──────────────────────

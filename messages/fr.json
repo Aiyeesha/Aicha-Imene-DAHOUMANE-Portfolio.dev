@@ -350,7 +350,7 @@
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. SIRET : non applicable (activité exercée en portage salarial). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
@@ -366,7 +366,7 @@
     "items": [
       {
         "q": "Êtes-vous disponible immédiatement ?",
-        "a": "Je suis actuellement en CDI chez LD Digitales (depuis oct. 2025). Je lance mon activité de consultante indépendante en portage salarial à partir d'août 2026. En attendant, je peux intervenir sur des missions ponctuelles ou des projets complémentaires selon les disponibilités."
+        "a": "Je suis actuellement en CDI chez LD Digitales (depuis oct. 2025) et je suis ouverte à toutes les opportunités à partir d'août 2026 : CDI, CDD, freelance ou mission — en France et à l'international. Contactez-moi pour discuter de votre besoin."
       },
       {
         "q": "Travaillez-vous à distance ?",
@@ -396,12 +396,12 @@
     "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email."
   },
   "availModal": {
-    "badge": "En CDI · Consulting indépendant dès août 2026",
+    "badge": "Disponible — CDI · CDD · Freelance · Mission",
     "title": "Mes disponibilités",
     "delay": "Statut actuel",
     "delayValue": "En CDI chez LD Digitales depuis oct. 2025",
     "contracts": "Prochaine étape",
-    "contractValues": "Consulting / portage salarial dès août 2026",
+    "contractValues": "CDI · CDD · Freelance · Mission — France & international",
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site · Full remote",
     "sector": "Secteurs",
