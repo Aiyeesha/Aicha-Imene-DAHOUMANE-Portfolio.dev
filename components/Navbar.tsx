@@ -290,7 +290,7 @@ useEffect(() => {
             className="flex flex-shrink-0 items-center gap-3 rounded-2xl soft-ring"
             aria-label={t("nav.home")}
           >
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-200 font-semibold">
+            <div className={`grid h-10 w-10 place-items-center rounded-full font-semibold ${track === "salesforce" ? "bg-cyan-500/15 text-cyan-700 dark:text-cyan-200" : "bg-violet-500/15 text-violet-700 dark:text-violet-200"}`}>
               {BRAND_INITIALS}
             </div>
             {/* Texte du brand — masqué à xl pour libérer de l'espace au desktop nav (6 items) */}
