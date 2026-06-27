@@ -350,7 +350,7 @@
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. SIRET: not applicable (activity carried out via portage salarial). Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
@@ -366,7 +366,7 @@
     "items": [
       {
         "q": "Are you available immediately?",
-        "a": "I'm currently in a permanent role (CDI) at LD Digitales since Oct. 2025. I'm launching independent consulting (portage salarial) from August 2026. In the meantime, I'm open to occasional projects or complementary missions depending on availability."
+        "a": "I'm currently in a permanent role at LD Digitales since Oct. 2025, and I'm open to all opportunities from August 2026: permanent, fixed-term, freelance, or contract — in France and internationally. Feel free to reach out to discuss your needs."
       },
       {
         "q": "Do you work remotely?",
@@ -396,12 +396,12 @@
     "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email."
   },
   "availModal": {
-    "badge": "CDI · Independent consulting from August 2026",
+    "badge": "Available — Permanent · Fixed-term · Freelance · Contract",
     "title": "My availability",
     "delay": "Current status",
     "delayValue": "CDI at LD Digitales since Oct. 2025",
     "contracts": "Next step",
-    "contractValues": "Consulting / portage salarial from August 2026",
+    "contractValues": "Permanent · Fixed-term · Freelance · Contract — France & worldwide",
     "workMode": "Work modes",
     "workModeValues": "Hybrid · On-site · Full remote",
     "sector": "Sectors",
