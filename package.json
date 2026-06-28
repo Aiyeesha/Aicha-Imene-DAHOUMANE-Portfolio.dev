@@ -80,6 +80,7 @@
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "pdf-lib": "^1.17.1",
     "postcss": "^8.5.2",
     "puppeteer": "^24.38.0",
     "sharp": "^0.34.5",
