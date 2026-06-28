@@ -57,7 +57,7 @@
     "requirements": "Exigences (PDF)",
     "details": "Voir le détail →",
     "featured": "Projets à la une",
-    "featuredSubtitle": "Les meilleurs exemples avant la liste complète.",
+    "featuredSubtitle": "Une sélection d'études de cas Salesforce et IT Ops.",
     "labelProject": "Projet",
     "backToProjects": "← Retour aux projets",
     "trackLabel": "Parcours",
@@ -86,7 +86,7 @@
     "services_title": "Services",
     "services_subtitle": "Des services sur mesure selon vos besoins (Salesforce ou IT Ops).",
     "projects_title": "Projets",
-    "projects_subtitle": "Utilise la recherche et les filtres. Le switch IT Ops / Salesforce modifie la liste.",
+    "projects_subtitle": "Implémentations Salesforce, automatisation IT Ops et projets web — filtrés par parcours.",
     "contact_title": "Contact",
     "contact_subtitle": "Je préfère être contactée par email — le formulaire ci-dessous est aussi disponible (anti-spam activé).",
     "blog_title": "Blog / Tutoriels",
@@ -345,12 +345,17 @@
     "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données personnelles.",
     "contact": "Pour exercer vos droits : {email}",
     "processorsTitle": "Sous-traitants",
-    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Supabase (stockage des messages de contact et données de disponibilité — hébergé aux États-Unis, conformité RGPD via Standard Contractual Clauses), Vercel (hébergement et CDN — États-Unis), Formspree (acheminement des emails de contact — États-Unis, si activé). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD."
+    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Supabase (stockage des messages de contact et données de disponibilité — hébergé aux États-Unis, conformité RGPD via Standard Contractual Clauses), Vercel (hébergement et CDN — États-Unis), Formspree (acheminement des emails de contact — États-Unis, si activé). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD.",
+    "lastUpdated": "28 juin 2026",
+    "controllerTitle": "Responsable du traitement",
+    "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, personne physique exerçant une activité professionnelle indépendante. Contact : {email}",
+    "breachTitle": "Violation de données",
+    "breachBody": "En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous serez notifié(e) dans les meilleurs délais. Conformément à l'article 33 du RGPD, la Commission Nationale de l'Informatique et des Libertés (CNIL) sera notifiée dans un délai de 72 heures. Pour toute réclamation, vous pouvez également saisir directement la CNIL : www.cnil.fr"
   },
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. SIRET : non applicable (portfolio personnel). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Marseille, France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
@@ -393,7 +398,8 @@
     "limitsTitle": "Limites connues",
     "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours sont les bienvenus.",
     "helpTitle": "Un problème d'accessibilité ?",
-    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email."
+    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email.",
+    "lastAudit": "Dernière vérification : 28 juin 2026 — Outils : axe-core (CI automatisé), vérification manuelle Navigation clavier."
   },
   "availModal": {
     "badge": "Disponible — CDI · CDD · Freelance · Mission",

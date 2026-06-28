@@ -26,7 +26,10 @@ export async function generateMetadata(
         en: `${siteUrl}/en/blog/tags`,
         fr: `${siteUrl}/fr/blog/tags`,
         "x-default": `${siteUrl}/en/blog/tags`,
-      }
+      },
+      types: {
+        "application/rss+xml": locale === "fr" ? `${siteUrl}/feed-fr.xml` : `${siteUrl}/feed.xml`,
+      },
     },
     openGraph: {
       title,

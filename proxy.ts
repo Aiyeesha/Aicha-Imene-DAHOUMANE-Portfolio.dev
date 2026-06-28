@@ -264,5 +264,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|opengraph-image|twitter-image|.*\\..*).*)"],
+  // feed/* : flux RSS par tag — routes API sans locale, exclues de l'i18n
+  matcher: ["/((?!api|_next|opengraph-image|twitter-image|feed|.*\\..*).*)"],
 };
