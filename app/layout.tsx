@@ -146,9 +146,16 @@ function buildJsonLd(locale: string) {
         areaServed: [
           { "@type": "Country", name: "France" },
           { "@type": "Country", name: "Algeria" },
+          { "@type": "Country", name: "Tunisia" },
           { "@type": "Country", name: "Belgium" },
-          { "@type": "Country", name: "Switzerland" },
           { "@type": "Country", name: "Luxembourg" },
+          { "@type": "Country", name: "Switzerland" },
+          { "@type": "Country", name: "Germany" },
+          { "@type": "Country", name: "Italy" },
+          { "@type": "Country", name: "Spain" },
+          { "@type": "Country", name: "United Kingdom" },
+          { "@type": "Country", name: "Ireland" },
+          { "@type": "Country", name: "Malta" },
           { "@type": "Country", name: "Canada" },
           "Worldwide", // remote international — string Text valide Schema.org
         ],
