@@ -212,6 +212,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         )}
         {/* Formspree : formulaire de contact (chargé à la demande) */}
         <link rel="dns-prefetch" href="https://formspree.io" />
+        {/* Identité sociale — vérification IndieWeb */}
+        <link rel="me" href="https://www.linkedin.com/in/aicha-imene-dahoumane" />
+        <link rel="me" href="https://github.com/Aiyeesha" />
         {/* Preload avatar — candidat LCP (Largest Contentful Paint) sur le hero.
             fetchpriority="high" priorise le téléchargement avant le parsing du Hero.
             Gain LCP typique : ~200–400ms sur Chrome/Edge.

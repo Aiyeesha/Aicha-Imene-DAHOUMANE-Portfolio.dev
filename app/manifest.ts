@@ -27,9 +27,9 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Salesforce Developer & Consultant · IT Ops — Portfolio professionnel d'Aïcha Imène DAHOUMANE.",
 
     // ── Navigation ──────────────────────────────────────────────────────────
-    start_url: "/en",          // Page d'accueil EN (langue par défaut du site)
+    start_url: "/",            // Racine — le middleware détecte la langue
     scope:     "/",            // Toutes les sous-routes sont dans le scope de la PWA
-    lang:      "en",           // Langue par défaut du site
+    lang:      "fr",           // Langue principale du portfolio
 
     // ── Affichage ───────────────────────────────────────────────────────────
     // display_override : tente "window-controls-overlay" (PWA desktop), fallback "standalone"
@@ -85,13 +85,13 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name:       "Blog",
         short_name: "Blog",
-        url:        "/en/blog",
+        url:        "/fr/blog",
         icons:      [{ src: "/icon-192.png", sizes: "192x192" }]
       },
       {
         name:       "About",
         short_name: "About",
-        url:        "/en/about",
+        url:        "/fr/about",
         icons:      [{ src: "/icon-192.png", sizes: "192x192" }]
       }
     ],
