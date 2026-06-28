@@ -24,11 +24,20 @@ export type BlogPostMeta = {
   file: string; // absolute path (server-only)
 };
 
-/** Estimate reading time in minutes from raw MDX content (strips code blocks). */
+/** Estimate reading time in minutes from raw MDX content.
+ * Text prose: 200 wpm. Code blocks: 40 wpm (readers parse code more slowly).
+ */
 function calcReadingTime(content: string): number {
-  const noCode = content.replace(/```[\s\S]*?```/g, "");
-  const words = noCode.trim().split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.round(words / 200));
+  let codeWords = 0;
+  const noCode = content.replace(/```[\s\S]*?```/g, (block) => {
+    // Strip the opening/closing fence lines, count only the code body
+    const body = block.replace(/^```[^\n]*\n?/, "").replace(/```$/, "");
+    codeWords += body.trim().split(/\s+/).filter(Boolean).length;
+    return "";
+  });
+  const proseWords = noCode.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = proseWords / 200 + codeWords / 40;
+  return Math.max(1, Math.round(minutes));
 }
 
 function postsDir(locale: BlogLocale) {
