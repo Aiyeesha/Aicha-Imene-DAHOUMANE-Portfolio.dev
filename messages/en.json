@@ -37,7 +37,7 @@
     "proof1": "Security-first",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
-    "availability": "CDI · Independent consulting from August 2026",
+    "availability": "Permanent · Fixed-term · Freelance · Contract",
     "startHere": "Start here:",
     "switchToSalesforce": "View Salesforce profile →",
     "switchToItops": "View IT Ops profile →"
@@ -150,7 +150,7 @@
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
-    "availability": "CDI · Independent consulting from August 2026"
+    "availability": "Permanent · Fixed-term · Freelance · Contract"
   },
   "blog": {
     "card_tutorials_kicker": "New",
@@ -286,11 +286,11 @@
     "p1": "Salesforce developer with 2 years of professional experience and a strong IT infrastructure background — foundations that make a real difference on complex projects.",
     "p2": "I started my career on the infrastructure side — internship at MIDRANGE GROUP (Feb – May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 200 Dell machines via Windows Autopilot, Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
     "p3": "From Oct. 2023 to Oct. 2025, I worked as a Salesforce Developer at LD Digitales (remote) while earning the Développeur Concepteur Logiciel title (RNCP Level 6) from OpenClassrooms. I built and maintained 10+ Apex classes, created 20+ automation Flows (reducing manual workload by 30%), designed reusable LWC components, and implemented CI/CD pipelines with Salesforce CLI.",
-    "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My 2026 goal is to work internationally as a freelance Salesforce developer & consultant, collaborating with distributed teams and clients in France and abroad.",
+    "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My goal is to contribute to ambitious Salesforce and IT Ops projects — in France or internationally, within distributed teams.",
     "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
-    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, with 2 years of production Salesforce experience. In parallel: building two Salesforce SaaS products (OrgDocs and SFRelease) and launching an independent consulting practice (portage salarial) from August 2026.",
+    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, with 2 years of production Salesforce experience. In parallel: building two Salesforce SaaS products (OrgDocs and SFRelease).",
     "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
@@ -298,7 +298,7 @@
     "goals2026Title": "2026 Goals",
     "goals2026Salesforce": [
       "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-      "Launch independent consulting activity (portage salarial) from August 2026",
+      "Find the right environment to grow as a Salesforce developer & consultant",
       "Ship first versions of OrgDocs and SFRelease — two SaaS products in the Salesforce ecosystem",
       "Actively contribute to the Salesforce community: technical blog, Trailblazer Community, open source",
       "Build an international client base (France, UK, European market — remote)"
@@ -312,7 +312,7 @@
     ],
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
-    "basedInValue": "Marseille / PACA — Full remote · Hybrid · On-site — Open to relocation (Europe & English-speaking countries)",
+    "basedInValue": "Marseille / Provence-Alpes-Côte d'Azur — Full remote · Hybrid · On-site — Open to relocation (Europe & English-speaking countries)",
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
@@ -320,9 +320,9 @@
     "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant",
     "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant",
     "availabilityLabel": "Availability",
-    "availabilityValue": "CDI at LD Digitales · Consulting from August 2026",
+    "availabilityValue": "Open to permanent, fixed-term, freelance & contract roles",
     "goalLabel": "Goal",
-    "goalValue": "Deepen Salesforce expertise in my current CDI (LD Digitales), complete 2026 certifications, and launch independent consulting (portage salarial) from August 2026.",
+    "goalValue": "Deepen Salesforce expertise, complete 2026 certifications, and find the right environment to grow — permanent, fixed-term, freelance, or contract.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Quality · Security",
     "focusValueItOps": "Monitoring · Runbooks · Automation · Security",
@@ -371,11 +371,11 @@
     "items": [
       {
         "q": "Are you available immediately?",
-        "a": "I'm currently in a permanent role at LD Digitales since Oct. 2025, and I'm open to all opportunities from August 2026: permanent, fixed-term, freelance, or contract — in France and internationally. Feel free to reach out to discuss your needs."
+        "a": "I'm currently working as a Salesforce Developer at LD Digitales. I'm open to permanent, fixed-term, freelance, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
       },
       {
         "q": "Do you work remotely?",
-        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in Marseille / PACA and open to relocation in France and internationally: Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta, and any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
+        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in Marseille / Provence-Alpes-Côte d'Azur and open to relocation in France and internationally: Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta, and any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
       },
       {
         "q": "What are your typical timelines?",
@@ -416,7 +416,7 @@
     "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant",
     "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant",
     "location": "Location",
-    "locationValues": "Marseille / PACA · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
+    "locationValues": "Marseille / Provence-Alpes-Côte d'Azur · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
     "cta": "Get in touch →"
   }
 }

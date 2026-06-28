@@ -171,24 +171,23 @@ export default async function Home({ params }: Props) {
             <TrustedBy />
             {/* Compteurs animés — métriques clés chiffrées (Apex, Flows, gain, projets) */}
             <GlobalMetrics />
+            {/* Indicateur témoignages en cours — visible tant que SHOW_TESTIMONIALS=false */}
+            <Reveal delayMs={80}>
+              <p className="mt-8 text-center text-xs text-muted-2">
+                {locale === "fr"
+                  ? "Témoignages clients en cours de collecte — disponibles prochainement"
+                  : "Client testimonials in progress — coming soon"}
+              </p>
+            </Reveal>
           </>
         )}
       </section>
 
       {/* PROJETS — section-stripe (fond alterné) */}
       <section id="projects" className="section-stripe py-14">
-        <Reveal>
-          <h2 className="text-3xl font-semibold">{t("sections.projects_title")}</h2>
-        </Reveal>
-        <Reveal delayMs={70}>
-          <p className="mt-3 text-muted">{t("sections.projects_subtitle")}</p>
-        </Reveal>
-        <div className="mt-8">
+        <div>
           <Reveal>
-            <h3 className="text-xl font-semibold">{t("projects.featured")}</h3>
-          </Reveal>
-          <Reveal delayMs={60}>
-            <p className="mt-2 text-sm text-muted">{t("projects.featuredSubtitle")}</p>
+            <h2 className="text-xl font-semibold">{t("projects.featured")}</h2>
           </Reveal>
           <div className="mt-5">
             <FeaturedProjects projects={supabaseProjects} />
