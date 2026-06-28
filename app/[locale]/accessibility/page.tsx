@@ -56,6 +56,7 @@ export default async function AccessibilityPage({
   return (
     <div className="py-14">
       <h1 className="text-3xl font-semibold">{t("title")}</h1>
+      <p className="mt-2 text-xs text-muted-2">{t("lastAudit")}</p>
 
       <div className="mt-8 grid gap-6">
 

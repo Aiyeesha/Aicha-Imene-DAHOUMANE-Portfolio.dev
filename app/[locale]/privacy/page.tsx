@@ -60,8 +60,17 @@ export default async function PrivacyPage({
   return (
     <div className="py-14">
       <h1 className="text-3xl font-semibold">{t("title")}</h1>
+      <p className="mt-2 text-xs text-muted-2">{t("lastUpdated")}</p>
 
       <div className="mt-8 grid gap-6">
+
+        {/* Responsable du traitement */}
+        <section className="card p-6">
+          <h2 className="text-lg font-semibold">{t("controllerTitle")}</h2>
+          <p className="mt-2 text-sm text-muted-2">
+            {t("controllerBody", { email: contactEmail })}
+          </p>
+        </section>
 
         {/* Analytics & Performance */}
         <section className="card p-6">
@@ -86,6 +95,12 @@ export default async function PrivacyPage({
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("processorsTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("processorsBody")}</p>
+        </section>
+
+        {/* Violation de données — Art. 33 RGPD */}
+        <section className="card p-6">
+          <h2 className="text-lg font-semibold">{t("breachTitle")}</h2>
+          <p className="mt-2 text-sm text-muted-2">{t("breachBody")}</p>
         </section>
 
         {/* Vos droits */}
