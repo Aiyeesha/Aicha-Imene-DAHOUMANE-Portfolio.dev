@@ -119,9 +119,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       projectLanguages.fr = `${base}/fr/projects/${slug}`;
     }
 
+    const enProject = enProjects.find((p) => p.slug === slug);
+    const projectLastMod = enProject?.updated_at
+      ? new Date(enProject.updated_at)
+      : STATIC_LAST_MODIFIED;
+
     // Entrée EN — toujours présente
     pages.push({
       url: `${base}/en/projects/${slug}`,
+      lastModified: projectLastMod,
       priority: 0.7,
       changeFrequency: "monthly",
       alternates: { languages: projectLanguages },
@@ -131,6 +137,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (hasFr) {
       pages.push({
         url: `${base}/fr/projects/${slug}`,
+        lastModified: projectLastMod,
         priority: 0.7,
         changeFrequency: "monthly",
         alternates: { languages: projectLanguages },

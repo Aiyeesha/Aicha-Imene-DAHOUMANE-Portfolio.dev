@@ -35,7 +35,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // display_override : tente "window-controls-overlay" (PWA desktop), fallback "standalone"
     display:              "standalone",
     display_override:     ["window-controls-overlay", "standalone", "minimal-ui"],
-    orientation:          "portrait-primary",
+    // "any" autorise portrait ET paysage — requis pour tablette et desktop PWA.
+    orientation:          "any",
 
     // ── Couleurs ────────────────────────────────────────────────────────────
     // Doit correspondre à la couleur de fond du site (dark mode par défaut).
@@ -98,6 +99,18 @@ export default function manifest(): MetadataRoute.Manifest {
     // ── Divers ──────────────────────────────────────────────────────────────
     categories:               ["portfolio", "business", "productivity"],
     prefer_related_applications: false, // Privilégier la PWA plutôt qu'une app native
-    screenshots:              []
+    // Screenshots — affichés dans le prompt d'installation Chrome/Edge.
+    // TODO (PORT-009) : ajouter un screenshot "narrow" (390×844, mobile portrait)
+    //   générable via : npx playwright screenshot ... --viewport-size=390,844
+    screenshots: [
+      {
+        src:        "/og-default.png",
+        sizes:      "1200x630",
+        type:       "image/png",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        form_factor: "wide" as any,
+        label:      "Portfolio — Aïcha Imène DAHOUMANE",
+      }
+    ]
   };
 }
