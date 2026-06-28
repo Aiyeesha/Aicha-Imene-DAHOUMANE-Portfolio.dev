@@ -37,7 +37,7 @@
     "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
-    "availability": "En CDI · Consulting indépendant dès août 2026",
+    "availability": "CDI · CDD · Freelance · Mission",
     "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
     "switchToItops": "Voir le profil IT Ops →"
@@ -150,7 +150,7 @@
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",
-    "availability": "En CDI · Consulting indépendant dès août 2026"
+    "availability": "CDI · CDD · Freelance · Mission"
   },
   "blog": {
     "card_tutorials_kicker": "Nouveau",
@@ -286,10 +286,10 @@
     "p1": "Développeuse Salesforce avec 2 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
     "p2": "J'ai commencé ma carrière côté infrastructure — stage chez MIDRANGE GROUP (fév – mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 200 workstations Dell via Windows Autopilot, administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
     "p3": "D'oct. 2023 à oct. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction de 30% de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
-    "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif pour 2026 est de travailler comme développeuse & consultante Salesforce freelance à l'international, en collaborant avec des équipes distribuées et des clients en France et à l'international.",
+    "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Marseille / PACA — Full remote · Hybride · Sur site — Mobilité France & international (Europe + pays anglophones)",
+    "basedInValue": "Marseille / Provence-Alpes-Côte d'Azur — Full remote · Hybride · Sur site — Mobilité France & international (Europe + pays anglophones)",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
@@ -297,9 +297,9 @@
     "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT",
     "rolesValueItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "En CDI chez LD Digitales · Consulting dès août 2026",
+    "availabilityValue": "Ouverte aux postes CDI, CDD, freelance & missions",
     "goalLabel": "Objectif",
-    "goalValue": "Approfondir mon expertise Salesforce en CDI (LD Digitales), préparer les certifications 2026 et lancer une activité de consulting indépendant (portage salarial) à partir d'août 2026.",
+    "goalValue": "Approfondir mon expertise Salesforce, préparer les certifications 2026 et trouver le bon contexte pour progresser — en CDI, CDD, freelance ou mission.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
@@ -307,7 +307,7 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. En parallèle : développement de deux SaaS Salesforce (OrgDocs et SFRelease) et lancement d'une activité de conseil indépendant (portage salarial) prévu à partir d'août 2026.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. En parallèle : développement de deux SaaS Salesforce (OrgDocs et SFRelease).",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
@@ -315,7 +315,7 @@
     "goals2026Title": "Objectifs 2026",
     "goals2026Salesforce": [
       "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-      "Lancer mon activité de consultante indépendante (portage salarial) à partir d'août 2026",
+      "Trouver le bon contexte pour progresser — CDI, CDD, freelance ou mission",
       "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
       "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
       "Développer une clientèle internationale (France, UK, marché européen en remote)"
@@ -371,11 +371,11 @@
     "items": [
       {
         "q": "Êtes-vous disponible immédiatement ?",
-        "a": "Je suis actuellement en CDI chez LD Digitales (depuis oct. 2025) et je suis ouverte à toutes les opportunités à partir d'août 2026 : CDI, CDD, freelance ou mission — en France et à l'international. Contactez-moi pour discuter de votre besoin."
+        "a": "Je travaille actuellement comme développeuse Salesforce chez LD Digitales. Je suis ouverte aux postes CDI, CDD, freelance et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
       },
       {
         "q": "Travaillez-vous à distance ?",
-        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée à Marseille / PACA et ouverte à la relocalisation en France et à l'international : Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte, et tout autre contexte anglophone. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
+        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée à Marseille / Provence-Alpes-Côte d'Azur et ouverte à la relocalisation en France et à l'international : Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte, et tout autre contexte anglophone. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
       },
       {
         "q": "Quels sont vos délais habituels ?",
@@ -416,7 +416,7 @@
     "rolesValuesSalesforce": "Administratrice Salesforce · Développeuse Salesforce · Consultante Salesforce",
     "rolesValuesItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT",
     "location": "Localisation",
-    "locationValues": "Marseille / PACA · Mobilité France & international (BE, LU, DE, IT, ES, UK, IE, MT + pays anglophones)",
+    "locationValues": "Marseille / Provence-Alpes-Côte d'Azur · Mobilité France & international (BE, LU, DE, IT, ES, UK, IE, MT + pays anglophones)",
     "cta": "Prendre contact →"
   }
 }

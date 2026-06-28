@@ -35,8 +35,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const name  = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const title = isFr ? `À propos — ${name}` : `About — ${name}`;
   const description = isFr
-    ? "De l'administration systèmes & réseaux au développement Salesforce. Développeuse Salesforce & IT Ops Engineer disponible en CDI, CDD, freelance ou portage."
-    : "From systems & network administration to Salesforce development. Salesforce Developer & IT Ops Engineer — open to permanent, fixed-term, freelance, or contract roles.";
+    ? "De l'administration systèmes & réseaux au développement Salesforce. Développeuse Salesforce & IT Ops Engineer ouverte à toutes opportunités — CDI, CDD, freelance ou mission."
+    : "From systems & network administration to Salesforce development. Salesforce Developer & IT Ops Engineer — open to all opportunities: permanent, fixed-term, freelance, or contract.";
 
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/about`;
