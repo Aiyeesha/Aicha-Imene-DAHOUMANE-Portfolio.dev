@@ -70,6 +70,17 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Mentions légales — ancienne URL → nouvelle URL (audit BUG-1)
+      {
+        source: "/:locale(en|fr)/mentions-legales",
+        destination: "/:locale/legal",
+        permanent: true,
+      },
+      {
+        source: "/mentions-legales",
+        destination: "/fr/legal",
+        permanent: true,
+      },
       // Slug blog incorrectement référencé (audit 2026-06-27) — le fichier MDX est visualforce-to-lwc-migration
       {
         source: "/:locale(en|fr)/blog/migration-visualforce-to-lwc",
