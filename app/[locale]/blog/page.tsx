@@ -5,6 +5,7 @@ import { readAllPosts } from "@/content/blog/fs";
 import { getTopTags } from "@/lib/blog-utils";
 import BlogTrackFilter from "@/components/blog/BlogTrackFilter";
 import type { PostCard } from "@/components/blog/BlogTrackFilter";
+import BlogSearchBar from "@/components/blog/BlogSearchBar";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 // ISR : revalide la liste des articles toutes les heures.
@@ -97,12 +98,13 @@ export default async function BlogIndexPage({
 
   return (
     <section className="py-12">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-xs text-muted-2">{t("kicker")}</div>
           <h1 className="mt-2 text-4xl font-semibold">{t("title")}</h1>
           <p className="mt-3 text-muted">{t("subtitle")}</p>
         </div>
+        <BlogSearchBar />
       </div>
 
       {/* Barre de tags (filtrage URL) */}

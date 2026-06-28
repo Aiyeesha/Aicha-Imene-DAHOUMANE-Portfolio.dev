@@ -57,7 +57,7 @@
     "requirements": "Requirements (PDF)",
     "details": "View project details →",
     "featured": "Featured projects",
-    "featuredSubtitle": "Quick highlights before the full list.",
+    "featuredSubtitle": "A selection of case studies across Salesforce and IT Ops.",
     "labelProject": "Project",
     "backToProjects": "← Back to projects",
     "trackLabel": "Track",
@@ -86,7 +86,7 @@
     "services_title": "Services",
     "services_subtitle": "Tailored services depending on your needs (Salesforce or IT Ops).",
     "projects_title": "Projects",
-    "projects_subtitle": "Use the search and filters. The IT Ops / Salesforce toggle changes the list.",
+    "projects_subtitle": "Salesforce implementations, IT Ops automation, and web projects — filtered by track.",
     "contact_title": "Contact",
     "contact_subtitle": "I prefer to be contacted by email — the form below is also available (spam-protected).",
     "blog_title": "Blog / Tutorials",
@@ -345,12 +345,17 @@
     "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, request deletion of, and obtain portability of your personal data.",
     "contact": "To exercise your rights: {email}",
     "processorsTitle": "Data processors",
-    "processorsBody": "Data collected through this website is processed by the following sub-processors: Supabase (storage of contact messages and availability data — hosted in the United States with GDPR compliance via Standard Contractual Clauses), Vercel (hosting and CDN — United States), Formspree (contact email delivery — United States, if enabled). These providers act as data processors within the meaning of Article 28 of the GDPR."
+    "processorsBody": "Data collected through this website is processed by the following sub-processors: Supabase (storage of contact messages and availability data — hosted in the United States with GDPR compliance via Standard Contractual Clauses), Vercel (hosting and CDN — United States), Formspree (contact email delivery — United States, if enabled). These providers act as data processors within the meaning of Article 28 of the GDPR.",
+    "lastUpdated": "June 28, 2026",
+    "controllerTitle": "Data controller",
+    "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, a self-employed professional. Contact: {email}",
+    "breachTitle": "Data breach notification",
+    "breachBody": "In the event of a data breach likely to result in a risk to your rights and freedoms, you will be notified as soon as possible. In accordance with Article 33 of the GDPR, the relevant supervisory authority will be notified within 72 hours. You also have the right to lodge a complaint with your national data protection authority (in France: CNIL — www.cnil.fr)."
   },
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. SIRET: not applicable (personal portfolio). Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. Address: Marseille, France. SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
@@ -393,7 +398,8 @@
     "limitsTitle": "Known limitations",
     "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
     "helpTitle": "Accessibility issue?",
-    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email."
+    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email.",
+    "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
   },
   "availModal": {
     "badge": "Available — Permanent · Fixed-term · Freelance · Contract",
