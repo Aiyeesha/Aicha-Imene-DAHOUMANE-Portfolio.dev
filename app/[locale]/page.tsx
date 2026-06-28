@@ -171,14 +171,6 @@ export default async function Home({ params }: Props) {
             <TrustedBy />
             {/* Compteurs animés — métriques clés chiffrées (Apex, Flows, gain, projets) */}
             <GlobalMetrics />
-            {/* Indicateur témoignages en cours — visible tant que SHOW_TESTIMONIALS=false */}
-            <Reveal delayMs={80}>
-              <p className="mt-8 text-center text-xs text-muted-2">
-                {locale === "fr"
-                  ? "Témoignages clients en cours de collecte — disponibles prochainement"
-                  : "Client testimonials in progress — coming soon"}
-              </p>
-            </Reveal>
           </>
         )}
       </section>
