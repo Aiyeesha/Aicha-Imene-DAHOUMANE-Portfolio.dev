@@ -8,23 +8,48 @@
 // Prérequis : puppeteer installé en devDependencies (npm i -D puppeteer)
 
 import puppeteer from "puppeteer";
+import { PDFDocument } from "pdf-lib";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { existsSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
 const CV_DIR     = join(__dirname, "../public/cv");
 
-// Liste des CV à générer : source HTML → PDF cible
+// Liste des CV à générer : source HTML → PDF cible + métadonnées
 const CV_FILES = [
-  { html: "cv-en-itops.html",      pdf: "cv-en-itops.pdf",      scale: 1.04 },
-  { html: "cv-en-salesforce.html", pdf: "cv-en-salesforce.pdf", scale: 1.04 },
-  { html: "cv-fr-itops.html",      pdf: "cv-fr-itops.pdf",      scale: 1.04 },
-  { html: "cv-fr-salesforce.html", pdf: "cv-fr-salesforce.pdf", scale: 1.04 },
+  {
+    html: "cv-en-itops.html",
+    pdf: "cv-en-itops.pdf",
+    scale: 1.04,
+    title: "Aïcha Imène DAHOUMANE — IT Ops / Systems & Networks — CV",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "cv-en-salesforce.html",
+    pdf: "cv-en-salesforce.pdf",
+    scale: 1.04,
+    title: "Aïcha Imène DAHOUMANE — Salesforce Developer — CV",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "cv-fr-itops.html",
+    pdf: "cv-fr-itops.pdf",
+    scale: 1.04,
+    title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "cv-fr-salesforce.html",
+    pdf: "cv-fr-salesforce.pdf",
+    scale: 1.04,
+    title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV",
+    author: "Aïcha Imène DAHOUMANE",
+  },
 ];
 
-async function generatePdf(browser, htmlFile, pdfFile, scale) {
+async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
   const htmlPath = join(CV_DIR, htmlFile);
   const pdfPath  = join(CV_DIR, pdfFile);
 
@@ -38,6 +63,19 @@ async function generatePdf(browser, htmlFile, pdfFile, scale) {
   // Charger le fichier HTML local (file:// URI)
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
 
+  // Forcer les métadonnées avant impression — Chromium lit document.title pour
+  // le champ Title du PDF, et la balise <meta name="author"> pour le champ Author.
+  await page.evaluate((t, a) => {
+    document.title = t;
+    let meta = document.querySelector('meta[name="author"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "author");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", a);
+  }, title, author);
+
   await page.pdf({
     path:              pdfPath,
     format:            "A4",
@@ -47,6 +85,18 @@ async function generatePdf(browser, htmlFile, pdfFile, scale) {
   });
 
   await page.close();
+
+  // Patcher les métadonnées PDF via pdf-lib (Author/Subject/Creator non lus par Chromium)
+  const pdfBytes = readFileSync(pdfPath);
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  pdfDoc.setTitle(title);
+  pdfDoc.setAuthor(author);
+  pdfDoc.setSubject(title);
+  pdfDoc.setCreator("portfolio-next / Puppeteer + pdf-lib");
+  pdfDoc.setProducer("Aïcha Imène DAHOUMANE");
+  const patchedBytes = await pdfDoc.save();
+  writeFileSync(pdfPath, patchedBytes);
+
   return true;
 }
 
@@ -60,9 +110,9 @@ async function main() {
 
   let success = 0;
 
-  for (const { html, pdf, scale } of CV_FILES) {
+  for (const { html, pdf, scale, title, author } of CV_FILES) {
     process.stdout.write(`  Génération de ${pdf}...`);
-    const ok = await generatePdf(browser, html, pdf, scale);
+    const ok = await generatePdf(browser, html, pdf, scale, title, author);
     if (ok) {
       console.log(" ✓");
       success++;
