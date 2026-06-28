@@ -62,6 +62,7 @@ export async function generateMetadata({
       description,
       images: [`${siteUrl}/twitter-image`],
     },
+    robots: { index: false, follow: true },
   };
 }
 

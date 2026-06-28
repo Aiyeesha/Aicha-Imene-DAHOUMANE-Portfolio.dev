@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [`${siteUrl}/twitter-image`],
     },
+    robots: { index: false, follow: true },
   };
 }
 
