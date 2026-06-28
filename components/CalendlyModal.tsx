@@ -45,13 +45,15 @@ export default function CalendlyModal({ variant = "contact" }: Props) {
     <>
       {variant === "hero" ? (
         /* ── Variante hero : pill compacte alignée avec les autres CTAs ── */
-        <button
-          type="button"
-          onClick={handleOpen}
+        <a
+          href={process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com"}
+          target="_blank"
+          rel="noreferrer noopener"
+          onClick={(e) => { e.preventDefault(); handleOpen(); }}
           className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
         >
           {t("cta.call15")} ↗
-        </button>
+        </a>
       ) : (
         /* ── Variante contact : bouton full-width (usage original) ── */
         <button
