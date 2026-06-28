@@ -52,19 +52,19 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     availNo:        isFr ? "Non disponible" : "Not available",
     availSince:     isFr ? `À partir de ${AVAILABILITY.since.fr}` : `From ${AVAILABILITY.since.en}`,
     availContracts: isFr
-      ? "Freelance direct · Portage salarial · Mission · CDD"
-      : "Direct freelance · Portage salarial · Contract · Fixed-term",
+      ? "CDI · CDD · Freelance · Mission"
+      : "Permanent · Fixed-term · Freelance · Contract",
     availMode:      isFr
-      ? "100 % remote · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
-      : "100% remote · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
+      ? "100 % remote · Marseille / Provence-Alpes-Côte d'Azur · Mobilité & relocalisation — France, Europe, pays anglophones"
+      : "100% remote · Marseille / Provence-Alpes-Côte d'Azur · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : "Domains",
     domains:        ["Salesforce Dev", "Administration Salesforce", "IT Ops", "DevOps / CI·CD", "Web · Next.js"],
     durationLabel:  isFr ? "Durée" : "Duration",
     durations:      isFr
-      ? ["Court terme (1–3 mois)", "Long terme (3–12 mois)", "Mission récurrente"]
-      : ["Short term (1–3 months)", "Long term (3–12 months)", "Ongoing engagement"],
+      ? ["Courte", "Longue", "Récurrente", "Au cas par cas"]
+      : ["Short", "Long", "Ongoing", "Ad-hoc"],
     modeLabel:      isFr ? "Mode" : "Mode",
     modes:          isFr
       ? ["100 % Remote", "Hybride · Sur site", "Mobilité & relocalisation envisageables"]
@@ -86,16 +86,14 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     faqTitle: isFr ? "Questions fréquentes" : "FAQ",
     faqs: isFr
       ? [
-          { q: "Sous quel statut intervenez-vous ?",                        a: "Je travaille en freelance direct ou en portage salarial selon ce qui convient le mieux à votre organisation. Les deux formules sont possibles, pour des missions courtes, longues ou ponctuelles — sans contrainte de minimum." },
-          { q: "Travaillez-vous en CDI ?",                                  a: "J'étudie les propositions en CDI pour des postes Salesforce ou IT Ops bien positionnés — contactez-moi pour en discuter." },
-          { q: "Êtes-vous disponible pour des missions courtes (< 1 mois) ?", a: "Oui, notamment pour des audits, des formations ou des interventions ponctuelles. Décrivez le besoin et je reviens sous 24 h." },
-          { q: "Quelle est votre zone géographique ?",                      a: "Je travaille 100 % à distance depuis Marseille / PACA. Je suis pleinement ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout pays ou contexte anglophone, en Europe ou hors d'Europe." },
+          { q: "Sous quel type de contrat intervenez-vous ?",       a: "Je travaille en CDI, CDD, freelance ou mission selon le contexte — en France et à l'international. Décrivez votre besoin et on verra ensemble ce qui convient le mieux." },
+          { q: "Êtes-vous disponible pour des missions courtes ?",  a: "Oui, y compris pour des audits, des formations ou des interventions ponctuelles. Décrivez le besoin et je reviens sous 24 h." },
+          { q: "Quelle est votre zone géographique ?",              a: "Je travaille 100 % à distance depuis Marseille / Provence-Alpes-Côte d'Azur, et je suis ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
         ]
       : [
-          { q: "What billing arrangement do you work under?",  a: "I work as a direct freelance or through portage salarial, whichever suits your organisation best. Both arrangements are available for short, long, or ad-hoc missions — no minimum commitment required." },
-          { q: "Are you open to permanent positions?",         a: "I consider well-positioned Salesforce or IT Ops permanent roles — reach out and let's talk." },
-          { q: "Do you take short missions (< 1 month)?",     a: "Yes, especially for audits, training, or ad-hoc interventions. Describe the need and I'll get back to you within 24 h." },
-          { q: "Where are you based?",                        a: "I work 100% remotely, from Marseille / PACA. I'm fully open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking country or context, within or outside Europe." },
+          { q: "What contract type works best?",             a: "I work on permanent, fixed-term, freelance, or contract engagements — in France and internationally. Tell me about your context and we'll find what fits." },
+          { q: "Do you take short missions?",                a: "Yes, including audits, training, or ad-hoc work. Describe the need and I'll get back to you within 24 h." },
+          { q: "Where are you based?",                       a: "I work 100% remotely from Marseille / Provence-Alpes-Côte d'Azur, and I'm open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
         ],
 
     ctaTitle:    isFr ? "Une mission en tête ?" : "Got a mission in mind?",
