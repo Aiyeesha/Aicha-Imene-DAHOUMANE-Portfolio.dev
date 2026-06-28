@@ -7,10 +7,10 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
       // /cv/ and /api/ are disallowed to prevent indexing of PDFs and API routes.
       // Sensitive paths (/admin, /testimonial-submit) are protected by auth, not listed here,
       // to avoid advertising their existence to attackers via robots.txt reconnaissance.
+      // Allow: / is intentionally omitted — it is implicit and would be redundant.
       disallow: ["/cv/", "/api/"],
     },
     sitemap: `${base}/sitemap.xml`,
