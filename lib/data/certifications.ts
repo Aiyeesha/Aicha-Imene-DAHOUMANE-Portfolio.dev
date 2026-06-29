@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { withRetry } from "@/lib/supabase/withRetry";
 
 export type CertificationRow = {
   id: string;
@@ -19,17 +20,19 @@ export type CertificationRow = {
 export async function getCertifications(locale: "fr" | "en") {
   const supabase = createServerSupabaseClient();
 
-  const { data, error } = await supabase
-    .from("certifications")
-    .select(
-      "id, locale, name, issuer, badge_image_url, credential_url, obtained_at, expires_at, earned_label, description, skills, sort_order, status"
-    )
-    .eq("locale", locale)
-    .eq("status", "published")
-    .order("sort_order", { ascending: true });
+  const { data, error } = await withRetry(() =>
+    supabase
+      .from("certifications")
+      .select(
+        "id, locale, name, issuer, badge_image_url, credential_url, obtained_at, expires_at, earned_label, description, skills, sort_order, status"
+      )
+      .eq("locale", locale)
+      .eq("status", "published")
+      .order("sort_order", { ascending: true })
+  );
 
   if (error) {
-    console.error("[certifications] error:", error.message);
+    console.error("[certifications] error:", (error as any)?.message ?? error);
     return [];
   }
   return (data ?? []) as CertificationRow[];
