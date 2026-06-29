@@ -18,9 +18,18 @@ export const LINKEDIN_URL = sanitizeUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL);
 
 // Extrait l'URL GitHub depuis NEXT_PUBLIC_SAME_AS (liste séparée par virgules).
 // Exemple : "https://linkedin.com/in/...,https://github.com/Aiyeesha"
+// Vérifie le hostname via new URL() plutôt qu'un substring — évite qu'une URL
+// comme "https://evil.com/github.com" ne soit acceptée à tort (CWE-184).
 export const GITHUB_URL = (() => {
   const sameAs = process.env.NEXT_PUBLIC_SAME_AS ?? "";
   const parts = sameAs.split(",").map((s) => s.trim());
-  const gh = parts.find((u) => u.toLowerCase().includes("github.com"));
+  const gh = parts.find((u) => {
+    try {
+      const { hostname } = new URL(u.startsWith("http") ? u : `https://${u}`);
+      return hostname === "github.com" || hostname.endsWith(".github.com");
+    } catch {
+      return false;
+    }
+  });
   return sanitizeUrl(gh);
 })();
