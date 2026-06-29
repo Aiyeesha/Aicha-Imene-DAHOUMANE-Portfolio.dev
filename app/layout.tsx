@@ -112,7 +112,8 @@ function buildJsonLd(locale: string) {
         "@id": `${siteUrl}/#website`,
         name: siteName,
         url: siteUrl,
-        inLanguage: locale === "fr" ? "fr-FR" : "en-US",
+        // inLanguage intentionnellement absent : propriété non standard pour WebSite,
+        // source de conflits d'@id quand FR et EN sont crawlés avec le même #website.
         // potentialAction SearchAction supprimée : la route /blog?q= n'implémente
         // pas de recherche côté serveur — Google ignorerait ou déprécierait l'entrée.
       },
@@ -124,6 +125,12 @@ function buildJsonLd(locale: string) {
         name: personName,
         url: siteUrl,
         jobTitle: headline,
+        description: "Freelance Salesforce Developer and IT Consultant available for remote missions across Belgium, UK, Ireland, Luxembourg, Germany, Malta, Italy, Spain, Tunisia, Algeria and English-speaking markets worldwide.",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "FR",
+          addressLocality: "Marseille"
+        },
         // knowsAbout : compétences clés pour le rich snippet Knowledge Graph
         knowsAbout: [
           "Salesforce", "Apex", "Lightning Web Components", "SOQL",
