@@ -169,6 +169,7 @@ export default async function CertificationsPage({ params }: PageProps) {
     activelyPreparing: isFr ? "Préparation active" : "Actively preparing",
     backHome: isFr ? "Retour à l'accueil" : "Back to home",
     credentialLink: isFr ? "Voir le justificatif" : "View credential",
+    diplomaLink: isFr ? "Voir le diplôme" : "View diploma",
     breadcrumbHome: isFr ? "Accueil" : "Home",
     breadcrumbCerts: "Certifications",
     intro: isFr
@@ -193,9 +194,10 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Professional title in software design & development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.",
       skills: ["Apex", "Salesforce Flows", "LWC", "Data Modeling", "CI/CD", "GitHub Actions", "Salesforce CLI", "API Integration", "Security & Permissions", "Automated Testing"],
       credentialUrl: undefined,
+      diplomaUrl: "/certifications/openclassrooms-dcl-diploma.pdf",
       initials: "DCL",
       color: "bg-indigo-700",
-      logoUrl: "/companies/openclassrooms.svg",
+      logoUrl: "/certifications/dev-concepteur-badge.png",
     },
     {
       id: "tssr-greta-valdoise",
@@ -210,9 +212,10 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Systems & network administration. Internship at Midrange Group: deployment of 200+ workstations via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM.",
       skills: ["Windows Server 2022", "Active Directory", "DNS / DHCP / WDS", "GPO", "PXE", "VMware Workstation 17", "PfSense", "Squid Proxy", "Acronis Cyber Protect", "Datto RMM", "Windows Autopilot"],
       credentialUrl: undefined,
+      diplomaUrl: "/certifications/tssr-greta-diploma.pdf",
       initials: "TSSR",
       color: "bg-blue-700",
-      logoUrl: "/companies/greta.svg",
+      logoUrl: "/certifications/systems-networks-badge.png",
     },
     {
       id: "tai-greta-valdoise",
@@ -227,9 +230,10 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, hardware diagnosis.",
       skills: ["Windows 10", "VirtualBox", "Active Directory", "Roaming Profiles", "WiFi Configuration", "Hardware Diagnosis", "User Support"],
       credentialUrl: undefined,
+      diplomaUrl: "/certifications/tai-greta-diploma.pdf",
       initials: "TAI",
       color: "bg-violet-700",
-      logoUrl: "/companies/greta.svg",
+      logoUrl: "/certifications/tai-badge.png",
     },
     {
       id: "linguaskill-cambridge",
@@ -242,9 +246,10 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Cambridge Business English certification. Score: 180+ (C1+) listening, 179 (B2) reading. Issued via Astrolabe Formation PFD.",
       skills: ["Business English", "Listening Comprehension", "Reading Comprehension", "Professional Communication"],
       credentialUrl: "https://www.cambridge.org/linguaskill",
+      diplomaUrl: "/certifications/Certification_LINGUASKILL_Page_1.png",
       initials: "C1+",
       color: "bg-rose-700",
-      logoUrl: "/certifications/linguaskill.svg",
+      logoUrl: "/certifications/linguaskill-badge.png",
     },
   ];
 
@@ -516,17 +521,29 @@ export default async function CertificationsPage({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Lien vérification */}
-              {cert.credentialUrl && (
-                <div className="mt-4">
-                  <a
-                    href={cert.credentialUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm underline underline-offset-4 hover:opacity-80"
-                  >
-                    {labels.credentialLink}<span aria-hidden="true"> ↗</span>
-                  </a>
+              {/* Liens diplôme + vérification */}
+              {((cert as any).diplomaUrl || cert.credentialUrl) && (
+                <div className="mt-4 flex flex-wrap gap-4">
+                  {(cert as any).diplomaUrl && (
+                    <a
+                      href={(cert as any).diplomaUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                    >
+                      {labels.diplomaLink}<span aria-hidden="true"> ↗</span>
+                    </a>
+                  )}
+                  {cert.credentialUrl && (
+                    <a
+                      href={cert.credentialUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                    >
+                      {labels.credentialLink}<span aria-hidden="true"> ↗</span>
+                    </a>
+                  )}
                 </div>
               )}
             </article>
