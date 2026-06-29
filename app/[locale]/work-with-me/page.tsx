@@ -1,6 +1,7 @@
 // app/[locale]/work-with-me/page.tsx — server component (metadata only)
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import WorkWithMeContent from "./work-with-me-content";
 
 type PageProps = { params: Promise<{ locale: string }> };
@@ -48,5 +49,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function WorkWithMePage({ params }: PageProps) {
   const { locale } = await params;
-  return <WorkWithMeContent locale={locale} />;
+  const siteUrl = getSiteUrl();
+  const isFr = locale === "fr";
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Travaillons ensemble" : "Work with me", item: `${siteUrl}/${locale}/work-with-me` },
+    ],
+  };
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
+      <WorkWithMeContent locale={locale} />
+    </>
+  );
 }
