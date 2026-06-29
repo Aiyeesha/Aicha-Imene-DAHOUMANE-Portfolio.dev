@@ -75,6 +75,7 @@ export default function AvailabilityModal() {
   const rows = [
     { icon: <IconClock />,    label: t("delay"),    value: t("delayValue")     },
     { icon: <IconMonitor />,  label: t("workMode"), value: t("workModeValues") },
+    { icon: <IconLocation />, label: t("mobility"), value: t("mobilityValues") },
     { icon: <IconSector />,   label: t("sector"),   value: t("sectorValues")   },
     { icon: <IconTarget />,   label: t("roles"),    value: isSalesforce ? t("rolesValuesSalesforce") : t("rolesValuesItops") },
     { icon: <IconLocation />, label: t("location"), value: t("locationValues") },
