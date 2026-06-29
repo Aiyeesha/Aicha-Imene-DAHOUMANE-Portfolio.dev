@@ -70,6 +70,12 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Ancien slug blog iDEM Connect — URL incorrecte référencée dans l'audit (2026-06-29)
+      {
+        source: "/:locale(en|fr)/projects/apex-backend-idem-connect",
+        destination: "/:locale/projects/idemconnect-apex-backend",
+        permanent: true,
+      },
       // Mentions légales — ancienne URL → nouvelle URL (audit BUG-1)
       {
         source: "/:locale(en|fr)/mentions-legales",
