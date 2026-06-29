@@ -10,6 +10,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 import type { SupportedLocale } from "@/i18n/projectTaxonomy";
 import ProjectsSection from "@/components/ProjectsSection";
@@ -78,8 +79,18 @@ export default async function ProjectsPage({ params }: PageProps) {
     empty: isFr ? "Aucun projet disponible pour l'instant." : "No projects available at the moment.",
   };
 
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: L.breadcrumbHome, item: `${getSiteUrl()}/${locale}` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Projets" : "Projects", item: `${getSiteUrl()}/${locale}/projects` },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
 
       {/* ── Breadcrumb ─────────────────────────────────────────────────────── */}
       <nav
