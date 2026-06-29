@@ -65,7 +65,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     {
       title: isFr ? "Déploiement & Observabilité" : "Deployment & Observability",
       items: [
-        { name: "Vercel",                role: isFr ? "Hébergement (Hobby plan) — CDN mondial, HTTPS automatique, preview deployments" : "Hosting (Hobby plan) — global CDN, automatic HTTPS, preview deployments", link: "https://vercel.com" },
+        { name: "Vercel",                role: isFr ? "Hébergement — CDN mondial, HTTPS automatique, preview deployments" : "Hosting — global CDN, automatic HTTPS, preview deployments", link: "https://vercel.com" },
         { name: "Vercel Analytics",      role: isFr ? "Métriques Core Web Vitals (production uniquement)" : "Core Web Vitals metrics (production only)" },
         { name: "Vercel Speed Insights", role: isFr ? "Analyse des performances en production" : "Production performance analysis" },
       ],
