@@ -4,6 +4,7 @@ import Link from "next/link";
 import Providers from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import Navbar from "@/components/Navbar";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -107,6 +108,10 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale: locale });
   const t = await getTranslations({ locale });
   const featuredProjectsForNav = await getFeaturedProjectsForNav(locale);
+  // Nonce CSP posé par proxy.ts — transmis à ThemeProvider pour que son script
+  // inline de détection de thème soit autorisé par la CSP strict-dynamic.
+  // Résout aussi le warning React 19 "Encountered a script tag while rendering".
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
@@ -114,7 +119,7 @@ export default async function LocaleLayout({
           preference from localStorage on mount (see providers.tsx useEffect).
           Note : le cache CDN reste inopérant car le nonce CSP de proxy.ts force
           Cache-Control: no-store sur toutes les routes HTML (rendu dynamique). */}
-      <Providers initialTrack="salesforce">
+      <Providers initialTrack="salesforce" nonce={nonce}>
         <CursorSpotlight />
         <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070B1A] dark:text-white">
           <div className="page-gradient" />
