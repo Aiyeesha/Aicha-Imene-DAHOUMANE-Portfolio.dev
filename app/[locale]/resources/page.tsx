@@ -8,6 +8,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { RESOURCE_CATEGORIES, type Locale } from "@/content/resources";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -82,6 +83,7 @@ export default async function ResourcesPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale: Locale = locale === "fr" ? "fr" : "en";
   const isFr = safeLocale === "fr";
+  const siteUrl = getSiteUrl();
 
   const labels = {
     headline:    isFr ? "Ressources & Boîte à outils" : "Resources & Toolbox",
@@ -95,8 +97,18 @@ export default async function ResourcesPage({ params }: PageProps) {
     ariaLabel:   isFr ? "Fil d'Ariane" : "Breadcrumb",
   };
 
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: labels.home, item: `${siteUrl}/${safeLocale}` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Ressources" : "Resources", item: `${siteUrl}/${safeLocale}/resources` },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
 
       {/* ── Breadcrumb ──────────────────────────────────────────────────────── */}
       <nav aria-label={labels.ariaLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
