@@ -44,7 +44,7 @@ export const certifications: Certification[] = [
     name: 'Linguaskill Business — C1+',
     issuer: 'Cambridge Assessment English',
     badgeUrl: '/certifications/linguaskill-badge.png',
-    credentialUrl: 'https://www.cambridge.org/linguaskill',
+    credentialUrl: 'https://results.linguaskill.com',
     earnedDate: 'Apr 2021',
     description: 'Cambridge Business English certification. Score: 180+ (C1+) in listening comprehension, 179 (B2) in reading comprehension. Issued via Astrolabe Formation PFD.',
     skills: ['Business English', 'Listening Comprehension', 'Reading Comprehension', 'Professional Communication']

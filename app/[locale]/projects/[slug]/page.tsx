@@ -265,6 +265,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       description,
       url: canonical,
       locale: locale === "fr" ? "fr_FR" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
       siteName,
       images: [{ url: ogImage, width: 1200, height: 630, alt: project.title }],
     },
