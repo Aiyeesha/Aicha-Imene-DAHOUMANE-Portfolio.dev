@@ -90,6 +90,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // ── Freelance ─────────────────────────────────────────────────────────────
     ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
+    ...biEntry(base, "/contact", { priority: 0.8, changeFrequency: "monthly" }),
 
     // ── Pages légales (faible priorité SEO, peu de changements) ──────────────
     ...biEntry(base, "/legal", { priority: 0.2, changeFrequency: "yearly" }),

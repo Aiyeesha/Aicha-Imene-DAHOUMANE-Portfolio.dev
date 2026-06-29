@@ -93,12 +93,6 @@ const nextConfig = {
         destination: "/:locale/blog/visualforce-to-lwc-migration",
         permanent: true,
       },
-      // /fr/contact et /en/contact retournaient 404 — pas de page dédiée, la section est dans l'accueil
-      {
-        source: "/:locale(en|fr)/contact",
-        destination: "/:locale/#contact",
-        permanent: true,
-      },
       // /rss.xml retournait 404 — le feed est servi sous /feed.xml
       {
         source: "/rss.xml",
