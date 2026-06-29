@@ -24,9 +24,9 @@ export default async function Image({ params }: Props) {
     : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I";
 
   const badges = [
-    { label: isFr ? "✓ Obtenu" : "✓ Completed",       color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
-    { label: isFr ? "↻ Actif"  : "↻ Active",           color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
-    { label: isFr ? "◎ En préparation" : "◎ 2026",     color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
+    { label: isFr ? "Obtenu" : "Completed",         color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
+    { label: isFr ? "Actif"  : "Active",             color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
+    { label: isFr ? "En preparation" : "2026",       color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
   ];
 
   return new ImageResponse(
