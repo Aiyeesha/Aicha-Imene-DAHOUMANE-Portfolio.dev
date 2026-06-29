@@ -43,8 +43,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     kicker:         isFr ? "Freelance · Remote · Mobilité & Relocalisation" : "Freelance · Remote · Open to Relocation",
     h1:             isFr ? "Travaillons ensemble" : "Work with me",
     subtitle:       isFr
-      ? "Je suis disponible pour des missions freelance en Salesforce et IT Ops — 100 % à distance, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
-      : "I'm available for freelance Salesforce and IT Ops missions — 100% remote, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
+      ? "Je suis disponible pour des missions freelance en Salesforce et IT Ops — 100 % Remote, hybride ou sur site, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
+      : "I'm available for freelance Salesforce and IT Ops missions — 100 % Remote, hybrid or on-site, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
 
     availTitle:     isFr ? "Disponibilité" : "Availability",
     availOpen:      isFr ? "Disponible" : "Available",
@@ -55,8 +55,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? "CDI · CDD · Freelance · Mission"
       : "Permanent · Fixed-term · Freelance · Contract",
     availMode:      isFr
-      ? "100 % remote · Marseille / Provence-Alpes-Côte d'Azur · Mobilité & relocalisation — France, Europe, pays anglophones"
-      : "100% remote · Marseille / Provence-Alpes-Côte d'Azur · Mobility & relocation — France, Europe, English-speaking countries",
+      ? "100 % Remote · Hybride · Sur site · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
+      : "100 % Remote · Hybrid · On-site · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : "Domains",
