@@ -25,10 +25,12 @@ export function useTrack() {
  */
 export default function Providers({
   children,
-  initialTrack
+  initialTrack,
+  nonce,
 }: {
   children: ReactNode;
   initialTrack: Track;
+  nonce?: string;
 }) {
   const [track, setTrackState] = useState<Track>(initialTrack);
 
@@ -65,7 +67,7 @@ document.cookie = `track=${t}; Path=/; Max-Age=31536000; SameSite=Lax${
   const value = useMemo(() => ({ track, setTrack }), [track]);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem nonce={nonce}>
       <TrackContext.Provider value={value}>{children}</TrackContext.Provider>
     </ThemeProvider>
   );
