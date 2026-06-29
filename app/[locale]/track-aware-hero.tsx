@@ -51,8 +51,10 @@ const avatarVariants: Variants = {
 };
 
 // Bloc texte : glisse depuis le bas
+// opacity reste à 1 pour que le H1 soit indexable dans le HTML SSR.
+// La montée seule (y: 18→0) suffit pour signaler l'animation visuellement.
 const textBlockVariants: Variants = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: { opacity: 1, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
@@ -152,7 +154,7 @@ export default function TrackAwareHero() {
       </motion.div>
 
       {/* ── Colonne 2 — Texte ────────────────────────────────────────────────── */}
-      <motion.div variants={shouldReduce ? {} : textBlockVariants}>
+      <motion.div variants={shouldReduce ? {} : textBlockVariants} suppressHydrationWarning>
 
         {/* Badge de disponibilité — cliquable → ouvre la modale de détails */}
         <div className="mb-4">
@@ -167,6 +169,7 @@ export default function TrackAwareHero() {
             animate={{ opacity: 1, x: 0 }}
             exit={shouldReduce ? {} : { opacity: 0, x: -10 }}
             transition={{ duration: 0.22, ease: "easeInOut" }}
+            suppressHydrationWarning
           >
             {/* Accroche courte — typing effect */}
             <p className={`text-sm font-medium ${track === "salesforce" ? "text-cyan-800 dark:text-cyan-300" : "text-violet-800 dark:text-violet-300"}`}>
