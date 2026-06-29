@@ -29,7 +29,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // ── Navigation ──────────────────────────────────────────────────────────
     start_url: "/",            // Racine — le middleware détecte la langue
     scope:     "/",            // Toutes les sous-routes sont dans le scope de la PWA
-    lang:      "fr",           // Langue principale du portfolio
+    lang:      "en",           // Langue par défaut du portfolio (marchés cibles anglophones)
 
     // ── Affichage ───────────────────────────────────────────────────────────
     // display_override : tente "window-controls-overlay" (PWA desktop), fallback "standalone"
@@ -85,13 +85,13 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name:       "Blog",
         short_name: "Blog",
-        url:        "/fr/blog",
+        url:        "/en/blog",
         icons:      [{ src: "/icon-192.png", sizes: "192x192" }]
       },
       {
         name:       "About",
         short_name: "About",
-        url:        "/fr/about",
+        url:        "/en/about",
         icons:      [{ src: "/icon-192.png", sizes: "192x192" }]
       }
     ],
