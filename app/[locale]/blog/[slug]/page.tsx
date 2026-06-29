@@ -134,7 +134,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     ? meta.cover.startsWith("http")
       ? meta.cover
       : `${siteUrl}${meta.cover.startsWith("/") ? meta.cover : `/${meta.cover}`}`
-    : `${siteUrl}/opengraph-image`;
+    : `${siteUrl}/${locale}/blog/${slug}/opengraph-image`;
 
   const jsonLdBlogPosting = {
     "@context": "https://schema.org",
@@ -144,7 +144,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     description: meta.excerpt || meta.title,
     url: postUrl,
     datePublished: meta.date,
-    dateModified: meta.date,
+    dateModified: (meta as { updatedDate?: string }).updatedDate ?? meta.date,
     inLanguage: locale === "fr" ? "fr-FR" : "en-US",
     keywords: meta.tags.join(", "),
     image: coverImageUrl,
