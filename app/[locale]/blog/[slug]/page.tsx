@@ -71,6 +71,7 @@ export async function generateMetadata(
     openGraph: {
       type: "article",
       locale: locale === "fr" ? "fr_FR" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
       title,
       description,
       url: urlPath,

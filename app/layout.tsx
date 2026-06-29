@@ -91,8 +91,9 @@ function buildJsonLd(locale: string) {
   const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce Developer & Consultant";
 
   // Liste des profils sociaux/professionnels (LinkedIn, GitHub…) — séparés par des virgules dans l'env var
-  // encodeURI normalise les caractères non-ASCII dans les URLs (ex: ï, è dans le
-  // profil LinkedIn) — requis pour la validité JSON-LD Schema.org.
+  // Note : les URLs doivent déjà être en ASCII dans l'env var (slug LinkedIn sans accents).
+  // new URL().href encode les caractères non-ASCII, ce qui produit des URLs percent-encodées
+  // non canoniques (%C3%AF…) — mieux vaut garantir la saisie correcte côté env.
   const sameAs = (process.env.NEXT_PUBLIC_SAME_AS || "")
     .split(",")
     .map((s) => s.trim())
