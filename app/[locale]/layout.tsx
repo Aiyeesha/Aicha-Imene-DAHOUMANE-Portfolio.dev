@@ -11,6 +11,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { GITHUB_URL } from "@/lib/social";
 import { getFeaturedProjectsForNav } from "@/lib/data/projects";
 
 /**
@@ -199,6 +200,17 @@ export default async function LocaleLayout({
                     >
                       {t("footer.uses")}
                     </Link>
+                    {GITHUB_URL && (
+                      <a
+                        href={GITHUB_URL}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="GitHub"
+                        className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      >
+                        GitHub
+                      </a>
+                    )}
                   </nav>
                 </div>
               </div>
