@@ -1,6 +1,7 @@
 // app/[locale]/work-with-me/page.tsx — server component (metadata only)
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import WorkWithMeContent from "./work-with-me-content";
 
 type PageProps = { params: Promise<{ locale: string }> };
@@ -14,8 +15,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
     : "Work with me — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Disponible pour des missions freelance Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones. Découvrez mes conditions, mon process et comment démarrer."
-    : "Available for freelance Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide. Find out about my terms, process, and how to get started.";
+    ? "Développeuse Salesforce & IT Ops freelance — 100 % remote, disponible pour missions en Europe, Belgique, Luxembourg, UK, Irlande et pays anglophones."
+    : "Freelance Salesforce Developer & IT Ops consultant — 100% remote, open to missions across Europe, UK, Ireland, Belgium, Luxembourg & English-speaking markets.";
   return {
     title,
     description,
@@ -48,5 +49,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function WorkWithMePage({ params }: PageProps) {
   const { locale } = await params;
-  return <WorkWithMeContent locale={locale} />;
+  const siteUrl = getSiteUrl();
+  const isFr = locale === "fr";
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Travaillons ensemble" : "Work with me", item: `${siteUrl}/${locale}/work-with-me` },
+    ],
+  };
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
+      <WorkWithMeContent locale={locale} />
+    </>
+  );
 }

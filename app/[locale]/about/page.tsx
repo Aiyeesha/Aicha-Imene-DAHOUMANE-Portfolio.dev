@@ -23,6 +23,7 @@ import TechStackGrid from "@/components/TechStackGrid";
 import VisualTimeline from "@/components/VisualTimeline";
 import CareerTimeline from "@/components/CareerTimeline";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -88,6 +89,7 @@ export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = locale === "fr" ? "fr" : "en";
 
+  const siteUrl = getSiteUrl();
   const about = await getAboutPageCached(safeLocale);
 
   if (!about) {
@@ -120,8 +122,18 @@ export default async function AboutPage({ params }: PageProps) {
   const passions = body.passions;
   // goals2026 délégué à AboutTrackGoals (Client Component track-aware)
 
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: safeLocale === "fr" ? "Accueil" : "Home", item: `${siteUrl}/${safeLocale}` },
+      { "@type": "ListItem", position: 2, name: safeLocale === "fr" ? "À propos" : "About", item: `${siteUrl}/${safeLocale}/about` },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
 
       {/* Breadcrumb — navigation retour vers l'accueil
           Permet à l'utilisateur de comprendre qu'il est sur une page dédiée (hors landing). */}
