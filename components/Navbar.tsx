@@ -13,6 +13,7 @@ import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
 import { useTrack } from "@/app/[locale]/providers";
+import { GITHUB_URL } from "@/lib/social";
 
 /** Petit bouton discret ⌘K pour rappeler le raccourci palette de commandes. */
 function CommandPaletteTrigger() {
@@ -563,6 +564,18 @@ useEffect(() => {
                 >
                   {t("contact.bookCall")}
                 </a>
+                {GITHUB_URL && (
+                  <a
+                    href={GITHUB_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex w-full justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-3 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+                    onClick={() => setMobileOpen(false)}
+                    aria-label="GitHub"
+                  >
+                    GitHub
+                  </a>
+                )}
               </div>
             </div>
             </div>{/* fin zone défilable */}

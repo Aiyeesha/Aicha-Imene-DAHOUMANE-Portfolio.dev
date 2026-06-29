@@ -15,3 +15,12 @@ export function sanitizeUrl(raw: string | undefined, fallback = ""): string {
 }
 
 export const LINKEDIN_URL = sanitizeUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL);
+
+// Extrait l'URL GitHub depuis NEXT_PUBLIC_SAME_AS (liste séparée par virgules).
+// Exemple : "https://linkedin.com/in/...,https://github.com/Aiyeesha"
+export const GITHUB_URL = (() => {
+  const sameAs = process.env.NEXT_PUBLIC_SAME_AS ?? "";
+  const parts = sameAs.split(",").map((s) => s.trim());
+  const gh = parts.find((u) => u.toLowerCase().includes("github.com"));
+  return sanitizeUrl(gh);
+})();
