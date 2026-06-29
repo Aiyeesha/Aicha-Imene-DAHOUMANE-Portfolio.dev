@@ -7,6 +7,7 @@ import BlogTrackFilter from "@/components/blog/BlogTrackFilter";
 import type { PostCard } from "@/components/blog/BlogTrackFilter";
 import BlogSearchBar from "@/components/blog/BlogSearchBar";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 // ISR : revalide la liste des articles toutes les heures.
 // Permet d'intégrer de nouveaux posts sans rebuild complet
@@ -70,6 +71,7 @@ export default async function BlogIndexPage({
   const { locale } = await params;
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: "blogIndex" });
+  const siteUrl = getSiteUrl();
 
   const selectedTag = sp.tag ? String(sp.tag) : "";
 
@@ -97,8 +99,18 @@ export default async function BlogIndexPage({
     slug, locale: l, title, excerpt, date, tags, readingTime
   }));
 
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: locale === "fr" ? "Accueil" : "Home", item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/${locale}/blog` },
+    ],
+  };
+
   return (
     <section className="py-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-xs text-muted-2">{t("kicker")}</div>
