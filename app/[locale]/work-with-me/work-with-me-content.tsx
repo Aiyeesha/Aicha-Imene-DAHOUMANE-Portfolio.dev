@@ -55,8 +55,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? "CDI · CDD · Freelance · Mission"
       : "Permanent · Fixed-term · Freelance · Contract",
     availMode:      isFr
-      ? "100 % Remote · Hybride · Sur site · Marseille / PACA · Mobilité & relocalisation — France, Europe, pays anglophones"
-      : "100 % Remote · Hybrid · On-site · Marseille / PACA · Mobility & relocation — France, Europe, English-speaking countries",
+      ? "100 % Remote · Hybride · Sur site · Marseille / Provence-Alpes-Côte d'Azur · Mobilité & relocalisation — France, Europe, pays anglophones"
+      : "100 % Remote · Hybrid · On-site · Marseille / Provence-Alpes-Côte d'Azur · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : "Domains",
