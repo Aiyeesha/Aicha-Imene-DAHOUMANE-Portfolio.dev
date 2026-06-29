@@ -90,22 +90,35 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     itops:      projects.filter((p) => p.track === "itops"       && (includeFeatured || !p.featured)).length
   }), [projects, includeFeatured]);
 
+  const TRACKS = ["salesforce", "itops"] as const;
+  type ActiveTab = "all" | "salesforce" | "itops";
+
+  // Sur la page /projects complète (includeFeatured=true), afficher tous les projets par défaut.
+  // Sur la home, respecter le track global (personnalisation cookie).
+  const [activeTab, setActiveTab] = useState<ActiveTab>(includeFeatured ? "all" : track as ActiveTab);
+
   // ── Catégories disponibles pour le track actif ───────────────────
   const categories = useMemo(() => {
     const set = new Set<string>();
+    const trackToFilter = includeFeatured && activeTab === "all" ? null : (includeFeatured ? activeTab : track);
     projects
-      .filter((p) => p.track === track && (includeFeatured || !p.featured))
+      .filter((p) => (trackToFilter ? p.track === trackToFilter : true) && (includeFeatured || !p.featured))
       .forEach((p) => (p.categories ?? []).forEach((c) => set.add(c)));
     return ["All", ...Array.from(set)];
-  }, [track, projects, includeFeatured]);
+  }, [activeTab, track, projects, includeFeatured]);
+
+  const allCount = useMemo(() =>
+    projects.filter((p) => includeFeatured || !p.featured).length,
+    [projects, includeFeatured]
+  );
 
   // Refs pour les boutons d'onglets (navigation au clavier ← →)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const TRACKS = ["salesforce", "itops"] as const;
 
   // Changer de track en réinitialisant les filtres
   const handleTrackChange = (newTrack: "salesforce" | "itops") => {
     setTrack(newTrack);
+    setActiveTab(newTrack);
     setActive("All");
     setQ("");
   };
@@ -125,14 +138,18 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
 
   // ── Filtrage : track + catégorie + recherche texte ───────────────
   const filtered = useMemo(() => {
-    const base = projects.filter((p) => p.track === track && (includeFeatured || !p.featured));
+    const base = includeFeatured
+      ? activeTab === "all"
+        ? projects.filter((p) => includeFeatured || !p.featured)
+        : projects.filter((p) => p.track === activeTab && (includeFeatured || !p.featured))
+      : projects.filter((p) => p.track === track && (includeFeatured || !p.featured));
     return base.filter((p) => {
       const inCat = active === "All" ? true : (p.categories ?? []).includes(active);
       const text = ((p.title ?? "") + " " + (p.summary ?? "") + " " + (p.tags ?? []).join(" ")).toLowerCase();
       const inQ  = q.trim() === "" ? true : text.includes(q.trim().toLowerCase());
       return inCat && inQ;
     });
-  }, [track, active, q, projects, includeFeatured]);
+  }, [activeTab, track, active, q, projects, includeFeatured]);
 
   return (
     <div>
@@ -145,10 +162,41 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
           aria-label={locale === "fr" ? "Filtrer par parcours" : "Filter by track"}
           className="flex rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-1"
         >
+          {/* Tab "All" — visible uniquement sur la page /projects complète */}
+          {includeFeatured && (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === "all" ? "true" : "false"}
+              tabIndex={activeTab === "all" ? 0 : -1}
+              onClick={() => { setActiveTab("all"); setActive("All"); setQ(""); }}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight") { setActiveTab("salesforce"); tabRefs.current[0]?.focus(); }
+                else if (e.key === "End") { setActiveTab("itops"); tabRefs.current[1]?.focus(); }
+              }}
+              className={[
+                "rounded-lg px-4 py-2 text-sm font-medium transition-colors soft-ring",
+                "inline-flex items-center gap-2",
+                activeTab === "all"
+                  ? "bg-cyan-500/20 text-cyan-700 dark:text-cyan-200"
+                  : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
+              ].join(" ")}
+            >
+              {locale === "fr" ? "Tous" : "All"}
+              <span className={[
+                "rounded-full px-1.5 py-0.5 text-xs leading-none",
+                activeTab === "all"
+                  ? "bg-cyan-500/30 text-cyan-800 dark:text-cyan-100"
+                  : "bg-black/10 dark:bg-white/10 text-slate-600 dark:text-white/70"
+              ].join(" ")}>
+                {allCount}
+              </span>
+            </button>
+          )}
           {TRACKS.map((tr, idx) => {
             const count = trackCounts[tr];
             const label = tr === "salesforce" ? "Salesforce" : "IT Ops";
-            const isActive = track === tr;
+            const isActive = activeTab === tr;
             return (
               <button
                 key={tr}
@@ -157,8 +205,13 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 role="tab"
                 aria-selected={isActive ? "true" : "false"}
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => handleTrackChange(tr)}
-                onKeyDown={(e) => handleTabKeyDown(e, idx)}
+                onClick={() => { handleTrackChange(tr); setActiveTab(tr); }}
+                onKeyDown={(e) => {
+                  handleTabKeyDown(e, idx);
+                  if (includeFeatured) {
+                    if (e.key === "ArrowLeft" && idx === 0) setActiveTab("all");
+                  }
+                }}
                 className={[
                   "rounded-lg px-4 py-2 text-sm font-medium transition-colors soft-ring",
                   "inline-flex items-center gap-2",
