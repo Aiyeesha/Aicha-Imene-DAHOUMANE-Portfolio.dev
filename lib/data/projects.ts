@@ -1,33 +1,36 @@
 // lib/data/projects.ts
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { withRetry } from "@/lib/supabase/withRetry";
 import { GITHUB_REPOS } from "@/content/github-repos";
 
 export async function getPublishedProjectsWithAssets(locale: string) {
   const supabase = createServerSupabaseClient();
 
-  const { data, error } = await supabase
-    .from("projects")
-    .select(`
-      id, slug, locale, title, summary, content, tech_stack, repo_url, live_url,
-      track, categories, tags, badge, highlights,
-      featured, sort_order, status, gallery, updated_at,
-      project_assets (
-        id, project_id, type, visibility, title, description,
-        storage_bucket, storage_path, external_url, mime_type, size_bytes, sort_order
-      )
-    `)
-    // ✅ IMPORTANT : multi + locale demandé
-    .in("locale", [locale, "multi"])
-    // ✅ Ne montrer que les publiés
-    .eq("status", "published")
-    .order("featured", { ascending: false })
-    .order("sort_order", { ascending: true });
+  const { data, error } = await withRetry(() =>
+    supabase
+      .from("projects")
+      .select(`
+        id, slug, locale, title, summary, content, tech_stack, repo_url, live_url,
+        track, categories, tags, badge, highlights,
+        featured, sort_order, status, gallery, updated_at,
+        project_assets (
+          id, project_id, type, visibility, title, description,
+          storage_bucket, storage_path, external_url, mime_type, size_bytes, sort_order
+        )
+      `)
+      // ✅ IMPORTANT : multi + locale demandé
+      .in("locale", [locale, "multi"])
+      // ✅ Ne montrer que les publiés
+      .eq("status", "published")
+      .order("featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+  );
 
   // En CI ou si Supabase est indisponible, retourner un tableau vide plutôt que de
   // crasher la page entière. Une erreur fatale ici entraîne une page d'erreur Next.js
   // sans root layout, ce qui déclenche des violations axe (html-has-lang) dans les E2E.
   if (error) {
-    console.error("[projects] Supabase error:", error.message ?? error);
+    console.error("[projects] Supabase error:", (error as any)?.message ?? error);
     return [];
   }
 
