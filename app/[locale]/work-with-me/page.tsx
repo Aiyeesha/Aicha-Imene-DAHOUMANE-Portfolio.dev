@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
     : "Work with me — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Disponible pour des missions freelance Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones. Découvrez mes conditions, mon process et comment démarrer."
-    : "Available for freelance Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide. Find out about my terms, process, and how to get started.";
+    ? "Développeuse Salesforce & IT Ops freelance — 100 % remote, disponible pour missions en Europe, Belgique, Luxembourg, UK, Irlande et pays anglophones."
+    : "Freelance Salesforce Developer & IT Ops consultant — 100% remote, open to missions across Europe, UK, Ireland, Belgium, Luxembourg & English-speaking markets.";
   return {
     title,
     description,
