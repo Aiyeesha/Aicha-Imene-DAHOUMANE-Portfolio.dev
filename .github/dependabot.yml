@@ -21,7 +21,7 @@ version: 2
 updates:
   # ── npm ────────────────────────────────────────────────────────────────────
   - package-ecosystem: "npm"
-    directory: "/portfolio"      # package.json est dans le sous-dossier portfolio/
+    directory: "/"                # package.json est à la racine du repo
     schedule:
       interval: "weekly"
       day: "monday"

@@ -3,11 +3,11 @@
 # Tout changement sur les fichiers critiques de sécurité requiert
 # une review de @Aiyeesha avant merge.
 
-/portfolio/proxy.ts                    @Aiyeesha
-/portfolio/next.config.mjs             @Aiyeesha
-/portfolio/lib/ratelimit.ts            @Aiyeesha
-/portfolio/lib/supabase/admin.ts       @Aiyeesha
-/portfolio/supabase/                   @Aiyeesha
-/portfolio/app/api/                    @Aiyeesha
-/portfolio/app/admin/                  @Aiyeesha
-/.github/workflows/                    @Aiyeesha
+/proxy.ts                    @Aiyeesha
+/next.config.mjs             @Aiyeesha
+/lib/ratelimit.ts            @Aiyeesha
+/lib/supabase/admin.ts       @Aiyeesha
+/supabase/                   @Aiyeesha
+/app/api/                    @Aiyeesha
+/app/admin/                  @Aiyeesha
+/.github/workflows/          @Aiyeesha
