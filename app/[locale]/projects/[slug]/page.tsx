@@ -322,7 +322,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const softwareSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": "CreativeWork",
     name: project.title,
     description: projectDescription,
     url: `${siteUrl}/${locale}/projects/${slug}`,
@@ -332,10 +332,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       name: "Aïcha Imène Dahoumane",
       url: `${siteUrl}/${locale}/about`,
     },
-    applicationCategory: "BusinessApplication",
     ...(projectCoverUrl && { image: projectCoverUrl }),
-    ...(project.repo_url && { codeRepository: project.repo_url }),
-    ...(project.live_url && { installUrl: project.live_url }),
     ...((project.tags ?? []).length > 0 && { keywords: (project.tags as string[]).join(", ") }),
   };
 
