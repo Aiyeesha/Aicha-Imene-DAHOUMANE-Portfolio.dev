@@ -104,7 +104,7 @@ export default function manifest(): MetadataRoute.Manifest {
     //   générable via : npx playwright screenshot ... --viewport-size=390,844
     screenshots: [
       {
-        src:        "/og-default.png",
+        src:        "/opengraph-image",
         sizes:      "1200x630",
         type:       "image/png",
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
