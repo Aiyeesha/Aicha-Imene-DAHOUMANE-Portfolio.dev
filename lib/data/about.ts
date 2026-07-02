@@ -2,7 +2,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { withRetry } from "@/lib/supabase/withRetry";
 
 export type AboutPageRow = {
-  locale: "fr" | "en";
+  locale: "fr" | "en" | "es";
   headline: string;
   intro: string | null;
   body: any;
@@ -10,7 +10,7 @@ export type AboutPageRow = {
   updated_at?: string;
 };
 
-export async function getAboutPage(locale: "fr" | "en") {
+export async function getAboutPage(locale: "fr" | "en" | "es") {
   const supabase = createServerSupabaseClient();
 
   const { data, error } = await withRetry(() =>
