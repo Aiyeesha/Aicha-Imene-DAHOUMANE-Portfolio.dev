@@ -12,7 +12,7 @@ type AvailabilityStatus = "open" | "limited" | "unavailable";
 
 const AVAILABILITY: { status: AvailabilityStatus; since: Record<"en" | "fr", string> } = {
   status: "open",
-  since: { en: "August 2026", fr: "Août 2026" },
+  since: { en: "immediately", fr: "immédiatement" },
 };
 
 export default function WorkWithMeContent({ locale }: { locale: string }) {
@@ -50,7 +50,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     availOpen:      isFr ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : "Limited availability",
     availNo:        isFr ? "Non disponible" : "Not available",
-    availSince:     isFr ? `À partir de ${AVAILABILITY.since.fr}` : `From ${AVAILABILITY.since.en}`,
+    availSince:     isFr ? "Disponible dès maintenant" : "Available immediately",
     availContracts: isFr
       ? "CDI · CDD · Freelance · Mission"
       : "Permanent · Fixed-term · Freelance · Contract",
