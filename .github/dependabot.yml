@@ -85,6 +85,12 @@ updates:
       # framer-motion : les majors peuvent casser les animations — upgrade manuel
       - dependency-name: "framer-motion"
         update-types: ["version-update:semver-major"]
+      # tailwindcss : la v4 change le plugin PostCSS (@tailwindcss/postcss) et
+      # le format de config — migration manuelle requise, pas un simple bump
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@tailwindcss/*"
+        update-types: ["version-update:semver-major"]
 
   # ── GitHub Actions ──────────────────────────────────────────────────────────
   - package-ecosystem: "github-actions"
