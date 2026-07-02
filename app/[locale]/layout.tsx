@@ -71,6 +71,7 @@ export async function generateMetadata({
       type: "website",
       url: canonical,
       locale: locale === "fr" ? "fr_FR" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
       title,
       description,
       siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
