@@ -1,0 +1,424 @@
+{
+  "nav": {
+    "about": "About",
+    "certifications": "Certifications",
+    "skills": "Skills",
+    "experience": "Experience",
+    "services": "Services",
+    "projects": "Projects",
+    "contact": "Contact",
+    "testimonials": "Testimonials",
+    "blog": "Blog",
+    "resources": "Resources",
+    "menu": "Menu",
+    "tagline": "Salesforce · IT Ops",
+    "workWithMeMenu": "Work with me",
+    "home": "Home",
+    "seeAllProjects": "See all projects"
+  },
+  "hero": {
+    "title": "Salesforce Developer & IT Consultant",
+    "subtitle": "Apex · LWC · Integrations · Systems",
+    "intro_salesforce": "I build Salesforce solutions that actually work — secure, tested, and designed to last. From Apex to CI/CD, I handle every layer of the delivery.",
+    "intro_itops": "From infrastructure to deployment, I automate, secure, and document IT operations so teams can focus on what matters.",
+    "avatar_alt": "Profile photo of Aïcha Imène DAHOUMANE, Salesforce Developer & IT Consultant",
+    "title_salesforce": "Salesforce Developer & IT Consultant",
+    "subtitle_salesforce": "Apex · LWC · Integrations · Systems",
+    "title_itops": "Systems & IT Ops Engineer",
+    "subtitle_itops": "Infrastructure · DevOps · Security",
+    "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
+    "value_itops": "Infrastructure · Automation · Security — built to scale.",
+    "proof1_salesforce": "Security-first",
+    "proof2_salesforce": "Tested & documented",
+    "proof3_salesforce": "Production-ready",
+    "proof1_itops": "Automated",
+    "proof2_itops": "Resilient by design",
+    "proof3_itops": "Ops-first mindset",
+    "proof1": "Security-first",
+    "proof2": "Scalable by design",
+    "proof3": "Documented & maintainable",
+    "availability": "Permanent · Fixed-term · Freelance · Contract",
+    "startHere": "Start here:",
+    "switchToSalesforce": "View Salesforce profile →",
+    "switchToItops": "View IT Ops profile →"
+  },
+  "cta": {
+    "call": "Schedule a discovery call",
+    "projects": "View selected projects",
+    "downloadCv": "Download my CV (PDF)",
+    "workWithMe": "Work with me",
+    "message": "Message",
+    "call15": "Book a 30-min call",
+    "downloadProfile": "Download my profile (PDF)",
+    "cvOnRequest": "CV available on request"
+  },
+  "projects": {
+    "search": "Search a project...",
+    "requirements": "Requirements (PDF)",
+    "details": "View project details →",
+    "featured": "Featured projects",
+    "featuredSubtitle": "A selection of case studies across Salesforce and IT Ops.",
+    "labelProject": "Project",
+    "backToProjects": "← Back to projects",
+    "trackLabel": "Track",
+    "typeLabel": "Type",
+    "scopeLabel": "Scope",
+    "trackSalesforce": "Salesforce",
+    "trackItOps": "IT Ops",
+    "overview": "Overview",
+    "downloadCode": "Download code",
+    "highlightsTitle": "Highlights",
+    "emptyFeatured": "No featured projects configured for this track yet.",
+    "emptyState": "No projects available at the moment.",
+    "emptyStateSubtitle": "Content is being prepared — please check back soon.",
+    "noMatch": "No projects match your search or filters.",
+    "resetFilters": "Reset filters"
+  },
+  "sections": {
+    "testimonials_title": "Testimonials",
+    "testimonials_subtitle": "A few words from people I worked with.",
+    "skills_title": "Skills",
+    "skills_subtitle": "A mix of Salesforce, administration, infrastructure and DevOps practices.",
+    "experience_title": "Experience",
+    "experience_subtitle": "Expand items to see details (accordion-style).",
+    "roles_title": "Roles",
+    "certifications_title": "Certifications",
+    "services_title": "Services",
+    "services_subtitle": "Tailored services depending on your needs (Salesforce or IT Ops).",
+    "projects_title": "Projects",
+    "projects_subtitle": "Salesforce implementations, IT Ops automation, and web projects — filtered by track.",
+    "contact_title": "Contact",
+    "contact_subtitle": "I prefer to be contacted by email — the form below is also available (spam-protected).",
+    "blog_title": "Blog / Tutorials",
+    "blog_subtitle": "Short, practical guides you can apply immediately.",
+    "profile_title": "Profile",
+    "profile_subtitle": "From systems & networks to Salesforce development"
+  },
+  "contact": {
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "namePlaceholder": "Your full name",
+    "emailPlaceholder": "you@domain.com",
+    "messagePlaceholder": "Tell me about your project, context, and what you need…",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Message sent.",
+    "error": "Error:",
+    "privacyNote": "Your message is sent securely. Avoid sharing sensitive secrets (passwords, tokens).",
+    "otherWays": "Other ways",
+    "bookCall": "Book a call (Calendly)",
+    "bookCallMissing": "Calendly link not configured yet.",
+    "emailMe": "Email me",
+    "emailMissing": "Email not configured yet.",
+    "calendlyHint": "Book a slot directly below.",
+    "openInNewTab": "Open in new tab",
+    "close": "Close",
+    "errors": {
+      "invalid_json": "Invalid request.",
+      "name_too_short": "Please enter your name (at least 2 characters).",
+      "invalid_email": "Please enter a valid email address.",
+      "message_too_short": "Please write a longer message (at least 10 characters).",
+      "rate_limited": "Too many requests. Please try again in a few minutes.",
+      "rate_limited_countdown": "Too many requests. Retry in {time}.",
+      "upstream_failed": "Delivery failed. Please try again later or use another channel.",
+      "generic": "Something went wrong. Please try again.",
+      "name_too_long": "Please use a shorter name (max 80 characters).",
+      "email_too_long": "Please use a shorter email address.",
+      "invalid_topic": "Please select a valid topic.",
+      "message_too_long": "Your message is too long (max 2000 characters).",
+      "forbidden_origin": "Request rejected. Please use the website contact form.",
+      "policy_not_accepted": "You must accept the privacy policy to send a message.",
+      "too_many_links": "Too many links in the message."
+    },
+    "homeIntro": "I prefer to be contacted by email. You can also use the secure form below. Anti-spam and rate limiting are enabled.",
+    "homeMethodsTitle": "Quick links",
+    "homeCv": "Download CV",
+    "homeLinkedIn": "LinkedIn",
+    "homeEmail": "Email",
+    "homeFormTitle": "Send a message",
+    "homeFormSubtitle": "I usually reply within 24–48 hours.",
+    "topicLabel": "Topic",
+    "topicPlaceholder": "Select a topic",
+    "topicGeneral": "General",
+    "topicSalesforce": "Salesforce project",
+    "topicItOps": "IT Ops / DevOps",
+    "topicAvailability": "Mission / availability",
+    "topicOther": "Other",
+    "envHint": "Missing configuration: some contact information is not set.",
+    "linkedInMissing": "The LinkedIn link is not available right now.",
+    "acceptPolicyAria": "I accept the privacy policy",
+    "acceptPolicyPrefix": "I have read and accept the",
+    "acceptPolicyLink": "privacy policy",
+    "availability": "Permanent · Fixed-term · Freelance · Contract"
+  },
+  "blog": {
+    "card_tutorials_kicker": "New",
+    "card_tutorials_title": "Read tutorials",
+    "card_tutorials_desc": "Implementation-focused posts: Salesforce, CI/CD, Next.js.",
+    "card_topics_kicker": "Topics",
+    "card_topics_desc": "I publish practical notes, patterns, and checklists.",
+    "card_cta": "Open blog",
+    "latest_loading": "Loading latest posts…",
+    "latest_empty": "No posts yet.",
+    "latest_cta": "View all posts",
+    "readingTime": "min read"
+  },
+  "blogIndex": {
+    "meta": {
+      "title": "Blog & Tutorials — Aïcha Imène DAHOUMANE",
+      "description": "Salesforce, IT Ops and web development tutorials — step-by-step guides, concrete implementations and real-world experience from a Salesforce developer."
+    },
+    "kicker": "Blog & tutorials",
+    "title": "Posts",
+    "subtitle": "Step-by-step guides, experience feedback, concrete implementations.",
+    "backHome": "Home",
+    "tags": {
+      "all": "All",
+      "allTags": "All tags"
+    },
+    "trackFilter": {
+      "label": "Filter by topic"
+    },
+    "tabs": {
+      "all": "All",
+      "salesforce": "Salesforce",
+      "itops": "IT Ops"
+    },
+    "readCta": "Read",
+    "featured": "Featured",
+    "readingTime": "min read",
+    "articleCount": "posts",
+    "noResults": "No posts found.",
+    "pagination": {
+      "page": "Page",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "ctaAllPosts": "See all posts"
+  },
+  "blogPost": {
+    "back": "Back",
+    "previous": "Previous post",
+    "next": "Next post",
+    "readingTime": "min read",
+    "author": "About the author",
+    "authorRoleSalesforce": "Salesforce Administrator & Developer · Consultant",
+    "authorRoleItops": "IT Ops Engineer · Systems Administrator",
+    "authorBioSalesforce": "Salesforce developer with a background in IT infrastructure — building reliable, maintainable solutions with Apex, Flows, LWC, and CI/CD.",
+    "authorBioItops": "IT Ops & DevOps engineer with a background in systems & network administration — monitoring, automation, hardening, and resilient infrastructure.",
+    "authorProfileLink": "Full profile →",
+    "backToTop": "Back to top",
+    "related": "Related posts",
+    "share": "Share",
+    "shareLinkedIn": "Share on LinkedIn",
+    "copyLink": "Copy link",
+    "copied": "Copied!"
+  },
+  "blogToc": {
+    "title": "Table of contents",
+    "backToList": "Back to list"
+  },
+  "blogTags": {
+    "meta": {
+      "title": "Blog — Tags | Aïcha Imène DAHOUMANE",
+      "description": "Browse all blog topics — Salesforce, IT Ops, web development and more. Filter articles by tag."
+    },
+    "kicker": "Topics",
+    "title": "All tags",
+    "subtitle": "Pick a tag to filter the blog index.",
+    "back": "Back"
+  },
+  "a11y": {
+    "skip": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "closeMenuOverlay": "Close menu overlay",
+    "previousTestimonial": "Previous testimonial",
+    "nextTestimonial": "Next testimonial",
+    "closeModal": "Close modal",
+    "toggleTheme": "Toggle theme",
+    "showImage": "Show image {index}",
+    "chooseTrack": "Choose a track",
+    "chooseItOps": "Switch to IT Ops track",
+    "chooseSalesforce": "Switch to Salesforce track",
+    "scrollToTop": "Back to top",
+    "opensPage": "Opens a dedicated page"
+  },
+  "tracks": {
+    "itops": "IT Ops",
+    "salesforce": "Salesforce"
+  },
+  "metadata": {
+    "title": "Aïcha Imène DAHOUMANE — Salesforce Developer & IT Consultant | Remote · Europe",
+    "description": "Salesforce Developer & IT Consultant (Marseille, remote) — Apex, LWC, CI/CD. 55 technical articles, concrete projects. Available immediately. Missions Europe & worldwide."
+  },
+  "testimonials": {
+    "kicker": "Testimonials",
+    "all": "All"
+  },
+  "trustedBy": {
+    "title": "Where I trained & worked"
+  },
+  "metrics": {
+    "apex": "Apex classes built",
+    "flows": "Automation Flows",
+    "workload": "Manual workload reduced",
+    "projects": "Projects delivered"
+  },
+  "services": {
+    "discuss": "Discuss this service"
+  },
+  "footer": {
+    "builtWith": "Built with Next.js",
+    "nav": "Footer navigation",
+    "privacy": "Privacy",
+    "legal": "Legal notice",
+    "accessibility": "Accessibility",
+    "status": "Status",
+    "changelog": "Changelog",
+    "workWithMe": "Work with me",
+    "uses": "Uses & Setup"
+  },
+  "profile": {
+    "kicker": "Profile",
+    "title": "From systems & networks to Salesforce development",
+    "p1": "Salesforce developer with 2 years of professional experience and a strong IT infrastructure background — foundations that make a real difference on complex projects.",
+    "p2": "I started my career on the infrastructure side — internship at MIDRANGE GROUP (Feb – May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 200 Dell machines via Windows Autopilot, Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
+    "p3": "From Oct. 2023 to Oct. 2025, I worked as a Salesforce Developer at LD Digitales (remote) while earning the Développeur Concepteur Logiciel title (RNCP Level 6) from OpenClassrooms. I built and maintained 10+ Apex classes, created 20+ automation Flows (reducing manual workload by 30%), designed reusable LWC components, and implemented CI/CD pipelines with Salesforce CLI.",
+    "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My goal is to contribute to ambitious Salesforce and IT Ops projects — in France or internationally, within distributed teams.",
+    "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
+    "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
+    "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
+    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, with 2 years of production Salesforce experience. In parallel: building two Salesforce SaaS products (OrgDocs and SFRelease).",
+    "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
+    "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
+    "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
+    "p4_itops": "Full-time Salesforce Developer at LD Digitales — IT Ops & DevOps skills, built through real production environments, remain fully available for targeted projects.",
+    "goals2026Title": "2026 Goals",
+    "goals2026Salesforce": [
+      "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
+      "Find the right environment to grow as a Salesforce developer & consultant",
+      "Ship first versions of OrgDocs and SFRelease — two SaaS products in the Salesforce ecosystem",
+      "Actively contribute to the Salesforce community: technical blog, Trailblazer Community, open source",
+      "Build an international client base (France, UK, European market — remote)"
+    ],
+    "goals2026Itops": [
+      "Land an IT Ops / SRE / DevOps role or project (permanent · fixed-term · freelance) in France or fully remote",
+      "Deepen infrastructure-as-code skills: Terraform, Ansible, provisioning automation",
+      "Obtain a cloud certification (AWS Solutions Architect or Azure Administrator)",
+      "Build a full monitoring homelab: Prometheus, Grafana, Alertmanager",
+      "Contribute to open-source DevOps projects (runbooks, scripts, monitoring dashboards)"
+    ],
+    "atAGlanceTitle": "At a glance",
+    "basedInLabel": "Based in",
+    "basedInValue": "Marseille / Provence-Alpes-Côte d'Azur — 100 % Remote · Hybrid · On-site — Mobility & relocation considered (France & international)",
+    "languagesLabel": "Languages",
+    "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
+    "rolesLabel": "Target roles",
+    "rolesValue": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant",
+    "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant",
+    "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant",
+    "availabilityLabel": "Availability",
+    "availabilityValue": "Open to permanent, fixed-term, freelance & contract roles",
+    "goalLabel": "Goal",
+    "goalValue": "Deepen Salesforce expertise, complete 2026 certifications, and find the right environment to grow — permanent, fixed-term, freelance, or contract.",
+    "focusLabel": "Focus",
+    "focusValueSalesforce": "Apex · Flows · CI/CD · Quality · Security",
+    "focusValueItOps": "Monitoring · Runbooks · Automation · Security",
+    "readMore": "Read more"
+  },
+  "mdx": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "analyticsTitle": "Analytics & Performance",
+    "analyticsBody": "This site uses Vercel Analytics and Vercel Speed Insights in production to measure Core Web Vitals and real-user performance. No personal data is collected — metrics are aggregated and anonymous. These services are disabled in development.",
+    "cookiesTitle": "Cookies",
+    "cookiesBody": "No marketing or tracking cookies are set. The language preference is stored in the URL (e.g. /en/, /fr/) and not in a cookie. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection).",
+    "formTitle": "Contact form data",
+    "formBody": "When you submit the contact form, the following data is collected: name, email, topic, message, IP address, and User-Agent. This data is used solely to process and respond to your request. If Formspree is enabled as a fallback, message content is forwarded to Formspree (a third-party email delivery service based in the United States).",
+    "retention": "Retention: contact messages are kept for a maximum of 90 days, then deleted. You may request early deletion by contacting us.",
+    "rightsTitle": "Your rights",
+    "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, request deletion of, and obtain portability of your personal data.",
+    "contact": "To exercise your rights: {email}",
+    "processorsTitle": "Data processors",
+    "processorsBody": "Data collected through this website is processed by the following sub-processors: Supabase (storage of contact messages and availability data — hosted in the United States with GDPR compliance via Standard Contractual Clauses), Vercel (hosting and CDN — United States), Formspree (contact email delivery — United States, if enabled). These providers act as data processors within the meaning of Article 28 of the GDPR.",
+    "lastUpdated": "June 28, 2026",
+    "controllerTitle": "Data controller",
+    "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, a self-employed professional. Contact: {email}",
+    "breachTitle": "Data breach notification",
+    "breachBody": "In the event of a data breach likely to result in a risk to your rights and freedoms, you will be notified as soon as possible. In accordance with Article 33 of the GDPR, the relevant supervisory authority will be notified within 72 hours. You also have the right to lodge a complaint with your national data protection authority (in France: CNIL — www.cnil.fr)."
+  },
+  "legal": {
+    "title": "Legal notice",
+    "editorTitle": "Publisher",
+    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. Address: Marseille, France. SIRET: not applicable (personal portfolio). Contact: {email}.",
+    "hostingTitle": "Hosting",
+    "hostingBody": "Hosting is provided by Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, United States. Website: vercel.com.",
+    "ipTitle": "Intellectual property",
+    "ipBody": "All content published on this website (texts, visuals, code, structure) is the exclusive property of the publisher, unless otherwise stated. Any reproduction, representation, or distribution, in whole or in part, by any means, without prior written authorization from the publisher, is strictly prohibited.",
+    "liabilityTitle": "Liability",
+    "liabilityBody": "The information on this website is provided for informational purposes only and does not constitute a commitment from the publisher. The publisher strives to ensure the accuracy of published information but cannot guarantee its completeness or freedom from errors. Links to third-party websites are provided for reference only; the publisher has no control over their content.",
+    "dataTitle": "Personal data",
+    "dataBody": "Data collected via the contact form (name, email, message) is used solely to respond to your request and is not shared with third parties, except when using an email delivery service. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. Contact: {email}."
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Everything you need to know before reaching out.",
+    "items": [
+      {
+        "q": "Are you available immediately?",
+        "a": "I'm currently working as a Salesforce Developer at LD Digitales. I'm open to permanent, fixed-term, freelance, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
+      },
+      {
+        "q": "Do you work remotely?",
+        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in Marseille / Provence-Alpes-Côte d'Azur and open to relocation in France and internationally: Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta, and any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
+      },
+      {
+        "q": "What are your typical timelines?",
+        "a": "It depends on the scope. A Salesforce audit or a focused feature (Flow, Apex class) usually takes 1–5 days. A full implementation with testing and documentation typically runs 2–8 weeks. I'll give you a precise estimate after an initial scoping call — no commitment required."
+      },
+      {
+        "q": "How does a typical engagement work?",
+        "a": "It usually goes like this: a short discovery call (30 min) to understand your context → a written proposal with scope, deliverables, and timeline → delivery with clear documentation → a handover session so your team can maintain everything independently. You own all the code and configuration I produce."
+      },
+      {
+        "q": "Do you offer support after delivery?",
+        "a": "Yes. I include a short support window after each delivery for adjustments and questions. For ongoing maintenance or feature evolution, we can discuss a retainer arrangement."
+      }
+    ]
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "commitmentTitle": "Accessibility commitment",
+    "commitmentBody": "This website aims to be accessible to as many people as possible, in line with WCAG 2.2 guidelines (Level AA). Measures implemented include: full keyboard navigation, color contrast meeting recommended ratios (minimum 4.5:1 for normal text), alternative text on all informative images, semantic HTML structure with ARIA landmarks, a skip-to-content link, and focus-visible indicators on all interactive elements.",
+    "limitsTitle": "Known limitations",
+    "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
+    "helpTitle": "Accessibility issue?",
+    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email.",
+    "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
+  },
+  "availModal": {
+    "badge": "Available — Permanent · Fixed-term · Freelance · Contract",
+    "title": "My availability",
+    "delay": "Current status",
+    "delayValue": "Full-time position at LD Digitales since Oct. 2025",
+    "contracts": "Next step",
+    "contractValues": "Permanent · Fixed-term · Freelance · Contract — France & worldwide",
+    "workMode": "Work modes",
+    "workModeValues": "100 % Remote · Hybrid · On-site",
+    "mobility": "Mobility",
+    "mobilityValues": "Mobility & relocation considered (France & international)",
+    "sector": "Sectors",
+    "sectorValues": "Salesforce · IT Ops / DevOps",
+    "roles": "Areas of expertise",
+    "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant",
+    "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant",
+    "location": "Location",
+    "locationValues": "Marseille / Provence-Alpes-Côte d'Azur · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
+    "cta": "Get in touch →"
+  }
+}
