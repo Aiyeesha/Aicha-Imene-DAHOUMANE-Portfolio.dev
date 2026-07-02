@@ -11,8 +11,8 @@ export type ProjectSection =
 export type ProjectDetails = {
   slug: string;
   locales?: {
-    en?: { heroSubtitle?: string; sections?: ProjectSection[] };
-    fr?: { heroSubtitle?: string; sections?: ProjectSection[] };
+    en?: { title?: string; heroSubtitle?: string; sections?: ProjectSection[] };
+    fr?: { title?: string; heroSubtitle?: string; sections?: ProjectSection[] };
   };
   gallery?: GalleryImage[];
 };

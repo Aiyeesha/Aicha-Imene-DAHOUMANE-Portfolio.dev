@@ -121,8 +121,8 @@ function buildProjectRow(params: {
   const locales = detailsRaw?.locales ?? {};
   const d = (locale === "fr" ? locales.fr : locales.en) ?? null;
 
-  // Titre : list EN (projects.ts) reste la source
-  const title = (base.title as string) || slug;
+  // Titre : projectDetails.locales.<lang>.title prioritaire, sinon list EN (projects.ts)
+  const title = (d?.title as string) || (base.title as string) || slug;
 
   // hero_subtitle : depuis projectDetails si dispo
   const heroSubtitle =
