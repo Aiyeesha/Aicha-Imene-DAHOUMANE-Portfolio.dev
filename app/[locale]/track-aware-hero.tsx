@@ -13,6 +13,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { useTrack } from "./providers";
 import {
@@ -24,9 +25,17 @@ import {
   type Variants,
 } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
-import CalendlyModal from "@/components/CalendlyModal";
-import AvailabilityModal from "@/components/AvailabilityModal";
 import { TypingText } from "@/components/TypingText";
+
+// CalendlyModal / AvailabilityModal ne sont utiles qu'au clic (modales fermées
+// par défaut) : chargées en dynamic import (ssr: false) pour ne pas alourdir
+// le JS exécuté au premier rendu du hero (above the fold).
+const CalendlyModal = dynamic(() => import("@/components/CalendlyModal"), {
+  ssr: false,
+});
+const AvailabilityModal = dynamic(() => import("@/components/AvailabilityModal"), {
+  ssr: false,
+});
 
 // ── Variants Framer Motion ─────────────────────────────────────────────────
 // Container : orchestre le stagger des enfants — pas d'opacité propre.
