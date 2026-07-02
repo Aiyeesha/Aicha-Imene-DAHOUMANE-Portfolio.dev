@@ -246,7 +246,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Cambridge Business English certification. Score: 180+ (C1+) listening, 179 (B2) reading. Issued via Astrolabe Formation PFD.",
       skills: ["Business English", "Listening Comprehension", "Reading Comprehension", "Professional Communication"],
       credentialUrl: "https://www.cambridge.org/linguaskill",
-      diplomaUrl: "/certifications/Certification_LINGUASKILL_Page_1.png",
+      diplomaUrl: "/certifications/Certification_LINGUASKILL_Page_1.webp",
       initials: "C1+",
       color: "bg-rose-700",
       logoUrl: "/certifications/linguaskill-badge.png",
