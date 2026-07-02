@@ -21,15 +21,35 @@ module.exports = {
   transformIgnorePatterns: [
     "/node_modules/(?!(next-intl|@vercel/analytics|use-intl)/).*"
   ],
-  // Seuil de couverture plancher — aligné sur la couverture actuelle (fichiers importés par les tests).
-  // Augmenter progressivement au fil des nouvelles suites de tests.
   coverageDirectory: "coverage",
+  // Périmètre de la couverture : l'ensemble du code livré (app/components/lib),
+  // pas seulement les fichiers déjà importés par les tests existants.
+  collectCoverageFrom: [
+    "app/**/*.{ts,tsx}",
+    "components/**/*.{ts,tsx}",
+    "lib/**/*.{ts,tsx}",
+    "!**/*.d.ts",
+    "!**/*.test.{ts,tsx}",
+    "!**/*.spec.{ts,tsx}",
+  ],
+  // ts-jest ne passe pas par Babel, donc le provider "babel" par défaut de Jest
+  // n'instrumente aucun fichier (couverture silencieusement à 0/0). Le provider
+  // "v8" fonctionne indépendamment du transform utilisé.
+  coverageProvider: "v8",
+  // Seuil de couverture plancher — reflète désormais la couverture réelle mesurée
+  // sur l'ensemble du code livré (app/, components/, lib/), et non plus
+  // seulement les fichiers déjà importés par les tests existants (ce qui donnait
+  // une fausse impression de couverture représentative à 50%). Les valeurs
+  // ci-dessous sont légèrement en dessous des chiffres réels mesurés le
+  // 2026-07-02 (statements 6%, branches 37.15%, functions 14.21%, lines 6%) pour
+  // laisser une petite marge. À augmenter progressivement au fil de l'ajout de
+  // nouvelles suites de tests.
   coverageThreshold: {
     global: {
-      statements: 50,
-      branches: 30,
-      functions: 50,
-      lines: 50,
+      statements: 5,
+      branches: 37,
+      functions: 14,
+      lines: 5,
     },
   },
 };
