@@ -15,6 +15,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useMotionValue, useSpring, useInView, useReducedMotion } from "framer-motion";
+import { useLocale } from "next-intl";
 
 type Props = {
   /** Valeur cible à atteindre */
@@ -27,6 +28,8 @@ type Props = {
 export default function AnimatedCounter({ value, suffix = "", className = "" }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
   const shouldReduce = useReducedMotion();
+  const locale = useLocale();
+  const intlLocale = locale === "fr" ? "fr-FR" : "en-US";
 
   // Déclenchement unique quand le composant entre dans le viewport
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
@@ -66,12 +69,12 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   // role="img" is required because aria-label is prohibited on generic <span>
   // elements (no implicit ARIA role) per ARIA 1.2 — axe rule aria-prohibited-attr.
   // role="img" provides a valid landmark for the aria-label to describe.
-  const ariaLabel = `${value.toLocaleString()}${suffix}`;
+  const ariaLabel = `${value.toLocaleString(intlLocale)}${suffix}`;
 
   return (
     <span ref={ref} className={className} role="img" aria-label={ariaLabel}>
       {/* aria-hidden masque les valeurs intermédiaires — le SR utilise aria-label */}
-      <span aria-hidden="true">{display.toLocaleString()}{suffix}</span>
+      <span aria-hidden="true">{display.toLocaleString(intlLocale)}{suffix}</span>
     </span>
   );
 }
