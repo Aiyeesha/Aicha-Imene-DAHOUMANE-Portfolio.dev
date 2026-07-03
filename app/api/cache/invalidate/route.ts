@@ -68,13 +68,19 @@ export async function POST(req: Request) {
     await redis.del(...keys);
     deleted.push(...keys);
   } else {
+    // Les 3 locales actives (en/fr/es) doivent toutes être listées ici — un flush-all
+    // qui en oublie une laisse du contenu obsolète en cache jusqu'à expiration du TTL
+    // (constaté lors de l'audit 2026-07 : "es" manquait, ajouté avec l'activation ES).
     const staticKeys = [
       "projects_with_assets:fr",
       "projects_with_assets:en",
+      "projects_with_assets:es",
       "about:fr",
       "about:en",
+      "about:es",
       "certifications:fr",
       "certifications:en",
+      "certifications:es",
       "portfolio:uptime:latest",
       "portfolio:uptime:stats:30d",
       "portfolio:uptime:latency:7d",
@@ -93,6 +99,7 @@ export async function POST(req: Request) {
     revalidatePath("/[locale]/projects/[slug]", "page");
     revalidatePath("/en", "page");
     revalidatePath("/fr", "page");
+    revalidatePath("/es", "page");
   }
 
   // ── 5. Log de l'opération ───────────────────────────────────────────────────
