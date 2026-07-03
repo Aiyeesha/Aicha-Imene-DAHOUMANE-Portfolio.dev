@@ -1,0 +1,187 @@
+---
+title: "Segmentación de red con VLANs: diseño, configuración y seguridad"
+excerpt: "Diseña e implementa la segmentación de red con VLANs — aislamiento del tráfico, enrutamiento entre VLANs, reglas de firewall y protección de sistemas sensibles frente a movimientos laterales."
+date: "2024-09-03"
+tags: ["IT Ops", "Networking", "Seguridad", "VLAN"]
+featured: false
+---
+
+Una red plana en la que cualquier dispositivo puede alcanzar a cualquier otro es un desastre de seguridad esperando a ocurrir. Las VLANs te permiten segmentar el tráfico de forma lógica sin tender cableado físico independiente. Aquí tienes cómo diseñar e implementar una segmentación que realmente mejore la seguridad.
+
+---
+
+## Requisitos previos
+
+- Switch gestionado (Cisco, Juniper, HP Aruba o Netgear)
+- Router o firewall con soporte de VLAN
+- Conocimientos básicos de subredes
+
+---
+
+## Principios de diseño de VLANs
+
+**Regla 1: segmenta por nivel de confianza, no solo por función**
+
+```
+VLAN 10 — Management (interfaces de gestión de switch/router, monitorización)
+  Subred: 192.168.10.0/24
+  Confianza: solo administradores de IT, ACLs estrictas
+
+VLAN 20 — Servers (servidores de producción, bases de datos)
+  Subred: 192.168.20.0/24
+  Confianza: solo el tráfico inter-servicio necesario
+
+VLAN 30 — Workstations (portátiles y equipos de escritorio de empleados)
+  Subred: 192.168.30.0/24
+  Confianza: acceso a internet, acceso limitado a servidores
+
+VLAN 40 — IoT / Impresoras (cámaras, impresoras, dispositivos inteligentes)
+  Subred: 192.168.40.0/24
+  Sin confianza: solo acceso a internet, aislada del resto
+
+VLAN 50 — WiFi de invitados
+  Subred: 192.168.50.0/24
+  Sin confianza: solo internet, sin acceso interno
+
+VLAN 99 — VLAN nativa (tráfico sin etiquetar)
+  Uso: solo puertos trunk, no se asignan dispositivos aquí
+```
+
+**Regla 2: nunca coloques dispositivos sensibles en la misma VLAN que las estaciones de trabajo**
+
+Si una estación de trabajo se ve comprometida, un atacante no debería poder alcanzar directamente tu servidor de base de datos. La segmentación limita el movimiento lateral.
+
+---
+
+## Configuración del switch (Cisco IOS)
+
+```
+! Crear las VLANs
+vlan 10
+ name Management
+vlan 20
+ name Servers
+vlan 30
+ name Workstations
+vlan 40
+ name IoT
+vlan 50
+ name Guest
+vlan 99
+ name Native
+
+! Puerto de acceso para una estación de trabajo
+interface GigabitEthernet0/1
+ switchport mode access
+ switchport access vlan 30
+ switchport nonegotiate
+ spanning-tree portfast
+
+! Puerto de acceso para un servidor
+interface GigabitEthernet0/10
+ switchport mode access
+ switchport access vlan 20
+ switchport nonegotiate
+ spanning-tree portfast
+
+! Puerto trunk hacia el router/firewall
+interface GigabitEthernet0/24
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+ switchport trunk native vlan 99
+```
+
+---
+
+## Enrutamiento entre VLANs con un firewall
+
+No dejes que el tráfico entre VLANs se enrute libremente. Enrútalo a través de un firewall y aplica reglas:
+
+**Configuración de pfSense/OPNsense:**
+
+```
+Interfaces → Assign → Añade cada subinterfaz VLAN
+  igb0.10 → VLAN 10 Management (192.168.10.1/24)
+  igb0.20 → VLAN 20 Servers (192.168.20.1/24)
+  igb0.30 → VLAN 30 Workstations (192.168.30.1/24)
+  igb0.40 → VLAN 40 IoT (192.168.40.0/24)
+  igb0.50 → VLAN 50 Guest (192.168.50.1/24)
+```
+
+**Reglas de firewall (mínimo privilegio):**
+
+```
+# VLAN 50 Guest — solo internet, nada interno
+Block: src=192.168.50.0/24, dst=192.168.0.0/16 (bloquea todo RFC1918)
+Allow: src=192.168.50.0/24, dst=any (internet)
+
+# VLAN 40 IoT — solo internet (para servicios cloud), bloquea todo lo interno
+Block: src=192.168.40.0/24, dst=192.168.0.0/16
+Allow: src=192.168.40.0/24, dst=any, port=80,443
+
+# VLAN 30 Workstations — internet + acceso a servidores específicos
+Allow: src=192.168.30.0/24, dst=192.168.20.10, port=443  # Solo el servidor de aplicaciones
+Allow: src=192.168.30.0/24, dst=any (internet)
+Block: src=192.168.30.0/24, dst=192.168.20.0/24  # Bloquea el resto de servidores
+
+# VLAN 20 Servers — internet saliente para actualizaciones, tráfico entre servidores limitado
+Allow: src=192.168.20.0/24, dst=192.168.20.0/24, port=5432  # BD dentro de la VLAN de servidores
+Allow: src=192.168.20.0/24, dst=any, port=443  # Actualizaciones
+
+# VLAN 10 Management — acceso completo (solo administradores)
+Allow: src=192.168.10.0/24, dst=any
+```
+
+---
+
+## WiFi con múltiples SSIDs por VLAN
+
+En un punto de acceso (ejemplo con Ubiquiti UniFi):
+
+```
+SSID: CorpNet       → VLAN 30 (WPA2-Enterprise, autenticación 802.1X)
+SSID: IoT-Devices   → VLAN 40 (WPA2-PSK, clientes aislados)
+SSID: Guest-WiFi    → VLAN 50 (WPA2-PSK, aislamiento de clientes, portal cautivo)
+```
+
+**El aislamiento de clientes en los SSIDs de IoT/invitados** impide que los dispositivos del mismo SSID se comuniquen entre sí — algo crítico para redes IoT y de invitados.
+
+---
+
+## Monitorización del tráfico VLAN
+
+```bash
+# En un servidor Linux con una interfaz VLAN
+ip link add link eth0 name eth0.20 type vlan id 20
+ip addr add 192.168.20.100/24 dev eth0.20
+ip link set eth0.20 up
+
+# Capturar tráfico solo en la VLAN 20
+tcpdump -i eth0.20 -n
+
+# Con ntopng para análisis de flujos — se ejecuta en un puerto SPAN/mirror
+```
+
+**Puerto mirror en Cisco para monitorización:**
+```
+monitor session 1 source vlan 20
+monitor session 1 destination interface GigabitEthernet0/23
+```
+
+---
+
+## Errores comunes
+
+- **VLAN 1 como VLAN nativa**: la VLAN 1 es la predeterminada y a menudo se usa para gestión — mueve el tráfico de gestión a una VLAN dedicada y deja la VLAN 1 sin usar
+- **Sin firewall entre VLANs**: enrutar entre VLANs directamente en el switch (switch de capa 3) sin un firewall significa que no hay filtrado de tráfico — enruta siempre a través de un firewall
+- **Demasiadas VLANs**: más VLANs significa más complejidad de gestión. Empieza con 4-6 y añade más solo cuando sea necesario
+- **Olvidar las excepciones de impresoras/IoT**: las impresoras necesitan alcanzar las estaciones de trabajo para imprimir — crea reglas específicas en lugar de poner las impresoras en la VLAN de estaciones de trabajo
+
+---
+
+## Recursos
+
+- [Guía de configuración de VLAN — Cisco](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swvlan.html)
+- [Documentación de VLAN de pfSense](https://docs.netgate.com/pfsense/en/latest/vlan/index.html)
+- [CIS Controls — Segmentación de red](https://www.cisecurity.org/controls/)

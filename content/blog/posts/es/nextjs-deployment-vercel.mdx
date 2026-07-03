@@ -1,0 +1,237 @@
+---
+title: "Despliegue de Next.js en Vercel: variables de entorno, ramas de preview y Edge Config"
+excerpt: "Despliega Next.js en Vercel correctamente — alcance de variables de entorno, despliegues de preview por rama, Edge Config para feature flags, gestión de dominios y deployment hooks."
+date: "2025-07-01"
+tags: ["Next.js", "Vercel", "Deployment", "DevOps"]
+featured: false
+---
+
+Vercel está diseñado específicamente para Next.js y la experiencia de despliegue es excelente — pero hay configuraciones no evidentes que importan en producción. Aquí tienes lo que hay que configurar más allá de simplemente hacer push a `main`.
+
+---
+
+## Requisitos previos
+
+- Proyecto Next.js en un repositorio de GitHub/GitLab/Bitbucket
+- Cuenta de Vercel (el plan gratuito sirve para empezar)
+- Nombre de dominio (opcional pero recomendado para producción)
+
+---
+
+## Variables de entorno: alcance y seguridad
+
+Vercel tiene tres entornos, cada uno con su propio conjunto de variables:
+
+```
+Production   — se ejecuta al hacer push a main/production
+Preview      — se ejecuta en cada PR / rama de funcionalidad
+Development  — se usa con vercel dev en local
+```
+
+**Tipos de variables:**
+
+| Prefijo | Expuesta a | Úsala para |
+|--------|-----------|---------|
+| `NEXT_PUBLIC_` | Navegador + Servidor | Valores públicos seguros (URL de Supabase, ID de analítica) |
+| (sin prefijo) | Solo servidor | Claves de API, URLs de base de datos, secretos |
+
+```bash
+# Añadir vía CLI
+vercel env add DATABASE_URL production
+vercel env add NEXT_PUBLIC_SUPABASE_URL production preview development
+
+# O en el dashboard: Project → Settings → Environment Variables
+```
+
+**Crítico:** nunca pongas un secreto en una variable `NEXT_PUBLIC_`. Quedará embebido en el bundle de JavaScript que se sirve a todos los navegadores.
+
+---
+
+## Despliegues de preview: una URL por rama
+
+Cada push a cualquier rama obtiene una URL de despliegue única:
+
+```
+main     → myapp.vercel.app (y tu dominio personalizado)
+feature/auth  → myapp-git-feature-auth-yourteam.vercel.app
+fix/bug-123   → myapp-git-fix-bug-123-yourteam.vercel.app
+```
+
+**Usando un entorno específico para preview:**
+- Configura `DATABASE_URL` para `preview` apuntando a una base de datos de staging
+- Configura `NEXT_PUBLIC_API_URL` para `preview` apuntando a tu API de staging
+- Las variables de producción nunca se usan en preview
+
+**Protección de ramas:**
+```
+Vercel Dashboard → Project → Settings → Git
+→ Production Branch: main (o master)
+→ Preview Branches: All branches (por defecto) o basado en patrones
+```
+
+---
+
+## Edge Config: feature flags en submilisegundos
+
+Edge Config es un almacén clave-valor distribuido globalmente que se lee en el edge con ~1ms de latencia — sin llamada a la API, sin ida y vuelta a la base de datos:
+
+```bash
+# Crear un Edge Config
+vercel edge-config create my-feature-flags
+```
+
+```typescript
+// Leer en el middleware (se ejecuta en el edge, antes de que la página se renderice)
+import { NextRequest, NextResponse } from 'next/server';
+import { get } from '@vercel/edge-config';
+
+export async function middleware(request: NextRequest) {
+  const isMaintenanceMode = await get('maintenance_mode');
+
+  if (isMaintenanceMode && !request.nextUrl.pathname.startsWith('/maintenance')) {
+    return NextResponse.redirect(new URL('/maintenance', request.url));
+  }
+
+  return NextResponse.next();
+}
+```
+
+```typescript
+// Actualizar Edge Config desde una Server Action o un webhook
+import { createClient } from '@vercel/edge-config-client';
+
+const client = createClient(process.env.EDGE_CONFIG_ID!);
+
+await client.update([
+  { operation: 'update', key: 'maintenance_mode', value: false },
+  { operation: 'update', key: 'new_feature_enabled', value: true },
+]);
+```
+
+---
+
+## Dominios personalizados y HTTPS
+
+```
+Vercel Dashboard → Project → Settings → Domains
+→ Añade: myapp.com, www.myapp.com
+→ Vercel proporciona HTTPS automático vía Let's Encrypt
+→ Redirección automática: www → apex o apex → www (configurable)
+```
+
+**Para un DNS ya existente:**
+```
+# Añade un CNAME para www
+www  CNAME  cname.vercel-dns.com
+
+# Añade un registro A para el dominio apex
+@    A      76.76.21.21
+```
+
+---
+
+## Deployment Hooks: activar despliegues desde eventos externos
+
+Activa un rebuild de producción desde un webhook de CMS, un cron job o un pipeline de CI:
+
+```
+Vercel Dashboard → Project → Settings → Git → Deploy Hooks
+→ Crea el hook: "CMS Content Update" → rama: main
+→ Copia la URL: https://api.vercel.com/v1/integrations/deploy/prj_xxx/yyy
+```
+
+```bash
+# Activar el despliegue desde curl (desde tu manejador de webhook del CMS)
+curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_xxx/yyy"
+```
+
+```typescript
+// En un route handler de webhook de Next.js
+// app/api/webhook/cms/route.ts
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  // Verificar la firma...
+
+  // Activar el redespliegue en Vercel
+  await fetch(process.env.VERCEL_DEPLOY_HOOK_URL!, { method: 'POST' });
+
+  return Response.json({ triggered: true });
+}
+```
+
+---
+
+## Vercel.json: configuración avanzada
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/old-path",
+      "destination": "/new-path",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/v1/:path*",
+      "destination": "https://legacy-api.example.com/v1/:path*"
+    }
+  ]
+}
+```
+
+---
+
+## Monitorización de despliegues
+
+```bash
+# Listar despliegues recientes
+vercel ls
+
+# Inspeccionar un despliegue concreto
+vercel inspect https://myapp-abc123.vercel.app
+
+# Ver logs en tiempo real
+vercel logs --follow
+```
+
+**Métricas clave en el dashboard de Vercel:**
+- Tiempo de build (objetivo < 2 minutos para una buena DX)
+- Duración del cold start de las funciones serverless
+- Invocaciones de edge functions
+- Uso de ancho de banda (vigila los picos inesperados)
+
+---
+
+## Errores comunes
+
+- **`NEXT_PUBLIC_` para secretos**: cualquier variable con este prefijo se incluye en el JS del cliente — visible para cualquiera
+- **Sin base de datos de staging para preview**: si las ramas de preview se conectan a la BD de producción, una PR defectuosa puede corromper datos reales
+- **Invalidación de la caché de build**: cuando los builds se rompen misteriosamente, limpiar la caché de build (`vercel --force`) suele solucionarlo
+- **Estructura de proyecto en raíz vs. `src/`**: Vercel lo detecta automáticamente, pero conviene fijar explícitamente el framework preset a Next.js para garantizar el comando de build correcto
+
+---
+
+## Recursos
+
+- [Documentación de Vercel](https://vercel.com/docs)
+- [Documentación de Edge Config](https://vercel.com/docs/storage/edge-config)
+- [Guía de variables de entorno](https://vercel.com/docs/projects/environment-variables)
