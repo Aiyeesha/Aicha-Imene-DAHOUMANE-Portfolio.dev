@@ -102,6 +102,7 @@ export async function generateMetadata({
       languages: {
         en: `${siteUrl}/en/status`,
         fr: `${siteUrl}/fr/status`,
+        es: `${siteUrl}/es/status`,
         "x-default": `${siteUrl}/en/status`,
       },
     },

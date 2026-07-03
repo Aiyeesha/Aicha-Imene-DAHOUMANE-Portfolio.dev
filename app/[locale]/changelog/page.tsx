@@ -49,6 +49,7 @@ export async function generateMetadata({
       languages: {
         en: `${siteUrl}/en/changelog`,
         fr: `${siteUrl}/fr/changelog`,
+        es: `${siteUrl}/es/changelog`,
         "x-default": `${siteUrl}/en/changelog`,
       },
     },
