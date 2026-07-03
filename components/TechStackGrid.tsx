@@ -62,7 +62,10 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
 
   return (
     // group — permet au hover/focus d'activer les classes group-hover:
-    <div className="group relative" tabIndex={0} role="button" aria-describedby={tooltipId}>
+    // Pas de role="button" : cet élément ne fait qu'afficher un tooltip au focus/hover,
+    // il n'a aucun gestionnaire de clic/clavier — role="button" sans action associée
+    // trompait les lecteurs d'écran et les utilisateurs clavier (WCAG 4.1.2 / 2.1.1).
+    <div className="group relative" tabIndex={0} aria-describedby={tooltipId}>
       {/* ── Badge ──────────────────────────────────────────────────────── */}
       <div
         className={[
