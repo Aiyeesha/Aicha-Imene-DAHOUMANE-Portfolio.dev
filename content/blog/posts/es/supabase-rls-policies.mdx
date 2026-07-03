@@ -1,0 +1,240 @@
+---
+title: "Row Level Security en Supabase: políticas que realmente funcionan"
+excerpt: "Escribe políticas RLS que protejan tus datos sin matar el rendimiento — aislamiento de usuarios, patrones multi-tenant, bypass con el service role y depuración de políticas."
+date: "2025-04-08"
+tags: ["Next.js", "Supabase", "Base de datos", "Seguridad"]
+featured: false
+---
+
+Row Level Security es la funcionalidad de seguridad más importante de Supabase — y la que más se configura mal. ¿Habilitada pero sin políticas? Todo el mundo queda bloqueado. ¿Lógica de política incorrecta? Los usuarios ven los datos de otros. Aquí te explico cómo escribir políticas que sean seguras y rápidas a la vez.
+
+---
+
+## Requisitos previos
+
+- Proyecto de Supabase con una base de datos PostgreSQL
+- Tablas con datos que quieras proteger
+- Autenticación configurada (los usuarios deben existir para que RLS tenga sentido)
+
+---
+
+## Habilitar RLS y entender el comportamiento por defecto
+
+```sql
+-- Habilitar RLS en una tabla (deshabilitado por defecto)
+ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
+
+-- Con RLS habilitado y SIN políticas: se deniega todo acceso (para usuarios no superuser)
+-- Con RLS habilitado y políticas: solo son accesibles las filas que coinciden con una política
+```
+
+El rol `anon` (no autenticado) y el rol `authenticated` (usuario con sesión iniciada) son los que apuntan tus políticas. El service role omite RLS por completo.
+
+---
+
+## Patrón básico de aislamiento de usuario
+
+El patrón más común — los usuarios solo pueden acceder a sus propias filas:
+
+```sql
+-- Permitir a los usuarios leer únicamente sus propias filas
+CREATE POLICY "users_read_own" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+-- Permitir a los usuarios insertar solo filas con su propio user_id
+CREATE POLICY "users_insert_own" ON posts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+-- Permitir a los usuarios actualizar únicamente sus propias filas
+CREATE POLICY "users_update_own" ON posts
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Permitir a los usuarios eliminar únicamente sus propias filas
+CREATE POLICY "users_delete_own" ON posts
+  FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+```
+
+`USING` controla qué filas son **visibles** (SELECT, UPDATE, DELETE).
+`WITH CHECK` controla qué filas se pueden **escribir** (INSERT, UPDATE).
+
+---
+
+## Lectura pública, escritura autenticada
+
+Entradas de blog o productos que son públicos para lectura pero protegidos para escritura:
+
+```sql
+-- Cualquiera (incluso sin autenticar) puede leer las entradas publicadas
+CREATE POLICY "public_read_published" ON posts
+  FOR SELECT
+  TO anon, authenticated
+  USING (published = true);
+
+-- Solo el autor puede leer sus borradores no publicados
+CREATE POLICY "author_read_drafts" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id AND published = false);
+
+-- Solo los usuarios autenticados pueden insertar
+CREATE POLICY "authenticated_insert" ON posts
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+```
+
+---
+
+## Patrón multi-tenant con organizaciones
+
+Cuando los usuarios pertenecen a organizaciones y pueden ver todos los datos dentro de su organización:
+
+```sql
+-- Función auxiliar para políticas más limpias
+CREATE OR REPLACE FUNCTION auth.user_org_id()
+RETURNS uuid AS $$
+  SELECT org_id FROM user_profiles WHERE user_id = auth.uid()
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
+
+-- Los usuarios pueden ver todas las filas de su organización
+CREATE POLICY "org_members_read" ON projects
+  FOR SELECT
+  TO authenticated
+  USING (org_id = auth.user_org_id());
+
+-- Solo los propietarios pueden eliminar
+CREATE POLICY "org_owners_delete" ON projects
+  FOR DELETE
+  TO authenticated
+  USING (
+    org_id = auth.user_org_id() AND
+    EXISTS (
+      SELECT 1 FROM org_members
+      WHERE org_id = projects.org_id
+      AND user_id = auth.uid()
+      AND role = 'owner'
+    )
+  );
+```
+
+---
+
+## Override de administrador con claims personalizados
+
+A veces necesitas que un usuario administrador vea todas las filas. Usa claims personalizados del JWT:
+
+```sql
+-- Verificar si el usuario tiene el claim admin en su JWT
+CREATE POLICY "admins_read_all" ON posts
+  FOR SELECT
+  TO authenticated
+  USING (
+    auth.uid() = user_id  -- las propias entradas del usuario
+    OR
+    (auth.jwt() ->> 'user_role') = 'admin'  -- O es admin
+  );
+```
+
+Establece el claim personalizado en una Supabase Function o Edge Function tras la creación del usuario:
+
+```typescript
+// supabase/functions/set-user-role/index.ts
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+Deno.serve(async (req) => {
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
+
+  const { userId, role } = await req.json();
+
+  await supabase.auth.admin.updateUserById(userId, {
+    app_metadata: { user_role: role }
+  });
+
+  return new Response(JSON.stringify({ success: true }));
+});
+```
+
+---
+
+## Rendimiento: indexa las columnas usadas en las cláusulas USING
+
+Las políticas RLS se ejecutan en cada fila. Si tu cláusula `USING` filtra por `user_id`, esa columna debe estar indexada:
+
+```sql
+-- Sin este índice, cada SELECT recorre toda la tabla para evaluar RLS
+CREATE INDEX idx_posts_user_id ON posts(user_id);
+CREATE INDEX idx_projects_org_id ON projects(org_id);
+```
+
+Para políticas complejas con subconsultas, prueba con `EXPLAIN ANALYZE`:
+
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM posts WHERE true;
+-- El WHERE true dispara la evaluación de RLS — revisa si hay Seq Scans en tablas grandes
+```
+
+---
+
+## Omitir RLS desde el servidor (service role)
+
+Tu código del lado del servidor en Next.js puede omitir RLS usando la clave de service role:
+
+```typescript
+// Usar el service role solo en código del lado del servidor (rutas API, server actions)
+import { createClient } from '@supabase/supabase-js';
+
+const adminClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // NO NEXT_PUBLIC — solo servidor
+);
+
+// Esto omite RLS — úsalo solo para operaciones administrativas
+const { data } = await adminClient.from('posts').select('*');
+```
+
+---
+
+## Depuración de políticas
+
+```sql
+-- Probar como un usuario específico
+SET LOCAL role TO authenticated;
+SET LOCAL request.jwt.claims TO '{"sub": "user-uuid-here"}';
+SELECT * FROM posts; -- Debería devolver solo las filas de ese usuario
+
+-- Ver todas las políticas de una tabla
+SELECT * FROM pg_policies WHERE tablename = 'posts';
+
+-- Comprobar qué filas puede ver el usuario actual
+SELECT * FROM posts; -- Ejecutar como usuario autenticado en el panel de Supabase
+```
+
+---
+
+## Errores comunes
+
+- **RLS habilitado sin políticas**: bloquea TODO el acceso, incluyendo tu propia aplicación — crea siempre al menos una política SELECT antes de habilitarlo
+- **No indexar las columnas filtradas**: `USING (user_id = auth.uid())` en una tabla de 1M de filas sin índice es un escaneo completo en cada consulta
+- **Usar la clave anon en el servidor**: la clave anon está sujeta a RLS — tu código de servidor debería usar el service role para operaciones administrativas
+- **Olvidar WITH CHECK en INSERT**: `USING` solo se aplica a filas existentes — INSERT necesita `WITH CHECK` para evitar que los usuarios inserten filas que no les pertenecen
+
+---
+
+## Recursos
+
+- [Documentación de RLS de Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security)
+- [Referencia de RLS de PostgreSQL](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
+- [Supabase Auth Helpers](https://supabase.com/docs/guides/auth/auth-helpers)
