@@ -11,13 +11,18 @@ type PageProps = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/contact`;
   const title = isFr
     ? "Contact — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Contacto — Aïcha Imène DAHOUMANE"
     : "Contact — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Contactez-moi pour une mission freelance Salesforce ou IT Ops, une opportunité CDI/CDD, ou toute question professionnelle. Réponse sous 48h."
+    : isEs
+    ? "Contáctame para una misión freelance de Salesforce o IT Ops, una oportunidad de contrato indefinido/temporal, o cualquier consulta profesional. Respondo en 48h."
     : "Get in touch for a Salesforce or IT Ops freelance mission, a permanent/fixed-term opportunity, or any professional inquiry. I reply within 48h.";
   return {
     title,
@@ -53,6 +58,7 @@ export default async function ContactPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
 
   const jsonLdBreadcrumb = {
@@ -62,23 +68,25 @@ export default async function ContactPage({ params }: PageProps) {
       {
         "@type": "ListItem",
         position: 1,
-        name: isFr ? "Accueil" : "Home",
+        name: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
         item: `${siteUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: isFr ? "Contact" : "Contact",
+        name: isFr ? "Contact" : isEs ? "Contacto" : "Contact",
         item: `${siteUrl}/${locale}/contact`,
       },
     ],
   };
 
   const L = {
-    breadcrumbHome: isFr ? "Accueil" : "Home",
-    title: isFr ? "Me contacter" : "Get in touch",
+    breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
+    title: isFr ? "Me contacter" : isEs ? "Contáctame" : "Get in touch",
     subtitle: isFr
       ? "Disponible pour des missions freelance, des opportunités CDI/CDD et des projets en remote. Réponse sous 48h."
+      : isEs
+      ? "Disponible para misiones freelance, oportunidades de contrato indefinido/temporal y proyectos en remoto. Respondo en 48h."
       : "Available for freelance missions, permanent/fixed-term roles, and remote projects. I reply within 48h.",
   };
 
@@ -92,7 +100,7 @@ export default async function ContactPage({ params }: PageProps) {
       <div className="mx-auto max-w-2xl px-4 py-10">
         {/* Breadcrumb */}
         <nav
-          aria-label={isFr ? "Fil d'Ariane" : "Breadcrumb"}
+          aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
           className="mb-6 flex items-center gap-2 text-sm text-muted-2"
         >
           <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">

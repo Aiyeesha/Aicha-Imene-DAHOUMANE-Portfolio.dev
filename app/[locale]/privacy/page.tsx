@@ -9,14 +9,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/privacy`;
   const title = isFr
     ? "Politique de confidentialité — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Política de privacidad — Aïcha Imène DAHOUMANE"
     : "Privacy policy — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Données collectées, cookies, durée de conservation et vos droits RGPD."
+    : isEs
+    ? "Datos recopilados, cookies, plazo de conservación y sus derechos RGPD."
     : "Data collected, cookies, retention period, and your GDPR rights.";
   return {
     title,
