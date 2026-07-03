@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: {
         en: `${siteUrl}/en/work-with-me`,
         fr: `${siteUrl}/fr/work-with-me`,
+        es: `${siteUrl}/es/work-with-me`,
         "x-default": `${siteUrl}/en/work-with-me`,
       },
     },
