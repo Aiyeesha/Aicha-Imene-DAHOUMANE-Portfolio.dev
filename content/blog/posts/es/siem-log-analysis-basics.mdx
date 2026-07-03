@@ -1,0 +1,251 @@
+---
+title: "Fundamentos de SIEM y análisis de logs: detectando amenazas con Elastic Stack"
+excerpt: "Configura capacidades SIEM básicas con Elastic Stack — recolección de logs con Filebeat, reglas de detección, alertas sobre patrones sospechosos y construcción de dashboards de seguridad."
+date: "2025-02-11"
+tags: ["IT Ops", "Seguridad", "SIEM", "Elastic"]
+featured: false
+---
+
+Un SIEM (Security Information and Event Management) centraliza los logs de toda tu infraestructura y ayuda a detectar amenazas automáticamente. Los SIEM empresariales cuestan una fortuna, pero puedes construir capacidades básicas con Elastic Stack de forma gratuita. Aquí te explico cómo.
+
+---
+
+## Requisitos previos
+
+- Docker Compose (para instalación local/VPS)
+- Servidores Linux a monitorizar
+- 8GB+ de RAM para el servidor de Elastic Stack
+
+---
+
+## Configuración de Elastic Stack
+
+```yaml
+# compose.yml
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -su elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 30s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+    ports:
+      - "127.0.0.1:5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.0
+    restart: unless-stopped
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"   # Entrada de Beats
+      - "514:514/udp" # Entrada de Syslog
+
+volumes:
+  es_data:
+```
+
+---
+
+## Filebeat en los servidores monitorizados
+
+Instala Filebeat en cada servidor que quieras monitorizar:
+
+```bash
+# Instalación en Ubuntu/Debian
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.13.0-amd64.deb
+sudo dpkg -i filebeat-8.13.0-amd64.deb
+```
+
+```yaml
+# /etc/filebeat/filebeat.yml
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/auth.log
+      - /var/log/syslog
+    tags: ["linux", "auth"]
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/access.log
+      - /var/log/nginx/error.log
+    tags: ["nginx"]
+    json.keys_under_root: true
+
+# Usa módulos para el parseo estructurado de logs
+filebeat.modules:
+  - module: system
+    auth:
+      enabled: true
+    syslog:
+      enabled: true
+  - module: nginx
+    access:
+      enabled: true
+    error:
+      enabled: true
+
+output.logstash:
+  hosts: ["siem-server:5044"]
+```
+
+```bash
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+```
+
+---
+
+## Pipeline de Logstash
+
+```ruby
+# logstash/pipeline/main.conf
+input {
+  beats {
+    port => 5044
+  }
+  udp {
+    port => 514
+    codec => plain
+    tags => ["syslog"]
+  }
+}
+
+filter {
+  # Parsear fallos de autenticación SSH
+  if "auth" in [tags] {
+    grok {
+      match => { "message" => "Failed password for %{USER:ssh_user} from %{IP:src_ip} port %{INT:src_port}" }
+      tag_on_failure => []
+    }
+
+    if [src_ip] {
+      geoip { source => "src_ip" }
+    }
+  }
+
+  # Parsear logs de acceso de nginx
+  if "nginx" in [tags] and [log][file][path] =~ "access" {
+    grok {
+      match => { "message" => "%{COMBINEDAPACHELOG}" }
+    }
+    mutate {
+      convert => { "response" => "integer" }
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["elasticsearch:9200"]
+    user => "elastic"
+    password => "${ELASTIC_PASSWORD}"
+    index => "siem-%{[tags][0]}-%{+YYYY.MM.dd}"
+  }
+}
+```
+
+---
+
+## Reglas de detección en Kibana
+
+Ve a **Security → Rules → Create new rule**
+
+**Regla 1: Detección de fuerza bruta SSH**
+```json
+{
+  "name": "SSH Brute Force Attempt",
+  "type": "threshold",
+  "query": "message: \"Failed password\" AND tags: auth",
+  "threshold": {
+    "field": "src_ip",
+    "value": 10
+  },
+  "time_window": "5m",
+  "severity": "high",
+  "actions": ["slack-alert"]
+}
+```
+
+**Regla 2: Login exitoso tras múltiples fallos**
+```json
+{
+  "name": "Successful Login After Brute Force",
+  "type": "eql",
+  "query": "sequence with maxspan=5m\n  [authentication where event.outcome == \"failure\"] with runs=5\n  [authentication where event.outcome == \"success\"]",
+  "severity": "critical"
+}
+```
+
+**Regla 3: Escalada de privilegios**
+```
+Query: message: "sudo" AND (message: "COMMAND" OR message: "authentication failure")
+Alert when: event count > 3 in 10m per user
+```
+
+---
+
+## Dashboards de seguridad clave a construir
+
+En Kibana Dashboards, crea visualizaciones para:
+
+1. **Eventos de autenticación en el tiempo** — gráfico de barras de logins exitosos vs. fallidos
+2. **Principales IPs de origen de fallos de autenticación** — tabla de datos, ordenada por conteo
+3. **Mapa geográfico de intentos SSH** — usando enriquecimiento geoip
+4. **Códigos de error HTTP en el tiempo** — tasa de 4xx/5xx de los logs de nginx
+5. **Nuevos procesos generados** — si usas Elastic Agent con monitorización de procesos
+
+---
+
+## Qué monitorizar (SIEM mínimo viable)
+
+| Fuente de logs | Eventos clave a alertar |
+|-----------|------------------------|
+| SSH (`/var/log/auth.log`) | >10 fallos en 5 min, login exitoso desde un país nuevo |
+| Sudo (`/var/log/auth.log`) | Cualquier comando `sudo` de usuarios no administradores |
+| Acceso nginx | Pico de 4xx (>100/min), errores 5xx |
+| Cron (`/var/log/syslog`) | Nuevas entradas de crontab (`crontab -e` por no-root) |
+| Gestor de paquetes | `apt install` / `yum install` fuera de horario |
+| Firewall (`ufw.log`) | Escaneo de puertos (>20 IPs bloqueadas por minuto) |
+
+---
+
+## Errores comunes a evitar
+
+- **Elasticsearch sin autenticación**: por defecto está abierto en versiones antiguas — habilita siempre `xpack.security.enabled=true`
+- **Sin rotación de logs**: los índices de Elasticsearch crecen indefinidamente — configura políticas de Index Lifecycle Management (ILM)
+- **Demasiadas alertas de baja severidad**: la fatiga de alertas provoca que se ignoren. Empieza solo con alta/crítica
+- **Un solo nodo sin replicación**: los datos de tu SIEM no pueden protegerse de un fallo de disco — usa snapshots hacia S3/GCS
+
+---
+
+## Recursos
+
+- [Documentación de Elastic Security](https://www.elastic.co/guide/en/security/current/index.html)
+- [Módulos de Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-modules.html)
+- [EQL (Event Query Language)](https://www.elastic.co/guide/en/elasticsearch/reference/current/eql.html)
