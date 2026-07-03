@@ -80,14 +80,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/status`;
   const title = isFr
     ? "Statut du site — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Estado del sitio — Aïcha Imène DAHOUMANE"
     : "Site Status — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "État opérationnel en temps réel du site et de ses services."
+    : isEs
+    ? "Estado operativo en tiempo real del sitio y sus servicios."
     : "Real-time operational status of the site and its services.";
   return {
     title,
