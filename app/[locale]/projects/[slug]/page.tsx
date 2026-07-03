@@ -556,7 +556,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                       className="flex items-center justify-center gap-2 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring text-strong"
                     >
                       <span aria-hidden>↗</span>
-                      {isFr ? "Voir le code" : "View source"}
+                      {isFr ? "Voir le code" : isEs ? "Ver el código" : "View source"}
                     </a>
                   )}
                   {liveHref && (
@@ -567,7 +567,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                       className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black hover:opacity-90 transition-opacity soft-ring"
                     >
                       <span aria-hidden>↗</span>
-                      {isFr ? "Voir le projet" : "Live demo"}
+                      {isFr ? "Voir le projet" : isEs ? "Ver el proyecto" : "Live demo"}
                     </a>
                   )}
                 </div>
@@ -577,7 +577,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               {fileAssets.length > 0 && !hasStaticResources && (
                 <div className="card p-5 space-y-3">
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
-                    {isFr ? "Livrables" : "Deliverables"}
+                    {isFr ? "Livrables" : isEs ? "Entregables" : "Deliverables"}
                   </p>
                   <ul className="space-y-3">
                     {fileAssets.map((a) => {
@@ -597,7 +597,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                                 rel="noreferrer"
                                 className="mt-1 inline-block text-xs text-cyan-600 dark:text-cyan-300 underline underline-offset-4 hover:opacity-70 transition-opacity"
                               >
-                                {isFr ? "Ouvrir" : "Open file"}
+                                {isFr ? "Ouvrir" : isEs ? "Abrir" : "Open file"}
                               </a>
                             )}
                           </div>
@@ -613,7 +613,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 href={`/${locale}/projects`}
                 className="flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
               >
-                ← {isFr ? "Tous les projets" : "All projects"}
+                ← {isFr ? "Tous les projets" : isEs ? "Todos los proyectos" : "All projects"}
               </Link>
 
             </div>

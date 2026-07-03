@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { BlogPostMeta } from "@/content/blog/fs";
-import { formatDate, detectTrack } from "@/lib/blog-utils";
+import { formatDate, detectTrack, translateTag } from "@/lib/blog-utils";
 
 interface Props {
   posts: BlogPostMeta[];
@@ -43,7 +43,7 @@ export default function RelatedPosts({ posts, locale, label }: Props) {
             <div className="text-sm font-semibold leading-snug line-clamp-3">{p.title}</div>
             <div className="mt-auto flex flex-wrap gap-1.5">
               {p.tags.slice(0, 2).map((tag) => (
-                <span key={tag} className="chip text-xs">{tag}</span>
+                <span key={tag} className="chip text-xs">{translateTag(tag, locale)}</span>
               ))}
             </div>
           </Link>

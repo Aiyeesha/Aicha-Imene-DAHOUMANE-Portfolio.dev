@@ -68,7 +68,7 @@ const tones: Record<string, string> = {
 };
 
 type ProjectsSectionProps = {
-  locale?: "en" | "fr";
+  locale?: "en" | "fr" | "es";
   projects: ProjectWithAssets[];
   /** Sur la page /projects, afficher aussi les projets featured (pas de FeaturedProjects au-dessus) */
   includeFeatured?: boolean;
@@ -79,7 +79,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
   const { track, setTrack } = useTrack();
   const pathname = usePathname();
   const pathnameLocale = pathname.split("/")[1];
-  const locale: "en" | "fr" = localeProp ?? (pathnameLocale === "fr" ? "fr" : "en");
+  const locale: "en" | "fr" | "es" = localeProp ?? (pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en");
+  // tCategory/tBadge/tTag translate against a fr/en-only taxonomy dictionary
+  // (content/projectTaxonomy.ts) — Spanish gracefully falls back to English there.
+  const taxonomyLocale: "en" | "fr" = locale === "fr" ? "fr" : "en";
 
   const [q, setQ] = useState("");
   const [active, setActive] = useState<string>("All");
@@ -159,7 +162,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div
           role="tablist"
-          aria-label={locale === "fr" ? "Filtrer par parcours" : "Filter by track"}
+          aria-label={locale === "fr" ? "Filtrer par parcours" : locale === "es" ? "Filtrar por trayectoria" : "Filter by track"}
           className="flex rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-1"
         >
           {/* Tab "All" — visible uniquement sur la page /projects complète */}
@@ -182,7 +185,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
               ].join(" ")}
             >
-              {locale === "fr" ? "Tous" : "All"}
+              {locale === "fr" ? "Tous" : locale === "es" ? "Todos" : "All"}
               <span className={[
                 "rounded-full px-1.5 py-0.5 text-xs leading-none",
                 activeTab === "all"
@@ -267,7 +270,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white/10"
               }`}
             >
-              {tCategory(c, locale)}
+              {tCategory(c, taxonomyLocale)}
             </button>
           ))}
         </div>
@@ -316,7 +319,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-lg font-semibold">{p.title}</h3>
                 {p.badge ? (
-                  <span className={tones[p.badge.tone]}>{tBadge(p.badge.label, locale)}</span>
+                  <span className={tones[p.badge.tone]}>{tBadge(p.badge.label, taxonomyLocale)}</span>
                 ) : null}
               </div>
 
@@ -326,7 +329,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
               {/* Tags techniques */}
               <div className="mt-4 flex flex-wrap gap-2">
                 {(p.tags ?? []).map((tag) => (
-                  <span key={tag} className="chip">{tTag(tag, locale)}</span>
+                  <span key={tag} className="chip">{tTag(tag, taxonomyLocale)}</span>
                 ))}
               </div>
 
