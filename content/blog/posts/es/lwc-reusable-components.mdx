@@ -1,0 +1,335 @@
+---
+title: "Construir Lightning Web Components reutilizables: patrones y buenas prácticas"
+excerpt: "Aprende a diseñar y construir componentes LWC verdaderamente reutilizables usando composición, eventos y slots — con patrones reales que puedes aplicar hoy mismo."
+date: "2025-03-10"
+tags: ["Salesforce", "LWC", "Lightning", "Front-end", "Best Practices"]
+---
+
+Lightning Web Components (LWC) es el framework de front-end moderno de Salesforce. Pero escribir un componente que funcione es una cosa, y escribir uno verdaderamente **reutilizable** en múltiples contextos es otra muy distinta. Aquí te explico cómo hacerlo bien.
+
+## ¿Qué hace que un componente sea "reutilizable"?
+
+Un componente reutilizable:
+- Hace **una sola cosa bien** (responsabilidad única)
+- Recibe datos a través de propiedades `@api`, no valores fijos
+- Se comunica hacia afuera mediante **eventos**, no manipulando el DOM directamente
+- Funciona en cualquier contexto padre: App Builder, página de registro, Flow, Aura
+
+## 1. Diseña primero las propiedades `@api`
+
+La API pública de tu componente se define por sus propiedades `@api`. Diséñalas antes de escribir la lógica.
+
+**❌ Componente con valores fijos (no reutilizable):**
+```js
+// statusBadge.js — con valores fijos, inútil fuera de un contexto concreto
+export default class StatusBadge extends LightningElement {
+    get statusLabel() { return 'Active'; }
+    get badgeColor() { return 'slds-badge_success'; }
+}
+```
+
+**✅ Componente reutilizable con `@api`:**
+```js
+// statusBadge.js
+import { LightningElement, api } from 'lwc';
+
+export default class StatusBadge extends LightningElement {
+    @api label = 'Unknown';
+    @api variant = 'default'; // 'success' | 'warning' | 'error' | 'default'
+
+    get badgeClass() {
+        const map = {
+            success: 'slds-badge slds-badge_success',
+            warning: 'slds-badge slds-badge_warning',
+            error: 'slds-badge slds-badge_error',
+            default: 'slds-badge'
+        };
+        return map[this.variant] || map.default;
+    }
+}
+```
+
+```html
+<!-- statusBadge.html -->
+<template>
+    <span class={badgeClass}>{label}</span>
+</template>
+```
+
+Uso desde cualquier padre:
+```html
+<c-status-badge label="Active" variant="success"></c-status-badge>
+<c-status-badge label="On Hold" variant="warning"></c-status-badge>
+```
+
+## 2. Comunica hacia arriba con eventos personalizados
+
+Nunca dejes que un componente hijo modifique directamente el estado de su padre. Usa `CustomEvent` para disparar eventos hacia arriba.
+
+**Patrón: el hijo dispara un evento, el padre lo maneja.**
+
+```js
+// confirmButton.js — hijo
+import { LightningElement, api } from 'lwc';
+
+export default class ConfirmButton extends LightningElement {
+    @api label = 'Confirm';
+    @api disabled = false;
+
+    handleClick() {
+        this.dispatchEvent(new CustomEvent('confirm'));
+    }
+}
+```
+
+```html
+<!-- confirmButton.html -->
+<template>
+    <lightning-button
+        label={label}
+        disabled={disabled}
+        onclick={handleClick}
+        variant="brand">
+    </lightning-button>
+</template>
+```
+
+Componente padre:
+```html
+<!-- parentForm.html -->
+<template>
+    <c-confirm-button
+        label="Save Record"
+        onconfirm={handleSave}>
+    </c-confirm-button>
+</template>
+```
+
+```js
+// parentForm.js
+handleSave() {
+    // el padre decide qué ocurre cuando el hijo dispara "confirm"
+    this.saveRecord();
+}
+```
+
+### Pasar datos con eventos
+
+Para enviar datos hacia arriba, usa la propiedad `detail` de `CustomEvent`:
+
+```js
+// searchInput.js
+handleSearch(event) {
+    this.dispatchEvent(new CustomEvent('search', {
+        detail: { query: event.target.value }
+    }));
+}
+```
+
+```js
+// padre
+handleSearch(event) {
+    const { query } = event.detail;
+    this.performSearch(query);
+}
+```
+
+## 3. Usa slots para flexibilidad estructural
+
+Los slots permiten que un padre inyecte contenido arbitrario en un hijo, convirtiendo al hijo en un contenedor de layout.
+
+```html
+<!-- card.html — estructura de tarjeta reutilizable -->
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <slot name="header">Default Title</slot>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <slot></slot> <!-- slot por defecto -->
+        </div>
+        <div class="slds-card__footer">
+            <slot name="footer"></slot>
+        </div>
+    </div>
+</template>
+```
+
+Padre usando la tarjeta:
+```html
+<c-card>
+    <span slot="header">Opportunity Details</span>
+    <p>Content goes here...</p>
+    <c-confirm-button slot="footer" label="Close" onconfirm={handleClose}></c-confirm-button>
+</c-card>
+```
+
+El componente `card` no sabe nada sobre su contenido: es puramente estructural.
+
+## 4. El patrón Container / Presentacional
+
+Divide tus componentes en dos categorías:
+
+| Contenedor | Presentacional |
+|-----------|---------------|
+| Obtiene datos (wire, imperativo) | Recibe datos vía `@api` |
+| Gestiona el estado | No tiene estado |
+| Maneja errores | Solo renderiza |
+| Nombrado `*Container` o `*Page` | Nombrado según lo que muestra |
+
+**Componente contenedor:**
+```js
+// accountSummaryContainer.js
+import { LightningElement, wire } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
+import ACCOUNT_PHONE from '@salesforce/schema/Account.Phone';
+
+export default class AccountSummaryContainer extends LightningElement {
+    @api recordId;
+
+    @wire(getRecord, { recordId: '$recordId', fields: [ACCOUNT_NAME, ACCOUNT_PHONE] })
+    account;
+
+    get accountData() {
+        if (!this.account.data) return null;
+        return {
+            name: this.account.data.fields.Name.value,
+            phone: this.account.data.fields.Phone.value
+        };
+    }
+
+    get isLoading() { return !this.account.data && !this.account.error; }
+    get hasError() { return Boolean(this.account.error); }
+}
+```
+
+**Componente presentacional (solo visualización):**
+```js
+// accountSummaryCard.js
+import { LightningElement, api } from 'lwc';
+
+export default class AccountSummaryCard extends LightningElement {
+    @api name;
+    @api phone;
+}
+```
+
+```html
+<!-- accountSummaryCard.html — sin wire, sin lógica -->
+<template>
+    <div class="slds-box">
+        <h2>{name}</h2>
+        <p>{phone}</p>
+    </div>
+</template>
+```
+
+El template del contenedor los conecta entre sí:
+```html
+<!-- accountSummaryContainer.html -->
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner></lightning-spinner>
+    </template>
+    <template if:true={accountData}>
+        <c-account-summary-card
+            name={accountData.name}
+            phone={accountData.phone}>
+        </c-account-summary-card>
+    </template>
+</template>
+```
+
+## 5. Evita los antipatrones
+
+### ❌ Consultar el DOM en el lifecycle hook equivocado
+
+```js
+// Incorrecto: el DOM no está listo en el constructor
+constructor() {
+    super();
+    const el = this.template.querySelector('.my-div'); // ¡null!
+}
+
+// Correcto: usa connectedCallback o renderedCallback
+connectedCallback() {
+    // el DOM tampoco está listo aquí para componentes hijos
+}
+
+renderedCallback() {
+    // el DOM está listo — pero se ejecuta después de cada render, protégelo
+    if (this._initialized) return;
+    this._initialized = true;
+    const el = this.template.querySelector('.my-div');
+}
+```
+
+### ❌ Mutar objetos `@api` directamente
+
+```js
+// Incorrecto: mutar un objeto recibido vía @api
+this.record.Name = 'New Name'; // error en modo estricto de LWC
+
+// Correcto: crea una copia local
+this._record = { ...this.record, Name: 'New Name' };
+```
+
+### ❌ Acoplamiento fuerte vía `querySelector` entre límites de componentes
+
+```js
+// Incorrecto: el padre accede directamente al DOM del hijo
+const childInput = this.template.querySelector('c-my-input').shadowRoot.querySelector('input');
+
+// Correcto: usa métodos @api en el hijo
+// En el hijo:
+@api focus() { this.template.querySelector('input').focus(); }
+// En el padre:
+this.template.querySelector('c-my-input').focus();
+```
+
+## 6. Configuración meta del componente
+
+No olvides configurar en qué contextos se admite tu componente en `*.js-meta.xml`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="label" type="String" label="Button Label" default="Confirm"/>
+            <property name="variant" type="String" label="Variant" default="default"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
+```
+
+## Checklist de reutilización
+
+Antes de publicar un componente, verifica:
+
+- [ ] Todos los valores mostrados provienen de `@api` (sin cadenas fijas)
+- [ ] La comunicación hacia afuera usa `CustomEvent`, no referencias directas al padre
+- [ ] Ninguna llamada Apex imperativa dentro de un componente presentacional
+- [ ] Slots usados donde se necesita flexibilidad estructural
+- [ ] `js-meta.xml` declara los targets y propiedades correctos
+- [ ] Componente testeado de forma aislada con `@lwc/jest-utils`
+- [ ] Funciona tanto con `recordId` presente como ausente (degradación elegante)
+
+## Conclusión
+
+Los componentes LWC reutilizables se construyen sobre tres pilares: **`@api` para la entrada**, **eventos para la salida** y **slots para la estructura**. Aplica la separación container/presentacional y verás que tus componentes se componen limpiamente, se testean con facilidad y sobreviven a los cambios de requisitos sin necesidad de reescrituras.
+
+---
+
+**Recursos útiles:**
+- [LWC Developer Guide - Salesforce](https://developer.salesforce.com/docs/component-library/documentation/en/lwc)
+- [LWC Recipes - Open Source](https://github.com/trailheadapps/lwc-recipes)
+- [Component Communication - Trailhead](https://trailhead.salesforce.com/content/learn/modules/lightning-web-components-and-salesforce-data)
