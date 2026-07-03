@@ -14,20 +14,25 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function Image({ params }: Props) {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  const title   = isFr ? "Ressources & Boîte à outils" : "Resources & Toolbox";
+  const title   = isFr ? "Ressources & Boîte à outils" : isEs ? "Recursos y caja de herramientas" : "Resources & Toolbox";
   const subtitle = isFr
     ? "Outils, stacks et références en Salesforce, IT Ops et développement web"
+    : isEs
+    ? "Herramientas, stacks y referencias en Salesforce, IT Ops y desarrollo web"
     : "Tools, stacks and references across Salesforce, IT Ops and web development";
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
   const tags = isFr
+    ? ["Salesforce", "IT Ops", "Web Dev", "Open Source"]
+    : isEs
     ? ["Salesforce", "IT Ops", "Web Dev", "Open Source"]
     : ["Salesforce", "IT Ops", "Web Dev", "Open Source"];
 

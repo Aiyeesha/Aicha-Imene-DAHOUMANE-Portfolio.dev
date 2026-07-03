@@ -18,6 +18,7 @@ const AVAILABILITY: { status: AvailabilityStatus; since: Record<"en" | "fr", str
 export default function WorkWithMeContent({ locale }: { locale: string }) {
   const { track } = useTrack();
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const isSf = track === "salesforce";
 
   // ── Couleurs accent selon le track ────────────────────────────────────────
@@ -40,42 +41,58 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       };
 
   const labels = {
-    kicker:         isFr ? "Freelance · Remote · Mobilité & Relocalisation" : "Freelance · Remote · Open to Relocation",
-    h1:             isFr ? "Travaillons ensemble" : "Work with me",
+    kicker:         isFr ? "Freelance · Remote · Mobilité & Relocalisation" : isEs ? "Freelance · Remoto · Movilidad y Relocalización" : "Freelance · Remote · Open to Relocation",
+    h1:             isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntas" : "Work with me",
     subtitle:       isFr
       ? "Je suis disponible pour des missions freelance en Salesforce et IT Ops — 100 % Remote, hybride ou sur site, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
+      : isEs
+      ? "Estoy disponible para proyectos freelance en Salesforce e IT Ops — 100 % remoto, híbrido o presencial, totalmente abierta a la movilidad y a la relocalización, en Francia, Europa o en un contexto de habla inglesa."
       : "I'm available for freelance Salesforce and IT Ops missions — 100 % Remote, hybrid or on-site, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
 
-    availTitle:     isFr ? "Disponibilité" : "Availability",
-    availOpen:      isFr ? "Disponible" : "Available",
-    availLimited:   isFr ? "Disponibilité limitée" : "Limited availability",
-    availNo:        isFr ? "Non disponible" : "Not available",
-    availSince:     isFr ? "Disponible dès maintenant" : "Available immediately",
+    availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
+    availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
+    availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
+    availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
+    availSince:     isFr ? "Disponible dès maintenant" : isEs ? "Disponible de inmediato" : "Available immediately",
     availContracts: isFr
       ? "CDI · CDD · Freelance · Mission"
+      : isEs
+      ? "Contrato indefinido · Temporal · Freelance · Proyecto"
       : "Permanent · Fixed-term · Freelance · Contract",
     availMode:      isFr
       ? "100 % Remote · Hybride · Sur site · Marseille / Provence-Alpes-Côte d'Azur · Mobilité & relocalisation — France, Europe, pays anglophones"
+      : isEs
+      ? "100 % remoto · Híbrido · Presencial · Marsella / Provenza-Alpes-Costa Azul · Movilidad y relocalización — Francia, Europa, países de habla inglesa"
       : "100 % Remote · Hybrid · On-site · Marseille / Provence-Alpes-Côte d'Azur · Mobility & relocation — France, Europe, English-speaking countries",
 
-    lookingTitle:   isFr ? "Ce que je recherche" : "What I'm looking for",
-    domainsLabel:   isFr ? "Domaines" : "Domains",
+    lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
+    domainsLabel:   isFr ? "Domaines" : isEs ? "Ámbitos" : "Domains",
     domains:        ["Salesforce Dev", "Administration Salesforce", "IT Ops", "DevOps / CI·CD", "Web · Next.js"],
-    durationLabel:  isFr ? "Durée" : "Duration",
+    durationLabel:  isFr ? "Durée" : isEs ? "Duración" : "Duration",
     durations:      isFr
       ? ["Courte", "Longue", "Récurrente", "Au cas par cas"]
+      : isEs
+      ? ["Corta", "Larga", "Recurrente", "Puntual"]
       : ["Short", "Long", "Ongoing", "Ad-hoc"],
-    modeLabel:      isFr ? "Mode" : "Mode",
+    modeLabel:      isFr ? "Mode" : isEs ? "Modalidad" : "Mode",
     modes:          isFr
       ? ["100 % Remote", "Hybride · Sur site", "Mobilité & relocalisation envisageables"]
+      : isEs
+      ? ["100 % remoto", "Híbrido · Presencial", "Abierta a movilidad y relocalización"]
       : ["100% Remote", "Hybrid · On-site", "Open to mobility & relocation"],
 
-    processTitle:   isFr ? "Mon process" : "My process",
+    processTitle:   isFr ? "Mon process" : isEs ? "Mi proceso" : "My process",
     steps: isFr
       ? [
           { n: "01", title: "Appel découverte",    desc: "30 min, sans engagement. On discute du besoin, du périmètre et des contraintes.",  badge: "Gratuit" },
           { n: "02", title: "Proposition & devis", desc: "Devis détaillé sous 48 h — périmètre, jalons, livrables et conditions.",           badge: "48 h" },
           { n: "03", title: "Démarrage",           desc: "On fixe le planning et je démarre dès la première semaine disponible.",             badge: "Rapide" },
+        ]
+      : isEs
+      ? [
+          { n: "01", title: "Llamada de descubrimiento", desc: "30 min, sin compromiso. Hablamos de tu necesidad, el alcance y las restricciones.", badge: "Gratis" },
+          { n: "02", title: "Propuesta y presupuesto",   desc: "Presupuesto detallado en 48 h — alcance, hitos, entregables y condiciones.",        badge: "48 h" },
+          { n: "03", title: "Puesta en marcha",          desc: "Fijamos el calendario y empiezo desde la primera semana disponible.",               badge: "Rápido" },
         ]
       : [
           { n: "01", title: "Discovery call",   desc: "30 min, no commitment. We discuss your needs, scope, and constraints.",           badge: "Free" },
@@ -83,12 +100,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
           { n: "03", title: "Kick-off",         desc: "We set the schedule and I start in your first available week.",                   badge: "Fast" },
         ],
 
-    faqTitle: isFr ? "Questions fréquentes" : "FAQ",
+    faqTitle: isFr ? "Questions fréquentes" : isEs ? "Preguntas frecuentes" : "FAQ",
     faqs: isFr
       ? [
           { q: "Sous quel type de contrat intervenez-vous ?",       a: "Je travaille en CDI, CDD, freelance ou mission selon le contexte — en France et à l'international. Décrivez votre besoin et on verra ensemble ce qui convient le mieux." },
           { q: "Êtes-vous disponible pour des missions courtes ?",  a: "Oui, y compris pour des audits, des formations ou des interventions ponctuelles. Décrivez le besoin et je reviens sous 24 h." },
           { q: "Quelle est votre zone géographique ?",              a: "Je travaille 100 % à distance depuis Marseille / Provence-Alpes-Côte d'Azur, et je suis ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
+        ]
+      : isEs
+      ? [
+          { q: "¿Bajo qué tipo de contrato trabajas?",           a: "Trabajo con contrato indefinido, temporal, freelance o por proyecto según el contexto — en Francia y a nivel internacional. Cuéntame tu necesidad y vemos juntas qué encaja mejor." },
+          { q: "¿Estás disponible para proyectos cortos?",       a: "Sí, incluyendo auditorías, formaciones o intervenciones puntuales. Describe la necesidad y te respondo en 24 h." },
+          { q: "¿Cuál es tu zona geográfica?",                   a: "Trabajo 100 % en remoto desde Marsella / Provenza-Alpes-Costa Azul, y estoy abierta a la movilidad y a la relocalización — en Francia y a nivel internacional: Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Reino Unido, Irlanda, Malta) y cualquier contexto de habla inglesa." },
         ]
       : [
           { q: "What contract type works best?",             a: "I work on permanent, fixed-term, freelance, or contract engagements — in France and internationally. Tell me about your context and we'll find what fits." },
@@ -96,13 +119,13 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
           { q: "Where are you based?",                       a: "I work 100% remotely from Marseille / Provence-Alpes-Côte d'Azur, and I'm open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
         ],
 
-    ctaTitle:    isFr ? "Une mission en tête ?" : "Got a mission in mind?",
-    ctaSubtitle: isFr ? "Décrivez votre besoin en quelques lignes — je reviens sous 24 h." : "Describe your needs in a few lines — I'll get back to you within 24 h.",
-    ctaContact:  isFr ? "Envoyer un message" : "Send a message",
-    ctaServices: isFr ? "Voir les services" : "View services",
-    backHome:    isFr ? "← Retour à l'accueil" : "← Back to home",
-    breadHome:   isFr ? "Accueil" : "Home",
-    breadLabel:  isFr ? "Fil d'Ariane" : "Breadcrumb",
+    ctaTitle:    isFr ? "Une mission en tête ?" : isEs ? "¿Tienes un proyecto en mente?" : "Got a mission in mind?",
+    ctaSubtitle: isFr ? "Décrivez votre besoin en quelques lignes — je reviens sous 24 h." : isEs ? "Describe tu necesidad en pocas líneas — te respondo en 24 h." : "Describe your needs in a few lines — I'll get back to you within 24 h.",
+    ctaContact:  isFr ? "Envoyer un message" : isEs ? "Enviar un mensaje" : "Send a message",
+    ctaServices: isFr ? "Voir les services" : isEs ? "Ver los servicios" : "View services",
+    backHome:    isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
+    breadHome:   isFr ? "Accueil" : isEs ? "Inicio" : "Home",
+    breadLabel:  isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb",
   };
 
   const statusLabel = AVAILABILITY.status === "open" ? labels.availOpen
@@ -125,6 +148,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     url: `${siteUrl}/${locale}/work-with-me`,
     description: isFr
       ? "Missions freelance Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
+      : isEs
+      ? "Proyectos freelance de Salesforce e IT Ops — 100 % remoto, abierta a la movilidad y a la relocalización en Francia, Europa y países de habla inglesa en todo el mundo."
       : "Freelance Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
     serviceType: ["Salesforce Development", "Salesforce Administration", "IT Operations", "DevOps / CI·CD", "Web Development"],
     provider: { "@type": "Person", name: ownerName, url: siteUrl },
@@ -230,7 +255,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <CalendlyPopupButton
             url={CALENDLY_URL}
-            label={isFr ? "Réserver un appel" : "Book a call"}
+            label={isFr ? "Réserver un appel" : isEs ? "Reservar una llamada" : "Book a call"}
             className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}
           />
           <Link href={`/${locale}/#contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">

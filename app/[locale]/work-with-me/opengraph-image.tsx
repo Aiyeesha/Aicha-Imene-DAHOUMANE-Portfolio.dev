@@ -10,15 +10,18 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function Image({ params }: Props) {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl().replace(/^https?:\/\//, "");
 
-  const title    = isFr ? "Travaillons ensemble" : "Work with me";
+  const title    = isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntos" : "Work with me";
   const subtitle = isFr
     ? "Salesforce · IT Ops · 100 % Remote · France & international"
+    : isEs
+    ? "Salesforce · IT Ops · 100 % Remoto · España e internacional"
     : "Salesforce · IT Ops · 100 % Remote · France & worldwide";
-  const availLabel = isFr ? "Disponible dès maintenant" : "Available immediately";
+  const availLabel = isFr ? "Disponible dès maintenant" : isEs ? "Disponible de inmediato" : "Available immediately";
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
@@ -26,6 +29,8 @@ export default async function Image({ params }: Props) {
 
   const domains = isFr
     ? ["Salesforce Dev", "Admin Salesforce", "IT Ops", "DevOps / CI·CD"]
+    : isEs
+    ? ["Salesforce Dev", "Administración Salesforce", "IT Ops", "DevOps / CI·CD"]
     : ["Salesforce Dev", "Salesforce Admin", "IT Ops", "DevOps / CI·CD"];
 
   return new ImageResponse(

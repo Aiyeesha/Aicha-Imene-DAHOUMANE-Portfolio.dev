@@ -29,11 +29,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
 
   return {
     title: isFr
       ? "Partagez votre témoignage — Aïcha Imène DAHOUMANE"
+      : isEs
+      ? "Comparte tu testimonio — Aïcha Imène DAHOUMANE"
       : "Share your testimonial — Aïcha Imène DAHOUMANE",
     // Exclure des moteurs de recherche et de l'indexation
     robots: { index: false, follow: false },
@@ -57,6 +60,10 @@ export default async function TestimonialSubmitPage({
   const sp                    = await searchParams;
   const locale                = rawLocale === "fr" ? "fr" : "en";
   const isFr                  = locale === "fr";
+  // `locale` above is narrowed to "fr" | "en" for the TestimonialSubmitForm
+  // prop (out of scope for this change); `isEs` here only gates the plain
+  // text labels on this page, derived from the raw (unnarrowed) locale.
+  const isEs                  = rawLocale === "es";
 
   // ── Validation du lien d'invitation HMAC ──────────────────────────────────
   // Format : ?invite=<hmac-sha256-hex>&exp=<unix-timestamp-seconds>
@@ -91,11 +98,13 @@ export default async function TestimonialSubmitPage({
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <p className="text-4xl">🔒</p>
         <h1 className="mt-4 text-xl font-semibold">
-          {isFr ? "Accès non autorisé" : "Access denied"}
+          {isFr ? "Accès non autorisé" : isEs ? "Acceso no autorizado" : "Access denied"}
         </h1>
         <p className="mt-3 text-sm text-muted">
           {isFr
             ? "Ce lien n'est pas valide ou a expiré. Contactez Aïcha directement."
+            : isEs
+            ? "Este enlace no es válido o ha caducado. Contacta con Aïcha directamente."
             : "This link is invalid or has expired. Please contact Aïcha directly."}
         </p>
       </div>
@@ -116,11 +125,13 @@ export default async function TestimonialSubmitPage({
       {/* En-tête */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold">
-          {isFr ? "Partagez votre témoignage" : "Share your testimonial"}
+          {isFr ? "Partagez votre témoignage" : isEs ? "Comparte tu testimonio" : "Share your testimonial"}
         </h1>
         <p className="mt-2 text-sm text-muted">
           {isFr
             ? "Votre retour aide d'autres professionnels à comprendre comment je travaille. Merci d'avoir pris le temps de répondre — votre témoignage sera relu avant publication."
+            : isEs
+            ? "Tu opinión ayuda a otros profesionales a entender cómo trabajo. Gracias por tomarte el tiempo de responder — tu testimonio será revisado antes de publicarse."
             : "Your feedback helps other professionals understand what it's like to work with me. Thank you for taking the time — your testimonial will be reviewed before being published."}
         </p>
       </div>
@@ -132,6 +143,8 @@ export default async function TestimonialSubmitPage({
       <p className="mt-8 text-xs text-muted-2">
         {isFr
           ? "Vos informations ne sont utilisées qu'aux fins du témoignage sur ce portfolio. Elles ne seront jamais revendues ni partagées avec des tiers."
+          : isEs
+          ? "Tu información se utiliza únicamente para el testimonio en este portfolio. Nunca será vendida ni compartida con terceros."
           : "Your information is used solely for this portfolio testimonial. It will never be sold or shared with third parties."}
       </p>
     </div>
