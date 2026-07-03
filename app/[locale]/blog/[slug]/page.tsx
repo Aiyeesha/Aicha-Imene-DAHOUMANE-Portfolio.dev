@@ -14,7 +14,7 @@ import SeriesBanner from "@/components/blog/SeriesBanner";
 import ScrollProgress from "@/components/ScrollProgress";
 import ShareButtons from "@/components/blog/ShareButtons";
 import { getPrevNext } from "@/content/blog/navigation";
-import { formatDate, detectTrack } from "@/lib/blog-utils";
+import { formatDate, detectTrack, translateTag } from "@/lib/blog-utils";
 import { getSeriePosition } from "@/content/blog/series";
 import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
@@ -149,7 +149,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     url: postUrl,
     datePublished: meta.date,
     dateModified: (meta as { updatedDate?: string }).updatedDate ?? meta.date,
-    inLanguage: locale === "fr" ? "fr-FR" : "en-US",
+    inLanguage: locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US",
     keywords: meta.tags.join(", "),
     image: coverImageUrl,
     author: {
@@ -171,7 +171,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: locale === "fr" ? "Accueil" : "Home",  item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 1, name: locale === "fr" ? "Accueil" : locale === "es" ? "Inicio" : "Home",  item: `${siteUrl}/${locale}` },
       { "@type": "ListItem", position: 2, name: "Blog",                                 item: blogUrl },
       { "@type": "ListItem", position: 3, name: meta.title,                             item: postUrl },
     ],
@@ -207,7 +207,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
                     href={`/${locale}/blog?tag=${encodeURIComponent(tg)}`}
                     className="chip hover:opacity-90"
                   >
-                    {tg}
+                    {translateTag(tg, locale)}
                   </Link>
                 ))}
               </div>

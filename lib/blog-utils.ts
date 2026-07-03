@@ -2,7 +2,7 @@
 export function formatDate(dateStr: string, locale: string): string {
   const [year, month, day] = dateStr.split("-").map(Number);
   const date = new Date(year, month - 1, day);
-  return new Intl.DateTimeFormat(locale === "fr" ? "fr-FR" : "en-US", {
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -42,10 +42,32 @@ const TAG_FR: Record<string, string> = {
   "Scripts":          "Scripts",
 };
 
-/** Translate a tag to the target locale (passthrough for EN, maps known tags for FR). */
+const TAG_ES: Record<string, string> = {
+  "Security":         "Seguridad",
+  "Backup":           "Copia de seguridad",
+  "Monitoring":       "Supervisión",
+  "Hardening":        "Bastionado",
+  "Networking":       "Redes",
+  "Incident Response":"Gestión de incidentes",
+  "Virtualization":   "Virtualización",
+  "Performance":      "Rendimiento",
+  "Caching":          "Cache",
+  "Deployment":       "Despliegue",
+  "Testing":          "Pruebas",
+  "Best Practices":   "Buenas prácticas",
+  "Database":         "Base de datos",
+  "Automation":       "Automatización",
+  "Animation":        "Animación",
+  "Web":              "Web",
+  "UI":               "Interfaz",
+  "Scripts":          "Scripts",
+};
+
+/** Translate a tag to the target locale (passthrough for EN, maps known tags for FR/ES). */
 export function translateTag(tag: string, locale: string): string {
-  if (locale !== "fr") return tag;
-  return TAG_FR[tag] ?? tag;
+  if (locale === "fr") return TAG_FR[tag] ?? tag;
+  if (locale === "es") return TAG_ES[tag] ?? tag;
+  return tag;
 }
 
 /** Count tag frequency from a list of posts and return sorted pairs [tag, count]. */
