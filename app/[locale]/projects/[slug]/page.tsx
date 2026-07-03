@@ -288,6 +288,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const siteUrl = getSiteUrl();
 
   const isFrPage = locale === "fr";
+  const isEsPage = locale === "es";
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -296,13 +297,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       {
         "@type": "ListItem",
         position: 1,
-        name: isFrPage ? "Accueil" : "Home",
+        name: isFrPage ? "Accueil" : isEsPage ? "Inicio" : "Home",
         item: `${siteUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: isFrPage ? "Projets" : "Projects",
+        name: isFrPage ? "Projets" : isEsPage ? "Proyectos" : "Projects",
         item: `${siteUrl}/${locale}/projects`,
       },
       {
@@ -394,6 +395,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const galleryRest = gallery.slice(1);
 
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   return (
     <main className="py-10 md:py-16">
@@ -412,7 +414,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           href={`/${locale}/projects`}
           className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
         >
-          ← {isFr ? "Retour aux projets" : "Back to projects"}
+          ← {isFr ? "Retour aux projets" : isEs ? "Volver a proyectos" : "Back to projects"}
         </Link>
 
         {/* ── COVER IMAGE ──────────────────────────────────────────────────── */}
@@ -491,7 +493,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 <div className="flex items-center gap-3 mb-5">
                   <span className="h-5 w-1.5 rounded-full bg-slate-400 flex-shrink-0" aria-hidden />
                   <h2 className="text-base font-semibold text-strong tracking-tight">
-                    {isFr ? "Captures d'écran" : "Screenshots"}
+                    {isFr ? "Captures d'écran" : isEs ? "Capturas de pantalla" : "Screenshots"}
                   </h2>
                 </div>
                 <ImageGallery images={galleryRest} />
@@ -506,7 +508,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               {/* Project metadata card */}
               <div className="card p-5 space-y-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
-                  {isFr ? "Informations" : "Project info"}
+                  {isFr ? "Informations" : isEs ? "Información" : "Project info"}
                 </p>
 
                 {badge && (
@@ -519,7 +521,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {tags.length > 0 && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
-                      {isFr ? "Compétences" : "Skills"}
+                      {isFr ? "Compétences" : isEs ? "Habilidades" : "Skills"}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {tags.map((tag) => (
@@ -532,7 +534,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {techStack.length > 0 && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
-                      {isFr ? "Technologies" : "Tech stack"}
+                      {isFr ? "Technologies" : isEs ? "Tecnologías" : "Tech stack"}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {techStack.map((t) => (
