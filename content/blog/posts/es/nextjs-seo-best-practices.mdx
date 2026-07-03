@@ -1,0 +1,257 @@
+---
+title: "SEO en Next.js: Metadata API, sitemaps y datos estructurados"
+excerpt: "Implementa el SEO correctamente en Next.js 14+ — generateMetadata, opengraph-image, configuración de next-sitemap, datos estructurados JSON-LD y URLs canónicas."
+date: "2025-06-17"
+tags: ["Next.js", "SEO", "Web"]
+featured: false
+---
+
+El App Router de Next.js ofrece potentes herramientas integradas para el SEO. Pero la mayoría de los tutoriales solo arañan la superficie. Aquí tienes una implementación completa que cubre metadatos, imágenes Open Graph, datos estructurados y sitemaps.
+
+---
+
+## Requisitos previos
+
+- Next.js 14+ con App Router
+- Conocimientos básicos de metadatos y conceptos de SEO
+
+---
+
+## generateMetadata — SEO dinámico por página
+
+La función `generateMetadata` sustituye al antiguo componente `Head`. Se ejecuta en el servidor y admite obtención de datos asíncrona:
+
+```tsx
+// app/[locale]/blog/[slug]/page.tsx
+import type { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ locale: string; slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const post = await getPostBySlug(slug, locale);
+
+  if (!post) return { title: "Post not found" };
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yoursite.com";
+  const canonical = `${siteUrl}/${locale}/blog/${slug}`;
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: {
+      canonical,
+      languages: {
+        en: `${siteUrl}/en/blog/${slug}`,
+        fr: `${siteUrl}/fr/blog/${slug}`,
+      },
+    },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      url: canonical,
+      publishedTime: post.date,
+      authors: ["Aïcha Imène DAHOUMANE"],
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
+  };
+}
+```
+
+---
+
+## opengraph-image.tsx — imágenes OG generadas de forma programática
+
+En lugar de imágenes estáticas, genera imágenes Open Graph dinámicas con la API `ImageResponse`:
+
+```tsx
+// app/[locale]/blog/[slug]/opengraph-image.tsx
+import { ImageResponse } from "next/og";
+
+export const runtime = "edge";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+
+type Props = { params: Promise<{ slug: string; locale: string }> };
+
+export default async function Image({ params }: Props) {
+  const { slug, locale } = await params;
+  const post = await getPostBySlug(slug, locale);
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          padding: "60px",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ color: "#22d3ee", fontSize: 18, fontWeight: 600 }}>
+          yoursite.com
+        </div>
+        <div>
+          <div style={{ color: "#f1f5f9", fontSize: 52, fontWeight: 700, lineHeight: 1.2 }}>
+            {post?.title ?? "Article"}
+          </div>
+          <div style={{ color: "#94a3b8", fontSize: 24, marginTop: 20 }}>
+            {post?.excerpt}
+          </div>
+        </div>
+      </div>
+    ),
+    { ...size }
+  );
+}
+```
+
+---
+
+## Datos estructurados JSON-LD
+
+Añade datos estructurados para obtener resultados enriquecidos en Google Search:
+
+```tsx
+// components/JsonLd.tsx
+export function PersonSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Aïcha Imène DAHOUMANE",
+    url: "https://yoursite.com",
+    jobTitle: "Salesforce Developer & IT Consultant",
+    sameAs: [
+      "https://github.com/Aiyeesha",
+      "https://www.linkedin.com/in/aïcha-imène-dahoumane",
+    ],
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function ArticleSchema({ post, url }: { post: Post; url: string }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    author: {
+      "@type": "Person",
+      name: "Aïcha Imène DAHOUMANE",
+    },
+    url,
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+Utilízalos en tu layout y en la página respectivamente:
+
+```tsx
+// app/layout.tsx
+import { PersonSchema } from "@/components/JsonLd";
+// ...
+<body>
+  <PersonSchema />
+  {children}
+</body>
+```
+
+---
+
+## Configuración de next-sitemap
+
+```bash
+npm install next-sitemap
+```
+
+```js
+// next-sitemap.config.js
+/** @type {import('next-sitemap').IConfig} */
+module.exports = {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://yoursite.com",
+  generateRobotsTxt: true,
+  sitemapSize: 5000,
+  changefreq: "weekly",
+  priority: 0.7,
+  exclude: ["/admin/*", "/api/*"],
+  robotsTxtOptions: {
+    policies: [
+      { userAgent: "*", allow: "/" },
+      { userAgent: "*", disallow: ["/admin/", "/api/"] },
+    ],
+  },
+  // Soporte multilingüe
+  alternateRefs: [
+    { href: "https://yoursite.com/en", hreflang: "en" },
+    { href: "https://yoursite.com/fr", hreflang: "fr" },
+  ],
+};
+```
+
+```json
+// package.json
+{
+  "scripts": {
+    "postbuild": "next-sitemap"
+  }
+}
+```
+
+---
+
+## URLs canónicas y hreflang
+
+Configura siempre URLs canónicas para evitar penalizaciones por contenido duplicado:
+
+```tsx
+// En generateMetadata
+alternates: {
+  canonical: `https://yoursite.com/${locale}/blog/${slug}`,
+  languages: {
+    "en": `https://yoursite.com/en/blog/${slug}`,
+    "fr": `https://yoursite.com/fr/blog/${slug}`,
+    "x-default": `https://yoursite.com/en/blog/${slug}`,
+  },
+},
+```
+
+---
+
+## Errores comunes
+
+- **Falta de `x-default`**: incluye siempre el hreflang `x-default` apuntando a tu idioma principal
+- **Imágenes OG duplicadas**: si tienes `opengraph-image.tsx`, no configures también `openGraph.images` en los metadatos — entrarán en conflicto
+- **robots.txt bloqueando CSS/JS**: algunos `robots.txt` generados bloquean accidentalmente los assets — verifícalo en `yoursite.com/robots.txt`
+- **Rutas dinámicas ausentes del sitemap**: asegúrate de que `generateStaticParams` esté implementado para que `next-sitemap` rastree todos los slugs
+
+---
+
+## Recursos
+
+- [Metadata API de Next.js](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
+- [next-sitemap](https://github.com/iamvishnusankar/next-sitemap)
+- [Google Rich Results Test](https://search.google.com/test/rich-results)
+- [Tipos de Schema.org](https://schema.org/docs/full.html)
