@@ -100,7 +100,7 @@ function buildIndex(locale: BlogLocale): { index: MiniSearch<SearchDoc>; docs: S
 export async function GET(request: NextRequest) {
   const q      = (request.nextUrl.searchParams.get("q") ?? "").trim();
   const locale = (request.nextUrl.searchParams.get("locale") ?? "en") as BlogLocale;
-  const validLocale: BlogLocale = locale === "fr" ? "fr" : "en";
+  const validLocale: BlogLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   if (!q || q.length < 2) {
     return NextResponse.json({ results: [] });

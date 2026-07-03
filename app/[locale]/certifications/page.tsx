@@ -56,8 +56,8 @@ export async function generateMetadata({
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       siteName,
       images: [{ url: `${siteUrl}/${locale}/certifications/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
@@ -149,9 +149,9 @@ type PageProps = {
 
 export default async function CertificationsPage({ params }: PageProps) {
   const { locale } = await params;
-  const safeLocale = locale === "fr" ? "fr" : "en";
-  const isFr = safeLocale === "fr";
-  const isEs = (locale as string) === "es";
+  const safeLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
+  const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   // Note : la page utilise uniquement les données statiques (bilingues et complètes).
   // L'intégration Supabase sera activée ultérieurement quand les IDs et
@@ -180,7 +180,7 @@ export default async function CertificationsPage({ params }: PageProps) {
     credentialLink: isFr ? "Voir le justificatif" : isEs ? "Ver el justificante" : "View credential",
     diplomaLink: isFr ? "Voir le diplôme" : isEs ? "Ver el diploma" : "View diploma",
     breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    breadcrumbCerts: "Certifications",
+    breadcrumbCerts: isEs ? "Certificaciones" : "Certifications",
     intro: isFr
       ? "Diplômes RNCP obtenus, certifications actives et certifications en cours de préparation."
       : isEs
@@ -314,9 +314,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-sales-foundations",
       name: "Salesforce Sales Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Juil. 2026" : "Jul 2026",
+      target: isFr ? "Juil. 2026" : isEs ? "Jul. 2026" : "Jul 2026",
       description: isFr
         ? "Fondamentaux Sales Cloud : gestion des leads, opportunités, comptes, contacts et prévisions commerciales."
+        : isEs
+        ? "Fundamentos de Sales Cloud: gestión de leads, oportunidades, cuentas, contactos y previsión de ventas."
         : "Sales Cloud fundamentals: lead management, opportunities, accounts, contacts and sales forecasting.",
       initials: "SF",
       color: "bg-sky-700",
@@ -328,9 +330,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator",
       issuer: "Salesforce",
-      target: isFr ? "Juil. 2026" : "Jul 2026",
+      target: isFr ? "Juil. 2026" : isEs ? "Jul. 2026" : "Jul 2026",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
+        : isEs
+        ? "Administración avanzada: configuración, seguridad, automatizaciones con Flows, gestión de usuarios y mantenimiento de la org."
         : "Advanced administration: configuration, security, Flow automations, user management and org maintenance.",
       initials: "ADM",
       color: "bg-sky-800",
@@ -342,9 +346,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Août 2026" : "Aug 2026",
+      target: isFr ? "Août 2026" : isEs ? "Ago. 2026" : "Aug 2026",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
+        : isEs
+        ? "Diseño y despliegue de aplicaciones personalizadas en la plataforma Salesforce con herramientas low-code."
         : "Design and deployment of custom applications on the Salesforce platform using low-code tools.",
       initials: "PAB",
       color: "bg-sky-800",
@@ -355,9 +361,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-cpq-administrator",
       name: "Salesforce CPQ Administrator",
       issuer: "Salesforce",
-      target: isFr ? "Sept. 2026" : "Sep 2026",
+      target: isFr ? "Sept. 2026" : isEs ? "Sep. 2026" : "Sep 2026",
       description: isFr
         ? "Configuration Salesforce CPQ : catalogues produits, règles de prix, bundles et processus de devis complexes."
+        : isEs
+        ? "Configuración de Salesforce CPQ: catálogos de productos, reglas de precios, bundles y procesos de cotización complejos."
         : "Salesforce CPQ configuration: product catalogs, pricing rules, bundles and complex quoting processes.",
       initials: "CPQ",
       color: "bg-sky-800",
@@ -368,9 +376,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-marketing-cloud-admin",
       name: "Marketing Cloud Engagement Admin",
       issuer: "Salesforce",
-      target: isFr ? "Oct. 2026" : "Oct 2026",
+      target: isFr ? "Oct. 2026" : isEs ? "Oct. 2026" : "Oct 2026",
       description: isFr
         ? "Administration Marketing Cloud : Email Studio, Journey Builder, segmentation des abonnés et reporting."
+        : isEs
+        ? "Administración de Marketing Cloud: Email Studio, Journey Builder, segmentación de suscriptores e informes."
         : "Marketing Cloud administration: Email Studio, Journey Builder, subscriber segmentation and reporting.",
       initials: "MCA",
       color: "bg-sky-800",
@@ -381,9 +391,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-developer-i",
       name: "Salesforce Platform Developer I",
       issuer: "Salesforce",
-      target: isFr ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
+        : isEs
+        ? "Desarrollo Salesforce: Apex, SOQL, Lightning Web Components, pruebas unitarias y buenas prácticas."
         : "Salesforce development: Apex, SOQL, Lightning Web Components, unit testing and best practices.",
       initials: "PDI",
       color: "bg-sky-800",
@@ -395,9 +407,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-network-plus",
       name: "CompTIA Network+",
       issuer: "CompTIA",
-      target: isFr ? "Jan. 2027" : "Jan 2027",
+      target: isFr ? "Jan. 2027" : isEs ? "Ene. 2027" : "Jan 2027",
       description: isFr
         ? "Fondamentaux des réseaux : protocoles TCP/IP, infrastructure, sécurité réseau, dépannage et virtualisation."
+        : isEs
+        ? "Fundamentos de redes: protocolos TCP/IP, infraestructura, seguridad de red, resolución de problemas y virtualización."
         : "Networking fundamentals: TCP/IP protocols, infrastructure, network security, troubleshooting and virtualization.",
       initials: "N+",
       color: "bg-red-700",
@@ -408,9 +422,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-security-plus",
       name: "CompTIA Security+",
       issuer: "CompTIA",
-      target: isFr ? "Mars 2027" : "Mar 2027",
+      target: isFr ? "Mars 2027" : isEs ? "Mar. 2027" : "Mar 2027",
       description: isFr
         ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
+        : isEs
+        ? "Certificación de ciberseguridad de referencia: amenazas, arquitectura de seguridad, gestión de identidades y respuesta a incidentes."
         : "Industry-standard cybersecurity cert: threats, security architecture, identity management and incident response.",
       initials: "S+",
       color: "bg-red-700",
@@ -421,9 +437,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-linux-plus",
       name: "CompTIA Linux+",
       issuer: "CompTIA",
-      target: isFr ? "Avr. 2027" : "Apr 2027",
+      target: isFr ? "Avr. 2027" : isEs ? "Abr. 2027" : "Apr 2027",
       description: isFr
         ? "Administration Linux : ligne de commande, scripts shell, gestion des utilisateurs, sécurité et automatisation système."
+        : isEs
+        ? "Administración Linux: línea de comandos, scripts de shell, gestión de usuarios, seguridad y automatización del sistema."
         : "Linux administration: command line, shell scripting, user management, security and system automation.",
       initials: "L+",
       color: "bg-red-700",
@@ -434,9 +452,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-cysa-plus",
       name: "CompTIA CySA+",
       issuer: "CompTIA",
-      target: isFr ? "Juin 2027" : "Jun 2027",
+      target: isFr ? "Juin 2027" : isEs ? "Jun. 2027" : "Jun 2027",
       description: isFr
         ? "Analyse cybersécurité : threat intelligence, SIEM, analyse comportementale et gestion des vulnérabilités."
+        : isEs
+        ? "Análisis de ciberseguridad: threat intelligence, SIEM, análisis de comportamiento y gestión de vulnerabilidades."
         : "Cybersecurity analysis: threat intelligence, SIEM, behavioral analysis and vulnerability management.",
       initials: "CSA+",
       color: "bg-red-700",
@@ -447,9 +467,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "comptia-pentest-plus",
       name: "CompTIA PenTest+",
       issuer: "CompTIA",
-      target: isFr ? "Juil. 2027" : "Jul 2027",
+      target: isFr ? "Juil. 2027" : isEs ? "Jul. 2027" : "Jul 2027",
       description: isFr
         ? "Tests de pénétration : planification, reconnaissance, exploitation, post-exploitation et rapport de vulnérabilités."
+        : isEs
+        ? "Pruebas de penetración: planificación, reconocimiento, explotación, post-explotación e informe de vulnerabilidades."
         : "Penetration testing: planning, reconnaissance, exploitation, post-exploitation and vulnerability reporting.",
       initials: "PT+",
       color: "bg-red-700",
@@ -483,7 +505,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
       {/* ── Breadcrumb ─────────────────────────────────────────────────────── */}
       <nav
-        aria-label={isFr ? "Fil d'Ariane" : "Breadcrumb"}
+        aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
         className="mb-6 flex items-center gap-2 text-sm text-muted-2"
       >
         <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
@@ -495,7 +517,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
       {/* ── En-tête ─────────────────────────────────────────────────────────── */}
       <h1 className="text-3xl font-semibold">
-        {isFr ? "Certifications & Diplômes" : "Certifications & Diplomas"}
+        {isFr ? "Certifications & Diplômes" : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas"}
       </h1>
       <p className="mt-3 text-muted">{labels.intro}</p>
 
@@ -526,7 +548,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                   <p className="mt-0.5 text-sm text-muted">{cert.issuer}</p>
                   <p className="mt-0.5 text-xs text-muted-2">{cert.level}</p>
                   <p className="mt-0.5 text-xs text-muted-2">
-                    {isFr ? "Obtenu :" : "Earned:"} {cert.earnedDate}
+                    {isFr ? "Obtenu :" : isEs ? "Obtenido:" : "Earned:"} {cert.earnedDate}
                   </p>
                 </div>
               </div>
@@ -636,6 +658,8 @@ export default async function CertificationsPage({ params }: PageProps) {
                     <span className="text-xs text-muted-2">
                       {isFr
                         ? `Progression vers Ranger — ${trailheadProfile.badges}/100 badges`
+                        : isEs
+                        ? `Progreso hacia Ranger — ${trailheadProfile.badges}/100 badges`
                         : `Progress to Ranger — ${trailheadProfile.badges}/100 badges`}
                     </span>
                     <span className="text-xs font-medium text-cyan-700 dark:text-cyan-300">
@@ -647,7 +671,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                     aria-valuenow={trailheadProfile.badges}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-label={isFr ? "Progression vers Ranger" : "Progress to Ranger"}
+                    aria-label={isFr ? "Progression vers Ranger" : isEs ? "Progreso hacia Ranger" : "Progress to Ranger"}
                     className="h-1.5 w-full rounded-full bg-black/10 dark:bg-white/10 overflow-hidden"
                   >
                     <div
@@ -693,7 +717,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               Salesforce
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint Juil. → Nov. 2026" : "— sprint Jul. → Nov. 2026"}
+              {isFr ? "— sprint Juil. → Nov. 2026" : isEs ? "— sprint jul. → nov. 2026" : "— sprint Jul. → Nov. 2026"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -713,7 +737,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                 <div className="mt-4 flex items-center gap-2">
                   {cert.isActive ? (
                     <span className="inline-flex items-center rounded-full bg-cyan-100 dark:bg-cyan-900/30 px-2.5 py-0.5 text-xs font-medium text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
-                      {isFr ? "↻ En cours" : "↻ In progress"}
+                      {isFr ? "↻ En cours" : isEs ? "↻ En curso" : "↻ In progress"}
                     </span>
                   ) : (
                     <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-300">
@@ -734,7 +758,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               CompTIA
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint Jan. 2027 → Juil. 2027" : "— sprint Jan. 2027 → Jul. 2027"}
+              {isFr ? "— sprint Jan. 2027 → Juil. 2027" : isEs ? "— sprint ene. 2027 → jul. 2027" : "— sprint Jan. 2027 → Jul. 2027"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

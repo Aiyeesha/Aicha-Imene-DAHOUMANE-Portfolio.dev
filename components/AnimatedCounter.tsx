@@ -29,7 +29,7 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   const ref = useRef<HTMLSpanElement>(null);
   const shouldReduce = useReducedMotion();
   const locale = useLocale();
-  const intlLocale = locale === "fr" ? "fr-FR" : "en-US";
+  const intlLocale = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US";
 
   // Déclenchement unique quand le composant entre dans le viewport
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });

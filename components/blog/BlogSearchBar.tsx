@@ -70,7 +70,8 @@ export default function BlogSearchBar() {
   }, []);
 
   const isFr = locale === "fr";
-  const placeholder = isFr ? "Rechercher un article…" : "Search articles…";
+  const isEs = locale === "es";
+  const placeholder = isFr ? "Rechercher un article…" : isEs ? "Buscar un artículo…" : "Search articles…";
 
   return (
     <div ref={containerRef} className="relative w-full max-w-md">
@@ -142,7 +143,7 @@ export default function BlogSearchBar() {
       {open && results.length === 0 && query.length >= 2 && !loading && (
         <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border border-black/10 bg-[var(--bg)] px-4 py-3 shadow-lg dark:border-white/10">
           <p className="text-sm text-muted-2">
-            {isFr ? <>Aucun résultat pour &laquo;&nbsp;</> : <>No results for &ldquo;</>}{query}{isFr ? <>&nbsp;&raquo;</> : <>&rdquo;</>}
+            {isFr ? <>Aucun résultat pour &laquo;&nbsp;</> : isEs ? <>Sin resultados para &laquo;&nbsp;</> : <>No results for &ldquo;</>}{query}{isFr ? <>&nbsp;&raquo;</> : isEs ? <>&nbsp;&raquo;</> : <>&rdquo;</>}
           </p>
         </div>
       )}
