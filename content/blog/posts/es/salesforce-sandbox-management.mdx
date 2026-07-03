@@ -1,0 +1,273 @@
+---
+title: "Gestión de sandboxes en Salesforce: tipos, estrategia de refresh y flujo de despliegue"
+excerpt: "Cómo gestionar los sandboxes de Salesforce de forma eficaz — elegir el tipo de sandbox adecuado, planificar el refresh, enmascarar datos para cumplimiento normativo y un flujo de despliegue limpio de dev a producción."
+date: "2025-12-08"
+tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Despliegue"]
+---
+
+La gestión de sandboxes en Salesforce suele quedar en segundo plano — hasta que tienes un despliegue roto, datos de test corruptos o una auditoría de cumplimiento normativo preguntando por qué hay datos de producción en un sandbox de desarrollo. Aquí te explico cómo hacerlo bien.
+
+## Tipos de sandbox: cuál usar para qué
+
+| Tipo | Metadatos | Datos | Refresh | Caso de uso |
+|------|----------|------|---------|----------|
+| **Developer** | Copia completa | Ninguno | 1 día | Desarrollo individual de funcionalidades |
+| **Developer Pro** | Copia completa | Ninguno | 1 día | Desarrollo en equipo, más almacenamiento |
+| **Partial** | Copia completa | Subconjunto (hasta 10k registros) | 5 días | Testing de QA con datos representativos |
+| **Full** | Copia completa | Copia completa | 29 días | UAT, staging, tests de rendimiento |
+
+**Nota sobre costes:** los sandboxes Developer suelen estar incluidos en las licencias Enterprise/Unlimited (recibes varios). Los sandboxes Partial y Full son limitados — normalmente 1 de cada uno. Planifica con cuidado.
+
+## La estrategia de sandbox recomendada
+
+Para un equipo de 3 o más desarrolladores, este modelo de ramificación funciona bien:
+
+```
+[Developer Sandbox 1] ──┐
+[Developer Sandbox 2] ──┤ deploy → [Integration Sandbox] → [UAT/Staging] → [Production]
+[Developer Sandbox 3] ──┘
+```
+
+- **Sandboxes Developer** (1 por desarrollador o funcionalidad): refresh diario disponible
+- **Integration** (Developer Pro o Partial): integra todo el trabajo de los desarrolladores, primeras pruebas de integración
+- **UAT/Staging** (Full): pruebas de usuarios de negocio contra datos a escala real
+- **Production**: solo recibe releases validados y aprobados
+
+## Configurar un sandbox
+
+### Vía la interfaz de Setup
+
+1. **Setup → Environments → Sandboxes → New Sandbox**
+2. Elige el tipo, el nombre (por ejemplo, `DEV-alice`, `INTEGRATION`, `UAT`)
+3. Para Partial/Full: selecciona la fuente de datos, la clase Apex para el seeding de datos
+
+### Vía Salesforce CLI
+
+```bash
+# Crear un sandbox vía CLI (requiere un alias de org con acceso de administrador)
+sf env create sandbox \
+    --name DEV-feature-lwc \
+    --license-type Developer \
+    --target-org production \
+    --alias dev-lwc
+
+# Esperar a que se cree el sandbox (tarda entre 5 y 30 minutos)
+sf env create sandbox --wait 60 --name DEV-feature-lwc ...
+```
+
+### Conectarse a un sandbox
+
+```bash
+# Autenticarse en un sandbox existente
+sf org login web --alias dev-lwc --instance-url https://test.salesforce.com
+
+# Verificar la conexión
+sf org display --target-org dev-lwc
+```
+
+## Planificación del refresh de sandboxes
+
+### Cuándo hacer un refresh
+
+El refresh borra el sandbox y lo recrea a partir de producción. Esto significa:
+- Todas las personalizaciones específicas del sandbox se **pierden**
+- Los nombres de usuario cambian (se añade un sufijo de sandbox: `user@company.com.devlwc`)
+- Puede que haya que reconfigurar las connected apps y las named credentials
+
+**Disparadores de refresh:**
+- Releases de producción importantes (haz refresh de UAT antes del ciclo de UAT)
+- Incidentes de seguridad (refresh para eliminar datos potencialmente comprometidos)
+- Cadencia programada (sandbox de integración: mensual; developer: según necesidad)
+
+### Runbook posterior al refresh
+
+Crea un runbook documentado para la configuración posterior al refresh:
+
+```markdown
+## Checklist posterior al refresh: sandbox INTEGRATION
+
+1. [ ] Actualizar las Named Credentials para que apunten a las APIs del sandbox (no a producción)
+2. [ ] Reautenticar todas las Connected Apps
+3. [ ] Verificar que todos los usuarios pueden iniciar sesión (los nombres de usuario del sandbox llevan sufijo)
+4. [ ] Desactivar o actualizar las reglas de email saliente (evitar que emails de prueba lleguen a usuarios reales)
+5. [ ] Ejecutar el script de smoke test: sf apex run --file scripts/smoke-test.apex
+6. [ ] Actualizar la configuración del pipeline de despliegue con el nuevo session ID del sandbox
+7. [ ] Notificar al equipo por Slack: #deployments
+```
+
+## Enmascaramiento de datos para cumplimiento normativo (RGPD)
+
+Los sandboxes Partial y Full pueden contener datos de producción. Esto es un **riesgo de privacidad de datos/RGPD** si esos datos incluyen información personal identificable (PII).
+
+### Opción 1: Sandbox Data Mask (nativo de Salesforce)
+
+Disponible como complemento de pago. Enmascara automáticamente los campos con PII durante la copia del sandbox.
+
+```
+Setup → Sandbox → Sandbox Data Mask
+Define las reglas de enmascaramiento por campo → aplícalas en el siguiente refresh
+```
+
+### Opción 2: script de enmascaramiento en Apex posterior al refresh
+
+Ejecuta esto inmediatamente después del refresh del sandbox, antes de dar acceso a los desarrolladores:
+
+```apex
+// MaskProductionData.apex — ejecutar como Anonymous Apex tras el refresh
+List<Contact> contacts = [
+    SELECT Id, FirstName, LastName, Email, Phone, MailingStreet
+    FROM Contact LIMIT 50000
+];
+
+Integer i = 0;
+for (Contact c : contacts) {
+    c.FirstName = 'Test';
+    c.LastName  = 'User' + i;
+    c.Email     = 'testuser' + i + '@sandbox.test';
+    c.Phone     = '0600000' + String.valueOf(i).leftPad(4, '0');
+    c.MailingStreet = '123 Test Street';
+    i++;
+}
+
+update contacts;
+System.debug('Masked ' + contacts.size() + ' contacts');
+```
+
+**Enmascara siempre antes de dar acceso a los desarrolladores.** Un sandbox con emails reales de clientes acabará tarde o temprano enviando un email de prueba a un cliente real.
+
+## Flujo de despliegue: de dev a producción
+
+### Con Salesforce CLI + Change Sets
+
+**Paso 1: en el sandbox de dev — recupera tus cambios**
+```bash
+# Extrae los cambios del sandbox al proyecto local
+sf project retrieve start --target-org dev-lwc
+
+# O recupera tipos de metadatos específicos
+sf project retrieve start \
+    --metadata "ApexClass:AccountTriggerHandler" \
+    --metadata "LightningComponentBundle:accountSummaryCard" \
+    --target-org dev-lwc
+```
+
+**Paso 2: valida contra el org destino (sin desplegar)**
+```bash
+# Validar antes del despliegue real
+sf project deploy validate \
+    --source-dir force-app/main/default \
+    --target-org integration \
+    --test-level RunLocalTests
+```
+
+**Paso 3: despliega si la validación pasa**
+```bash
+sf project deploy start \
+    --source-dir force-app/main/default \
+    --target-org integration \
+    --test-level RunLocalTests
+```
+
+**Paso 4: promociona a través de los entornos**
+```
+dev-lwc → integration → uat → production
+         (validate)     (validate + RunLocalTests)   (RunAllTestsInOrg)
+```
+
+### Automatizado con GitHub Actions
+
+```yaml
+# .github/workflows/deploy-integration.yml
+name: Deploy to Integration
+
+on:
+  push:
+    branches: [integration]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to Integration sandbox
+        run: |
+          echo "${{ secrets.INTEGRATION_SFDX_AUTH_URL }}" > auth.json
+          sf org login sfdx-url --sfdx-url-file auth.json --alias integration
+
+      - name: Validate deployment
+        run: |
+          sf project deploy validate \
+            --source-dir force-app \
+            --target-org integration \
+            --test-level RunLocalTests
+
+      - name: Deploy
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org integration \
+            --test-level RunLocalTests
+```
+
+## Gestión de usuarios en el sandbox
+
+Tras el refresh, los nombres de usuario del sandbox reciben un sufijo: `admin@company.com.integrationsandbox`.
+
+### Restablecer la contraseña de todos los usuarios del sandbox
+
+```apex
+// Restablecimiento masivo rápido de contraseñas (útil tras un refresh)
+List<User> users = [SELECT Id FROM User WHERE IsActive = true AND Profile.Name != 'Chatter External User'];
+System.resetPassword(users[0].Id, true);
+// Nota: hazlo usuario por usuario o vía UI por seguridad
+```
+
+### Congelar/activar usuarios en el sandbox
+
+```apex
+// Desactivar en el sandbox usuarios que no deberían tener acceso (p. ej., exempleados replicados desde producción)
+List<User> toDeactivate = [
+    SELECT Id FROM User
+    WHERE IsActive = true
+    AND Profile.Name NOT IN ('System Administrator', 'Developer Profile')
+];
+for (User u : toDeactivate) u.IsActive = false;
+update toDeactivate;
+```
+
+## Checklist de gestión de sandboxes
+
+**Configuración:**
+- [ ] Cada desarrollador activo tiene su propio sandbox Developer
+- [ ] Los sandboxes de Integration, UAT y producción están documentados
+- [ ] Los nombres de los sandboxes siguen una convención de nomenclatura: `[TYPE]-[PURPOSE]`
+
+**Cumplimiento normativo:**
+- [ ] La PII está enmascarada en todos los sandboxes con datos reales (Full, Partial)
+- [ ] La entrega de emails está configurada como "System Email Only" fuera de producción
+- [ ] El acceso a los sandboxes está restringido a los miembros actuales del equipo
+
+**Despliegue:**
+- [ ] El despliegue se valida antes de desplegar (nunca te saltes la validación)
+- [ ] Nivel de test: RunLocalTests como mínimo para integración, RunAllTestsInOrg para producción
+- [ ] El plan de rollback está documentado antes de cada despliegue a producción
+
+**Refresh:**
+- [ ] El runbook posterior al refresh se mantiene actualizado
+- [ ] El sandbox de integración se refresca al menos mensualmente
+- [ ] UAT se refresca antes de cada ciclo de UAT
+
+## Conclusión
+
+Una buena gestión de sandboxes marca la diferencia entre un proceso de despliegue caótico y uno repetible y fiable. Los hábitos clave: enmascarar la PII inmediatamente después de cualquier refresh, aplicar una ruta de promoción lineal (dev → integration → UAT → production), validar antes de desplegar y mantener un runbook posterior al refresh para que la configuración nunca se improvise. Haz esto bien y tu pipeline de CI/CD funcionará sin problemas desde el primer día.
+
+---
+
+**Recursos útiles:**
+- [Guía para desarrolladores de Salesforce DX](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
+- [Resumen de sandboxes - Salesforce Help](https://help.salesforce.com/s/articleView?id=sf.create_test_instance.htm)
+- [Referencia de Salesforce CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)

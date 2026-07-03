@@ -1,0 +1,202 @@
+---
+title: "Health Check de un org Salesforce: checklist de auditoría para administradores"
+excerpt: "Una checklist de auditoría práctica para evaluar tu org Salesforce — deuda técnica, brechas de seguridad, metadatos sin usar, riesgos de governor limits y señales de alerta de rendimiento."
+date: "2025-11-18"
+tags: ["Salesforce", "Admin", "Auditoría", "Buenas prácticas"]
+featured: false
+---
+
+La mayoría de los orgs Salesforce acumulan deuda técnica en silencio. Campos sin usar, automatizaciones duplicadas, usuarios inactivos y consultas que matan el rendimiento se van acumulando durante años. Este health check te da una forma sistemática de auditar un org — ya sea uno que heredaste o uno que llevas gestionando durante años.
+
+---
+
+## Cuándo hacer un health check
+
+- Al hacerte cargo de un org existente
+- Antes de un proyecto grande o una migración
+- Anualmente, como parte del mantenimiento habitual
+- Después de un crecimiento rápido o una implementación grande
+
+---
+
+## 1. Auditoría de seguridad
+
+**Usuarios y accesos:**
+```
+[ ] Listar usuarios activos con perfil de System Administrator
+    → SELECT Id, Name, Profile.Name FROM User WHERE IsActive = true 
+      AND Profile.Name = 'System Administrator'
+    → Deberían ser mínimos — cada sysadmin es un riesgo de seguridad
+
+[ ] Usuarios que no han iniciado sesión en 90+ días (desactivar o investigar)
+    → SELECT Id, Name, LastLoginDate FROM User 
+      WHERE IsActive = true AND LastLoginDate < LAST_N_DAYS:90
+
+[ ] Perfiles con "Modify All Data" o "View All Data"
+    → Revisa Setup → Profiles → busca permisos amplios más allá de System Admin
+
+[ ] Usuarios solo-API sin restricciones de IP
+    → Setup → Users → filtra por API-Enabled, revisa Login IP Ranges
+```
+
+**OWD y sharing:**
+```
+[ ] Organization-Wide Defaults en Private para objetos sensibles
+    → Setup → Security → Sharing Settings
+
+[ ] Reglas de sharing revisadas por coherencia con la estructura de equipo actual
+[ ] Reglas de sharing en Apex siguen siendo relevantes (sin registros de share huérfanos)
+```
+
+---
+
+## 2. Calidad de los metadatos
+
+**Objetos personalizados:**
+```sql
+-- Revisar los API names de los objetos en busca de patrones de nomenclatura obsoletos
+SELECT QualifiedApiName, DeveloperName FROM EntityDefinition 
+WHERE IsCustomSetting = false AND IsCustomizable = true
+ORDER BY DeveloperName
+```
+
+Presta atención a:
+- `Old__c`, `Legacy__c`, `Temp__c`, `Test__c` — objetos huérfanos
+- Objetos duplicados que hacen lo mismo
+- Objetos con 0 registros (posiblemente sin uso)
+
+**Campos personalizados:**
+```
+[ ] Campos sin reportes, fórmulas ni referencias en código
+    → Usa Salesforce Optimizer (Setup → Optimizer) para encontrar campos sin usar
+    → También: el reporte Field Usage en Setup
+
+[ ] Campos de fórmula que referencian otros campos de fórmula muy anidados
+    → Riesgo: límites de complejidad de fórmulas y governor limits de tiempo de CPU
+
+[ ] Campos con etiquetas en blanco o API names como "Field1__c"
+```
+
+**Automatizaciones:**
+```
+[ ] Varios triggers que se solapan en el mismo objeto
+    → Patrón de un trigger por objeto: comprueba si hay incumplimientos
+
+[ ] Workflows, process builders Y flows activos en el mismo objeto
+    → El orden de ejecución importa — documéntalo
+
+[ ] Flows programados / batch jobs que ya no tienen propósito
+    → Setup → Flows → filtra por Scheduled/Active
+
+[ ] Jobs programados de Apex
+    → SELECT Id, JobType, CronJobDetail.Name, State FROM CronTrigger
+```
+
+---
+
+## 3. Señales de alerta de rendimiento
+
+**Consultas SOQL:**
+```apex
+// Buscar consultas no selectivas en Apex (se ralentizan con la escala)
+// Patrón problemático en Apex:
+[SELECT Id FROM Account WHERE CreatedById = :userId]  // No indexado
+[SELECT Id FROM Contact WHERE Name LIKE '%Smith%']    // LIKE con comodín al inicio
+
+// Revisa el Query Optimizer en Setup → Schema Builder o herramientas de inspección SOQL
+```
+
+**Índices a verificar:**
+- Campos External ID usados en upserts — deben estar indexados
+- Campos de lookup usados en cláusulas WHERE de consultas pesadas
+- Campos indexados personalizados: Setup → Object Manager → Field → [detalle del campo]
+
+**Límites de Apex:**
+```soql
+-- Revisar incumplimientos de tiempo de CPU de Apex en los logs
+SELECT Id, Operation, Status, StartedDate 
+FROM AsyncApexJob 
+WHERE Status = 'Failed' AND JobType = 'BatchApex'
+ORDER BY StartedDate DESC LIMIT 50
+```
+
+---
+
+## 4. Calidad de los datos
+
+```sql
+-- Cuentas sin contactos (datos huérfanos)
+SELECT Id, Name FROM Account 
+WHERE Id NOT IN (SELECT AccountId FROM Contact WHERE AccountId != null)
+LIMIT 100
+
+-- Detección de duplicados
+SELECT Name, COUNT(Id) cnt FROM Account 
+GROUP BY Name HAVING COUNT(Id) > 1 
+ORDER BY cnt DESC
+
+-- Contactos sin email (si el email es crítico para tu proceso)
+SELECT Id, FirstName, LastName FROM Contact 
+WHERE Email = null AND IsDeleted = false
+```
+
+**Métricas clave a capturar:**
+- Total de registros por cada objeto principal
+- % de registros con campos obligatorios completados
+- Tasa de duplicados (configura Duplicate Rules si no existen)
+
+---
+
+## 5. Despliegue y gestión del cambio
+
+```
+[ ] ¿Se usan Change Sets o CLI? (¿No? Añade integración con Git)
+
+[ ] ¿Está documentado el calendario de refresh de sandboxes?
+    → ¿Cuándo fue el último refresh de sandbox?
+    → ¿Se usan sandboxes para testear antes de los despliegues a producción?
+
+[ ] Cobertura de tests de Apex en todo el org
+    → Setup → Apex Classes → Run All Tests
+    → Objetivo: 85%+ (75% es el mínimo — no lo trates como la meta)
+
+[ ] Historial de despliegues revisado
+    → Busca despliegues grandes recientes sin registros de ejecución de tests
+```
+
+---
+
+## 6. Almacenamiento
+
+```
+[ ] Uso de almacenamiento de datos (Setup → Company Information → Storage)
+    → > 80% del almacenamiento asignado = zona de riesgo
+    [ ] Objetos grandes / adjuntos usando Attachments heredado vs. Files
+    [ ] Registros antiguos de ContentVersion de registros eliminados
+
+[ ] Almacenamiento de archivos
+    → ContentDocument sin registro padre (archivos huérfanos)
+    SELECT Id FROM ContentDocument 
+    WHERE Id NOT IN (SELECT ContentDocumentId FROM ContentDocumentLink)
+```
+
+---
+
+## Cómo reportar tus hallazgos
+
+Estructura tus hallazgos así:
+
+| Categoría | Hallazgo | Severidad | Recomendación |
+|----------|---------|----------|---------------|
+| Seguridad | 12 System Admins activos | Alta | Reducir a 3, usar Permission Sets |
+| Rendimiento | 3 triggers en Account sin patrón de handler | Media | Consolidar en un TriggerFramework |
+| Datos | 8.400 contactos sin email | Baja | Campaña de limpieza de datos |
+| Metadatos | 47 campos personalizados sin usar | Baja | Desactivar tras análisis de impacto |
+
+---
+
+## Recursos
+
+- [Salesforce Optimizer](https://help.salesforce.com/s/articleView?id=sf.optimizer_kick_off.htm)
+- [Estado y límites de confianza (Trust Status)](https://status.salesforce.com/)
+- [Health Check en Setup](https://help.salesforce.com/s/articleView?id=sf.security_health_check.htm)
