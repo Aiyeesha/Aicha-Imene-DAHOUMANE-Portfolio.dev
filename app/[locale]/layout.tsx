@@ -37,7 +37,7 @@ import { getFeaturedProjectsForNav } from "@/lib/data/projects";
  */
 
 export function generateStaticParams() {
-  return [{ locale: "fr" }, { locale: "en" }];
+  return [{ locale: "fr" }, { locale: "en" }, { locale: "es" }];
 }
 
 export async function generateMetadata({
@@ -46,7 +46,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = rawLocale === "fr" ? "fr" : "en";
+  const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   const t = await getTranslations({ locale: locale });
 
   const title = t("metadata.title");
@@ -64,14 +64,15 @@ export async function generateMetadata({
       languages: {
         en: `${siteUrl}/en`,
         fr: `${siteUrl}/fr`,
+        es: `${siteUrl}/es`,
         "x-default": `${siteUrl}/en`,
       }
     },
     openGraph: {
       type: "website",
       url: canonical,
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       title,
       description,
       siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
