@@ -8,13 +8,18 @@ type PageProps = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/legal`;
   const title = isFr
     ? "Mentions légales — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Aviso legal — Aïcha Imène DAHOUMANE"
     : "Legal Notice — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Éditeur, hébergement, propriété intellectuelle et politique des données personnelles."
+    : isEs
+    ? "Editor, alojamiento, propiedad intelectual y política de datos personales."
     : "Publisher, hosting, intellectual property, and personal data policy.";
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {

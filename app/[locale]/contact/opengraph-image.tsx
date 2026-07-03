@@ -10,13 +10,16 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function Image({ params }: Props) {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl().replace(/^https?:\/\//, "");
 
-  const title    = isFr ? "Contactez-moi" : "Get in touch";
+  const title    = isFr ? "Contactez-moi" : isEs ? "Contáctame" : "Get in touch";
   const subtitle = isFr
     ? "Réponse sous 48h — Mission, CDI, CDD, Freelance"
+    : isEs
+    ? "Respuesta en 48h — Proyecto, contrato indefinido, temporal, freelance"
     : "Reply within 48h — Contract, Permanent, Fixed-term, Freelance";
 
   const cyan   = "#22d3ee";
@@ -24,6 +27,8 @@ export default async function Image({ params }: Props) {
 
   const pills = isFr
     ? ["CDI · CDD", "Freelance · Mission", "100 % Remote", "France & international"]
+    : isEs
+    ? ["Indefinido · Temporal", "Freelance · Proyecto", "100 % Remoto", "España & internacional"]
     : ["Permanent · Fixed-term", "Freelance · Contract", "100 % Remote", "France & worldwide"];
 
   return new ImageResponse(
