@@ -1,0 +1,303 @@
+---
+title: "Stack de monitorización y alertas: Prometheus, Grafana y AlertManager"
+excerpt: "Construye desde cero un stack de monitorización de producción — scraping de métricas con Prometheus, dashboards de Grafana, enrutamiento con AlertManager y escalado de guardia con PagerDuty."
+date: "2024-12-10"
+tags: ["IT Ops", "Monitoring", "Prometheus", "DevOps"]
+featured: false
+---
+
+Operar servicios sin monitorización es volar a ciegas. La primera señal de un problema no debería ser una queja de un cliente. Aquí te explico cómo construir un stack de monitorización que te da visibilidad antes de que las cosas se rompan.
+
+---
+
+## Requisitos previos
+
+- Docker y Docker Compose instalados
+- Un servidor Linux o VPS
+- Al menos un servicio que monitorizar (app Node.js, PostgreSQL, Nginx)
+
+---
+
+## Visión general del stack
+
+```
+Application metrics → Prometheus (scrape & store)
+                           ↓
+                      Grafana (visualize)
+                           ↓
+                    AlertManager (route alerts)
+                           ↓
+              Slack / PagerDuty / Email
+```
+
+---
+
+## Configuración con Docker Compose
+
+```yaml
+# compose.yml
+services:
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "127.0.0.1:9093:9093"
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SERVER_ROOT_URL: https://grafana.yourdomain.com
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "127.0.0.1:3001:3000"
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - '--path.rootfs=/host'
+
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://monitor:${DB_MONITOR_PASSWORD}@db:5432/appdb?sslmode=disable"
+
+volumes:
+  prometheus_data:
+  grafana_data:
+```
+
+---
+
+## Configuración de Prometheus
+
+```yaml
+# prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - 'alerts/*.yml'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node_exporter:9100']
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+
+  - job_name: 'app'
+    static_configs:
+      - targets: ['app:3000']  # Tu app debe exponer /metrics
+    metrics_path: '/metrics'
+```
+
+---
+
+## Reglas de alerta
+
+```yaml
+# prometheus/alerts/infrastructure.yml
+groups:
+  - name: infrastructure
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% for more than 5 minutes."
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Disk space is {{ $value | humanize }}% full."
+
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL is down"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+```
+
+---
+
+## Enrutamiento con AlertManager
+
+```yaml
+# alertmanager/alertmanager.yml
+global:
+  resolve_timeout: 5m
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+route:
+  receiver: 'slack-notifications'
+  group_by: ['alertname', 'instance']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  routes:
+    # Las alertas críticas van a PagerDuty
+    - receiver: 'pagerduty-critical'
+      match:
+        severity: critical
+      continue: true  # También se envían a Slack
+
+    # Las alertas de advertencia solo van a Slack
+    - receiver: 'slack-notifications'
+      match:
+        severity: warning
+
+receivers:
+  - name: 'slack-notifications'
+    slack_configs:
+      - channel: '#alerts'
+        title: '{{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  - name: 'pagerduty-critical'
+    pagerduty_configs:
+      - routing_key: 'YOUR_PAGERDUTY_ROUTING_KEY'
+        description: '{{ .GroupLabels.alertname }}: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+```
+
+---
+
+## Exponer métricas desde tu aplicación
+
+```typescript
+// Node.js con prom-client
+import { Registry, Counter, Histogram, collectDefaultMetrics } from 'prom-client';
+import express from 'express';
+
+const register = new Registry();
+collectDefaultMetrics({ register });
+
+// Métricas personalizadas
+const httpRequestDuration = new Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.01, 0.05, 0.1, 0.5, 1, 2, 5],
+  registers: [register],
+});
+
+const httpRequestsTotal = new Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'status_code'],
+  registers: [register],
+});
+
+// Middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = (Date.now() - start) / 1000;
+    const route = req.route?.path ?? req.path;
+    httpRequestDuration.labels(req.method, route, res.statusCode.toString()).observe(duration);
+    httpRequestsTotal.labels(req.method, route, res.statusCode.toString()).inc();
+  });
+  next();
+});
+
+// Endpoint de métricas
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
+```
+
+---
+
+## Aprovisionamiento de dashboards en Grafana
+
+```yaml
+# grafana/provisioning/dashboards/dashboard.yml
+apiVersion: 1
+providers:
+  - name: 'default'
+    folder: 'Infrastructure'
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards
+```
+
+Importa dashboards de la comunidad por ID desde la UI de Grafana:
+- **Node Exporter Full**: 1860
+- **PostgreSQL**: 9628
+- **Nginx**: 9614
+
+---
+
+## Errores comunes
+
+- **Alertar en cada pico**: usa `for: 5m` en las reglas de alerta para evitar tormentas de alertas por picos breves
+- **Sin enlaces a runbooks en las anotaciones**: añade una anotación `runbook_url` a cada alerta — los ingenieros deben saber qué hacer antes de que se les avise
+- **Retención de Prometheus demasiado corta**: el valor por defecto es 15 días — configura `--storage.tsdb.retention.time=30d` como mínimo
+- **Grafana sin aprovisionar**: la creación manual de dashboards no sobrevive a los reinicios de contenedor — aprovisiona siempre desde código
+
+---
+
+## Recursos
+
+- [Prometheus Documentation](https://prometheus.io/docs/)
+- [Grafana Documentation](https://grafana.com/docs/)
+- [AlertManager Configuration](https://prometheus.io/docs/alerting/latest/configuration/)
+- [prom-client for Node.js](https://github.com/siimon/prom-client)
