@@ -1,0 +1,219 @@
+---
+title: "Gestión de certificados SSL/TLS: Let's Encrypt, renovación y monitorización"
+excerpt: "Gestiona certificados TLS a gran escala — automatiza la renovación de Let's Encrypt con Certbot y ACME, monitoriza la caducidad en varios servidores y gestiona certificados wildcard."
+date: "2024-09-24"
+tags: ["IT Ops", "TLS", "Seguridad", "Linux"]
+featured: false
+---
+
+La caducidad de certificados sigue siendo una de las causas más comunes de caídas en producción — incluso en 2026. Automatizar la renovación y añadir monitorización de caducidad evita la alerta a las 3 de la madrugada cuando tu sitio se queda con el HTTPS roto. Aquí tienes una configuración completa.
+
+---
+
+## Requisitos previos
+
+- Servidor Ubuntu/Debian
+- Nginx o Apache instalado
+- Dominio apuntando a la IP de tu servidor
+- Puerto 80 abierto (para el desafío HTTP-01)
+
+---
+
+## Instalar Certbot y obtener tu primer certificado
+
+```bash
+# Instalar Certbot con el plugin de Nginx
+sudo apt install certbot python3-certbot-nginx -y
+
+# Obtener el certificado y configurar Nginx automáticamente
+sudo certbot --nginx -d tudominio.com -d www.tudominio.com
+
+# O para Apache
+sudo certbot --apache -d tudominio.com
+
+# Modo standalone (si no hay servidor web)
+sudo certbot certonly --standalone -d tudominio.com
+```
+
+Certbot almacena los certificados en `/etc/letsencrypt/live/tudominio.com/`:
+```
+cert.pem       — Tu certificado de dominio
+chain.pem      — Certificados intermedios
+fullchain.pem  — cert.pem + chain.pem (usa este en Nginx)
+privkey.pem    — Clave privada
+```
+
+---
+
+## Configuración de Nginx con TLS robusto
+
+```nginx
+# /etc/nginx/sites-available/tudominio.com
+server {
+    listen 80;
+    server_name tudominio.com www.tudominio.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name tudominio.com www.tudominio.com;
+
+    ssl_certificate /etc/letsencrypt/live/tudominio.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tudominio.com/privkey.pem;
+
+    # Configuración TLS robusta
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    # HSTS (habilitar solo después de probar — difícil de revertir)
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/tudominio.com/chain.pem;
+    resolver 1.1.1.1 valid=300s;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+---
+
+## Renovación automática
+
+Certbot instala automáticamente un timer de systemd (o una tarea cron):
+
+```bash
+# Verificar el timer
+systemctl status certbot.timer
+systemctl list-timers | grep certbot
+
+# Probar la renovación sin renovar realmente
+sudo certbot renew --dry-run
+
+# Renovación manual (si es necesario)
+sudo certbot renew
+sudo systemctl reload nginx
+```
+
+Si la renovación automática de Certbot no funciona, añade una tarea cron:
+
+```bash
+# crontab -e
+0 12 * * * certbot renew --quiet --post-hook "systemctl reload nginx"
+```
+
+---
+
+## Certificados wildcard con el desafío DNS-01
+
+Los certificados wildcard (`*.tudominio.com`) requieren validación DNS:
+
+```bash
+# Desafío DNS manual (no apto para automatización)
+sudo certbot certonly --manual --preferred-challenges dns \
+  -d "*.tudominio.com" -d "tudominio.com"
+```
+
+Para la renovación automática de wildcards, usa un plugin de proveedor DNS:
+
+```bash
+# Ejemplo con Cloudflare
+sudo pip install certbot-dns-cloudflare
+
+# Crear el archivo de credenciales
+cat > /root/.cloudflare.ini << EOF
+dns_cloudflare_api_token = TU_TOKEN_API_DE_CLOUDFLARE
+EOF
+chmod 600 /root/.cloudflare.ini
+
+# Obtener el certificado wildcard
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /root/.cloudflare.ini \
+  -d "*.tudominio.com" -d "tudominio.com"
+```
+
+---
+
+## Script de monitorización de caducidad de certificados
+
+```bash
+#!/bin/bash
+# check-cert-expiry.sh
+# Ejecutar vía cron: 0 8 * * * /opt/scripts/check-cert-expiry.sh
+
+DOMINIOS="tudominio.com api.tudominio.com app.tudominio.com"
+DIAS_ALERTA=30
+EMAIL_ALERTA="ops@tudominio.com"
+
+for DOMINIO in $DOMINIOS; do
+    CADUCIDAD=$(echo | openssl s_client -servername "$DOMINIO" \
+        -connect "$DOMINIO":443 2>/dev/null | \
+        openssl x509 -noout -enddate 2>/dev/null | \
+        cut -d= -f2)
+
+    CADUCIDAD_EPOCH=$(date -d "$CADUCIDAD" +%s)
+    AHORA_EPOCH=$(date +%s)
+    DIAS_RESTANTES=$(( (CADUCIDAD_EPOCH - AHORA_EPOCH) / 86400 ))
+
+    if [ $DIAS_RESTANTES -le $DIAS_ALERTA ]; then
+        echo "AVISO: $DOMINIO caduca en $DIAS_RESTANTES días ($CADUCIDAD)" | \
+            mail -s "AVISO DE CADUCIDAD DE CERTIFICADO: $DOMINIO" $EMAIL_ALERTA
+        echo "ALERTA: $DOMINIO — $DIAS_RESTANTES días restantes"
+    else
+        echo "OK: $DOMINIO — $DIAS_RESTANTES días restantes"
+    fi
+done
+```
+
+---
+
+## Certificados internos con una CA privada
+
+Para servicios internos, crea tu propia CA con OpenSSL:
+
+```bash
+# Crear la clave y el certificado de la CA
+openssl genrsa -out ca.key 4096
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt \
+  -subj "/C=ES/O=TuOrganizacion/CN=CA Interna"
+
+# Crear el certificado para un servicio
+openssl genrsa -out service.key 2048
+openssl req -new -key service.key -out service.csr \
+  -subj "/C=ES/O=TuOrganizacion/CN=servicio-interno.local"
+
+# Firmar con tu CA
+openssl x509 -req -days 365 -in service.csr \
+  -CA ca.crt -CAkey ca.key -CAcreateserial -out service.crt
+
+# Distribuye ca.crt a todos los clientes que deban confiar en la CA
+```
+
+---
+
+## Errores comunes
+
+- **HSTS sin pruebas previas**: una vez habilitado con un max-age largo, HSTS es muy difícil de retirar — prueba primero con un valor corto
+- **Olvidar recargar Nginx tras la renovación**: añade `--post-hook "systemctl reload nginx"` a tu cron de certbot renew
+- **Monitorizar solo tu propio servidor**: los servicios de terceros (CDN, balanceador de carga) pueden tener fechas de caducidad distintas
+- **Permisos de la clave privada**: `privkey.pem` debe ser legible únicamente por root (modo 600) — Nginx la lee como root al arrancar
+
+---
+
+## Recursos
+
+- [Documentación de Certbot](https://certbot.eff.org/docs/)
+- [Generador de configuración SSL de Mozilla](https://ssl-config.mozilla.org/)
+- [SSL Labs Server Test](https://www.ssllabs.com/ssltest/)
