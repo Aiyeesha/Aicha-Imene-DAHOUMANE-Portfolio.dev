@@ -17,7 +17,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 // SSG : le changelog ne change qu'à chaque déploiement
 export const dynamic = "force-static";
 
-type Locale = "en" | "fr";
+type Locale = "en" | "fr" | "es";
 
 export async function generateMetadata({
   params,
@@ -171,6 +171,16 @@ const LABELS = {
     formatLink: "Keep a Changelog",
     semver:     "Semantic Versioning",
   },
+  es: {
+    title:      "Changelog",
+    subtitle:   "Todos los cambios notables de este portfolio.",
+    unreleased: "No publicado",
+    backHome:   "← Volver al inicio",
+    compare:    "Ver diff ↗",
+    format:     "Formato",
+    formatLink: "Keep a Changelog",
+    semver:     "Semantic Versioning",
+  },
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -181,7 +191,7 @@ export default async function ChangelogPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const safeLocale: Locale = locale === "fr" ? "fr" : "en";
+  const safeLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const l = LABELS[safeLocale];
 
   // Lire le fichier depuis la racine du projet (process.cwd() = portfolio/)
@@ -194,7 +204,7 @@ export default async function ChangelogPage({
       {/* ── Breadcrumb ──────────────────────────────────────────────────────── */}
       <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
-          {safeLocale === "fr" ? "Accueil" : "Home"}
+          {safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home"}
         </Link>
         <span aria-hidden="true">›</span>
         <span className="text-muted">{l.title}</span>
@@ -207,6 +217,11 @@ export default async function ChangelogPage({
       {safeLocale === "fr" && (
         <p className="mt-3 rounded-lg border border-black/10 bg-black/5 px-4 py-2.5 text-xs text-muted-2 dark:border-white/10 dark:bg-white/5">
           Ce changelog est rédigé en anglais, langue de référence du code source.
+        </p>
+      )}
+      {safeLocale === "es" && (
+        <p className="mt-3 rounded-lg border border-black/10 bg-black/5 px-4 py-2.5 text-xs text-muted-2 dark:border-white/10 dark:bg-white/5">
+          Este changelog está redactado en inglés, idioma de referencia del código fuente.
         </p>
       )}
 

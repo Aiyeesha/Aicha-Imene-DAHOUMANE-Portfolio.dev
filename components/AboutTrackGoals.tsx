@@ -45,11 +45,11 @@ function StatusIcon({ status }: { status: GoalStatus }) {
 }
 
 // Libellé de statut pour le lecteur d'écran + badge visuel
-function StatusBadge({ status, isFr }: { status: GoalStatus; isFr: boolean }) {
+function StatusBadge({ status, isFr, isEs }: { status: GoalStatus; isFr: boolean; isEs: boolean }) {
   const config = {
-    completed:   { label: isFr ? "Atteint"       : "Completed",   cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" },
-    in_progress: { label: isFr ? "En cours"       : "In progress", cls: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300" },
-    not_started: { label: isFr ? "À venir"         : "Upcoming",   cls: "bg-black/5 text-muted-2 dark:bg-white/5" },
+    completed:   { label: isFr ? "Atteint"       : isEs ? "Logrado"    : "Completed",   cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" },
+    in_progress: { label: isFr ? "En cours"       : isEs ? "En curso"   : "In progress", cls: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300" },
+    not_started: { label: isFr ? "À venir"         : isEs ? "Próximo"   : "Upcoming",   cls: "bg-black/5 text-muted-2 dark:bg-white/5" },
   };
   const { label, cls } = config[status];
   return (
@@ -73,6 +73,7 @@ export default function AboutTrackGoals({ goals }: Props) {
   const { track } = useTrack();
   const locale = useLocale();
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const isSalesforce = track === "salesforce";
 
   // Filtrer les goals du track actif depuis Supabase
@@ -94,6 +95,8 @@ export default function AboutTrackGoals({ goals }: Props) {
 
   const sectionTitle = isFr
     ? `Objectifs ${trackLabel} 2026`
+    : isEs
+    ? `Objetivos ${trackLabel} 2026`
     : `${trackLabel} 2026 Goals`;
 
   return (
@@ -112,15 +115,15 @@ export default function AboutTrackGoals({ goals }: Props) {
           <div className="flex items-center gap-3 text-xs text-muted-2 shrink-0">
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block" />
-              {isFr ? "Atteint" : "Done"}
+              {isFr ? "Atteint" : isEs ? "Logrado" : "Done"}
             </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-cyan-500 inline-block" />
-              {isFr ? "En cours" : "In progress"}
+              {isFr ? "En cours" : isEs ? "En curso" : "In progress"}
             </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-black/20 dark:bg-white/20 inline-block" />
-              {isFr ? "À venir" : "Upcoming"}
+              {isFr ? "À venir" : isEs ? "Próximo" : "Upcoming"}
             </span>
           </div>
         )}
@@ -142,9 +145,11 @@ export default function AboutTrackGoals({ goals }: Props) {
               <li key={goal.id} className="flex items-start gap-3">
                 <StatusIcon status={goal.status} />
                 <span className={`flex-1 text-sm leading-relaxed ${goal.status === "completed" ? "line-through opacity-60" : "opacity-90"}`}>
+                  {/* Goal text comes from a fr/en-only Supabase column (lib/data/goals.ts);
+                      Spanish gracefully falls back to English, same scoping as elsewhere. */}
                   {isFr ? goal.text_fr : goal.text_en}
                 </span>
-                <StatusBadge status={goal.status} isFr={isFr} />
+                <StatusBadge status={goal.status} isFr={isFr} isEs={isEs} />
               </li>
             ))
         }

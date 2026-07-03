@@ -84,8 +84,14 @@ const USES: UseCategory[] = [
 export default function UsesContent({ locale }: { locale: string }) {
   const { track } = useTrack();
   const isSf = track === "salesforce";
+  // `Locale` (USES content — title/description records) is a fr/en-only
+  // content-data type; large per-tool descriptions stay as an English
+  // fallback for "es" (same scoping as resources/page.tsx). `isFr`/`isEs`
+  // below are derived from the real `locale`, not from `safeLocale`, so
+  // the plain-text UI labels (breadcrumb, buttons) are fully translated.
   const safeLocale: Locale = locale === "fr" ? "fr" : "en";
-  const isFr = safeLocale === "fr";
+  const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   // Badge classes — open-source badge suit le track
   const openSourceBadge = isSf
@@ -105,11 +111,15 @@ export default function UsesContent({ locale }: { locale: string }) {
     : "hover:border-violet-400/40 hover:text-violet-700 dark:hover:text-violet-300";
 
   const labels = {
-    title:    isFr ? "Setup & Outils" : "Uses & Setup",
-    intro:    isFr ? "Mon environnement de travail au quotidien — éditeur, outils Salesforce, IT Ops, et productivité. Inspiré de la convention" : "My daily working environment — editor, Salesforce tools, IT Ops, and productivity. Inspired by the",
+    title:    isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup",
+    intro:    isFr
+      ? "Mon environnement de travail au quotidien — éditeur, outils Salesforce, IT Ops, et productivité. Inspiré de la convention"
+      : isEs
+      ? "Mi entorno de trabajo diario — editor, herramientas Salesforce, IT Ops y productividad. Inspirado en la convención"
+      : "My daily working environment — editor, Salesforce tools, IT Ops, and productivity. Inspired by the",
     convention: "uses.tech",
-    visit:    isFr ? "Visiter" : "Visit",
-    backHome: isFr ? "← Retour à l'accueil" : "← Back to home",
+    visit:    isFr ? "Visiter" : isEs ? "Visitar" : "Visit",
+    backHome: isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
   };
 
   function Badge({ label }: { label: string }) {
@@ -124,8 +134,8 @@ export default function UsesContent({ locale }: { locale: string }) {
     <div className="mx-auto max-w-4xl px-4 py-10">
 
       <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
-          {isFr ? "Accueil" : "Home"}
+        <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">
+          {isFr ? "Accueil" : isEs ? "Inicio" : "Home"}
         </Link>
         <span aria-hidden="true">›</span>
         <span className="text-muted">{labels.title}</span>
@@ -161,7 +171,7 @@ export default function UsesContent({ locale }: { locale: string }) {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`${labels.visit} ${item.name} (${isFr ? "nouvel onglet" : "new tab"})`}
+                      aria-label={`${labels.visit} ${item.name} (${isFr ? "nouvel onglet" : isEs ? "nueva pestaña" : "new tab"})`}
                       className={`inline-flex items-center gap-1.5 self-start rounded-full border border-black/10 dark:border-white/10 px-3 py-1.5 text-xs font-medium text-muted-2 transition-colors soft-ring ${linkHover}`}
                     >
                       {labels.visit}<span aria-hidden="true"> ↗</span>
@@ -175,7 +185,7 @@ export default function UsesContent({ locale }: { locale: string }) {
       </div>
 
       <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
-        <Link href={`/${safeLocale}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-5 py-2.5 text-sm text-muted-2 hover:bg-black/5 dark:hover:bg-white/5 soft-ring transition-colors">
+        <Link href={`/${locale}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-5 py-2.5 text-sm text-muted-2 hover:bg-black/5 dark:hover:bg-white/5 soft-ring transition-colors">
           {labels.backHome}
         </Link>
       </div>

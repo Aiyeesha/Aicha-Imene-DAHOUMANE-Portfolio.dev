@@ -64,12 +64,13 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
   },
   // Flux RSS — annoncé dans <head> pour les lecteurs de flux et moteurs de recherche
-  // Deux flux : EN (/feed.xml) et FR (/feed-fr.xml) pour l'audience francophone.
+  // Trois flux : EN (/feed.xml), FR (/feed-fr.xml), ES (/feed-es.xml).
   alternates: {
     types: {
       "application/rss+xml": [
         { url: "/feed.xml", title: "RSS Feed (EN)" },
         { url: "/feed-fr.xml", title: "Flux RSS (FR)" },
+        { url: "/feed-es.xml", title: "Feed RSS (ES)" },
       ],
     },
   },

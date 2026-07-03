@@ -53,6 +53,8 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
   const context = tech.context[locale === "fr" ? "fr" : "en"];
   const yearsLabel = locale === "fr"
     ? `${tech.years} an${tech.years > 1 ? "s" : ""}`
+    : locale === "es"
+    ? `${tech.years} año${tech.years !== 1 ? "s" : ""}`
     : `${tech.years} yr${tech.years !== 1 ? "s" : ""}`;
 
   // id unique pour aria-describedby
@@ -132,7 +134,7 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
 
         {/* Années d'expérience */}
         <p className="mt-1 text-xs text-muted-2">
-          {locale === "fr" ? `${yearsLabel} d'expérience` : `${yearsLabel} of experience`}
+          {locale === "fr" ? `${yearsLabel} d'expérience` : locale === "es" ? `${yearsLabel} de experiencia` : `${yearsLabel} of experience`}
         </p>
 
         {/* Contexte / usage */}
@@ -159,6 +161,8 @@ export default function TechStackGrid() {
         aria-label={
           locale === "fr"
             ? "Stack technique interactive"
+            : locale === "es"
+            ? "Stack técnico interactivo"
             : "Interactive tech stack"
         }
       >

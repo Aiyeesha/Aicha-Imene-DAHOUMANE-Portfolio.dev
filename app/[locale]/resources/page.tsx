@@ -113,8 +113,8 @@ export default async function ResourcesPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: labels.home, item: `${siteUrl}/${safeLocale}` },
-      { "@type": "ListItem", position: 2, name: isFr ? "Ressources" : isEs ? "Recursos" : "Resources", item: `${siteUrl}/${safeLocale}/resources` },
+      { "@type": "ListItem", position: 1, name: labels.home, item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Ressources" : isEs ? "Recursos" : "Resources", item: `${siteUrl}/${locale}/resources` },
     ],
   };
 
@@ -125,7 +125,7 @@ export default async function ResourcesPage({ params }: PageProps) {
       {/* ── Breadcrumb ──────────────────────────────────────────────────────── */}
       <nav aria-label={labels.ariaLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link
-          href={`/${safeLocale}`}
+          href={`/${locale}`}
           className="hover:underline soft-ring rounded px-1"
         >
           {labels.home}
@@ -198,7 +198,7 @@ export default async function ResourcesPage({ params }: PageProps) {
       {/* ── Back to home ────────────────────────────────────────────────────── */}
       <div className="mt-12 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
-          href={`/${safeLocale}`}
+          href={`/${locale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-5 py-2.5 text-sm text-muted-2 hover:bg-black/5 dark:hover:bg-white/5 soft-ring transition-colors"
         >
           {labels.backHome}
