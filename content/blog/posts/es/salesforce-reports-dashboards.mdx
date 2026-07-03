@@ -1,0 +1,149 @@
+---
+title: "Reportes y dashboards de Salesforce: más allá de lo básico"
+excerpt: "Ve más allá de los reportes simples — cross filters, columnas bucket, reportes combinados (joined reports), dashboards dinámicos y suscripciones a reportes para distribución automatizada."
+date: "2025-12-02"
+tags: ["Salesforce", "Reportes", "Analítica", "Admin"]
+featured: false
+---
+
+La mayoría de los usuarios de Salesforce saben crear un reporte tabular básico. Pero las mejoras reales de productividad vienen de funciones que la mayoría de los administradores nunca configuran: cross filters, reportes combinados y dashboards dinámicos que se adaptan a cada usuario. Esto es lo que te estás perdiendo.
+
+---
+
+## Requisitos previos
+
+- Org de Salesforce con acceso a Report Builder
+- Comprensión básica de objetos y relaciones
+- App Reports and Dashboards visible en el App Launcher
+
+---
+
+## Cross filters: "Mostrar cuentas SIN ninguna oportunidad abierta"
+
+Los cross filters te permiten filtrar un objeto principal según la presencia o ausencia de registros relacionados — sin escribir una fórmula ni código Apex.
+
+**Ejemplo de caso de uso:** encontrar cuentas que no tienen ninguna oportunidad abierta (cuentas en riesgo a las que dirigir campañas de upsell).
+
+```
+Report Type: Accounts
+Add Cross Filter: Accounts WITHOUT Opportunities
+  Additional Filter: Opportunity Stage EQUALS "Open"
+```
+
+Esto es imposible con un filtro de campo estándar porque no se puede filtrar por la "ausencia" de un registro hijo.
+
+**Más ejemplos:**
+- Contactos SIN casos en los últimos 30 días (contactos inactivos)
+- Leads CON actividades pero NO convertidos
+- Oportunidades SIN tareas (deals sin seguimiento)
+
+---
+
+## Columnas bucket: agrupación en línea sin un campo de fórmula
+
+Las columnas bucket te permiten agrupar valores al vuelo dentro del reporte sin crear un campo de fórmula en el objeto.
+
+**Ejemplo:** agrupar oportunidades por categoría de tamaño de deal:
+
+```
+Add Bucket Column on: Amount
+  < 10.000   → "Small"
+  10.000–50.000 → "Mid-Market"
+  > 50.000   → "Enterprise"
+```
+
+La columna agrupada aparece como una nueva columna que puedes usar para agrupar, añadir a gráficos o usar en fórmulas de resumen.
+
+**Casos de uso:**
+- Rangos de edad a partir de la fecha de nacimiento del contacto
+- Niveles de Lead Score (frío/tibio/caliente)
+- Agrupaciones de días para cierre (< 30, 30–90, > 90)
+
+---
+
+## Reportes combinados: varios tipos de reporte en uno
+
+Los reportes combinados (joined reports) te permiten combinar datos de distintos tipos de reporte, uno al lado del otro. Ejemplo clásico: un embudo de leads vs. oportunidades en un solo reporte.
+
+```
+New Report → Report Type: Opportunities
+Add Block → Report Type: Cases
+Group both blocks by: Account Name
+```
+
+Cada bloque ejecuta su propia consulta SOQL contra su tipo de objeto. Luego puedes añadir fórmulas de resumen entre bloques:
+
+```
+Block 1 summary: COUNT(Opportunity ID) → Open Deals
+Block 2 summary: COUNT(Case ID) → Open Cases
+Cross-block formula: Open Deals / Open Cases → Deal-to-Case Ratio
+```
+
+---
+
+## Dashboards dinámicos: datos por usuario
+
+Los dashboards estándar se ejecutan como un único usuario (el "running user"). Todos ven los mismos datos, independientemente de su propio acceso a los registros.
+
+Los **dashboards dinámicos** se ejecutan como el *usuario que ha iniciado sesión*. Un representante de ventas ve solo su propio pipeline; su gerente ve el pipeline de todo su equipo — todo desde el mismo dashboard.
+
+```
+Edit Dashboard → Properties → View Dashboard As
+  → "The logged-in user" (Dynamic Dashboard)
+```
+
+Límites:
+- Máximo 5 dashboards dinámicos por org en la edición Enterprise
+- El reporte subyacente no debe usar "Run as Specified User"
+- No funciona con la app móvil Salesforce1 (solo Lightning)
+
+---
+
+## Suscripciones a reportes: distribución automatizada
+
+En lugar de ejecutar y enviar manualmente un reporte cada lunes, usa Report Subscriptions:
+
+```
+Report → Subscribe
+  Frequency: Weekly, Monday 8:00 AM
+  Condition: Only send if "Count of Records" > 0
+  Recipients: tú mismo + un grupo público
+  Message: "Here are this week's at-risk accounts."
+```
+
+**Consejo:** usa condiciones para enviar el email solo cuando sea accionable — evita enviar reportes vacíos que acostumbran a los usuarios a ignorarlos.
+
+---
+
+## Campos de fórmula de resumen
+
+Las fórmulas de resumen se calculan a nivel de agrupación, no a nivel de registro. Son la forma de calcular cosas como la "tasa de éxito" o el "tamaño medio de deal por etapa":
+
+```
+Report: Opportunities grouped by Stage
+Summary Formula: CLOSE_WIN / COUNT(Id)
+  Label: Win Rate
+  Format: Percent, 1 decimal place
+```
+
+Patrones habituales:
+- `SUM(Amount) / COUNT(Id)` → tamaño medio de deal
+- `[Block1:COUNT] / [Block2:COUNT]` → ratio entre bloques (reportes combinados)
+- `PARENTGROUPVAL(SUM(Amount), ROW_GRAND_SUMMARY)` → porcentaje del total general
+
+---
+
+## Consejos de rendimiento para reportes
+
+- **Filtra sobre campos indexados**: Account Name, Owner y Created Date están indexados — filtrar sobre campos de fórmula es lento
+- **Limita los rangos de fechas**: nunca ejecutes un reporte "All Time" en producción — acótalo siempre por fecha
+- **Evita anular el límite de filas**: los reportes tienen un tope de 2.000 filas en la interfaz; exporta si necesitas más
+- **Usa resumen en vez de detalle**: si solo necesitas totales, cambia al tipo de reporte Summary — es más rápido
+
+---
+
+## Recursos
+
+- [Trailhead de Report Builder](https://trailhead.salesforce.com/content/learn/modules/lex_implementation_reports_dashboards)
+- [Documentación de reportes combinados (joined reports)](https://help.salesforce.com/s/articleView?id=sf.reports_joined_format.htm)
+- [Dashboards dinámicos](https://help.salesforce.com/s/articleView?id=sf.dashboards_dynamic_intro.htm)
