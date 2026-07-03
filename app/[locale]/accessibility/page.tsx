@@ -7,13 +7,18 @@ type PageProps = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/accessibility`;
   const title = isFr
     ? "Accessibilité — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Accesibilidad — Aïcha Imène DAHOUMANE"
     : "Accessibility — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Engagement WCAG 2.2 (niveau AA), limites connues et contact pour signaler un problème d'accessibilité."
+    : isEs
+    ? "Compromiso WCAG 2.2 (nivel AA), limitaciones conocidas y contacto para reportar un problema de accesibilidad."
     : "WCAG 2.2 (Level AA) commitment, known limitations, and contact to report an accessibility issue.";
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
