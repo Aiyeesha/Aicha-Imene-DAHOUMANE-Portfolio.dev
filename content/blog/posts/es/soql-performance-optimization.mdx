@@ -1,0 +1,246 @@
+---
+title: "Optimización de rendimiento SOQL: de consultas lentas a resultados en menos de un segundo"
+excerpt: "Técnicas prácticas para escribir consultas SOQL más rápidas en Salesforce — índices, filtros selectivos, planes de consulta y anti-patrones comunes a eliminar."
+date: "2025-05-05"
+tags: ["Salesforce", "SOQL", "Rendimiento", "Base de datos", "Buenas prácticas"]
+---
+
+Las consultas SOQL lentas son uno de los cuellos de botella de rendimiento más comunes en Salesforce. Ya sea que estés alcanzando los governor limits, provocando timeouts, o simplemente frustrado por páginas lentas, esta guía te da las herramientas para diagnosticar y corregir el rendimiento de tus consultas.
+
+## Entendiendo cómo Salesforce ejecuta las consultas
+
+Antes de optimizar, entiende el modelo de ejecución. Salesforce usa una **base de datos Oracle** por debajo, con una arquitectura multi-tenant. Conceptos clave:
+
+- **Selectividad**: una consulta es "selectiva" si su filtro coincide con un pequeño porcentaje del total de registros. Salesforce requiere selectividad para usar un índice.
+- **Tipos de índice**: los campos estándar (Id, Name, SystemModstamp, etc.) están auto-indexados. Los campos personalizados pueden indexarse bajo solicitud.
+- **Full table scan**: si no existe un filtro selectivo, Salesforce escanea todos los registros — lento y bloqueado a partir de ciertos umbrales.
+
+## 1. Usa la herramienta Query Plan
+
+La herramienta Query Plan en Developer Console es tu primera arma:
+
+1. Abre **Developer Console**
+2. Ve a **Help → Preferences → Enable Query Plan**
+3. Ejecuta tu consulta → haz clic en la pestaña **Query Plan**
+
+**Interpretando los resultados:**
+
+| Cardinalidad | Qué significa |
+|-------------|--------------|
+| Baja (< 10%) | Se usará un índice — rápido |
+| Media (10–30%) | Puede usar índice — aceptable |
+| Alta (> 30%) | Full table scan — ¡optimiza! |
+
+**Ejemplo de un plan malo:**
+```
+Query: SELECT Id FROM Account WHERE Industry = 'Technology'
+Plan: TableScan — Cost: 0.92 (high)
+```
+
+**Después de añadir un filtro selectivo:**
+```
+Query: SELECT Id FROM Account WHERE Industry = 'Technology' AND OwnerId = :currentUserId
+Plan: Index on OwnerId — Cost: 0.04 (low)
+```
+
+## 2. Filtra siempre sobre campos indexados
+
+**Campos estándar indexados** (siempre indexados):
+- `Id`
+- `Name`
+- `OwnerId`
+- `RecordTypeId`
+- `CreatedDate` / `LastModifiedDate`
+- Campos de relación Lookup/Master-Detail
+
+**Cómo comprobar si un campo está indexado:**
+Setup → Object Manager → [Objeto] → Fields & Relationships → clic en el campo → "Unique" o "External ID" = indexado.
+
+**Buena práctica:** incluye siempre al menos un campo indexado en tu cláusula `WHERE`.
+
+```apex
+// ❌ No selectiva — full table scan
+List<Account> accounts = [
+    SELECT Id, Name FROM Account WHERE Industry = 'Technology'
+];
+
+// ✅ Selectiva — usa el índice de OwnerId
+List<Account> accounts = [
+    SELECT Id, Name FROM Account
+    WHERE Industry = 'Technology' AND OwnerId = :UserInfo.getUserId()
+];
+```
+
+## 3. Evita SOQL dentro de bucles
+
+Esto es una violación de governor limit esperando a ocurrir — y además es lento.
+
+```apex
+// ❌ SOQL dentro de un bucle — 1 consulta por registro = mal
+for (Account acc : accounts) {
+    List<Contact> contacts = [SELECT Id FROM Contact WHERE AccountId = :acc.Id];
+    // procesa los contactos...
+}
+
+// ✅ Consulta masiva — 1 consulta para todos los registros
+Set<Id> accountIds = new Set<Id>();
+for (Account acc : accounts) accountIds.add(acc.Id);
+
+Map<Id, List<Contact>> contactsByAccount = new Map<Id, List<Contact>>();
+for (Contact c : [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accountIds]) {
+    if (!contactsByAccount.containsKey(c.AccountId)) {
+        contactsByAccount.put(c.AccountId, new List<Contact>());
+    }
+    contactsByAccount.get(c.AccountId).add(c);
+}
+```
+
+## 4. Usa consultas de relación para reducir round-trips
+
+En lugar de consultar el padre y los hijos por separado, usa subconsultas:
+
+```apex
+// ❌ Dos consultas separadas
+List<Account> accounts = [SELECT Id, Name FROM Account WHERE OwnerId = :userId];
+Set<Id> accountIds = new Map<Id, Account>(accounts).keySet();
+List<Contact> contacts = [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accountIds];
+
+// ✅ Una consulta con sub-select (de hijo a padre)
+List<Account> accounts = [
+    SELECT Id, Name,
+           (SELECT Id, FirstName, LastName, Email FROM Contacts WHERE IsActive__c = true)
+    FROM Account
+    WHERE OwnerId = :userId
+];
+```
+
+**Límites a tener en cuenta:**
+- Máximo 1 nivel de anidamiento de subconsultas
+- La subconsulta devuelve máximo 200 registros por padre
+- Máximo 20 subconsultas por consulta de nivel superior
+
+## 5. Limita tus resultados con LIMIT
+
+Nunca recuperes más registros de los que necesitas:
+
+```apex
+// ❌ Trae todo
+List<Account> all = [SELECT Id, Name FROM Account];
+
+// ✅ Trae solo lo que necesitas
+List<Account> recent = [
+    SELECT Id, Name, CreatedDate
+    FROM Account
+    WHERE CreatedDate = LAST_N_DAYS:30
+    ORDER BY CreatedDate DESC
+    LIMIT 50
+];
+```
+
+Usa `LIMIT 1` cuando esperes un único resultado:
+```apex
+Account acc = [SELECT Id FROM Account WHERE Name = 'Acme Corp' LIMIT 1];
+```
+
+## 6. Usa `FOR UPDATE` con cuidado
+
+```apex
+// Bloquea los registros durante la duración de la transacción
+List<Account> accounts = [
+    SELECT Id, AnnualRevenue FROM Account
+    WHERE Id IN :accountIds
+    FOR UPDATE
+];
+```
+
+Usa `FOR UPDATE` solo cuando necesites bloqueo a nivel de fila para evitar actualizaciones concurrentes. Evítalo en flujos de solo lectura intensivos — bloquea otras transacciones.
+
+## 7. Literales de fecha vs. fechas dinámicas
+
+Los literales de fecha son más eficientes que las expresiones dinámicas porque son más amigables para el optimizador:
+
+```apex
+// ✅ Usa literales de fecha
+WHERE CreatedDate = LAST_N_DAYS:30
+WHERE CloseDate = THIS_QUARTER
+WHERE LastModifiedDate > LAST_MONTH
+
+// ⚠️ Fechas dinámicas — funcionan pero son ligeramente más pesadas
+WHERE CreatedDate > :Date.today().addDays(-30)
+```
+
+**Literales de fecha comunes:**
+- `TODAY`, `YESTERDAY`, `TOMORROW`
+- `THIS_WEEK`, `LAST_WEEK`, `NEXT_WEEK`
+- `THIS_MONTH`, `LAST_MONTH`, `THIS_QUARTER`
+- `LAST_N_DAYS:n`, `NEXT_N_DAYS:n`
+- `THIS_YEAR`, `LAST_YEAR`
+
+## 8. Consultas agregadas y GROUP BY
+
+Las consultas SOQL agregadas pueden reducir drásticamente los datos que recuperas:
+
+```apex
+// ❌ Recuperar todas las oportunidades para contar en Apex
+List<Opportunity> opps = [SELECT Id, StageName FROM Opportunity WHERE AccountId = :accId];
+Integer closedCount = 0;
+for (Opportunity o : opps) {
+    if (o.StageName == 'Closed Won') closedCount++;
+}
+
+// ✅ Agregar en SOQL
+AggregateResult[] results = [
+    SELECT StageName, COUNT(Id) cnt
+    FROM Opportunity
+    WHERE AccountId = :accId
+    GROUP BY StageName
+];
+for (AggregateResult r : results) {
+    System.debug(r.get('StageName') + ': ' + r.get('cnt'));
+}
+```
+
+## 9. Evita `!=` y `NOT IN` en grandes volúmenes de datos
+
+Las condiciones negativas (`!=`, `NOT IN`, `NOT LIKE`) impiden el uso de índices y fuerzan escaneos completos.
+
+```apex
+// ❌ No puede usar índice
+WHERE StageName != 'Closed Won'
+
+// ✅ Replantéalo como condiciones positivas
+WHERE StageName IN ('Prospecting', 'Qualification', 'Proposal')
+```
+
+## 10. Solicita índices personalizados para filtros de alto volumen
+
+Si filtras frecuentemente sobre un campo personalizado con millones de registros, solicita un **índice personalizado** a través de Salesforce Support.
+
+Candidatos para indexación personalizada:
+- Campos filtrados en batch jobs que afectan a más de 100 mil registros
+- Campos usados en cláusulas WHERE de SOSL/SOQL de LWC en objetos de alto volumen
+- Campos External ID usados para upserts de integración de datos
+
+## Checklist de rendimiento
+
+Antes de desplegar una consulta a producción:
+
+- [ ] Ejecutaste Query Plan — la cardinalidad es baja (< 10%)
+- [ ] Al menos un campo indexado en la cláusula WHERE
+- [ ] Ningún SOQL dentro de bucles
+- [ ] LIMIT aplicado donde corresponda
+- [ ] Subconsultas usadas en lugar de múltiples round-trips
+- [ ] Consultas agregadas usadas para evitar traer registros innecesarios
+- [ ] Literales de fecha usados para filtros de fecha
+- [ ] Condiciones negativas (`!=`, `NOT IN`) reemplazadas cuando sea posible
+
+## Conclusión
+
+El rendimiento de SOQL se reduce a un principio: **dale al optimizador de consultas algo con qué trabajar**. Filtra siempre sobre campos indexados, nunca consultes dentro de bucles y usa la herramienta Query Plan para validar antes de desplegar. En orgs de alto volumen, estos hábitos marcan la diferencia entre un sistema que escala y uno que se derrumba bajo carga.
+
+---
+
+**Recursos útiles:**
+- [Referencia de SOQL y SOSL](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/)
+- [Herramienta Query Plan - Developer Console](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_query.htm)
+- [Consejos de rendimiento SOQL - Salesforce Help](https://help.salesforce.com/s/articleView?id=000181904)
