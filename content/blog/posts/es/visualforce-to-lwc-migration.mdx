@@ -1,0 +1,218 @@
+---
+title: "Migrar de Visualforce a LWC: una guía práctica"
+excerpt: "Migra páginas Visualforce a Lightning Web Components paso a paso — mapeo de conceptos VF a LWC, patrones de acceso a datos y gestión de los casos límite que complican las migraciones."
+date: "2026-03-17"
+tags: ["Salesforce", "LWC", "Visualforce", "Migración"]
+featured: false
+---
+
+Visualforce no va a desaparecer de la noche a la mañana, pero Lightning Web Components es el presente y el futuro del desarrollo de interfaces en Salesforce. Migrar de forma incremental — un componente a la vez — es el enfoque realista para la mayoría de las orgs.
+
+---
+
+## Cuándo migrar (y cuándo no)
+
+**Buenos candidatos para migración:**
+- Páginas de alto tráfico que se beneficiarían del rendimiento de LWC
+- Páginas de las que los usuarios se quejan de lentitud (el view state de VF es un culpable habitual)
+- Nuevas funcionalidades que estás construyendo junto a páginas VF existentes
+
+**Mantén como Visualforce:**
+- Generación de PDF (VF renderiza PDFs de forma nativa — LWC no)
+- Plantillas de email que usan `<messaging:emailTemplate>`
+- Grillas de edición en línea complejas que requerirían un rediseño significativo
+- Páginas que funcionan y que nadie toca — no migres solo por migrar
+
+---
+
+## Mapeo de conceptos
+
+| Visualforce | Equivalente en LWC |
+|-------------|---------------|
+| `<apex:page>` | Archivos `html` + `js` del componente |
+| `<apex:form>` + `<apex:commandButton>` | `<form>` + Server Action o `@wire` |
+| `<apex:inputField>` | `<lightning-input-field>` |
+| `<apex:outputField>` | `<lightning-output-field>` |
+| `<apex:pageBlock>` | `<lightning-card>` |
+| `<apex:dataTable>` | `<lightning-datatable>` |
+| `<apex:repeat>` | Directiva `for:each` |
+| Standard controller | Wire adapters de `lightning/uiRecordApi` |
+| Custom controller | Clase Apex invocada con `@wire` o `callApex` |
+| `$User.Id`, `$Label` | `@salesforce/user/Id`, `@salesforce/label/c.My_Label` |
+
+---
+
+## Migración simple de visualización de campos
+
+**Visualforce:**
+```xml
+<apex:page standardController="Account">
+    <apex:pageBlock title="Account Details">
+        <apex:pageBlockSection>
+            <apex:outputField value="{!Account.Name}"/>
+            <apex:outputField value="{!Account.Phone}"/>
+            <apex:outputField value="{!Account.Industry}"/>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>
+```
+
+**Equivalente en LWC:**
+```html
+<!-- accountDetails.html -->
+<template>
+    <lightning-card title="Account Details">
+        <div class="slds-p-around_medium">
+            <lightning-record-view-form record-id={recordId} object-api-name="Account">
+                <lightning-output-field field-name="Name"></lightning-output-field>
+                <lightning-output-field field-name="Phone"></lightning-output-field>
+                <lightning-output-field field-name="Industry"></lightning-output-field>
+            </lightning-record-view-form>
+        </div>
+    </lightning-card>
+</template>
+```
+
+```javascript
+// accountDetails.js
+import { LightningElement, api } from 'lwc';
+
+export default class AccountDetails extends LightningElement {
+    @api recordId;
+}
+```
+
+---
+
+## Migración de formulario con lógica personalizada
+
+**Controlador Visualforce (simplificado):**
+```apex
+public class AccountFormController {
+    public Account acc { get; set; }
+
+    public AccountFormController() {
+        acc = new Account();
+    }
+
+    public PageReference save() {
+        if (acc.Name == null) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR, 'Name is required'));
+            return null;
+        }
+        insert acc;
+        return new PageReference('/lightning/r/Account/' + acc.Id + '/view');
+    }
+}
+```
+
+**LWC con Server Action:**
+```javascript
+// accountForm.js
+import { LightningElement } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import createAccount from '@salesforce/apex/AccountFormController.createAccount';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+export default class AccountForm extends NavigationMixin(LightningElement) {
+    name = '';
+    phone = '';
+
+    handleNameChange(event) {
+        this.name = event.target.value;
+    }
+
+    async handleSave() {
+        if (!this.name) {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Validation Error',
+                message: 'Name is required',
+                variant: 'error',
+            }));
+            return;
+        }
+
+        try {
+            const accountId = await createAccount({ name: this.name, phone: this.phone });
+            this[NavigationMixin.Navigate]({
+                type: 'standard__recordPage',
+                attributes: { recordId: accountId, actionName: 'view' },
+            });
+        } catch (error) {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Error',
+                message: error.body?.message ?? 'Unknown error',
+                variant: 'error',
+            }));
+        }
+    }
+}
+```
+
+---
+
+## Reemplazar `<apex:repeat>` y tablas dinámicas
+
+**Visualforce:**
+```xml
+<apex:repeat value="{!contacts}" var="c">
+    <div>{!c.Name} — {!c.Email}</div>
+</apex:repeat>
+```
+
+**LWC:**
+```html
+<template for:each={contacts} for:item="contact">
+    <div key={contact.Id}>
+        {contact.Name} — {contact.Email}
+    </div>
+</template>
+```
+
+Para tablas editables, usa `<lightning-datatable>`:
+```javascript
+columns = [
+    { label: 'Name', fieldName: 'Name', type: 'text', editable: true },
+    { label: 'Email', fieldName: 'Email', type: 'email' },
+    { label: 'Phone', fieldName: 'Phone', type: 'phone' },
+];
+```
+
+```html
+<lightning-datatable
+    key-field="Id"
+    data={contacts}
+    columns={columns}
+    oncellchange={handleCellChange}
+    onsave={handleSave}
+    draft-values={draftValues}>
+</lightning-datatable>
+```
+
+---
+
+## Estrategia de migración
+
+1. **Identifica la complejidad de la página** — simple (< 1 día), media (1–3 días), compleja (1+ semana)
+2. **Crea el LWC junto a la página VF** — no elimines VF hasta que el LWC esté validado
+3. **Usa un feature flag** — un custom setting `LWC_Enabled__c` para alternar entre VF y LWC por usuario
+4. **Valida primero con los usuarios** — despliega el LWC a un subconjunto de usuarios antes del rollout completo
+5. **Elimina la página VF** — solo después de 2–4 semanas de uso exitoso del LWC
+
+---
+
+## Errores comunes a evitar
+
+- **View state → sin view state**: LWC no tiene concepto de view state — usa `@wire` para los datos, `@track` (o propiedades normales) para el estado local
+- **Redirecciones de página**: VF usa `PageReference` — LWC usa `NavigationMixin`
+- **`apex:messages`**: los mensajes de error de VF usan `ApexPages.addMessage` — LWC usa `ShowToastEvent` o renderizado de errores en la propia página
+- **CSS inline en VF**: LWC impone el Lightning Design System — evita CSS crudo en el scope del componente, usa las clases utilitarias de SLDS
+
+---
+
+## Recursos
+
+- [Guía de migración LWC](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.migrate_visualforce)
+- [Trailhead: de Visualforce a LWC](https://trailhead.salesforce.com/content/learn/modules/migrate-visualforce-to-lwc)
+- [Documentación de NavigationMixin](https://developer.salesforce.com/docs/component-library/bundle/lightning-navigation/documentation)

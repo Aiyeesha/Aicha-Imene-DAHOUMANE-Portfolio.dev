@@ -1,0 +1,307 @@
+---
+title: "Hardening de seguridad de Windows Server 2022: una checklist práctica"
+excerpt: "Guía de hardening paso a paso para Windows Server 2022 — desde deshabilitar protocolos obsoletos hasta configurar políticas de auditoría, firewall local y gestión de accesos privilegiados."
+date: "2025-09-08"
+tags: ["IT Ops", "Windows Server", "Seguridad", "Hardening", "Runbook"]
+---
+
+Un Windows Server 2022 recién instalado no es un servidor seguro. La configuración por defecto prioriza la compatibilidad por encima de la seguridad. Esta guía recorre los pasos de hardening esenciales — aplicables a cualquier rol, desde controladores de dominio hasta servidores de archivos.
+
+## Antes de empezar
+
+**Baselines de referencia:**
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319) — plantillas de GPO preconstruidas
+- CIS Benchmark para Windows Server 2022
+- Guía ANSSI para hardening de Windows
+
+Prueba siempre primero en un sistema que no sea de producción. Algunas configuraciones pueden romper aplicaciones o el acceso RDP si se aplican sin cuidado.
+
+## 1. Deshabilitar servicios innecesarios
+
+Reduce la superficie de ataque deteniendo los servicios que no usas:
+
+```powershell
+# Listar todos los servicios en ejecución
+Get-Service | Where-Object {$_.Status -eq "Running"} | Sort-Object Name
+
+# Deshabilitar servicios específicos de riesgo o innecesarios
+$servicesToDisable = @(
+    "Fax",              # Servicio de fax — raramente necesario
+    "XblGameSave",      # Guardado de partidas de Xbox Live
+    "WSearch",          # Windows Search (deshabilitar en servidores sin sesiones de usuario)
+    "Print Spooler"     # Si no es un servidor de impresión — riesgo de PrintNightmare
+)
+
+foreach ($svc in $servicesToDisable) {
+    Set-Service -Name $svc -StartupType Disabled
+    Stop-Service -Name $svc -Force -ErrorAction SilentlyContinue
+    Write-Host "Disabled: $svc"
+}
+```
+
+**Crítico: Print Spooler (PrintNightmare)**
+Si no se trata de un servidor de impresión, deshabilita el spooler:
+```powershell
+Stop-Service -Name "Spooler" -Force
+Set-Service -Name "Spooler" -StartupType Disabled
+```
+
+## 2. Deshabilitar protocolos y suites de cifrado obsoletos
+
+### SMBv1 (vector de EternalBlue — WannaCry, NotPetya)
+
+```powershell
+# Deshabilitar SMBv1 (debería estar apagado por defecto en Server 2022, verificar)
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+
+# Verificar
+Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol
+```
+
+### LLMNR y NetBIOS (usados en ataques MITM/relay)
+
+```powershell
+# Deshabilitar LLMNR vía registro
+$reg = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
+New-Item -Path $reg -Force | Out-Null
+Set-ItemProperty -Path $reg -Name "EnableMulticast" -Value 0 -Type DWord
+
+# Deshabilitar NetBIOS sobre TCP/IP en todos los adaptadores
+$adapters = Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object {$_.IPEnabled}
+foreach ($adapter in $adapters) {
+    $adapter.SetTcpipNetbios(2) | Out-Null  # 2 = Deshabilitar NetBIOS
+}
+```
+
+### Versiones débiles de TLS (TLS 1.0, 1.1)
+
+```powershell
+# Deshabilitar TLS 1.0
+$path = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"
+New-Item -Path "$path\TLS 1.0\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.0\Server" -Name "Enabled" -Value 0
+Set-ItemProperty -Path "$path\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1
+
+# Deshabilitar TLS 1.1
+New-Item -Path "$path\TLS 1.1\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.1\Server" -Name "Enabled" -Value 0
+Set-ItemProperty -Path "$path\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1
+
+# Verificar que TLS 1.2 está explícitamente habilitado
+New-Item -Path "$path\TLS 1.2\Server" -Force | Out-Null
+Set-ItemProperty -Path "$path\TLS 1.2\Server" -Name "Enabled" -Value 1
+Set-ItemProperty -Path "$path\TLS 1.2\Server" -Name "DisabledByDefault" -Value 0
+```
+
+### Autenticación NTLMv1
+
+```
+GPO: Computer Configuration → Windows Settings → Security Settings → Local Policies → Security Options
+  → Network security: LAN Manager authentication level
+  → Value: Send NTLMv2 response only. Refuse LM & NTLM
+```
+
+## 3. Configuración del Windows Firewall
+
+Habilita el Windows Firewall incluso si tienes un firewall perimetral — defensa en profundidad.
+
+```powershell
+# Habilitar todos los perfiles de firewall
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+# Establecer acciones por defecto (bloquear entrante, permitir saliente)
+Set-NetFirewallProfile -Profile Domain,Public,Private `
+    -DefaultInboundAction Block `
+    -DefaultOutboundAction Allow
+
+# Permitir RDP solo desde la subred de gestión
+New-NetFirewallRule `
+    -DisplayName "Allow RDP - Management Only" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 3389 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+
+# Permitir WinRM (para gestión remota por PS) solo desde la gestión
+New-NetFirewallRule `
+    -DisplayName "Allow WinRM - Management Only" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 5985,5986 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+
+# Permitir ICMP (ping) desde la gestión
+New-NetFirewallRule `
+    -DisplayName "Allow ICMP - Management" `
+    -Direction Inbound `
+    -Protocol ICMPv4 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+```
+
+## 4. Administrador local y acceso privilegiado
+
+### Renombrar y deshabilitar el Administrator integrado
+
+```powershell
+# Renombrar la cuenta Administrator integrada
+Rename-LocalUser -Name "Administrator" -NewName "srv-admin"
+
+# Crear una cuenta de administrador separada para uso diario
+New-LocalUser -Name "sysadmin-ops" `
+    -Password (ConvertTo-SecureString "S3cur3P@ss2026!" -AsPlainText -Force) `
+    -FullName "Operations Admin" `
+    -PasswordNeverExpires $false
+
+Add-LocalGroupMember -Group "Administrators" -Member "sysadmin-ops"
+
+# Deshabilitar la cuenta integrada (ya renombrada)
+Disable-LocalUser -Name "srv-admin"
+```
+
+### Deshabilitar la cuenta Guest local
+
+```powershell
+Disable-LocalUser -Name "Guest"
+```
+
+### Configurar la política de seguridad local
+
+```powershell
+# Denegar el logon de red para cuentas locales (forzar autenticación de dominio)
+# Vía GPO: User Rights Assignment → Deny access to this computer from the network
+# Añadir: Local account (built-in group)
+
+# Requerir CTRL+ALT+SUPR para el logon interactivo
+# GPO: Security Options → Interactive logon: Do not require CTRL+ALT+DEL → Disabled
+```
+
+## 5. Configuración de la política de auditoría
+
+Un servidor sin logs de auditoría es un callejón sin salida forense. Configura una auditoría completa:
+
+```powershell
+# Aplicar la política de auditoría avanzada vía auditpol
+auditpol /set /subcategory:"Credential Validation" /success:enable /failure:enable
+auditpol /set /subcategory:"Logon" /success:enable /failure:enable
+auditpol /set /subcategory:"Account Lockout" /failure:enable
+auditpol /set /subcategory:"User Account Management" /success:enable /failure:enable
+auditpol /set /subcategory:"Security Group Management" /success:enable
+auditpol /set /subcategory:"Process Creation" /success:enable
+auditpol /set /subcategory:"Detailed File Share" /failure:enable
+auditpol /set /subcategory:"Sensitive Privilege Use" /success:enable /failure:enable
+auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
+
+# Verificar
+auditpol /get /category:*
+```
+
+### Aumentar el tamaño del log de eventos
+
+```powershell
+# Log de seguridad: 1 GB mínimo
+Limit-EventLog -LogName Security -MaximumSize 1073741824
+
+# System y Application: 256 MB
+Limit-EventLog -LogName System -MaximumSize 268435456
+Limit-EventLog -LogName Application -MaximumSize 268435456
+```
+
+## 6. Configuración de Windows Defender
+
+```powershell
+# Verificar que Defender está activo y actualizado
+Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, `
+    RealTimeProtectionEnabled, AntispywareEnabled, `
+    AntivirusSignatureLastUpdated
+
+# Habilitar protección en la nube y envío automático de muestras
+Set-MpPreference -MAPSReporting Advanced
+Set-MpPreference -SubmitSamplesConsent SendAllSamples
+
+# Habilitar protección de red (bloquea URLs maliciosas a nivel de kernel)
+Set-MpPreference -EnableNetworkProtection Enabled
+
+# Protección PUA (Potentially Unwanted Applications)
+Set-MpPreference -PUAProtection Enabled
+
+# Reglas de Attack Surface Reduction
+Add-MpPreference -AttackSurfaceReductionRules_Ids `
+    "d4f940ab-401b-4efc-aadc-ad5f3c50688a" `  # Bloquear que Office cree procesos hijo
+    -AttackSurfaceReductionRules_Actions Enabled
+```
+
+## 7. Seguridad del Escritorio Remoto
+
+```powershell
+# Asegurar que se requiere Network Level Authentication
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+    -Name "UserAuthentication" -Value 1
+
+# Establecer el nivel de cifrado en High
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+    -Name "MinEncryptionLevel" -Value 3
+
+# Cambiar el puerto RDP (seguridad por oscuridad — opcional pero reduce el ruido)
+# Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+#     -Name "PortNumber" -Value 33899
+# (actualizar la regla de firewall correspondiente)
+```
+
+## 8. Actualizaciones automáticas
+
+```powershell
+# Vía GPO para servidores unidos al dominio:
+# Computer Configuration → Administrative Templates → Windows Components → Windows Update
+
+# Para servidores independientes:
+# Habilitar actualizaciones automáticas vía Settings → Windows Update → Advanced Options
+# O configurar WSUS si está disponible
+```
+
+## Checklist completa de hardening
+
+**Protocolos:**
+- [ ] SMBv1 deshabilitado
+- [ ] LLMNR deshabilitado
+- [ ] NetBIOS sobre TCP/IP deshabilitado
+- [ ] TLS 1.0 y 1.1 deshabilitados
+- [ ] NTLMv1 rechazado, NTLMv2 forzado
+
+**Servicios:**
+- [ ] Print Spooler deshabilitado (si no es servidor de impresión)
+- [ ] Servicio de fax deshabilitado
+- [ ] Todos los servicios no utilizados deshabilitados
+
+**Cuentas:**
+- [ ] Administrator integrado renombrado y deshabilitado
+- [ ] Cuenta Guest deshabilitada
+- [ ] Cuentas de administrador nominativas con contraseñas fuertes
+
+**Firewall:**
+- [ ] Todos los perfiles habilitados
+- [ ] Por defecto: bloquear entrante, permitir saliente
+- [ ] RDP restringido a la subred de gestión
+
+**Auditoría:**
+- [ ] Eventos de logon auditados (éxito + fallo)
+- [ ] Gestión de cuentas auditada
+- [ ] Log de seguridad ≥ 1 GB
+
+**Antivirus:**
+- [ ] Windows Defender habilitado con protección en la nube
+- [ ] Protección en tiempo real activa
+- [ ] Reglas ASR desplegadas
+
+## Conclusión
+
+El hardening de seguridad no es una tarea puntual — es una baseline que aplicas en el aprovisionamiento y mantienes en el tiempo. Automatiza estos pasos con PowerShell DSC o Ansible para asegurar que cada nuevo servidor cumple la baseline. Combínalo con escaneos de vulnerabilidades regulares (Nessus, OpenVAS) para detectar desviaciones con el tiempo.
+
+---
+
+**Recursos útiles:**
+- [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+- [CIS Benchmarks para Windows Server 2022](https://www.cisecurity.org/benchmark/microsoft_windows_server)
+- [Reglas ASR de Windows Defender](https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction)
