@@ -9,13 +9,18 @@ type PageProps = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/work-with-me`;
   const title = isFr
     ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Trabajemos juntas — Aïcha Imène DAHOUMANE"
     : "Work with me — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Développeuse Salesforce & IT Ops — 100 % Remote, hybride ou sur site, mobilité & relocalisation envisageables. Disponible pour missions en France, Europe et pays anglophones."
+    : isEs
+    ? "Desarrolladora Salesforce & IT Ops — 100 % remoto, híbrido o presencial, abierta a movilidad y relocalización. Disponible para proyectos en Francia, Europa y países de habla inglesa."
     : "Salesforce Developer & IT Ops consultant — 100 % Remote, hybrid or on-site, open to mobility & relocation. Available for missions in France, Europe & English-speaking markets.";
   return {
     title,
@@ -51,12 +56,13 @@ export default async function WorkWithMePage({ params }: PageProps) {
   const { locale } = await params;
   const siteUrl = getSiteUrl();
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const jsonLdBreadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteUrl}/${locale}` },
-      { "@type": "ListItem", position: 2, name: isFr ? "Travaillons ensemble" : "Work with me", item: `${siteUrl}/${locale}/work-with-me` },
+      { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : isEs ? "Inicio" : "Home", item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntas" : "Work with me", item: `${siteUrl}/${locale}/work-with-me` },
     ],
   };
   return (
