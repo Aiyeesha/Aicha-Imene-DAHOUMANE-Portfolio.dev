@@ -1,63 +1,67 @@
 ---
-title: "SEO Next.js : Metadata API, Sitemaps et données structurées"
-excerpt: "Implémentez le SEO correctement dans Next.js 14+ — generateMetadata, opengraph-image, next-sitemap, JSON-LD et URLs canoniques."
+title: "SEO Next.js : Metadata API, sitemaps et données structurées"
+excerpt: "Implémentez le SEO correctement dans Next.js 14+ — generateMetadata, opengraph-image, configuration next-sitemap, données structurées JSON-LD et URLs canoniques."
 date: "2025-06-17"
 tags: ["Next.js", "SEO", "Web"]
 featured: false
 ---
 
-Next.js App Router offre des outils SEO intégrés puissants. Mais la plupart des tutoriels ne font qu'effleurer la surface. Voici une implémentation complète couvrant les métadonnées, images Open Graph, données structurées et sitemaps.
+Next.js App Router offre des outils SEO intégrés puissants. Mais la plupart des tutoriels ne font qu'effleurer la surface. Voici une implémentation complète couvrant les métadonnées, les images Open Graph, les données structurées et les sitemaps.
 
 ---
 
 ## Prérequis
 
 - Next.js 14+ avec App Router
-- Notions de base en HTML/SEO
-- Un projet déployé sur Vercel ou équivalent
+- Notions de base sur les métadonnées et le SEO
 
 ---
 
-## generateMetadata — Au-delà des basiques
+## generateMetadata — SEO dynamique par page
 
-La fonction `generateMetadata` permet de générer des métadonnées dynamiques par page :
+La fonction `generateMetadata` remplace l'ancien composant `Head`. Elle s'exécute côté serveur et prend en charge la récupération de données asynchrone :
 
-```typescript
+```tsx
 // app/[locale]/blog/[slug]/page.tsx
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-export async function generateMetadata({
-  params,
-}: {
+type Props = {
   params: Promise<{ locale: string; slug: string }>;
-}): Promise<Metadata> {
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = await getPost(slug, locale);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://monsite.fr';
+  const post = await getPostBySlug(slug, locale);
+
+  if (!post) return { title: "Article introuvable" };
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://votresite.com";
+  const canonical = `${siteUrl}/${locale}/blog/${slug}`;
 
   return {
-    title: `${post.title} | Mon Portfolio`,
+    title: post.title,
     description: post.excerpt,
     alternates: {
-      canonical: `${siteUrl}/${locale}/blog/${slug}`,
+      canonical,
       languages: {
-        fr: `${siteUrl}/fr/blog/${slug}`,
         en: `${siteUrl}/en/blog/${slug}`,
+        fr: `${siteUrl}/fr/blog/${slug}`,
+        es: `${siteUrl}/es/blog/${slug}`,
       },
     },
     openGraph: {
+      type: "article",
       title: post.title,
       description: post.excerpt,
-      url: `${siteUrl}/${locale}/blog/${slug}`,
-      images: [{ url: post.coverImage, width: 1200, height: 630, alt: post.title }],
-      type: 'article',
+      url: canonical,
       publishedTime: post.date,
+      authors: ["Aïcha Imène DAHOUMANE"],
+      tags: post.tags,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: [post.coverImage],
     },
   };
 }
@@ -65,79 +69,52 @@ export async function generateMetadata({
 
 ---
 
-## Image Open Graph générée automatiquement
+## opengraph-image.tsx — Images OG générées de façon programmatique
 
-Créez `app/[locale]/blog/[slug]/opengraph-image.tsx` pour générer une image OG dynamique :
+Plutôt que des images statiques, générez des images Open Graph dynamiques avec l'API `ImageResponse` :
 
-```typescript
-import { ImageResponse } from 'next/og';
+```tsx
+// app/[locale]/blog/[slug]/opengraph-image.tsx
+import { ImageResponse } from "next/og";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
 
-export default async function OGImage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const post = await getPost(slug);
+type Props = { params: Promise<{ slug: string; locale: string }> };
+
+export default async function Image({ params }: Props) {
+  const { slug, locale } = await params;
+  const post = await getPostBySlug(slug, locale);
 
   return new ImageResponse(
     (
       <div
         style={{
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '60px',
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          padding: "60px",
+          justifyContent: "space-between",
         }}
       >
-        <p style={{ color: '#22d3ee', fontSize: 24, margin: '0 0 16px' }}>
-          Mon Portfolio · Blog
-        </p>
-        <h1 style={{ color: 'white', fontSize: 56, lineHeight: 1.2, margin: 0 }}>
-          {post.title}
-        </h1>
+        <div style={{ color: "#22d3ee", fontSize: 18, fontWeight: 600 }}>
+          votresite.com
+        </div>
+        <div>
+          <div style={{ color: "#f1f5f9", fontSize: 52, fontWeight: 700, lineHeight: 1.2 }}>
+            {post?.title ?? "Article"}
+          </div>
+          <div style={{ color: "#94a3b8", fontSize: 24, marginTop: 20 }}>
+            {post?.excerpt}
+          </div>
+        </div>
       </div>
     ),
-    size
+    { ...size }
   );
-}
-```
-
----
-
-## Sitemap dynamique
-
-```typescript
-// app/sitemap.ts
-import type { MetadataRoute } from 'next';
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-  const posts = await getAllPosts();
-  const locales = ['en', 'fr'];
-
-  const blogUrls = posts.flatMap((post) =>
-    locales.map((locale) => ({
-      url: `${siteUrl}/${locale}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }))
-  );
-
-  const staticPages = locales.flatMap((locale) => [
-    { url: `${siteUrl}/${locale}`, lastModified: new Date(), priority: 1.0 },
-    { url: `${siteUrl}/${locale}/blog`, lastModified: new Date(), priority: 0.8 },
-    { url: `${siteUrl}/${locale}/projects`, lastModified: new Date(), priority: 0.8 },
-  ]);
-
-  return [...staticPages, ...blogUrls];
 }
 ```
 
@@ -145,27 +122,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 ## Données structurées JSON-LD
 
-Les données structurées aident Google à comprendre votre contenu et permettent d'obtenir des rich snippets :
+Ajoutez des données structurées pour obtenir des rich results dans Google Search :
 
-```typescript
-// components/ArticleJsonLd.tsx
-export function ArticleJsonLd({ post, url }: { post: Post; url: string }) {
+```tsx
+// components/JsonLd.tsx
+export function PersonSchema() {
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'TechArticle',
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Aïcha Imène DAHOUMANE",
+    url: "https://votresite.com",
+    jobTitle: "Développeuse Salesforce & Consultante IT",
+    sameAs: [
+      "https://github.com/Aiyeesha",
+      "https://www.linkedin.com/in/aïcha-imène-dahoumane",
+    ],
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function ArticleSchema({ post, url }: { post: Post; url: string }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    dateModified: post.updatedAt ?? post.date,
     author: {
-      '@type': 'Person',
-      name: 'Aïcha Imène DAHOUMANE',
-      url: process.env.NEXT_PUBLIC_SITE_URL,
+      "@type": "Person",
+      name: "Aïcha Imène DAHOUMANE",
     },
     url,
-    image: post.coverImage,
   };
-
   return (
     <script
       type="application/ld+json"
@@ -175,65 +168,93 @@ export function ArticleJsonLd({ post, url }: { post: Post; url: string }) {
 }
 ```
 
+Utilisez-les respectivement dans votre layout et votre page :
+
+```tsx
+// app/layout.tsx
+import { PersonSchema } from "@/components/JsonLd";
+// ...
+<body>
+  <PersonSchema />
+  {children}
+</body>
+```
+
 ---
 
-## Robots.txt et meta robots
+## Configuration next-sitemap
 
-```typescript
-// app/robots.ts
-import type { MetadataRoute } from 'next';
+```bash
+npm install next-sitemap
+```
 
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/admin', '/api/'],
-      },
+```js
+// next-sitemap.config.js
+/** @type {import('next-sitemap').IConfig} */
+module.exports = {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://votresite.com",
+  generateRobotsTxt: true,
+  sitemapSize: 5000,
+  changefreq: "weekly",
+  priority: 0.7,
+  exclude: ["/admin/*", "/api/*"],
+  robotsTxtOptions: {
+    policies: [
+      { userAgent: "*", allow: "/" },
+      { userAgent: "*", disallow: ["/admin/", "/api/"] },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`,
-  };
+  },
+  // Support multilingue
+  alternateRefs: [
+    { href: "https://votresite.com/en", hreflang: "en" },
+    { href: "https://votresite.com/fr", hreflang: "fr" },
+    { href: "https://votresite.com/es", hreflang: "es" },
+  ],
+};
+```
+
+```json
+// package.json
+{
+  "scripts": {
+    "postbuild": "next-sitemap"
+  }
 }
 ```
 
-Pour les pages à ne pas indexer (admin, drafts) :
+---
 
-```typescript
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-};
+## URLs canoniques et hreflang
+
+Définissez toujours des URLs canoniques pour éviter les pénalités de contenu dupliqué :
+
+```tsx
+// Dans generateMetadata
+alternates: {
+  canonical: `https://votresite.com/${locale}/blog/${slug}`,
+  languages: {
+    "en": `https://votresite.com/en/blog/${slug}`,
+    "fr": `https://votresite.com/fr/blog/${slug}`,
+    "es": `https://votresite.com/es/blog/${slug}`,
+    "x-default": `https://votresite.com/en/blog/${slug}`,
+  },
+},
 ```
 
 ---
 
 ## Pièges courants
 
-- **Métadonnées dupliquées** : utilisez les URLs canoniques pour les pages avec paramètres similaires
-- **Balises title trop longues** : restez entre 50 et 60 caractères
-- **Images OG manquantes** : chaque article doit avoir une image 1200×630
-- **Hreflang mal configuré** : vérifiez que chaque locale pointe vers l'autre via `alternates.languages`
-- **JSON-LD invalide** : testez avec le [Rich Results Test de Google](https://search.google.com/test/rich-results)
-
----
-
-## Récapitulatif
-
-| Élément SEO | Implémentation Next.js |
-|-------------|----------------------|
-| Titre / Description | `generateMetadata` |
-| Open Graph | `openGraph` dans metadata |
-| Image OG | `opengraph-image.tsx` |
-| URL canonique | `alternates.canonical` |
-| Hreflang | `alternates.languages` |
-| Sitemap | `app/sitemap.ts` |
-| Données structurées | JSON-LD dans le layout |
-| Robots | `app/robots.ts` |
+- **`x-default` manquant** : incluez toujours un hreflang `x-default` pointant vers votre langue principale
+- **Images OG dupliquées** : si vous avez un `opengraph-image.tsx`, ne définissez pas aussi `openGraph.images` dans les métadonnées — les deux entreraient en conflit
+- **robots.txt qui bloque CSS/JS** : certains `robots.txt` générés bloquent accidentellement des assets — vérifiez sur `votresite.com/robots.txt`
+- **Routes dynamiques absentes du sitemap** : assurez-vous que `generateStaticParams` est implémenté pour que `next-sitemap` explore bien tous les slugs
 
 ---
 
 ## Ressources
 
-- [Documentation Metadata Next.js](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
-- [Rich Results Test — Google](https://search.google.com/test/rich-results)
-- [Schema.org TechArticle](https://schema.org/TechArticle)
+- [Next.js Metadata API](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
+- [next-sitemap](https://github.com/iamvishnusankar/next-sitemap)
+- [Google Rich Results Test](https://search.google.com/test/rich-results)
+- [Schema.org Types](https://schema.org/docs/full.html)
