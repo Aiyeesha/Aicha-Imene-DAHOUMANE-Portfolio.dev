@@ -1,0 +1,169 @@
+---
+title: "Checklist de migración de datos en Salesforce: del sistema legado al org"
+excerpt: "Una checklist práctica para migrar datos a Salesforce — mapeo, deduplicación, estrategia de Data Loader, reglas de validación y plan de rollback."
+date: "2026-01-06"
+tags: ["Salesforce", "Datos", "Migración", "Admin"]
+featured: false
+---
+
+Las migraciones de datos son donde fracasan los proyectos Salesforce. No en el diseño, no en el desarrollo — en el momento en que 50.000 Accounts llegan a producción con el propietario equivocado, campos obligatorios en blanco o registros duplicados. Esta checklist cubre lo que realmente hay que hacer antes, durante y después de una migración.
+
+---
+
+## Requisitos previos
+
+- Org Salesforce con el esquema de destino listo
+- Datos de origen exportados (CSV, dump SQL o API)
+- Acceso de administrador y un sandbox donde probar
+
+---
+
+## Fase 1 — Analizar y mapear
+
+Antes de tocar ninguna herramienta, responde estas preguntas:
+
+**Inventario de objetos:**
+- ¿Qué objetos hay que migrar? (¿Accounts, Contacts, Opportunities, objetos personalizados?)
+- ¿Cuáles son las relaciones? (¿lookup, master-detail, muchos-a-muchos vía objeto de unión?)
+- ¿Hay objetos con IDs externos del sistema origen?
+
+**Calidad de los datos:**
+- ¿Qué porcentaje de registros tiene campos obligatorios vacíos?
+- ¿Hay duplicados? ¿Cuál es la clave de deduplicación?
+- ¿Qué codificación tienen los datos de origen? (UTF-8 vs. latin-1 puede romper caracteres acentuados)
+
+**Tabla de mapeo de campos:**
+
+| Campo de origen | Campo Salesforce | Transformación necesaria |
+|-------------|-----------------|-----------------|
+| customer_name | Account.Name | Ninguna |
+| email | Contact.Email | Minúsculas |
+| created_date | Account.CreatedDate | Formato ISO 8601 |
+| account_type | Account.Type | Mapeo de enum |
+
+---
+
+## Fase 2 — Preparar el org
+
+```apex
+// Desactiva temporalmente reglas de validación y triggers para la carga masiva
+// En Setup: desactiva las reglas de validación de los objetos migrados
+// En los triggers de Apex: añade un mecanismo de bypass
+
+public class TriggerUtils {
+    public static Boolean isMigrationMode = false;
+}
+
+trigger AccountTrigger on Account (before insert, before update) {
+    if (TriggerUtils.isMigrationMode) return;
+    // Lógica normal del trigger...
+}
+```
+
+**También desactiva:**
+- Workflow rules que envían correos
+- Automatizaciones de Process Builder / Flow que crean registros hijos
+- Reglas de duplicados (temporalmente, con registro de log)
+
+---
+
+## Fase 3 — El orden de carga importa
+
+Carga siempre en orden de dependencia:
+
+```
+1. Users (si migras propietarios — coincide por email)
+2. Accounts (objetos padre)
+3. Contacts (requiere lookup a Account)
+4. Opportunities (requiere lookup a Account)
+5. Opportunity Contact Roles (requiere tanto Opp como Contact)
+6. Objetos de unión personalizados al final
+```
+
+---
+
+## Fase 4 — Estrategia de Data Loader
+
+```bash
+# Usa Salesforce CLI para grandes volúmenes
+sf data import bulk \
+  --sobject Account \
+  --file accounts.csv \
+  --external-id External_Id__c \
+  --wait 10
+
+# O Data Loader en modo upsert (recomendado en lugar de insert)
+# Upsert: inserta si es nuevo, actualiza si el ID externo coincide
+```
+
+**Configuraciones clave:**
+- Usa **Upsert**, no Insert (idempotente — seguro de volver a ejecutar)
+- Define un campo de **ID externo** significativo para cada objeto (guarda el ID del sistema origen)
+- Tamaño de lote: 200 para la mayoría de objetos, 10 para objetos complejos con muchos lookups
+- Ejecuta fuera de horario laboral si es posible
+
+---
+
+## Fase 5 — Validar
+
+```soql
+-- Comprueba registros con lookups obligatorios vacíos
+SELECT Id, Name, AccountId FROM Contact WHERE AccountId = null
+
+-- Cuenta por propietario para detectar problemas de asignación
+SELECT Owner.Name, COUNT(Id) cnt FROM Account GROUP BY Owner.Name ORDER BY cnt DESC
+
+-- Verifica que los totales coinciden con el origen
+SELECT COUNT(Id) FROM Account  -- debería coincidir con el conteo del sistema origen
+```
+
+**Comprobaciones post-carga:**
+- [ ] El conteo de registros coincide con el sistema origen (±0)
+- [ ] Revisar manualmente 10–20 registros contra el origen
+- [ ] Las relaciones se resuelven correctamente (sin lookups rotos)
+- [ ] Los campos obligatorios están poblados en todos los registros
+- [ ] Los page layouts se muestran como se espera
+
+---
+
+## Fase 6 — Reactivar y salir a producción
+
+```
+1. Reactivar las reglas de validación
+2. Reactivar los triggers (quitar el bypass de migración)
+3. Reactivar workflows/flows
+4. Ejecutar un escaneo de detección de duplicados
+5. Asignar la propiedad de registros si se cargaron en lote como admin
+6. Notificar a los usuarios y ejecutar smoke tests
+```
+
+---
+
+## Plan de rollback
+
+- Mantén el sistema origen en modo solo lectura durante 30 días tras la migración
+- Exporta todos los registros migrados con sus nuevos IDs de Salesforce antes de salir a producción
+- Documenta la consulta de borrado por si necesitas limpiar y volver a ejecutar:
+
+```apex
+// Borra todos los registros con External_Id__c poblado (registros migrados)
+List<Account> toDelete = [SELECT Id FROM Account WHERE External_Id__c != null];
+delete toDelete;
+```
+
+---
+
+## Errores comunes
+
+- **Cargar sin IDs externos**: no puedes volver a ejecutar la migración de forma segura, cada reintento crea duplicados
+- **Ignorar las zonas horarias**: los campos de fecha/datetime cambian según la configuración regional del org — usa siempre UTC en tus archivos de origen
+- **Olvidar los Record Types**: los registros cargados sin un RecordTypeId reciben el valor por defecto, que puede no ser el correcto
+- **Mapeo de propietarios**: los IDs de usuario de Salesforce difieren entre orgs — mapea siempre por email, nunca por ID
+
+---
+
+## Recursos
+
+- [Guía de Salesforce Data Loader](https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/)
+- [Referencia de la CLI sf data import](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
+- [Buenas prácticas de ID externo](https://help.salesforce.com/s/articleView?id=sf.faq_import_general_what_is_an_external.htm)
