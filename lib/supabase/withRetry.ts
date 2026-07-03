@@ -10,10 +10,25 @@ const BASE_DELAY_MS = 200;
 
 function isRetryable(error: { code?: string | number; status?: number; message?: string } | null): boolean {
   if (!error) return false;
+  // Defensive fallback: @supabase/postgrest-js's PostgrestError never carries `status`
+  // and always types `code` as a string (e.g. "PGRST301") — these two branches cannot
+  // fire for the actual callers of withRetry() (see lib/data/about.ts, certifications.ts,
+  // projects.ts, all Postgrest queries), but are kept in case a differently-shaped error
+  // (e.g. from another Supabase subsystem) is ever passed through this same helper.
   if (error.status && RETRYABLE_CODES.has(error.status)) return true;
   if (typeof error.code === "number" && RETRYABLE_CODES.has(error.code)) return true;
-  // Network-level failures (fetch rejected, no status code)
-  if (error.message && /network|timeout|ECONNRESET|ETIMEDOUT|fetch failed/i.test(error.message)) return true;
+  // Network-level failures (fetch rejected, no status code) and Cloudflare edge errors
+  // (503/429/502/520-524) surfaced as plain text in PostgrestError.message when Cloudflare
+  // intercepts the request before it reaches PostgREST (non-JSON body → message holds the
+  // raw response text/status, e.g. "523" or "Origin Unreachable").
+  if (
+    error.message &&
+    /network|timeout|ECONNRESET|ETIMEDOUT|fetch failed|too many requests|bad gateway|service unavailable|origin unreachable|\b(429|502|503|520|521|522|523|524)\b/i.test(
+      error.message
+    )
+  ) {
+    return true;
+  }
   return false;
 }
 
