@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { getAllTags } from "@/content/blog/navigation";
 import { getSiteUrl } from "@/lib/siteUrl";
 
-type Params = { locale: "en" | "fr" };
+type Params = { locale: "en" | "fr" | "es" };
 
 export async function generateMetadata(
   { params }: { params: Promise<Params> }
@@ -36,8 +36,8 @@ export async function generateMetadata(
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [{ url: `${siteUrl}/${locale}/blog/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

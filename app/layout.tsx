@@ -167,7 +167,7 @@ function buildJsonLd(locale: string) {
           { "@type": "Country", name: "Canada" },
           "Worldwide", // remote international — string Text valide Schema.org
         ],
-        inLanguage: locale === "fr" ? "fr-FR" : "en-US"
+        inLanguage: locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US"
       }
     ]
   };

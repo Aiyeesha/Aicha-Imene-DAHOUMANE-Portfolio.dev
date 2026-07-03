@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-export type BlogLocale = "en" | "fr";
+export type BlogLocale = "en" | "fr" | "es";
 
 export type BlogFrontmatter = {
   title?: string;

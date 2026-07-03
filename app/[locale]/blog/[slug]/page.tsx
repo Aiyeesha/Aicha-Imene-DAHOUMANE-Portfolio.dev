@@ -22,7 +22,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { LINKEDIN_URL } from "@/lib/social";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
-type Params = { locale: "en" | "fr"; slug: string };
+type Params = { locale: "en" | "fr" | "es"; slug: string };
 
 // ISR : les articles pré-générés sont revalidés toutes les 24 h.
 // dynamicParams = true → un nouvel article se génère à la première visite
@@ -32,7 +32,7 @@ export const dynamicParams = true;
 
 export async function generateStaticParams(): Promise<Params[]> {
   const out: Params[] = [];
-  for (const locale of ["en", "fr"] as const) {
+  for (const locale of ["en", "fr", "es"] as const) {
     const posts = readAllPosts(locale);
     for (const p of posts) out.push({ locale, slug: p.slug });
   }
@@ -74,8 +74,8 @@ export async function generateMetadata(
     alternates: { canonical: urlPath, languages },
     openGraph: {
       type: "article",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       title,
       description,
       url: urlPath,
