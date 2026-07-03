@@ -16,15 +16,18 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function Image({ params }: Props) {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   const name     = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-  const title    = isFr ? "À propos" : "About me";
+  const title    = isFr ? "À propos" : isEs ? "Sobre mí" : "About me";
   const subtitle = isFr
     ? "De l'administration systèmes & réseaux au développement Salesforce"
+    : isEs
+    ? "De la administración de sistemas y redes al desarrollo Salesforce"
     : "From systems & network administration to Salesforce development";
 
   // Cyan (Salesforce) + Violet (IT Ops) — palette cohérente avec l'OG homepage
@@ -33,6 +36,8 @@ export default async function Image({ params }: Props) {
 
   const tags = isFr
     ? ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 ans d'expérience"]
+    : isEs
+    ? ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 años de experiencia"]
     : ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 years experience"];
 
   return new ImageResponse(

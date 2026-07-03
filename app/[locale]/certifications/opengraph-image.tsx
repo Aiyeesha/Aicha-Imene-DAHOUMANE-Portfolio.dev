@@ -13,20 +13,23 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function Image({ params }: Props) {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME  || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  const title    = isFr ? "Certifications & Diplômes"  : "Certifications & Diplomas";
+  const title    = isFr ? "Certifications & Diplômes"  : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas";
   const subtitle = isFr
+    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I"
+    : isEs
     ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I"
     : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I";
 
   const badges = [
-    { label: isFr ? "Obtenu" : "Completed",         color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
-    { label: isFr ? "Actif"  : "Active",             color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
-    { label: isFr ? "En preparation" : "2026",       color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
+    { label: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",         color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
+    { label: isFr ? "Actif"  : isEs ? "Activo" : "Active",             color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
+    { label: isFr ? "En preparation" : isEs ? "En preparación" : "2026",       color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
   ];
 
   return new ImageResponse(

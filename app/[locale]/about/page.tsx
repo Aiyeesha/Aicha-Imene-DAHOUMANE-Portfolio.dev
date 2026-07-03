@@ -32,11 +32,14 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   const name  = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const title = isFr ? `À propos — ${name}` : `About — ${name}`;
+  const title = isFr ? `À propos — ${name}` : isEs ? `Sobre mí — ${name}` : `About — ${name}`;
   const description = isFr
     ? "De l'administration systèmes & réseaux au développement Salesforce. Développeuse Salesforce & IT Ops Engineer ouverte à toutes opportunités — CDI, CDD, freelance ou mission."
+    : isEs
+    ? "De la administración de sistemas y redes al desarrollo Salesforce. Desarrolladora Salesforce e IT Ops Engineer abierta a todo tipo de oportunidades: contrato indefinido, temporal, freelance o por proyecto."
     : "From systems & network administration to Salesforce development. Salesforce Developer & IT Ops Engineer — open to all opportunities: permanent, fixed-term, freelance, or contract.";
 
   const siteUrl = getSiteUrl();
