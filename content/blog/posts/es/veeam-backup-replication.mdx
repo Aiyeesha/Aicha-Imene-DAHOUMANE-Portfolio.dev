@@ -1,0 +1,284 @@
+---
+title: "Estrategia de backup con Veeam: regla 3-2-1, replicación y pruebas de recuperación"
+excerpt: "Implementa una estrategia de backup de nivel producción con Veeam Backup & Replication — regla 3-2-1, configuración de jobs, replicación externa a almacenamiento de objetos y pruebas de recuperación automatizadas."
+date: "2024-11-19"
+tags: ["IT Ops", "Backup", "Veeam", "Recuperación ante desastres"]
+featured: false
+---
+
+Un backup que no se ha probado no es un backup. La mayoría de las organizaciones descubren que sus backups están rotos durante un desastre real. Aquí te explico cómo construir una estrategia de backup con Veeam en la que realmente puedas confiar.
+
+---
+
+## La regla 3-2-1
+
+```
+3 copias de los datos
+  → Producción + 2 backups
+
+2 tipos de soporte de almacenamiento distintos
+  → Repositorio de backup local + almacenamiento externo (nube/cinta)
+
+1 copia externa
+  → Ubicación física distinta o almacenamiento de objetos en la nube
+```
+
+La arquitectura de Veeam se corresponde directamente con esto:
+
+```
+VMs de producción (vSphere/Hyper-V)
+    ↓  Backup Job (nocturno)
+Repositorio local (NAS/DAS en las instalaciones)
+    ↓  Backup Copy Job (con desfase horario)
+Almacenamiento de objetos (S3/Azure Blob/Wasabi)  ← externo, inmutable
+```
+
+---
+
+## Visión general de la instalación
+
+**Veeam Backup & Replication** se instala en un Windows Server (2019 o 2022):
+
+- Mínimo: 4 núcleos, 8 GB de RAM, 500 GB para el catálogo + metadatos
+- Servidores de repositorio: servidores dedicados o NAS con SMB/NFS
+- Community Edition: gratuita hasta 10 cargas de trabajo
+
+Tras instalar y añadir tu host vCenter/Hyper-V como servidor gestionado, ya puedes configurar los jobs.
+
+---
+
+## Configuración de los jobs de backup
+
+### Job 1: Backup diario de VMs
+
+```
+Nombre del job: Production-Daily
+Tipo: Backup (VMware o Hyper-V)
+VMs: Todas las VMs de producción (o carpetas/etiquetas específicas)
+
+Programación:
+  Hora de inicio: 22:00
+  Reintentar en caso de fallo: 3 veces, intervalo de 10 min
+
+Almacenamiento:
+  Repositorio: Local-NAS-Repo
+  Puntos de restauración: 14 (mantener 2 semanas diarias)
+  Compresión: Óptima
+  Deduplicación: Habilitada
+
+Procesamiento del huésped:
+  Habilitar procesamiento application-aware: Sí
+  Credenciales del huésped: svc-veeam (administrador local)
+  Truncado del log de transacciones: Habilitado (para SQL/Exchange)
+
+Avanzado → Notificaciones:
+  Enviar informe por correo: Habilitado
+  Destinatarios: ops-team@company.com
+  Notificar en: Advertencia + Fallo
+```
+
+### Job 2: SQL Server — backup más frecuente
+
+Para bases de datos, usa Veeam Agent o backup application-aware con envío de logs:
+
+```
+Nombre del job: SQL-Production-Frequent
+VMs: solo db-prod-01
+Programación: Cada 4 horas
+Application-aware: Habilitado
+  Credenciales de SQL Server: svc-sqlbackup
+  Intervalo de backup de logs: 15 minutos (logs de transacciones)
+Retención: 7 días
+```
+
+---
+
+## Backup Copy Job (externo)
+
+El backup copy job toma los datos de tu repositorio local y los envía al almacenamiento de objetos:
+
+```
+Nombre del job: Offsite-Copy-S3
+Tipo: Backup Copy
+Origen: Production-Daily (backup job)
+Programación: Copiar inmediatamente al completarse el backup
+
+Repositorio de destino: S3-Compatible-Object-Storage
+  Proveedor: Amazon S3 (o Wasabi/Backblaze B2)
+  Bucket: company-backups-prod
+  Carpeta: veeam/
+  Inmutabilidad: Habilitada, 30 días
+  Cifrado: AES-256 (habilitar con contraseña robusta)
+
+Retención:
+  Puntos de restauración: 30 (rotación mensual GFS)
+  GFS:
+    Conservar semanales: 4
+    Conservar mensuales: 12
+    Conservar anuales: 1
+```
+
+**Añadir S3 como repositorio de almacenamiento de objetos:**
+
+```
+Backup Infrastructure → Add Repository → Object Storage → Amazon S3
+
+Credenciales: usuario IAM con s3:PutObject, s3:GetObject, s3:DeleteObject
+  (usa roles IAM si el servidor Veeam está en AWS)
+Bucket: company-backups-prod
+Región: eu-west-1
+Inmutabilidad: Habilitar (requiere S3 Object Lock, modo Compliance)
+```
+
+---
+
+## Job de replicación (standby en caliente)
+
+Para VMs críticas, replica hacia un sitio de recuperación ante desastres (DR) para un failover rápido (RTO de minutos frente a horas):
+
+```
+Nombre del job: Critical-VMs-Replication
+Tipo: Replicación
+VMs de origen: crm-prod, erp-prod, dc-prod
+
+Destino: DR-vCenter (host vSphere remoto)
+  Datastore: DR-SSD-Datastore
+  Sufijo del nombre de réplica: _replica
+
+Programación: Cada 4 horas
+Retención: 7 puntos de restauración
+
+Mapeo de red:
+  Red de producción → DR-network (mapeo de VLAN)
+  Remapeo de IP: Habilitado (subred distinta en el sitio DR)
+```
+
+**Plan de failover:**
+
+```
+Home → Replicas → Failover Plans → New
+
+Nombre: DR-Failover-Complete
+Pasos:
+  1. crm-prod_replica (prioridad 1, esperar 300s antes del siguiente)
+  2. erp-prod_replica (prioridad 2)
+  3. dc-prod_replica (prioridad 3)
+
+Script previo al failover: notify-oncall.ps1
+Script posterior al failover: update-dns-dr.ps1
+```
+
+---
+
+## Pruebas de recuperación (SureBackup)
+
+SureBackup arranca automáticamente las VMs respaldadas en un entorno aislado y verifica que inician y superan las comprobaciones de heartbeat/ping.
+
+```
+Grupo de aplicación: AG-Core-Services
+VMs: dc-prod, crm-prod
+
+Job SureBackup: Weekly-Recovery-Verification
+Programación: Cada domingo a las 03:00
+Grupo de aplicación: AG-Core-Services
+Jobs vinculados: Production-Daily (usa el último punto de restauración)
+
+Opciones de prueba:
+  Prueba de heartbeat: Habilitada
+  Prueba de ping: Habilitada
+  Prueba de script: Habilitada
+    Script: C:\Veeam\Tests\verify-sql-connectivity.ps1
+    Tiempo máximo de ejecución: 120 segundos
+
+Mantener la VM en ejecución tras la prueba: No (red aislada, sin riesgo)
+Enviar informe: ops-team@company.com
+```
+
+**Ejemplo de script de verificación:**
+
+```powershell
+# verify-sql-connectivity.ps1
+# Se ejecuta dentro de la VM aislada durante SureBackup
+param($VMName)
+
+try {
+    $conn = New-Object System.Data.SqlClient.SqlConnection
+    $conn.ConnectionString = "Server=localhost;Integrated Security=true"
+    $conn.Open()
+    $conn.Close()
+    Write-Output "Conexión a SQL Server: OK"
+    exit 0
+} catch {
+    Write-Output "Conexión a SQL Server: FALLIDA - $_"
+    exit 1
+}
+```
+
+---
+
+## Monitorización y alertas
+
+**Veeam ONE** (gratuito para monitorizar jobs de Veeam):
+
+Alarmas clave a configurar:
+- Job de backup fallido
+- Repositorio con poco espacio (menos del 20% libre)
+- Último backup con más de 24h de antigüedad
+- Job de replicación fallido
+- Verificación de SureBackup fallida
+
+**Script de PowerShell para comprobación de estado:**
+
+```powershell
+# Obtener los resultados de todos los backup jobs de las últimas 24h
+$jobs = Get-VBRJob
+$cutoff = (Get-Date).AddHours(-24)
+
+foreach ($job in $jobs) {
+    $session = Get-VBRBackupSession | 
+      Where-Object { $_.JobName -eq $job.Name -and $_.CreationTime -gt $cutoff } |
+      Sort-Object CreationTime -Descending |
+      Select-Object -First 1
+
+    if ($session -eq $null) {
+        Write-Warning "[$($job.Name)] Sin sesión en las últimas 24h"
+    } elseif ($session.Result -ne "Success") {
+        Write-Warning "[$($job.Name)] Último resultado: $($session.Result)"
+    } else {
+        Write-Host "[$($job.Name)] OK — $($session.CreationTime)"
+    }
+}
+```
+
+---
+
+## Dimensionamiento del repositorio
+
+| Carga de trabajo | Tasa de cambio | Tamaño de backup diario | Retención de 14 días |
+|----------|-------------|-------------------|------------------|
+| Servidor de archivos (2TB) | 2% | ~40GB | ~560GB |
+| SQL Server (500GB) | 10% | ~50GB | ~700GB |
+| Exchange (1TB) | 5% | ~50GB | ~700GB |
+
+**Regla general:** Tamaño del repositorio ≈ backup completo × 1.5 + incrementos diarios × días de retención
+
+Habilita siempre deduplicación + compresión — la ratio típica es de 2:1 a 5:1 según el tipo de datos.
+
+---
+
+## Errores comunes
+
+- **No probar nunca las restauraciones**: ejecuta SureBackup semanalmente y haz restauraciones manuales a nivel de archivo mensualmente — detecta problemas antes de que llegue el desastre
+- **Servidor de backup en el mismo almacenamiento de producción**: si la SAN falla, también pierdes los backups — mantén el repositorio en hardware separado
+- **Sin cifrado en las copias externas**: los buckets de S3 son legibles por cualquiera que tenga las claves — habilita siempre el cifrado en los repositorios en la nube
+- **Ignorar la inmutabilidad**: sin inmutabilidad, el ransomware puede eliminar los backups en la nube mediante credenciales comprometidas — habilita S3 Object Lock
+- **Un único job de backup para todo**: separa un job por nivel de criticidad (SQL horario, VMs diarias, recursos compartidos semanales) para un mejor control de la programación
+
+---
+
+## Recursos
+
+- [Guía de buenas prácticas de Veeam](https://bp.veeam.com/)
+- [Veeam Community Edition (gratuita)](https://www.veeam.com/virtual-machine-backup-solution-free.html)
+- [S3 Object Lock — documentación de AWS](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html)
+- [Regla 3-2-1-1-0 (extendida)](https://www.veeam.com/blog/321-backup-rule.html)
