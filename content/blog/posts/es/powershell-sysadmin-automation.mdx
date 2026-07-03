@@ -1,0 +1,308 @@
+---
+title: "Automatización con PowerShell para sysadmins: scripts que ahorran horas cada semana"
+excerpt: "Scripts prácticos de PowerShell para administradores de sistemas Windows — gestión de usuarios, monitorización de discos, recopilación de logs, ejecución remota e informes programados."
+date: "2025-10-06"
+tags: ["IT Ops", "PowerShell", "Automatización", "Windows", "Scripting"]
+---
+
+PowerShell es la navaja suiza de la administración Windows. La diferencia entre un sysadmin que siempre está apagando fuegos y uno que tiene tiempo para pensar suele ser una buena colección de scripts. Aquí están los que más tiempo han ahorrado de forma constante.
+
+## 1. Gestión masiva de cuentas de usuario
+
+### Crear varios usuarios desde CSV
+
+```powershell
+# formato de users.csv:
+# GivenName,Surname,Department,Title,Manager
+# Jean,Dupont,Sales,Account Manager,m.martin
+# Alice,Martin,IT,Sysadmin,
+
+Import-Csv "C:\users.csv" | ForEach-Object {
+    $sam = "$($_.GivenName[0]).$($_.Surname)".ToLower()
+    $upn = "$sam@company.com"
+    $ou  = "OU=$($_.Department),OU=Employees,DC=company,DC=local"
+
+    # Omitir si el usuario ya existe
+    if (Get-ADUser -Filter {SamAccountName -eq $sam} -ErrorAction SilentlyContinue) {
+        Write-Warning "El usuario $sam ya existe — se omite"
+        return
+    }
+
+    $params = @{
+        Name                  = "$($_.GivenName) $($_.Surname)"
+        GivenName             = $_.GivenName
+        Surname               = $_.Surname
+        SamAccountName        = $sam
+        UserPrincipalName     = $upn
+        Department            = $_.Department
+        Title                 = $_.Title
+        Path                  = $ou
+        AccountPassword       = (ConvertTo-SecureString "Welcome2026!" -AsPlainText -Force)
+        ChangePasswordAtLogon = $true
+        Enabled               = $true
+    }
+
+    New-ADUser @params
+    Write-Host "Creado: $sam" -ForegroundColor Green
+}
+```
+
+### Deshabilitar cuentas inactivas (90 días)
+
+```powershell
+$cutoff = (Get-Date).AddDays(-90)
+$disabledOU = "OU=Disabled,OU=Users,DC=company,DC=local"
+
+$inactiveUsers = Get-ADUser -Filter {
+    LastLogonDate -lt $cutoff -and
+    Enabled -eq $true -and
+    DistinguishedName -notlike "*$disabledOU*"
+} -Properties LastLogonDate, Department | Where-Object {
+    $_.DistinguishedName -notlike "*ServiceAccounts*"  # proteger las cuentas de servicio
+}
+
+foreach ($user in $inactiveUsers) {
+    Disable-ADAccount -Identity $user.SamAccountName
+    Move-ADObject -Identity $user.DistinguishedName -TargetPath $disabledOU
+    Write-Host "Deshabilitado y movido: $($user.SamAccountName) — Último logon: $($user.LastLogonDate)"
+}
+
+Write-Host "`nTotal procesado: $($inactiveUsers.Count)"
+```
+
+### Script de checklist de baja de usuario
+
+```powershell
+function Invoke-UserOffboarding {
+    param([string]$SamAccountName)
+
+    $user = Get-ADUser -Identity $SamAccountName -Properties MemberOf, Manager
+
+    # 1. Deshabilitar la cuenta
+    Disable-ADAccount -Identity $SamAccountName
+
+    # 2. Eliminar las membresías de grupo (excepto Domain Users)
+    $user.MemberOf | ForEach-Object {
+        Remove-ADGroupMember -Identity $_ -Members $SamAccountName -Confirm:$false
+    }
+
+    # 3. Definir la descripción con la fecha de baja
+    Set-ADUser -Identity $SamAccountName -Description "Baja el $(Get-Date -Format 'yyyy-MM-dd')"
+
+    # 4. Mover a la OU de deshabilitados
+    Move-ADObject -Identity $user.DistinguishedName `
+        -TargetPath "OU=Disabled,OU=Users,DC=company,DC=local"
+
+    Write-Host "Baja completada para: $SamAccountName" -ForegroundColor Green
+}
+
+# Uso
+Invoke-UserOffboarding -SamAccountName "j.dupont"
+```
+
+## 2. Monitorización del espacio en disco
+
+### Alertar por poco espacio en disco
+
+```powershell
+$threshold = 20  # Alertar cuando el espacio libre esté por debajo del 20%
+$smtpServer = "mail.company.com"
+$alertEmail = "it-alerts@company.com"
+
+$diskReport = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" | ForEach-Object {
+    $pctFree = [math]::Round(($_.FreeSpace / $_.Size) * 100, 1)
+    [PSCustomObject]@{
+        Computer  = $env:COMPUTERNAME
+        Drive     = $_.DeviceID
+        SizeGB    = [math]::Round($_.Size / 1GB, 1)
+        FreeGB    = [math]::Round($_.FreeSpace / 1GB, 1)
+        PctFree   = $pctFree
+        Status    = if ($pctFree -lt $threshold) { "⚠️ LOW" } else { "OK" }
+    }
+}
+
+$lowDisks = $diskReport | Where-Object { $_.Status -eq "⚠️ LOW" }
+
+if ($lowDisks) {
+    $body = $lowDisks | Format-Table | Out-String
+    Send-MailMessage -To $alertEmail -From "monitoring@company.com" `
+        -Subject "⚠️ Poco espacio en disco en $env:COMPUTERNAME" `
+        -Body $body -SmtpServer $smtpServer
+}
+
+$diskReport | Format-Table -AutoSize
+```
+
+### Recopilar el uso de disco en varios servidores
+
+```powershell
+$servers = @("SRV-FILE01", "SRV-FILE02", "SRV-APP01", "SRV-DB01")
+
+$allDisks = $servers | ForEach-Object {
+    $server = $_
+    try {
+        Get-WmiObject Win32_LogicalDisk -ComputerName $server -Filter "DriveType=3" |
+        Select-Object @{n="Server";e={$server}},
+                      DeviceID,
+                      @{n="SizeGB";e={[math]::Round($_.Size/1GB,1)}},
+                      @{n="FreeGB";e={[math]::Round($_.FreeSpace/1GB,1)}},
+                      @{n="UsedPct";e={[math]::Round((($_.Size-$_.FreeSpace)/$_.Size)*100,1)}}
+    } catch {
+        Write-Warning "No se puede alcanzar: $server"
+    }
+}
+
+$allDisks | Sort-Object UsedPct -Descending | Format-Table -AutoSize
+```
+
+## 3. Recopilación y filtrado de logs de eventos
+
+### Buscar intentos de inicio de sesión fallidos (Event ID 4625)
+
+```powershell
+$startTime = (Get-Date).AddHours(-24)
+$failedLogons = Get-WinEvent -FilterHashtable @{
+    LogName   = "Security"
+    Id        = 4625  # Inicio de sesión fallido
+    StartTime = $startTime
+} -ErrorAction SilentlyContinue
+
+$failedLogons | ForEach-Object {
+    $xml = [xml]$_.ToXml()
+    $data = $xml.Event.EventData.Data
+
+    [PSCustomObject]@{
+        Time        = $_.TimeCreated
+        Account     = ($data | Where-Object {$_.Name -eq "TargetUserName"})."#text"
+        Domain      = ($data | Where-Object {$_.Name -eq "TargetDomainName"})."#text"
+        SourceIP    = ($data | Where-Object {$_.Name -eq "IpAddress"})."#text"
+        LogonType   = ($data | Where-Object {$_.Name -eq "LogonType"})."#text"
+        Reason      = ($data | Where-Object {$_.Name -eq "SubStatus"})."#text"
+    }
+} | Sort-Object Time -Descending | Format-Table -AutoSize
+```
+
+### Exportar eventos de seguridad a CSV
+
+```powershell
+$events = Get-WinEvent -FilterHashtable @{
+    LogName   = "Security"
+    Id        = @(4624, 4625, 4648, 4720, 4726)  # Logon, fallido, explícito, usuario creado/eliminado
+    StartTime = (Get-Date).AddDays(-7)
+}
+
+$events | Select-Object TimeCreated, Id, Message |
+    Export-Csv "C:\security-events-$(Get-Date -Format 'yyyy-MM-dd').csv" -NoTypeInformation
+
+Write-Host "Exportados $($events.Count) eventos"
+```
+
+## 4. Ejecución remota con Invoke-Command
+
+```powershell
+# Ejecutar un comando en varios servidores simultáneamente
+$servers = @("SRV-WEB01", "SRV-WEB02", "SRV-WEB03")
+
+$results = Invoke-Command -ComputerName $servers -ScriptBlock {
+    [PSCustomObject]@{
+        Server      = $env:COMPUTERNAME
+        OSVersion   = (Get-WmiObject Win32_OperatingSystem).Caption
+        Uptime      = (Get-Date) - (gcim Win32_OperatingSystem).LastBootUpTime
+        CPULoad     = (Get-WmiObject Win32_Processor | Measure-Object LoadPercentage -Average).Average
+        Services    = (Get-Service | Where-Object {$_.Status -eq "Running"}).Count
+    }
+}
+
+$results | Sort-Object Server | Format-Table -AutoSize
+```
+
+### Reiniciar servicios en varios servidores
+
+```powershell
+$servers = @("SRV-APP01", "SRV-APP02")
+$serviceName = "W3SVC"  # IIS
+
+Invoke-Command -ComputerName $servers -ScriptBlock {
+    param($svc)
+    $s = Get-Service -Name $svc
+    if ($s.Status -ne "Running") {
+        Start-Service $svc
+        Write-Host "$env:COMPUTERNAME: Iniciado $svc"
+    } else {
+        Restart-Service $svc
+        Write-Host "$env:COMPUTERNAME: Reiniciado $svc"
+    }
+} -ArgumentList $serviceName
+```
+
+## 5. Informes programados
+
+### Informe semanal de salud de servidores
+
+```powershell
+# Guardar como: C:\Scripts\weekly-report.ps1
+# Programar vía Task Scheduler: todos los lunes a las 7am
+
+$servers = @("SRV-DC01", "SRV-FILE01", "SRV-APP01")
+$html = @"
+<html><body style="font-family:Arial; font-size:12px">
+<h2>Informe semanal de salud de servidores — $(Get-Date -Format 'dd/MM/yyyy')</h2>
+"@
+
+foreach ($server in $servers) {
+    try {
+        $os   = Get-WmiObject Win32_OperatingSystem -ComputerName $server
+        $disk = Get-WmiObject Win32_LogicalDisk -ComputerName $server -Filter "DriveType=3" |
+                Select-Object DeviceID, @{n="FreeGB";e={[math]::Round($_.FreeSpace/1GB,1)}}
+        $uptime = (Get-Date) - $os.ConvertToDateTime($os.LastBootUpTime)
+
+        $html += "<h3>$server</h3><ul>"
+        $html += "<li>Uptime: $([math]::Round($uptime.TotalDays,1)) días</li>"
+        foreach ($d in $disk) {
+            $html += "<li>Disco $($d.DeviceID): $($d.FreeGB) GB libres</li>"
+        }
+        $html += "</ul>"
+    } catch {
+        $html += "<h3>$server — ⚠️ No accesible</h3>"
+    }
+}
+
+$html += "</body></html>"
+
+Send-MailMessage -To "it-team@company.com" -From "monitoring@company.com" `
+    -Subject "Informe semanal de servidores — $(Get-Date -Format 'dd/MM/yyyy')" `
+    -Body $html -BodyAsHtml -SmtpServer "mail.company.com"
+```
+
+## Buenas prácticas para scripts
+
+```powershell
+# Incluir siempre gestión de errores
+try {
+    # tu operación
+} catch {
+    Write-Error "Fallo: $_"
+    # opcional: enviar un correo de alerta, escribir en un archivo de log
+}
+
+# Usar Write-Verbose para depuración (se activa con el flag -Verbose)
+Write-Verbose "Procesando usuario: $sam"
+
+# Registrar en un archivo
+$logFile = "C:\Logs\script-$(Get-Date -Format 'yyyy-MM-dd').log"
+"$(Get-Date -Format 'HH:mm:ss') — Procesados $($users.Count) usuarios" | Tee-Object -FilePath $logFile -Append
+
+# Usar -WhatIf para operaciones destructivas durante las pruebas
+Remove-ADUser -Identity "j.dupont" -WhatIf
+```
+
+## Conclusión
+
+Los scripts anteriores cubren la mayoría de las tareas repetitivas de un sysadmin: gestión del ciclo de vida de usuarios, monitorización de discos, análisis de logs y operaciones multiservidor. El hábito clave es **registrar siempre lo que haces** — tanto para auditoría como para depurar cuando algo inevitablemente falle a las 3 de la madrugada. Combina esto con el Task Scheduler para informes semanales automáticos y liberarás tiempo considerable para trabajo más interesante.
+
+---
+
+**Recursos útiles:**
+- [Documentación de PowerShell - Microsoft](https://docs.microsoft.com/en-us/powershell/)
+- [Referencia del módulo ActiveDirectory](https://docs.microsoft.com/en-us/powershell/module/activedirectory/)
+- [PowerShell Gallery](https://www.powershellgallery.com/)

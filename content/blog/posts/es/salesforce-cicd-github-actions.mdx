@@ -1,0 +1,31 @@
+---
+title: "Salesforce CI/CD con GitHub Actions (un pipeline pragmático)"
+excerpt: "Cómo construir un pipeline de CI/CD para Salesforce con GitHub Actions: validación de metadatos, tests Apex, estrategias de scratch org y despliegue seguro a orgs de producción."
+date: "2025-01-22"
+tags: ["Salesforce", "CI/CD", "GitHub Actions"]
+---
+
+## Salesforce CI/CD con GitHub Actions
+
+Un pipeline pragmático que puedes poner en marcha rápido y reforzar progresivamente.
+
+## Objetivos
+
+- Validar las PR (lint, tests)
+- Desplegar de forma segura a las orgs destino
+- Mantener los secretos protegidos
+- Reducir los problemas de "en mi máquina funciona"
+
+## Etapas sugeridas
+
+1. **Validación de PR**: ejecutar tests unitarios + comprobaciones estáticas
+2. **UAT**: desplegar a una sandbox, ejecutar smoke tests
+3. **Producción**: despliegue controlado, con aprobaciones manuales si es necesario
+
+## Buenas prácticas
+
+- Preferir **scratch orgs** o sandboxes dedicadas para la validación
+- Usar secretos con el **principio de mínimo privilegio** en CI
+- Añadir un **plan de rollback** y un changelog claro
+
+Podemos añadir un ejemplo YAML real y explicar cada línea paso a paso.
