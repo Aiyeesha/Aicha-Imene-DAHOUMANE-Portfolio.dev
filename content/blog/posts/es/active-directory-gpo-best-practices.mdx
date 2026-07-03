@@ -1,0 +1,288 @@
+---
+title: "Active Directory y GPO: administración y buenas prácticas de seguridad"
+excerpt: "Guía práctica para estructurar la jerarquía de OU de tu AD, diseñar GPOs mantenibles y seguras, y evitar los errores de administración más frecuentes."
+date: "2025-07-07"
+tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Security"]
+---
+
+Un Active Directory mal diseñado o una maraña de GPOs contradictorias es una de las deudas técnicas más dolorosas que puede heredar un equipo de IT. Aquí tienes cómo diseñarlo bien desde el principio, o cómo limpiar lo que ya existe.
+
+## Estructura de OU: los cimientos
+
+La jerarquía de tus Unidades Organizativas (OU) determina cómo se aplican las GPOs y cómo funciona la delegación. Si la diseñas mal, la sufrirás durante años.
+
+### Antipatrón: organizar solo por ubicación o departamento
+
+```
+domain.local
+├── Paris
+│   ├── IT
+│   ├── Sales
+│   └── HR
+└── Lyon
+    ├── IT
+    └── Sales
+```
+
+**Problema:** si IT de Paris e IT de Lyon necesitan la misma GPO, tienes que aplicarla a ambas OU, o usar filtros WMI. Duplicación y desincronización.
+
+### Recomendado: división funcional + por tipo
+
+```
+domain.local
+├── _Computers
+│   ├── Workstations
+│   │   ├── Standard
+│   │   └── Privileged
+│   ├── Servers
+│   │   ├── Production
+│   │   └── Dev-Test
+│   └── Kiosk
+├── _Users
+│   ├── Employees
+│   │   ├── IT
+│   │   ├── Sales
+│   │   └── HR
+│   ├── ServiceAccounts
+│   └── Admins
+└── _Groups
+```
+
+**Por qué funciona:**
+- Las GPOs sobre `_Computers\Workstations` se aplican a todas las estaciones de trabajo sin importar la oficina
+- Las cuentas de servicio están separadas → auditoría más sencilla
+- La OU de Admins puede tener GPOs más estrictas (sin scripts de inicio de sesión, sin apps personales)
+
+**Convención de nombres para OU:** usa un prefijo como `_` u `OU-` para distinguir las OU de otros objetos de AD en las consultas.
+
+## Principios de diseño de GPO
+
+### 1. Una GPO, un propósito
+
+Cada GPO debe hacer una sola cosa y tener un nombre que lo refleje:
+
+```
+GPO: Computers-Firewall-Baseline
+GPO: Computers-Bitlocker-Standard
+GPO: Users-Desktop-Restrictions
+GPO: Users-Proxy-Settings
+GPO: Users-Mapped-Drives-Sales
+```
+
+**Nunca** crees una GPO "cajón de sastre" llamada "Política IT" que contenga 40 configuraciones distintas. Cuando necesites cambiar la configuración del firewall, no querrás arriesgarte a tocar las unidades de red mapeadas.
+
+### 2. Configuración de equipo vs. configuración de usuario
+
+Las GPOs tienen dos lados: Configuración de equipo y Configuración de usuario. Mantenlos separados:
+
+| | GPO de config. de equipo | GPO de config. de usuario |
+|--|---------------------|-----------------|
+| Se aplica en | Arranque de la máquina | Inicio de sesión del usuario |
+| Se aplica a | Cuenta de equipo | Cuenta de usuario |
+| Vinculada a | OU de equipos | OU de usuarios (o la misma OU) |
+| Ejemplos | Firewall, BitLocker, Windows Update | Unidades mapeadas, proxy, restricciones de escritorio |
+
+**Buena práctica:** deshabilita el lado no usado de cada GPO.
+- Si una GPO solo contiene configuración de equipo → deshabilita la configuración de usuario (Propiedades de la GPO → pestaña Detalles)
+- Esto acelera el procesamiento de las directivas de grupo
+
+### 3. Herencia y bloqueo de GPO
+
+Por defecto, las GPOs de las OU padre se aplican a las OU hijas. Puedes controlar esto con:
+
+- **Bloquear herencia** en una OU: la OU hija ignora las GPOs del padre. Úsalo con moderación: genera confusión.
+- **Exigido (Enforced)** en un vínculo de GPO: fuerza la aplicación de la GPO aunque el hijo tenga bloqueo de herencia. Úsalo para políticas críticas de seguridad.
+- **Filtrado de seguridad**: por defecto, las GPOs se aplican a "Usuarios autenticados". Sustitúyelo por un grupo específico para una aplicación dirigida.
+
+```powershell
+# Verificar qué GPOs se aplican a un equipo concreto
+gpresult /scope computer /r
+
+# Informe detallado en HTML
+gpresult /h C:\gpo-report.html
+
+# Forzar la actualización inmediata de GPO en una máquina remota
+Invoke-GPUpdate -Computer "PC-EXAMPLE" -Force
+```
+
+## GPOs de seguridad esenciales
+
+### GPO: Política de contraseñas (Default Domain Policy)
+
+Nota: la política de contraseñas para las cuentas del dominio debe estar en la **Default Domain Policy** (o usa Fine-Grained Password Policies para grupos específicos).
+
+```
+Computer Configuration → Windows Settings → Security Settings → Account Policies → Password Policy
+
+Minimum password length: 12
+Password complexity: Enabled
+Maximum password age: 90 days
+Minimum password age: 1 day
+Enforce password history: 24 passwords
+```
+
+**Fine-Grained Password Policy para administradores** (más estricta):
+```powershell
+# Crear un PSO (Password Settings Object) para administradores
+New-ADFineGrainedPasswordPolicy -Name "PSO-Admins" `
+    -Precedence 10 `
+    -MinPasswordLength 16 `
+    -PasswordHistoryCount 24 `
+    -MaxPasswordAge "60.00:00:00" `
+    -ComplexityEnabled $true `
+    -ReversibleEncryptionEnabled $false
+
+# Aplicarla al grupo Domain Admins
+Add-ADFineGrainedPasswordPolicySubject "PSO-Admins" -Subjects "Domain Admins"
+```
+
+### GPO: Bloqueo de cuentas
+
+```
+Computer Configuration → Windows Settings → Security Settings → Account Policies → Account Lockout
+
+Account lockout threshold: 5 invalid attempts
+Account lockout duration: 30 minutes
+Reset account lockout counter after: 30 minutes
+```
+
+### GPO: Base de referencia del firewall de Windows
+
+```
+Computer Configuration → Windows Settings → Security Settings → Windows Defender Firewall
+
+Domain Profile: On
+Private Profile: On
+Public Profile: On (block all inbound by default)
+
+Inbound rules:
+- Allow: RDP from Management VLAN only (IP filter)
+- Allow: ICMP (ping) from Management VLAN
+- Block: SMB from external (port 445)
+```
+
+### GPO: Deshabilitar protocolos heredados
+
+```
+Computer Configuration → Administrative Templates → Network → Lanman Workstation
+  → Enable insecure guest logons: Disabled
+
+Computer Configuration → Windows Settings → Security Settings → Local Policies → Security Options
+  → Network security: LAN Manager authentication level: Send NTLMv2 response only. Refuse LM & NTLM
+  → Minimum session security for NTLM SSP: Require NTLMv2 session security, 128-bit encryption
+```
+
+### GPO: Restricciones de medios extraíbles
+
+```
+Computer Configuration → Administrative Templates → System → Removable Storage Access
+  → All Removable Storage classes: Deny all access: Enabled
+
+(Si se necesitan excepciones USB, usa políticas de instalación de dispositivos o una whitelist por ID de hardware)
+```
+
+## Gestión de derechos de usuario y privilegios
+
+### Restringir el acceso de administrador local
+
+```powershell
+# GPO: Computer Configuration → Preferences → Control Panel Settings → Local Users and Groups
+# Crear/actualizar un grupo local: Administrators
+# Miembros: DOMAIN\Domain Admins, DOMAIN\IT-LocalAdmins-Group
+# Acción: Update (reemplaza a los miembros existentes)
+```
+
+Esto garantiza que solo los grupos de AD autorizados sean administradores locales — las cuentas locales no pueden acumularse.
+
+### Política de auditoría
+
+```
+Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy
+
+Account Logon:
+  Credential Validation: Success, Failure
+
+Account Management:
+  User Account Management: Success, Failure
+  Security Group Management: Success
+
+Logon/Logoff:
+  Logon: Success, Failure
+  Logoff: Success
+
+Object Access:
+  File System: Failure (on sensitive shares only)
+
+Privilege Use:
+  Sensitive Privilege Use: Success, Failure
+
+System:
+  Security State Change: Success, Failure
+```
+
+## Automatizar la administración de AD
+
+```powershell
+# Crear un nuevo usuario en la OU correcta
+New-ADUser `
+    -Name "Dupont, Jean" `
+    -GivenName "Jean" `
+    -Surname "Dupont" `
+    -SamAccountName "j.dupont" `
+    -UserPrincipalName "j.dupont@domain.local" `
+    -Path "OU=Employees,OU=_Users,DC=domain,DC=local" `
+    -AccountPassword (ConvertTo-SecureString "Temp!2026" -AsPlainText -Force) `
+    -ChangePasswordAtLogon $true `
+    -Enabled $true
+
+# Añadir a grupos
+Add-ADGroupMember -Identity "GRP-VPN-Users" -Members "j.dupont"
+Add-ADGroupMember -Identity "GRP-Sales" -Members "j.dupont"
+```
+
+```powershell
+# Deshabilitar la cuenta y moverla a la OU Disabled al dar de baja al usuario
+$user = "j.dupont"
+Disable-ADAccount -Identity $user
+Move-ADObject -Identity (Get-ADUser $user).DistinguishedName `
+    -TargetPath "OU=Disabled,OU=_Users,DC=domain,DC=local"
+```
+
+```powershell
+# Encontrar todos los equipos inactivos (sin inicio de sesión en 90 días)
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADComputer -Filter {LastLogonDate -lt $cutoff -and Enabled -eq $true} `
+    -Properties LastLogonDate | Select-Object Name, LastLogonDate
+```
+
+## Checklist de administración de AD
+
+**Estructura:**
+- [ ] La jerarquía de OU refleja grupos funcionales, no solo el organigrama
+- [ ] Equipos y usuarios están en ramas de OU separadas
+- [ ] Las cuentas de servicio están en una OU dedicada con acceso auditado
+- [ ] Las cuentas no usadas están en una OU `Disabled` (no se eliminan inmediatamente)
+
+**GPO:**
+- [ ] Cada GPO tiene un propósito único y documentado
+- [ ] Las GPOs tienen nombres claros: `[Scope]-[Purpose]-[Target]`
+- [ ] La mitad no usada (equipo o usuario) está deshabilitada en las propiedades de la GPO
+- [ ] La política de contraseñas está en la Default Domain Policy o en un PSO
+- [ ] La política de auditoría captura los éxitos/fallos de inicio de sesión
+
+**Seguridad:**
+- [ ] Las cuentas de administrador están separadas de las cuentas de uso diario
+- [ ] LM/NTLM v1 deshabilitados — solo NTLMv2 o Kerberos
+- [ ] Restricciones USB implementadas para el personal que no es de IT
+- [ ] El grupo de administradores locales está controlado por GPO (sin excepciones individuales)
+
+## Conclusión
+
+Active Directory es la columna vertebral de tu entorno Windows — su diseño impacta la seguridad, la mantenibilidad y la escalabilidad durante años. Invierte tiempo en una estructura de OU limpia, nombra tus GPOs de forma descriptiva y mantén cada GPO centrada en una sola responsabilidad. Las pocas horas dedicadas a diseñarlo correctamente ahorrarán cientos de horas de resolución de problemas más adelante.
+
+---
+
+**Recursos útiles:**
+- [Microsoft AD Best Practices](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
+- [Group Policy Overview](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-objects)
+- [Fine-Grained Password Policies](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/adac/introduction-to-active-directory-administrative-center-enhancements--level-100-)

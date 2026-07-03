@@ -1,0 +1,124 @@
+---
+title: "Acronis: copias de seguridad (Cloud + NAS), alertas y remediación"
+excerpt: "Runbook práctico de Acronis Cyber Protect Cloud: planes, destinos (Cloud/NAS), retención, alertas y cómo solucionar los errores más comunes."
+date: "2025-02-20"
+tags: ["Backup", "Acronis", "Monitoring", "Runbooks", "IT Ops"]
+---
+
+
+## Objetivo
+
+Operar copias de seguridad **fiables** con **Acronis Cyber Protect Cloud**:
+
+- Planes de backup por tipo (VM / servidores / estaciones de trabajo)
+- Destinos: **Cloud** y/o **NAS local (SMB)**
+- Política de retención
+- Alertas y supervisión diaria
+- Remediación de errores comunes
+
+## Paso 1 — Preparar los destinos
+
+### 1.1 Destino Cloud
+
+1. Abre la consola de Acronis.
+2. Selecciona el tenant/cliente correcto.
+3. Verifica la cuota Cloud y el uso actual.
+
+### 1.2 Destino NAS (SMB)
+
+1. Valida el acceso SMB desde un servidor de prueba:
+   - cuenta de servicio dedicada
+   - permisos de lectura/escritura
+2. Registra:
+   - ruta SMB: `smb://IP/share/folder`
+   - credenciales almacenadas en un gestor de secretos
+
+## Paso 2 — Crear un plan de backup
+
+1. **Planes** → **Crear plan**.
+2. Asígnale un nombre (por ejemplo) `BKP-SRV-VM-DAILY`.
+3. **Qué respaldar**:
+   - VMs: máquina completa (imagen) o discos seleccionados
+   - Servidores: sistema + volúmenes de datos
+   - SQL/Exchange: habilita las opciones application-aware si están disponibles
+4. **Dónde respaldar**:
+   - Acronis Cloud, o
+   - ruta NAS (SMB) + credenciales
+5. **Programación** (ejemplo): de lunes a sábado a las 23:00
+6. **Retención** (ejemplo):
+   - Diaria: 6 días
+   - Semanal: 4 semanas
+   - Mensual: 2 meses
+7. Guarda.
+
+## Paso 3 — Asignar el plan a los dispositivos
+
+1. Ve a **Dispositivos**.
+2. Filtra por sitio/grupo.
+3. Selecciona las máquinas objetivo.
+4. Asigna el plan (o mediante política).
+5. Confirma que los agentes estén en línea y actualizados.
+
+## Paso 4 — Supervisión diaria
+
+Cada día:
+
+1. Abre **Dashboard / Alertas**.
+2. Trabaja en este orden:
+   1) Crítico
+   2) Error
+   3) Advertencia
+3. Para cada alerta:
+   - identifica el plan + dispositivo
+   - abre los detalles de la ejecución
+
+## Paso 5 — Remediación: errores comunes
+
+### 5.1 "Espacio insuficiente / cuota excedida"
+
+1. Verifica la capacidad del destino:
+   - cuota Cloud + uso
+   - espacio libre en NAS + snapshots
+2. Revisa la retención (¿demasiado larga?).
+3. Opciones:
+   - reducir la retención
+   - habilitar compresión/deduplicación
+   - mover algunos jobs a otro destino de almacenamiento
+4. Vuelve a ejecutar en un dispositivo de prueba.
+
+### 5.2 Advertencia de CBT/snapshots de VMware
+
+1. En vCenter, verifica si hay snapshots existentes/huérfanos.
+2. Elimínalos/consolídalos durante una ventana de mantenimiento.
+3. Vuelve a ejecutar el job.
+4. Si persiste, verifica la configuración de VMware/Acronis y las versiones de los agentes.
+
+### 5.3 Fallo de autenticación SMB
+
+1. Prueba el acceso SMB desde una máquina: `\IP\share\path`
+2. Verifica:
+   - contraseña caducada
+   - permisos del recurso compartido/NTFS
+   - firewall (SMB 445)
+3. Actualiza las credenciales en Acronis y vuelve a probar.
+
+## Paso 6 — Validación de la restauración
+
+Un backup marcado como "OK" no basta: hay que demostrar la restauración.
+
+1. Elige una máquina crítica.
+2. Ejecuta una prueba de restauración:
+   - restauración de archivos (rápida)
+   - restauración de volumen/VM (según sea necesario)
+3. Valida:
+   - integridad de los archivos
+   - tiempo de restauración (RTO)
+4. Documenta los resultados (fecha, duración, operador, mejoras).
+
+## Checklist del primer día
+
+- [ ] Agentes en línea y actualizados
+- [ ] Retención realista
+- [ ] Destinos Cloud/NAS accesibles
+- [ ] Alertas enrutadas al equipo correcto (email/PSA)
+- [ ] Se ha realizado y documentado una prueba de restauración
