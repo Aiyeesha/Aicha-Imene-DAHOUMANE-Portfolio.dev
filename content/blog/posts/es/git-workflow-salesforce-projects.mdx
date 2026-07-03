@@ -1,0 +1,207 @@
+---
+title: "Flujo de trabajo Git para proyectos Salesforce: ramas, SFDX y CI"
+excerpt: "Aplica una estrategia práctica de ramas Git al desarrollo Salesforce — ramas de funcionalidad, scratch orgs, validación de pull requests y pipelines de despliegue automatizados."
+date: "2025-10-21"
+tags: ["Salesforce", "Git", "DevOps", "CI/CD"]
+featured: false
+---
+
+La mayoría de los equipos de Salesforce o bien no tienen ningún flujo de trabajo Git (solo change sets) o copiaron un modelo de ramas de ingeniería de software que no tiene en cuenta las dependencias de metadatos del org. Aquí tienes un flujo de trabajo ajustado para equipos Salesforce de cualquier tamaño.
+
+---
+
+## Requisitos previos
+
+- Salesforce CLI (`sf`) instalado
+- Git instalado y conocimientos básicos
+- GitHub o GitLab para pull requests
+- Un org Dev Hub habilitado para scratch orgs (opcional pero recomendado)
+
+---
+
+## Estrategia de ramas
+
+```
+main          ← listo para producción, protegida
+  └── staging ← refleja el org de UAT/pre-prod
+        └── feature/TICKET-123-account-validation
+        └── feature/TICKET-124-lwc-opportunities
+        └── hotfix/TICKET-130-broken-trigger
+```
+
+**Reglas:**
+- Los commits directos a `main` están bloqueados
+- Todo cambio pasa primero por una PR dirigida a `staging`
+- `staging` se fusiona a `main` solo tras el visto bueno de UAT
+- Los hotfixes parten de `main` y se fusionan de vuelta tanto a `main` como a `staging`
+
+---
+
+## Estructura del proyecto
+
+```
+force-app/
+  main/
+    default/
+      classes/         ← Clases Apex + clases de test
+      triggers/        ← Triggers Apex
+      lwc/             ← Lightning Web Components
+      objects/         ← Objetos personalizados, campos, layouts
+      flows/           ← Screen flows, flujos autolanzados
+      permissionsets/  ← Permission sets
+      profiles/        ← Perfiles (mínimo, solo lo que cambió)
+.forceignore           ← Como .gitignore pero para metadatos de Salesforce
+sfdx-project.json      ← Definición del proyecto
+```
+
+**.forceignore — incluye siempre esto:**
+
+```
+# No versionar metadatos de paquetes gestionados
+**/profiles/*.profile  # Los perfiles crecen rápido — plantéate versionar solo lo que cambió
+**/installedPackages/
+**/objects/*/recordTypes/   # Si es específico del org
+**/*.sharingRules
+**/*.flowDefinition
+```
+
+---
+
+## Flujo diario del desarrollador
+
+```bash
+# 1. Traer lo último de staging
+git checkout staging
+git pull origin staging
+
+# 2. Crear rama de funcionalidad
+git checkout -b feature/TICKET-123-account-validation
+
+# 3. Crear scratch org para desarrollo aislado
+sf org create scratch \
+  --definition-file config/project-scratch-def.json \
+  --alias ticket-123 \
+  --duration-days 7
+
+# 4. Desplegar el código fuente al scratch org
+sf project deploy start --target-org ticket-123
+
+# 5. Desarrollar en el scratch org...
+# 6. Recuperar los cambios de vuelta al entorno local
+sf project retrieve start \
+  --metadata ApexClass:AccountValidator \
+  --target-org ticket-123
+
+# 7. Hacer commit y push
+git add force-app/main/default/classes/AccountValidator*
+git commit -m "feat(TICKET-123): add account validation on before insert"
+git push origin feature/TICKET-123-account-validation
+
+# 8. Abrir PR dirigida a staging
+```
+
+---
+
+## Validación de pull requests con GitHub Actions
+
+```yaml
+# .github/workflows/validate-pr.yml
+name: Validate PR
+on:
+  pull_request:
+    branches: [staging]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate Dev Hub
+        run: |
+          echo "${{ secrets.SF_DEVHUB_AUTH_URL }}" > devhub.txt
+          sf org login sfdx-url --sfdx-url-file devhub.txt --alias devhub --set-default-dev-hub
+
+      - name: Create Scratch Org
+        run: |
+          sf org create scratch \
+            --definition-file config/project-scratch-def.json \
+            --alias ci-org \
+            --duration-days 1 \
+            --target-dev-hub devhub
+
+      - name: Deploy and Run Tests
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org ci-org \
+            --test-level RunLocalTests \
+            --wait 30
+
+      - name: Delete Scratch Org
+        if: always()
+        run: sf org delete scratch --target-org ci-org --no-prompt
+```
+
+---
+
+## Fusión a producción
+
+```bash
+# 1. Fusionar staging → main tras el visto bueno de UAT
+git checkout main
+git merge staging --no-ff -m "chore: merge UAT release 2026.05.01"
+
+# 2. Etiquetar el release
+git tag -a v2026.05.01 -m "Release 2026.05.01"
+git push origin main --tags
+
+# 3. GitHub Actions despliega automáticamente main a producción
+```
+
+```yaml
+# .github/workflows/deploy-prod.yml
+name: Deploy to Production
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install CLI
+        run: npm install -g @salesforce/cli
+      - name: Authenticate Production
+        run: |
+          echo "${{ secrets.SF_PROD_AUTH_URL }}" > prod.txt
+          sf org login sfdx-url --sfdx-url-file prod.txt --alias prod
+      - name: Deploy
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org prod \
+            --test-level RunLocalTests \
+            --wait 60
+```
+
+---
+
+## Errores comunes
+
+- **Versionar los perfiles completos**: los perfiles en formato SFDX son extremadamente ruidosos — versiona solo el delta o usa permission sets en su lugar
+- **Sin definición de scratch org**: sin `project-scratch-def.json`, los desarrolladores comparten orgs de desarrollo y se pisan los cambios entre sí
+- **PRs demasiado grandes**: mantén las ramas de funcionalidad centradas en un solo ticket — una PR que cambia 30 objetos es imposible de revisar
+- **Fusionar sin tests**: el flag `--test-level RunLocalTests` en cada despliegue no es opcional en producción
+
+---
+
+## Recursos
+
+- [Guía del desarrollador SFDX](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
+- [Estrategia de ramas Git de Salesforce](https://developer.salesforce.com/blogs/2021/07/salesforce-dx-branching-strategy)
+- [Referencia de la definición de scratch org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_def_file.htm)
