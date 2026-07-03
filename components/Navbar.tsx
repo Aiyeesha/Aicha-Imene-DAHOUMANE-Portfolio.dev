@@ -230,8 +230,11 @@ useEffect(() => {
     }`;
 
   // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
+  // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
+  // FR/ES sont plus longs qu'en anglais et débordaient le conteneur scrollable à 1280px
+  // (ex: "Contact"/"Contacto" tronqué, ~32-48px de débordement mesuré) — voir audit.
   const desktopLinkClass = (id: string) =>
-    `relative z-10 rounded-full px-2 2xl:px-3 py-2 text-sm leading-none transition-colors soft-ring ${
+    `relative z-10 rounded-full px-1 2xl:px-3 py-2 text-[13px] 2xl:text-sm leading-none transition-colors soft-ring ${
       desktopActiveId === id
         ? "text-cyan-700 dark:text-cyan-200"
         : "text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white"
@@ -306,7 +309,7 @@ useEffect(() => {
           <div className="hidden xl:flex flex-1 min-w-0 items-center justify-center">
             <div
               id="desktop-nav"
-              className="relative flex h-11 max-w-full min-w-0 items-center gap-0.5 overflow-x-auto rounded-full px-1
+              className="relative flex h-11 max-w-full min-w-0 items-center gap-0 overflow-x-auto rounded-full px-1
                          [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <NavbarPill activeId={desktopActiveId} containerId="desktop-nav" />
