@@ -20,7 +20,7 @@ export const contentType = "image/png";
 
 // Pré-génère les paramètres (locale × slug) au build pour les URLs statiques
 export async function generateStaticParams() {
-  const locales: BlogLocale[] = ["en", "fr"];
+  const locales: BlogLocale[] = ["en", "fr", "es"];
   const params: { locale: string; slug: string }[] = [];
   for (const locale of locales) {
     const posts = readAllPosts(locale);

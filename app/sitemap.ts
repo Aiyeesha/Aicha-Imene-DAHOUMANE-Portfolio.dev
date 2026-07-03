@@ -55,9 +55,10 @@ function biEntry(
     "x-default": `${base}/en${path}`,
     en: `${base}/en${path}`,
     fr: `${base}/fr${path}`,
+    es: `${base}/es${path}`,
   };
 
-  return (["en", "fr"] as const).map((locale) => ({
+  return (["en", "fr", "es"] as const).map((locale) => ({
     url: `${base}/${locale}${path}`,
     lastModified,
     priority,
@@ -102,15 +103,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Récupère EN + FR pour savoir quels slugs existent dans chaque locale.
   // Un projet locale="multi" apparaît dans les deux ; locale="en" uniquement en EN.
   // biEntry crée des URLs EN+FR — on le restreint aux slugs qui ont une version FR.
-  const [enProjects, frProjects] = await Promise.all([
+  const [enProjects, frProjects, esProjects] = await Promise.all([
     getPublishedProjectsWithAssetsCached("en"),
     getPublishedProjectsWithAssetsCached("fr"),
+    getPublishedProjectsWithAssetsCached("es"),
   ]);
   const enSlugs = [...new Set(enProjects.map((p) => p.slug))];
   const frSlugSetProjects = new Set(frProjects.map((p) => p.slug));
+  const esSlugSetProjects = new Set(esProjects.map((p) => p.slug));
 
   for (const slug of enSlugs) {
     const hasFr = frSlugSetProjects.has(slug);
+    const hasEs = esSlugSetProjects.has(slug);
 
     const projectLanguages: Record<string, string> = {
       "x-default": `${base}/en/projects/${slug}`,
@@ -118,6 +122,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
     if (hasFr) {
       projectLanguages.fr = `${base}/fr/projects/${slug}`;
+    }
+    if (hasEs) {
+      projectLanguages.es = `${base}/es/projects/${slug}`;
     }
 
     const enProject = enProjects.find((p) => p.slug === slug);
@@ -144,6 +151,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         alternates: { languages: projectLanguages },
       });
     }
+
+    // Entrée ES — uniquement si le projet est disponible en ES
+    if (hasEs) {
+      pages.push({
+        url: `${base}/es/projects/${slug}`,
+        lastModified: projectLastMod,
+        priority: 0.7,
+        changeFrequency: "monthly",
+        alternates: { languages: projectLanguages },
+      });
+    }
   }
 
   // ── Articles de blog MDX ──────────────────────────────────────────────────
@@ -151,10 +169,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // On génère une entrée par locale existante, avec hreflang conditionnels.
   const enPosts = readAllPosts("en");
   const frPosts = readAllPosts("fr");
+  const esPosts = readAllPosts("es");
   const frSlugSet = new Set(frPosts.map((p) => p.slug));
+  const esSlugSet = new Set(esPosts.map((p) => p.slug));
 
   for (const post of enPosts) {
     const hasFr = frSlugSet.has(post.slug);
+    const hasEs = esSlugSet.has(post.slug);
     const lastModified = new Date(post.date);
 
     const languages: Record<string, string> = {
@@ -163,6 +184,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
     if (hasFr) {
       languages.fr = `${base}/fr/blog/${post.slug}`;
+    }
+    if (hasEs) {
+      languages.es = `${base}/es/blog/${post.slug}`;
     }
 
     // Entrée EN — toujours présente
@@ -178,6 +202,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (hasFr) {
       pages.push({
         url: `${base}/fr/blog/${post.slug}`,
+        lastModified,
+        priority: 0.7,
+        changeFrequency: "yearly",
+        alternates: { languages },
+      });
+    }
+
+    // Entrée ES — uniquement si la traduction existe
+    if (hasEs) {
+      pages.push({
+        url: `${base}/es/blog/${post.slug}`,
         lastModified,
         priority: 0.7,
         changeFrequency: "yearly",
