@@ -12,7 +12,6 @@ import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
-import type { SupportedLocale } from "@/i18n/projectTaxonomy";
 import ProjectsSection from "@/components/ProjectsSection";
 
 export const revalidate = 300;
@@ -51,8 +50,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       title,
       description,
       siteName,
@@ -71,7 +70,7 @@ export default async function ProjectsPage({ params }: PageProps) {
   const { locale } = await params;
   const isFr = locale === "fr";
   const isEs = locale === "es";
-  const safeLocale = (locale === "fr" ? "fr" : "en") as SupportedLocale;
+  const uiLocale: "en" | "fr" | "es" = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   const projects = await getPublishedProjectsWithAssetsCached(locale);
 
@@ -126,7 +125,7 @@ export default async function ProjectsPage({ params }: PageProps) {
         <div className="mt-10">
           <ProjectsSection
             projects={projects}
-            locale={safeLocale}
+            locale={uiLocale}
             includeFeatured
           />
         </div>

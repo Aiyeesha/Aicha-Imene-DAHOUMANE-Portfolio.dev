@@ -24,18 +24,19 @@ type Props = {
 export default function SeriesBanner({ position, locale }: Props) {
   const { serie, index, prevSlug, nextSlug } = position;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
 
   // Lire les titres des articles adjacents pour l'affichage
   const prevMeta = prevSlug ? readPostMeta(locale, prevSlug) : null;
   const nextMeta = nextSlug ? readPostMeta(locale, nextSlug) : null;
 
-  const serieName  = isFr ? serie.name.fr : serie.name.en;
+  const serieName  = isFr ? serie.name.fr : isEs ? serie.name.es : serie.name.en;
   const total      = serie.slugs.length;
   const position1  = index + 1; // 1-based pour l'affichage
 
   return (
     <aside
-      aria-label={isFr ? `Série : ${serieName}` : `Series: ${serieName}`}
+      aria-label={isFr ? `Série : ${serieName}` : isEs ? `Serie: ${serieName}` : `Series: ${serieName}`}
       className="mt-6 rounded-2xl border border-cyan-200 dark:border-cyan-800/50 bg-cyan-50/60 dark:bg-cyan-950/30 px-5 py-4"
     >
       {/* En-tête — icône + nom de la série + position */}
@@ -44,7 +45,7 @@ export default function SeriesBanner({ position, locale }: Props) {
         <span aria-hidden="true" className="text-base">📚</span>
 
         <span className="text-xs font-semibold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
-          {isFr ? "Série" : "Series"}
+          {isFr ? "Série" : isEs ? "Serie" : "Series"}
         </span>
 
         <span className="text-sm font-semibold text-cyan-900 dark:text-cyan-200">
@@ -78,7 +79,7 @@ export default function SeriesBanner({ position, locale }: Props) {
               className="flex flex-col gap-0.5 rounded-xl px-3 py-2 hover:bg-cyan-100/60 dark:hover:bg-cyan-900/30 transition-colors"
             >
               <span className="text-xs text-cyan-600 dark:text-cyan-500">
-                ← {isFr ? "Précédent" : "Previous"}
+                ← {isFr ? "Précédent" : isEs ? "Anterior" : "Previous"}
               </span>
               <span className="font-medium text-cyan-900 dark:text-cyan-200 line-clamp-2 leading-snug">
                 {prevMeta.title}
@@ -95,7 +96,7 @@ export default function SeriesBanner({ position, locale }: Props) {
               className="flex flex-col gap-0.5 rounded-xl px-3 py-2 text-right hover:bg-cyan-100/60 dark:hover:bg-cyan-900/30 transition-colors"
             >
               <span className="text-xs text-cyan-600 dark:text-cyan-500">
-                {isFr ? "Suivant" : "Next"} →
+                {isFr ? "Suivant" : isEs ? "Siguiente" : "Next"} →
               </span>
               <span className="font-medium text-cyan-900 dark:text-cyan-200 line-clamp-2 leading-snug">
                 {nextMeta.title}

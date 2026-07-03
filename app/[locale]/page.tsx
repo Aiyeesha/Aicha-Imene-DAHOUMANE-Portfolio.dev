@@ -34,7 +34,7 @@ import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
-type Props = { params: Promise<{ locale: "en" | "fr" }> };
+type Props = { params: Promise<{ locale: "en" | "fr" | "es" }> };
 
 // ISR — revalidation toutes les heures.
 // ⚠️ Ce paramètre est actuellement sans effet sur le cache CDN Vercel :
@@ -48,7 +48,9 @@ export const revalidate = 3600;
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const experienceItems = getExperienceItems(locale);
+  // getExperienceItems() looks up a fr/en-only content dictionary (content/experience.tsx);
+  // Spanish gracefully falls back to English there, same scoping as elsewhere.
+  const experienceItems = getExperienceItems(locale === "fr" ? "fr" : "en");
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
 
   // FAQPage JSON-LD — généré côté serveur depuis les traductions i18n (même source que ServicesFaq).
@@ -188,9 +190,9 @@ export default async function Home({ params }: Props) {
             <Link
               href={`/${locale}/projects`}
               className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-              aria-label={locale === "fr" ? "Voir tous les projets" : "View all projects"}
+              aria-label={locale === "fr" ? "Voir tous les projets" : locale === "es" ? "Ver todos los proyectos" : "View all projects"}
             >
-              {locale === "fr" ? "Voir tous les projets →" : "View all projects →"}
+              {locale === "fr" ? "Voir tous les projets →" : locale === "es" ? "Ver todos los proyectos →" : "View all projects →"}
             </Link>
           </div>
         </div>

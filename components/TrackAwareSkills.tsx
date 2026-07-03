@@ -95,9 +95,12 @@ const ITOPS_ICONS = [
   <IconUsers key="soft" />
 ];
 
-export default function TrackAwareSkills({ locale }: { locale: Locale }) {
+export default function TrackAwareSkills({ locale }: { locale: Locale | "es" }) {
   const { track } = useTrack();
-  const groups = getSkillGroups(locale, track);
+  // getSkillGroups() looks up a fr/en-only content dictionary (content/skills.ts);
+  // Spanish gracefully falls back to English there, same scoping as elsewhere.
+  const dataLocale: Locale = locale === "fr" ? "fr" : "en";
+  const groups = getSkillGroups(dataLocale, track);
 
   // Sélectionner le jeu d'icônes selon le parcours actif
   const icons = track === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;

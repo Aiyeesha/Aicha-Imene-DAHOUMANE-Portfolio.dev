@@ -56,9 +56,9 @@ function pageHref(page: number, locale: string, tag?: string): string {
 export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts, currentPage, totalPages }: Props) {
   const t = useTranslations("blogIndex");
 
-  // Locale validé à "en" | "fr" ; slug restreint à [a-z0-9-_] pour éliminer
+  // Locale validé à "en" | "fr" | "es" ; slug restreint à [a-z0-9-_] pour éliminer
   // les alertes CodeQL js/stored-xss
-  const safeLocale: "en" | "fr" = locale === "fr" ? "fr" : "en";
+  const safeLocale: "en" | "fr" | "es" = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const safeSlug = (slug: string) => slug.replace(/[^a-z0-9-_]/gi, "");
 
   // Filtrage par tag URL uniquement (le toggle global de la navbar gère le track)

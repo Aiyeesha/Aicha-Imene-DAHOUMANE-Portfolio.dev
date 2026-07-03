@@ -95,9 +95,12 @@ const IconFile = () => (
 const SALESFORCE_ICONS = [<IconAudit key="a" />, <IconCode key="b" />, <IconLink key="c" />, <IconGraduation key="d" />];
 const ITOPS_ICONS      = [<IconShield key="a" />, <IconServer key="b" />, <IconGear key="c" />, <IconFile key="d" />];
 
-export default function TrackAwareServices({ locale }: { locale: Locale }) {
+export default function TrackAwareServices({ locale }: { locale: Locale | "es" }) {
   const { track } = useTrack();
   const t = useTranslations();
+  // getServices() looks up a fr/en-only content dictionary (content/services.ts);
+  // Spanish gracefully falls back to English there, same scoping as elsewhere.
+  const dataLocale: Locale = locale === "fr" ? "fr" : "en";
 
   // Defer all track-dependent rendering until after mount.
   // The server always renders with "salesforce" (initialTrack); Providers then
@@ -108,7 +111,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   useEffect(() => { setMounted(true); }, []);
 
   const effectiveTrack = mounted ? track : "salesforce";
-  const cards = getServices(locale, effectiveTrack);
+  const cards = getServices(dataLocale, effectiveTrack);
   const icons = effectiveTrack === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
   /**
@@ -177,13 +180,13 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             <div className="mt-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 space-y-1.5 text-sm">
               <p className="text-muted dark:text-slate-400">
                 <span className="font-medium text-slate-700 dark:text-slate-200">
-                  {locale === "fr" ? "Livrable :" : "You'll receive:"}
+                  {locale === "fr" ? "Livrable :" : locale === "es" ? "Entregable:" : "You'll receive:"}
                 </span>{" "}
                 {c.deliverable}
               </p>
               <p className="text-muted dark:text-slate-400">
                 <span className="font-medium text-slate-700 dark:text-slate-200">
-                  {locale === "fr" ? "Durée typique :" : "Typical timeline:"}
+                  {locale === "fr" ? "Durée typique :" : locale === "es" ? "Duración típica:" : "Typical timeline:"}
                 </span>{" "}
                 {c.duration}
               </p>
