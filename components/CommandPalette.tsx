@@ -162,41 +162,42 @@ export default function CommandPalette() {
 
   const linkedInUrl = LINKEDIN_URL || "https://www.linkedin.com";
 
-  // ── Labels bilingues ─────────────────────────────────────────────────────────
+  // ── Labels i18n ──────────────────────────────────────────────────────────────
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const L = {
-    placeholder: isFr ? "Rechercher une action…" : "Search or run a command…",
-    sections:    isFr ? "Sections" : "Sections",
-    pages:       isFr ? "Pages" : "Pages",
-    actions:     isFr ? "Actions" : "Actions",
-    links:       isFr ? "Liens" : "Links",
-    skills:      isFr ? "Compétences" : "Skills",
+    placeholder: isFr ? "Rechercher une action…" : isEs ? "Buscar una acción…" : "Search or run a command…",
+    sections:    isFr ? "Sections" : isEs ? "Secciones" : "Sections",
+    pages:       isFr ? "Pages" : isEs ? "Páginas" : "Pages",
+    actions:     isFr ? "Actions" : isEs ? "Acciones" : "Actions",
+    links:       isFr ? "Liens" : isEs ? "Enlaces" : "Links",
+    skills:      isFr ? "Compétences" : isEs ? "Habilidades" : "Skills",
     experience:  "Experience",
-    services:    isFr ? "Services" : "Services",
-    projects:    isFr ? "Projets" : "Projects",
+    services:    isFr ? "Services" : isEs ? "Servicios" : "Services",
+    projects:    isFr ? "Projets" : isEs ? "Proyectos" : "Projects",
     blog:        "Blog",
     contact:     "Contact",
     about:       "About",
     certifications: "Certifications",
-    resources:   isFr ? "Ressources" : "Resources",
-    allProjects: isFr ? "Tous les projets" : "All projects",
-    workWithMe:  isFr ? "Travaillons ensemble" : "Work with me",
+    resources:   isFr ? "Ressources" : isEs ? "Recursos" : "Resources",
+    allProjects: isFr ? "Tous les projets" : isEs ? "Todos los proyectos" : "All projects",
+    workWithMe:  isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntos" : "Work with me",
     colophon:    "Colophon",
-    legal:       isFr ? "Mentions légales" : "Legal",
-    privacy:     isFr ? "Politique de confidentialité" : "Privacy",
-    accessibility: isFr ? "Accessibilité" : "Accessibility",
+    legal:       isFr ? "Mentions légales" : isEs ? "Aviso legal" : "Legal",
+    privacy:     isFr ? "Politique de confidentialité" : isEs ? "Política de privacidad" : "Privacy",
+    accessibility: isFr ? "Accessibilité" : isEs ? "Accesibilidad" : "Accessibility",
     status:      "Status",
     changelog:   "Changelog",
-    info:        isFr ? "Info" : "Info",
-    switchToSf:  isFr ? "Voir le profil Salesforce →" : "View Salesforce profile →",
-    switchToOps: isFr ? "Voir le profil IT Ops →" : "View IT Ops profile →",
-    lightMode:   isFr ? "Passer en mode clair" : "Switch to light mode",
-    darkMode:    isFr ? "Passer en mode sombre" : "Switch to dark mode",
-    downloadCv:  isFr ? "Télécharger le CV" : "Download CV",
+    info:        isFr ? "Info" : isEs ? "Info" : "Info",
+    switchToSf:  isFr ? "Voir le profil Salesforce →" : isEs ? "Ver el perfil Salesforce →" : "View Salesforce profile →",
+    switchToOps: isFr ? "Voir le profil IT Ops →" : isEs ? "Ver el perfil IT Ops →" : "View IT Ops profile →",
+    lightMode:   isFr ? "Passer en mode clair" : isEs ? "Cambiar a modo claro" : "Switch to light mode",
+    darkMode:    isFr ? "Passer en mode sombre" : isEs ? "Cambiar a modo oscuro" : "Switch to dark mode",
+    downloadCv:  isFr ? "Télécharger le CV" : isEs ? "Descargar el CV" : "Download CV",
     linkedin:    "LinkedIn",
-    noResults:   isFr ? "Aucun résultat." : "No results.",
-    switchLang:  isFr ? "Switch to English" : "Passer en français",
-    shortcut:    isFr ? "Fermer" : "Close",
+    noResults:   isFr ? "Aucun résultat." : isEs ? "Sin resultados." : "No results.",
+    switchLang:  locale === "fr" ? "Switch to English" : locale === "en" ? "Cambiar a español" : "Passer en français",
+    shortcut:    isFr ? "Fermer" : isEs ? "Cerrar" : "Close",
   };
 
   // ── Classe partagée pour les items (répétée inline car CSS injecté globalement) ──
@@ -212,14 +213,14 @@ export default function CommandPalette() {
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}
-        label={isFr ? "Palette de commandes" : "Command palette"}
+        label={isFr ? "Palette de commandes" : isEs ? "Paleta de comandos" : "Command palette"}
       >
         {/* Panel principal */}
         <div className="bg-white dark:bg-[#0f1929] text-slate-900 dark:text-white">
 
           {/* DialogTitle requis par Radix UI pour l'accessibilité — visuellement masqué */}
           <RadixDialog.Title className="sr-only">
-            {isFr ? "Palette de commandes" : "Command palette"}
+            {isFr ? "Palette de commandes" : isEs ? "Paleta de comandos" : "Command palette"}
           </RadixDialog.Title>
 
           {/* Champ de recherche */}
@@ -239,7 +240,7 @@ export default function CommandPalette() {
                 { id: "experience",  label: L.experience,  icon: "M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" },
                 { id: "services",    label: L.services,    icon: "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" },
                 ...(process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true"
-                  ? [{ id: "testimonials", label: isFr ? "Témoignages" : "Testimonials", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" }]
+                  ? [{ id: "testimonials", label: isFr ? "Témoignages" : isEs ? "Testimonios" : "Testimonials", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" }]
                   : []),
                 { id: "projects",    label: L.projects,    icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
                 { id: "blog",        label: L.blog,        icon: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" },
@@ -266,7 +267,7 @@ export default function CommandPalette() {
                 { href: `/${locale}/projects`,        label: L.allProjects,     icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
                 { href: `/${locale}/resources`,       label: L.resources,        icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
                 { href: `/${locale}/blog`,            label: "Blog →",           icon: "M4 6h16M4 12h8m-8 6h16" },
-                { href: `/${locale}/uses`,            label: isFr ? "Setup & Outils" : "Uses & Setup", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },
+                { href: `/${locale}/uses`,            label: isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },
                 { href: `/${locale}/work-with-me`,   label: L.workWithMe,       icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
                 { href: `/${locale}/colophon`,        label: L.colophon,         icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" },
                 { href: `/${locale}/changelog`,       label: L.changelog,        icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" },
@@ -335,7 +336,7 @@ export default function CommandPalette() {
 
               {/* Langue */}
               <Command.Item
-                onSelect={() => navigate(`/${locale === "fr" ? "en" : "fr"}`)}
+                onSelect={() => navigate(`/${locale === "fr" ? "en" : locale === "en" ? "es" : "fr"}`)}
                 className={itemCls}
               >
                 <Icon d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-2.333A17.9 17.9 0 0 1 8.027 13H4.062a8.008 8.008 0 0 0 5.648 6.667zM10.03 13c.151 2.439.848 4.73 1.97 6.752A15.905 15.905 0 0 0 13.97 13h-3.94zm9.908 0h-3.965a17.9 17.9 0 0 1-1.683 6.667A8.008 8.008 0 0 0 19.938 13z" />
@@ -373,10 +374,10 @@ export default function CommandPalette() {
 
           {/* Pied de page — légende clavier */}
           <div className="border-t border-black/10 dark:border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-slate-500 dark:text-white/40">
-            <span><kbd className="font-mono">↑↓</kbd> {isFr ? "naviguer" : "navigate"}</span>
-            <span><kbd className="font-mono">↵</kbd> {isFr ? "sélectionner" : "select"}</span>
+            <span><kbd className="font-mono">↑↓</kbd> {isFr ? "naviguer" : isEs ? "navegar" : "navigate"}</span>
+            <span><kbd className="font-mono">↵</kbd> {isFr ? "sélectionner" : isEs ? "seleccionar" : "select"}</span>
             <span><kbd className="font-mono">Esc</kbd> {L.shortcut}</span>
-            <span className="ml-auto opacity-60">{isFr ? "Aussi ⌘K" : "Also ⌘K"}</span>
+            <span className="ml-auto opacity-60">{isFr ? "Aussi ⌘K" : isEs ? "También ⌘K" : "Also ⌘K"}</span>
           </div>
         </div>
       </Command.Dialog>

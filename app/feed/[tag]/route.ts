@@ -20,7 +20,7 @@ export async function GET(
   const { tag } = await params;
   const decodedTag = decodeURIComponent(tag);
   const locale = (request.nextUrl.searchParams.get("locale") ?? "en") as BlogLocale;
-  const validLocale: BlogLocale = locale === "fr" ? "fr" : "en";
+  const validLocale: BlogLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   const xml = buildRssFeed({ locale: validLocale, tag: decodedTag });
 

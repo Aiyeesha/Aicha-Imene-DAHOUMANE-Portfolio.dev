@@ -5,7 +5,7 @@ import { detectTrack, translateTag } from "@/lib/blog-utils";
 import type React from "react";
 
 type LatestPostsProps = {
-  locale: "en" | "fr";
+  locale: "en" | "fr" | "es";
   className?: string;
   /** Track actif — filtre les articles affichés sur la homepage */
   track?: "salesforce" | "itops";

@@ -31,12 +31,14 @@ export function buildRssFeed(opts: RssOptions = {}): string {
     );
   }
 
-  const langPath = locale === "fr" ? "fr" : "en";
+  const langPath = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const tagSuffix = tag ? ` — ${tag}` : "";
   const feedLink = tag
-    ? `${siteUrl}/feed/${encodeURIComponent(tag)}${locale === "fr" ? "?locale=fr" : ""}`
+    ? `${siteUrl}/feed/${encodeURIComponent(tag)}${locale === "fr" ? "?locale=fr" : locale === "es" ? "?locale=es" : ""}`
     : locale === "fr"
     ? `${siteUrl}/feed-fr.xml`
+    : locale === "es"
+    ? `${siteUrl}/feed-es.xml`
     : `${siteUrl}/feed.xml`;
 
   const meta = {
@@ -45,6 +47,8 @@ export function buildRssFeed(opts: RssOptions = {}): string {
       ? `Articles tagged "${tag}" — Salesforce, IT Ops, DevOps.`
       : locale === "fr"
       ? "Tutoriels pratiques sur Salesforce, l'IT Ops et le développement web moderne."
+      : locale === "es"
+      ? "Tutoriales prácticos sobre Salesforce, IT Ops y desarrollo web moderno."
       : "Practical tutorials on Salesforce, IT Ops, and modern web development.",
     link: `${siteUrl}/${langPath}/blog${tag ? `?tag=${encodeURIComponent(tag)}` : ""}`,
     feedLink,
