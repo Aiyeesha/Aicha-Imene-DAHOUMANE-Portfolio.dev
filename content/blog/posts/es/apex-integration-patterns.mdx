@@ -1,0 +1,263 @@
+---
+title: "Patrones de integración Apex: REST, callouts y Named Credentials"
+excerpt: "Construye integraciones Salesforce fiables — callouts REST con Named Credentials, gestión de límites asíncronos, lógica de reintento con Platform Events y mocking de servicios externos."
+date: "2026-02-17"
+tags: ["Salesforce", "Apex", "Integration", "API"]
+featured: false
+---
+
+Integrar Salesforce con sistemas externos implica mucho más que hacer una llamada HTTP. Los governor limits, los límites transaccionales, los reintentos y la gestión de secretos requieren atención. Aquí tienes cómo construir integraciones que aguanten en producción.
+
+---
+
+## Requisitos previos
+
+- Fundamentos de Apex (clases, governor limits)
+- Comprensión de los conceptos básicos de HTTP/REST
+- Un sandbox con una API externa contra la que probar
+
+---
+
+## Named Credentials — nunca hardcodees los endpoints
+
+Las Named Credentials almacenan las URLs de los endpoints y los detalles de autenticación de forma segura, fuera de tu código. Sobreviven a los refresh de sandbox y a las migraciones de org sin necesidad de cambiar código.
+
+```
+Setup → Security → Named Credentials → New Named Credential
+```
+
+Configuración:
+- Label: `Stripe API`
+- Name: `Stripe_API`
+- URL: `https://api.stripe.com`
+- Identity Type: Named Principal
+- Authentication Protocol: Password Authentication
+- Username: (vacío)
+- Password: `sk_live_...` (almacenada de forma segura en Salesforce)
+
+```apex
+// Usando Named Credentials en los callouts — sin URL ni auth en el código
+public class StripeService {
+
+    public static Map<String, Object> createCustomer(String email, String name) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('callout:Stripe_API/v1/customers');
+        req.setMethod('POST');
+        req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+        req.setBody('email=' + EncodingUtil.urlEncode(email, 'UTF-8') +
+                    '&name=' + EncodingUtil.urlEncode(name, 'UTF-8'));
+
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+
+        if (res.getStatusCode() == 200) {
+            return (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+        }
+
+        throw new CalloutException('Stripe API error: ' + res.getStatusCode() + ' ' + res.getBody());
+    }
+}
+```
+
+---
+
+## Gestionar los governor limits de los callouts
+
+Apex tiene un timeout de 10 segundos por callout y un total de 120 segundos por transacción. Las operaciones masivas alcanzan estos límites rápidamente.
+
+**Patrón: encolar callouts vía Platform Events**
+
+```apex
+// En lugar de llamar a la API externa en un trigger (bloqueado por los límites),
+// publica un Platform Event y procesa de forma asíncrona
+
+trigger OpportunityTrigger on Opportunity (after update) {
+    List<Integration_Request__e> events = new List<Integration_Request__e>();
+
+    for (Opportunity opp : Trigger.New) {
+        Opportunity old = Trigger.OldMap.get(opp.Id);
+        if (opp.StageName == 'Closed Won' && old.StageName != 'Closed Won') {
+            events.add(new Integration_Request__e(
+                Record_Id__c = opp.Id,
+                Action__c = 'CREATE_DEAL'
+            ));
+        }
+    }
+
+    if (!events.isEmpty()) EventBus.publish(events);
+}
+
+// Un trigger separado en el Platform Event se dispara en su propia transacción
+trigger IntegrationRequestTrigger on Integration_Request__e (after insert) {
+    for (Integration_Request__e event : Trigger.New) {
+        // Cada evento se dispara en su propio contexto asíncrono — governor limits nuevos
+        ExternalCRMService.createDeal(event.Record_Id__c);
+    }
+}
+```
+
+---
+
+## Lógica de reintento con backoff exponencial
+
+Las API externas fallan. Construye siempre lógica de reintento para errores transitorios:
+
+```apex
+public class RetryableCallout {
+
+    private static final Integer MAX_RETRIES = 3;
+    private static final List<Integer> BACKOFF_SECONDS = new List<Integer>{1, 3, 7};
+
+    public static HttpResponse callWithRetry(HttpRequest req) {
+        Http http = new Http();
+        Integer attempt = 0;
+
+        while (attempt < MAX_RETRIES) {
+            HttpResponse res = http.send(req);
+
+            // Éxito o error no reintentable
+            if (res.getStatusCode() < 500) return res;
+
+            attempt++;
+            if (attempt < MAX_RETRIES) {
+                // Nota: en Apex no se puede hacer sleep realmente — usa Queueable para retrasos reales
+                // Este patrón está simplificado; en producción, vuelve a encolar como un job Queueable
+            }
+        }
+
+        throw new CalloutException('Max retries exceeded');
+    }
+}
+
+// Reintento real con encadenamiento de Queueable
+public class RetryQueueable implements Queueable, Database.AllowsCallouts {
+    private String recordId;
+    private Integer attempt;
+
+    public RetryQueueable(String recordId, Integer attempt) {
+        this.recordId = recordId;
+        this.attempt = attempt;
+    }
+
+    public void execute(QueueableContext ctx) {
+        try {
+            ExternalCRMService.createDeal(recordId);
+        } catch (Exception e) {
+            if (attempt < 3) {
+                System.enqueueJob(new RetryQueueable(recordId, attempt + 1));
+            } else {
+                // Registrar en un objeto personalizado o enviar una alerta
+                ErrorLog__c log = new ErrorLog__c(
+                    Record_Id__c = recordId,
+                    Error__c = e.getMessage()
+                );
+                insert log;
+            }
+        }
+    }
+}
+```
+
+---
+
+## Parsear respuestas JSON
+
+```apex
+// Opción 1: deserializeUntyped — flexible pero sin tipado
+Map<String, Object> response = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+String customerId = (String) response.get('id');
+List<Object> items = (List<Object>) response.get('items');
+
+// Opción 2: clase tipada — segura en cuanto a tipos, recomendada para esquemas conocidos
+public class StripeCustomer {
+    public String id;
+    public String email;
+    public Long created;
+    public StripeAddress address;
+
+    public class StripeAddress {
+        public String city;
+        public String country;
+    }
+}
+
+StripeCustomer customer = (StripeCustomer) JSON.deserialize(res.getBody(), StripeCustomer.class);
+String customerId = customer.id;
+
+// Opción 3: JSONParser para respuestas muy grandes o complejas
+JSONParser parser = JSON.createParser(res.getBody());
+while (parser.nextToken() != null) {
+    if (parser.getCurrentToken() == JSONToken.FIELD_NAME && parser.getText() == 'id') {
+        parser.nextToken();
+        String id = parser.getText();
+    }
+}
+```
+
+---
+
+## Probar los callouts
+
+```apex
+@isTest
+global class StripeApiMock implements HttpCalloutMock {
+    private Integer statusCode;
+    private String body;
+
+    global StripeApiMock(Integer statusCode, String body) {
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+
+    global HTTPResponse respond(HTTPRequest req) {
+        HTTPResponse res = new HTTPResponse();
+        res.setStatusCode(statusCode);
+        res.setBody(body);
+        res.setHeader('Content-Type', 'application/json');
+        return res;
+    }
+}
+
+@isTest
+static void testCreateCustomerSuccess() {
+    String mockBody = '{"id": "cus_123", "email": "test@example.com"}';
+    Test.setMock(HttpCalloutMock.class, new StripeApiMock(200, mockBody));
+
+    Test.startTest();
+    Map<String, Object> result = StripeService.createCustomer('test@example.com', 'Test User');
+    Test.stopTest();
+
+    System.assertEquals('cus_123', result.get('id'));
+}
+
+@isTest
+static void testCreateCustomerError() {
+    Test.setMock(HttpCalloutMock.class, new StripeApiMock(400, '{"error": {"message": "Invalid email"}}'));
+
+    Test.startTest();
+    try {
+        StripeService.createCustomer('invalid', 'Test');
+        System.assert(false, 'Expected exception');
+    } catch (CalloutException e) {
+        System.assert(e.getMessage().contains('400'));
+    }
+    Test.stopTest();
+}
+```
+
+---
+
+## Errores comunes a evitar
+
+- **Callouts en triggers**: los triggers síncronos no pueden hacer callouts — usa `@future`, Queueable o Platform Events
+- **Secretos en el código**: nunca almacenes API keys en clases Apex ni en Custom Metadata — usa Named Credentials
+- **Timeout no configurado**: el timeout de callout por defecto es de 10s — configúralo siempre explícitamente con `req.setTimeout(5000)` para las rutas críticas
+- **DML antes del callout**: Apex bloquea los callouts después de un DML en la misma transacción — reestructura o usa asíncrono
+
+---
+
+## Recursos
+
+- [Named Credentials Documentation](https://help.salesforce.com/s/articleView?id=sf.named_credentials_about.htm)
+- [Apex Integration Services Trailhead](https://trailhead.salesforce.com/content/learn/modules/apex_integration_services)
+- [HttpCalloutMock Reference](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_interface_httpcalloutmock.htm)
