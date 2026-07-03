@@ -1,0 +1,189 @@
+---
+title: "Platform Events y CDC: integraciones de Salesforce en tiempo real"
+excerpt: "Crea integraciones en tiempo real en Salesforce usando Platform Events y Change Data Capture — publica, suscríbete y gestiona el replay con ejemplos prácticos de Apex y LWC."
+date: "2026-03-03"
+tags: ["Salesforce", "Integración", "Eventos", "Apex"]
+featured: false
+---
+
+Cuando necesitas comunicación en tiempo real entre Salesforce y sistemas externos — o entre componentes dentro del propio Salesforce — Platform Events y Change Data Capture (CDC) son las herramientas adecuadas. Aquí te explico cómo funcionan y cuándo usar cada una.
+
+---
+
+## Platform Events vs. CDC vs. Streaming API
+
+| Característica | Platform Events | Change Data Capture | PushTopic (legado) |
+|---------|----------------|--------------------|--------------------|
+| Se dispara por | Tu código Apex/Flow | Cualquier DML en objetos rastreados | Consulta SOQL |
+| Payload personalizado | ✅ Sí | ❌ No (esquema fijo) | ❌ No |
+| Replay soportado | ✅ Sí (-1, -2, o replayId) | ✅ Sí | ❌ No |
+| Caso de uso | Mensajería entre apps | Sincronización con sistemas externos | Obsoleto |
+
+---
+
+## Definir y publicar un Platform Event
+
+**Paso 1 — Crear el evento en Setup:**
+
+Setup → Platform Events → New Platform Event
+Nombre: `Order_Placed__e`
+Campos: `Order_Id__c` (Text), `Customer_Email__c` (Text), `Total_Amount__c` (Number)
+
+**Paso 2 — Publicar desde Apex:**
+
+```apex
+public class OrderService {
+
+    public static void publishOrderPlaced(Order__c order) {
+        Order_Placed__e event = new Order_Placed__e(
+            Order_Id__c = order.Id,
+            Customer_Email__c = order.Customer_Email__c,
+            Total_Amount__c = order.Total_Amount__c
+        );
+
+        Database.SaveResult result = EventBus.publish(event);
+
+        if (!result.isSuccess()) {
+            for (Database.Error err : result.getErrors()) {
+                System.debug('Error publishing event: ' + err.getMessage());
+            }
+        }
+    }
+}
+```
+
+> **Governor limit:** puedes publicar hasta 150.000 Platform Events cada 24 horas en las ediciones Enterprise/Unlimited.
+
+---
+
+## Suscribirse en Apex (trigger sobre el evento)
+
+Crea un trigger de Apex sobre el Platform Event para procesarlo de forma asíncrona:
+
+```apex
+trigger OrderPlacedTrigger on Order_Placed__e (after insert) {
+    List<Order_Placed__e> events = Trigger.new;
+
+    for (Order_Placed__e event : events) {
+        // Procesa cada evento
+        System.debug('Order received: ' + event.Order_Id__c
+            + ' from ' + event.Customer_Email__c);
+
+        // Encola trabajo asíncrono si es necesario
+        System.enqueueJob(new OrderFulfillmentQueueable(event.Order_Id__c));
+    }
+}
+```
+
+El trigger se ejecuta en su propia transacción — los fallos no afectan al publicador.
+
+---
+
+## Suscribirse en LWC
+
+Usa el wire adapter `empApi` para suscribirte desde un Lightning Web Component:
+
+```javascript
+// orderNotifications.js
+import { LightningElement, wire } from 'lwc';
+import { subscribe, MessageContext } from 'lightning/empApi';
+
+export default class OrderNotifications extends LightningElement {
+    subscription = null;
+    notifications = [];
+
+    connectedCallback() {
+        this.subscribeToEvents();
+    }
+
+    subscribeToEvents() {
+        const channel = '/event/Order_Placed__e';
+        subscribe(channel, -1, (event) => {
+            const payload = event.data.payload;
+            this.notifications = [
+                ...this.notifications,
+                {
+                    id: Date.now(),
+                    orderId: payload.Order_Id__c,
+                    email: payload.Customer_Email__c,
+                    amount: payload.Total_Amount__c
+                }
+            ];
+        }).then(response => {
+            this.subscription = response;
+        });
+    }
+}
+```
+
+El replay ID `-1` significa "suscribirse solo a eventos nuevos". Usa `-2` para reproducir todos los eventos retenidos (hasta 72 horas).
+
+---
+
+## Change Data Capture — sincronización con sistemas externos
+
+CDC publica automáticamente eventos de cambio cuando los registros se crean, actualizan, eliminan o restauran. No requiere código personalizado en el lado de Salesforce.
+
+**Activar CDC en Setup:**
+Setup → Integrations → Change Data Capture → Selecciona los objetos a rastrear (por ejemplo, Account, Contact, Opportunity)
+
+**Suscribirse desde un sistema externo (ejemplo en Node.js):**
+
+```javascript
+const jsforce = require('jsforce');
+
+const conn = new jsforce.Connection({
+    loginUrl: 'https://login.salesforce.com'
+});
+
+await conn.login(username, password);
+
+conn.streaming.topic('/data/AccountChangeEvent').subscribe((event) => {
+    const header = event.payload.ChangeEventHeader;
+    console.log('Change type:', header.changeType); // CREATE, UPDATE, DELETE, UNDELETE
+    console.log('Changed fields:', header.changedFields);
+    console.log('Record IDs:', header.recordIds);
+
+    // Sincroniza con tu base de datos
+    syncToExternalSystem(event.payload);
+});
+```
+
+---
+
+## Gestión del replay y de errores
+
+```apex
+// Almacena el último ReplayId procesado en un Custom Setting
+public class EventReplayTracker {
+
+    public static Long getLastReplayId(String channelName) {
+        Event_Replay__c setting = Event_Replay__c.getInstance(channelName);
+        return setting != null ? (Long) setting.Replay_Id__c : -1;
+    }
+
+    public static void updateReplayId(String channelName, Long replayId) {
+        Event_Replay__c setting = Event_Replay__c.getInstance(channelName)
+            ?? new Event_Replay__c(Name = channelName);
+        setting.Replay_Id__c = replayId;
+        upsert setting Name;
+    }
+}
+```
+
+---
+
+## Errores comunes
+
+- **Los eventos no se almacenan de forma permanente**: los Platform Events se retienen 72 horas. No los uses como un log persistente.
+- **El orden no está garantizado**: si el orden importa, incluye un número de secuencia en el payload del evento.
+- **Gestión de errores en triggers**: un trigger de evento fallido NO detiene la publicación. Diseña suscriptores idempotentes.
+- **Seguridad a nivel de campo en CDC**: CDC respeta la FLS de las credenciales del suscriptor. Usa usuarios de integración con acceso completo a los campos.
+
+---
+
+## Recursos
+
+- [Guía para desarrolladores de Platform Events](https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/)
+- [Guía para desarrolladores de Change Data Capture](https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/)
+- [Módulo LWC empApi](https://developer.salesforce.com/docs/component-library/bundle/lightning-emp-api)

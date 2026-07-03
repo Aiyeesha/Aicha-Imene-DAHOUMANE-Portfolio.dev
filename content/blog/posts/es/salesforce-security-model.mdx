@@ -1,0 +1,166 @@
+---
+title: "Modelo de seguridad de Salesforce: perfiles, permission sets y OWD"
+excerpt: "Domina el modelo de seguridad de Salesforce — organization-wide defaults, jerarquía de roles, perfiles vs. permission sets, seguridad a nivel de campo y reglas de sharing explicadas con claridad."
+date: "2025-10-07"
+tags: ["Salesforce", "Seguridad", "Admin", "Permisos"]
+featured: false
+---
+
+El modelo de seguridad de Salesforce tiene cinco capas distintas. La mayoría de los administradores entienden bien una o dos y resuelven el resto con soluciones improvisadas basadas en el perfil de System Admin. Entender cómo interactúan evita el exceso de permisos y solicitudes de soporte del tipo "no puedo ver este registro".
+
+---
+
+## Las cinco capas
+
+```
+1. Organization-Wide Defaults (OWD) — acceso base para todos los registros
+2. Jerarquía de roles — los managers ven los registros de sus subordinados
+3. Reglas de sharing — amplían el acceso a grupos o roles
+4. Perfiles — permisos de objeto/campo/pestaña por tipo de usuario
+5. Permission Sets — permisos adicionales sobre los perfiles
+```
+
+Salesforce las evalúa en este orden. Si OWD bloquea el acceso, las reglas de sharing pueden abrirlo. Los perfiles nunca pueden conceder acceso a registros que OWD ha bloqueado — solo el sharing de registros puede hacerlo.
+
+---
+
+## Organization-Wide Defaults
+
+OWD establece el nivel **mínimo** de acceso para cada usuario sobre cada registro que no posee.
+
+| Configuración de OWD | Qué significa |
+|-------------|--------------|
+| Private | Solo el propietario y la jerarquía por encima pueden ver el registro |
+| Public Read Only | Todos pueden leer, solo el propietario puede editar |
+| Public Read/Write | Todos pueden leer y editar |
+| Controlled by Parent | El registro hijo sigue el OWD del padre (detalle en relaciones maestro-detalle) |
+
+**Regla general:** empieza con Private para objetos sensibles (Opportunity, Contract), y con Public Read Only para objetos de referencia (Product, Pricebook).
+
+```
+Setup → Security → Sharing Settings → Organization-Wide Defaults
+```
+
+---
+
+## Jerarquía de roles
+
+Cuando OWD es Private, la jerarquía de roles concede a los managers acceso de lectura (y opcionalmente edición) sobre los registros propiedad de los usuarios por debajo de ellos.
+
+```
+CEO
+├── VP Sales
+│   ├── Regional Manager West
+│   │   ├── Sales Rep 1 (posee Opp A)
+│   │   └── Sales Rep 2 (posee Opp B)
+│   └── Regional Manager East
+```
+
+Con OWD en Private:
+- Sales Rep 1 solo ve la Opp A
+- Regional Manager West ve la Opp A y la Opp B
+- VP Sales ve todas las oportunidades de su subárbol
+
+**Importante:** la jerarquía de roles no se aplica a los objetos personalizados a menos que se active "Grant Access Using Hierarchies" para ese objeto.
+
+---
+
+## Reglas de sharing
+
+Cuando OWD es Private pero necesitas que grupos de usuarios compartan acceso, usa Sharing Rules:
+
+```
+Setup → Security → Sharing Settings → [Object] Sharing Rules → New
+```
+
+**Regla de sharing basada en propiedad:**
+- Registros propiedad de: *Role: Sales Rep West Coast*
+- Compartidos con: *Public Group: Ops Team*
+- Acceso: Read Only
+
+**Regla de sharing basada en criterios:**
+- Registros donde: `Region__c = 'EMEA'`
+- Compartidos con: *Role: EMEA Manager*
+- Acceso: Read/Write
+
+Las reglas de sharing solo pueden **ampliar** el acceso más allá de OWD. No pueden restringirlo.
+
+---
+
+## Perfiles vs. Permission Sets
+
+Los **perfiles** definen la base: a qué objetos puede acceder un usuario, qué pestañas son visibles, qué record types tiene asignados y qué apps aparecen en el App Launcher.
+
+Los **Permission Sets** (y los Permission Set Groups) se añaden sobre el perfil. Son la forma preferida de conceder acceso adicional.
+
+```
+Profile = base de la función del puesto (Sales User, Service Agent)
+Permission Set = capacidad adicional (View All Accounts, Run Reports)
+```
+
+```
+// Estructura de org recomendada como buena práctica:
+Standard Profile (permisos mínimos)
+  + Permission Set: Core Sales Access
+  + Permission Set: Advanced Reporting (solo para reps senior)
+  + Permission Set: Integration API Access (solo para usuarios de integración)
+```
+
+**Nunca uses el perfil de System Administrator como solución rápida.** Crea un permission set específico con los permisos exactos que se necesitan.
+
+---
+
+## Seguridad a nivel de campo
+
+Aunque un usuario tenga acceso al objeto, los campos individuales se pueden ocultar o poner en solo lectura mediante la seguridad a nivel de campo (FLS):
+
+```
+Setup → Object Manager → [Object] → Fields & Relationships → [Field] → Set Field-Level Security
+```
+
+O directamente vía Profile/Permission Set:
+```
+Profile → Field Permissions → [Object] → marca Read/Edit por campo
+```
+
+**La FLS se aplica en:**
+- Los page layouts estándar (automáticamente)
+- El código Apex con `WITH SECURITY_ENFORCED` o `Security.stripInaccessible()`
+- LWC usando el wire adapter `getRecord` (solo se devuelven los campos solicitados)
+
+**La FLS NO se aplica automáticamente en:**
+- El SOQL puro en Apex (hay que aplicarla manualmente)
+- Los reportes (los usuarios que hacen reportes ven todos los campos a los que tienen acceso vía perfil)
+
+---
+
+## Diagnóstico rápido
+
+Cuando un usuario no puede ver un registro o un campo:
+
+```
+1. Revisa su perfil: ¿tiene permiso de lectura sobre el objeto?
+2. Revisa OWD: ¿es Private? ¿Es propietario del registro o está en la jerarquía por encima del propietario?
+3. Revisa las reglas de sharing: ¿hay alguna regla que cubra su rol/grupo?
+4. Comprueba si hay un share manual en el registro específico
+5. Para campos: revisa la FLS en su perfil o en el permission set correspondiente
+```
+
+Usa el botón **Why Can't I See This?** en los registros (menú del engranaje) y el **Permission Analyzer** en Setup para un diagnóstico sistemático.
+
+---
+
+## Errores comunes
+
+- **OWD demasiado permisivo**: Public Read/Write casi nunca es correcto para datos de negocio — empieza con Private
+- **Perfiles con todo habilitado**: crea una pesadilla en las auditorías de seguridad y bloquea futuros endurecimientos
+- **Reglas de sharing que no cubren nuevos grupos**: cuando añades un rol o grupo nuevo, las reglas de sharing existentes no se aplican automáticamente — hay que crear reglas nuevas o usar reglas basadas en criterios
+- **Apex que se salta la FLS**: usa siempre `WITH SECURITY_ENFORCED` o `Security.stripInaccessible()` en el código Apex de producción
+
+---
+
+## Recursos
+
+- [Guía de seguridad de Salesforce](https://developer.salesforce.com/docs/atlas.en-us.securityImplGuide.meta/securityImplGuide/)
+- [Trailhead: seguridad de datos](https://trailhead.salesforce.com/content/learn/modules/data_security)
+- [Permission Set Groups](https://help.salesforce.com/s/articleView?id=sf.perm_set_groups.htm)
