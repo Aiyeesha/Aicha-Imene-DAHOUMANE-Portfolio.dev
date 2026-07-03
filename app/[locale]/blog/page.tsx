@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { readAllPosts } from "@/content/blog/fs";
-import { getTopTags } from "@/lib/blog-utils";
+import { getTopTags, translateTag } from "@/lib/blog-utils";
 import BlogTrackFilter from "@/components/blog/BlogTrackFilter";
 import type { PostCard } from "@/components/blog/BlogTrackFilter";
 import BlogSearchBar from "@/components/blog/BlogSearchBar";
@@ -14,7 +14,7 @@ import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 // une fois le blog migré vers une source externe (CMS, Supabase).
 export const revalidate = 3600;
 
-type Params = { locale: "en" | "fr" };
+type Params = { locale: "en" | "fr" | "es" };
 
 export async function generateMetadata(
   { params }: { params: Promise<Params> }
@@ -45,8 +45,8 @@ export async function generateMetadata(
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [{ url: `${urlPath}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
@@ -103,7 +103,7 @@ export default async function BlogIndexPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: locale === "fr" ? "Accueil" : "Home", item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 1, name: locale === "fr" ? "Accueil" : locale === "es" ? "Inicio" : "Home", item: `${siteUrl}/${locale}` },
       { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/${locale}/blog` },
     ],
   };
@@ -141,7 +141,7 @@ export default async function BlogIndexPage({
               selectedTag === tg ? "bg-black/10 border-black/20 dark:bg-white/10 dark:border-white/20" : ""
             ].join(" ")}
           >
-            {tg}
+            {translateTag(tg, locale)}
           </Link>
         ))}
 
@@ -168,7 +168,7 @@ export default async function BlogIndexPage({
           href={`/${locale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
         >
-          ← {locale === "fr" ? "Retour à l'accueil" : "Back to home"}
+          ← {locale === "fr" ? "Retour à l'accueil" : locale === "es" ? "Volver al inicio" : "Back to home"}
         </Link>
       </div>
     </section>

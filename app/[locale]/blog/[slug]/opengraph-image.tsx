@@ -20,7 +20,7 @@ export const contentType = "image/png";
 
 // Pré-génère les paramètres (locale × slug) au build pour les URLs statiques
 export async function generateStaticParams() {
-  const locales: BlogLocale[] = ["en", "fr"];
+  const locales: BlogLocale[] = ["en", "fr", "es"];
   const params: { locale: string; slug: string }[] = [];
   for (const locale of locales) {
     const posts = readAllPosts(locale);
@@ -88,7 +88,7 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale, slug } = await params;
-  const safeLocale: BlogLocale = locale === "fr" ? "fr" : "en";
+  const safeLocale: BlogLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   // Lecture des métadonnées de l'article
   const post = readPostMeta(safeLocale, slug);
@@ -98,6 +98,7 @@ export default async function Image({ params }: Props) {
   const tags        = post?.tags?.slice(0, 3) ?? [];
   const readingTime = post?.readingTime ?? null;
   const isFr        = safeLocale === "fr";
+  const isEs        = safeLocale === "es";
 
   const siteUrl    = getSiteUrl()
     .replace(/^https?:\/\//, "");
@@ -189,7 +190,7 @@ export default async function Image({ params }: Props) {
                 display: "flex",
               }}
             >
-              {readingTime} min {isFr ? "de lecture" : "read"}
+              {readingTime} min {isFr ? "de lecture" : isEs ? "de lectura" : "read"}
             </div>
           )}
 

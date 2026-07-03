@@ -13,8 +13,8 @@
 export type Serie = {
   /** Identifiant unique de la série */
   id: string;
-  /** Nom affiché de la série (bilingue) */
-  name: { en: string; fr: string };
+  /** Nom affiché de la série (trilingue) */
+  name: { en: string; fr: string; es: string };
   /** Slugs des articles dans l'ordre de lecture */
   slugs: string[];
 };
@@ -26,6 +26,7 @@ const SALESFORCE_DEV: Serie = {
   name: {
     en: "Salesforce Development Essentials",
     fr: "Développement Salesforce — l'essentiel",
+    es: "Desarrollo Salesforce — lo esencial",
   },
   slugs: [
     "flow-vs-apex-decision-guide",
@@ -40,6 +41,7 @@ const SALESFORCE_LWC: Serie = {
   name: {
     en: "Lightning Web Components",
     fr: "Lightning Web Components",
+    es: "Lightning Web Components",
   },
   slugs: [
     "lwc-reusable-components",
@@ -52,6 +54,7 @@ const SALESFORCE_CICD: Serie = {
   name: {
     en: "Salesforce DevOps & CI/CD",
     fr: "DevOps Salesforce & CI/CD",
+    es: "DevOps Salesforce y CI/CD",
   },
   slugs: [
     "salesforce-sandbox-management",
@@ -66,6 +69,7 @@ const ITOPS_WINDOWS: Serie = {
   name: {
     en: "Windows Server Administration",
     fr: "Administration Windows Server",
+    es: "Administración de Windows Server",
   },
   slugs: [
     "windows-server-2022-hardening",
@@ -79,6 +83,7 @@ const ITOPS_MONITORING: Serie = {
   name: {
     en: "IT Ops: Monitoring & Security",
     fr: "IT Ops : Supervision & Sécurité",
+    es: "IT Ops: Supervisión y Seguridad",
   },
   slugs: [
     "datto-rmm-supervision-runbooks",
@@ -92,6 +97,7 @@ const ITOPS_AUTOMATION: Serie = {
   name: {
     en: "IT Ops: Automation & Ticketing",
     fr: "IT Ops : Automatisation & Ticketing",
+    es: "IT Ops: Automatización y Ticketing",
   },
   slugs: [
     "powershell-sysadmin-automation",

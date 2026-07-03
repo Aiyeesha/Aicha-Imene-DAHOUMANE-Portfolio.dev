@@ -62,8 +62,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US"] : ["fr_FR"],
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       siteName,
       images: [{ url: `${siteUrl}/${locale}/about/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
@@ -90,7 +90,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
-  const safeLocale = locale === "fr" ? "fr" : "en";
+  const safeLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   const siteUrl = getSiteUrl();
   const about = await getAboutPageCached(safeLocale);
@@ -101,13 +101,13 @@ export default async function AboutPage({ params }: PageProps) {
         {/* Breadcrumb retour accueil */}
         <nav aria-label="Fil d'Ariane" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
           <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded">
-            {safeLocale === "fr" ? "Accueil" : "Home"}
+            {safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home"}
           </Link>
           <span aria-hidden="true">›</span>
-          <span>{safeLocale === "fr" ? "À propos" : "About"}</span>
+          <span>{safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About"}</span>
         </nav>
         <h1 className="text-3xl font-semibold">
-          {safeLocale === "fr" ? "À propos" : "About"}
+          {safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About"}
         </h1>
         <p className="mt-4 opacity-80">
           {safeLocale === "fr"
@@ -129,8 +129,8 @@ export default async function AboutPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: safeLocale === "fr" ? "Accueil" : "Home", item: `${siteUrl}/${safeLocale}` },
-      { "@type": "ListItem", position: 2, name: safeLocale === "fr" ? "À propos" : "About", item: `${siteUrl}/${safeLocale}/about` },
+      { "@type": "ListItem", position: 1, name: safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home", item: `${siteUrl}/${safeLocale}` },
+      { "@type": "ListItem", position: 2, name: safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About", item: `${siteUrl}/${safeLocale}/about` },
     ],
   };
 
@@ -140,12 +140,12 @@ export default async function AboutPage({ params }: PageProps) {
 
       {/* Breadcrumb — navigation retour vers l'accueil
           Permet à l'utilisateur de comprendre qu'il est sur une page dédiée (hors landing). */}
-      <nav aria-label={safeLocale === "fr" ? "Fil d'Ariane" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+      <nav aria-label={safeLocale === "fr" ? "Fil d'Ariane" : safeLocale === "es" ? "Ruta de navegación" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
-          {safeLocale === "fr" ? "Accueil" : "Home"}
+          {safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home"}
         </Link>
         <span aria-hidden="true">›</span>
-        <span className="text-muted">{safeLocale === "fr" ? "À propos" : "About"}</span>
+        <span className="text-muted">{safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About"}</span>
       </nav>
 
       <header>
@@ -172,7 +172,7 @@ export default async function AboutPage({ params }: PageProps) {
           p4 exclu volontairement (objectif 2026 → déjà dans la section goals ci-dessous). */}
       <section className="mt-10">
         <SectionTitle>
-          {safeLocale === "fr" ? "Positionnement" : "Positioning"}
+          {safeLocale === "fr" ? "Positionnement" : safeLocale === "es" ? "Posicionamiento" : "Positioning"}
         </SectionTitle>
         <div className="mt-4">
         <Suspense fallback={
@@ -190,7 +190,7 @@ export default async function AboutPage({ params }: PageProps) {
       {/* ── TECH STACK GRID ──────────────────────────────────────────────────── */}
       <section className="mt-10">
         <h2 className="text-xl font-semibold">
-          {safeLocale === "fr" ? "Stack technique" : "Tech stack"}
+          {safeLocale === "fr" ? "Stack technique" : safeLocale === "es" ? "Stack técnico" : "Tech stack"}
         </h2>
         <p className="mt-2 text-sm text-muted">
           {safeLocale === "fr"
@@ -205,7 +205,7 @@ export default async function AboutPage({ params }: PageProps) {
           Affiche les années, types et organisations clairement. */}
       <section className="mt-10 rounded-2xl border border-black/10 dark:border-white/10 p-6">
         <SectionTitle>
-          {safeLocale === "fr" ? "Parcours en un coup d'œil" : "Career at a glance"}
+          {safeLocale === "fr" ? "Parcours en un coup d'œil" : safeLocale === "es" ? "Trayectoria de un vistazo" : "Career at a glance"}
         </SectionTitle>
         <p className="mt-2 text-sm text-muted">
           {safeLocale === "fr"
@@ -221,11 +221,11 @@ export default async function AboutPage({ params }: PageProps) {
             Ligne verticale + numéro de phase pour rythmer la lecture. */}
         {journey?.title || (journey?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
-            <SectionTitle>{journey?.title ?? (safeLocale === "fr" ? "Parcours" : "Journey")}</SectionTitle>
+            <SectionTitle>{journey?.title ?? (safeLocale === "fr" ? "Parcours" : safeLocale === "es" ? "Trayectoria" : "Journey")}</SectionTitle>
             {Array.isArray(journey?.paragraphs) ? (
               <VisualTimeline
                 steps={journey!.paragraphs!}
-                ariaLabel={journey?.title ?? (safeLocale === "fr" ? "Parcours" : "Journey")}
+                ariaLabel={journey?.title ?? (safeLocale === "fr" ? "Parcours" : safeLocale === "es" ? "Trayectoria" : "Journey")}
               />
             ) : null}
           </section>
@@ -235,7 +235,7 @@ export default async function AboutPage({ params }: PageProps) {
         {values?.title || (values?.items?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>
-              {values?.title ?? (safeLocale === "fr" ? "Valeurs" : "Values")}
+              {values?.title ?? (safeLocale === "fr" ? "Valeurs" : safeLocale === "es" ? "Valores" : "Values")}
             </SectionTitle>
 
             {Array.isArray(values?.items) ? (
@@ -257,7 +257,7 @@ export default async function AboutPage({ params }: PageProps) {
         {passions?.title || (passions?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>
-              {passions?.title ?? (safeLocale === "fr" ? "En dehors du travail" : "Outside of work")}
+              {passions?.title ?? (safeLocale === "fr" ? "En dehors du travail" : safeLocale === "es" ? "Fuera del trabajo" : "Outside of work")}
             </SectionTitle>
             {Array.isArray(passions?.paragraphs) ? (
               <div className="mt-4 space-y-3">
@@ -279,7 +279,7 @@ export default async function AboutPage({ params }: PageProps) {
           href={`/${safeLocale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
         >
-          ← {safeLocale === "fr" ? "Retour à l'accueil" : "Back to home"}
+          ← {safeLocale === "fr" ? "Retour à l'accueil" : safeLocale === "es" ? "Volver al inicio" : "Back to home"}
         </Link>
       </div>
     </div>
