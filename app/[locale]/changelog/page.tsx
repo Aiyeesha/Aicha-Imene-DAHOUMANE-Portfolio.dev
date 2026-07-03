@@ -26,14 +26,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/changelog`;
   const title = isFr
     ? "Changelog — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Changelog — Aïcha Imène DAHOUMANE"
     : "Changelog — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Historique des versions et des améliorations du portfolio."
+    : isEs
+    ? "Historial de versiones y mejoras del portfolio."
     : "Version history and improvements of the portfolio.";
   return {
     metadataBase: new URL(siteUrl),
