@@ -1,0 +1,311 @@
+---
+title: "Framer Motion en Next.js: transiciones de página, animaciones al hacer scroll y gestos"
+excerpt: "Añade animaciones cuidadas a Next.js con Framer Motion — transiciones de página con App Router, animaciones activadas por scroll, interacciones gestuales y buenas prácticas de rendimiento."
+date: "2025-04-22"
+tags: ["Next.js", "Framer Motion", "Animation", "UI"]
+featured: false
+---
+
+Las animaciones dan vida a las interfaces, pero mal implementadas ralentizan tu sitio y molestan a los usuarios. Framer Motion encuentra el equilibrio justo: declarativo, eficiente y respetuoso con las preferencias de movimiento reducido.
+
+---
+
+## Requisitos previos
+
+- Next.js 14+ con App Router
+- React 18+
+
+```bash
+npm install framer-motion
+```
+
+---
+
+## Animación básica con componentes `motion`
+
+```typescript
+'use client';
+import { motion } from 'framer-motion';
+
+// Aparición con fundido al montar
+export function FadeIn({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
+```tsx
+// Uso
+<FadeIn>
+  <h1>Hello World</h1>
+</FadeIn>
+```
+
+---
+
+## Transiciones de página en App Router
+
+App Router no tiene un sistema de transiciones integrado, pero puedes simularlo con un wrapper de layout:
+
+```typescript
+// components/PageTransition.tsx
+'use client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+
+const pageVariants = {
+  initial: { opacity: 0, x: -20 },
+  enter: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 20 },
+};
+
+export function PageTransition({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+        variants={pageVariants}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+```
+
+```typescript
+// app/[locale]/layout.tsx
+import { PageTransition } from '@/components/PageTransition';
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <main>
+      <PageTransition>{children}</PageTransition>
+    </main>
+  );
+}
+```
+
+---
+
+## Animaciones activadas por scroll con `whileInView`
+
+```typescript
+'use client';
+import { motion } from 'framer-motion';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
+
+export function AnimatedCard({ title, description }: { title: string; description: string }) {
+  return (
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}  // Se activa cuando el 30% es visible, solo una vez
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="rounded-xl border p-6"
+    >
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </motion.div>
+  );
+}
+```
+
+**Animación escalonada de elementos hijos:**
+
+```typescript
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,  // 100ms entre cada hijo
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+export function StaggeredList({ items }: { items: string[] }) {
+  return (
+    <motion.ul
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
+      {items.map((item) => (
+        <motion.li key={item} variants={itemVariants}>
+          {item}
+        </motion.li>
+      ))}
+    </motion.ul>
+  );
+}
+```
+
+---
+
+## Interacciones gestuales
+
+```typescript
+'use client';
+import { motion } from 'framer-motion';
+
+// Botón con feedback de pulsación y de hover
+export function AnimatedButton({ children, onClick }: {
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  return (
+    <motion.button
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      className="rounded-lg bg-primary px-6 py-3 text-white"
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+// Interacción de arrastre
+export function DraggableCard() {
+  return (
+    <motion.div
+      drag
+      dragConstraints={{ left: -100, right: 100, top: -50, bottom: 50 }}
+      dragElastic={0.2}
+      whileDrag={{ scale: 1.05, rotate: 2, cursor: 'grabbing' }}
+      className="cursor-grab rounded-xl bg-white p-4 shadow-lg"
+    >
+      Arrástrame
+    </motion.div>
+  );
+}
+```
+
+---
+
+## useScroll y useTransform para efecto parallax
+
+```typescript
+'use client';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+
+export function ParallaxHero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+
+  // Mapear el progreso del scroll a valores
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  return (
+    <div ref={ref} className="relative h-screen overflow-hidden">
+      <motion.div style={{ y, opacity }} className="absolute inset-0">
+        <img src="/hero.jpg" alt="Hero" className="h-full w-full object-cover" />
+      </motion.div>
+      <div className="relative z-10 flex h-full items-center justify-center">
+        <h1>Bienvenido</h1>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Respetar `prefers-reduced-motion`
+
+```typescript
+'use client';
+import { motion, useReducedMotion } from 'framer-motion';
+
+export function AccessibleAnimation({ children }: { children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: shouldReduceMotion ? 0.01 : 0.4 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
+O globalmente en tus variants:
+```typescript
+const variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+// Framer Motion respeta automáticamente prefers-reduced-motion
+// deshabilitando las animaciones de transform cuando el usuario lo tiene activado
+```
+
+---
+
+## Buenas prácticas de rendimiento
+
+```typescript
+// ✅ Animar transform y opacity — acelerados por GPU
+<motion.div animate={{ opacity: 0, x: 100 }} />
+
+// ❌ Evitar animar propiedades de layout — provoca recálculo de layout
+<motion.div animate={{ width: '100%', marginTop: 20 }} />
+
+// ✅ Usar layoutId para transiciones de elementos compartidos (evita el remontaje)
+<motion.div layoutId="card-1" />
+
+// ✅ Carga diferida de componentes de animación pesados
+const HeavyAnimation = dynamic(() => import('./HeavyAnimation'), { ssr: false });
+```
+
+---
+
+## Errores comunes
+
+- **Componentes `motion` en Server Components**: requieren `'use client'` — envuélvelos en un boundary de cliente
+- **`AnimatePresence` sin `key`**: las animaciones de salida no se disparan sin una `key` estable en el hijo
+- **Animar propiedades no transformables**: `width`, `height`, `margin` provocan saltos de layout — prefiere `scaleX`, `scaleY`
+- **Demasiadas animaciones simultáneas**: escalónalas — 20 elementos animándose a la vez resulta abrupto
+
+---
+
+## Recursos
+
+- [Documentación de Framer Motion](https://www.framer.com/motion/)
+- [Ejemplos de animaciones](https://www.framer.com/motion/examples/)
+- [Referencia de funciones de easing](https://easings.net/)
