@@ -21,11 +21,16 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const isFr = locale === "fr";
+  const isEs = locale === "es";
   const title = isFr
     ? "Ressources & Outils — Aïcha Imène DAHOUMANE"
+    : isEs
+    ? "Recursos y herramientas — Aïcha Imène DAHOUMANE"
     : "Resources & Toolbox — Aïcha Imène DAHOUMANE";
   const description = isFr
     ? "Outils, stacks et ressources d'apprentissage utilisés en développement Salesforce, IT Ops et développement web."
+    : isEs
+    ? "Herramientas, stacks y recursos de aprendizaje utilizados en desarrollo Salesforce, IT Ops y desarrollo web."
     : "Tools, stacks, and learning resources used in Salesforce development, IT Ops, and web development.";
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/resources`;
@@ -83,18 +88,25 @@ export default async function ResourcesPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale: Locale = locale === "fr" ? "fr" : "en";
   const isFr = safeLocale === "fr";
+  // Note: `Locale` (content/resources.ts) is a fr/en-only content-data type
+  // out of scope for this change, so `safeLocale`/`RESOURCE_CATEGORIES` keep
+  // falling back to "en" for "es" as before. `isEs` only affects the plain
+  // text labels below, in line with the isFr/isEs/en pattern used elsewhere.
+  const isEs = locale === "es";
   const siteUrl = getSiteUrl();
 
   const labels = {
-    headline:    isFr ? "Ressources & Boîte à outils" : "Resources & Toolbox",
+    headline:    isFr ? "Ressources & Boîte à outils" : isEs ? "Recursos y caja de herramientas" : "Resources & Toolbox",
     intro:       isFr
       ? "Une sélection d'outils, de stacks et de références que j'utilise et recommande — en développement Salesforce, IT Ops et web."
+      : isEs
+      ? "Una selección de herramientas, stacks y referencias que uso y recomiendo — en desarrollo Salesforce, IT Ops y web."
       : "A curated selection of tools, stacks, and references I use and recommend — across Salesforce development, IT Ops, and web.",
-    breadcrumb:  isFr ? "Ressources" : "Resources",
-    home:        isFr ? "Accueil" : "Home",
-    visitLink:   isFr ? "Visiter" : "Visit",
-    backHome:    isFr ? "← Retour à l'accueil" : "← Back to home",
-    ariaLabel:   isFr ? "Fil d'Ariane" : "Breadcrumb",
+    breadcrumb:  isFr ? "Ressources" : isEs ? "Recursos" : "Resources",
+    home:        isFr ? "Accueil" : isEs ? "Inicio" : "Home",
+    visitLink:   isFr ? "Visiter" : isEs ? "Visitar" : "Visit",
+    backHome:    isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
+    ariaLabel:   isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb",
   };
 
   const jsonLdBreadcrumb = {
@@ -102,7 +114,7 @@ export default async function ResourcesPage({ params }: PageProps) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: labels.home, item: `${siteUrl}/${safeLocale}` },
-      { "@type": "ListItem", position: 2, name: isFr ? "Ressources" : "Resources", item: `${siteUrl}/${safeLocale}/resources` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Ressources" : isEs ? "Recursos" : "Resources", item: `${siteUrl}/${safeLocale}/resources` },
     ],
   };
 
@@ -171,7 +183,7 @@ export default async function ResourcesPage({ params }: PageProps) {
                     href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`${labels.visitLink} ${resource.name} (${isFr ? "nouvel onglet" : "new tab"})`}
+                    aria-label={`${labels.visitLink} ${resource.name} (${isFr ? "nouvel onglet" : isEs ? "nueva pestaña" : "new tab"})`}
                     className="inline-flex items-center gap-1.5 self-start rounded-full border border-black/10 dark:border-white/10 px-3 py-1.5 text-xs font-medium text-muted-2 hover:border-cyan-400/40 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors soft-ring"
                   >
                     {labels.visitLink}<span aria-hidden="true"> ↗</span>
