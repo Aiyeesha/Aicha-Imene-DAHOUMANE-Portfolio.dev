@@ -23,7 +23,7 @@ export const revalidate = 60;
 
 // ── Types locaux ─────────────────────────────────────────────────────────────
 
-type Locale = "en" | "fr";
+type Locale = "en" | "fr" | "es";
 
 // "maintenance" est un statut d'affichage uniquement (pas retourné par les checks)
 type DisplayStatus = ServiceStatus | "maintenance";
@@ -31,12 +31,12 @@ type DisplayStatus = ServiceStatus | "maintenance";
 // ── Descriptions des services (i18n) ─────────────────────────────────────────
 
 const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
-  "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets" },
-  "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam" },
-  "Database (Supabase)":  { en: "Projects, certifications, about — PostgreSQL",  fr: "Projets, certifications, à propos — PostgreSQL" },
-  "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit" },
-  "Blog & MDX":           { en: "Salesforce & IT Ops articles — static build",   fr: "Articles Salesforce & IT Ops — build statique" },
-  "PWA / Service Worker": { en: "Offline mode and static asset caching",         fr: "Mode hors-ligne et cache des fichiers statiques" },
+  "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
+  "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam",    es: "Envío de mensajes, limitación de tasa, anti-spam" },
+  "Database (Supabase)":  { en: "Projects, certifications, about — PostgreSQL",  fr: "Projets, certifications, à propos — PostgreSQL",       es: "Proyectos, certificaciones, sobre mí — PostgreSQL" },
+  "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit",             es: "Cache de respuestas y limitación de tasa" },
+  "Blog & MDX":           { en: "Salesforce & IT Ops articles — static build",   fr: "Articles Salesforce & IT Ops — build statique",        es: "Artículos de Salesforce & IT Ops — build estático" },
+  "PWA / Service Worker": { en: "Offline mode and static asset caching",         fr: "Mode hors-ligne et cache des fichiers statiques",       es: "Modo sin conexión y cache de archivos estáticos" },
 };
 
 // ── Configuration visuelle par statut ─────────────────────────────────────────
@@ -46,25 +46,25 @@ const STATUS_CONFIG: Record<
   { label: Record<Locale, string>; dot: string; badge: string; banner: string }
 > = {
   operational: {
-    label:  { en: "Operational", fr: "Opérationnel" },
+    label:  { en: "Operational", fr: "Opérationnel", es: "Operativo" },
     dot:    "bg-emerald-500",
     badge:  "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
     banner: "border-emerald-500/20 bg-emerald-500/5",
   },
   degraded: {
-    label:  { en: "Degraded", fr: "Dégradé" },
+    label:  { en: "Degraded", fr: "Dégradé", es: "Degradado" },
     dot:    "bg-amber-400",
     badge:  "bg-amber-500/10 text-amber-700 dark:text-amber-300",
     banner: "border-amber-400/20 bg-amber-400/5",
   },
   outage: {
-    label:  { en: "Outage", fr: "Panne" },
+    label:  { en: "Outage", fr: "Panne", es: "Interrupción" },
     dot:    "bg-rose-500",
     badge:  "bg-rose-500/10 text-rose-700 dark:text-rose-300",
     banner: "border-rose-500/20 bg-rose-500/5",
   },
   maintenance: {
-    label:  { en: "Maintenance", fr: "Maintenance" },
+    label:  { en: "Maintenance", fr: "Maintenance", es: "Mantenimiento" },
     dot:    "bg-blue-400",
     badge:  "bg-blue-500/10 text-blue-700 dark:text-blue-300",
     banner: "border-blue-400/20 bg-blue-400/5",
@@ -110,8 +110,8 @@ export async function generateMetadata({
       description,
       url: urlPath,
       type: "website",
-      locale: isFr ? "fr_FR" : "en_US",
-      alternateLocale: isFr ? ["en_US"] : ["fr_FR"],
+      locale: isFr ? "fr_FR" : isEs ? "es_ES" : "en_US",
+      alternateLocale: isFr ? ["en_US", "es_ES"] : isEs ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       siteName,
       images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
@@ -133,8 +133,9 @@ export default async function StatusPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const safeLocale: Locale = locale === "fr" ? "fr" : "en";
+  const safeLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const isFr = safeLocale === "fr";
+  const isEs = safeLocale === "es";
 
   // Lit le dernier rapport stocké par le cron + stats uptime + historique latence.
   // Aucun appel sortant en direct — données issues de uptime_pings (Supabase).
@@ -148,7 +149,7 @@ export default async function StatusPage({
   const global   = report?.overall ?? "operational";
   const cfg      = STATUS_CONFIG[global];
   const checkedAt = report
-    ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : "en-US", { dateStyle: "medium", timeStyle: "short" })
+    ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", { dateStyle: "medium", timeStyle: "short" })
     : "—";
 
   // Garde de fraîcheur : avertissement si les données dépassent 48 h
@@ -161,26 +162,30 @@ export default async function StatusPage({
   const isStale = ageHours !== null && ageHours > STALE_THRESHOLD_HOURS;
 
   const labels = {
-    headline:      isFr ? "Statut du site"           : "Site Status",
-    breadcrumb:    isFr ? "Statut"                   : "Status",
-    home:          isFr ? "Accueil"                  : "Home",
-    ariaLabel:     isFr ? "Fil d'Ariane"             : "Breadcrumb",
-    allOk:         isFr ? "Tous les systèmes sont opérationnels." : "All systems are operational.",
-    degraded:      isFr ? "Certains services sont dégradés."      : "Some services are experiencing issues.",
-    outage:        isFr ? "Une panne est en cours."               : "An outage is currently in progress.",
-    maintenance:   isFr ? "Maintenance en cours."                 : "Maintenance in progress.",
-    servicesTitle: isFr ? "Services"                 : "Services",
-    lastChecked:   isFr ? "Vérifié le"               : "Last checked",
-    latency:       isFr ? "Latence"                  : "Latency",
-    sparklineLabel: isFr ? "Latence sur 7 jours"     : "7-day latency",
-    backHome:      isFr ? "← Retour à l'accueil"    : "← Back to home",
+    headline:      isFr ? "Statut du site"           : isEs ? "Estado del sitio"              : "Site Status",
+    breadcrumb:    isFr ? "Statut"                   : isEs ? "Estado"                          : "Status",
+    home:          isFr ? "Accueil"                  : isEs ? "Inicio"                          : "Home",
+    ariaLabel:     isFr ? "Fil d'Ariane"             : isEs ? "Ruta de navegación"              : "Breadcrumb",
+    allOk:         isFr ? "Tous les systèmes sont opérationnels." : isEs ? "Todos los sistemas están operativos." : "All systems are operational.",
+    degraded:      isFr ? "Certains services sont dégradés."      : isEs ? "Algunos servicios presentan problemas." : "Some services are experiencing issues.",
+    outage:        isFr ? "Une panne est en cours."               : isEs ? "Hay una interrupción en curso."       : "An outage is currently in progress.",
+    maintenance:   isFr ? "Maintenance en cours."                 : isEs ? "Mantenimiento en curso."               : "Maintenance in progress.",
+    servicesTitle: isFr ? "Services"                 : isEs ? "Servicios"                       : "Services",
+    lastChecked:   isFr ? "Vérifié le"               : isEs ? "Verificado el"                   : "Last checked",
+    latency:       isFr ? "Latence"                  : isEs ? "Latencia"                         : "Latency",
+    sparklineLabel: isFr ? "Latence sur 7 jours"     : isEs ? "Latencia de 7 días"               : "7-day latency",
+    backHome:      isFr ? "← Retour à l'accueil"    : isEs ? "← Volver al inicio"                : "← Back to home",
     noIncidents:   isFr
       ? "Aucun incident signalé. Tout fonctionne normalement."
+      : isEs
+      ? "No se ha reportado ningún incidente. Todo funciona con normalidad."
       : "No incidents reported. Everything is running normally.",
-    incidentTitle: isFr ? "Historique des incidents" : "Incident history",
-    apiLink:       isFr ? "Endpoint JSON brut ↗"    : "Raw JSON endpoint ↗",
+    incidentTitle: isFr ? "Historique des incidents" : isEs ? "Historial de incidentes"         : "Incident history",
+    apiLink:       isFr ? "Endpoint JSON brut ↗"    : isEs ? "Endpoint JSON sin procesar ↗"      : "Raw JSON endpoint ↗",
     staleWarning:  isFr
       ? `Avertissement : données de monitoring potentiellement obsolètes (${Math.floor(ageHours ?? 0)} h). Le cron de vérification n'a peut-être pas tourné récemment.`
+      : isEs
+      ? `Advertencia: los datos de monitoreo podrían estar desactualizados (${Math.floor(ageHours ?? 0)} h). Es posible que el cron de verificación no se haya ejecutado recientemente.`
       : `Warning: monitoring data may be stale (${Math.floor(ageHours ?? 0)} h old). The check cron may not have run recently.`,
   };
 
@@ -264,7 +269,7 @@ export default async function StatusPage({
                   {uptimeStats[service.name] != null && (
                     <span
                       className="text-xs text-muted-2 tabular-nums"
-                      title={isFr ? "Disponibilité sur 30 jours" : "30-day uptime"}
+                      title={isFr ? "Disponibilité sur 30 jours" : isEs ? "Disponibilidad de 30 días" : "30-day uptime"}
                     >
                       {uptimeStats[service.name]}%
                     </span>

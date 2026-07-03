@@ -102,7 +102,7 @@ export default async function LegalPage({
           href={`/${locale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
         >
-          ← {locale === "fr" ? "Retour à l'accueil" : "Back to home"}
+          ← {locale === "fr" ? "Retour à l'accueil" : locale === "es" ? "Volver al inicio" : "Back to home"}
         </Link>
       </div>
     </div>

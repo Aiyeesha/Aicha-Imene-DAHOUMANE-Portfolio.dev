@@ -104,7 +104,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale: rawLocale } = await params;
-  const locale = rawLocale === "fr" ? "fr" : "en";
+  const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   // Stocker la locale dans l'AsyncLocalStorage de next-intl AVANT tout appel async.
   // Permet aux composants enfants d'appeler getLocale()/getTranslations() sans lire headers().
   setRequestLocale(locale);
