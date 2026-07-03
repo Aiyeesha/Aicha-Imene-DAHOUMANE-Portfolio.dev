@@ -1,0 +1,127 @@
+---
+title: "Autotask: un flujo de tickets pragmático (triaje, SLA, escalado, cierre)"
+excerpt: "Un flujo de trabajo práctico en Autotask: recepción por email, cualificación, control de SLA, escalado a N2, registro de horas y cierre limpio."
+date: "2025-02-14"
+tags: ["Ticketing", "IT Ops", "SLA", "Runbooks", "Support"]
+---
+
+
+## Objetivo
+
+Estandarizar la gestión de incidencias y solicitudes en **Autotask**:
+
+- Creación/triaje (email → ticket)
+- Cualificación (impacto, urgencia, categoría)
+- Cumplimiento del **SLA** (prioridades, escalado)
+- Trazabilidad (notas, adjuntos, **registro de horas**)
+- Cierre limpio (resolución, comunicación al cliente, post-mortem ligero)
+
+## Paso 1 — Recepción: del email al ticket
+
+1. Abre **Autotask**.
+2. Ve a **Service Desk** → **Tickets**.
+3. Filtra por cola: `N1 - Support` (o equivalente).
+4. Confirma que el email creó un ticket:
+   - Asunto del email → título del ticket
+   - Cuerpo del email → descripción / nota inicial
+   - Adjuntos → pestaña *Attachments*
+
+**Buenas prácticas**
+- Un único buzón de soporte: `support@...`
+- Patrón de asunto claro: `[Cliente] - [Servicio] - [Síntoma]`
+- Verificar que el mapeo *Company / Contact* sea correcto.
+
+## Paso 2 — Cualificación (≤ 3 minutos)
+
+Abre el ticket y completa:
+
+1. **Company / Contact**
+2. **Type**: Incidente / Solicitud de servicio / Problema
+3. **Category / Subcategory**
+4. **Impact**
+5. **Urgency**
+6. **Priority**
+7. **Source** (Email, Teléfono, Monitorización, etc.)
+
+### Matriz simple Impacto × Urgencia (ejemplo)
+
+- Impacto alto + Urgencia alta → **P1**
+- Impacto alto + Urgencia media → **P2**
+- Impacto medio + Urgencia alta → **P2**
+- Impacto medio + Urgencia media → **P3**
+- Todo lo demás → **P4**
+
+## Paso 3 — SLA: temporizadores y escalado
+
+1. Comprueba qué **SLA** se aplica (a menudo automático según la empresa).
+2. Confirma la **Due Date** y/o los hitos (Primera respuesta / Resolución).
+3. Para P1/P2:
+   - Asigna un **técnico** de inmediato
+   - Añade la etiqueta/flag "On-call" si la usas
+   - Notifica al canal interno según tu runbook
+
+## Paso 4 — Registro de trabajo: notas + registro de horas
+
+### 4.1 Notas (comunicación)
+
+- **Nota interna**: para el equipo (diagnóstico, hipótesis, próximos pasos)
+- **Nota al cliente**: clara, factual, con el mínimo de jerga técnica
+
+**Estructura recomendada**
+
+- Síntoma:
+- Hallazgos:
+- Acciones realizadas:
+- Resultado:
+- Próximo paso:
+
+### 4.2 Time Entry (obligatorio)
+
+1. Haz clic en **New Time Entry**.
+2. Completa:
+   - Fecha / Inicio / Fin
+   - Work Type (Remoto/Presencial)
+   - Summary Notes (accionable)
+3. Guarda.
+
+## Paso 5 — Escalado a N2 / proveedor
+
+### Cuándo escalar
+
+- El alcance supera a N1
+- Recopilaste evidencias (logs/capturas)
+- Ejecutaste las acciones estándar de N1 (runbook)
+
+### Paquete de escalado (incluir en el ticket)
+
+- Contexto: cliente, sede, impacto
+- Timestamp + frecuencia
+- Evidencias: logs/capturas
+- Acciones ya intentadas (+ resultado)
+- Hipótesis + una pregunta concreta
+
+Después:
+
+1. Cambia el **Assigned Resource** a `N2` (o a la cola dedicada).
+2. Añade una nota interna "ESCALATION" con el paquete.
+3. Si se necesita un caso con el proveedor, añade el ID del caso en el ticket.
+
+## Paso 6 — Calidad del cierre
+
+Antes de cerrar:
+
+1. Asegúrate de que el campo **Resolution** esté completo.
+2. Asegúrate de que la comunicación al cliente esté registrada/enviada.
+3. Confirma:
+   - al menos un registro de horas
+   - los adjuntos relevantes
+4. Cambia el estado a **Complete / Closed**.
+
+## Paso 7 — Post-mortem ligero (P1/P2)
+
+Añade una nota interna "RETEX":
+
+- Causa raíz (si se conoce)
+- Acción correctiva
+- Acción preventiva (monitorización, política, documentación)
+- Tarea de seguimiento si es necesario
