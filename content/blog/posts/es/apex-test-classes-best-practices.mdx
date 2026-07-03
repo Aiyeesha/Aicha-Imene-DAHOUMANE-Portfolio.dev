@@ -1,0 +1,222 @@
+---
+title: "Clases de test Apex: cobertura del 85 %+ sin hacer trampa"
+excerpt: "Escribe tests Apex significativos que realmente detecten bugs — TestDataFactory, tests asíncronos, mocks de callouts y los antipatrones que inflan la cobertura sin aportar valor."
+date: "2026-01-20"
+tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
+featured: false
+---
+
+Salesforce exige un 75 % de cobertura de código para poder desplegar. Pero hay una diferencia entre *cobertura* y *tests que detectan bugs*. La mayoría de los proyectos Apex tienen mucho de lo primero y muy poco de lo segundo. Aquí tienes cómo escribir tests que realmente importan.
+
+---
+
+## Requisitos previos
+
+- Conocimientos básicos de Apex
+- Comprensión de la estructura de triggers/clases Apex
+- Familiaridad con las operaciones DML de Salesforce
+
+---
+
+## El patrón TestDataFactory
+
+Nunca crees datos de prueba de forma improvisada dentro de los métodos de test. Centraliza todo en una clase de utilidad `TestDataFactory`:
+
+```apex
+@isTest
+public class TestDataFactory {
+
+    public static Account createAccount(String name, Boolean doInsert) {
+        Account acc = new Account(
+            Name = name,
+            Phone = '0123456789',
+            BillingCountry = 'France'
+        );
+        if (doInsert) insert acc;
+        return acc;
+    }
+
+    public static List<Contact> createContacts(Id accountId, Integer count, Boolean doInsert) {
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i = 0; i < count; i++) {
+            contacts.add(new Contact(
+                FirstName = 'Test',
+                LastName = 'Contact ' + i,
+                AccountId = accountId,
+                Email = 'test' + i + '@example.com'
+            ));
+        }
+        if (doInsert) insert contacts;
+        return contacts;
+    }
+}
+```
+
+**Ventajas:** un único lugar que actualizar cuando cambien las reglas de validación, reutilizable en todas las clases de test, te obliga a pensar en los campos obligatorios.
+
+---
+
+## @TestSetup — configuración compartida sin sobrecarga
+
+Usa `@TestSetup` para crear los datos una sola vez por clase en lugar de repetir la configuración en cada método:
+
+```apex
+@isTest
+private class AccountServiceTest {
+
+    @TestSetup
+    static void setup() {
+        Account acc = TestDataFactory.createAccount('Test Corp', true);
+        TestDataFactory.createContacts(acc.Id, 5, true);
+    }
+
+    @isTest
+    static void testGetActiveContacts() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Test.startTest();
+        List<Contact> result = AccountService.getActiveContacts(acc.Id);
+        Test.stopTest();
+
+        System.assertEquals(5, result.size(), 'Should return 5 contacts');
+    }
+
+    @isTest
+    static void testDeactivateContacts() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Test.startTest();
+        AccountService.deactivateContacts(acc.Id);
+        Test.stopTest();
+
+        List<Contact> active = [SELECT Id FROM Contact WHERE AccountId = :acc.Id AND IsActive__c = true];
+        System.assertEquals(0, active.size(), 'All contacts should be deactivated');
+    }
+}
+```
+
+> **Importante:** los datos de `@TestSetup` se revierten y se vuelven a crear para cada método de test. Los cambios DML hechos en un método no afectan a otro.
+
+---
+
+## Probar código asíncrono con Test.startTest() / stopTest()
+
+`Test.startTest()` reinicia los governor limits y fuerza a que la ejecución asíncrona (métodos future, queueable, batch) se ejecute de forma síncrona cuando se llama a `Test.stopTest()`:
+
+```apex
+@isTest
+static void testFutureMethod() {
+    Account acc = TestDataFactory.createAccount('Async Test', true);
+
+    Test.startTest();
+    AccountService.recalculateMetricsAsync(acc.Id); // método @future
+    Test.stopTest(); // Fuerza la ejecución asíncrona aquí
+
+    // Ahora consulta los resultados — el @future ya se ha ejecutado
+    Account updated = [SELECT Metric_Score__c FROM Account WHERE Id = :acc.Id];
+    System.assertNotEquals(null, updated.Metric_Score__c, 'Score should be calculated');
+}
+```
+
+---
+
+## Mockear callouts HTTP
+
+Los tests que hacen callouts HTTP reales fallarán. Usa `HttpCalloutMock`:
+
+```apex
+// Clase mock
+@isTest
+global class SalesforceApiMock implements HttpCalloutMock {
+    global HTTPResponse respond(HTTPRequest req) {
+        HTTPResponse res = new HTTPResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody('{"id": "12345", "status": "success"}');
+        res.setStatusCode(200);
+        return res;
+    }
+}
+
+// Método de test
+@isTest
+static void testCalloutSuccess() {
+    Test.setMock(HttpCalloutMock.class, new SalesforceApiMock());
+
+    Test.startTest();
+    String result = ExternalApiService.createRecord('Test Data');
+    Test.stopTest();
+
+    System.assertEquals('12345', result, 'Should return the created ID');
+}
+```
+
+Para los escenarios de error, crea un segundo mock que devuelva 4xx/5xx y prueba también tu ruta de manejo de errores.
+
+---
+
+## Escribir aserciones significativas
+
+Las aserciones deficientes inflan la cobertura sin detectar bugs:
+
+```apex
+// ❌ Inútil — siempre pasa
+System.assert(true);
+System.assertNotEquals(null, result);
+
+// ✅ Significativa — detectará regresiones
+System.assertEquals(3, result.size(),
+    'Expected 3 records after filtering by active status');
+System.assertEquals('ESCALATED', ticket.Status__c,
+    'Ticket should be escalated when SLA is breached');
+System.assert(result.contains(expectedId),
+    'Result set must include the account we just created');
+```
+
+Usa siempre el tercer parámetro (el mensaje) — te indica *qué* falló cuando la aserción se rompe.
+
+---
+
+## Antipatrones a evitar
+
+- **`SeeAllData=true`**: expone tus tests a los datos reales de la org, haciéndolos dependientes del entorno y poco fiables. No lo uses nunca.
+- **Insertar en cada método de test**: consume límites de DML y ralentiza las ejecuciones. Usa `@TestSetup` o `TestDataFactory`.
+- **Probar solo el camino feliz**: escribe al menos un test negativo — ¿qué ocurre con una entrada nula, campos faltantes o datos inválidos?
+- **Ignorar los tests masivos**: añade un test con 200 registros para verificar que tu código está correctamente "bulkificado".
+
+```apex
+@isTest
+static void testBulk200Records() {
+    List<Account> accounts = new List<Account>();
+    for (Integer i = 0; i < 200; i++) {
+        accounts.add(new Account(Name = 'Bulk ' + i));
+    }
+    insert accounts;
+
+    Test.startTest();
+    AccountService.processAll(accounts);
+    Test.stopTest();
+
+    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed']);
+}
+```
+
+---
+
+## Resumen
+
+| Práctica | Por qué importa |
+|----------|---------------|
+| `TestDataFactory` | Fuente única de verdad para los datos de test |
+| `@TestSetup` | Evita DML repetidos, métodos de test más limpios |
+| `Test.startTest/stopTest` | Fuerza la ejecución asíncrona, reinicia los límites |
+| `HttpCalloutMock` | Prueba la lógica de callout sin llamadas externas |
+| Aserciones significativas | Realmente detecta regresiones |
+| Test masivo (200 registros) | Verifica la "bulkificación" |
+
+---
+
+## Recursos
+
+- [Apex Testing Documentation](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing.htm)
+- [Test.setMock Reference](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_test.htm)
+- [Trailhead: Apex Testing](https://trailhead.salesforce.com/content/learn/modules/apex_testing)

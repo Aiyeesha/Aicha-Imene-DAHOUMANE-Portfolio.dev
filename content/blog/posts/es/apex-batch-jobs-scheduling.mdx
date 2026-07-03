@@ -1,0 +1,312 @@
+---
+title: "Apex Batch Jobs: planificación, encadenamiento y supervisión en producción"
+excerpt: "Guía completa sobre Apex Batch Jobs — desde escribir tu primer Database.Batchable hasta encadenar jobs, planificarlos con Cron y supervisar los fallos en producción."
+date: "2025-04-07"
+tags: ["Salesforce", "Apex", "Batch", "Automation", "Performance"]
+---
+
+Cuando necesitas procesar miles o millones de registros en Salesforce, los Apex Batch Jobs son la respuesta. Esta guía cubre desde lo básico hasta los patrones de nivel producción.
+
+## ¿Por qué Batch Jobs?
+
+Los governor limits de Salesforce impiden procesar más de ~50.000 registros en una única transacción síncrona. Batch Apex resuelve esto dividiendo el trabajo en **chunks** (por defecto: 200 registros cada uno), cada uno procesado en su propia transacción.
+
+**Casos de uso:**
+- Actualizaciones o migraciones masivas de datos
+- Sincronización nocturna de datos con sistemas externos
+- Recálculo periódico de campos agregados
+- Limpieza de registros obsoletos o huérfanos
+
+## Las tres interfaces
+
+Cada batch job implementa `Database.Batchable<SObject>` con tres métodos:
+
+```apex
+public class AccountCleanupBatch implements Database.Batchable<SObject> {
+
+    // 1. QUERY — define el conjunto de datos a procesar
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([
+            SELECT Id, Name, LastActivityDate, OwnerId
+            FROM Account
+            WHERE LastActivityDate < LAST_N_DAYS:365
+            AND Type = 'Prospect'
+        ]);
+    }
+
+    // 2. EXECUTE — se llama una vez por chunk (200 registros por defecto)
+    public void execute(Database.BatchableContext bc, List<Account> scope) {
+        List<Account> toUpdate = new List<Account>();
+        for (Account acc : scope) {
+            acc.Status__c = 'Dormant';
+            toUpdate.add(acc);
+        }
+        update toUpdate;
+    }
+
+    // 3. FINISH — se llama una vez completados todos los chunks
+    public void finish(Database.BatchableContext bc) {
+        AsyncApexJob job = [
+            SELECT Id, Status, NumberOfErrors, JobItemsProcessed, TotalJobItems
+            FROM AsyncApexJob
+            WHERE Id = :bc.getJobId()
+        ];
+
+        // Enviar email de resumen
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new String[]{ 'admin@yourorg.com' });
+        mail.setSubject('AccountCleanupBatch completed: ' + job.Status);
+        mail.setPlainTextBody(
+            'Processed: ' + job.JobItemsProcessed + '/' + job.TotalJobItems +
+            '\nErrors: ' + job.NumberOfErrors
+        );
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail });
+    }
+}
+```
+
+## Elegir el tamaño de chunk adecuado
+
+El tamaño de chunk por defecto es 200, pero puedes sobrescribirlo:
+
+```apex
+// Lanzar con un tamaño de chunk personalizado
+Id jobId = Database.executeBatch(new AccountCleanupBatch(), 50);
+```
+
+**Directrices de tamaño de chunk:**
+
+| Escenario | Tamaño recomendado |
+|----------|-----------------|
+| Actualizaciones simples de campos | 200 (por defecto) |
+| Triggers complejos en el objeto | 50–100 |
+| Con callouts HTTP | 1–10 (límites de callout) |
+| SOQL pesado en execute() | 50–100 |
+| Procesamiento intensivo en memoria | 25–50 |
+
+**Regla general:** si alcanzas los governor limits dentro de `execute()`, reduce el tamaño del chunk. Si el job va demasiado lento, auméntalo.
+
+## Database.Stateful: compartir estado entre chunks
+
+Por defecto, los batch jobs no tienen estado (stateless) — las variables miembro se reinician entre chunks. Usa `Database.Stateful` para acumular resultados:
+
+```apex
+public class SalesReportBatch
+    implements Database.Batchable<SObject>, Database.Stateful {
+
+    // Estas persisten a través de todos los chunks
+    private Integer totalProcessed = 0;
+    private Decimal totalRevenue = 0;
+    private List<String> errors = new List<String>();
+
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([
+            SELECT Id, Amount, StageName FROM Opportunity
+            WHERE CloseDate = THIS_YEAR AND StageName = 'Closed Won'
+        ]);
+    }
+
+    public void execute(Database.BatchableContext bc, List<Opportunity> scope) {
+        for (Opportunity opp : scope) {
+            try {
+                totalRevenue += opp.Amount;
+                totalProcessed++;
+            } catch (Exception e) {
+                errors.add('Opp ' + opp.Id + ': ' + e.getMessage());
+            }
+        }
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug('Total processed: ' + totalProcessed);
+        System.debug('Total revenue: ' + totalRevenue);
+        System.debug('Errors: ' + errors.size());
+        // Crear un registro personalizado SalesReport__c con estos totales
+    }
+}
+```
+
+> **Precaución:** `Database.Stateful` consume más heap. No almacenes colecciones grandes: guarda contadores e IDs, no listas completas de SObjects.
+
+## Encadenar batch jobs
+
+Para ejecutar jobs en secuencia, lanza el siguiente job desde `finish()`:
+
+```apex
+public class Step1_DataExtractBatch implements Database.Batchable<SObject> {
+
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator('SELECT Id FROM Account LIMIT 10000');
+    }
+
+    public void execute(Database.BatchableContext bc, List<Account> scope) {
+        // ... procesar
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        // Encadenar con el siguiente batch
+        Database.executeBatch(new Step2_DataTransformBatch(), 200);
+    }
+}
+```
+
+**Patrón de encadenamiento:**
+```
+Step1_DataExtractBatch.finish()
+    → lanza Step2_DataTransformBatch
+        → Step2.finish() lanza Step3_DataLoadBatch
+            → Step3.finish() envía la notificación de finalización
+```
+
+> **Importante:** puedes encadenar indefinidamente, pero solo se pueden encolar **5 batch jobs** a la vez por org. Verifica el límite en producción.
+
+## Planificar batch jobs
+
+### Método 1: Apex anónimo (una sola vez)
+```apex
+// Ejecutar inmediatamente
+Database.executeBatch(new AccountCleanupBatch(), 200);
+```
+
+### Método 2: Apex planificado (recurrente)
+
+```apex
+public class AccountCleanupScheduler implements Schedulable {
+
+    public void execute(SchedulableContext sc) {
+        Database.executeBatch(new AccountCleanupBatch(), 200);
+    }
+}
+```
+
+Planifícalo con una expresión CRON:
+```apex
+// Cada domingo a las 2h
+String cron = '0 0 2 ? * SUN';
+System.schedule('Weekly Account Cleanup', cron, new AccountCleanupScheduler());
+```
+
+**Patrones CRON comunes:**
+
+| Expresión | Significado |
+|-----------|---------|
+| `0 0 2 * * ?` | Cada día a las 2h |
+| `0 0 0 1 * ?` | El 1 de cada mes a medianoche |
+| `0 0 6 ? * MON-FRI` | Días laborables a las 6h |
+| `0 0/30 * * * ?` | Cada 30 minutos |
+
+### Método 3: Interfaz de configuración
+
+Ve a **Setup → Apex Classes → Schedule Apex** para planificar sin código.
+
+## Manejo de errores dentro de execute()
+
+No dejes que un registro defectuoso aborte todo el chunk. Usa `Database.update` con `allOrNone = false`:
+
+```apex
+public void execute(Database.BatchableContext bc, List<Account> scope) {
+    List<Account> toUpdate = new List<Account>();
+
+    for (Account acc : scope) {
+        acc.LastReviewedDate__c = Date.today();
+        toUpdate.add(acc);
+    }
+
+    // allOrNone = false: se permite el éxito parcial
+    List<Database.SaveResult> results = Database.update(toUpdate, false);
+
+    for (Integer i = 0; i < results.size(); i++) {
+        if (!results[i].isSuccess()) {
+            for (Database.Error err : results[i].getErrors()) {
+                System.debug(LoggingLevel.ERROR,
+                    'Failed: ' + toUpdate[i].Id +
+                    ' — ' + err.getMessage());
+            }
+        }
+    }
+}
+```
+
+## Supervisión en producción
+
+### Consultar el objeto AsyncApexJob
+
+```apex
+// Verificar el estado de un job concreto
+AsyncApexJob job = [
+    SELECT Id, Status, NumberOfErrors, JobItemsProcessed,
+           TotalJobItems, CreatedDate, CompletedDate
+    FROM AsyncApexJob
+    WHERE Id = :jobId
+];
+```
+
+**Estados posibles:**
+- `Queued` — esperando para iniciar
+- `Processing` — ejecutándose actualmente
+- `Completed` — finalizado (revisa `NumberOfErrors`)
+- `Failed` — el job en sí falló (no errores de chunk)
+- `Aborted` — detenido manualmente
+
+### Supervisión desde Setup
+
+**Setup → Apex Jobs** muestra todos los batch jobs actualmente en ejecución y completados recientemente, con estado, progreso y recuento de errores.
+
+### Abortar un job descontrolado
+
+```apex
+// Abortar por JobId
+System.abortJob(jobId);
+```
+
+## Checklist de producción
+
+Antes de desplegar un batch job a producción:
+
+- [ ] Probado con `Test.startTest()` / `Test.stopTest()` en tests unitarios
+- [ ] `execute()` usa `Database.DML` con `allOrNone = false` para mayor resiliencia
+- [ ] Tamaño de chunk validado según la complejidad de tus triggers/SOQL
+- [ ] `finish()` envía una notificación (email o Platform Event)
+- [ ] Job planificado documentado (propósito, frecuencia, dependencias)
+- [ ] Alerta de supervisión configurada para `NumberOfErrors > 0`
+- [ ] Profundidad de encadenamiento documentada — no más de 5 jobs encolados
+
+## Test unitario de un batch job
+
+```apex
+@isTest
+private class AccountCleanupBatch_Test {
+
+    @isTest
+    static void testBatchRuns() {
+        // Arrange: crear cuentas de prueba
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < 10; i++) {
+            accounts.add(new Account(Name = 'Test ' + i, Type = 'Prospect'));
+        }
+        insert accounts;
+
+        // Act
+        Test.startTest();
+        Database.executeBatch(new AccountCleanupBatch(), 200);
+        Test.stopTest();
+
+        // Assert
+        Integer dormant = [SELECT COUNT() FROM Account WHERE Status__c = 'Dormant'];
+        System.assertEquals(10, dormant, 'All accounts should be marked Dormant');
+    }
+}
+```
+
+> `Test.startTest()` / `Test.stopTest()` fuerza a que el batch se complete de forma síncrona en los tests — esencial para poder verificar los resultados.
+
+## Conclusión
+
+Los Apex Batch Jobs habilitan la capacidad de procesar conjuntos de datos completos de forma segura dentro de los governor limits de Salesforce. Los principios clave son: **el tamaño de chunk correcto**, **acumulación con estado cuando es necesario**, **tolerancia a fallos parciales con `allOrNone = false`**, y **supervisión constante a través de `finish()`**. Diseña tus batch jobs pensando en la observabilidad en producción desde el primer día.
+
+---
+
+**Recursos útiles:**
+- [Apex Batch Documentation](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm)
+- [Schedulable Interface](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm)
+- [Async Apex - Trailhead](https://trailhead.salesforce.com/content/learn/modules/asynchronous_apex)
