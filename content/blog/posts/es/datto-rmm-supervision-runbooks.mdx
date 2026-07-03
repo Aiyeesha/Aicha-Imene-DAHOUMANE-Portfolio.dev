@@ -1,0 +1,148 @@
+---
+title: "Datto RMM: monitorización, alertas y runbooks (de la alerta a la remediación)"
+excerpt: "Construye una configuración de Datto RMM realmente accionable: monitores, control del ruido, escalado y runbooks/Quick Jobs para remediar rápido."
+date: "2025-02-10"
+tags: ["RMM", "Monitoring", "Automation", "Runbooks", "IT Ops"]
+---
+
+
+> **Nota**: las etiquetas de menú pueden variar ligeramente según la versión/tenant de Datto RMM, pero el flujo general (Sites → Devices → Policies → Monitors → Alerts → Automation) se mantiene igual.
+
+## Objetivo
+
+Configurar una monitorización **coherente** y **accionable**:
+
+- **Detectar** (Monitoring): CPU/RAM/Disco, servicios de Windows, eventos críticos, disponibilidad.
+- **Notificar** (Alerting): prioridades, enrutamiento, anti-ruido, escalado.
+- **Remediar** (Runbooks / Quick Jobs): acciones estandarizadas con trazabilidad.
+
+## Requisitos previos
+
+- Una cuenta con permisos para **Sites**, **Policies**, **Monitors**, **Alerts**, **Automation**.
+- Al menos un dispositivo de prueba con el agente de Datto RMM instalado.
+- Una convención de nombres (ejemplo):
+  - Monitores: `MON-<TYPE>-<WHAT>-<SEVERITY>`
+  - Políticas: `POL-<SITE>-<ROLE>`
+  - Quick Jobs: `QJ-<OS>-<ACTION>`
+
+## Paso 1 — Estructurar Sites y Devices
+
+1. Abre **Sites** en el menú izquierdo.
+2. Asegúrate de que cada cliente/entidad tenga un **Site** dedicado.
+3. Abre un site piloto.
+4. Ve a **Devices** y selecciona una estación/servidor piloto.
+5. Verifica los datos de referencia: SO, último reinicio, versión del agente, estado del antivirus, estado de parches.
+
+**Buenas prácticas**
+
+- Separa **Servers** y **Workstations** usando filtros/grupos.
+- Usa **UDFs** (campos personalizados) para: criticidad, propietario, ventana de mantenimiento, contacto de escalado.
+
+## Paso 2 — Crear una Policy base
+
+La idea: una política "de base" por SO/rol.
+
+1. Ve a **Policies**.
+2. Haz clic en **New Policy**.
+3. Nómbrala (por ejemplo) `POL-BASE-WIN10`.
+4. Configura:
+   - **Patch Management**: ventana de parcheo + reglas de reinicio controlado.
+   - **Monitoring**: adjunta los monitores base (ver Paso 3).
+   - **Automation**: adjunta los jobs estándar (ver Paso 5).
+5. Guarda.
+
+## Paso 3 — Crear Monitors (detección)
+
+### 3.1 Espacio en disco (capacidad)
+
+- **Por qué**: evitar incidentes de "disco lleno".
+- Umbrales sugeridos (adapta a tu entorno):
+  - Warning: < 15% libre
+  - Critical: < 10% libre
+
+**Implementación**
+
+1. Ve a **Monitors** → **New Monitor**.
+2. Elige **Disk Usage** (o equivalente).
+3. Objetivo: `C:` (y volúmenes clave en servidores).
+4. Configura los umbrales Warning/Critical.
+5. Personaliza el mensaje de alerta para incluir `% libre`, `GB libres`, dispositivo, site.
+
+### 3.2 Servicios críticos de Windows
+
+Ejemplos: `Spooler` (servidor de impresión), `MSSQLSERVER`, `W3SVC` (IIS), `LanmanServer`.
+
+1. **New Monitor** → tipo **Service**.
+2. Nombre del servicio: `MSSQLSERVER`.
+3. Condición: **Not running**.
+4. (Opcional) adjunta una remediación vía Automation/Quick Job (ver Paso 5).
+
+### 3.3 Cumplimiento de parches
+
+1. Crea/activa un monitor relacionado con **Patch Status** / **Reboot required**.
+2. Dispara "warning" para **aprobado pendiente** / "critical" para **vencido**.
+3. Combínalo con una ventana de parcheo programada y reglas de reinicio claras.
+
+## Paso 4 — Enrutamiento de alertas y control del ruido
+
+### 4.1 Severidad y propiedad
+
+1. En tu monitor, define la **severidad** (Warning vs Critical).
+2. Enruta las alertas por:
+   - Site (cliente)
+   - Rol (servidor vs estación)
+   - Categoría (seguridad vs disponibilidad)
+
+### 4.2 Reducir la fatiga de alertas
+
+Usa al menos 3 capas:
+
+- **Deduplicación / cool-down**: no abrir 20 alertas idénticas para el mismo disco.
+- **Ventanas horarias**: evitar alertas durante el mantenimiento.
+- **Escalado**: N1 gestiona, N2 de guardia solo si no se reconoce en X minutos.
+
+## Paso 5 — Runbooks / Quick Jobs (remediación)
+
+Un runbook debe ser seguro, repetible y registrado (logged).
+
+### 5.1 Runbooks típicos
+
+- Reiniciar un servicio: `Restart-Service MSSQLSERVER`
+- Limpiar archivos temporales (remediación de disco)
+- Forzar la actualización de políticas / tareas del agente
+- Disparar un escaneo/informe de Windows Update
+
+### 5.2 Ejemplo: reiniciar un servicio (Windows)
+
+1. Ve a **Automation** (o **Quick Jobs**).
+2. Crea un nuevo job `QJ-WIN-Restart-MSSQLSERVER`.
+3. Usa PowerShell (ejemplo):
+
+```powershell
+# Reiniciar MSSQLSERVER de forma segura
+Restart-Service -Name "MSSQLSERVER" -Force
+Start-Sleep -Seconds 10
+Get-Service -Name "MSSQLSERVER" | Select-Object Status, Name
+```
+
+4. Configura el registro/captura de la salida.
+5. Aplícalo primero a un **dispositivo de prueba**.
+6. Adjunta el job como **auto-remediación** para el monitor del servicio.
+
+## Paso 6 — Checklist de validación
+
+Para cada monitor/runbook, valida:
+
+- El monitor se dispara como se espera (simula un stop-service o un umbral de disco bajo).
+- La alerta llega al canal/equipo correcto.
+- El runbook se ejecuta y registra la salida.
+- El incidente se cierra con trazabilidad (qué se ejecutó, cuándo, resultado).
+
+## Paso 7 — Documentación (biblioteca de runbooks)
+
+Mantén una documentación breve "amigable para el operador" por runbook:
+
+- Objetivo, requisitos previos, comprobaciones de seguridad
+- Cómo ejecutarlo manualmente
+- Salida esperada / rollback
+- Cuándo escalar
