@@ -31,7 +31,7 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
 
   function hrefFor(locale: AppLocale): string {
     if (alternates[locale]) return alternates[locale]!;
-    const rest = pathname.replace(/^\/(en|fr)/, "");
+    const rest = pathname.replace(/^\/(en|fr|es)/, "");
     return `/${locale}${rest}`;
   }
 

@@ -1,7 +1,7 @@
 import { readAllPosts } from "./fs";
 
 export function getPrevNext(
-  locale: "en" | "fr",
+  locale: "en" | "fr" | "es",
   slug: string
 ): { prev?: { slug: string; title: string }; next?: { slug: string; title: string } } {
   const posts = readAllPosts(locale); // already sorted by date desc
@@ -17,7 +17,7 @@ export function getPrevNext(
   };
 }
 
-export function getAllTags(locale: "en" | "fr") {
+export function getAllTags(locale: "en" | "fr" | "es") {
   const posts = readAllPosts(locale);
   const map = new Map<string, number>();
   for (const p of posts) {
