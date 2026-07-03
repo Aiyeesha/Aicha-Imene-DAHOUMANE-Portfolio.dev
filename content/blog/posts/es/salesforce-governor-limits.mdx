@@ -1,0 +1,262 @@
+---
+title: "Governor Limits en Salesforce: entenderlos, monitorearlos y evitarlos"
+excerpt: "Una guía práctica sobre los governor limits de Salesforce — los más críticos, cómo monitorear tu consumo y patrones para mantenerte holgadamente dentro de los límites."
+date: "2025-11-03"
+tags: ["Salesforce", "Apex", "Rendimiento", "Governor Limits", "Buenas prácticas"]
+---
+
+Los governor limits son las reglas que Salesforce impone para garantizar que ningún org monopolice los recursos compartidos de la plataforma. Entenderlos es esencial — alcanzarlos en producción provoca excepciones, automatizaciones rotas y usuarios descontentos.
+
+## Por qué existen los governor limits
+
+Salesforce es una plataforma multi-tenant. Tu org comparte cómputo, base de datos y recursos de API con miles de otros. Los governor limits evitan que un solo org consuma recursos de forma desproporcionada. No son errores — son la arquitectura misma.
+
+## Los límites que realmente muerden
+
+### Límites síncronos por transacción
+
+| Límite | Valor | Causa habitual |
+|-------|-------|----------------|
+| Consultas SOQL | 100 | SOQL dentro de un loop |
+| Sentencias DML | 150 | DML dentro de un loop |
+| Filas DML | 10.000 | Operaciones masivas |
+| Filas SOQL | 50.000 | Recuperar tablas completas |
+| Tamaño del heap | 6 MB | Almacenar datasets grandes |
+| Tiempo de CPU | 10.000 ms | Loops complejos, algoritmos |
+| Callouts | 100 | Llamadas a APIs externas |
+
+### Límites asíncronos por transacción (Batch, Future, Queueable)
+
+| Límite | Valor |
+|-------|-------|
+| Consultas SOQL | 200 |
+| Sentencias DML | 150 |
+| Filas DML | 10.000 |
+| Tamaño del heap | 12 MB (batch) |
+| Tiempo de CPU | 60.000 ms |
+
+### Límites diarios a nivel de org
+
+| Límite | Valor |
+|-------|-------|
+| Ejecuciones de Apex asíncronas | 250.000 |
+| Alertas de email | 1.000 por usuario al día |
+| Mensajes salientes | 10.000 |
+| Llamadas a la API | Varía según la edición (Developer: 15.000/día) |
+
+## Monitorear tus límites
+
+### En código Apex
+
+```apex
+// Comprueba los límites restantes en cualquier punto de la ejecución
+System.debug('SOQL queries: ' + Limits.getQueries() + '/' + Limits.getLimitQueries());
+System.debug('DML statements: ' + Limits.getDmlStatements() + '/' + Limits.getLimitDmlStatements());
+System.debug('DML rows: ' + Limits.getDmlRows() + '/' + Limits.getLimitDmlRows());
+System.debug('CPU time: ' + Limits.getCpuTime() + '/' + Limits.getLimitCpuTime());
+System.debug('Heap: ' + Limits.getHeapSize() + '/' + Limits.getLimitHeapSize());
+```
+
+### Guardia proactiva antes de operaciones críticas
+
+```apex
+public class LimitGuard {
+    public static Boolean hasSoqlCapacity(Integer needed) {
+        return (Limits.getLimitQueries() - Limits.getQueries()) >= needed;
+    }
+
+    public static Boolean hasDmlCapacity(Integer needed) {
+        return (Limits.getLimitDmlStatements() - Limits.getDmlStatements()) >= needed;
+    }
+
+    public static Boolean isHeapSafe(Integer safetyMarginBytes) {
+        return (Limits.getLimitHeapSize() - Limits.getHeapSize()) > safetyMarginBytes;
+    }
+}
+
+// Uso
+if (!LimitGuard.hasSoqlCapacity(5)) {
+    throw new LimitException('Insufficient SOQL capacity to proceed.');
+}
+```
+
+## Los patrones que evitan la mayoría de las violaciones
+
+### 1. Nunca hagas SOQL o DML dentro de un loop
+
+Esta es la causa número uno de violaciones de governor limits. Una consulta por registro = 201 consultas para 201 registros.
+
+```apex
+// ❌ SOQL dentro de un loop — alcanza el límite en el registro 101
+for (Opportunity opp : opportunities) {
+    Account acc = [SELECT Name FROM Account WHERE Id = :opp.AccountId];
+    // ... usar acc
+}
+
+// ✅ Patrón seguro para bulk
+Set<Id> accountIds = new Set<Id>();
+for (Opportunity opp : opportunities) accountIds.add(opp.AccountId);
+
+Map<Id, Account> accountMap = new Map<Id, Account>(
+    [SELECT Id, Name FROM Account WHERE Id IN :accountIds]
+);
+
+for (Opportunity opp : opportunities) {
+    Account acc = accountMap.get(opp.AccountId);
+    // ... usar acc
+}
+```
+
+### 2. Recolecta y ejecuta el DML una sola vez
+
+```apex
+// ❌ DML dentro de un loop
+for (Contact c : contacts) {
+    c.Status__c = 'Processed';
+    update c; // 1 DML por registro
+}
+
+// ✅ Recolectar y luego hacer DML una sola vez
+List<Contact> toUpdate = new List<Contact>();
+for (Contact c : contacts) {
+    c.Status__c = 'Processed';
+    toUpdate.add(c);
+}
+if (!toUpdate.isEmpty()) update toUpdate; // 1 DML en total
+```
+
+### 3. Usa `@future` o Queueable para los callouts
+
+Los callouts no pueden hacerse desde transacciones con DML abierto de forma síncrona en algunos contextos. Descárgalos:
+
+```apex
+public class ExternalSyncService {
+
+    @future(callout=true)
+    public static void syncToERP(List<Id> accountIds) {
+        List<Account> accounts = [SELECT Id, Name FROM Account WHERE Id IN :accountIds];
+        // ... hacer llamadas HTTP
+    }
+}
+
+// Invocación desde el trigger
+trigger AccountTrigger on Account (after insert) {
+    ExternalSyncService.syncToERP(
+        new List<Id>(new Map<Id, Account>(Trigger.new).keySet())
+    );
+}
+```
+
+### 4. Usa SOQL de agregación para reducir el conteo de filas
+
+```apex
+// ❌ Recuperar 50k filas solo para contarlas
+List<Opportunity> all = [SELECT Id FROM Opportunity WHERE AccountId = :accId];
+Integer count = all.size(); // ¡usa 50k de tu límite de 50k filas!
+
+// ✅ Agregar a nivel de base de datos
+Integer count = [SELECT COUNT() FROM Opportunity WHERE AccountId = :accId];
+```
+
+### 5. Gestiona el heap liberando referencias con null
+
+```apex
+public void execute(Database.BatchableContext bc, List<Account> scope) {
+    // Procesa la primera mitad
+    processPhaseOne(scope);
+
+    // Pone explícitamente a null los datos intermedios grandes para liberar heap antes de la fase 2
+    // (el recolector de basura de Salesforce lo reclamará en la próxima asignación)
+    List<Account> processed = null;
+
+    // Procesa la segunda fase con más heap disponible
+    processPhaseTwo(scope);
+}
+```
+
+## Queueable Apex: mejor que `@future`
+
+Los jobs Queueable son el reemplazo moderno de `@future` — soportan encadenamiento y parámetros con tipado seguro:
+
+```apex
+public class SyncQueueable implements Queueable, Database.AllowsCallouts {
+    private List<Id> recordIds;
+
+    public SyncQueueable(List<Id> ids) {
+        this.recordIds = ids;
+    }
+
+    public void execute(QueueableContext ctx) {
+        // Hacer el trabajo — puede hacer callouts (Database.AllowsCallouts)
+        List<Account> accounts = [SELECT Id, Name FROM Account WHERE Id IN :recordIds];
+        // ... procesar
+
+        // Encadena el siguiente job si queda más trabajo
+        if (moreWorkNeeded()) {
+            System.enqueueJob(new SyncQueueable(nextBatch));
+        }
+    }
+}
+
+// Encolar
+System.enqueueJob(new SyncQueueable(accountIds));
+```
+
+> **Límite:** Máximo 50 jobs Queueable encadenados por transacción. Máximo 2 jobs Queueable encolados desde una sola transacción síncrona.
+
+## Qué hacer cuando alcanzas un límite
+
+### LimitException en producción
+
+1. **Revisa los debug logs** — identifica qué línea lanzó la excepción
+2. **Encuentra la causa raíz** — normalmente un trigger que llama a un método que hace SOQL/DML dentro de un loop
+3. **Comprueba la recursión** — ¿el trigger se está llamando a sí mismo? Usa una guarda de recursión estática
+4. **Refactoriza** — aplica patrones de bulkificación
+5. **Considera lo asíncrono** — mueve el procesamiento pesado a Batch o Queueable
+
+### Escenario habitual: doble disparo de trigger + Process Builder
+
+```apex
+// Un trigger se dispara → Process Builder crea registros → el trigger se dispara de nuevo
+// Solución: guarda de recursión estática
+
+public class TriggerRecursionGuard {
+    private static Boolean running = false;
+
+    public static Boolean isRunning() { return running; }
+    public static void setRunning() { running = true; }
+}
+
+// En el handler del trigger
+if (TriggerRecursionGuard.isRunning()) return;
+TriggerRecursionGuard.setRunning();
+// ... tu lógica
+```
+
+## Seguimiento de límites en Developer Console
+
+En Developer Console → **Logs** → abre un debug log → haz clic en la pestaña **Execution Overview**.
+
+Verás un gráfico del consumo de governor limits a lo largo de la transacción — útil para identificar qué método consume más consultas SOQL o heap.
+
+## Tabla resumen: antipatrones → soluciones
+
+| Antipatrón | Problema | Solución |
+|--------------|---------|----------|
+| SOQL en loop | Límite de 100 consultas | Recolectar IDs, consultar una vez con `IN` |
+| DML en loop | Límite de 150 DML | Recolectar registros, DML una sola vez |
+| SOQL grande sin LIMIT | Límite de 50.000 filas | Añadir WHERE, LIMIT, o usar agregación |
+| Recursión de trigger | Loop infinito | Clase de guarda de recursión estática |
+| Callout síncrono | Límite de CPU/callout | @future o Queueable + AllowsCallouts |
+| Almacenar listas completas de SObject | Heap de 6MB | Usar sets/maps de IDs en su lugar |
+
+## Conclusión
+
+Los governor limits te obligan a escribir mejor código — bulkificado, eficiente y consciente del consumo de recursos. Los patrones aquí (consultas masivas, un solo DML, callouts asíncronos, SOQL de agregación) no son workarounds — son la base del desarrollo profesional en Salesforce. Aplícalos con consistencia y rara vez verás una `LimitException` fuera de los tests.
+
+---
+
+**Recursos útiles:**
+- [Governor Limits de Apex - Guía del desarrollador](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm)
+- [Referencia de la clase Limits](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_limits.htm)
+- [Queueable Apex](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_queueing_jobs.htm)
