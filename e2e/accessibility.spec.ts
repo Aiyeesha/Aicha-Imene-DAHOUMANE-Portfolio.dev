@@ -8,7 +8,10 @@
 //   - Blog (liste) /en/blog
 //   - Blog (article) /en/blog/apex-triggers-best-practices
 //   - Certifications /en/certifications
+//   - Contact /en/contact
+//   - Work with me /en/work-with-me
 //   - Accueil FR /fr (vérification locale)
+//   - Accueil ES /es (vérification locale)
 //
 // Tags couverts : wcag2a, wcag2aa, wcag21aa, wcag22aa
 //
@@ -135,6 +138,57 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
     await waitForReady(page);
 
     const results = await runAxe(page);
+
+    const critical = results.violations.filter((v) => v.impact === "critical");
+    expect(critical, `Violations critiques : ${JSON.stringify(formatViolations(critical))}`).toHaveLength(0);
+
+    const serious = results.violations.filter((v) => v.impact === "serious");
+    expect(serious, `Violations sérieuses : ${JSON.stringify(formatViolations(serious))}`).toHaveLength(0);
+  });
+
+  test("Page Contact /en/contact — aucune violation critique/sérieuse", async ({ page }) => {
+    await page.goto("/en/contact");
+    await waitForReady(page);
+
+    const results = await runAxe(page);
+
+    if (results.violations.length > 0) {
+      console.log("Violations /en/contact :", JSON.stringify(formatViolations(results.violations), null, 2));
+    }
+
+    const critical = results.violations.filter((v) => v.impact === "critical");
+    expect(critical, `Violations critiques : ${JSON.stringify(formatViolations(critical))}`).toHaveLength(0);
+
+    const serious = results.violations.filter((v) => v.impact === "serious");
+    expect(serious, `Violations sérieuses : ${JSON.stringify(formatViolations(serious))}`).toHaveLength(0);
+  });
+
+  test("Page Work with me /en/work-with-me — aucune violation critique/sérieuse", async ({ page }) => {
+    await page.goto("/en/work-with-me");
+    await waitForReady(page);
+
+    const results = await runAxe(page);
+
+    if (results.violations.length > 0) {
+      console.log("Violations /en/work-with-me :", JSON.stringify(formatViolations(results.violations), null, 2));
+    }
+
+    const critical = results.violations.filter((v) => v.impact === "critical");
+    expect(critical, `Violations critiques : ${JSON.stringify(formatViolations(critical))}`).toHaveLength(0);
+
+    const serious = results.violations.filter((v) => v.impact === "serious");
+    expect(serious, `Violations sérieuses : ${JSON.stringify(formatViolations(serious))}`).toHaveLength(0);
+  });
+
+  test("Page d'accueil ES /es — aucune violation critique/sérieuse", async ({ page }) => {
+    await page.goto("/es");
+    await waitForReady(page);
+
+    const results = await runAxe(page);
+
+    if (results.violations.length > 0) {
+      console.log("Violations /es :", JSON.stringify(formatViolations(results.violations), null, 2));
+    }
 
     const critical = results.violations.filter((v) => v.impact === "critical");
     expect(critical, `Violations critiques : ${JSON.stringify(formatViolations(critical))}`).toHaveLength(0);
