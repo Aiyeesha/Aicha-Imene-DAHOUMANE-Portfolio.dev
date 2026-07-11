@@ -52,10 +52,17 @@ export const certifications: Certification[] = [
 ];
 
 export const upcomingCertifications: string[] = [
-  'CompTIA A+ — préparation en cours',
-  'Salesforce Certified Administrator — préparation active en cours',
-  'Salesforce Certified Platform Developer I — préparation active en cours',
-  'ISC2 CC (Certified in Cybersecurity) — préparation en cours'
+  'Salesforce Platform Foundations — préparation active en cours',
+  'Salesforce Platform Administrator (ADM-201) — à venir',
+  'Salesforce Platform App Builder — à venir',
+  'Salesforce Platform Developer I (PD1) — à venir',
+  'CompTIA Network+ — à venir',
+  'CompTIA Security+ — à venir',
+  'CompTIA Linux+ — à venir',
+  'CompTIA CySA+ — à venir',
+  'BTL1 (Blue Team Level 1) — à venir',
+  'PNPT (Practical Network Penetration Tester) — à venir',
+  'CompTIA PenTest+ — optionnel',
 ];
 
 export const trailheadProfile = {
