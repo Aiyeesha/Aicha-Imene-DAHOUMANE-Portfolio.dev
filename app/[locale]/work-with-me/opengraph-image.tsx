@@ -21,7 +21,7 @@ export default async function Image({ params }: Props) {
     : isEs
     ? "Salesforce · IT Ops · 100 % Remoto · España e internacional"
     : "Salesforce · IT Ops · 100 % Remote · France & worldwide";
-  const availLabel = isFr ? "Disponible dès maintenant" : isEs ? "Disponible de inmediato" : "Available immediately";
+  const availLabel = isFr ? "Disponible immédiatement" : isEs ? "Disponible de inmediato" : "Available immediately";
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
