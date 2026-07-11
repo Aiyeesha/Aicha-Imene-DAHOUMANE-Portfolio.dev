@@ -29,7 +29,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         stepNum:    "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
         stepBadge:  "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
         ctaSection: "border-cyan-200 dark:border-cyan-800 bg-cyan-500/5 dark:bg-cyan-500/10",
-        ctaBtn:     "bg-cyan-600 hover:bg-cyan-700 text-white",
+        // bg-cyan-600 + white text only reaches 3.68:1 contrast (WCAG AA needs 4.5:1
+        // for normal-size text) — cyan-700 clears it at ~5.4:1. Caught by the axe-core
+        // e2e scan added for this page.
+        ctaBtn:     "bg-cyan-700 hover:bg-cyan-800 text-white",
       }
     : {
         kicker:     "text-violet-600 dark:text-violet-400",
