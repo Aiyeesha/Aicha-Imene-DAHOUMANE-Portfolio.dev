@@ -295,21 +295,6 @@
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
     "p4_itops": "Full-time Salesforce Developer at LD Digitales — IT Ops & DevOps skills, built through real production environments, remain fully available for targeted projects.",
-    "goals2026Title": "2026 Goals",
-    "goals2026Salesforce": [
-      "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-      "Find the right environment to grow as a Salesforce developer & consultant",
-      "Ship first versions of OrgDocs and SFRelease — two SaaS products in the Salesforce ecosystem",
-      "Actively contribute to the Salesforce community: technical blog, Trailblazer Community, open source",
-      "Build an international client base (France, UK, European market — remote)"
-    ],
-    "goals2026Itops": [
-      "Land an IT Ops / SRE / DevOps role or project (permanent · fixed-term · freelance) in France or fully remote",
-      "Deepen infrastructure-as-code skills: Terraform, Ansible, provisioning automation",
-      "Obtain a cloud certification (AWS Solutions Architect or Azure Administrator)",
-      "Build a full monitoring homelab: Prometheus, Grafana, Alertmanager",
-      "Contribute to open-source DevOps projects (runbooks, scripts, monitoring dashboards)"
-    ],
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
     "basedInValue": "Marseille / Provence-Alpes-Côte d'Azur — 100 % Remote · Hybrid · On-site — Mobility & relocation considered (France & international)",
