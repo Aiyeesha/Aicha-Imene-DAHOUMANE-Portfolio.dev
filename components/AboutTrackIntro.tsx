@@ -6,9 +6,8 @@
 //
 // Remplace ProfileNarrative sur la page About :
 //   - Plus structuré (badge track + 3 paragraphes ciblés)
-//   - Sans redondance avec le contenu Supabase (journey, goals)
+//   - Sans redondance avec le contenu Supabase (journey)
 //   - p1 = positionnement, p2 = compétences/méthodes, p3 = différenciant
-//   - p4 intentionnellement exclu (chevauchement avec la section goals2026)
 //
 // Couleur :
 //   - Salesforce → cyan
