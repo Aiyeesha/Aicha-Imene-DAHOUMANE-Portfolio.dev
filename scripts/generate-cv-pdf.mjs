@@ -47,6 +47,20 @@ const CV_FILES = [
     title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
+  {
+    html: "cv-es-itops.html",
+    pdf: "cv-es-itops.pdf",
+    scale: 1.04,
+    title: "Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes — CV",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "cv-es-salesforce.html",
+    pdf: "cv-es-salesforce.pdf",
+    scale: 1.04,
+    title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce — CV",
+    author: "Aïcha Imène DAHOUMANE",
+  },
 ];
 
 async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
