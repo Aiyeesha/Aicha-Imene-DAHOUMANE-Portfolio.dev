@@ -243,7 +243,7 @@ async function seedProjects() {
 
 
 // ------------------------------
-// 5) Seed About (FR/EN)
+// 5) Seed About (FR/EN/ES)
 // ------------------------------
 async function seedAbout() {
   console.log("📦 Seeding about_pages from content/about.ts ...");
@@ -266,6 +266,13 @@ async function seedAbout() {
       body: aboutContent.en ?? {},
       status: "published",
     },
+    {
+      locale: "es",
+      headline: "Sobre mí",
+      intro: aboutContent.es?.introduction ?? null,
+      body: aboutContent.es ?? {},
+      status: "published",
+    },
   ];
 
   const { error } = await supabase
@@ -276,7 +283,7 @@ async function seedAbout() {
     throw new Error(`Upsert about_pages failed: ${error.message}`);
   }
 
-  console.log(`✅ about_pages upserted: ${rows.length} rows (EN + FR)`);
+  console.log(`✅ about_pages upserted: ${rows.length} rows (EN + FR + ES)`);
 }
 
 // ------------------------------
