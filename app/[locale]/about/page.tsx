@@ -8,7 +8,6 @@
 //   3. journey            — Timeline du parcours (Supabase) — contenu générique exhaustif
 //   4. values             — Valeurs professionnelles (Supabase) — grille 2 colonnes
 //   5. passions           — En dehors du travail (Supabase)
-//   6. goals2026          — Objectifs 2026 avec checklist (Supabase)
 //
 // ProfileNarrative a été remplacé par AboutTrackIntro pour éliminer la redondance
 // avec le contenu Supabase (journey, goals) et mieux adapter l'intro au track.
@@ -82,7 +81,6 @@ type AboutBody = {
   journey?: { title?: string; paragraphs?: string[] };
   values?: { title?: string; items?: { title: string; description: string }[] };
   passions?: { title?: string; paragraphs?: string[] };
-  goals2026?: { title?: string; items?: string[] };
 };
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -124,7 +122,6 @@ export default async function AboutPage({ params }: PageProps) {
   const journey = body.journey;
   const values = body.values;
   const passions = body.passions;
-  // goals2026 délégué à AboutTrackGoals (Client Component track-aware)
 
   const jsonLdBreadcrumb = {
     "@context": "https://schema.org",

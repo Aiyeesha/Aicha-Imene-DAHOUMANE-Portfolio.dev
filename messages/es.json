@@ -295,21 +295,6 @@
     "p2_itops": "Implemento estándares operativos: monitorización y alertas accionables, reducción del ruido, procedimientos de escalado, documentación y automatización (scripts, jobs, playbooks).",
     "p3_itops": "Presto especial atención a la seguridad y la continuidad: copias de seguridad, hardening, gestión de accesos y prácticas de gestión del cambio para reducir incidentes.",
     "p4_itops": "Desarrolladora Salesforce a tiempo completo en LD Digitales — mis habilidades de IT Ops y DevOps, forjadas en entornos de producción reales, siguen plenamente disponibles para proyectos específicos.",
-    "goals2026Title": "Objetivos 2026",
-    "goals2026Salesforce": [
-      "Obtener certificaciones Salesforce en 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-      "Encontrar el entorno adecuado para crecer como desarrolladora y consultora Salesforce",
-      "Lanzar las primeras versiones de OrgDocs y SFRelease — dos productos SaaS del ecosistema Salesforce",
-      "Contribuir activamente a la comunidad Salesforce: blog técnico, Trailblazer Community, código abierto",
-      "Construir una cartera de clientes internacional (Francia, Reino Unido, mercado europeo — en remoto)"
-    ],
-    "goals2026Itops": [
-      "Conseguir un puesto o proyecto IT Ops / SRE / DevOps (indefinido · temporal · freelance) en Francia o en remoto total",
-      "Profundizar en infraestructura como código: Terraform, Ansible, automatización de aprovisionamiento",
-      "Obtener una certificación cloud (AWS Solutions Architect o Azure Administrator)",
-      "Construir un homelab de monitorización completo: Prometheus, Grafana, Alertmanager",
-      "Contribuir a proyectos DevOps de código abierto (runbooks, scripts, paneles de monitorización)"
-    ],
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
     "basedInValue": "Marsella / Provenza-Alpes-Costa Azul — 100 % remoto · Híbrido · Presencial — Movilidad y traslado posibles (Francia e internacional)",

@@ -44,17 +44,6 @@ export const aboutContent = {
 
         `En dehors du numérique, j'aime la mode — dessiner des silhouettes, imaginer des créations, suivre les défilés. Je pratique aussi les arts martiaux et la danse, deux disciplines qui m'apprennent autant sur la discipline et la précision que sur l'écoute de l'autre. Enfin, j'aime voyager et découvrir de nouvelles cultures.`
       ]
-    },
-
-    goals2026: {
-      title: "Objectifs 2026",
-      items: [
-        "Obtenir les certifications Salesforce 2026 : Platform Foundations, ADM-201, App Builder, Platform Developer I (PD1)",
-        "Trouver la prochaine opportunité — CDI, CDD, freelance ou mission — en valorisant mon expertise Salesforce et IT Ops, disponible immédiatement",
-        "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
-        "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
-        "Développer une clientèle internationale (France, UK, marché européen en remote)"
-      ]
     }
   },
 
@@ -102,17 +91,6 @@ export const aboutContent = {
         `I'm also passionate about cybersecurity — a passion inherited from my years in systems administration. I actively follow MITRE ATT&CK publications, advisories and defensive best practices. I'm preparing a structured Blue Team learning path that I'll run alongside my Salesforce certifications.`,
 
         `Outside of tech, I'm drawn to fashion — sketching silhouettes, imagining designs, following runway shows. I also practice martial arts and dance, two disciplines that teach as much about discipline and precision as they do about reading the other person. I love traveling and discovering new cultures too.`
-      ]
-    },
-
-    goals2026: {
-      title: "2026 Goals",
-      items: [
-        "Obtain Salesforce certifications in 2026: Platform Foundations, ADM-201, App Builder, Platform Developer I (PD1)",
-        "Find the next opportunity — permanent, fixed-term, freelance, or contract — leveraging my Salesforce and IT Ops expertise, available immediately",
-        "Ship first versions of OrgDocs and SFRelease — two SaaS products in the Salesforce ecosystem",
-        "Actively contribute to the Salesforce community: technical blog, Trailblazer Community, open source",
-        "Build an international client base (France, UK, European market — remote)"
       ]
     }
   }
