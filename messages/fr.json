@@ -311,22 +311,7 @@
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
-    "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, forgées en contexte de production réel, restent pleinement mobilisables pour des missions ciblées.",
-    "goals2026Title": "Objectifs 2026",
-    "goals2026Salesforce": [
-      "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-      "Trouver le bon contexte pour progresser — CDI, CDD, freelance ou mission",
-      "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
-      "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
-      "Développer une clientèle internationale (France, UK, marché européen en remote)"
-    ],
-    "goals2026Itops": [
-      "Décrocher un poste ou une mission IT Ops / SRE / DevOps (CDI · CDD · Freelance) en France ou en full remote",
-      "Approfondir l'infrastructure-as-code : Terraform, Ansible, automatisation de provisioning",
-      "Obtenir une certification cloud (AWS Solutions Architect ou Azure Administrator)",
-      "Construire un homelab de supervision complet : Prometheus, Grafana, Alertmanager",
-      "Contribuer à des projets open source DevOps (runbooks, scripts, dashboards de monitoring)"
-    ]
+    "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, forgées en contexte de production réel, restent pleinement mobilisables pour des missions ciblées."
   },
   "mdx": {
     "copy": "Copier",
