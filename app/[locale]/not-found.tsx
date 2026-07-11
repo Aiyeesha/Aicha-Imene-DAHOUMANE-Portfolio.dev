@@ -16,9 +16,8 @@ const content = {
     description: "Cette page n'existe pas ou a été déplacée.",
     hint: "Essayez de revenir à l'accueil ou utilisez le menu de navigation.",
     cta: "Retour à l'accueil",
-    href: "/fr",
-    altHref: "/en",
-    altLabel: "EN",
+    contact: "Contact",
+    langLabel: "Langue",
   },
   en: {
     code: "404",
@@ -26,13 +25,27 @@ const content = {
     description: "This page doesn't exist or may have been moved.",
     hint: "Try going back to the home page or use the navigation menu.",
     cta: "Back to home",
-    href: "/en",
-    altHref: "/fr",
-    altLabel: "FR",
+    contact: "Contact",
+    langLabel: "Language",
+  },
+  es: {
+    code: "404",
+    title: "Página no encontrada",
+    description: "Esta página no existe o ha sido movida.",
+    hint: "Vuelve al inicio o usa el menú de navegación.",
+    cta: "Volver al inicio",
+    contact: "Contacto",
+    langLabel: "Idioma",
   },
 } as const;
 
 type Locale = keyof typeof content;
+
+const LANGUAGES: { code: Locale; label: string }[] = [
+  { code: "en", label: "EN" },
+  { code: "fr", label: "FR" },
+  { code: "es", label: "ES" },
+];
 
 // ── Icône : boussole ────────────────────────────────────────────────────────
 function Icon404() {
@@ -60,7 +73,7 @@ function Icon404() {
 export default function LocaleNotFound() {
   const params = useParams();
   const raw = params?.locale;
-  const locale: Locale = raw === "fr" || raw === "en" ? raw : "en";
+  const locale: Locale = raw === "fr" || raw === "es" ? raw : "en";
   const c = content[locale];
 
   return (
@@ -79,17 +92,40 @@ export default function LocaleNotFound() {
 
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <a
-            href={c.href}
+            href={`/${locale}`}
             className="rounded-full bg-cyan-500 px-6 py-2.5 text-sm font-medium text-black hover:opacity-90 transition-opacity"
           >
             {c.cta}
           </a>
           <a
-            href={c.altHref}
+            href={`/${locale}/contact`}
             className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-6 py-2.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
           >
-            {c.altLabel}
+            {c.contact}
           </a>
+        </div>
+
+        {/* Sélecteur de langue complet — EN/FR/ES */}
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <span className="text-xs uppercase tracking-widest text-slate-400 dark:text-white/40">
+            {c.langLabel}
+          </span>
+          <div className="flex items-center gap-2">
+            {LANGUAGES.map(({ code, label }) => (
+              <a
+                key={code}
+                href={`/${code}`}
+                aria-current={code === locale ? "true" : undefined}
+                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  code === locale
+                    ? "bg-cyan-500 text-black"
+                    : "border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
+                }`}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
 
       </div>
