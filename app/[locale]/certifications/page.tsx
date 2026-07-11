@@ -35,10 +35,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et plan de 12 certifications Salesforce + CompTIA (juil. 2026 – juil. 2027)."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (juil. 2026 – 2027/2028)."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un plan de 12 certificaciones Salesforce + CompTIA (jul. 2026 – jul. 2027)."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + CompTIA (Jul 2026 – Jul 2027).";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (jul. 2026 – 2027/2028)."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (Jul 2026 – 2027/2028).";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -177,6 +177,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       ? "Rango Trailhead: Expeditioner — verificable en línea · 10 badges para alcanzar Ranger"
       : "Trailhead rank: Expeditioner — verifiable online · 10 badges to reach Ranger",
     activelyPreparing: isFr ? "Préparation active" : isEs ? "Preparación activa" : "Actively preparing",
+    plannedRoadmap: isFr ? "Roadmap" : isEs ? "Roadmap" : "Roadmap",
     backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
     credentialLink: isFr ? "Voir le justificatif" : isEs ? "Ver el justificante" : "View credential",
     diplomaLink: isFr ? "Voir le diplôme" : isEs ? "Ver el diploma" : "View diploma",
@@ -279,7 +280,9 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
   ];
 
-  // Certifications en préparation — groupées par domaine
+  // Certifications en préparation — groupées par horizon (2026 en cours vs. 2027 roadmap).
+  // Les certifications reportées à date indéterminée (Sales Foundations, CPQ Admin,
+  // MC Engagement Admin) ne sont volontairement PAS affichées ici.
   type UpcomingItem = {
     id: string;
     name: string;
@@ -290,16 +293,17 @@ export default async function CertificationsPage({ params }: PageProps) {
     color: string;
     logoUrl?: string;
     track: "salesforce" | "comptia";
+    phase: "2026" | "2027";
     isActive?: boolean;
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── Salesforce track (sprint Avr. → Juil. 2026) ──────────────────────────
+    // ── 2026 — dans l'ordre (Juil. → Déc. 2026) ──────────────────────────────
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Juil. 2026" : isEs ? "Jul. 2026" : "Jul 2026",
+      target: isFr ? "Juil.–Août 2026" : isEs ? "Jul.–ago. 2026" : "Jul–Aug 2026",
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : isEs
@@ -309,29 +313,14 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-700",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      isActive: true,
-    },
-    {
-      id: "sf-sales-foundations",
-      name: "Salesforce Sales Foundations",
-      issuer: "Salesforce",
-      target: isFr ? "Juil. 2026" : isEs ? "Jul. 2026" : "Jul 2026",
-      description: isFr
-        ? "Fondamentaux Sales Cloud : gestion des leads, opportunités, comptes, contacts et prévisions commerciales."
-        : isEs
-        ? "Fundamentos de Sales Cloud: gestión de leads, oportunidades, cuentas, contactos y previsión de ventas."
-        : "Sales Cloud fundamentals: lead management, opportunities, accounts, contacts and sales forecasting.",
-      initials: "SF",
-      color: "bg-sky-700",
-      logoUrl: "/certifications/salesforce.svg",
-      track: "salesforce",
+      phase: "2026",
       isActive: true,
     },
     {
       id: "sf-platform-administrator",
-      name: "Salesforce Platform Administrator",
+      name: "Salesforce Platform Administrator (ADM-201)",
       issuer: "Salesforce",
-      target: isFr ? "Juil. 2026" : isEs ? "Jul. 2026" : "Jul 2026",
+      target: isFr ? "Fin août 2026" : isEs ? "Fin. ago. 2026" : "Late Aug 2026",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
@@ -341,13 +330,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      isActive: false,
+      phase: "2026",
     },
     {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Août 2026" : isEs ? "Ago. 2026" : "Aug 2026",
+      target: isFr ? "Août–sept. 2026" : isEs ? "Ago.–sep. 2026" : "Aug–Sep 2026",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
         : isEs
@@ -357,42 +346,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-    },
-    {
-      id: "sf-cpq-administrator",
-      name: "Salesforce CPQ Administrator",
-      issuer: "Salesforce",
-      target: isFr ? "Sept. 2026" : isEs ? "Sep. 2026" : "Sep 2026",
-      description: isFr
-        ? "Configuration Salesforce CPQ : catalogues produits, règles de prix, bundles et processus de devis complexes."
-        : isEs
-        ? "Configuración de Salesforce CPQ: catálogos de productos, reglas de precios, bundles y procesos de cotización complejos."
-        : "Salesforce CPQ configuration: product catalogs, pricing rules, bundles and complex quoting processes.",
-      initials: "CPQ",
-      color: "bg-sky-800",
-      logoUrl: "/certifications/salesforce.svg",
-      track: "salesforce",
-    },
-    {
-      id: "sf-marketing-cloud-admin",
-      name: "Marketing Cloud Engagement Admin",
-      issuer: "Salesforce",
-      target: isFr ? "Oct. 2026" : isEs ? "Oct. 2026" : "Oct 2026",
-      description: isFr
-        ? "Administration Marketing Cloud : Email Studio, Journey Builder, segmentation des abonnés et reporting."
-        : isEs
-        ? "Administración de Marketing Cloud: Email Studio, Journey Builder, segmentación de suscriptores e informes."
-        : "Marketing Cloud administration: Email Studio, Journey Builder, subscriber segmentation and reporting.",
-      initials: "MCA",
-      color: "bg-sky-800",
-      logoUrl: "/certifications/salesforce.svg",
-      track: "salesforce",
+      phase: "2026",
     },
     {
       id: "sf-platform-developer-i",
-      name: "Salesforce Platform Developer I",
+      name: "Salesforce Platform Developer I (PD1)",
       issuer: "Salesforce",
-      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Fin sept. 2026" : isEs ? "Fin. sep. 2026" : "Late Sep 2026",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
         : isEs
@@ -402,13 +362,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
+      phase: "2026",
     },
-    // ── CompTIA track (sprint Oct. 2026 → Mai 2027) ──────────────────────────
     {
       id: "comptia-network-plus",
       name: "CompTIA Network+",
       issuer: "CompTIA",
-      target: isFr ? "Jan. 2027" : isEs ? "Ene. 2027" : "Jan 2027",
+      target: isFr ? "Oct. 2026" : isEs ? "Oct. 2026" : "Oct 2026",
       description: isFr
         ? "Fondamentaux des réseaux : protocoles TCP/IP, infrastructure, sécurité réseau, dépannage et virtualisation."
         : isEs
@@ -418,12 +378,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
+      phase: "2026",
     },
     {
       id: "comptia-security-plus",
-      name: "CompTIA Security+",
+      name: "CompTIA Security+ (SY0-701)",
       issuer: "CompTIA",
-      target: isFr ? "Mars 2027" : isEs ? "Mar. 2027" : "Mar 2027",
+      target: isFr ? "Nov. 2026 ⭐" : isEs ? "Nov. 2026 ⭐" : "Nov 2026 ⭐",
       description: isFr
         ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
         : isEs
@@ -433,12 +394,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
+      phase: "2026",
     },
     {
       id: "comptia-linux-plus",
       name: "CompTIA Linux+",
       issuer: "CompTIA",
-      target: isFr ? "Avr. 2027" : isEs ? "Abr. 2027" : "Apr 2027",
+      target: isFr ? "Déc. 2026" : isEs ? "Dic. 2026" : "Dec 2026",
       description: isFr
         ? "Administration Linux : ligne de commande, scripts shell, gestion des utilisateurs, sécurité et automatisation système."
         : isEs
@@ -448,12 +410,14 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
+      phase: "2026",
     },
+    // ── 2027 — roadmap (pas encore de dates fines, ordre indicatif) ──────────
     {
       id: "comptia-cysa-plus",
       name: "CompTIA CySA+",
       issuer: "CompTIA",
-      target: isFr ? "Juin 2027" : isEs ? "Jun. 2027" : "Jun 2027",
+      target: "2027",
       description: isFr
         ? "Analyse cybersécurité : threat intelligence, SIEM, analyse comportementale et gestion des vulnérabilités."
         : isEs
@@ -463,26 +427,76 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
+      phase: "2027",
     },
     {
-      id: "comptia-pentest-plus",
-      name: "CompTIA PenTest+",
-      issuer: "CompTIA",
-      target: isFr ? "Juil. 2027" : isEs ? "Jul. 2027" : "Jul 2027",
+      id: "btl1-blue-team-level-1",
+      name: "BTL1 — Blue Team Level 1",
+      issuer: "Security Blue Team",
+      target: "2027",
       description: isFr
-        ? "Tests de pénétration : planification, reconnaissance, exploitation, post-exploitation et rapport de vulnérabilités."
+        ? "Examen 100% pratique (24h en lab) : détection, triage et investigation d'incidents — complément indispensable au CySA+ théorique."
         : isEs
-        ? "Pruebas de penetración: planificación, reconocimiento, explotación, post-explotación e informe de vulnerabilidades."
-        : "Penetration testing: planning, reconnaissance, exploitation, post-exploitation and vulnerability reporting.",
-      initials: "PT+",
-      color: "bg-red-700",
+        ? "Examen 100% práctico (24h en laboratorio): detección, triaje e investigación de incidentes — complemento indispensable al CySA+ teórico."
+        : "100% hands-on exam (24h lab): detection, triage and incident investigation — the essential practical complement to the more theoretical CySA+.",
+      initials: "BTL1",
+      color: "bg-red-800",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
+      phase: "2027",
+    },
+    {
+      id: "pnpt-pentest-plus",
+      name: "PNPT / CompTIA PenTest+",
+      issuer: "TCM Security / CompTIA",
+      target: "2027",
+      description: isFr
+        ? "Tests de pénétration réseau : PNPT (5 jours de lab réel + rapport écrit) complété par PenTest+ pour la reconnaissance institutionnelle/DoD."
+        : isEs
+        ? "Pruebas de penetración de red: PNPT (5 días de laboratorio real + informe escrito) complementado con PenTest+ para el reconocimiento institucional/DoD."
+        : "Network penetration testing: PNPT (5-day real-world lab + written report) complemented by PenTest+ for institutional/DoD recognition.",
+      initials: "PNPT",
+      color: "bg-red-800",
+      logoUrl: "/certifications/comptia-security.svg",
+      track: "comptia",
+      phase: "2027",
+    },
+    {
+      id: "sf-sharing-visibility-architect",
+      name: "Salesforce Sharing & Visibility Architect",
+      issuer: "Salesforce",
+      target: "2027",
+      description: isFr
+        ? "Modèles de sécurité Salesforce avancés : OWD, règles de partage, Apex Sharing — valorise directement l'expérience déjà acquise sur profils et permissions."
+        : isEs
+        ? "Modelos avanzados de seguridad Salesforce: OWD, reglas de colaboración, Apex Sharing — pone en valor directamente la experiencia ya adquirida en perfiles y permisos."
+        : "Advanced Salesforce security models: OWD, sharing rules, Apex Sharing — directly builds on existing profile & permissions experience.",
+      initials: "SVA",
+      color: "bg-sky-800",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+      phase: "2027",
+    },
+    {
+      id: "sf-iam-architect",
+      name: "Salesforce IAM Architect",
+      issuer: "Salesforce",
+      target: "2027–2028",
+      description: isFr
+        ? "SSO, OAuth, SAML, MFA, Identity Connect — pont entre l'expérience Active Directory/GPO (sysadmin) et l'écosystème Salesforce."
+        : isEs
+        ? "SSO, OAuth, SAML, MFA, Identity Connect — puente entre la experiencia en Active Directory/GPO (sysadmin) y el ecosistema Salesforce."
+        : "SSO, OAuth, SAML, MFA, Identity Connect — a bridge between existing Active Directory/GPO (sysadmin) experience and the Salesforce ecosystem.",
+      initials: "IAM",
+      color: "bg-sky-900",
+      logoUrl: "/certifications/salesforce.svg",
+      track: "salesforce",
+      phase: "2027",
     },
   ];
 
-  const salesforceCerts = upcomingItems.filter((c) => c.track === "salesforce");
-  const comptaCerts = upcomingItems.filter((c) => c.track === "comptia");
+  const certs2026 = upcomingItems.filter((c) => c.phase === "2026");
+  const certs2027 = upcomingItems.filter((c) => c.phase === "2027");
 
   // ── JSON-LD — BreadcrumbList ──────────────────────────────────────────────
   const siteUrl = getSiteUrl();
@@ -711,18 +725,18 @@ export default async function CertificationsPage({ params }: PageProps) {
         </div>
         <p className="mt-1 text-sm text-muted">{labels.sectionUpcomingSub}</p>
 
-        {/* ── Sous-groupe Salesforce ──────────────────────────────────────── */}
+        {/* ── Sous-groupe 2026 — en cours / planifiées ─────────────────────── */}
         <div className="mt-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Salesforce
+              {isFr ? "En cours / Planifiées 2026" : isEs ? "En curso / Planificadas 2026" : "In progress / Planned 2026"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint Juil. → Nov. 2026" : isEs ? "— sprint jul. → nov. 2026" : "— sprint Jul. → Nov. 2026"}
+              {isFr ? "— sprint juil. → déc. 2026" : isEs ? "— sprint jul. → dic. 2026" : "— sprint Jul. → Dec. 2026"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {salesforceCerts.map((cert) => (
+            {certs2026.map((cert) => (
               <article
                 key={cert.id}
                 className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
@@ -752,18 +766,15 @@ export default async function CertificationsPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* ── Sous-groupe CompTIA ─────────────────────────────────────────── */}
+        {/* ── Sous-groupe 2027 — roadmap ────────────────────────────────────── */}
         <div className="mt-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              CompTIA
-            </span>
-            <span className="text-xs text-muted-2">
-              {isFr ? "— sprint Jan. 2027 → Juil. 2027" : isEs ? "— sprint ene. 2027 → jul. 2027" : "— sprint Jan. 2027 → Jul. 2027"}
+              {isFr ? "Roadmap 2027" : isEs ? "Roadmap 2027" : "2027 Roadmap"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {comptaCerts.map((cert) => (
+            {certs2027.map((cert) => (
               <article
                 key={cert.id}
                 className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
@@ -777,8 +788,8 @@ export default async function CertificationsPage({ params }: PageProps) {
                 </div>
                 <p className="mt-4 text-sm text-muted leading-relaxed">{cert.description}</p>
                 <div className="mt-4 flex items-center gap-2">
-                  <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-300">
-                    {labels.activelyPreparing}
+                  <span className="inline-flex items-center rounded-full bg-black/5 dark:bg-white/10 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:text-slate-300 border border-black/10 dark:border-white/10">
+                    {labels.plannedRoadmap}
                   </span>
                   <span className="text-xs text-muted-2">— {cert.target}</span>
                 </div>
