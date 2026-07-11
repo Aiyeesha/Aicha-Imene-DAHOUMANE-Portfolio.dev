@@ -49,8 +49,8 @@ export const aboutContent = {
     goals2026: {
       title: "Objectifs 2026",
       items: [
-        "Obtenir les certifications Salesforce 2026 : ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-        "Lancer mon activité de consultante indépendante (portage salarial) dès maintenant",
+        "Obtenir les certifications Salesforce 2026 : Platform Foundations, ADM-201, App Builder, Platform Developer I (PD1)",
+        "Trouver la prochaine opportunité — CDI, CDD, freelance ou mission — en valorisant mon expertise Salesforce et IT Ops, disponible immédiatement",
         "Publier les premières versions de OrgDocs et SFRelease — deux SaaS dans l'écosystème Salesforce",
         "Contribuer activement à la communauté Salesforce : blog technique, Trailblazer Community, open source",
         "Développer une clientèle internationale (France, UK, marché européen en remote)"
@@ -108,8 +108,8 @@ export const aboutContent = {
     goals2026: {
       title: "2026 Goals",
       items: [
-        "Obtain Salesforce certifications in 2026: ADM-201, App Builder, CPQ Admin, Marketing Cloud Engagement Admin",
-        "Launch independent consulting activity (portage salarial) immediately",
+        "Obtain Salesforce certifications in 2026: Platform Foundations, ADM-201, App Builder, Platform Developer I (PD1)",
+        "Find the next opportunity — permanent, fixed-term, freelance, or contract — leveraging my Salesforce and IT Ops expertise, available immediately",
         "Ship first versions of OrgDocs and SFRelease — two SaaS products in the Salesforce ecosystem",
         "Actively contribute to the Salesforce community: technical blog, Trailblazer Community, open source",
         "Build an international client base (France, UK, European market — remote)"
