@@ -13,6 +13,7 @@ export type ProjectDetails = {
   locales?: {
     en?: { title?: string; heroSubtitle?: string; sections?: ProjectSection[] };
     fr?: { title?: string; heroSubtitle?: string; sections?: ProjectSection[] };
+    es?: { title?: string; heroSubtitle?: string; sections?: ProjectSection[] };
   };
   gallery?: GalleryImage[];
 };
@@ -467,6 +468,219 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
 `,
           }
         ]
+      },
+      es: {
+        heroSubtitle:
+          "Integrar AXG en Salesforce (Legarant) y entregar una capa de integración lista para una app móvil (REST + Heroku).",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "LEGARANT (seguro de vida) adquirió AXG para expandirse en Alemania. El objetivo era mantener la org de Salesforce de Legarant como CRM principal e integrar en ella los datos clave de AXG.",
+              "La integración es unidireccional (AXG → Salesforce). Como se preveía una app móvil, también se necesitaba una capa aplicativa (tipo Heroku) conectada a Salesforce, y llamadas REST para consultar la base de clientes."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Lo que entregué",
+            items: [
+              "Una colección Postman que cubre las llamadas REST solicitadas (API estándar + endpoints personalizados cuando fue necesario).",
+              "Controladores REST Apex personalizados para implementar reglas de negocio no cubiertas por la API estándar de Contact (crear o devolver el Id, borrado lógico vía DELETE).",
+              "Una aplicación desplegada en Heroku y conectada a Salesforce, con replicación de datos y documentación de los cambios de configuración.",
+              "Un paquete de despliegue + runbook: lista de componentes, acciones manuales y checklist de validación (test y producción)."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Endpoints REST cubiertos",
+            items: [
+              "POST /services/oauth2/token — Token OAuth (Password Flow / client credentials).",
+              "POST /services/apexrest/v1/contacts — Creación de Contact (crear o devolver según la especificación).",
+              "GET /services/apexrest/v1/contacts/{idOrExt} — Lectura de Contact por Id o External Id.",
+              "PATCH /services/apexrest/v1/contacts/{externalId} — Actualización de Contact por External Id.",
+              "PATCH /services/apexrest/v1/contacts/{id} — Desactivación de Contact (borrado lógico).",
+              "POST /services/apexrest/v1/accounts — Creación de Account.",
+              "GET /services/apexrest/v1/accounts/{idOrExt} — Lectura de Account por Id o External Id.",
+              "PATCH /services/apexrest/v1/accounts/{externalId} — Actualización de Account por External Id.",
+              "POST /services/apexrest/v1/contracts — Creación de Contract.",
+              "GET /services/apexrest/v1/contracts/{idOrExt} — Lectura de Contract por Id o External Id.",
+              "PATCH /services/apexrest/v1/contracts/{externalId} — Actualización de Contract por External Id."
+            ]
+          },
+          {
+            type: "code",
+            title: "Parámetros de los endpoints (desde Postman)",
+            language: "text",
+            code: `POST <instance_url>/services/apexrest/v1/contacts
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campos LastName, city, Email
+  Ejemplo:
+    {
+      "LastName": "axG -tests Contact Test",
+      "city" : "Berlin",
+      "Email": "test.Contact@example.com"
+    }
+
+GET <instance_url>/services/apexrest/v1/contacts/{{idOrExt}}
+  Parámetros de ruta: idOrExt
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+
+PATCH <instance_url>/services/apexrest/v1/contacts/{{lastContactExt}}
+  Parámetros de ruta: lastContactExt
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campo MobilePhone
+  Ejemplo:
+    {
+      "MobilePhone": "+491111"
+    }
+
+PATCH <instance_url>/services/apexrest/v1/contacts/{{lastContactId}}
+  Parámetros de ruta: lastContactId
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campo Active
+  Ejemplo:
+    {
+      "Active": "false"
+    }
+
+POST <instance_url>/services/apexrest/v1/accounts
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campos Name, Phone
+  Ejemplo:
+    {
+      "Name": "AXG GmbH",
+      "Phone": "12345"
+    }
+
+GET <instance_url>/services/apexrest/v1/accounts/{{idOrExt}}
+  Parámetros de ruta: idOrExt
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+
+PATCH <instance_url>/services/apexrest/v1/accounts/{{lastAccountExt}}
+  Parámetros de ruta: lastAccountExt
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campo Website
+  Ejemplo:
+    {
+      "Website": "https://axg.de"
+    }
+
+POST <instance_url>/services/apexrest/v1/contracts
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campos AccountId, Status, StartDate, ContractTerm
+  Ejemplo:
+    {
+      "AccountId": "<axgAccountId>",
+      "Status": "Draft",
+      "StartDate": "2025-01-01",
+      "ContractTerm": 12
+    }
+
+GET <instance_url>/services/apexrest/v1/contracts/{{idOrExt}}
+  Parámetros de ruta: idOrExt
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+
+PATCH <instance_url>/services/apexrest/v1/contracts/{{lastContractExt}}
+  Parámetros de ruta: lastContractExt
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+  Cuerpo (JSON): campo Description
+  Ejemplo:
+    {
+      "Description": "Actualizado"
+    }
+
+GET <instance_url>/services/data/v59.0/limits
+  Headers:
+    - Authorization: Bearer <access_token>
+    - Content-Type: application/json
+
+POST <instance_url>/services/oauth2/token
+  Cuerpo (x-www-form-urlencoded): grant_type, client_id, client_secret`
+          },
+          {
+            type: "timeline",
+            title: "Flujo de implementación",
+            steps: [
+              {
+                title: "Diseño de la integración",
+                description:
+                  "Validación del sentido de los datos (AXG → Salesforce), identificación de los endpoints y elección de la autenticación (Connected App + OAuth username/password flow)."
+              },
+              {
+                title: "Implementación y pruebas de la API",
+                description:
+                  "Construcción y validación de las llamadas en Postman. Se añadió REST Apex personalizado cuando la API estándar no cumplía con la especificación (creación de Contact y comportamiento DELETE)."
+              },
+              {
+                title: "Capa Heroku para el móvil",
+                description:
+                  "Despliegue en Heroku, conexión a Salesforce y verificación de la sincronización bidireccional (Heroku ↔ Salesforce) en los objetos necesarios."
+              },
+              {
+                title: "Fiabilización de la sincronización",
+                description:
+                  "Automatización del llenado del External ID utilizado para la sincronización (trigger) para garantizar la unicidad y evitar errores manuales."
+              },
+              {
+                title: "Despliegue y documentación",
+                description:
+                  "Redacción del documento de despliegue (componentes + acciones manuales) y del documento de cambios de Heroku, seguido de la preparación de la demo."
+              }
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Calidad y garantías",
+            items: [
+              { label: "Conformidad de la API", value: "Colección Postman validada según las especificaciones" },
+              { label: "Reglas de negocio", value: "REST Apex personalizado para los requisitos de create/DELETE" },
+              { label: "Fiabilidad de la sincronización", value: "External ID autocompletado con unicidad garantizada" },
+              { label: "Listo para producción", value: "Runbook de despliegue + checklist de validación" }
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables",
+            items: [
+              { label: "Colección Postman (JSON)", href: "/docs/projects/legarant-axg-salesforce-deployment/postman-collection.json" },
+              { label: "Cambios en Heroku (PDF)", href: "/docs/projects/legarant-axg-salesforce-deployment/heroku-changes.pdf" },
+              { label: "Guía de despliegue (PDF)", href: "/docs/projects/legarant-axg-salesforce-deployment/deployment.pdf" },
+              { label: "Requisitos / especificación (PDF)", href: "/docs/projects/legarant-axg-salesforce-deployment/requirements.pdf" },
+              { label: "Brief del proyecto (DOCX)", href: "/docs/projects/legarant-axg-salesforce-deployment/brief.docx" },
+              { label: "Guía Heroku anterior (PDF)", href: "/docs/projects/legarant-axg-salesforce-deployment/legacy-heroku-guide.pdf" },
+              { label: "Umbrales del nivel gratuito de Azure (PDF)", href: "/docs/projects/legarant-axg-salesforce-deployment/azure-free-tier-thresholds.pdf" },
+              { label: "Enlace del repositorio (TXT)", href: "/docs/projects/legarant-axg-salesforce-deployment/repository-link.txt" },
+              { label: "Enlace de staging (TXT)", href: "/docs/projects/legarant-axg-salesforce-deployment/sandbox-link.txt" }
+            ]
+          },
+          {
+            type: "code",
+            title: "Enlaces (repo + staging)",
+            language: "text",
+            code: `Repository: https://github.com/Aiyeesha/Projet-12/tree/main\nStaging app: https://legarant-staging-78a7880351d1.herokuapp.com`,
+          }
+        ]
       }
     }
   },
@@ -641,6 +855,83 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           ]
         }
       ]
+    },
+    es: {
+      heroSubtitle: "CRM Salesforce de seguimiento de entregas — diseño y entregables (LTP)",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Le Temps des Papillons (LTP) es un grupo francés (lujo / moda / belleza). Los comerciales necesitan un CRM fluido para gestionar el ciclo Lead → Cuenta/Contacto/Oportunidad, y luego crear entregas.",
+            "Los agentes de soporte reciben ~194 llamadas/día de clientes que quieren conocer el estado de su entrega, pero los datos están repartidos entre 3 transportistas (Francia, Europa, Internacional).",
+            "El objetivo del proyecto: producir un diseño técnico completo de la aplicación Salesforce (especificaciones, modelo de datos, seguridad, estrategia de importación e integración)."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Necesidades clave",
+          items: [
+            "Acceder rápidamente a la ficha del cliente desde un número de pedido, el nombre o el email.",
+            "Automatizar el seguimiento de entregas e informar automáticamente a los clientes de los cambios de estado.",
+            "Diseñar un modelo de datos claro (objetos estándar + personalizados) para las entregas y el tracking.",
+            "Definir un modelo de seguridad (perfiles / roles / reglas de colaboración) adaptado a los usos de Comercial vs Soporte.",
+            "Preparar una estrategia de importación inicial realista y compatible con un alto volumen de datos."
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Enfoque de entrega",
+          steps: [
+            {
+              title: "Especificaciones técnicas",
+              description: "Definición del alcance, lista de objetos (estándar + personalizados), procesos clave e interfaces de integración por transportista."
+            },
+            {
+              title: "Diagrama UML (modelo de datos)",
+              description: "Formalización de entidades y relaciones para dar soporte a Oportunidades, Pedidos/Entregas, Transportistas y estados de tracking."
+            },
+            {
+              title: "Seguridad y visibilidad",
+              description: "Perfiles + roles, permisos de acceso por objeto y reglas de colaboración (quién ve qué) para los equipos comerciales y de soporte."
+            },
+            {
+              title: "Estrategia de importación / migración",
+              description: "Plan de carga (Data Loader / ETL), External IDs, orden de dependencias y validaciones para conjuntos de datos voluminosos."
+            }
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Cifras clave (alcance)",
+          items: [
+            { label: "Transportistas", value: "3", note: "Francia / Europa / Internacional" },
+            { label: "Soporte", value: "≈194 llamadas/día", note: "Solicitudes de seguimiento de entrega" },
+            { label: "Cuentas", value: "2.123.000", note: "Volumetría inicial" },
+            { label: "Contactos", value: "3.239.870", note: "Volumetría inicial" }
+          ]
+        },
+        {
+          type: "text",
+          title: "Evaluación y comentarios",
+          paragraphs: [
+            "⚠️ Nota: el documento proporcionado contiene dos bloques de evaluación distintos (uno indicando las competencias validadas, el otro listando puntos a corregir). Para evitar cualquier interpretación errónea, destaco a continuación los comentarios accionables.",
+            "Puntos de mejora mencionados: (1) orden de dependencias en la importación (ej. Productos antes que PricebookEntry), (2) respetar el punto de partida «Público de solo lectura» cuando se solicita explícitamente, (3) integración SFTP: preferir un ETL en lugar de un Batch Apex."
+          ]
+        },
+        {
+          type: "resources",
+          title: "Entregables y evidencias",
+          items: [
+            { label: "Especificaciones técnicas (PDF)", href: "/docs/projects/ltp-apex-backend-prototype/specifications.pdf" },
+            { label: "Diagrama UML (PDF)", href: "/docs/projects/ltp-apex-backend-prototype/uml-data-model.pdf" },
+            { label: "Derechos de acceso y colaboración (PDF)", href: "/docs/projects/ltp-apex-backend-prototype/access-rights.pdf" },
+            { label: "Estrategia de importación (PDF)", href: "/docs/projects/ltp-apex-backend-prototype/import-strategy.pdf" },
+            { label: "Requisitos (PDF)", href: "/docs/projects/ltp-apex-backend-prototype/requirements.pdf" },
+            { label: "Escenario del proyecto (DOCX)", href: "/docs/projects/ltp-apex-backend-prototype/brief.docx" }
+          ]
+        }
+      ]
     }
   }
 },
@@ -792,6 +1083,67 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             ]
           }
         ]
+      },
+      es: {
+        heroSubtitle: "Entrega de un backend Apex (iDEM Connect)",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "iDEM Connect es un proveedor de acceso a Internet global y un actor de las tecnologías de conexión. Se diseñó una nueva aplicación Salesforce para ayudar a los equipos comerciales a vender mejor, hacer seguimiento de clientes y gestionar contratos de suscripción.",
+              "Mi alcance: entregar el backend Apex (trigger, clases de servicio, batch + scheduler) con un enfoque «listo para producción»: documentación, pruebas unitarias y trazabilidad requisitos → implementación."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Lo que se solicitaba",
+            items: [
+              "Desarrollar un Trigger Apex y clases Apex que cubran las funcionalidades de la grilla.",
+              "Proporcionar un Batch Apex y su Scheduler para los procesos recurrentes.",
+              "Respetar las buenas prácticas de Apex (bulkificación, límites de Salesforce).",
+              "Producir la documentación de las clases (PDF) y un informe de ejecución de pruebas mostrando la cobertura."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Enfoque de implementación",
+            items: [
+              "Arquitectura en capa de servicio: triggers «ligeros», responsabilidades claras, mejor mantenibilidad.",
+              "Bulkificación sistemática (colecciones/maps), con 0 SOQL/DML dentro de bucles.",
+              "Batch + Scheduler para ejecutar actualizaciones recurrentes de forma fiable y predecible.",
+              "Pruebas unitarias alineadas con la grilla funcional + informe de pruebas para demostrar la cobertura."
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Calidad y evidencias",
+            items: [
+              { label: "Competencias validadas (evaluación)", value: "3/3" },
+              { label: "Cobertura de código", value: "> 75%" },
+              { label: "SOQL/DML en bucles", value: "0" }
+            ]
+          },
+          {
+            type: "text",
+            title: "Comentarios de la evaluación",
+            paragraphs: [
+              "Los comentarios destacan entregables completos y pertinentes: clases documentadas, pruebas unitarias ejecutadas correctamente cubriendo las funcionalidades, respeto de los estándares Apex (bulk-safe), y un backend que combina trigger, servicios y batch/scheduler para responder a los casos de uso sobre Account y Order."
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables y evidencias",
+            items: [
+              { label: "Brief del proyecto (DOCX)", href: "/docs/projects/idemconnect-apex-backend/brief.docx" },
+              { label: "Requisitos (PDF)", href: "/docs/projects/idemconnect-apex-backend/cahier-des-charges.pdf" },
+              { label: "Grilla de funcionalidades (PDF)", href: "/docs/projects/idemconnect-apex-backend/grille-de-fonctionnalites.pdf" },
+              { label: "Enlace del repositorio / código (TXT)", href: "/docs/projects/idemconnect-apex-backend/code-repo.txt" },
+              { label: "Documentación de las clases (PDF)", href: "/docs/projects/idemconnect-apex-backend/documentation.pdf" },
+              { label: "Informe de ejecución de pruebas (PDF)", href: "/docs/projects/idemconnect-apex-backend/rapport-tests.pdf" }
+            ]
+          }
+        ]
       }
     }
   },
@@ -929,6 +1281,62 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
               { label: "Brief du projet (DOCX)", href: "/docs/projects/fasha-apex-backend-optimization/brief.docx" },
               { label: "Note de cadrage (PDF)", href: "/docs/projects/fasha-apex-backend-optimization/note-de-cadrage.pdf" },
               { label: "Lien du dépôt (TXT)", href: "/docs/projects/fasha-apex-backend-optimization/repository.txt" }
+            ]
+          }
+        ]
+      },
+      es: {
+        heroSubtitle: "Optimización de backend Apex (FASHA)",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "FASHA (distribución de ropa) presentaba problemas de rendimiento y fiabilidad en el backend de Salesforce.",
+              "Los batches semanales se volvían demasiado lentos tras las actualizaciones de precios de productos, la aplicación se bloqueaba al editar simultáneamente Cuentas y Pedidos, y el código estaba poco estructurado (naming, clases demasiado largas)."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Necesidades del cliente",
+            items: [
+              "Optimizar los batches que recalculan la facturación de las cuentas tras cambios de precio de los productos.",
+              "Evitar comportamientos bloqueantes durante ediciones concurrentes en Cuentas y Pedidos.",
+              "Reorganizar el código Apex para mejorar la mantenibilidad (responsabilidades claras, convenciones de nombres)."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Implementación",
+            items: [
+              "Refactorización en arquitectura trigger → handler/servicios: triggers «ligeros», DML/SOQL trasladados a clases dedicadas (bulk-safe).",
+              "Bulkificación de los cálculos (facturación / importe neto) mediante colecciones y maps; consolidación de consultas; eliminación de todo SOQL/DML en bucles.",
+              "Optimización de las consultas sobre pedidos (filtros selectivos) y refuerzo del batch para procesar mayores volúmenes sin timeout."
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Calidad y evidencias",
+            items: [
+              { label: "Competencias validadas (jurado)", value: "2/2" },
+              { label: "SOQL/DML en bucles", value: "0" },
+              { label: "Cobertura de pruebas", value: "Buena (feedback del jurado)" }
+            ]
+          },
+          {
+            type: "text",
+            title: "Comentarios de la evaluación",
+            paragraphs: [
+              "El jurado destaca: triggers sin operaciones de BD/DML (trasladadas a clases separadas), código bien testeado con buena cobertura, cálculos de facturación/importe neto correctos, batch + controlador funcionales, consultas SOQL optimizadas con filtro y capacidad de procesar varias líneas de pedido."
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables y evidencias",
+            items: [
+              { label: "Brief del proyecto (DOCX)", href: "/docs/projects/fasha-apex-backend-optimization/brief.docx" },
+              { label: "Nota de encuadre (PDF)", href: "/docs/projects/fasha-apex-backend-optimization/note-de-cadrage.pdf" },
+              { label: "Enlace del repositorio (TXT)", href: "/docs/projects/fasha-apex-backend-optimization/repository.txt" }
             ]
           }
         ]
@@ -1101,6 +1509,75 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             ]
           }
         ]
+      },
+      es: {
+        heroSubtitle: "Migración de Visualforce a Lightning (WireBright)",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "EG Manufacturing utilizaba Salesforce Classic con páginas Visualforce y botones JavaScript personalizados.",
+              "El objetivo era migrar a Lightning Experience para acceder a las funcionalidades recientes, modernizar la UX y mantener un comportamiento de negocio equivalente.",
+              "El trabajo incluye un plan de migración (especificaciones), evidencias antes/después (capturas) y las primeras conversiones (Visualforce + botón JavaScript)."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Objetivos",
+            items: [
+              "Identificar los componentes Classic afectados por la migración a Lightning (páginas Visualforce, botones JavaScript, UI personalizada).",
+              "Proponer opciones de conversión con pros/contras (patrones Lightning) y estimar el esfuerzo por componente.",
+              "Proporcionar evidencias antes/después y explicar las ventajas de Lightning para cada pantalla.",
+              "Empezar convirtiendo las páginas Visualforce y los botones JavaScript que dejarían de funcionar en Lightning."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Solución",
+            items: [
+              "Especificaciones técnicas y funcionales: inventario de componentes + propuesta de conversión.",
+              "Estrategia de conversión de los botones JavaScript (acciones/patrones compatibles con Lightning).",
+              "Validación mediante capturas de pantalla comparativas (Classic vs Lightning) y controles funcionales."
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Impacto y evidencias",
+            items: [
+              { label: "Pantallas comparadas", value: "3 (antes/después)" },
+              { label: "Componentes legacy migrados", value: "2 (Visualforce + botón JS)" },
+              { label: "Competencias validadas (jurado)", value: "2/2" }
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables y evidencias",
+            items: [
+              { label: "Especificaciones técnicas y funcionales (PDF)", href: "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf" },
+              { label: "Manual de instalación (PDF)", href: "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf" },
+              { label: "Ventajas de Lightning (PDF)", href: "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf" },
+              { label: "Capturas antes/después (ZIP)", href: "/docs/projects/wirebright-visualforce-to-lightning/screenshots.zip" },
+              { label: "Solicitud / brief del proyecto (DOCX)", href: "/docs/projects/wirebright-visualforce-to-lightning/brief.docx" }
+            ]
+          },
+          {
+            type: "text",
+            title: "Comentarios del jurado",
+            paragraphs: [
+              "Se validaron las 2 competencias evaluadas: integración de wireframes / evidencias mediante capturas, y producción de documentación técnica y funcional.",
+              "Puntos fuertes señalados: buena comprensión, propuesta de solución completa (pros/contras + estimaciones), y migración efectiva de los componentes clave."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Stack y herramientas",
+            items: [
+              "Salesforce Classic → Lightning Experience (Visualforce, patrones Lightning).",
+              "Entrega orientada a documentación (especificaciones, guía de instalación, pack de evidencias)."
+            ]
+          }
+        ]
       }
     }
   },
@@ -1259,6 +1736,86 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
               "Backlog unique, détaillé, priorisé et chiffré.",
               "Flux de travail clair (statuts distincts) et limites WIP respectées.",
               "Demandes classées par priorité, outil adapté utilisé."
+            ]
+          }
+        ]
+      },
+      es: {
+        heroSubtitle: "Entrega de una aplicación Lightning, estrategia de pruebas y mejoras continuas (Avenir Télécom)",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "Tras una auditoría interna, los equipos de venta al consumidor de la zona Sur de Avenir Télécom necesitaban una nueva aplicación Lightning, mejor alineada con sus usos diarios.",
+              "Definí la estrategia de implementación y coordiné la organización de la entrega con un pequeño equipo (3 desarrolladores Salesforce: senior / confirmado / júnior) en dos fases: plan y calidad, y luego backlog de evoluciones tras 3 meses de piloto."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Necesidades de negocio",
+            items: [
+              "Definir una estrategia de implementación a partir del pliego de requisitos.",
+              "Construir un Product Backlog (buenas prácticas Scrum): valor de negocio, prioridad y estimación.",
+              "Producir un cuaderno de pruebas unitarias y de integración: funcionalidades a probar, clases de test asociadas y buenas prácticas/requisitos.",
+              "Tras 3 meses de uso, consolidar las solicitudes y crear un backlog Kanban (evoluciones / correcciones) con estados y límites WIP."
+            ]
+          },
+          {
+            type: "timeline",
+            title: "Enfoque de implementación",
+            steps: [
+              {
+                title: "Fase 1 — Plan y estrategia de calidad",
+                description: "Backlog Scrum, estrategia de entrega y cuaderno de pruebas (unitarias + integración) para garantizar una puesta en producción controlada y verificable."
+              },
+              {
+                title: "Fase 2 — Mejoras continuas",
+                description: "Tras 3 meses de uso por parte de los comerciales, consolidación de las solicitudes y producción de un backlog Kanban priorizado (estados distintos + límites WIP)."
+              }
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Lo que demuestra este proyecto",
+            items: [
+              { label: "Calidad del backlog", value: "Detallado, priorizado y estimado", note: "Valor de negocio + orden + esfuerzo" },
+              { label: "Preparación para pruebas", value: "Cuaderno de pruebas completo", note: "Mapeo funcionalidades → clases" },
+              { label: "Mejora continua", value: "Kanban + límites WIP", note: "Flujo de trabajo claro" }
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Stack y método",
+            items: [
+              "Salesforce Lightning (App Builder y configuración).",
+              "Ágil: Scrum (Product Backlog), luego Kanban para las evoluciones.",
+              "Calidad: cuaderno de pruebas unitarias/integración + buenas prácticas."
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables y evidencias",
+            items: [
+              { label: "Brief (DOCX)", href: "/docs/projects/avenir-telecom-lightning-app/brief.docx" },
+              { label: "Pliego de requisitos (PDF)", href: "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf" },
+              { label: "Estrategia de implementación (PDF)", href: "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf" },
+              { label: "Backlog inicial (XLSX)", href: "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx" },
+              { label: "Cuaderno de pruebas (XLSX)", href: "/docs/projects/avenir-telecom-lightning-app/test-workbook.xlsx" },
+              { label: "Informe de auditoría (PDF)", href: "/docs/projects/avenir-telecom-lightning-app/audit-report.pdf" },
+              { label: "Solicitudes de evoluciones/correcciones (PDF)", href: "/docs/projects/avenir-telecom-lightning-app/requests-evolutions-corrections.pdf" },
+              { label: "Backlog de evoluciones (export Kanban, PDF)", href: "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf" },
+              { label: "Backlog de evoluciones (XLSX)", href: "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions.xlsx" }
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Feedback del jurado (síntesis)",
+            items: [
+              "Cuaderno de pruebas completo.",
+              "Backlog único, detallado, priorizado y estimado.",
+              "Flujo de trabajo claro (estados distintos) y límites WIP respetados.",
+              "Solicitudes clasificadas por prioridad, herramienta adecuada utilizada."
             ]
           }
         ]
@@ -1489,6 +2046,108 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             ]
           }
         ]
+      },
+      es: {
+        heroSubtitle: "Diseño de una solución Salesforce (Tours For Life)",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "Tours For Life quería acelerar su desarrollo comercial simplificando a la vez la gestión de los viajes (proceso demasiado complejo). El objetivo era diseñar una solución Salesforce realmente utilizable por los comerciales: creación de prospectos, conversión en viajeros, gestión de viajes, informes y paneles de control.",
+              "Durante el encuadre se añadió una necesidad adicional: gestionar la flota de autobuses directamente en Salesforce, controlada por los directores comerciales y vinculada a los viajes (un mismo autobús puede usarse en varios viajes)."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Necesidades clave (brief del cliente)",
+            items: [
+              "Crear y calificar prospectos en Salesforce (Lead).",
+              "Convertir los prospectos en viajeros (Person Accounts) y centralizar la información del cliente.",
+              "Crear y gestionar viajes para los viajeros, con seguimiento de capacidad y plazas disponibles.",
+              "Generar informes y paneles de control para el seguimiento comercial y operativo.",
+              "Gestionar una flota de autobuses y vincular los autobuses a los viajes (varios viajes por autobús)."
+            ]
+          },
+          {
+            type: "text",
+            title: "Visión general de la solución",
+            paragraphs: [
+              "El modelo de datos y la automatización se diseñaron en torno al ciclo completo: Lead → Viajero → Viaje. La implementación prioriza los objetos estándar (Lead, Actividades) e introduce objetos personalizados para la parte operativa (Viaje) y para la gestión de flota (Flota de autobuses).",
+              "Se implementó un Flow record-triggered para decrementar automáticamente el campo «Plazas disponibles» cuando se asignan viajeros a un viaje, garantizando un seguimiento de capacidad fiable."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Puntos clave del modelo de datos",
+            items: [
+              "Los prospectos se gestionan mediante el objeto estándar Lead y luego se convierten en Person Accounts (viajeros).",
+              "Los viajes se crean y se asocian a los viajeros para el seguimiento operativo.",
+              "Nuevo objeto «Flota de autobuses»: número del autobús (Texto), capacidad (Número), lookup hacia «Viaje».",
+              "El modelo está construido para alimentar dashboards en la página de inicio (KPIs + vistas operativas)."
+            ]
+          },
+          {
+            type: "text",
+            title: "Seguridad (roles, perfiles, accesos)",
+            paragraphs: [
+              "Los accesos se diseñaron para dos audiencias: comerciales y directores comerciales. En la configuración entregada se crearon dos perfiles (Comercial y Director comercial) y tres roles para reflejar la jerarquía.",
+              "Con perspectiva, un enfoque más escalable consiste en mantener un único perfil «Comercial» y otorgar los permisos de director mediante un Permission Set: esto reduce el mantenimiento y hace más flexible la evolución de los accesos."
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Lo que demuestra este proyecto",
+            items: [
+              {
+                label: "Competencias validadas",
+                value: "4/4",
+                note: "Análisis de necesidades, decisiones técnicas, modelo de datos y reglas de negocio, especificaciones detalladas."
+              },
+              {
+                label: "Automatización entregada",
+                value: "Flow",
+                note: "Decremento automático de «Plazas disponibles» para un seguimiento fiable de la capacidad."
+              },
+              {
+                label: "Diseño de seguridad",
+                value: "2 perfiles + 3 roles",
+                note: "Accesos a objetos documentados y jerarquía implementada (con propuesta de mejora)."
+              }
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables y evidencias",
+            items: [
+              {
+                label: "Especificaciones detalladas (PDF)",
+                href: "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
+                note: "Especificaciones funcionales + técnicas alineadas con el pliego de requisitos."
+              },
+              {
+                label: "Presentación (PPTX)",
+                href: "/docs/projects/tours-for-life-salesforce-solution/presentation.pptx",
+                note: "Soporte de presentación de la solución (encuadre, decisiones, demostración)."
+              },
+              {
+                label: "Modelo de datos (PNG)",
+                href: "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
+                note: "Captura del esquema (objetos y relaciones)."
+              },
+              {
+                label: "Pliego de requisitos (PDF)",
+                href: "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
+                note: "Brief inicial + incorporación de la gestión de flota."
+              },
+              {
+                label: "Guía de creación de sandbox (PDF)",
+                href: "/docs/projects/tours-for-life-salesforce-solution/sandbox-creation-guide.pdf",
+                note: "Procedimiento utilizado para preparar un entorno de demostración."
+              }
+            ]
+          }
+        ]
       }
     }
   },
@@ -1707,6 +2366,109 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             ]
           }
         ]
+      },
+      es: {
+        heroSubtitle:
+          "Auditoría y modernización de una org Salesforce para una escuela en línea: rediseño del modelo de datos, automatizaciones (Flows) y reporting.",
+        sections: [
+          {
+            type: "text",
+            title: "Contexto",
+            paragraphs: [
+              "Digit Learning es una escuela en línea. Los equipos comerciales llevan ~2 años usando Salesforce para gestionar Estudiantes, Mentores y Formaciones.",
+              "Tras entrevistas con usuarios clave, el departamento de IT solicitó una auditoría estructurada y la implementación de mejoras concretas para reducir el trabajo manual, fiabilizar los datos y mejorar la toma de decisiones."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Necesidades de los usuarios (entrevistas)",
+            items: [
+              "Permitir que un mismo estudiante se inscriba en varias formaciones (el modelo inicial era demasiado restrictivo).",
+              "Automatizar las inscripciones y la asignación de mentores para reducir manipulaciones y errores.",
+              "Implementar un seguimiento de antiguos clientes para mejorar la reactivación y el reenganche.",
+              "Gestionar mejor las formaciones (capacidad, seguimiento) con indicadores fiables.",
+              "Proporcionar informes/paneles accionables (estudiantes por estado, plazas disponibles, tasa de conversión)."
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Lo que implementé",
+            items: [
+              "Actualización del modelo de datos: creación de un objeto de unión «Formaciones compradas» (master-detail hacia Estudiantes y Formaciones) para gestionar varias inscripciones por estudiante + roll-up summaries (historial, contadores…).",
+              "Automatización: Flow record-triggered sobre «Formaciones compradas» para fiabilizar el proceso de inscripción y mantener actualizadas las plazas disponibles.",
+              "Automatización: Flow programado para gestionar el ciclo de vida de los estudiantes (Cliente activo vs Antiguo cliente) según las formaciones activas.",
+              "Reporting: creación de informes (plazas disponibles, estudiantes agrupados por estado y por mentor, comparativo de la tasa de conversión prospecto → cliente activo).",
+              "Documentación: guías de despliegue + importación de datos para un paso a producción reproducible."
+            ]
+          },
+          {
+            type: "metrics",
+            title: "Resultados medidos (cualitativos y cuantitativos)",
+            items: [
+              {
+                label: "Tiempo de procesamiento de una inscripción",
+                value: "20 → 5 min / estudiante",
+                note: "Estimación: 75% de tiempo ahorrado por inscripción gracias a la automatización."
+              },
+              {
+                label: "Seguimiento de antiguos clientes",
+                value: "500 registros",
+                note: "Reenganche observado: +15% (seguimiento habilitado y accionable)."
+              },
+              {
+                label: "Tasa de éxito de las formaciones",
+                value: "70% → 85%",
+                note: "Mejora: +15% gracias a un mejor seguimiento y una gestión más fiable."
+              }
+            ]
+          },
+          {
+            type: "resources",
+            title: "Entregables y evidencias",
+            items: [
+              {
+                label: "Informe de auditoría (DOCX)",
+                href: "/docs/projects/digit-learning-salesforce-update/audit-report.docx",
+                note: "Hallazgos + recomendaciones basados en entrevistas con usuarios."
+              },
+              {
+                label: "Análisis cualitativo y cuantitativo (DOCX)",
+                href: "/docs/projects/digit-learning-salesforce-update/analysis-report.docx",
+                note: "Estimaciones de tiempo ahorrado + explicación del impacto en el negocio."
+              },
+              {
+                label: "Guía de despliegue (PDF)",
+                href: "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf"
+              },
+              {
+                label: "Guía de importación de datos (PDF)",
+                href: "/docs/projects/digit-learning-salesforce-update/data-import-guide.pdf"
+              },
+              {
+                label: "Notas de las entrevistas (PDF)",
+                href: "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf"
+              },
+              {
+                label: "Enlace de instalación del paquete (TXT)",
+                href: "/docs/projects/digit-learning-salesforce-update/package-installation-link.txt"
+              },
+              {
+                label: "Pack de capturas de pantalla (ZIP)",
+                href: "/docs/projects/digit-learning-salesforce-update/screenshots.zip",
+                note: "Schema Builder + Flows + reporting."
+              }
+            ]
+          },
+          {
+            type: "bullets",
+            title: "Stack y herramientas",
+            items: [
+              "Salesforce: objetos personalizados, relaciones master-detail, roll-up summaries, validación y reporting.",
+              "Automatización: Flows record-triggered y programados (patrones mantenibles).",
+              "Documentación: guías de despliegue e importación para una operación reproducible."
+            ]
+          }
+        ]
       }
     }
   },
@@ -1741,6 +2503,20 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             ]
           }
         ]
+      },
+      es: {
+        heroSubtitle: "CI/CD pipeline setup",
+        sections: [
+          {
+            type: "bullets",
+            title: "Lo que hice",
+            items: [
+              "Definición del alcance: objetivos, entregables, criterios de aceptación.",
+              "Realización: implementación y/o documentación de principio a fin.",
+              "Validación: pruebas / evidencias + redacción de la documentación."
+            ]
+          }
+        ]
       }
     }
   },
@@ -1771,6 +2547,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP internship" },
       fr: { heroSubtitle: "Windows Autopilot · Dell Image Assist · Blancco · Intune · Stage MIDRANGE GROUP" },
+      es: { heroSubtitle: "Windows Autopilot · Dell Image Assist · Blancco · Intune · Prácticas en MIDRANGE GROUP" },
     },
   },
   {
@@ -1788,6 +2565,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP internship" },
       fr: { heroSubtitle: "Autotask PSA · Splashtop · Webroot · Datto RMM · Stage MIDRANGE GROUP" },
+      es: { heroSubtitle: "Autotask PSA · Splashtop · Webroot · Datto RMM · Prácticas en MIDRANGE GROUP" },
     },
   },
   {
@@ -1799,6 +2577,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Samsung DDR4 · Samsung SSD · Acronis Clone · HP Laptop · Personal Project" },
       fr: { heroSubtitle: "Samsung DDR4 · Samsung SSD · Clone Acronis · HP Laptop · Projet personnel" },
+      es: { heroSubtitle: "Samsung DDR4 · Samsung SSD · Clonado Acronis · HP Laptop · Proyecto personal" },
     },
   },
   {
@@ -1816,6 +2595,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP internship" },
       fr: { heroSubtitle: "Datto RMM · Splashtop · MalwareBytes · Stage MIDRANGE GROUP" },
+      es: { heroSubtitle: "Datto RMM · Splashtop · MalwareBytes · Prácticas en MIDRANGE GROUP" },
     },
   },
   {
@@ -1828,6 +2608,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP internship" },
       fr: { heroSubtitle: "Acronis Cyber Backup · Acronis Cyber Protect Cloud · Stage MIDRANGE GROUP" },
+      es: { heroSubtitle: "Acronis Cyber Backup · Acronis Cyber Protect Cloud · Prácticas en MIDRANGE GROUP" },
     },
   },
   {
@@ -1866,6 +2647,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS" },
       fr: { heroSubtitle: "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS" },
+      es: { heroSubtitle: "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS" },
     },
   },
   {
@@ -1885,6 +2667,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17" },
       fr: { heroSubtitle: "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17" },
+      es: { heroSubtitle: "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17" },
     },
   },
   {
@@ -1904,6 +2687,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "AOMEI Partition Assistant · AOMEI Backupper · Windows Server Backup · VirtualBox · Greta du Val d'Oise" },
       fr: { heroSubtitle: "AOMEI Partition Assistant · AOMEI Backupper · Sauvegarde Windows Server · VirtualBox · Greta du Val d'Oise" },
+      es: { heroSubtitle: "AOMEI Partition Assistant · AOMEI Backupper · Copia de seguridad Windows Server · VirtualBox · Greta du Val d'Oise" },
     },
   },
   {
@@ -1921,6 +2705,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise" },
       fr: { heroSubtitle: "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise" },
+      es: { heroSubtitle: "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise" },
     },
   },
   {
@@ -1932,6 +2717,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "TP-Link Access Point · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise" },
       fr: { heroSubtitle: "Point d'acces TP-Link · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise" },
+      es: { heroSubtitle: "Punto de acceso TP-Link · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise" },
     },
   },
   {
@@ -1947,6 +2733,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Active Directory · Roaming Profiles · Windows Server · EBTAI Domain · Greta du Val d'Oise" },
       fr: { heroSubtitle: "Active Directory · Profils itinerants · Windows Server · Domaine EBTAI · Greta du Val d'Oise" },
+      es: { heroSubtitle: "Active Directory · Perfiles móviles · Windows Server · Dominio EBTAI · Greta du Val d'Oise" },
     },
   },
   {
@@ -1957,6 +2744,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Hardware Sizing · Excel Devis · Component Research · Greta du Val d'Oise" },
       fr: { heroSubtitle: "Dimensionnement materiel · Devis Excel · Recherche composants · Greta du Val d'Oise" },
+      es: { heroSubtitle: "Dimensionamiento de hardware · Presupuesto Excel · Investigación de componentes · Greta du Val d'Oise" },
     },
   },
   {
@@ -1968,6 +2756,7 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
     locales: {
       en: { heroSubtitle: "Outlook 2016 · Exchange ActiveSync · User Onboarding · Greta du Val d'Oise" },
       fr: { heroSubtitle: "Outlook 2016 · Exchange ActiveSync · Onboarding utilisateur · Greta du Val d'Oise" },
+      es: { heroSubtitle: "Outlook 2016 · Exchange ActiveSync · Incorporación de usuarios · Greta du Val d'Oise" },
     },
   },
 
@@ -2151,6 +2940,95 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
         {
           type: "code",
           title: "Dépôt GitHub",
+          language: "text",
+          code: "https://github.com/Aiyeesha/DAHOUMANE-Aicha-Imene-Debuggez-une-applicationJava.git",
+        }
+      ]
+    },
+    es: {
+      heroSubtitle: "Depurar y refactorizar una aplicación Java de análisis de síntomas (Heme Biotech)",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Heme Biotech necesitaba un programa de análisis sencillo: leer un archivo de síntomas y generar el número de ocurrencias por síntoma.",
+            "La lectura del archivo era correcta, pero el conteo era incorrecto (ej. 3 ocurrencias en el archivo → 0 en la salida para todos los síntomas)."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Objetivos",
+          items: [
+            "Corregir el conteo para agregar correctamente las ocurrencias de cada síntoma.",
+            "Generar un archivo de salida (result.out) ordenado alfabéticamente, con el formato: síntoma, cantidad.",
+            "Refactorizar en POO (interfaces + métodos cortos) para hacer el código mantenible.",
+            "Aplicar un flujo de trabajo Git limpio (rama dev, commits frecuentes, historial claro)."
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Enfoque",
+          steps: [
+            {
+              title: "Reproducir y aislar el error",
+              description:
+                "Ejecución local, comparación de la salida con el comportamiento esperado, y localización del punto de cálculo de las ocurrencias."
+            },
+            {
+              title: "Corrección del conteo + casos límite",
+              description:
+                "Implementación de un conteo robusto (agregación vía Map) y validación del incremento en síntomas repetidos."
+            },
+            {
+              title: "Refactorización mediante interfaces",
+              description:
+                "Creación de la interfaz de escritura (ISymptomWriter) y división en etapas: leer → contar → ordenar → escribir."
+            },
+            {
+              title: "Orden alfabético determinista",
+              description:
+                "Uso de una estructura ordenada (TreeMap) para garantizar el orden alfabético sin lógica de ordenación adicional."
+            },
+            {
+              title: "Refuerzo de la calidad",
+              description:
+                "Limpieza del código (naming camelCase, eliminación de comentarios innecesarios), añadido de Javadoc, indentación y validaciones repetidas."
+            }
+          ]
+        },
+        {
+          type: "code",
+          title: "Ejecutar en local",
+          language: "bash",
+          code: "javac com/hemebiotech/analytics/*.java\njava -cp \".\" com.hemebiotech.analytics.Main"
+        },
+        {
+          type: "metrics",
+          title: "Resultados",
+          items: [
+            { label: "Conteo correcto", value: "Los recuentos coinciden con las ocurrencias del archivo" },
+            { label: "Salida ordenada", value: "Orden alfabético garantizado (TreeMap)" },
+            { label: "Arquitectura mantenible", value: "Interfaces reader/writer + métodos cortos" },
+            { label: "Listo para trabajo en equipo", value: "Flujo Git + código documentado (Javadoc)" }
+          ]
+        },
+        {
+          type: "resources",
+          title: "Entregables",
+          items: [
+            { label: "Brief del proyecto (DOCX)", href: "/docs/projects/hemebiotech-java-debug/brief.docx" },
+            { label: "Guía de pasos clave (PDF)", href: "/docs/projects/hemebiotech-java-debug/key-steps-guide.pdf" },
+            { label: "Directrices (PDF)", href: "/docs/projects/hemebiotech-java-debug/directives.pdf" },
+            { label: "Intercambio de emails (PDF)", href: "/docs/projects/hemebiotech-java-debug/email-exchange.pdf" },
+            { label: "Entrega (PDF)", href: "/docs/projects/hemebiotech-java-debug/deliverable.pdf" },
+            { label: "Versión anterior (PDF)", href: "/docs/projects/hemebiotech-java-debug/legacy-version-may-2023.pdf", note: "Referencia" },
+            { label: "Enlace del repositorio (TXT)", href: "/docs/projects/hemebiotech-java-debug/repository.txt" }
+          ]
+        },
+        {
+          type: "code",
+          title: "Repositorio GitHub",
           language: "text",
           code: "https://github.com/Aiyeesha/DAHOUMANE-Aicha-Imene-Debuggez-une-applicationJava.git",
         }
@@ -2365,6 +3243,97 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           code: "https://github.com/Aiyeesha/ParkingSystem.git",
         }
       ]
+    },
+    es: {
+      heroSubtitle: "TDD + pruebas unitarias y de integración en un sistema de pago de parking en Java (Park’it)",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Park’it es un backend de pago de aparcamiento (interfaz en terminal) que debe pasar de una beta a una versión más robusta. El equipo de producto esperaba correcciones de errores, una estrategia de pruebas y nuevas funcionalidades antes de ampliar el despliegue.",
+            "Las expectativas incluían: corregir las regresiones existentes, desarrollar nuevas reglas de tarificación en TDD, completar las pruebas de integración pendientes y proporcionar evidencias de ejecución (informes Surefire + JaCoCo)."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Objetivos y requisitos",
+          items: [
+            "Corregir el error de tarificación que producía duraciones negativas cuando el vehículo permanecía más de 24h.",
+            "Implementar la gratuidad de los primeros 30 minutos (0$) y cubrirla con pruebas unitarias (TDD).",
+            "Implementar un descuento del 5% para usuarios recurrentes (según el número de tickets) y cubrirlo con pruebas unitarias (TDD).",
+            "Reforzar las pruebas de ParkingService mediante mocks de Mockito y alcanzar una alta cobertura en esa clase.",
+            "Completar los TODO de las pruebas de integración (base de datos) y alcanzar una cobertura global >= 70%."
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Flujo de implementación",
+          steps: [
+            {
+              title: "Línea base y reproducción",
+              description:
+                "Configuración del versionado, ejecución de mvn test / mvn verify, y análisis de las pruebas fallidas para aislar las causas."
+            },
+            {
+              title: "Corrección: duración negativa (>24h)",
+              description:
+                "Corrección del cálculo de duración mediante timestamps en milisegundos (Date.getTime()), con conversión coherente a minutos."
+            },
+            {
+              title: "TDD: 30 minutos gratuitos",
+              description:
+                "Escritura de pruebas unitarias (coche + moto) para estancias < 30 minutos, y adaptación de FareCalculatorService para devolver una tarifa de 0 en ese caso."
+            },
+            {
+              title: "TDD: descuento 5% usuario recurrente",
+              description:
+                "Añadido de un flujo calculateFare(Ticket, boolean), implementación del conteo en TicketDAO (getNbTicket), y aplicación del descuento cuando el usuario no está en su primer uso."
+            },
+            {
+              title: "Refuerzo de pruebas unitarias (Mockito)",
+              description:
+                "Ampliación de las pruebas unitarias de ParkingService mediante mocks (TicketDAO, ParkingSpotDAO, InputReader), y adición de pruebas específicas para cubrir los caminos exitosos y de error."
+            },
+            {
+              title: "Pruebas de integración + informes",
+              description:
+                "Finalización de los TODO en ParkingDatabaseIT, adición de una prueba de integración para el descuento (usuario recurrente), y generación de los informes Surefire + JaCoCo mediante mvn verify."
+            }
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Resultados de calidad",
+          items: [
+            { label: "Fiabilidad de tarificación", value: "Error de duración negativa corregido" },
+            { label: "Funcionalidades entregadas", value: "30 min gratis + descuento 5% usuario recurrente" },
+            { label: "Alcance de pruebas", value: "Pruebas unitarias + pruebas de integración (BD)" },
+            { label: "Objetivos de cobertura", value: ">= 70% global; > 90% en ParkingService (instrucciones)", note: "Verificado vía JaCoCo" },
+            { label: "Evidencias", value: "Informes Surefire + JaCoCo capturados", note: "Capturas incluidas en los entregables" }
+          ]
+        },
+        {
+          type: "resources",
+          title: "Entregables y evidencias",
+          items: [
+            { label: "Brief del proyecto (DOCX)", href: "/docs/projects/parkit-java-testing/brief-parkit.docx" },
+            { label: "Guía de pasos (PDF)", href: "/docs/projects/parkit-java-testing/guide-etapes.pdf" },
+            { label: "Guía de pasos clave (PDF)", href: "/docs/projects/parkit-java-testing/guide-etapes-cles.pdf" },
+            { label: "Kit técnico de incorporación (PDF)", href: "/docs/projects/parkit-java-testing/kit-technique-onboarding.pdf" },
+            { label: "Versión archivada (PDF)", href: "/docs/projects/parkit-java-testing/ancienne-version-mai-2023.pdf" },
+            { label: "Capturas de informes de pruebas (ZIP)", href: "/docs/projects/parkit-java-testing/screenshots.zip" },
+            { label: "Repositorio GitHub", href: "https://github.com/Aiyeesha/ParkingSystem.git" },
+            { label: "Descargar enlace del repositorio (TXT)", href: "/docs/projects/parkit-java-testing/repository-link.txt" }
+          ]
+        },
+        {
+          type: "code",
+          title: "Repositorio",
+          language: "text",
+          code: "https://github.com/Aiyeesha/ParkingSystem.git",
+        }
+      ]
     }
   }
 },
@@ -2512,6 +3481,65 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           code: "https://github.com/Aiyeesha/Projet-6-Creez-une-interface-utilisateur-pour-votre-application-PochLib.git",
         }
       ]
+    },
+    es: {
+      heroSubtitle: "Interfaz Single Page Application para una librería (Poch’Lib)",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Great’App (Niza) me encargó la realización del front-end de Poch’Lib, una aplicación de gestión de libros solicitada por la librería «La plume enchantée».",
+            "El entregable esperado es una Single Page Application responsive (móvil/tablet/escritorio), conforme a las especificaciones funcionales y a los wireframes UX."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Funcionalidades clave",
+          items: [
+            "Buscar y añadir un libro a la lista del usuario.",
+            "Mostrar los libros guardados y eliminar un libro de la lista.",
+            "Interfaz responsive en 3 formatos (móvil / tablet / escritorio)."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Puntos técnicos",
+          items: [
+            "Integración mobile-first respetando al máximo los wireframes proporcionados.",
+            "HTML semántico + estilos estructurados (enfoque DRY, Sass).",
+            "JavaScript vanilla para actualizar el DOM (añadir/eliminar, estados de UI).",
+            "Fetch para interactuar con una API y obtener el contenido dinámicamente."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Señales de calidad",
+          items: [
+            { label: "Responsive", value: "3 formatos (móvil / tablet / escritorio)" },
+            { label: "Coherencia visual", value: "Wireframes respetados + tipografía/espaciados coherentes" },
+            { label: "Buenas prácticas", value: "HTML/CSS/JS + Sass (CSS estructurado)" },
+            { label: "Dinamismo", value: "Manipulación del DOM + Fetch (API)" }
+          ]
+        },
+        {
+          type: "resources",
+          title: "Entregables y evidencias",
+          items: [
+            { label: "Especificaciones funcionales (PDF)", href: "/docs/projects/pochlib-ui/functional-specs.pdf" },
+            { label: "Brief e informe del jurado (DOCX)", href: "/docs/projects/pochlib-ui/brief.docx" },
+            { label: "Página HTML de demostración (HTML)", href: "/docs/projects/pochlib-ui/index.html" },
+            { label: "Repositorio GitHub", href: "https://github.com/Aiyeesha/Projet-6-Creez-une-interface-utilisateur-pour-votre-application-PochLib.git" },
+            { label: "Descargar enlace del repositorio (TXT)", href: "/docs/projects/pochlib-ui/repository-link.txt" }
+          ]
+        },
+        {
+          type: "code",
+          title: "Repositorio",
+          language: "text",
+          code: "https://github.com/Aiyeesha/Projet-6-Creez-une-interface-utilisateur-pour-votre-application-PochLib.git",
+        }
+      ]
     }
   }
 },
@@ -2607,6 +3635,48 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           title: "Lancer l'outil",
           language: "bash",
           code: `# Aucune installation requise — stdlib uniquement (requests optionnel pour HIBP)\npython password_checker.py`
+        }
+      ]
+    },
+    es: {
+      heroSubtitle: "Analizador de fortaleza de contraseñas — entropía, regex, HaveIBeenPwned (CLI Python)",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Una herramienta de línea de comandos que evalúa rigurosamente la fortaleza de una contraseña sin transmitirla nunca en texto plano. Proyecto personal centrado en la seguridad para explorar el motor de regex de Python, el cálculo de entropía y el diseño de APIs respetuosas con la privacidad.",
+            "La herramienta funciona en modo interactivo en la terminal, enmascara la entrada y produce un informe estructurado completo en una sola pasada."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Lo que construí",
+          items: [
+            "Cálculo de entropía basado en el tamaño del conjunto de caracteres y la longitud de la contraseña (bits), con una puntuación compuesta de 0 a 100.",
+            "Detección de patrones mediante regex: caracteres repetidos, secuencias numéricas/alfabéticas, patrones de teclado (qwerty/azerty), años incluidos, largas series numéricas.",
+            "Comparación con un diccionario de 30+ contraseñas comunes.",
+            "Estimación del tiempo de crackeo a tres velocidades de ataque (10k/s, 1M/s, 1.000M/s) mediante la fórmula del espacio de búsqueda.",
+            "Integración con HaveIBeenPwned mediante k-anonimato: solo se envían a la API los 5 primeros caracteres del hash SHA-1 — la contraseña nunca sale de la máquina.",
+            "Salida de terminal coloreada con ANSI, barra de progreso, checklist por criterio y sugerencias de mejora accionables."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Decisiones técnicas clave",
+          items: [
+            { label: "Modelo de entropía", value: "log₂(pool^longitud) — adaptado al conjunto de caracteres" },
+            { label: "Privacidad HIBP", value: "k-anonimato — solo se envían 5 caracteres del hash SHA-1" },
+            { label: "Motor de patrones", value: "9 reglas regex compiladas (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD…)" },
+            { label: "Rango de puntuación", value: "0–100 con bonificaciones de longitud, complejidad, entropía y penalizaciones" },
+            { label: "Dependencias", value: "solo stdlib (re, hashlib, math, getpass) + requests opcional" }
+          ]
+        },
+        {
+          type: "code",
+          title: "Ejecutar la herramienta",
+          language: "bash",
+          code: `# No requiere instalación — solo stdlib (requests opcional para HIBP)\npython password_checker.py`
         }
       ]
     }
@@ -2758,6 +3828,74 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           code: `# Backend\npip install fastapi uvicorn websockets\npython backend.py\n\n# Frontend (terminal séparé)\ncd scanner-ui\nnpm install && npm run dev`
         }
       ]
+    },
+    es: {
+      heroSubtitle: "Escáner de red en tiempo real — backend FastAPI + WebSocket + interfaz React/Vite",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Un escáner de red local full-stack realizado como proyecto personal de seguridad. El objetivo era producir una herramienta capaz de identificar los hosts activos y los puertos abiertos en un segmento LAN, transmitir los resultados en tiempo real y clasificar cada servicio por nivel de riesgo.",
+            "El proyecto se compone de dos capas: un backend Python FastAPI que realiza el escaneo real con hilos concurrentes, y un frontend React/Vite que se conecta vía WebSocket y muestra los resultados en directo."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Lo que construí",
+          items: [
+            "Backend FastAPI con un endpoint WebSocket que transmite los resultados a medida que se obtienen — sin polling ni recarga de página.",
+            "Escáner de puertos concurrente mediante ThreadPoolExecutor: recorre todos los puertos principales de una subred en paralelo, y luego agrega los resultados por host.",
+            "Tabla de detección de servicios que cubre 100+ puertos conocidos (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
+            "Clasificación de riesgo (alto / medio / bajo) por puerto abierto basada en un RISK_MAP curado (Telnet, RDP, listener de Metasploit, bases de datos expuestas…).",
+            "API REST con CORS habilitado en paralelo al endpoint WebSocket para facilitar la integración.",
+            "Frontend React/Vite con tarjetas de host actualizadas en tiempo real, badges de puertos coloreados por riesgo e indicador de progreso del escaneo."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Puntos técnicos clave",
+          items: [
+            { label: "Transporte", value: "WebSocket (FastAPI + uvicorn) — streaming en tiempo real" },
+            { label: "Concurrencia", value: "ThreadPoolExecutor — sondeo paralelo de puertos por host" },
+            { label: "Cobertura de puertos", value: "100+ servicios conocidos en el dict KNOWN_SERVICES" },
+            { label: "Niveles de riesgo", value: "alto / medio / bajo por puerto (Telnet, RDP, BD expuestas…)" },
+            { label: "Stack", value: "Python 3, FastAPI, uvicorn, websockets · React 18, Vite" }
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Funcionamiento",
+          steps: [
+            {
+              title: "Descubrimiento de hosts",
+              description: "El backend resuelve la subred local y hace ping a cada IP para construir la lista de hosts activos."
+            },
+            {
+              title: "Escaneo de puertos concurrente",
+              description: "Para cada host activo, un ThreadPoolExecutor sondea la lista TOP_PORTS en paralelo, recopilando los puertos abiertos y los nombres de servicios."
+            },
+            {
+              title: "Clasificación de riesgos",
+              description: "Cada puerto abierto se busca en RISK_MAP y se etiqueta como alto / medio / bajo según el riesgo de exposición conocido."
+            },
+            {
+              title: "Streaming WebSocket",
+              description: "Los resultados se envían al frontend en tiempo real en cuanto cada host termina su escaneo — sin esperar a que finalice el escaneo completo."
+            },
+            {
+              title: "Renderizado de la UI React",
+              description: "El frontend Vite/React recibe eventos JSON vía WebSocket y muestra tarjetas de host con badges de puertos coloreados al vuelo."
+            }
+          ]
+        },
+        {
+          type: "code",
+          title: "Ejecutar el proyecto",
+          language: "bash",
+          code: `# Backend\npip install fastapi uvicorn websockets\npython backend.py\n\n# Frontend (terminal separada)\ncd scanner-ui\nnpm install && npm run dev`
+        }
+      ]
     }
   }
 },
@@ -2850,6 +3988,48 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           ]
         }
       ]
+    },
+    es: {
+      heroSubtitle: "Panel de monitorización de seguridad en tiempo real — KPIs, indicadores de amenazas y tendencias de vulnerabilidades.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Diseño y configuración de un panel de monitorización de seguridad de red que ofrece a los equipos y a la dirección una vista centralizada y en tiempo real de la postura de seguridad de la infraestructura.",
+            "El panel destaca las métricas más relevantes — vulnerabilidades abiertas, cobertura de parches, alertas activas — y visualiza las tendencias a lo largo del tiempo para facilitar la toma de decisiones."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Lo que construí",
+          items: [
+            "Widgets KPI que muestran vulnerabilidades abiertas, alertas críticas, endpoints parcheados vs. no parcheados y tiempo medio de remediación.",
+            "Gráficos de tendencias para eventos de seguridad, distribución de severidad de vulnerabilidades y cumplimiento de parches en periodos móviles.",
+            "Vistas filtradas por severidad (crítica / alta / media / baja) para un triaje rápido de los analistas.",
+            "Panel de resumen ejecutivo para informes de dirección, sin ruido técnico crudo."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Indicadores clave cubiertos",
+          items: [
+            { label: "KPIs de vulnerabilidades", value: "Abiertas, parcheadas, críticas — contadores en vivo" },
+            { label: "Ventana de tendencia", value: "Historial de eventos y parches en 30 días móviles" },
+            { label: "Vistas por severidad", value: "4 niveles: crítica / alta / media / baja" },
+            { label: "Audiencia", value: "Triaje de analistas + informes de dirección" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Herramientas y stack",
+          items: [
+            "Plataforma de panel de seguridad (disposición tipo SIEM).",
+            "Fuentes de datos: feeds del escáner de vulnerabilidades, estado de parcheo de endpoints, registros de alertas.",
+            "Principios de diseño: jerarquía de la información, código de color por severidad, capacidad de drill-down."
+          ]
+        }
+      ]
     }
   }
 },
@@ -2938,6 +4118,49 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             "Interprétation des scores CVSS et mapping des findings sur le risque métier.",
             "Production de rapports à double audience (exécutif + technique).",
             "Priorisation de la remédiation par exploitabilité et criticité des actifs."
+          ]
+        }
+      ]
+    },
+    es: {
+      heroSubtitle: "Evaluación de vulnerabilidades Tenable SecurityCenter — resumen ejecutivo, clasificación por severidad y remediación mapeada a CVE.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Realización de una evaluación estructurada de vulnerabilidades con Tenable SecurityCenter para evaluar la postura de seguridad de un segmento de red objetivo.",
+            "El entregable cubre dos niveles: un resumen ejecutivo para las partes interesadas, y un informe técnico de detalles de vulnerabilidades por puerto para el equipo de remediación — cada hallazgo vinculado a referencias CVE y puntuaciones CVSS."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Lo que entregué",
+          items: [
+            "Definición del alcance y ejecución de un escaneo Tenable SecurityCenter sobre el entorno objetivo.",
+            "Informe de resumen ejecutivo: puntuación de riesgo global, recuentos crítico/alto/medio/bajo, comparación de tendencias.",
+            "Informe de detalles de vulnerabilidades por puerto: desglose por host y por puerto con CVE, puntuaciones CVSS y salida de los plugins.",
+            "Lista de prioridades de remediación: hallazgos críticos y altos clasificados por explotabilidad, con las correcciones recomendadas."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Resumen de la evaluación",
+          items: [
+            { label: "Herramienta", value: "Tenable SecurityCenter" },
+            { label: "Capas del informe", value: "Resumen ejecutivo + detalles de vulnerabilidades por puerto" },
+            { label: "Puntuación", value: "CVSS v3 — crítica / alta / media / baja" },
+            { label: "Entregable", value: "Hallazgos mapeados a CVE con guía de remediación" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Competencias demostradas",
+          items: [
+            "Configuración del escáner de vulnerabilidades y definición de la política de escaneo.",
+            "Interpretación de las puntuaciones CVSS y mapeo de los hallazgos al riesgo de negocio.",
+            "Producción de informes de doble audiencia (ejecutivo + técnico).",
+            "Priorización de la remediación por explotabilidad y criticidad de los activos."
           ]
         }
       ]
@@ -3064,6 +4287,65 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
           ]
         }
       ]
+    },
+    es: {
+      heroSubtitle: "Playbook de respuesta a incidentes de phishing — detectar, triar, contener, erradicar, recuperar.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "El phishing sigue siendo uno de los vectores de acceso inicial más frecuentes. Este playbook proporciona a los analistas un flujo de trabajo estructurado y guiado por decisiones para tratar los incidentes de phishing de manera coherente y eficaz.",
+            "Cubre el ciclo de vida completo del incidente — desde la detección inicial hasta la revisión posterior — con puntos de decisión explícitos, rutas de escalado y directrices de comunicación en cada etapa."
+          ]
+        },
+        {
+          type: "timeline",
+          title: "Etapas del playbook",
+          steps: [
+            {
+              title: "Detección y notificación",
+              description: "Alerta generada por la pasarela de correo, una regla SIEM o una notificación de usuario. Triaje inicial: confirmar los indicadores de phishing (remitente, enlaces, adjuntos, cabeceras)."
+            },
+            {
+              title: "Contención",
+              description: "Bloquear el remitente/dominio malicioso a nivel de pasarela. Poner en cuarentena los buzones afectados. Aislar cualquier endpoint que haya abierto un enlace o adjunto. Restablecer credenciales si se sospecha compromiso."
+            },
+            {
+              title: "Erradicación",
+              description: "Eliminar los correos de phishing de todos los buzones (purga de administrador). Revocar las sesiones activas. Escanear los endpoints en busca de malware depositado por algún payload abierto."
+            },
+            {
+              title: "Recuperación",
+              description: "Restaurar el acceso a cuentas y endpoints tras la verificación. Reactivar los servicios progresivamente. Confirmar la ausencia de mecanismos de persistencia."
+            },
+            {
+              title: "Revisión post-incidente",
+              description: "Documentar la cronología, la causa raíz y las lecciones aprendidas. Actualizar las reglas de detección y la formación de concienciación. Producir un informe de incidente para las partes interesadas."
+            }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Características del playbook",
+          items: [
+            "Organigrama de decisión con puertas de rombo en cada punto de triaje (¿Es phishing? ¿Se hizo clic en un enlace? ¿Se introdujeron credenciales?).",
+            "Matriz de escalado: analista L1 → responsable SOC → CISO según el alcance y el compromiso confirmado.",
+            "Plantillas de comunicación para notificaciones a usuarios y actualizaciones a la dirección.",
+            "Checklist de recopilación de evidencias para transferencia forense o requisitos legales."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Competencias demostradas",
+          items: [
+            "Diseño del ciclo de vida de respuesta a incidentes (alineado con NIST SP 800-61).",
+            "Modelado de amenazas para vectores de ataque de phishing.",
+            "Diseño de organigramas de proceso para el apoyo a la decisión de los analistas.",
+            "Planificación de comunicación con partes interesadas y escalado."
+          ]
+        }
+      ]
     }
   }
 },
@@ -3152,6 +4434,49 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             "Outillage GRC : conception de registre des risques et gestion du cycle de vie.",
             "Traduction des risques techniques en langage d'impact métier pour les parties prenantes.",
             "Applicable sur les risques d'infrastructure, la sécurité cloud et les référentiels de conformité (ISO 27001, NIS2, RGPD)."
+          ]
+        }
+      ]
+    },
+    es: {
+      heroSubtitle: "Matriz de riesgos 5×5 — puntuación probabilidad × impacto, zonas de severidad coloreadas y plantilla de registro de riesgos.",
+      sections: [
+        {
+          type: "text",
+          title: "Contexto",
+          paragraphs: [
+            "Construcción de una matriz de riesgos 5×5 estructurada como herramienta reutilizable para evaluar los riesgos de TI, infraestructura y cumplimiento dentro de una organización.",
+            "La matriz cruza la probabilidad (1–5) con el impacto (1–5) para producir una puntuación de riesgo, con zonas coloreadas (verde / amarillo / naranja / rojo) que guían la priorización y las decisiones de tratamiento."
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Lo que construí",
+          items: [
+            "Matriz 5×5: probabilidad (1 = rara → 5 = casi segura) × impacto (1 = insignificante → 5 = catastrófico).",
+            "Zonas de severidad coloreadas: Baja (1–4), Media (5–9), Alta (10–16), Crítica (17–25).",
+            "Plantilla de registro de riesgos: ID, descripción, probabilidad, impacto, puntuación, propietario, tratamiento y fecha de revisión.",
+            "Ejemplos de riesgos que cubren infraestructura, control de acceso, exposición de datos y continuidad de negocio."
+          ]
+        },
+        {
+          type: "metrics",
+          title: "Estructura de la matriz",
+          items: [
+            { label: "Dimensiones", value: "5×5 — probabilidad × impacto" },
+            { label: "Rango de puntuación", value: "1 (baja) → 25 (crítica)" },
+            { label: "Zonas de severidad", value: "Baja / Media / Alta / Crítica" },
+            { label: "Casos de uso", value: "Infraestructura IT, cloud, GRC, auditorías de cumplimiento" }
+          ]
+        },
+        {
+          type: "bullets",
+          title: "Competencias demostradas",
+          items: [
+            "Identificación, puntuación y planificación del tratamiento de riesgos (alineado con ISO 27005 / NIST RMF).",
+            "Herramientas GRC: diseño de registro de riesgos y gestión del ciclo de vida.",
+            "Traducción de riesgos técnicos a un lenguaje de impacto de negocio para las partes interesadas.",
+            "Aplicable a riesgos de infraestructura, seguridad cloud y marcos de cumplimiento (ISO 27001, NIS2, RGPD)."
           ]
         }
       ]

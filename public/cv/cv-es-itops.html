@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV — Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Liberation Sans', 'DejaVu Sans', Arial, sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.45;
+      color: #1e293b;
+      background: white;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+    .cv-header {
+      background: #4c1d95;
+      color: white;
+      padding: 20px 28px 16px;
+    }
+    .cv-name { font-size: 20pt; font-weight: 700; letter-spacing: -0.3px; }
+    .cv-title { font-size: 11pt; margin-top: 3px; opacity: 0.9; }
+    .cv-contacts {
+      display: flex; flex-wrap: wrap; gap: 5px 18px;
+      margin-top: 10px; font-size: 8.5pt; opacity: 0.85;
+    }
+    .cv-body { display: flex; align-items: stretch; }
+    .cv-main { flex: 1; padding: 16px 22px; min-width: 0; }
+    .cv-aside {
+      width: 190px; flex-shrink: 0;
+      background: #f5f3ff;
+      padding: 16px 14px;
+      border-left: 3px solid #4c1d95;
+    }
+    .section { margin-bottom: 14px; }
+    .section-title {
+      font-size: 7.5pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: #4c1d95;
+      border-bottom: 1.5px solid #4c1d95;
+      padding-bottom: 3px; margin-bottom: 8px;
+    }
+    .summary { font-size: 9.5pt; line-height: 1.55; color: #334155; }
+    .exp-item { margin-bottom: 11px; }
+    .exp-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 3px; }
+    .exp-title { font-weight: 700; font-size: 10pt; }
+    .exp-period { font-size: 8pt; color: #64748b; white-space: nowrap; font-style: italic; }
+    .exp-company { font-size: 8.5pt; color: #475569; margin-bottom: 3px; }
+    .exp-note { font-size: 8pt; color: #64748b; font-style: italic; margin-top: 3px; }
+    ul.exp-ul { padding-left: 14px; margin-top: 3px; }
+    ul.exp-ul li { font-size: 9pt; margin-bottom: 2px; }
+    .edu-item { margin-bottom: 8px; }
+    .edu-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .edu-title { font-weight: 600; font-size: 9.5pt; }
+    .edu-year { font-size: 8pt; color: #64748b; font-style: italic; white-space: nowrap; }
+    .edu-school { font-size: 8.5pt; color: #475569; }
+    .edu-detail { font-size: 8pt; color: #64748b; margin-top: 1px; }
+    .aside-section { margin-bottom: 12px; }
+    .aside-title {
+      font-size: 7pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #4c1d95;
+      border-bottom: 1px solid #4c1d95;
+      padding-bottom: 2px; margin-bottom: 6px;
+    }
+    .sg-title { font-weight: 600; font-size: 8pt; color: #334155; margin-top: 5px; margin-bottom: 2px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 3px; }
+    .tag { background: #4c1d95; color: white; font-size: 7pt; padding: 2px 6px; border-radius: 9px; }
+    .tag-light { background: #ede9fe; color: #4c1d95; font-size: 7pt; padding: 2px 6px; border-radius: 9px; }
+    .cert-item { margin-bottom: 4px; font-size: 8pt; }
+    .done { color: #7c3aed; font-weight: 700; }
+    .wip  { color: #d97706; font-weight: 700; }
+    .plan { color: #2563eb; font-weight: 700; }
+    .lang-item { font-size: 8pt; margin-bottom: 3px; }
+    .lang-name { font-weight: 600; }
+    .int-item { font-size: 8pt; margin-bottom: 3px; }
+    @media print {
+      body { font-size: 8pt; line-height: 1.3; }
+      @page { margin: 6mm 8mm; size: A4; }
+      .cv-header { padding: 13px 20px 9px; }
+      .cv-main { padding: 11px 16px; }
+      .cv-aside { padding: 11px 11px; }
+      .section { margin-bottom: 8px; }
+      .exp-item { margin-bottom: 7px; }
+      .edu-item { margin-bottom: 5px; }
+      .aside-section { margin-bottom: 8px; }
+      .sg-title { margin-top: 3px; margin-bottom: 1px; }
+      .cert-item { margin-bottom: 2px; }
+      ul.exp-ul { margin-top: 2px; }
+      ul.exp-ul li { margin-bottom: 1px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="cv-header">
+  <div class="cv-name">Aïcha Imène DAHOUMANE</div>
+  <div class="cv-title">Administradora de Sistemas y Redes &nbsp;·&nbsp; IT Ops &nbsp;·&nbsp; DevOps</div>
+  <div class="cv-contacts">
+    <span>ai.dahoumane@gmail.com</span>
+    <span>+33 7 45 45 04 74</span>
+    <span>linkedin.com/in/aicha-imene-dahoumane</span>
+    <span>linktr.ee/aiyeesha</span>
+    <span>Marsella / Provenza-Alpes-Costa Azul</span>
+    <span>100 % remoto · Híbrido · Presencial · Movilidad y relocalización posibles</span>
+  </div>
+</header>
+
+<div class="cv-body">
+
+  <main class="cv-main">
+
+    <div class="section">
+      <div class="section-title">Perfil</div>
+      <p class="summary">
+        Administradora de sistemas y redes (RNCP Nivel 5 — TSSR) con experiencia real en empresa que incluye el <strong>despliegue a gran escala</strong> (200+ estaciones de trabajo mediante Windows Autopilot), la administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), la seguridad (PfSense, Blancco, Acronis) y herramientas de supervisión profesionales (Datto RMM, Autotask). Perfil polivalente reforzado con competencias de <strong>DevOps y scripting</strong> (CI/CD, GitHub Actions, Salesforce CLI). Inglés C1+ — disponible para proyectos en Francia y a nivel internacional.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Experiencia profesional</div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Desarrolladora Salesforce — DevOps y Automatización (contrato indefinido)</span>
+          <span class="exp-period">Oct. 2025 — Actualidad</span>
+        </div>
+        <div class="exp-company">LD Digitales &nbsp;·&nbsp; Remoto</div>
+        <div class="exp-note">↳ Contrato indefinido ofrecido al finalizar el contrato de formación, sin periodo de prueba.</div>
+        <ul class="exp-ul">
+          <li>Pipelines CI/CD con Salesforce CLI y GitHub Actions (despliegues multi-entorno)</li>
+          <li>Automatización de procesos de negocio (Apex, Flows) — enfoque DevOps: pruebas, monitorización, documentación</li>
+          <li>Revisiones de código, supervisión de buenas prácticas de desarrollo</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Desarrolladora Salesforce (contrato de formación)</span>
+          <span class="exp-period">Oct. 2023 — Oct. 2025</span>
+        </div>
+        <div class="exp-company">LD Digitales &nbsp;·&nbsp; Remoto</div>
+        <ul class="exp-ul">
+          <li>10+ clases Apex y batch jobs · 20+ Flows (−30 % carga manual) · LWC reutilizables</li>
+          <li>CI/CD entre sandboxes con Salesforce CLI · migraciones de datos</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Administradora júnior de sistemas y redes (prácticas)</span>
+          <span class="exp-period">Feb. 2023 — May. 2023</span>
+        </div>
+        <div class="exp-company">MIDRANGE GROUP &nbsp;·&nbsp; Francia &nbsp;·&nbsp; Presencial (3 centros)</div>
+        <ul class="exp-ul">
+          <li>Soporte técnico para <strong>50+ puestos de trabajo</strong> y portátiles en varios centros</li>
+          <li>Despliegue de <strong>200+ estaciones de trabajo Dell</strong> (64 Optiplex + Latitude) mediante <strong>Windows Autopilot</strong>, Sysprep, WDS y PXE</li>
+          <li>Administración completa de <strong>Windows Server 2022</strong>: AD DS, DNS, DHCP, WDS, GPO, políticas de grupo</li>
+          <li>Implementación y configuración de un <strong>firewall PfSense</strong> con proxy <strong>Squid</strong></li>
+          <li>Gestión de copias de seguridad: <strong>Acronis Cyber Protect Cloud</strong> y <strong>Acronis Cyber Backup</strong></li>
+          <li>Supervisión y mantenimiento mediante <strong>Datto RMM</strong>; ticketing mediante <strong>Autotask</strong></li>
+          <li>Borrado seguro de datos con <strong>Blancco</strong>; teleasistencia mediante <strong>Splashtop</strong></li>
+          <li>Antivirus y seguridad de endpoints: <strong>Webroot</strong></li>
+          <li>Supervisión de red, respuesta a incidentes de seguridad (simulacros de ransomware)</li>
+          <li>Redacción de procedimientos y contribución a la base de conocimiento interna</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Formación</div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Desarrolladora Diseñadora de Software — RNCP Nivel 6</span>
+          <span class="edu-year">Oct. 2025</span>
+        </div>
+        <div class="edu-school">OpenClassrooms &nbsp;·&nbsp; Especialización DevOps y automatización</div>
+        <div class="edu-detail">CI/CD · Scripting · Integración de APIs · Despliegue y pruebas</div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Técnica Superior en Sistemas y Redes — RNCP Nivel 5</span>
+          <span class="edu-year">Jun. 2023</span>
+        </div>
+        <div class="edu-school">GRETA du Val d'Oise &nbsp;·&nbsp; Oct. 2022 – Jun. 2023</div>
+        <div class="edu-detail">Infraestructuras de red · Administración Windows/Linux · Virtualización · Seguridad · Prácticas en MIDRANGE GROUP</div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Técnica de Asistencia Informática — RNCP Nivel 4</span>
+          <span class="edu-year">Jul. 2022</span>
+        </div>
+        <div class="edu-school">GRETA du Val d'Oise &nbsp;·&nbsp; Lycée Louis Jouvet, Taverny</div>
+        <div class="edu-detail">Soporte a usuarios · Instalación de Windows · Active Directory · WiFi · Hardware</div>
+      </div>
+    </div>
+
+  </main>
+
+  <aside class="cv-aside">
+
+    <div class="aside-section">
+      <div class="aside-title">Sistemas y Redes</div>
+      <div class="sg-title">Infraestructura</div>
+      <div class="tags">
+        <span class="tag">Windows Server 2022</span>
+        <span class="tag">AD DS</span><span class="tag">DNS</span>
+        <span class="tag">DHCP</span><span class="tag">WDS</span>
+        <span class="tag">GPO</span><span class="tag">PXE</span>
+        <span class="tag">Windows 10</span><span class="tag">VMware</span>
+      </div>
+      <div class="sg-title">Seguridad y Copias de seguridad</div>
+      <div class="tags">
+        <span class="tag">PfSense</span><span class="tag">Squid Proxy</span>
+        <span class="tag">Acronis Cyber Protect</span>
+        <span class="tag">Blancco</span><span class="tag">Webroot</span>
+      </div>
+      <div class="sg-title">Despliegue y Supervisión</div>
+      <div class="tags">
+        <span class="tag">Windows Autopilot</span>
+        <span class="tag">Sysprep</span>
+        <span class="tag">Datto RMM</span>
+        <span class="tag">Autotask</span>
+        <span class="tag">Splashtop</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">DevOps y Scripting</div>
+      <div class="tags">
+        <span class="tag-light">GitHub Actions</span>
+        <span class="tag-light">Salesforce CLI</span>
+        <span class="tag-light">CI/CD</span>
+        <span class="tag-light">Git</span>
+        <span class="tag-light">SQL</span>
+        <span class="tag-light">Python</span>
+        <span class="tag-light">Apex</span>
+        <span class="tag-light">VS Code</span>
+        <span class="tag-light">Postman</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Certificaciones</div>
+      <div class="cert-item"><span class="done">✓</span> TSSR RNCP Nivel 5 <em>(jun. 2023)</em></div>
+      <div class="cert-item"><span class="done">✓</span> TAI RNCP Nivel 4 <em>(jul. 2022)</em></div>
+      <div class="cert-item"><span class="done">✓</span> Desarrolladora Diseñadora de Software RNCP L6 <em>(oct. 2025)</em></div>
+      <div class="cert-item"><span class="done">✓</span> Linguaskill Business C1+ <em>(abr. 2021)</em></div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Idiomas</div>
+      <div class="lang-item"><span class="lang-name">Francés</span> &nbsp;·&nbsp; nativo</div>
+      <div class="lang-item"><span class="lang-name">Inglés</span> &nbsp;·&nbsp; C1+ (Cambridge)</div>
+      <div class="lang-item"><span class="lang-name">Español</span> &nbsp;·&nbsp; B1</div>
+      <div class="lang-item"><span class="lang-name">Italiano</span> &nbsp;·&nbsp; A1</div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Intereses</div>
+      <div class="int-item">Ciberseguridad, CTF</div>
+      <div class="int-item">Artes marciales · Danza</div>
+      <div class="int-item">Moda — diseño, sketch</div>
+      <div class="int-item">Viajes, descubrimientos culturales</div>
+    </div>
+
+  </aside>
+
+</div>
+</body>
+</html>
