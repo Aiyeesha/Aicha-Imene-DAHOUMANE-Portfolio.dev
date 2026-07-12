@@ -305,6 +305,7 @@ useEffect(() => {
                 <Image
                   src={avatarSrc}
                   alt=""
+                  aria-hidden="true"
                   fill
                   sizes="40px"
                   className="object-cover object-top"
