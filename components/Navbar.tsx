@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -50,6 +51,7 @@ export default function Navbar({ featuredProjects = [] }: { featuredProjects?: F
   const { track } = useTrack();
   const pathname = usePathname();
   const locale = (pathname.split("/")[1] || "en") as "en" | "fr";
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp");
 
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
 
@@ -291,11 +293,27 @@ useEffect(() => {
         <div className="mx-auto flex h-full max-w-7xl items-center gap-3 px-4 lg:px-6">
           <Link
             href={`/${locale}`}
-            className="flex flex-shrink-0 items-center gap-3 rounded-2xl soft-ring"
+            className={`flex flex-shrink-0 items-center gap-3 rounded-2xl border px-2.5 py-1.5 -mx-2.5 -my-1.5 transition-colors soft-ring ${
+              track === "salesforce"
+                ? "border-cyan-500/20 hover:bg-cyan-500/5 dark:hover:bg-cyan-400/5"
+                : "border-violet-500/20 hover:bg-violet-500/5 dark:hover:bg-violet-400/5"
+            }`}
             aria-label={t("nav.home")}
           >
-            <div className={`grid h-10 w-10 place-items-center rounded-full font-semibold ${track === "salesforce" ? "bg-cyan-500/15 text-cyan-700 dark:text-cyan-200" : "bg-violet-500/15 text-violet-700 dark:text-violet-200"}`}>
-              {BRAND_INITIALS}
+            <div className={`relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full font-semibold ${track === "salesforce" ? "bg-cyan-500/15 text-cyan-700 dark:text-cyan-200" : "bg-violet-500/15 text-violet-700 dark:text-violet-200"}`}>
+              {avatarSrc ? (
+                <Image
+                  src={avatarSrc}
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="40px"
+                  className="object-cover object-top"
+                  onError={() => setAvatarSrc(null)}
+                />
+              ) : (
+                BRAND_INITIALS
+              )}
             </div>
             {/* Texte du brand — masqué à xl pour libérer de l'espace au desktop nav (6 items) */}
             <div className="hidden sm:block xl:hidden 2xl:block leading-tight">
