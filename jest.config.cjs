@@ -41,15 +41,16 @@ module.exports = {
   // seulement les fichiers déjà importés par les tests existants (ce qui donnait
   // une fausse impression de couverture représentative à 50%). Les valeurs
   // ci-dessous sont légèrement en dessous des chiffres réels mesurés le
-  // 2026-07-02 (statements 6%, branches 37.15%, functions 14.21%, lines 6%) pour
-  // laisser une petite marge. À augmenter progressivement au fil de l'ajout de
-  // nouvelles suites de tests.
+  // 2026-07-12 (statements 7.14%, branches 42.58%, functions 17.01%, lines
+  // 7.14%), après avoir ciblé les modules critiques (lib/contactValidation.ts,
+  // lib/ratelimit.ts — cf. audit) plutôt que viser un chiffre global élevé.
+  // À augmenter progressivement au fil de l'ajout de nouvelles suites de tests.
   coverageThreshold: {
     global: {
-      statements: 5,
-      branches: 37,
-      functions: 14,
-      lines: 5,
+      statements: 7,
+      branches: 41,
+      functions: 16,
+      lines: 7,
     },
   },
 };
