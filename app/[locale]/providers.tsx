@@ -3,6 +3,21 @@
 import { ThemeProvider } from "next-themes";
 import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 
+// next-themes intentionally renders an inline <script> (via React.createElement)
+// to set the theme class before hydration and avoid a flash of the wrong theme.
+// React 19 added a blanket dev-mode warning for any <script> tag rendered inside
+// a component tree, which fires here even though the script runs correctly on
+// initial SSR paint — a confirmed false positive (next-themes hasn't shipped a
+// fix since; see https://github.com/pacocoursey/next-themes/issues/387).
+// Filtered narrowly by message prefix so no other console.error is silenced.
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  const originalConsoleError = console.error;
+  console.error = (...args: unknown[]) => {
+    if (typeof args[0] === "string" && args[0].includes("Encountered a script tag")) return;
+    originalConsoleError.apply(console, args);
+  };
+}
+
 export type Track = "itops" | "salesforce";
 type TrackContextValue = { track: Track; setTrack: (t: Track) => void };
 
