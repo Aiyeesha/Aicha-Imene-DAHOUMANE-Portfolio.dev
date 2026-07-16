@@ -4483,5 +4483,45 @@ POST <instance_url>/services/oauth2/token
     }
   }
 },
+{
+  slug: "homelab-cowrie-honeypot",
+  gallery: [
+      { src: "/projects/homelab-cowrie-honeypot/cover.webp", alt: "Homelab - Cowrie Honeypot - cover" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-1.webp", alt: "Homelab - Cowrie Honeypot - screenshot 1" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-2.webp", alt: "Homelab - Cowrie Honeypot - screenshot 2" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-3.webp", alt: "Homelab - Cowrie Honeypot - screenshot 3" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-4.webp", alt: "Homelab - Cowrie Honeypot - screenshot 4" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-5.webp", alt: "Homelab - Cowrie Honeypot - screenshot 5" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-6.webp", alt: "Homelab - Cowrie Honeypot - screenshot 6" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-7.webp", alt: "Homelab - Cowrie Honeypot - screenshot 7" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-8.webp", alt: "Homelab - Cowrie Honeypot - screenshot 8" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-9.webp", alt: "Homelab - Cowrie Honeypot - screenshot 9" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-10.webp", alt: "Homelab - Cowrie Honeypot - screenshot 10" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-11.webp", alt: "Homelab - Cowrie Honeypot - screenshot 11" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-12.webp", alt: "Homelab - Cowrie Honeypot - screenshot 12" },
+      { src: "/projects/homelab-cowrie-honeypot/screenshot-13.webp", alt: "Homelab - Cowrie Honeypot - screenshot 13" },
+  ],
+  locales: {
+    en: { heroSubtitle: "Cowrie - Hydra - iptables - VMware Workstation Pro 17" },
+    fr: { heroSubtitle: "Cowrie - Hydra - iptables - VMware Workstation Pro 17" },
+    es: { heroSubtitle: "Cowrie - Hydra - iptables - VMware Workstation Pro 17" },
+  },
+},
+{
+  slug: "homelab-password-cracking-lab",
+  gallery: [
+      { src: "/projects/homelab-password-cracking-lab/cover.webp", alt: "Homelab - Password Cracking Lab - cover" },
+      { src: "/projects/homelab-password-cracking-lab/screenshot-1.webp", alt: "Homelab - Password Cracking Lab - screenshot 1" },
+      { src: "/projects/homelab-password-cracking-lab/screenshot-2.webp", alt: "Homelab - Password Cracking Lab - screenshot 2" },
+      { src: "/projects/homelab-password-cracking-lab/screenshot-3.webp", alt: "Homelab - Password Cracking Lab - screenshot 3" },
+      { src: "/projects/homelab-password-cracking-lab/screenshot-4.webp", alt: "Homelab - Password Cracking Lab - screenshot 4" },
+      { src: "/projects/homelab-password-cracking-lab/screenshot-5.webp", alt: "Homelab - Password Cracking Lab - screenshot 5" },
+  ],
+  locales: {
+    en: { heroSubtitle: "John the Ripper - Hashcat - OpenCL - Kali Linux" },
+    fr: { heroSubtitle: "John the Ripper - Hashcat - OpenCL - Kali Linux" },
+    es: { heroSubtitle: "John the Ripper - Hashcat - OpenCL - Kali Linux" },
+  },
+},
 
 ];

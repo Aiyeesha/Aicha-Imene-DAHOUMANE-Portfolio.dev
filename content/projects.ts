@@ -513,6 +513,36 @@ export const projects: Project[] = [
   badge: { label: "PERSONAL PROJECT", tone: "personal" },
   repoUrl: "https://github.com/Aiyeesha/risk-assessment-matrix",
 },
+{
+  slug: "homelab-cowrie-honeypot",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "SSH/Telnet Honeypot with Cowrie",
+  excerpt: "Deployed a Cowrie honeypot on an isolated VMware lab to capture, log, and analyze an SSH brute-force attack — including a full rebuild of the attacker machine after a real incident.",
+  highlights: [
+    "Cowrie honeypot deployed and isolated on a dedicated VMnet2 network",
+    "Hydra brute-force attack executed and analyzed (3 passwords recovered)",
+    "17 attacker commands captured and parsed with jq",
+  ],
+  track: "itops",
+  categories: ["IT Ops", "Security", "Network"],
+  tags: ["Honeypot", "Cowrie", "SSH", "Brute Force", "Log Analysis"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+},
+{
+  slug: "homelab-password-cracking-lab",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Password Cracking: Hashing, Salting & Stretching",
+  excerpt: "Hands-on study of password storage (hashing, salting, stretching) with John the Ripper and Hashcat, including a measured MD5 vs bcrypt benchmark and full troubleshooting of a GPU-less Hashcat environment.",
+  highlights: [
+    "Measured MD5 vs bcrypt benchmark (~25,900x factor)",
+    "Full OpenCL/Mesa troubleshooting chain resolved without a dedicated GPU",
+    "Dictionary, rule-based, mask and brute-force attacks all documented",
+  ],
+  track: "itops",
+  categories: ["IT Ops", "Security"],
+  tags: ["Password Cracking", "Hashing", "John the Ripper", "Hashcat", "Cryptography"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+},
 ];
 
 
