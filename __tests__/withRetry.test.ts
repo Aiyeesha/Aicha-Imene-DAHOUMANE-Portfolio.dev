@@ -43,3 +43,23 @@ describe("withRetry", () => {
     expect(hangingThenResolves).toHaveBeenCalledTimes(2);
   }, 10000);
 });
+
+describe("withRetry against the CI placeholder Supabase URL", () => {
+  const ORIGINAL_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  afterEach(() => {
+    process.env.NEXT_PUBLIC_SUPABASE_URL = ORIGINAL_URL;
+  });
+
+  it("fails fast with zero retries instead of retrying against a known-broken host", async () => {
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://placeholder.supabase.co";
+
+    await jest.isolateModulesAsync(async () => {
+      const { withRetry: withRetryAgainstPlaceholder } = await import("@/lib/supabase/withRetry");
+      const fn = jest.fn().mockResolvedValue({ data: null, error: { message: "fetch failed" } });
+      const result = await withRetryAgainstPlaceholder(fn);
+      expect(result.error).toEqual({ message: "fetch failed" });
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+  });
+});
