@@ -12,6 +12,12 @@ const BASE_DELAY_MS = 200;
 // Sans ce plafond, une tentative bloquée + le backoff des retries suivants
 // peut à elle seule dépasser les timeouts de test E2E (30s) ou de route API.
 const ATTEMPT_TIMEOUT_MS = 5000;
+// CI (et les previews sans secrets configurés, ex. PRs Dependabot) retombe sur
+// cette URL factice — voir .github/workflows/ci.yml. Retenter contre un hôte
+// qu'on sait déjà cassé n'apporte rien et ne fait qu'accumuler du backoff sur
+// chaque appel Supabase de chaque page testée (c'est ce qui faisait dépasser
+// les timeouts Playwright, indépendamment de la version de @supabase/supabase-js).
+const isPlaceholderSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL === "https://placeholder.supabase.co";
 
 function isRetryable(error: { code?: string | number; status?: number; message?: string } | null): boolean {
   if (!error) return false;
@@ -67,7 +73,7 @@ function withTimeout<T>(
  */
 export async function withRetry<T>(
   fn: () => PromiseLike<{ data: T | null; error: { code?: string | number; status?: number; message?: string } | null }>,
-  retries = MAX_RETRIES
+  retries = isPlaceholderSupabaseUrl ? 0 : MAX_RETRIES
 ): Promise<{ data: T | null; error: unknown }> {
   let lastError: unknown = null;
 
