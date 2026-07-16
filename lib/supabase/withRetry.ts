@@ -7,6 +7,11 @@
 const RETRYABLE_CODES = new Set([429, 503, 524, 520, 521, 522, 523]);
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 200;
+// Plafond dur par tentative — un client réseau qui traîne (DNS, TLS, undici
+// hanging) ne doit jamais faire dépasser le budget de la requête appelante.
+// Sans ce plafond, une tentative bloquée + le backoff des retries suivants
+// peut à elle seule dépasser les timeouts de test E2E (30s) ou de route API.
+const ATTEMPT_TIMEOUT_MS = 5000;
 
 function isRetryable(error: { code?: string | number; status?: number; message?: string } | null): boolean {
   if (!error) return false;
@@ -36,6 +41,22 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Course entre la promesse Supabase et un timer : si le client réseau n'a pas
+// répondu dans le délai imparti, on traite ça comme une erreur "timeout"
+// (retryable, voir isRetryable) plutôt que de rester bloqué indéfiniment.
+function withTimeout<T>(
+  promise: PromiseLike<{ data: T | null; error: { code?: string | number; status?: number; message?: string } | null }>,
+  ms: number
+): Promise<{ data: T | null; error: { code?: string | number; status?: number; message?: string } | null }> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve({ data: null, error: { message: "withRetry: attempt timeout" } }), ms);
+    Promise.resolve(promise).then((result) => {
+      clearTimeout(timer);
+      resolve(result);
+    });
+  });
+}
+
 /**
  * Wraps a Supabase query thunk with exponential-backoff retry.
  *
@@ -51,7 +72,7 @@ export async function withRetry<T>(
   let lastError: unknown = null;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
-    const result = await fn();
+    const result = await withTimeout(fn(), ATTEMPT_TIMEOUT_MS);
 
     if (!result.error) return result;
 
