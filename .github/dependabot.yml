@@ -91,6 +91,23 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@tailwindcss/*"
         update-types: ["version-update:semver-major"]
+      # eslint 10 : eslint-config-next@16.2.x embarque une version d'eslint-plugin-react
+      # incompatible avec la nouvelle API de contexte des règles ESLint 10
+      # (`react/display-name` casse avec `contextOrFilename.getFilename is not a function`).
+      # À retirer quand eslint-config-next publiera une version stable pour ESLint 10.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/*"
+        update-types: ["version-update:semver-major"]
+      # typescript 7 : ts-jest@29.4.11 déclare un peer-dependency `typescript@">=4.3 <7"`,
+      # ce qui fait échouer `npm install` (ERESOLVE). À retirer quand ts-jest supportera TS 7.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # @types/node : doit rester aligné sur le pin Node "engines": "24.x" du package.json
+      # (voir commit "Add homelab network sniffing project"). Les versions 25+ tracent
+      # Node 25/26 et casseraient cet alignement.
+      - dependency-name: "@types/node"
+        versions: [">=25.0.0"]
 
   # ── GitHub Actions ──────────────────────────────────────────────────────────
   - package-ecosystem: "github-actions"
