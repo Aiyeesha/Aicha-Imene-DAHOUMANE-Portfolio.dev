@@ -543,6 +543,21 @@ export const projects: Project[] = [
   tags: ["Password Cracking", "Hashing", "John the Ripper", "Hashcat", "Cryptography"],
   badge: { label: "PERSONAL PROJECT", tone: "personal" },
 },
+{
+  slug: "homelab-network-sniffing",
+  updatedAt: DEFAULT_UPDATED_AT,
+  title: "Network Sniffing: tcpdump, Wireshark & Scapy",
+  excerpt: "Captured and analyzed network traffic on an isolated lab to demonstrate why unencrypted protocols (HTTP, FTP) expose data in plaintext, including a custom Python sniffer built with Scapy.",
+  highlights: [
+    "FTP credentials intercepted in plaintext (USER/PASS visible without any cracking tool)",
+    "Full HTTP request/response read in cleartext via Follow HTTP Stream",
+    "Custom Python network sniffer built with Scapy, tested on live traffic",
+  ],
+  track: "itops",
+  categories: ["IT Ops", "Security", "Network"],
+  tags: ["Sniffing", "Wireshark", "tcpdump", "Scapy", "Network Security"],
+  badge: { label: "PERSONAL PROJECT", tone: "personal" },
+},
 ];
 
 
