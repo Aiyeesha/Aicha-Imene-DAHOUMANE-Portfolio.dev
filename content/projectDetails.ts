@@ -4523,5 +4523,24 @@ POST <instance_url>/services/oauth2/token
     es: { heroSubtitle: "John the Ripper - Hashcat - OpenCL - Kali Linux" },
   },
 },
+{
+  slug: "homelab-network-sniffing",
+  gallery: [
+      { src: "/projects/homelab-network-sniffing/cover.webp", alt: "Homelab - Network Sniffing - cover" },
+      { src: "/projects/homelab-network-sniffing/screenshot-1.webp", alt: "Homelab - Network Sniffing - screenshot 1" },
+      { src: "/projects/homelab-network-sniffing/screenshot-2.webp", alt: "Homelab - Network Sniffing - screenshot 2" },
+      { src: "/projects/homelab-network-sniffing/screenshot-3.webp", alt: "Homelab - Network Sniffing - screenshot 3" },
+      { src: "/projects/homelab-network-sniffing/screenshot-4.webp", alt: "Homelab - Network Sniffing - screenshot 4" },
+      { src: "/projects/homelab-network-sniffing/screenshot-5.webp", alt: "Homelab - Network Sniffing - screenshot 5" },
+      { src: "/projects/homelab-network-sniffing/screenshot-6.webp", alt: "Homelab - Network Sniffing - screenshot 6" },
+      { src: "/projects/homelab-network-sniffing/screenshot-7.webp", alt: "Homelab - Network Sniffing - screenshot 7" },
+      { src: "/projects/homelab-network-sniffing/screenshot-8.webp", alt: "Homelab - Network Sniffing - screenshot 8" },
+  ],
+  locales: {
+    en: { heroSubtitle: "tcpdump - Wireshark - Scapy - VMware Workstation Pro 17" },
+    fr: { heroSubtitle: "tcpdump - Wireshark - Scapy - VMware Workstation Pro 17" },
+    es: { heroSubtitle: "tcpdump - Wireshark - Scapy - VMware Workstation Pro 17" },
+  },
+},
 
 ];
