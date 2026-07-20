@@ -1,7 +1,23 @@
-import { withRetry } from "@/lib/supabase/withRetry";
+// withRetry() reads NEXT_PUBLIC_SUPABASE_URL once at module-load time to decide
+// whether it's running against the CI placeholder host (see lib/supabase/withRetry.ts).
+// The build-test CI job itself sets that env var to the placeholder — so these tests
+// must not rely on whatever value happens to be ambient; each block sets its own
+// value and re-imports the module fresh via jest.isolateModulesAsync.
 
-describe("withRetry", () => {
+async function loadWithRetry(supabaseUrl: string) {
+  const original = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  process.env.NEXT_PUBLIC_SUPABASE_URL = supabaseUrl;
+  let withRetry: typeof import("@/lib/supabase/withRetry").withRetry;
+  await jest.isolateModulesAsync(async () => {
+    ({ withRetry } = await import("@/lib/supabase/withRetry"));
+  });
+  process.env.NEXT_PUBLIC_SUPABASE_URL = original;
+  return withRetry!;
+}
+
+describe("withRetry (real Supabase URL)", () => {
   it("returns data immediately on success", async () => {
+    const withRetry = await loadWithRetry("https://real-project.supabase.co");
     const fn = jest.fn().mockResolvedValue({ data: { id: 1 }, error: null });
     const result = await withRetry(fn);
     expect(result).toEqual({ data: { id: 1 }, error: null });
@@ -9,6 +25,7 @@ describe("withRetry", () => {
   });
 
   it("does not retry on a non-retryable error", async () => {
+    const withRetry = await loadWithRetry("https://real-project.supabase.co");
     const fn = jest.fn().mockResolvedValue({ data: null, error: { code: "PGRST301", message: "not found" } });
     const result = await withRetry(fn);
     expect(result.error).toEqual({ code: "PGRST301", message: "not found" });
@@ -16,6 +33,7 @@ describe("withRetry", () => {
   });
 
   it("retries on a retryable error and eventually succeeds", async () => {
+    const withRetry = await loadWithRetry("https://real-project.supabase.co");
     const fn = jest
       .fn()
       .mockResolvedValueOnce({ data: null, error: { message: "fetch failed" } })
@@ -26,6 +44,7 @@ describe("withRetry", () => {
   });
 
   it("gives up after exhausting all retries", async () => {
+    const withRetry = await loadWithRetry("https://real-project.supabase.co");
     const fn = jest.fn().mockResolvedValue({ data: null, error: { message: "fetch failed" } });
     const result = await withRetry(fn, 2);
     expect(result.error).toEqual({ message: "fetch failed" });
@@ -33,6 +52,7 @@ describe("withRetry", () => {
   });
 
   it("treats a hanging attempt as a retryable timeout instead of blocking forever", async () => {
+    const withRetry = await loadWithRetry("https://real-project.supabase.co");
     const hangingThenResolves = jest
       .fn()
       .mockImplementationOnce(() => new Promise(() => {})) // never resolves
@@ -45,21 +65,11 @@ describe("withRetry", () => {
 });
 
 describe("withRetry against the CI placeholder Supabase URL", () => {
-  const ORIGINAL_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-  afterEach(() => {
-    process.env.NEXT_PUBLIC_SUPABASE_URL = ORIGINAL_URL;
-  });
-
   it("fails fast with zero retries instead of retrying against a known-broken host", async () => {
-    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://placeholder.supabase.co";
-
-    await jest.isolateModulesAsync(async () => {
-      const { withRetry: withRetryAgainstPlaceholder } = await import("@/lib/supabase/withRetry");
-      const fn = jest.fn().mockResolvedValue({ data: null, error: { message: "fetch failed" } });
-      const result = await withRetryAgainstPlaceholder(fn);
-      expect(result.error).toEqual({ message: "fetch failed" });
-      expect(fn).toHaveBeenCalledTimes(1);
-    });
+    const withRetry = await loadWithRetry("https://placeholder.supabase.co");
+    const fn = jest.fn().mockResolvedValue({ data: null, error: { message: "fetch failed" } });
+    const result = await withRetry(fn);
+    expect(result.error).toEqual({ message: "fetch failed" });
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });
