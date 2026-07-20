@@ -48,16 +48,18 @@ export async function getPublishedProjectsWithAssets(locale: string) {
 export async function getFeaturedProjectsForNav(locale: string) {
   try {
     const supabase = createServerSupabaseClient();
-    const { data, error } = await supabase
-      .from("projects")
-      .select("slug, title, track")
-      .in("locale", [locale, "multi"])
-      .eq("status", "published")
-      .eq("featured", true)
-      .order("sort_order", { ascending: true })
-      .limit(6);
+    const { data, error } = await withRetry(() =>
+      supabase
+        .from("projects")
+        .select("slug, title, track")
+        .in("locale", [locale, "multi"])
+        .eq("status", "published")
+        .eq("featured", true)
+        .order("sort_order", { ascending: true })
+        .limit(6)
+    );
     if (error) {
-      console.error("[projects/nav] Supabase error:", error.message);
+      console.error("[projects/nav] Supabase error:", (error as any)?.message ?? error);
       return [] as { slug: string; title: string; track: string | null }[];
     }
     return (data ?? []) as { slug: string; title: string; track: string | null }[];
