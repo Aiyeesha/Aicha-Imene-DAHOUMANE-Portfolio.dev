@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { withRetry } from "@/lib/supabase/withRetry";
 import { GITHUB_REPOS } from "@/content/github-repos";
 
 type ProjectAsset = {
@@ -59,10 +60,11 @@ export async function getPublishedProjectBySlugWithAssets(
 
   // Fetch every published row for this slug (all locales) so we can
   // collect assets regardless of which row they were attached to.
-  const { data, error } = await supabase
-    .from("projects")
-    .select(
-      `
+  const { data, error } = await withRetry(() =>
+    supabase
+      .from("projects")
+      .select(
+        `
       id, slug, locale, title, summary, content, hero_subtitle, sections, gallery,
       tech_stack, repo_url, live_url,
       track, categories, tags, badge, highlights,
@@ -72,9 +74,10 @@ export async function getPublishedProjectBySlugWithAssets(
         storage_bucket, storage_path, external_url, mime_type, size_bytes, sort_order
       )
     `
-    )
-    .eq("status", "published")
-    .eq("slug", slug);
+      )
+      .eq("status", "published")
+      .eq("slug", slug)
+  );
 
   if (error) throw error;
   if (!data || data.length === 0) return null;
