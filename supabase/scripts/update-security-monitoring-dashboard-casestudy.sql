@@ -43,3 +43,24 @@ UPDATE projects SET
   ],
   status = 'published'
 WHERE slug = 'security-monitoring-dashboard' AND locale = 'fr';
+
+-- ── ES ───────────────────────────────────────────────────────────────────────
+-- The existing ES row described an unrelated generic concept ("KPI widgets
+-- for patch status" etc.) — aligned here with what was actually built.
+UPDATE projects SET
+  title = 'Dashboard de supervisión de seguridad (FastAPI + React)',
+  summary = 'Dashboard de supervisión de seguridad full-stack construido con FastAPI y React/TypeScript. Transmite eventos de seguridad en tiempo real vía WebSocket, clasifica las alertas por severidad y realiza el seguimiento del MTTR — ahora con persistencia SQLite, ingesta protegida por clave API y una suite de pruebas Pytest.',
+  content = 'Backend FastAPI en capas (routers / capa de servicio / persistencia SQLAlchemy) que sustituye una versión anterior en un único archivo. Los eventos se almacenan en SQLite en lugar de en memoria, los endpoints de escritura requieren una clave API, y una suite Pytest cubre los endpoints de eventos y métricas de extremo a extremo. Frontend React/TypeScript con un hook de WebSocket personalizado para actualizaciones en vivo. Desplegable con Docker Compose. Primer proyecto de un portafolio de seguridad de 4 proyectos; la plantilla arquitectónica que siguen los otros tres.',
+  tech_stack = ARRAY['Python','FastAPI','SQLAlchemy','SQLite','React','TypeScript','WebSocket','Vite','Docker','Pytest'],
+  categories = ARRAY['Security','Monitoring'],
+  tags = ARRAY['FastAPI','React','WebSocket','SQLite','Pytest'],
+  badge = '{"tone":"personal","label":"PERSONAL PROJECT"}'::jsonb,
+  highlights = ARRAY[
+    'Transmisión en tiempo real de eventos de seguridad vía WebSocket',
+    'Clasificación de alertas por severidad: Crítica / Alta / Media / Baja / Info',
+    'Persistencia SQLite + ingesta protegida por clave API (añadidas en una reestructuración del backend)',
+    'Suite Pytest que cubre los endpoints de eventos y métricas',
+    'Interfaz responsive con tema oscuro — despliegue en un solo comando con Docker Compose'
+  ],
+  status = 'published'
+WHERE slug = 'security-monitoring-dashboard' AND locale = 'es';

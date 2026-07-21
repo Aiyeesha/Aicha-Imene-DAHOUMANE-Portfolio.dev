@@ -52,3 +52,24 @@ VALUES (
   ],
   false, 261, 'published'
 ) ON CONFLICT (slug, locale) DO NOTHING;
+
+-- ── ES ───────────────────────────────────────────────────────────────────────
+INSERT INTO projects (slug, locale, title, summary, content, tech_stack, repo_url, live_url, track, categories, tags, badge, highlights, featured, sort_order, status)
+VALUES (
+  'incident-response-tracker', 'es',
+  'Incident Response Tracker — Flujo de tickets SOC',
+  'Flujo de trabajo de tickets para incidentes de seguridad que impone un ciclo de vida estricto mediante una máquina de estados, un reloj SLA por severidad, y un registro de auditoría con marca de tiempo de cada cambio de estado, comentario y asignación.',
+  'Backend FastAPI donde las reglas del flujo de trabajo residen en un módulo state_machine puro y probado unitariamente: las transiciones legales (nuevo → clasificado → en investigación → contenido → resuelto → cerrado, con cierre directo y reapertura posibles) y los objetivos SLA por severidad (crítica 4h, alta 24h, media 72h, baja 7 días) son funciones simples sin I/O. Las transiciones ilegales se rechazan con un HTTP 409 explícito que lista los estados siguientes permitidos. Cada cambio de estado, comentario y asignación se añade a una cronología de auditoría por incidente. Dashboard React/TypeScript con vista maestro-detalle. Verificado en vivo: una transición ilegal new→resolved correctamente rechazada con un 409, transiciones válidas correctamente registradas en la cronología.',
+  ARRAY['Python','FastAPI','SQLAlchemy','React','TypeScript','Vite','SQLite','Docker','Pytest'],
+  'https://github.com/Aiyeesha/incident-response-tracker', NULL,
+  'itops', ARRAY['Security','Incident Response'], ARRAY['State Machine','SLA','FastAPI','React','Audit Trail'],
+  '{"tone":"personal","label":"PERSONAL PROJECT"}'::jsonb,
+  ARRAY[
+    'Ciclo de vida impuesto: nuevo → clasificado → en investigación → contenido → resuelto → cerrado, transiciones ilegales rechazadas con HTTP 409',
+    'Reloj SLA por severidad: crítica 4h, alta 24h, media 72h, baja 7 días',
+    'Registro de auditoría completo — cada cambio de estado, comentario y asignación con marca de tiempo',
+    '15 pruebas automatizadas, incluyendo pruebas unitarias puras de la máquina de estados sin ninguna dependencia de base de datos',
+    'Verificado en vivo: una transición ilegal new→resolved correctamente rechazada con un 409 y la lista de estados permitidos'
+  ],
+  false, 261, 'published'
+) ON CONFLICT (slug, locale) DO NOTHING;
