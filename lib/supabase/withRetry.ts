@@ -18,6 +18,12 @@ const ATTEMPT_TIMEOUT_MS = 5000;
 // chaque appel Supabase de chaque page testée (c'est ce qui faisait dépasser
 // les timeouts Playwright, indépendamment de la version de @supabase/supabase-js).
 const isPlaceholderSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL === "https://placeholder.supabase.co";
+// Contre le placeholder, on sait déjà que l'appel échouera — pas besoin d'attendre
+// jusqu'à ATTEMPT_TIMEOUT_MS pour un vrai aller-retour réseau qui n'aboutira jamais.
+// Cet appel se produit sur CHAQUE page rendue (ex. getFeaturedProjectsForNav dans le
+// layout) ; sous charge E2E concurrente, même quelques secondes par page suffisent à
+// dépasser les timeouts d'assertion stricts (ex. 5s sur un changement de langue).
+const PLACEHOLDER_ATTEMPT_TIMEOUT_MS = 300;
 
 function isRetryable(error: { code?: string | number; status?: number; message?: string } | null): boolean {
   if (!error) return false;
@@ -77,8 +83,10 @@ export async function withRetry<T>(
 ): Promise<{ data: T | null; error: unknown }> {
   let lastError: unknown = null;
 
+  const attemptTimeoutMs = isPlaceholderSupabaseUrl ? PLACEHOLDER_ATTEMPT_TIMEOUT_MS : ATTEMPT_TIMEOUT_MS;
+
   for (let attempt = 0; attempt <= retries; attempt++) {
-    const result = await withTimeout(fn(), ATTEMPT_TIMEOUT_MS);
+    const result = await withTimeout(fn(), attemptTimeoutMs);
 
     if (!result.error) return result;
 
