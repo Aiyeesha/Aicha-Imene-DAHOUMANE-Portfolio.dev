@@ -14,9 +14,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 
-// SSG : le changelog ne change qu'à chaque déploiement
-export const dynamic = "force-static";
-
 type Locale = "en" | "fr" | "es";
 
 export async function generateMetadata({
