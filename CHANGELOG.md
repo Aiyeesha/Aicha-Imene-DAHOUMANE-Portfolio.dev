@@ -34,6 +34,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Sous-titre du hero (FR/EN/ES) reformulé : liste plate de technologies (« Apex · LWC · Intégrations · Sysadmin ») remplacée par un one-liner qui fusionne stack technique et bénéfice (« Apex · LWC · Intégrations — livrées sécurisées, prêtes pour la prod » et équivalents EN/ES).
+- **Calendrier de certifications Salesforce décalé (sept.–oct. 2026)** — Plus de créneau disponible en centre agréé avant septembre. Les 4 certifications initialement étalées juil.–sept. 2026 (Foundations, ADM-201, App Builder, PD1) sont repoussées et compressées sur sept.–oct. 2026, même ordre relatif. FAQ disponibilité (FR/EN/ES) : « courant août 2026 » → « courant septembre 2026 ». Meta description et sous-titre du sprint sur `/certifications` mis à jour en conséquence.
 
 ### Changed
 
