@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import UsesContent from "./uses-content";
 
-export const dynamic = "force-static";
-
 type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
