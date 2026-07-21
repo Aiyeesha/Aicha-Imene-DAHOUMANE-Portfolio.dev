@@ -30,6 +30,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Redirection corrigée pour un slug de projet erroné (iDEM Connect). Redirections `/mentions-legales` → `/legal`, `/contact`, `/rss.xml`. Liens et images de badges de certification corrigés. CTA avec repli propre quand Calendly est indisponible ; placeholders de témoignages retirés. Mentions « Provence-Alpes-Côte d'Azur » harmonisées (remplacent « PACA ») et modes de travail (100 % remote/hybride/sur site + mobilité) alignés sur toutes les pages et les 4 CV. Locale explicite (`fr-FR`/`en-US`) dans `AnimatedCounter`. Titre de projet bilingue dans le script de seed pour éviter qu'un futur reseed n'écrase les traductions FR déjà en base. Seuil de couverture Jest rendu honnête (mesuré sur l'ensemble du code via `coverageProvider: "v8"`, pas seulement les fichiers déjà testés).
 - `/uses` et `/changelog` rendaient un squelette vide en production (`export const dynamic = "force-static"` combiné à un rendu dynamique par ailleurs). Rendu dynamique par requête rétabli sur les deux pages.
 
+### Changed
+
+- Sous-titre du hero (FR/EN/ES) reformulé : liste plate de technologies (« Apex · LWC · Intégrations · Sysadmin ») remplacée par un one-liner qui fusionne stack technique et bénéfice (« Apex · LWC · Intégrations — livrées sécurisées, prêtes pour la prod » et équivalents EN/ES).
+
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
 
