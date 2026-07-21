@@ -14,6 +14,7 @@
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { readdir } from "fs/promises";
 import { join } from "path";
+import Link from "next/link";
 import TogglePublished from "./TogglePublished";
 import RevalidateButton from "./RevalidateButton";
 
@@ -236,7 +237,15 @@ export default async function AdminPage() {
       <section>
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-xl font-semibold text-slate-100">Vue d&apos;ensemble</h1>
-          <RevalidateButton />
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin/incidents"
+              className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+            >
+              → Dashboard incidents
+            </Link>
+            <RevalidateButton />
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           <StatCard

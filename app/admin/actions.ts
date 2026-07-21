@@ -9,7 +9,7 @@ import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 // Le middleware proxy.ts protège déjà /admin, mais les Server Actions peuvent
 // en théorie être invoquées directement via un POST forgé. Ce guard garantit
 // que même hors contexte middleware, l'action rejette les appelants non authentifiés.
-async function requireAdminAuth(): Promise<void> {
+export async function requireAdminAuth(): Promise<void> {
   const expectedUser = process.env.ADMIN_USERNAME ?? "";
   const expectedPass = process.env.ADMIN_PASSWORD ?? "";
 
