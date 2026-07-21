@@ -34,6 +34,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Sous-titre du hero (FR/EN/ES) reformulé : liste plate de technologies (« Apex · LWC · Intégrations · Sysadmin ») remplacée par un one-liner qui fusionne stack technique et bénéfice (« Apex · LWC · Intégrations — livrées sécurisées, prêtes pour la prod » et équivalents EN/ES).
 
+### Changed
+
+- **`/certifications`** — Les diplômes de la section « Obtenu » sont réordonnés du plus ancien au plus récent (RNCP 4 → 5 → 6) au lieu du plus récent au plus ancien, pour rendre la progression explicite. Le sous-titre de section mentionne désormais directement « progression RNCP 4 → 5 → 6 » (FR/EN/ES).
+
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
 
