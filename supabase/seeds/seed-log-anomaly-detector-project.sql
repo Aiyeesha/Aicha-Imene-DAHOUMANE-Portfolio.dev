@@ -49,3 +49,24 @@ VALUES (
   ],
   false, 263, 'published'
 ) ON CONFLICT (slug, locale) DO NOTHING;
+
+-- ── ES ───────────────────────────────────────────────────────────────────────
+INSERT INTO projects (slug, locale, title, summary, content, tech_stack, repo_url, live_url, track, categories, tags, badge, highlights, featured, sort_order, status)
+VALUES (
+  'log-anomaly-detector', 'es',
+  'Log Anomaly Detector — Análisis de logs de autenticación por reglas',
+  'Motor de detección basado en reglas para logs de autenticación, que detecta intentos de fuerza bruta, inicios de sesión con viaje imposible, ráfagas de credential stuffing y accesos fuera de horario — cada regla una función pura y probada unitariamente, sin I/O.',
+  'Backend FastAPI donde cuatro reglas de detección independientes (detection.py) toman simples diccionarios de eventos como entrada y devuelven simples diccionarios de anomalías: fuerza bruta (5+ inicios de sesión fallidos para una cuenta en menos de 5 minutos), viaje imposible (misma cuenta, dos países, con menos de 2 horas de diferencia), credential stuffing (8+ nombres de usuario distintos fallando desde una misma IP en menos de 10 minutos — la contraparte horizontal de la fuerza bruta), y acceso fuera de horario (inicio de sesión exitoso entre las 22:00 y las 06:00 UTC). Una capa de orquestación gestiona el ventaneo, la persistencia y la deduplicación de anomalías para que un ataque sostenido no sature de alertas duplicadas. Un botón «Simulate attack traffic» reproduce un escenario determinista que activa las cuatro reglas exactamente una vez. Verificado en vivo, incluyendo que repetir el escenario no produce anomalías duplicadas.',
+  ARRAY['Python','FastAPI','SQLAlchemy','React','TypeScript','Vite','SQLite','Docker','Pytest'],
+  'https://github.com/Aiyeesha/log-anomaly-detector', NULL,
+  'itops', ARRAY['Security','Detection Engineering'], ARRAY['Anomaly Detection','Brute Force','FastAPI','React'],
+  '{"tone":"personal","label":"PERSONAL PROJECT"}'::jsonb,
+  ARRAY[
+    'Cuatro reglas de detección independientes: fuerza bruta, viaje imposible, credential stuffing, acceso fuera de horario',
+    'Deduplicación de anomalías — una regla no se vuelve a activar para el mismo sujeto dentro de su propia ventana temporal',
+    'Escenario de demostración determinista que activa las cuatro reglas de forma reproducible — verificado en vivo, incluyendo la deduplicación al repetir',
+    '20 pruebas automatizadas, las 4 reglas probadas unitariamente con simples diccionarios de eventos — sin base de datos ni dependencia del reloj',
+    'Genera alertas razonando sobre secuencias de eventos, en lugar de simplemente mostrar alertas ya existentes'
+  ],
+  false, 263, 'published'
+) ON CONFLICT (slug, locale) DO NOTHING;
