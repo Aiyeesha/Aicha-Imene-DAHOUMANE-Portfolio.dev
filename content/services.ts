@@ -1,4 +1,4 @@
-export type Locale = "en" | "fr";
+export type Locale = "en" | "fr" | "es";
 export type Track = "salesforce" | "itops";
 
 export type ServiceCard = {
@@ -125,6 +125,124 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
         ],
         deliverable: "Runbooks livrés + support de formation + documentation d’exploitation",
         duration: "1 à 2 jours par session"
+      }
+    ];
+  }
+
+  if (locale === "es") {
+    if (track === "salesforce") {
+      return [
+        {
+          title: "Auditoría y asesoría Salesforce",
+          pitch: "Tu org de Salesforce se ha vuelto compleja y ya no sabes qué está frenando a tus equipos. En 3 a 5 días, hago el diagnóstico y te entrego un plan de acción concreto, priorizado y directamente aplicable.",
+          description:
+            "Analizar el estado actual, identificar oportunidades de optimización y ofrecer recomendaciones accionables.",
+          bullets: [
+            "Auditoría de la org y diagnóstico de salud",
+            "Optimización de procesos y flujos de trabajo",
+            "Revisión de seguridad y cumplimiento"
+          ],
+          deliverable: "Informe de auditoría estructurado + plan de acción priorizado",
+          duration: "3 a 5 días"
+        },
+        {
+          title: "Desarrollo y administración",
+          pitch: "Necesitas automatizar un proceso o implementar una funcionalidad en Salesforce, pero no cuentas con los recursos internos. Me encargo del diseño, el código y el despliegue — del sandbox a producción.",
+          description:
+            "Diseñar el modelo de datos, automatizar la lógica de negocio y gestionar los entornos del sandbox a producción.",
+          bullets: [
+            "Diseño de objetos personalizados y modelos de datos",
+            "Automatización con Flows y Apex",
+            "Configuración de entornos y seguridad"
+          ],
+          deliverable: "Código versionado (git) + documentación técnica + guía de despliegue",
+          duration: "Según alcance — de 1 semana a 2 meses"
+        },
+        {
+          title: "Integraciones y APIs",
+          pitch: "Tus datos están dispersos entre Salesforce y otras herramientas, generando errores y doble captura. Conecto tus sistemas y configuro la supervisión para que todo fluya sin fricción.",
+          description:
+            "Conectar Salesforce con sistemas externos y mantener la coherencia de los datos entre plataformas.",
+          bullets: [
+            "Integraciones vía API REST / SOAP",
+            "Configuración ETL y sincronización de datos",
+            "Supervisión y gestión de errores"
+          ],
+          deliverable: "Integración operativa + guía de configuración + manual de supervisión",
+          duration: "1 a 3 semanas"
+        },
+        {
+          title: "Formación y soporte",
+          pitch: "Tus usuarios o administradores no están aprovechando Salesforce al máximo tras la puesta en producción. Diseño formaciones prácticas y documentación clara para que tu equipo gane autonomía rápidamente.",
+          description:
+            "Acompañar a usuarios y administradores con formación práctica, documentación y soporte posterior al despliegue.",
+          bullets: [
+            "Formación de usuarios y administradores",
+            "Documentación y buenas prácticas",
+            "Soporte posterior al despliegue"
+          ],
+          deliverable: "Material de formación + documentación de usuario + FAQ",
+          duration: "1 a 3 días por sesión"
+        }
+      ];
+    }
+
+    // IT Ops / DevOps
+    return [
+      {
+        title: "Auditoría y hardening de infraestructura",
+        pitch: "No tienes una visión clara del estado de tu infraestructura y desconoces qué vulnerabilidades podrían estar presentes. En pocos días, mapeo los riesgos y te entrego un plan de remediación priorizado.",
+        description:
+          "Evaluar y proteger la infraestructura: supervisión, hardening, copias de seguridad y runbooks.",
+        bullets: [
+          "Evaluación de infraestructura y diagnóstico de salud",
+          "Hardening y buenas prácticas de seguridad",
+          "Implementación de supervisión y alertas",
+          "Planificación de runbooks y copias de seguridad"
+        ],
+        deliverable: "Informe de evaluación + checklist de hardening + plan de remediación",
+        duration: "2 a 4 días"
+      },
+      {
+        title: "Implantación y administración",
+        pitch: "Necesitas desplegar o modernizar una infraestructura de servidores/red sin contar con los recursos internos disponibles. Me encargo de la instalación, configuración y documentación de principio a fin.",
+        description:
+          "Desplegar y gestionar servidores, redes, virtualización y entornos cloud en Windows/Linux.",
+        bullets: [
+          "Instalación de servidores Windows y Linux",
+          "Active Directory y servicios de red (DNS, DHCP)",
+          "Virtualización y contenedorización",
+          "Configuración de pfSense y seguridad"
+        ],
+        deliverable: "Entorno operativo + documentación de arquitectura + runbooks",
+        duration: "Según alcance — de 3 días a 4 semanas"
+      },
+      {
+        title: "Pipelines CI/CD y DevOps",
+        pitch: "Tus despliegues son manuales, lentos y propensos a errores — cada puesta en producción es una fuente de estrés. Implemento un pipeline automatizado que hace tus entregas rápidas, reproducibles y trazables.",
+        description:
+          "Implementar pipelines automatizados con buenas prácticas de entrega y control de versiones.",
+        bullets: [
+          "Diseño de pipelines CI/CD",
+          "Automatización con GitHub Actions",
+          "Dockerización y aprovisionamiento de entornos",
+          "Colaboración y control de versiones"
+        ],
+        deliverable: "Pipeline funcional + documentación + guía de mantenimiento",
+        duration: "1 a 2 semanas"
+      },
+      {
+        title: "Soporte, formación y documentación",
+        pitch: "Tus equipos gestionan demasiados incidentes recurrentes por falta de procedimientos claros y documentación actualizada. Redacto los runbooks y formo a tus equipos para que operen con confianza.",
+        description:
+          "Brindar soporte a usuarios, documentación y acompañamiento en la operación y gestión de incidentes.",
+        bullets: [
+          "Formación y transferencia de conocimiento",
+          "Runbooks y documentación",
+          "Respuesta a incidentes y resolución de problemas"
+        ],
+        deliverable: "Runbooks entregados + material de formación + documentación operativa",
+        duration: "1 a 2 días por sesión"
       }
     ];
   }
