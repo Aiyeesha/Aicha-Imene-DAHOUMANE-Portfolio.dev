@@ -35,10 +35,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (juil. 2026 – 2027/2028)."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (sept. 2026 – 2027/2028)."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (jul. 2026 – 2027/2028)."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (Jul 2026 – 2027/2028).";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (sept. 2026 – 2027/2028)."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (Sep 2026 – 2027/2028).";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -301,12 +301,15 @@ export default async function CertificationsPage({ params }: PageProps) {
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── 2026 — dans l'ordre (Juil. → Déc. 2026) ──────────────────────────────
+    // ── 2026 — dans l'ordre (Sept. → Déc. 2026) ──────────────────────────────
+    // Report : plus de créneau disponible en centre agréé avant septembre —
+    // les 4 certifications Salesforce, initialement juil.–sept., sont
+    // repoussées et compressées sur sept.–oct. 2026, même ordre relatif.
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Juil.–Août 2026" : isEs ? "Jul.–ago. 2026" : "Jul–Aug 2026",
+      target: isFr ? "Sept. 2026" : isEs ? "Sep. 2026" : "Sep 2026",
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : isEs
@@ -323,7 +326,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator (ADM-201)",
       issuer: "Salesforce",
-      target: isFr ? "Fin août 2026" : isEs ? "Fin. ago. 2026" : "Late Aug 2026",
+      target: isFr ? "Fin sept. 2026" : isEs ? "Fin. sep. 2026" : "Late Sep 2026",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
@@ -339,7 +342,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Août–sept. 2026" : isEs ? "Ago.–sep. 2026" : "Aug–Sep 2026",
+      target: isFr ? "Début oct. 2026" : isEs ? "Inicio oct. 2026" : "Early Oct 2026",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
         : isEs
@@ -355,7 +358,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-developer-i",
       name: "Salesforce Platform Developer I (PD1)",
       issuer: "Salesforce",
-      target: isFr ? "Fin sept. 2026" : isEs ? "Fin. sep. 2026" : "Late Sep 2026",
+      target: isFr ? "Mi-oct. 2026" : isEs ? "Mediados oct. 2026" : "Mid-Oct 2026",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
         : isEs
@@ -735,7 +738,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {isFr ? "En cours / Planifiées 2026" : isEs ? "En curso / Planificadas 2026" : "In progress / Planned 2026"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint juil. → déc. 2026" : isEs ? "— sprint jul. → dic. 2026" : "— sprint Jul. → Dec. 2026"}
+              {isFr ? "— sprint sept. → déc. 2026" : isEs ? "— sprint sept. → dic. 2026" : "— sprint Sep. → Dec. 2026"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
