@@ -1,4 +1,4 @@
-export type Locale = "en" | "fr";
+export type Locale = "en" | "fr" | "es";
 export type Track = "salesforce" | "itops";
 
 export type SkillGroup = {
@@ -95,6 +95,99 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
           "Communication structurée",
           "Autonomie",
           "Transparence & apprentissage continu"
+        ]
+      }
+    ];
+  }
+
+  if (locale === "es") {
+    if (track === "salesforce") {
+      return [
+        {
+          title: "Desarrollo y administración de Salesforce",
+          items: [
+            "Apex (triggers, clases, batch jobs)",
+            "Flow Builder y buenas prácticas de automatización",
+            "Lightning App Builder y Lightning Web Components",
+            "Modelado de datos y seguridad (tipos de registro, roles, perfiles, permission sets)",
+            "Despliegues vía Change Sets y Salesforce CLI"
+          ]
+        },
+        {
+          title: "Programación y plataformas",
+          items: [
+            "Java · JavaScript / TypeScript (experiencia en producción)",
+            "PostgreSQL (avanzado · 2 años) · MySQL (intermedio · 1 año) — consultas complejas, administración, integraciones Salesforce vía Heroku Connect",
+            "Heroku (avanzado · 2 años) — despliegues de aplicaciones conectadas a Salesforce vía Heroku Connect, gestión de dynos y variables de entorno",
+            "API REST / SOAP — diseño e integración",
+            "Pruebas unitarias y aserciones",
+            "Git y flujos de trabajo en GitHub",
+            "VS Code, desarrollo guiado por CLI"
+          ]
+        },
+        {
+          title: "Sistemas, DevOps y seguridad",
+          items: [
+            "Administración Windows y Linux",
+            "Fundamentos de red y supervisión",
+            "Pipelines CI/CD con Salesforce CLI y GitHub Actions",
+            "Prácticas de copia de seguridad y restauración",
+            "Cultura de seguridad (control de accesos, concienciación sobre ransomware)"
+          ]
+        },
+        {
+          title: "Soft skills y forma de trabajar",
+          items: [
+            "Documentación técnica clara",
+            "Comunicación activa con interlocutores no técnicos",
+            "Colaboración remota (múltiples zonas horarias)",
+            "Aprendizaje rápido con autoformación estructurada",
+            "Enfoque centrado en el usuario para la recopilación de requisitos"
+          ]
+        }
+      ];
+    }
+
+    // IT Ops
+    return [
+      {
+        title: "Sistemas, DevOps y seguridad",
+        items: [
+          "Administración Windows y Linux",
+          "Fundamentos de red y supervisión",
+          "Copia de seguridad / restauración y DRP (buenas prácticas)",
+          "Cultura de seguridad (control de accesos, concienciación sobre ransomware)",
+          "Documentación, runbooks y gestión de incidentes"
+        ]
+      },
+      {
+        title: "Pipelines y automatización",
+        items: [
+          "CI/CD con GitHub Actions",
+          "Automatización por scripts (enfoque pragmático)",
+          "Dockerización y entornos reproducibles",
+          "Monitorización y alertas",
+          "Control de versiones (Git)"
+        ]
+      },
+      {
+        title: "Soporte y operaciones",
+        items: [
+          "Soporte a usuarios y diagnóstico",
+          "Estandarización de procedimientos",
+          "Mejora continua (reducción de deuda operativa)",
+          "Gestión de cambios",
+          "Comunicación clara en situaciones de incidente"
+        ]
+      },
+      {
+        title: "Idiomas y colaboración",
+        items: [
+          "Francés (nativo), Inglés (C2), Español (B1), Italiano (A1)",
+          "Colaboración remota",
+          "Comunicación estructurada",
+          "Autonomía",
+          "Transparencia y aprendizaje continuo"
         ]
       }
     ];

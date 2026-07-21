@@ -95,12 +95,10 @@ const IconFile = () => (
 const SALESFORCE_ICONS = [<IconAudit key="a" />, <IconCode key="b" />, <IconLink key="c" />, <IconGraduation key="d" />];
 const ITOPS_ICONS      = [<IconShield key="a" />, <IconServer key="b" />, <IconGear key="c" />, <IconFile key="d" />];
 
-export default function TrackAwareServices({ locale }: { locale: Locale | "es" }) {
+export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const { track } = useTrack();
   const t = useTranslations();
-  // getServices() looks up a fr/en-only content dictionary (content/services.ts);
-  // Spanish gracefully falls back to English there, same scoping as elsewhere.
-  const dataLocale: Locale = locale === "fr" ? "fr" : "en";
+  const dataLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   // Defer all track-dependent rendering until after mount.
   // The server always renders with "salesforce" (initialTrack); Providers then
