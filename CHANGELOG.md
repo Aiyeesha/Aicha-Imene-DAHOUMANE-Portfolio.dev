@@ -29,6 +29,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Redirection corrigée pour un slug de projet erroné (iDEM Connect). Redirections `/mentions-legales` → `/legal`, `/contact`, `/rss.xml`. Liens et images de badges de certification corrigés. CTA avec repli propre quand Calendly est indisponible ; placeholders de témoignages retirés. Mentions « Provence-Alpes-Côte d'Azur » harmonisées (remplacent « PACA ») et modes de travail (100 % remote/hybride/sur site + mobilité) alignés sur toutes les pages et les 4 CV. Locale explicite (`fr-FR`/`en-US`) dans `AnimatedCounter`. Titre de projet bilingue dans le script de seed pour éviter qu'un futur reseed n'écrase les traductions FR déjà en base. Seuil de couverture Jest rendu honnête (mesuré sur l'ensemble du code via `coverageProvider: "v8"`, pas seulement les fichiers déjà testés).
 
+### Changed
+
+- **`/certifications`** — Les diplômes de la section « Obtenu » sont réordonnés du plus ancien au plus récent (RNCP 4 → 5 → 6) au lieu du plus récent au plus ancien, pour rendre la progression explicite. Le sous-titre de section mentionne désormais directement « progression RNCP 4 → 5 → 6 » (FR/EN/ES).
+
 ### Planned
 - LinkedIn recommendations / testimonials (pending responses from colleagues)
 
