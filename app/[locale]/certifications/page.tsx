@@ -162,7 +162,11 @@ export default async function CertificationsPage({ params }: PageProps) {
 
   const labels = {
     sectionCompleted: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",
-    sectionCompletedSub: isFr ? "Diplômes et certificats" : isEs ? "Diplomas y certificados" : "Degrees & certificates",
+    sectionCompletedSub: isFr
+      ? "Diplômes et certificats — progression RNCP 4 → 5 → 6"
+      : isEs
+      ? "Diplomas y certificados — progresión RNCP 4 → 5 → 6"
+      : "Degrees & certificates — RNCP progression 4 → 5 → 6",
     sectionActive: isFr ? "Actif" : isEs ? "Activo" : "Active",
     sectionActiveSub: isFr ? "Progression continue" : isEs ? "Aprendizaje continuo" : "Continuous learning",
     sectionUpcoming: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation",
@@ -195,26 +199,26 @@ export default async function CertificationsPage({ params }: PageProps) {
 
   const completedCerts = [
     {
-      id: "dev-concepteur-logiciel-openclassrooms",
+      id: "tai-greta-valdoise",
       name: isFr
-        ? "Développeur Concepteur Logiciel"
+        ? "Technicien(ne) d'Assistance Informatique"
         : isEs
-        ? "Développeur Concepteur Logiciel"
-        : "Développeur Concepteur Logiciel",
-      issuer: "OpenClassrooms",
-      earnedDate: isFr ? "Oct. 2025" : isEs ? "Oct. 2025" : "Oct 2025",
-      level: isFr ? "Titre RNCP niveau 6 (Bac+3/4)" : isEs ? "Título RNCP nivel 6 (equivalente a Bac+3/4)" : "RNCP Level 6 (Bac+3/4 equivalent)",
+        ? "Técnico/a de Asistencia Informática"
+        : "IT Support Technician",
+      issuer: "GRETA du Val d'Oise — Lycée Louis Jouvet",
+      earnedDate: isFr ? "Juil. 2022" : isEs ? "Jul. 2022" : "Jul 2022",
+      level: isFr ? "Titre RNCP niveau 4 (Bac)" : isEs ? "Título RNCP nivel 4 (equivalente a Bachillerato)" : "RNCP Level 4 (Bac)",
       description: isFr
-        ? "Titre professionnel en conception et développement logiciel avec spécialisation Salesforce : Apex, Flows, modélisation des données, CI/CD (Salesforce CLI, GitHub Actions), LWC, sécurité et permission sets."
+        ? "Support et assistance informatique. Formation au Lycée Louis Jouvet (Taverny). Installation Windows 10, virtualisation VirtualBox, configuration réseau TP-Link, profils itinérants Active Directory, diagnostic matériel."
         : isEs
-        ? "Título profesional en diseño y desarrollo de software con especialización en Salesforce: Apex, Flows, modelado de datos, CI/CD (Salesforce CLI, GitHub Actions), LWC, seguridad y permission sets."
-        : "Professional title in software design & development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.",
-      skills: ["Apex", "Salesforce Flows", "LWC", "Data Modeling", "CI/CD", "GitHub Actions", "Salesforce CLI", "API Integration", "Security & Permissions", "Automated Testing"],
+        ? "Soporte y asistencia informática. Formación en el Lycée Louis Jouvet (Taverny). Instalación de Windows 10, virtualización con VirtualBox, configuración de red TP-Link, perfiles móviles de Active Directory, diagnóstico de hardware."
+        : "IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, hardware diagnosis.",
+      skills: ["Windows 10", "VirtualBox", "Active Directory", "Roaming Profiles", "WiFi Configuration", "Hardware Diagnosis", "User Support"],
       credentialUrl: undefined,
-      diplomaUrl: "/certifications/openclassrooms-dcl-diploma.pdf",
-      initials: "DCL",
-      color: "bg-indigo-700",
-      logoUrl: "/certifications/dev-concepteur-badge.png",
+      diplomaUrl: "/certifications/tai-greta-diploma.pdf",
+      initials: "TAI",
+      color: "bg-violet-700",
+      logoUrl: "/certifications/tai-badge.png",
     },
     {
       id: "tssr-greta-valdoise",
@@ -239,26 +243,26 @@ export default async function CertificationsPage({ params }: PageProps) {
       logoUrl: "/certifications/systems-networks-badge.png",
     },
     {
-      id: "tai-greta-valdoise",
+      id: "dev-concepteur-logiciel-openclassrooms",
       name: isFr
-        ? "Technicien(ne) d'Assistance Informatique"
+        ? "Développeur Concepteur Logiciel"
         : isEs
-        ? "Técnico/a de Asistencia Informática"
-        : "IT Support Technician",
-      issuer: "GRETA du Val d'Oise — Lycée Louis Jouvet",
-      earnedDate: isFr ? "Juil. 2022" : isEs ? "Jul. 2022" : "Jul 2022",
-      level: isFr ? "Titre RNCP niveau 4 (Bac)" : isEs ? "Título RNCP nivel 4 (equivalente a Bachillerato)" : "RNCP Level 4 (Bac)",
+        ? "Développeur Concepteur Logiciel"
+        : "Développeur Concepteur Logiciel",
+      issuer: "OpenClassrooms",
+      earnedDate: isFr ? "Oct. 2025" : isEs ? "Oct. 2025" : "Oct 2025",
+      level: isFr ? "Titre RNCP niveau 6 (Bac+3/4)" : isEs ? "Título RNCP nivel 6 (equivalente a Bac+3/4)" : "RNCP Level 6 (Bac+3/4 equivalent)",
       description: isFr
-        ? "Support et assistance informatique. Formation au Lycée Louis Jouvet (Taverny). Installation Windows 10, virtualisation VirtualBox, configuration réseau TP-Link, profils itinérants Active Directory, diagnostic matériel."
+        ? "Titre professionnel en conception et développement logiciel avec spécialisation Salesforce : Apex, Flows, modélisation des données, CI/CD (Salesforce CLI, GitHub Actions), LWC, sécurité et permission sets."
         : isEs
-        ? "Soporte y asistencia informática. Formación en el Lycée Louis Jouvet (Taverny). Instalación de Windows 10, virtualización con VirtualBox, configuración de red TP-Link, perfiles móviles de Active Directory, diagnóstico de hardware."
-        : "IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, hardware diagnosis.",
-      skills: ["Windows 10", "VirtualBox", "Active Directory", "Roaming Profiles", "WiFi Configuration", "Hardware Diagnosis", "User Support"],
+        ? "Título profesional en diseño y desarrollo de software con especialización en Salesforce: Apex, Flows, modelado de datos, CI/CD (Salesforce CLI, GitHub Actions), LWC, seguridad y permission sets."
+        : "Professional title in software design & development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.",
+      skills: ["Apex", "Salesforce Flows", "LWC", "Data Modeling", "CI/CD", "GitHub Actions", "Salesforce CLI", "API Integration", "Security & Permissions", "Automated Testing"],
       credentialUrl: undefined,
-      diplomaUrl: "/certifications/tai-greta-diploma.pdf",
-      initials: "TAI",
-      color: "bg-violet-700",
-      logoUrl: "/certifications/tai-badge.png",
+      diplomaUrl: "/certifications/openclassrooms-dcl-diploma.pdf",
+      initials: "DCL",
+      color: "bg-indigo-700",
+      logoUrl: "/certifications/dev-concepteur-badge.png",
     },
     {
       id: "linguaskill-cambridge",
