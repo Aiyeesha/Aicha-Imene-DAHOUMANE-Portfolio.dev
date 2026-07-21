@@ -29,6 +29,13 @@ type ProjectSection =
 
 type Params = { locale: string; slug: string };
 
+// Locale display names, keyed by the reader's locale (rows) then the target locale (cols).
+const LOCALE_NAMES: Record<string, Record<string, string>> = {
+  en: { fr: "French", es: "Spanish", en: "English" },
+  fr: { en: "anglaise", es: "espagnole", fr: "française" },
+  es: { en: "inglés", fr: "francés", es: "español" },
+};
+
 type ProjectAsset = {
   id: string;
   title: string;
@@ -432,6 +439,22 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 unoptimized
               />
             </div>
+          </div>
+        )}
+
+        {/* ── LOCALE FALLBACK NOTICE ───────────────────────────────────────────
+            getPublishedProjectBySlugWithAssets falls back to another locale's
+            published row when the requested locale has none (translation gap,
+            or a same-slug revision still in draft). That fallback is silent at
+            the data layer, so it's made visible here rather than letting a
+            visitor mistake unrelated-locale content for a native page. */}
+        {project.locale !== locale && (
+          <div className="mt-8 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
+            {isFr
+              ? `Cette étude de cas n'est pas encore disponible en français — version ${LOCALE_NAMES.fr[project.locale] ?? project.locale} affichée.`
+              : isEs
+              ? `Este estudio de caso aún no está disponible en español — se muestra la versión en ${LOCALE_NAMES.es[project.locale] ?? project.locale}.`
+              : `This case study isn't available in English yet — showing the ${LOCALE_NAMES.en[project.locale] ?? project.locale} version.`}
           </div>
         )}
 
