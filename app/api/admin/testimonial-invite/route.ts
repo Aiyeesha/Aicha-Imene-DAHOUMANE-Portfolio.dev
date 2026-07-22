@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
   // ── 4. Paramètres optionnels ────────────────────────────────────────────────
   let days = DEFAULT_DAYS;
-  let locale: "en" | "fr" = "en";
+  let locale: "en" | "fr" | "es" = "en";
 
   try {
     const body = (await req.json()) as Record<string, unknown>;
@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
       days = Math.floor(body.days);
     }
     if (body.locale === "fr") locale = "fr";
+    else if (body.locale === "es") locale = "es";
   } catch {
     // Body absent ou invalide → paramètres par défaut
   }
