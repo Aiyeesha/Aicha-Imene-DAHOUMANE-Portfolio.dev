@@ -2,9 +2,9 @@
 // ---------------------
 // Données statiques pour la page Ressources / Boîte à outils.
 // Les noms d'outils et URLs sont invariants par langue.
-// Les descriptions sont bilingues (en / fr).
+// Les descriptions sont trilingues (en / fr / es).
 
-export type Locale = "en" | "fr";
+export type Locale = "en" | "fr" | "es";
 
 export type Resource = {
   name: string;
@@ -29,6 +29,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
     title: {
       en: "Salesforce Development",
       fr: "Développement Salesforce",
+      es: "Desarrollo Salesforce",
     },
     resources: [
       {
@@ -37,6 +38,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Official CLI for deploying metadata, running Apex tests, and managing orgs from the terminal.",
           fr: "CLI officielle pour déployer des métadonnées, lancer des tests Apex et gérer les orgs depuis le terminal.",
+          es: "CLI oficial para desplegar metadatos, ejecutar pruebas Apex y gestionar orgs desde la terminal.",
         },
         tag: "free",
       },
@@ -46,6 +48,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "The standard IDE for Apex, LWC, SOQL, and SOSL development with rich IntelliSense.",
           fr: "L'IDE de référence pour développer en Apex, LWC, SOQL et SOSL avec un IntelliSense complet.",
+          es: "El IDE de referencia para desarrollar en Apex, LWC, SOQL y SOSL con un IntelliSense completo.",
         },
         tag: "free",
       },
@@ -55,6 +58,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Chrome extension to inspect any Salesforce org — fields, record IDs, REST Explorer, and bulk export.",
           fr: "Extension Chrome pour inspecter une org Salesforce — champs, IDs, explorateur REST et export en masse.",
+          es: "Extensión de Chrome para inspeccionar cualquier org Salesforce — campos, IDs de registro, explorador REST y exportación masiva.",
         },
         tag: "free",
       },
@@ -64,6 +68,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Static analysis tool for Apex code — catches security issues, dead code, and performance anti-patterns.",
           fr: "Outil d'analyse statique pour Apex — détecte les failles de sécurité, le code mort et les anti-patterns de performance.",
+          es: "Herramienta de análisis estático para código Apex — detecta problemas de seguridad, código muerto y anti-patrones de rendimiento.",
         },
         tag: "open-source",
       },
@@ -73,6 +78,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Official Salesforce learning platform. Badges, superbadges, and hands-on challenges in free dev orgs.",
           fr: "Plateforme d'apprentissage officielle Salesforce. Badges, superbadges et défis pratiques dans des orgs de développement gratuites.",
+          es: "Plataforma oficial de aprendizaje de Salesforce. Insignias, superinsignias y retos prácticos en orgs de desarrollo gratuitas.",
         },
         tag: "free",
       },
@@ -86,6 +92,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
     title: {
       en: "Dev Stack",
       fr: "Stack de développement",
+      es: "Stack de desarrollo",
     },
     resources: [
       {
@@ -94,6 +101,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Typed superset of JavaScript. Strict mode + editor integration dramatically reduces runtime errors.",
           fr: "Surcouche typée de JavaScript. Le mode strict et l'intégration IDE réduisent drastiquement les erreurs à l'exécution.",
+          es: "Superconjunto tipado de JavaScript. El modo estricto y la integración con el editor reducen drásticamente los errores en tiempo de ejecución.",
         },
         tag: "open-source",
       },
@@ -103,6 +111,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Full-stack React framework with RSC, SSR, SSG, API Routes, and built-in image/font optimization.",
           fr: "Framework React full-stack avec RSC, SSR, SSG, API Routes et optimisation native des images et polices.",
+          es: "Framework React full-stack con RSC, SSR, SSG, API Routes y optimización nativa de imágenes y fuentes.",
         },
         tag: "open-source",
       },
@@ -112,6 +121,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Utility-first CSS framework. Eliminates dead CSS and speeds up UI iteration without leaving the HTML.",
           fr: "Framework CSS utility-first. Élimine le CSS mort et accélère l'itération UI sans quitter le HTML.",
+          es: "Framework CSS utility-first. Elimina el CSS muerto y acelera la iteración de la UI sin salir del HTML.",
         },
         tag: "open-source",
       },
@@ -121,6 +131,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Open-source Firebase alternative — PostgreSQL, Auth, Storage, and Realtime, fully self-hostable.",
           fr: "Alternative open-source à Firebase — PostgreSQL, Auth, Storage et Realtime, entièrement auto-hébergeable.",
+          es: "Alternativa open-source a Firebase — PostgreSQL, Auth, Storage y Realtime, totalmente autoalojable.",
         },
         tag: "open-source",
       },
@@ -130,6 +141,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "The go-to testing stack for React. Encourages tests that resemble how users interact with the UI.",
           fr: "La stack de test de référence pour React. Encourage des tests qui reflètent la façon dont les utilisateurs interagissent avec l'UI.",
+          es: "La stack de pruebas de referencia para React. Fomenta pruebas que reflejan cómo interactúan los usuarios con la UI.",
         },
         tag: "open-source",
       },
@@ -143,6 +155,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
     title: {
       en: "IT & Ops",
       fr: "IT & Ops",
+      es: "IT & Ops",
     },
     resources: [
       {
@@ -151,6 +164,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Agentless automation engine for configuration management, app deployment, and orchestration.",
           fr: "Moteur d'automatisation sans agent pour la gestion de configuration, le déploiement d'applications et l'orchestration.",
+          es: "Motor de automatización sin agente para gestión de configuración, despliegue de aplicaciones y orquestación.",
         },
         tag: "open-source",
       },
@@ -160,6 +174,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Foundation of most enterprise Windows environments. AD DS, DNS, DHCP, and GPO are day-one skills.",
           fr: "Socle de la plupart des environnements Windows d'entreprise. AD DS, DNS, DHCP et GPO sont des compétences fondamentales.",
+          es: "Base de la mayoría de los entornos Windows empresariales. AD DS, DNS, DHCP y GPO son competencias fundamentales.",
         },
       },
       {
@@ -168,6 +183,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Open-source firewall and router — routing, VPN (WireGuard/OpenVPN), IDS/IPS, and traffic shaping.",
           fr: "Pare-feu et routeur open-source — routage, VPN (WireGuard/OpenVPN), IDS/IPS et contrôle du trafic.",
+          es: "Firewall y router open-source — enrutamiento, VPN (WireGuard/OpenVPN), IDS/IPS y control de tráfico.",
         },
         tag: "open-source",
       },
@@ -177,6 +193,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "CI/CD pipelines directly in GitHub. Used for lint, typecheck, tests, and deployments on every push.",
           fr: "Pipelines CI/CD directement dans GitHub. Utilisé pour le lint, le typecheck, les tests et les déploiements à chaque push.",
+          es: "Pipelines CI/CD directamente en GitHub. Usado para lint, typecheck, pruebas y despliegues en cada push.",
         },
         tag: "free",
       },
@@ -186,6 +203,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Remote monitoring and management platform for endpoint oversight, patching, and automation scripts.",
           fr: "Plateforme de supervision et gestion à distance des endpoints — surveillance, patchs et scripts d'automatisation.",
+          es: "Plataforma de supervisión y gestión remota de endpoints — monitorización, parches y scripts de automatización.",
         },
       },
     ],
@@ -198,6 +216,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
     title: {
       en: "Learning & Reference",
       fr: "Apprentissage & Référence",
+      es: "Aprendizaje y referencia",
     },
     resources: [
       {
@@ -206,6 +225,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "The definitive reference for HTML, CSS, JavaScript, and Web APIs. Bookmark it.",
           fr: "La référence incontournable pour HTML, CSS, JavaScript et les APIs web. À mettre en favoris.",
+          es: "La referencia definitiva para HTML, CSS, JavaScript y las APIs web. Guárdala en favoritos.",
         },
         tag: "free",
       },
@@ -215,6 +235,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Visual learning roadmaps for frontend, backend, DevOps, and more. Great for structuring self-study.",
           fr: "Parcours d'apprentissage visuels pour frontend, backend, DevOps et plus. Idéal pour structurer une formation autonome.",
+          es: "Rutas de aprendizaje visuales para frontend, backend, DevOps y más. Ideal para estructurar el autoaprendizaje.",
         },
         tag: "free",
       },
@@ -224,6 +245,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "The standard reference for web application security risks. Essential reading before shipping anything.",
           fr: "La référence standard pour les risques de sécurité des applications web. Lecture obligatoire avant tout déploiement.",
+          es: "La referencia estándar de riesgos de seguridad en aplicaciones web. Lectura imprescindible antes de publicar nada.",
         },
         tag: "free",
       },
@@ -233,6 +255,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "Timeless book on software craftsmanship — DRY, orthogonality, debugging, and professionalism.",
           fr: "Ouvrage intemporel sur l'artisanat logiciel — DRY, orthogonalité, débogage et professionnalisme.",
+          es: "Libro atemporal sobre la artesanía del software — DRY, ortogonalidad, depuración y profesionalismo.",
         },
         tag: "book",
       },
@@ -242,6 +265,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         description: {
           en: "The authoritative reference for Apex, LWC, REST API, Metadata API, and Salesforce platform limits.",
           fr: "La référence officielle pour Apex, LWC, REST API, Metadata API et les limites de la plateforme Salesforce.",
+          es: "La referencia oficial para Apex, LWC, REST API, Metadata API y los límites de la plataforma Salesforce.",
         },
         tag: "free",
       },
