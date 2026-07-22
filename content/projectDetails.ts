@@ -51,6 +51,14 @@ export const projectDetails: ProjectDetails[] = [
             ]
           },
           {
+            type: "text",
+            title: "The hybrid-skill proof point",
+            paragraphs: [
+              "This project is the clearest evidence that my Salesforce and infrastructure skills aren't two separate résumés: I built the Apex REST layer AND the Heroku app that runs beside it, then wrote the deployment runbook a real ops handoff needs.",
+              "It's also the first step toward a deeper crossover already scoped next — a real-time Heroku↔Salesforce sync via Platform Events and OAuth 2.0 JWT Bearer Flow."
+            ]
+          },
+          {
             type: "bullets",
             title: "What I delivered",
             items: [
@@ -262,6 +270,14 @@ POST <instance_url>/services/oauth2/token
             paragraphs: [
               "LEGARANT (assurance vie) a racheté AXG pour s’implanter en Allemagne. L’objectif était de conserver l’org Salesforce de Legarant comme CRM principal et d’y intégrer les données clés d’AXG.",
               "L’intégration est unidirectionnelle (AXG → Salesforce). Une application mobile étant prévue, il fallait aussi une couche applicative (hébergeur type Heroku) connectée à Salesforce, et des appels REST pour requêter la base clients."
+            ]
+          },
+          {
+            type: "text",
+            title: "La preuve du croisement de compétences",
+            paragraphs: [
+              "Ce projet est la preuve la plus claire que mes compétences Salesforce et infrastructure ne sont pas deux CV séparés : j'ai construit la couche Apex REST ET l'application Heroku qui l'accompagne, puis rédigé le runbook de déploiement qu'exige une vraie passation ops.",
+              "C'est aussi la première marche vers un projet de croisement plus poussé déjà cadré — une synchronisation temps réel Heroku↔Salesforce via Platform Events et OAuth 2.0 JWT Bearer Flow."
             ]
           },
           {
@@ -479,6 +495,14 @@ Staging app: https://legarant-staging-78a7880351d1.herokuapp.com
             paragraphs: [
               "LEGARANT (seguro de vida) adquirió AXG para expandirse en Alemania. El objetivo era mantener la org de Salesforce de Legarant como CRM principal e integrar en ella los datos clave de AXG.",
               "La integración es unidireccional (AXG → Salesforce). Como se preveía una app móvil, también se necesitaba una capa aplicativa (tipo Heroku) conectada a Salesforce, y llamadas REST para consultar la base de clientes."
+            ]
+          },
+          {
+            type: "text",
+            title: "La prueba del cruce de competencias",
+            paragraphs: [
+              "Este proyecto es la prueba más clara de que mis competencias en Salesforce e infraestructura no son dos currículums separados: construí la capa Apex REST Y la aplicación Heroku que la acompaña, y redacté el runbook de despliegue que exige un traspaso operativo real.",
+              "También es el primer paso hacia un proyecto de cruce más avanzado ya definido — una sincronización en tiempo real Heroku↔Salesforce mediante Platform Events y OAuth 2.0 JWT Bearer Flow."
             ]
           },
           {
