@@ -55,7 +55,8 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const t = useTranslations();
   const { track } = useTrack();
   const pathname = usePathname();
-  const locale = (pathname.split("/")[1] || "en") as "en" | "fr";
+  const pathnameLocale = pathname.split("/")[1];
+  const locale: "en" | "fr" | "es" = pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en";
 
   const featured = useMemo(() => {
     return projects
