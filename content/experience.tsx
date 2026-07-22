@@ -1,6 +1,6 @@
 import type { AccordionItem } from "@/components/Accordion";
 
-export type Locale = "en" | "fr";
+export type Locale = "en" | "fr" | "es";
 
 export function getExperienceItems(locale: Locale): AccordionItem[] {
   if (locale === "fr") {
@@ -105,6 +105,115 @@ export function getExperienceItems(locale: Locale): AccordionItem[] {
             <li>
               Rédaction de procédures et contribution à une base de connaissances sur les
               incidents récurrents.
+            </li>
+          </ul>
+        )
+      }
+    ];
+  }
+
+  if (locale === "es") {
+    return [
+      {
+        id: "exp-ld-cdi-es",
+        logoSrc: "/companies/ld-digitales.webp",
+        logoAlt: "LD Digitales",
+        title: "Desarrolladora Salesforce (contrato indefinido) — LD Digitales",
+        subtitle: "Remoto",
+        rightMeta: "Oct. 2025 — Actualidad",
+        content: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li className="italic text-sm text-slate-500 dark:text-slate-400">
+              Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba.
+            </li>
+            <li>
+              Diseño e implementación de soluciones Salesforce avanzadas en estrecha
+              colaboración con las áreas de negocio.
+            </li>
+            <li>
+              Refactorización del código Apex existente para mejorar la calidad, el
+              rendimiento y la mantenibilidad.
+            </li>
+            <li>
+              Aplicación de buenas prácticas de ingeniería: CI/CD, revisiones de código y
+              supervisión del rendimiento.
+            </li>
+            <li>
+              Acompañamiento y formación de compañeros y aprendices en herramientas y
+              metodologías Salesforce.
+            </li>
+            <li>
+              Coordinación con los equipos de Producto y Marketing para alinear las
+              soluciones técnicas con los objetivos de negocio.
+            </li>
+          </ul>
+        )
+      },
+      {
+        id: "exp-ld-alt-es",
+        logoSrc: "/companies/ld-digitales.webp",
+        logoAlt: "LD Digitales",
+        title: "Desarrolladora Salesforce (formación en alternancia) — LD Digitales",
+        subtitle: "Remoto",
+        rightMeta: "Oct. 2023 — Sept. 2025",
+        content: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              Desarrollo y mantenimiento de más de 10 clases Apex y batch jobs para
+              automatizar el procesamiento de datos y los informes.
+            </li>
+            <li>
+              Creación de más de 20 Flows para orquestar procesos de negocio, reduciendo
+              la carga manual en cerca de un 30%.
+            </li>
+            <li>
+              Diseño de componentes reutilizables con Lightning App Builder y Lightning
+              Web Components.
+            </li>
+            <li>
+              Implementación de prácticas CI/CD con Salesforce CLI y Git, agilizando los
+              despliegues entre sandboxes.
+            </li>
+            <li>
+              Soporte en migraciones de datos (CSV / asistentes de importación), con
+              control de calidad e integridad de los datos.
+            </li>
+            <li>
+              Desarrollo de funcionalidades web (Java, JavaScript) junto a los proyectos
+              Salesforce — integraciones, scripts de automatización e interfaces
+              ligeras.
+            </li>
+            <li>
+              Administración y consultas de bases de datos relacionales (PostgreSQL,
+              MySQL) para necesidades de integración e informes.
+            </li>
+            <li>
+              Despliegue y gestión de aplicaciones en Heroku (pipelines, variables de
+              entorno, logs de producción).
+            </li>
+          </ul>
+        )
+      },
+      {
+        id: "exp-midrange-es",
+        logoSrc: "/companies/midrange.webp",
+        logoAlt: "Midrange Group",
+        title: "Administradora júnior de sistemas y redes (prácticas) — Midrange Group",
+        subtitle: "Francia · Presencial",
+        rightMeta: "Feb. 2023 — May. 2023",
+        content: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Soporte técnico para más de 50 puestos de trabajo y portátiles en varias sedes.</li>
+            <li>
+              Instalación y mantenimiento de software (Blancco, Acronis, Datto RMM).
+            </li>
+            <li>
+              Supervisión de la infraestructura de red y respuesta a incidentes de
+              seguridad, incluidos simulacros de tipo ransomware.
+            </li>
+            <li>
+              Redacción de procedimientos y contribución a una base de conocimiento
+              sobre incidentes recurrentes.
             </li>
           </ul>
         )
@@ -252,6 +361,51 @@ export function getCertificationItems(locale: Locale): AccordionItem[] {
             <li>Salesforce Certified App Builder — juillet 2026</li>
             <li>Salesforce CPQ Admin + Marketing Cloud Engagement Admin — juillet–août 2026</li>
             <li>ISC2 CC (Certified in Cybersecurity) — préparation en parallèle</li>
+          </ul>
+        )
+      }
+    ];
+  }
+
+  if (locale === "es") {
+    return [
+      {
+        id: "cert-obtained-es",
+        title: "Obtenidas",
+        subtitle: "Títulos y certificados",
+        rightMeta: "—",
+        content: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Desarrolladora Diseñadora de Software (nivel 6 RNCP) — OpenClassrooms (oct. 2025)</li>
+            <li>Técnica Superior en Sistemas y Redes (nivel 5 RNCP) — GRETA du Val d’Oise (jun. 2023)</li>
+            <li>Técnica de Soporte Informático (nivel 4 RNCP) — GRETA du Val d’Oise, Lycée Louis Jouvet (jul. 2022)</li>
+            <li>Linguaskill Business C1+ — Cambridge Assessment English (abr. 2021)</li>
+          </ul>
+        )
+      },
+      {
+        id: "cert-active-es",
+        title: "Activa",
+        subtitle: "Progresión continua",
+        rightMeta: "—",
+        content: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Trailhead Expeditioner — Salesforce Trailhead</li>
+          </ul>
+        )
+      },
+      {
+        id: "cert-planned-es",
+        title: "En preparación",
+        subtitle: "Preparación activa en curso",
+        rightMeta: "2026",
+        content: (
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Salesforce Platform Foundations + Sales Foundations — mayo 2026</li>
+            <li>Salesforce Certified Administrator (ADM-201) — junio 2026</li>
+            <li>Salesforce Certified App Builder — julio 2026</li>
+            <li>Salesforce CPQ Admin + Marketing Cloud Engagement Admin — julio-agosto 2026</li>
+            <li>ISC2 CC (Certified in Cybersecurity) — preparación en paralelo</li>
           </ul>
         )
       }
