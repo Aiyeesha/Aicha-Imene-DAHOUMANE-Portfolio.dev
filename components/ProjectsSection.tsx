@@ -80,9 +80,6 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
   const pathname = usePathname();
   const pathnameLocale = pathname.split("/")[1];
   const locale: "en" | "fr" | "es" = localeProp ?? (pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en");
-  // tCategory/tBadge/tTag translate against a fr/en-only taxonomy dictionary
-  // (content/projectTaxonomy.ts) — Spanish gracefully falls back to English there.
-  const taxonomyLocale: "en" | "fr" = locale === "fr" ? "fr" : "en";
 
   const [q, setQ] = useState("");
   const [active, setActive] = useState<string>("All");
@@ -270,7 +267,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white/10"
               }`}
             >
-              {tCategory(c, taxonomyLocale)}
+              {tCategory(c, locale)}
             </button>
           ))}
         </div>
@@ -319,7 +316,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-lg font-semibold">{p.title}</h3>
                 {p.badge ? (
-                  <span className={tones[p.badge.tone]}>{tBadge(p.badge.label, taxonomyLocale)}</span>
+                  <span className={tones[p.badge.tone]}>{tBadge(p.badge.label, locale)}</span>
                 ) : null}
               </div>
 
@@ -329,7 +326,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
               {/* Tags techniques */}
               <div className="mt-4 flex flex-wrap gap-2">
                 {(p.tags ?? []).map((tag) => (
-                  <span key={tag} className="chip">{tTag(tag, taxonomyLocale)}</span>
+                  <span key={tag} className="chip">{tTag(tag, locale)}</span>
                 ))}
               </div>
 
