@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     : null;
   const message               = typeof body.message === "string" ? body.message.trim() : "";
   const photo_url             = typeof body.photo_url === "string" ? body.photo_url.trim() || null : null;
-  const locale                = body.locale === "fr" ? "fr" : "en";
+  const locale                = body.locale === "fr" ? "fr" : body.locale === "es" ? "es" : "en";
 
   if (!full_name)                         return NextResponse.json({ error: "Name is required." }, { status: 400 });
   if (!role)                              return NextResponse.json({ error: "Role is required." }, { status: 400 });

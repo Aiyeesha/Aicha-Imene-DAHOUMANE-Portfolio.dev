@@ -24,7 +24,7 @@ import { useState, useId } from "react";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Locale = "en" | "fr";
+type Locale = "en" | "fr" | "es";
 
 type Props = {
   /** Clé de session HMAC 30 min générée côté serveur — jamais le token brut */
@@ -59,6 +59,7 @@ const LABELS = {
     lang:       "Language of this testimonial",
     lang_en:    "English",
     lang_fr:    "French",
+    lang_es:    "Spanish",
     submit:     "Send testimonial",
     submitting: "Sending…",
     success:    "Thank you! Your testimonial has been received and will be reviewed before publication.",
@@ -87,11 +88,41 @@ const LABELS = {
     lang:       "Langue de ce témoignage",
     lang_en:    "Anglais",
     lang_fr:    "Français",
+    lang_es:    "Espagnol",
     submit:     "Envoyer le témoignage",
     submitting: "Envoi en cours…",
     success:    "Merci ! Votre témoignage a bien été reçu et sera examiné avant publication.",
     error:      "Une erreur s'est produite. Veuillez réessayer.",
     required:   "Obligatoire",
+  },
+  es: {
+    title:         "Comparte tu testimonio",
+    subtitle:      "Tu opinión ayuda a otros profesionales a entender cómo es trabajar conmigo. ¡Gracias!",
+    full_name:     "Nombre completo",
+    role:          "Rol / Puesto",
+    company:       "Empresa u organización (opcional)",
+    relation_type: "Tu relación con Aïcha",
+    relation_opts: [
+      { value: "colleague",  label: "Colega / Compañero de trabajo" },
+      { value: "trainer",    label: "Formador / Mentor" },
+      { value: "jury",       label: "Jurado / Evaluador" },
+      { value: "classmate",  label: "Compañero de formación" },
+      { value: "client",     label: "Cliente / Interlocutor" },
+      { value: "other",      label: "Otro" },
+    ],
+    context:    "Contexto de colaboración (opcional — ej. 'Proyecto Salesforce, 6 semanas')",
+    message:    "Tu testimonio",
+    message_hint: "Mínimo 20 caracteres, máximo 2000.",
+    photo_url:  "URL de tu foto (opcional — foto de LinkedIn, Gravatar…)",
+    lang:       "Idioma de este testimonio",
+    lang_en:    "Inglés",
+    lang_fr:    "Francés",
+    lang_es:    "Español",
+    submit:     "Enviar testimonio",
+    submitting: "Enviando…",
+    success:    "¡Gracias! Tu testimonio ha sido recibido y será revisado antes de su publicación.",
+    error:      "Ocurrió un error. Inténtalo de nuevo.",
+    required:   "Obligatorio",
   },
 } as const;
 
@@ -332,6 +363,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
         >
           <option value="en">{l.lang_en}</option>
           <option value="fr">{l.lang_fr}</option>
+          <option value="es">{l.lang_es}</option>
         </select>
       </div>
 
