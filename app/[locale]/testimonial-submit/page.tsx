@@ -58,12 +58,9 @@ export default async function TestimonialSubmitPage({
 }: PageProps) {
   const { locale: rawLocale } = await params;
   const sp                    = await searchParams;
-  const locale                = rawLocale === "fr" ? "fr" : "en";
+  const locale: "en" | "fr" | "es" = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   const isFr                  = locale === "fr";
-  // `locale` above is narrowed to "fr" | "en" for the TestimonialSubmitForm
-  // prop (out of scope for this change); `isEs` here only gates the plain
-  // text labels on this page, derived from the raw (unnarrowed) locale.
-  const isEs                  = rawLocale === "es";
+  const isEs                  = locale === "es";
 
   // ── Validation du lien d'invitation HMAC ──────────────────────────────────
   // Format : ?invite=<hmac-sha256-hex>&exp=<unix-timestamp-seconds>

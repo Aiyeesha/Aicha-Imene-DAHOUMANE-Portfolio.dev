@@ -87,13 +87,9 @@ function ResourceTag({ tag }: { tag: string }) {
 
 export default async function ResourcesPage({ params }: PageProps) {
   const { locale } = await params;
-  const safeLocale: Locale = locale === "fr" ? "fr" : "en";
+  const safeLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const isFr = safeLocale === "fr";
-  // Note: `Locale` (content/resources.ts) is a fr/en-only content-data type
-  // out of scope for this change, so `safeLocale`/`RESOURCE_CATEGORIES` keep
-  // falling back to "en" for "es" as before. `isEs` only affects the plain
-  // text labels below, in line with the isFr/isEs/en pattern used elsewhere.
-  const isEs = locale === "es";
+  const isEs = safeLocale === "es";
   const siteUrl = getSiteUrl();
 
   const labels = {
