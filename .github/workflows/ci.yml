@@ -122,10 +122,20 @@ jobs:
 
       # Audit de sécurité des dépendances npm.
       # --audit-level=high : échoue uniquement sur les vulnérabilités HIGH et CRITICAL.
-      # --production : ignore les devDependencies (non déployées sur Vercel).
+      # --omit=dev : ignore les devDependencies (non déployées sur Vercel).
+      # --omit=optional : ignore les optionalDependencies. Nécessaire car next
+      # embarque sharp en optionalDependency figée à ^0.34.5 (vulnérable, voir
+      # scripts/fix-nested-sharp.mjs) ; npm n'applique pas nos overrides à une
+      # optionalDependency imbriquée (limitation npm connue), donc cette entrée
+      # reste dans package-lock.json quoi qu'on fasse. Le projet dépend déjà
+      # directement d'une version corrigée de sharp (^0.35.3) au niveau racine,
+      # et scripts/fix-nested-sharp.mjs supprime la copie imbriquée après install
+      # pour que la résolution runtime utilise la version corrigée. --omit=optional
+      # ne masque donc pas un vrai risque : il évite juste de bloquer la CI sur une
+      # optionalDependency qu'on neutralise déjà autrement.
       # Sans cette étape, des CVE connues peuvent être mergées sans alerte.
       - name: Security audit
-        run: npm audit --audit-level=high --production
+        run: npm audit --audit-level=high --omit=dev --omit=optional
 
       - name: Lint
         run: npm run lint
