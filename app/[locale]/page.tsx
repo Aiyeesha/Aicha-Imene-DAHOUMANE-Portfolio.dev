@@ -48,9 +48,7 @@ export const revalidate = 3600;
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  // getExperienceItems() looks up a fr/en-only content dictionary (content/experience.tsx);
-  // Spanish gracefully falls back to English there, same scoping as elsewhere.
-  const experienceItems = getExperienceItems(locale === "fr" ? "fr" : "en");
+  const experienceItems = getExperienceItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
 
   // FAQPage JSON-LD — généré côté serveur depuis les traductions i18n (même source que ServicesFaq).
