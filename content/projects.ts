@@ -24,6 +24,7 @@ export const projects: Project[] = [
     title: "Salesforce deployment with Heroku (Legarant‑AXG)",
     excerpt: "Deployment strategy and documentation: environments, release process, API tests, and production rollout with traceability.",
     highlights: [
+      "🔗 Proof point: Salesforce dev + Heroku infra delivered together, not two separate skillsets",
       "Environment strategy (test → production) with traceability",
       "Deployment runbook + validation checklist",
       "API validation suite (Postman) for rollout"
