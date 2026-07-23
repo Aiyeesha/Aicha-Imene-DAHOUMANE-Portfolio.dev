@@ -265,7 +265,11 @@
     "apex": "Clases Apex desarrolladas",
     "flows": "Flows de automatización",
     "workload": "Carga manual reducida",
-    "projects": "Proyectos entregados"
+    "projects": "Proyectos entregados",
+    "rmm": "Equipos supervisados (Datto RMM)",
+    "tickets": "Tickets IT gestionados",
+    "alerts": "Alertas de copia de seguridad clasificadas",
+    "deployments": "Puestos desplegados"
   },
   "services": {
     "discuss": "Consultar sobre este servicio"
