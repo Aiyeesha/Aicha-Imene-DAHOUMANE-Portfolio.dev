@@ -40,6 +40,7 @@ export type ProjectWithAssets = {
   featured?: boolean | null;
   sort_order?: number | null;
   status?: string | null;
+  is_bridge?: boolean | null;
   project_assets: ProjectAsset[];
 };
 
@@ -68,7 +69,7 @@ export async function getPublishedProjectBySlugWithAssets(
       id, slug, locale, title, summary, content, hero_subtitle, sections, gallery,
       tech_stack, repo_url, live_url,
       track, categories, tags, badge, highlights,
-      featured, sort_order, status,
+      featured, sort_order, status, is_bridge,
       project_assets (
         id, project_id, type, visibility, title, description,
         storage_bucket, storage_path, external_url, mime_type, size_bytes, sort_order
