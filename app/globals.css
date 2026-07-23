@@ -116,6 +116,14 @@ html.dark .card:hover {
   @apply border-sky-300 bg-sky-50 text-sky-800;
   @apply dark:border-sky-400/30 dark:bg-sky-500/15 dark:text-sky-200;
 }
+/* Badge "projet pont" — signale un projet qui croise Salesforce et Infra/DevOps,
+   indépendamment du track actif. Dégradé cyan→violet pour ne pas se confondre
+   avec les tons mono-track existants (client/personal/training). */
+.badge-bridge {
+  @apply border-transparent bg-gradient-to-r from-cyan-500/15 to-violet-500/15 text-slate-800;
+  @apply dark:from-cyan-400/20 dark:to-violet-400/20 dark:text-white;
+  border-image: linear-gradient(to right, rgb(34 211 238 / 0.5), rgb(167 139 250 / 0.5)) 1;
+}
 
 html.dark .chip {
   @apply border-white/10 bg-white/5 text-white/80;

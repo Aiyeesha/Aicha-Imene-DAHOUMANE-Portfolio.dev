@@ -12,7 +12,7 @@ export async function getPublishedProjectsWithAssets(locale: string) {
       .select(`
         id, slug, locale, title, summary, content, tech_stack, repo_url, live_url,
         track, categories, tags, badge, highlights,
-        featured, sort_order, status, gallery, updated_at,
+        featured, sort_order, status, is_bridge, gallery, updated_at,
         project_assets (
           id, project_id, type, visibility, title, description,
           storage_bucket, storage_path, external_url, mime_type, size_bytes, sort_order

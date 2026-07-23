@@ -72,7 +72,8 @@
     "emptyState": "No projects available at the moment.",
     "emptyStateSubtitle": "Content is being prepared — please check back soon.",
     "noMatch": "No projects match your search or filters.",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "bridgeBadge": "Salesforce ⇄ Infra bridge"
   },
   "sections": {
     "testimonials_title": "Testimonials",

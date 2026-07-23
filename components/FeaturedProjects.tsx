@@ -123,6 +123,10 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               ) : null}
             </div>
 
+            {p.is_bridge ? (
+              <span className="badge badge-bridge mt-2 inline-flex">{t("projects.bridgeBadge")}</span>
+            ) : null}
+
             <p className="mt-3 text-sm text-muted">{p.summary}</p>
 
             <div className="mt-4 flex flex-wrap gap-2">
