@@ -295,7 +295,7 @@
     "p1_salesforce": "Desarrolladora y consultora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
     "p2_salesforce": "Trabajo con Apex, Flows, modelos de datos, seguridad (permission sets, sharing) y pipelines de CI/CD (Salesforce CLI, GitHub Actions) para llevar el código a producción de forma limpia.",
     "p3_salesforce": "Mi base en sistemas y DevOps me permite abordar Salesforce con mentalidad de operaciones: observabilidad, gestión de riesgos, documentación y automatización, para que las soluciones se mantengan sólidas con el tiempo.",
-    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, con 2 años de experiencia Salesforce en producción — y en paralelo, el desarrollo de dos productos SaaS Salesforce (OrgDocs y SFRelease). El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados.",
+    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, con 2 años de experiencia Salesforce en producción — y en paralelo, el desarrollo de dos productos SaaS Salesforce (OrgDocs y SFRelease). El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 90+ badges) — la certificación Salesforce Administrator está en preparación activa para septiembre de 2026.",
     "p1_itops": "IT Ops & DevOps: ayudo a los equipos a diseñar, mantener y proteger infraestructuras resilientes, con procesos operativos pragmáticos (runbooks, monitorización, remediación).",
     "p2_itops": "Implemento estándares operativos: monitorización y alertas accionables, reducción del ruido, procedimientos de escalado, documentación y automatización (scripts, jobs, playbooks).",
     "p3_itops": "Presto especial atención a la seguridad y la continuidad: copias de seguridad, hardening, gestión de accesos y prácticas de gestión del cambio para reducir incidentes.",
@@ -361,7 +361,11 @@
     "items": [
       {
         "q": "¿Estás disponible de inmediato?",
-        "a": "Sí, estoy disponible de inmediato. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales, freelance y por proyecto — en Francia y a nivel internacional. Para puestos que exijan una certificación Salesforce (Administrador), mi disponibilidad efectiva se sitúa hacia septiembre de 2026, una vez obtenida. No dudes en escribirme para hablar de tus necesidades."
+        "a": "Sí, estoy disponible de inmediato. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales, freelance y por proyecto — en Francia y a nivel internacional. No dudes en escribirme para hablar de tus necesidades."
+      },
+      {
+        "q": "¿Tienes alguna certificación Salesforce?",
+        "a": "Todavía no tengo una certificación oficial de Salesforce — está en preparación activa para septiembre de 2026 (Salesforce Administrator, luego App Builder y Platform Developer I antes de fin de 2026). Mientras tanto, dos credenciales verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, OpenClassrooms, 2025) y un perfil Trailhead activo — rango Expeditioner, 90+ badges, 57 000+ puntos (consultable en línea). El detalle completo está en la página de Certificaciones."
       },
       {
         "q": "¿Trabajas en remoto?",
