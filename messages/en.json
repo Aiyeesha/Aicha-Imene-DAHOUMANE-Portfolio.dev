@@ -265,7 +265,11 @@
     "apex": "Apex classes built",
     "flows": "Automation Flows",
     "workload": "Manual workload reduced",
-    "projects": "Projects delivered"
+    "projects": "Projects delivered",
+    "rmm": "Endpoints monitored (Datto RMM)",
+    "tickets": "IT tickets handled",
+    "alerts": "Backup alerts triaged",
+    "deployments": "Workstations deployed"
   },
   "services": {
     "discuss": "Discuss this service"
