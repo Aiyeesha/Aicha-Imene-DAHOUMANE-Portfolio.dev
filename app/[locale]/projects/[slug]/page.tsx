@@ -460,9 +460,14 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
         {/* ── HERO TEXT ────────────────────────────────────────────────────── */}
         <header className="mt-8">
-          {badge && (
-            <div className="mb-3">
-              <span className={badgeClass}>{badge.label}</span>
+          {(badge || project.is_bridge) && (
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              {badge && <span className={badgeClass}>{badge.label}</span>}
+              {project.is_bridge && (
+                <span className="badge badge-bridge">
+                  {isFr ? "Pont Salesforce ⇄ Infra" : isEs ? "Puente Salesforce ⇄ Infra" : "Salesforce ⇄ Infra bridge"}
+                </span>
+              )}
             </div>
           )}
           <h1 className="text-3xl md:text-4xl font-bold text-strong leading-tight tracking-tight">
@@ -539,6 +544,17 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">Type</p>
                     <span className={badgeClass}>{badge.label}</span>
+                  </div>
+                )}
+
+                {project.is_bridge && (
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
+                      {isFr ? "Profil" : isEs ? "Perfil" : "Profile"}
+                    </p>
+                    <span className="badge badge-bridge">
+                      {isFr ? "Pont Salesforce ⇄ Infra" : isEs ? "Puente Salesforce ⇄ Infra" : "Salesforce ⇄ Infra bridge"}
+                    </span>
                   </div>
                 )}
 
