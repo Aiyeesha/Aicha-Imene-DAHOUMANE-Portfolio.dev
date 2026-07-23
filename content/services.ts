@@ -44,7 +44,7 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
           title: "Intégrations & APIs",
           pitch: "Vos données sont éparpillées entre Salesforce et d'autres outils, générant des erreurs et de la saisie double. Je connecte vos systèmes et mets en place la supervision pour que tout circule sans friction.",
           description:
-            "Connecter Salesforce à des systèmes externes et assurer la cohérence des données entre plateformes.",
+            "Connecter Salesforce à des systèmes externes et assurer la cohérence des données entre plateformes — avec, si besoin, la supervision infra de ces flux prise en charge par la même personne, sans relais externe.",
           bullets: [
             "Intégration via API REST / SOAP",
             "Configuration ETL & synchronisation de données",
@@ -75,7 +75,7 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
         title: "Audit & durcissement infra",
         pitch: "Vous n’avez pas de visibilité claire sur l’état de votre infrastructure et ignorez quelles vulnérabilités y sommeillent. En quelques jours, je cartographie les risques et vous remets un plan de remédiation hiérarchisé.",
         description:
-          "Évaluer et sécuriser l’infrastructure : supervision, hardening, sauvegardes et runbooks.",
+          "Évaluer et sécuriser l’infrastructure : supervision, hardening, sauvegardes et runbooks — y compris la sécurité des accès API côté Salesforce quand l’infra alimente directement l’org.",
         bullets: [
           "Évaluation d’infrastructure & bilan de santé",
           "Durcissement & bonnes pratiques de sécurité",
@@ -162,7 +162,7 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
           title: "Integraciones y APIs",
           pitch: "Tus datos están dispersos entre Salesforce y otras herramientas, generando errores y doble captura. Conecto tus sistemas y configuro la supervisión para que todo fluya sin fricción.",
           description:
-            "Conectar Salesforce con sistemas externos y mantener la coherencia de los datos entre plataformas.",
+            "Conectar Salesforce con sistemas externos y mantener la coherencia de los datos entre plataformas — incluyendo, si es necesario, la supervisión de infraestructura de esos flujos a cargo de la misma persona, sin intermediarios externos.",
           bullets: [
             "Integraciones vía API REST / SOAP",
             "Configuración ETL y sincronización de datos",
@@ -193,7 +193,7 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
         title: "Auditoría y hardening de infraestructura",
         pitch: "No tienes una visión clara del estado de tu infraestructura y desconoces qué vulnerabilidades podrían estar presentes. En pocos días, mapeo los riesgos y te entrego un plan de remediación priorizado.",
         description:
-          "Evaluar y proteger la infraestructura: supervisión, hardening, copias de seguridad y runbooks.",
+          "Evaluar y proteger la infraestructura: supervisión, hardening, copias de seguridad y runbooks — incluyendo la seguridad de los accesos API de Salesforce cuando la infraestructura alimenta directamente la org.",
         bullets: [
           "Evaluación de infraestructura y diagnóstico de salud",
           "Hardening y buenas prácticas de seguridad",
@@ -272,7 +272,7 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
         title: "Integrations & APIs",
         pitch: "Your data is scattered across Salesforce and other tools, causing errors and double entry. I connect your systems and set up monitoring so everything flows without friction.",
         description:
-          "Connect Salesforce to external systems and keep data consistent across platforms.",
+          "Connect Salesforce to external systems and keep data consistent across platforms — with the infra-side monitoring of those flows handled by the same person when needed, no external hand-off.",
         bullets: ["REST / SOAP integrations", "ETL configuration & data sync", "Monitoring & error handling"],
         deliverable: "Live integration + configuration runbook + monitoring guide",
         duration: "1 to 3 weeks"
@@ -294,7 +294,7 @@ export function getServices(locale: Locale, track: Track): ServiceCard[] {
       title: "Infra audit & hardening",
       pitch: "You lack clear visibility into your infrastructure's health and don't know what vulnerabilities are lurking. In a few days, I map the risks and hand you a prioritised remediation plan.",
       description:
-        "Assess and secure your infrastructure: monitoring, hardening, backups and runbooks.",
+        "Assess and secure your infrastructure: monitoring, hardening, backups and runbooks — including Salesforce-side API access security when the infra feeds directly into the org.",
       bullets: ["Infrastructure health check", "Hardening & security best practices", "Monitoring & alerting", "Runbooks & backup planning"],
       deliverable: "Assessment report + hardening checklist + remediation plan",
       duration: "2 to 4 days"
