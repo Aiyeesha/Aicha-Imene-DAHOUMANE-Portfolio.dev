@@ -8,27 +8,41 @@
 // Comportement :
 // - AnimatedCounter (Framer Motion useSpring) : animation 0 → N au scroll
 // - prefers-reduced-motion : valeur finale affichée directement (via AnimatedCounter)
-// - 4 métriques : Apex classes, Flows, réduction charge manuelle, projets livrés
+// - 4 métriques par track — avant ce changement, le jeu Salesforce s'affichait
+//   aussi sur le track IT Ops (copié-collé non contextualisé, cf. audit).
 //
-// Pour modifier les chiffres : éditer le tableau METRICS ci-dessous.
+// Pour modifier les chiffres : éditer les tableaux ci-dessous. Chaque valeur
+// est tirée d'une fiche projet déjà publiée (voir highlights des projets
+// it-ops-rmm-supervision, it-ops-incident-management, it-ops-acronis-backup,
+// workstation-mass-deployment) — aucun chiffre inventé.
 
 import AnimatedCounter from "@/components/AnimatedCounter";
 import Reveal from "@/components/Reveal";
 import { useTranslations } from "next-intl";
+import { useTrack } from "@/app/[locale]/providers";
 
 // ── Données métriques ──────────────────────────────────────────────────────
 // value     : valeur cible de l'AnimatedCounter
 // suffix    : affiché après le nombre ("+", "%", etc.)
 // labelKey  : clé de traduction dans messages/{locale}.json#metrics
-const METRICS = [
+const SALESFORCE_METRICS = [
   { value: 10, suffix: "+", labelKey: "metrics.apex"      },
   { value: 20, suffix: "+", labelKey: "metrics.flows"     },
   { value: 30, suffix: "%", labelKey: "metrics.workload"  },
   { value: 10, suffix: "+", labelKey: "metrics.projects"  },
 ] as const;
 
+const ITOPS_METRICS = [
+  { value: 550, suffix: "+", labelKey: "metrics.rmm"         },
+  { value: 316, suffix: "",  labelKey: "metrics.tickets"     },
+  { value: 85,  suffix: "",  labelKey: "metrics.alerts"      },
+  { value: 264, suffix: "",  labelKey: "metrics.deployments" },
+] as const;
+
 export default function GlobalMetrics() {
   const t = useTranslations();
+  const { track } = useTrack();
+  const METRICS = track === "salesforce" ? SALESFORCE_METRICS : ITOPS_METRICS;
 
   return (
     <Reveal delayMs={80}>
