@@ -25,6 +25,10 @@ export default function AboutTrackIntro() {
   const p1 = isSalesforce ? t("profile.p1_salesforce") : t("profile.p1_itops");
   const p2 = isSalesforce ? t("profile.p2_salesforce") : t("profile.p2_itops");
   const p3 = isSalesforce ? t("profile.p3_salesforce") : t("profile.p3_itops");
+  // p4 — clôt la promesse du hero par une preuve concrète (Legarant-AXG côté Salesforce,
+  // mobilité des compétences IT Ops côté itops) au lieu de laisser le fil hybride
+  // s'arrêter au badge de track. Clés déjà traduites en fr/en/es, jamais rendues jusqu'ici.
+  const p4 = isSalesforce ? t("profile.p4_salesforce") : t("profile.p4_itops");
 
   // Styles adaptés au track
   const badgeClass = isSalesforce
@@ -52,6 +56,9 @@ export default function AboutTrackIntro() {
 
       {/* p3 — différenciant (background cross-domain) */}
       <p className="text-sm leading-relaxed text-muted">{p3}</p>
+
+      {/* p4 — preuve concrète et statut actuel */}
+      <p className="text-sm leading-relaxed text-muted">{p4}</p>
     </div>
   );
 }
