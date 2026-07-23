@@ -312,7 +312,7 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production — et en parallèle, le développement de deux SaaS Salesforce (OrgDocs et SFRelease). Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production — et en parallèle, le développement de deux SaaS Salesforce (OrgDocs et SFRelease). Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 90+ badges) — la certification éditeur Salesforce Administrator est en préparation active pour septembre 2026.",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
@@ -361,7 +361,11 @@
     "items": [
       {
         "q": "Êtes-vous disponible immédiatement ?",
-        "a": "Oui, je suis disponible immédiatement. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD, freelance et missions — en France et à l'international. Pour les postes exigeant une certification Salesforce (Administrateur), ma disponibilité effective se situe courant septembre 2026, le temps de l'obtenir. Contactez-moi pour discuter de votre besoin."
+        "a": "Oui, je suis disponible immédiatement. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD, freelance et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
+      },
+      {
+        "q": "Avez-vous une certification Salesforce ?",
+        "a": "Pas encore de certification éditeur — elle est en préparation active pour septembre 2026 (Salesforce Administrator, puis App Builder et Platform Developer I d'ici fin 2026). En attendant, deux preuves vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, OpenClassrooms, 2025) et un profil Trailhead actif — rang Expeditioner, 90+ badges, 57 000+ points (consultable en ligne). Le détail complet est sur la page Certifications."
       },
       {
         "q": "Travaillez-vous à distance ?",
