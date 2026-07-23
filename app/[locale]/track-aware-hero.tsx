@@ -7,7 +7,10 @@
 //
 // Animations (Framer Motion) :
 //   - Entrance stagger : avatar + bloc texte s'animent en séquence au chargement
-//   - Track switch     : AnimatePresence fade-slide sur le contenu dynamique
+//   - Track switch     : fondu CSS (@keyframes fadeIn, déjà utilisé ailleurs sur
+//                        le site) sur le contenu dynamique — pas de Framer Motion
+//                        ici : voir la note plus bas sur pourquoi AnimatePresence
+//                        a été retiré de ce bloc précis.
 //   - Parallaxe avatar : léger décalage vertical de l'avatar au scroll (useScroll)
 //   - Reduced motion   : toutes les animations sont désactivées si prefers-reduced-motion
 
@@ -18,7 +21,6 @@ import { useMemo, useState } from "react";
 import { useTrack } from "./providers";
 import {
   motion,
-  AnimatePresence,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -170,16 +172,24 @@ export default function TrackAwareHero() {
           <AvailabilityModal />
         </div>
 
-        {/* Contenu dynamique (track-dépendant) — anime au changement de track */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={track}
-            initial={shouldReduce ? false : { opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={shouldReduce ? {} : { opacity: 0, x: -10 }}
-            transition={{ duration: 0.22, ease: "easeInOut" }}
-            suppressHydrationWarning
-          >
+        {/* Contenu dynamique (track-dépendant).
+            Ancienne version : <AnimatePresence mode="wait"><motion.div key={track}>...
+            Retiré entièrement (pas seulement mode="wait") : sur un second toggle, le
+            callback de fin d'animation de sortie de Framer Motion ne se déclenchait pas
+            de façon fiable (React 19 + framer-motion 12) — AnimatePresence restait bloqué
+            à mi-transition. Sans mode="wait" seul, le symptôme changeait de forme mais ne
+            disparaissait pas : l'ancien ET le nouveau contenu restaient tous les deux montés
+            indéfiniment (texte dupliqué, superposé), preuve que c'est bien le signal de fin
+            de sortie qui est en cause, pas mode="wait" en particulier.
+            Un <div> simple, sans montage/démontage, élimine complètement la dépendance à ce
+            callback : le contenu reflète toujours `track` immédiatement au re-render, sans
+            jamais pouvoir rester bloqué entre deux états. Transition CSS légère (classe
+            Tailwind) en remplacement du crossfade Framer Motion. */}
+        <div
+          key={track}
+          className={shouldReduce ? "" : "animate-[fadeIn_0.3s_ease_forwards]"}
+          suppressHydrationWarning
+        >
             {/* Accroche courte — typing effect */}
             <p className={`text-sm font-medium ${track === "salesforce" ? "text-cyan-800 dark:text-cyan-300" : "text-violet-800 dark:text-violet-300"}`}>
               <TypingText
@@ -212,8 +222,7 @@ export default function TrackAwareHero() {
                 <span key={tag} className="chip">{tag}</span>
               ))}
             </div>
-          </motion.div>
-        </AnimatePresence>
+        </div>
 
         {/* CTAs — statiques, ne réaniment pas au changement de track */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
