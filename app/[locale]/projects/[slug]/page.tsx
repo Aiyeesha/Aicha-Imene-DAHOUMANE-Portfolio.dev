@@ -7,6 +7,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
+import { tBadge } from "@/i18n/projectTaxonomy";
 
 // ISR : revalide les pages projet toutes les 5 minutes
 export const revalidate = 300;
@@ -297,6 +298,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const isFrPage = locale === "fr";
   const isEsPage = locale === "es";
+  const safeLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -462,7 +464,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         <header className="mt-8">
           {(badge || project.is_bridge) && (
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              {badge && <span className={badgeClass}>{badge.label}</span>}
+              {badge && <span className={badgeClass}>{tBadge(badge.label, safeLocale)}</span>}
               {project.is_bridge && (
                 <span className="badge badge-bridge">
                   {isFr ? "Pont Salesforce ⇄ Infra" : isEs ? "Puente Salesforce ⇄ Infra" : "Salesforce ⇄ Infra bridge"}
@@ -543,7 +545,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {badge && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">Type</p>
-                    <span className={badgeClass}>{badge.label}</span>
+                    <span className={badgeClass}>{tBadge(badge.label, safeLocale)}</span>
                   </div>
                 )}
 
