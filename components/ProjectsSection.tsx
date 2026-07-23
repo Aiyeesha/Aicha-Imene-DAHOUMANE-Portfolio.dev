@@ -320,6 +320,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 ) : null}
               </div>
 
+              {p.is_bridge ? (
+                <span className="badge badge-bridge mt-2 inline-flex">{t("bridgeBadge")}</span>
+              ) : null}
+
               {/* Résumé */}
               <p className="mt-3 text-sm text-muted line-clamp-2">{p.summary}</p>
 

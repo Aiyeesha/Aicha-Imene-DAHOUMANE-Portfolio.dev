@@ -72,7 +72,8 @@
     "emptyState": "No hay proyectos disponibles por el momento.",
     "emptyStateSubtitle": "El contenido está en preparación — vuelve pronto.",
     "noMatch": "Ningún proyecto coincide con tu búsqueda o tus filtros.",
-    "resetFilters": "Restablecer filtros"
+    "resetFilters": "Restablecer filtros",
+    "bridgeBadge": "Puente Salesforce ⇄ Infra"
   },
   "sections": {
     "testimonials_title": "Testimonios",
