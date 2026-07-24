@@ -13,6 +13,7 @@
 import { useMemo, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
+import ProjectClientLogo from "./ProjectClientLogo";
 
 // CDN Supabase Storage — les images sont uploadées dans le bucket "projects"
 const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
@@ -329,6 +330,11 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 {p.badge ? (
                   <span className={tones[p.badge.tone]}>{tBadge(p.badge.label, locale)}</span>
                 ) : null}
+              </div>
+
+              {/* Logo client — silencieux si absent, lazy (grille jusqu'à ~39 cartes) */}
+              <div className="mt-1">
+                <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
               </div>
 
               {p.is_bridge ? (
