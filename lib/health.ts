@@ -127,6 +127,53 @@ async function checkContactForm(): Promise<ServiceHealth> {
   }
 }
 
+// ── Vérification intégrité du contenu ─────────────────────────────────────────
+// Backstop applicatif à la contrainte SQL `featured_published_requires_sections`
+// (migration prevent_empty_featured_published_sections) : un projet publié ET mis
+// en avant ne doit jamais avoir un corps (`sections`) vide, quelle que soit la
+// locale. La contrainte empêche la régression en base ; ce check la rend visible
+// ici plutôt que seulement au moment (rare) d'une tentative d'écriture invalide.
+
+type ContentGap = { slug: string; locale: string };
+
+async function checkContentIntegrity(): Promise<ServiceHealth> {
+  const start = Date.now();
+  try {
+    const { createServerSupabaseClient } = await import("@/lib/supabase/server");
+    const { withRetry } = await import("@/lib/supabase/withRetry");
+    const supabase = createServerSupabaseClient();
+
+    const { data, error } = await withRetry<ContentGap[]>(() =>
+      supabase
+        .from("projects")
+        .select("slug, locale")
+        .eq("status", "published")
+        .eq("featured", true)
+        .or("sections.is.null,sections.eq.[]")
+    );
+
+    const latencyMs = Date.now() - start;
+    if (error) {
+      return { name: "Content integrity", status: "degraded", latencyMs, message: String((error as { message?: string })?.message ?? error) };
+    }
+
+    const gaps = data ?? [];
+    if (gaps.length > 0) {
+      const sample = gaps.slice(0, 3).map((g) => `${g.slug} (${g.locale})`).join(", ");
+      return {
+        name: "Content integrity",
+        status: "degraded",
+        latencyMs,
+        message: `${gaps.length} featured project(s) missing body content: ${sample}${gaps.length > 3 ? "…" : ""}`,
+      };
+    }
+
+    return { name: "Content integrity", status: "operational", latencyMs };
+  } catch (e) {
+    return { name: "Content integrity", status: "degraded", latencyMs: Date.now() - start, message: String(e) };
+  }
+}
+
 // ── Services statiques (toujours opérationnels si le serveur répond) ──────────
 
 function checkWebsite(): ServiceHealth {
@@ -154,10 +201,11 @@ function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
 
 export async function runHealthChecks(): Promise<HealthReport> {
   // Checks réseau en parallèle — les checks statiques sont instantanés
-  const [supabase, redis, contact] = await Promise.all([
+  const [supabase, redis, contact, contentIntegrity] = await Promise.all([
     checkSupabase(),
     checkRedis(),
     checkContactForm(),
+    checkContentIntegrity(),
   ]);
 
   const services: ServiceHealth[] = [
@@ -165,6 +213,7 @@ export async function runHealthChecks(): Promise<HealthReport> {
     contact,
     supabase,
     redis,
+    contentIntegrity,
     checkBlog(),
     checkPwa(),
   ];
