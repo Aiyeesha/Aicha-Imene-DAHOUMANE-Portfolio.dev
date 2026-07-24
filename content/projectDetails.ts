@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-24T19:19:23.205Z
+// Last export: 2026-07-24T20:31:31.721Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -4390,7 +4390,88 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Remote monitoring & endpoint security (Datto RMM)",
         "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · Prácticas en MIDRANGE GROUP",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Durante mis prácticas en MIDRANGE GROUP, un proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, fui asignada al equipo de Explotación bajo la supervisión de Théo KACEL, Administrador de Sistemas y Redes. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi puesto en Explotación me dio acceso operativo directo a la plataforma RMM de la empresa."
+            ]
+          },
+          {
+            "type": "text",
+            "title": "Plataforma: Datto RMM",
+            "paragraphs": [
+              "Datto RMM (Remote Monitoring and Management) es una plataforma de nivel empresarial diseñada para que los MSP y equipos de IT supervisen y gestionen de forma remota equipos, redes y sistemas a gran escala. Théo me presentó la plataforma y sus capacidades principales: supervisión en tiempo real del estado de los equipos, gestión automatizada de parches, inventario de software, acceso remoto, seguimiento del estado de seguridad y automatización de tareas mediante Quick Jobs y políticas."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Equipos supervisados",
+                "value": "550+ dispositivos (desktops, laptops, servidores) en varios sitios de clientes"
+              },
+              {
+                "label": "Sitio utilizado en la formación",
+                "value": "MID-S0A (sitio interno de MIDRANGE GROUP)"
+              },
+              {
+                "label": "Versión del agente",
+                "value": "4.4.2195.2195"
+              },
+              {
+                "label": "Herramienta de acceso remoto",
+                "value": "Splashtop (integrado en Datto RMM)"
+              },
+              {
+                "label": "Antivirus",
+                "value": "Webroot SecureAnywhere Endpoint / MalwareBytes"
+              }
+            ],
+            "title": "Detalles de la plataforma"
+          },
+          {
+            "type": "text",
+            "title": "Tareas realizadas",
+            "paragraphs": [
+              "Bajo la supervisión de Théo, realicé las siguientes tareas operativas en la plataforma Datto RMM: revisión del Default Dashboard para evaluar el estado general del parque gestionado (recuento de equipos fuera de línea por tipo, cobertura antivirus en todos los sitios); navegación por los perfiles de equipos para inspeccionar las especificaciones de hardware, la versión del SO, el estado de los parches y el inventario de software de cada equipo; uso de la función Quick Job para desplegar de forma remota el agente MalwareBytes en los equipos seleccionados sin necesidad de acceso físico ni intervención del usuario; y conexión a los equipos de los clientes vía Splashtop para sesiones de resolución de incidencias y soporte remoto."
+            ]
+          },
+          {
+            "type": "text",
+            "title": "Acceso remoto: Splashtop",
+            "paragraphs": [
+              "Splashtop está integrado de forma nativa en Datto RMM y ofrece acceso de escritorio remoto seguro a los equipos gestionados. Durante las prácticas, lo utilicé para: soporte técnico remoto a usuarios finales (ver y controlar la pantalla del cliente para resolver incidencias sin presencia física); tareas de gestión de servidores (acceso y verificación remota de configuraciones); y resolución de incidencias colaborativa junto a Théo en incidentes complejos que afectaban a la infraestructura de los clientes."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Visibilidad del parque",
+                "value": "Supervisión en tiempo real de 550+ equipos con estado de salud, parches y antivirus de un vistazo"
+              },
+              {
+                "label": "Despliegue remoto",
+                "value": "MalwareBytes desplegado en equipos desprotegidos vía Quick Jobs — cero desplazamientos in situ"
+              },
+              {
+                "label": "Soporte remoto",
+                "value": "Incidencias de usuario resueltas vía Splashtop sin intervención física"
+              },
+              {
+                "label": "Exposición MSP",
+                "value": "Comprensión directa de las operaciones de un MSP: gestión multi-cliente, soporte orientado a SLA, escalado por niveles"
+              },
+              {
+                "label": "Competencias",
+                "value": "Datto RMM, supervisión remota, gestión de parches, seguridad de endpoints, Splashtop, flujos de trabajo MSP"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -4670,7 +4751,104 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Windows Autopilot & mass imaging (Dell fleet)",
         "heroSubtitle": "Windows Autopilot · Dell Image Assist · Blancco · Intune · Prácticas en MIDRANGE GROUP",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Durante unas prácticas en MIDRANGE GROUP (equipo Alternative Partner Solutions), se me encargó desplegar dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
+              "Las dos flotas requerían flujos de trabajo completamente distintos: las máquinas Optiplex eran hardware reacondicionado que debía borrarse de forma certificada antes de su reutilización, mientras que los portátiles Latitude eran unidades nuevas destinadas a un despliegue remoto zero-touch vía Windows Autopilot."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "El hardware reacondicionado debe borrarse de forma certificada antes de su reinscripción — un simple formateo no es suficiente para el cumplimiento normativo. Se requiere: un estándar de borrado trazable (NIST 800-88) con certificados por dispositivo.",
+              "La imagen Sysprep requiere una imagen dorada estable: controladores, actualizaciones de Windows y aplicaciones corporativas deben estar integrados antes de la captura. Cualquier cambio posterior a la captura implica un nuevo ciclo de imagen.",
+              "Windows Autopilot requiere que los hashes de hardware estén pre-registrados en Intune antes de encender el dispositivo. En hardware Dell nuevo sin ProDeploy, Dell ImageAssist es la vía más rápida para capturar el hash.",
+              "Los perfiles de despliegue de Intune, las políticas de BitLocker, la configuración de Defender y los anillos de actualización deben validarse todos en un equipo de prueba antes de desplegar a 200 máquinas.",
+              "Despliegue escalonado (20–30 equipos/día) para detectar fallos de política de Intune antes de que afecten a toda la flota."
+            ],
+            "title": "Retos técnicos"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Fase 1 — Borrado de datos con Blancco (64 Dell Optiplex)",
+                "description": "Cada Optiplex reacondicionado se arrancó desde una llave USB de Blancco. Se creó una tarea de borrado (estándar NIST 800-88), se seleccionaron todos los discos y se lanzó el borrado. Blancco sobrescribe cada sector y verifica. Se genera automáticamente un certificado PDF de conformidad a prueba de manipulaciones por cada máquina. Las 64 máquinas se ejecutaron en paralelo durante la noche — de 2 a 3 horas cada una según el tamaño del disco."
+              },
+              {
+                "title": "Fase 2 — Imagen dorada con Sysprep (64 Dell Optiplex)",
+                "description": "Se configuró completamente un Optiplex de referencia: Windows 11, últimos controladores, suite de aplicaciones corporativas, ajustes de unión al dominio. Se ejecutó Sysprep (/oobe /generalize /shutdown) para preparar la imagen para su despliegue. Se utilizó una llave USB WinPE para arrancar y capturar la imagen con DISM (dism /Capture-Image). El archivo .wim resultante se desplegó en los 63 Optiplex restantes mediante el mismo entorno WinPE (dism /Apply-Image). Cada máquina completó después el OOBE y se unió al dominio."
+              },
+              {
+                "title": "Fase 3 — Windows Autopilot vía Dell ImageAssist (200 Dell Latitude)",
+                "description": "Cada Latitude nuevo se arrancó desde una llave USB de Dell ImageAssist. ImageAssist aplicó automáticamente el perfil de despliegue, descargó una imagen de Windows actualizada desde la nube, capturó el hash de hardware y lo subió al tenant de Intune. El equipo reinició en un OOBE limpio y pre-registrado. Los usuarios solo tenían que introducir su correo corporativo — Azure AD los autenticaba, el perfil de Autopilot se descargaba e Intune desplegaba silenciosamente políticas y aplicaciones en segundo plano. Tiempo total de intervención de IT por Latitude tras la configuración inicial: menos de 5 minutos."
+              }
+            ],
+            "title": "Cómo se hizo — 3 fases"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "64 Optiplex (Sysprep) + 200 Latitude (Autopilot)",
+                "label": "Equipos desplegados",
+                "value": "264"
+              },
+              {
+                "note": "Uno por cada Optiplex borrado — conforme a NIST 800-88",
+                "label": "Certificados Blancco",
+                "value": "64"
+              },
+              {
+                "note": "Tras la configuración del perfil Intune e ImageAssist",
+                "label": "Tiempo de IT por Latitude",
+                "value": "< 5 min"
+              },
+              {
+                "note": "Sin intervención física de IT en los puestos de usuario",
+                "label": "Autopilot zero-touch",
+                "value": "200"
+              }
+            ],
+            "title": "Cifras clave"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Blancco y Autopilot son complementarios, no competidores: Blancco gestiona la capa de conformidad para el hardware reacondicionado, Autopilot gestiona la capa de provisión zero-touch para el hardware nuevo.",
+              "Dell ImageAssist reduce significativamente el tiempo de configuración de Autopilot en grandes pedidos Dell: no es necesario ejecutar PowerShell por dispositivo, ni requiere inscripción previa.",
+              "Las imágenes doradas de Sysprep deben reconstruirse para cada modelo de hardware — los controladores son específicos del hardware. Una única imagen que cubra todos los SKU de Optiplex requiere una inyección cuidadosa de controladores.",
+              "Escalonar los despliegues de Autopilot (lotes de 20–30/día) es crítico: permite detectar fallos de política de Intune de forma temprana, antes de que afecten a cientos de usuarios.",
+              "Generar los certificados Blancco en el momento del borrado (no de forma retroactiva) es la única forma de garantizar una cadena de custodia ininterrumpida para las auditorías de conformidad."
+            ],
+            "title": "Aprendizajes clave"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://docs.microsoft.com/es-es/mem/autopilot/windows-autopilot",
+                "label": "Documentación de Windows Autopilot — Microsoft"
+              },
+              {
+                "href": "https://www.dell.com/es-es/dt/services/deployment-services/imageassist.htm",
+                "label": "Dell ImageAssist"
+              },
+              {
+                "href": "https://www.blancco.com/es/products/drive-eraser/",
+                "label": "Blancco Drive Eraser"
+              },
+              {
+                "href": "https://docs.microsoft.com/es-es/mem/intune/enrollment/windows-enrollment-status",
+                "label": "Página de estado de inscripción de Intune"
+              }
+            ],
+            "title": "Herramientas y referencias"
+          }
+        ]
       }
     }
   },
@@ -4910,7 +5088,106 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "IT helpdesk & incident management (Autotask PSA)",
         "heroSubtitle": "Autotask PSA · Splashtop · Webroot · Datto RMM · Prácticas en MIDRANGE GROUP",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Durante unas prácticas en MIDRANGE GROUP (equipo de Soporte Técnico), fui asignada bajo la supervisión de Théo KACEL, Administrador de Sistemas y Redes. El equipo atiende las solicitudes de soporte de los clientes gestionados a través de tres canales de entrada: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
+              "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). Théo me confió un ticket real de un cliente para gestionarlo bajo su supervisión."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Teléfono: el cliente llama directamente a la línea de soporte. El técnico crea el ticket manualmente en Autotask y comienza el triaje de inmediato.",
+              "Correo electrónico: el cliente envía un mensaje a la dirección de soporte. Autotask lo procesa automáticamente y crea el ticket, que luego se asigna a la cola correspondiente.",
+              "Agente Datto RMM: el agente instalado en los equipos gestionados supervisa el dispositivo en tiempo real y puede generar alertas automáticamente (pico de CPU, disco lleno, evento de seguridad). Estas generan tickets en Autotask sin ninguna acción del cliente."
+            ],
+            "title": "Cómo llegan los tickets al equipo de soporte"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Paso 1 — Ticket recibido en Autotask",
+                "description": "Un cliente informó que no podía acceder a un sitio web específico. Webroot mostraba una advertencia de sitio bloqueado en su equipo. El ticket fue asignado a Théo y delegado para su resolución práctica."
+              },
+              {
+                "title": "Paso 2 — Acceso remoto vía Datto RMM",
+                "description": "Contactamos al cliente y solicitamos permiso para tomar el control remoto de su equipo vía Datto RMM. Esto nos permitió reproducir el problema en tiempo real, ver el mensaje exacto de advertencia de Webroot y confirmar qué URL estaba siendo bloqueada."
+              },
+              {
+                "title": "Paso 3 — Diagnóstico: falso positivo de Webroot",
+                "description": "Tras inspeccionar la URL bloqueada, determinamos que se trataba de un sitio profesional legítimo, incorrectamente marcado por la inteligencia de amenazas de Webroot. El sitio no era malicioso — Webroot lo había clasificado como sospechoso según su puntuación de reputación de dominio."
+              },
+              {
+                "title": "Paso 4 — Exclusión de URL en la consola de gestión de Webroot",
+                "description": "Nos conectamos a la consola de gestión de Webroot (CE 23.2) y navegamos hasta la lista de exclusión de URL dentro de la política del cliente. Añadimos el dominio bloqueado a la lista de exclusión (lista blanca). El cambio se propagó al equipo del cliente en pocos minutos, y el sitio quedó accesible sin ninguna intervención adicional en la máquina."
+              },
+              {
+                "title": "Paso 5 — Resolución registrada en Autotask",
+                "description": "Se creó una entrada de tiempo en Autotask con un resumen del problema, la causa raíz (falso positivo) y los pasos de resolución realizados. El ticket se cerró como Completado. El tiempo trabajado se registró para la facturación del cliente y como parte de la trazabilidad de auditoría."
+              }
+            ],
+            "title": "Resolución del incidente — paso a paso"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Teléfono · Correo electrónico · Agente Datto RMM",
+                "label": "Canales de entrada de tickets",
+                "value": "3"
+              },
+              {
+                "note": "Resolución 100% remota vía Datto RMM",
+                "label": "Intervención en sitio",
+                "value": "Ninguna"
+              },
+              {
+                "note": "Exclusión de URL desde la consola — equipo sin modificar",
+                "label": "Reinstalación de Webroot requerida",
+                "value": "No"
+              },
+              {
+                "note": "Entrada de tiempo en Autotask con causa raíz y pasos",
+                "label": "Resolución documentada",
+                "value": "Sí"
+              }
+            ],
+            "title": "Cifras clave"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Los falsos positivos de Webroot en sitios profesionales legítimos son un escenario de soporte recurrente: el primer reflejo debe ser siempre revisar la lista de exclusión de URL antes de escalar o reconfigurar el equipo.",
+              "El acceso remoto vía Datto RMM elimina la necesidad de desplazamientos in situ para la mayoría de incidencias de usuario, reduciendo significativamente el tiempo de resolución.",
+              "Las entradas de tiempo en Autotask no son opcionales: sirven tanto de justificante de facturación para el cliente como de base de conocimiento consultable para incidencias recurrentes.",
+              "El enrutamiento importa: distinguir desde la primera descripción un ticket de Soporte Técnico (usuario) de un ticket de Explotación (infraestructura) ahorra tiempo y evita asignaciones incorrectas.",
+              "Reproducir siempre el problema de forma remota antes de tocar cualquier configuración — confirmar el síntoma exacto evita cambios prematuros o incorrectos."
+            ],
+            "title": "Aprendizajes clave"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.autotask.net",
+                "label": "Autotask — Plataforma PSA / Ticketing"
+              },
+              {
+                "href": "https://www.webroot.com/us/en/business/smb/endpoint-protection",
+                "label": "Webroot Business Endpoint Protection"
+              },
+              {
+                "href": "https://www.datto.com/products/rmm",
+                "label": "Datto RMM — Supervisión y gestión remota"
+              }
+            ],
+            "title": "Herramientas utilizadas"
+          }
+        ]
       }
     }
   },
@@ -5164,7 +5441,111 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Backup operations & alert triage (Acronis)",
         "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · Prácticas en MIDRANGE GROUP",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "En la continuidad de mis prácticas en MIDRANGE GROUP bajo la tutela de Théo KACEL, participé en la gestión de las operaciones de copia de seguridad en la nube y locales para uno de los clientes de la empresa. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi tarea diaria consistía en abrir el panel de Acronis, revisar el estado de las alertas e investigar los fallos para restablecer la continuidad de las copias de seguridad."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Herramienta de backup local",
+                "value": "Acronis Cyber Backup (NAS / nube privada)"
+              },
+              {
+                "label": "Herramienta de backup en la nube",
+                "value": "Acronis Cyber Protect Cloud (alojado por Acronis)"
+              },
+              {
+                "label": "Destino NAS 1",
+                "value": "smb://10.15.231.11/backups — 8,77 Tio / 10,5 Tio"
+              },
+              {
+                "label": "Destino NAS 2",
+                "value": "smb://10.15.231.11/backups-new — 9,57 Tio / 10,5 Tio"
+              },
+              {
+                "label": "Destino en la nube",
+                "value": "Nube Acronis — 139 Gio / 250 Gio"
+              },
+              {
+                "label": "Dispositivos protegidos",
+                "value": "105 en total (89 OK, 16 con error, 0 críticos)"
+              },
+              {
+                "label": "Dispositivos no protegidos",
+                "value": "6 (UPS_LENOVO, VMware vCenter Server, ACRONIS, SRV-EXCH)"
+              },
+              {
+                "label": "Almacenamiento total utilizado",
+                "value": "9,74 Tio de backup / 21,18 Tio en total"
+              }
+            ],
+            "title": "Infraestructura de backup"
+          },
+          {
+            "type": "text",
+            "title": "Planes de backup",
+            "paragraphs": [
+              "El cliente disponía de 5 planes de backup activos configurados en Acronis Cyber Backup: ‘Toutes les VM’ (todas las VM — 16 dispositivos incluyendo SRV-RDS04, SRV-BDD, SRV-PRINT2 y otros 13 — programado de lunes a sábado a las 23:00, destino: smb backups-new, retención: 2 meses mensual / 4 semanas semanal / 6 días diario); ‘TMP-BDD’ (1 dispositivo); ‘SQL-CLOUD 2’ (86 dispositivos, lunes a viernes a las 23:00); ‘SQL-CLOUD’ (86 dispositivos); ‘Bases_Exchange’ (2 dispositivos, diario a las 03:00)."
+            ]
+          },
+          {
+            "type": "text",
+            "title": "Investigación y resolución de alertas",
+            "paragraphs": [
+              "El panel mostraba 85 alertas activas: 33 fallos de actividad y 52 advertencias. Investigué cada caso para identificar la causa raíz y aplicar la corrección adecuada. Los escenarios de fallo más frecuentes fueron: (1) almacenamiento NAS saturado al 75%+ — requiriendo la eliminación de copias completas antiguas para liberar espacio; (2) servidor fuera de línea o desconectado en el momento del backup — resuelto reprogramando o verificando la disponibilidad del servidor; (3) plan de backup corrupto — requiriendo recrear el plan con un nuevo nombre (misma base + sufijo incrementado) manteniendo la misma política de backup; (4) problema de red (cable defectuoso o NAS saturado) — provocando fallos de transferencia durante el backup."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Advertencia SRV-RDS04",
+                "value": "Backup de VM completado con advertencia: CBT desactivado — backup ejecutado sin Changed Block Tracking (snapshots VMware presentes)"
+              },
+              {
+                "label": "Error SRV-BDD.acces.local",
+                "value": "Replicación fallida — cuota de almacenamiento superada para stchristophecloud@hotmail.fr, los próximos backups fallarán"
+              },
+              {
+                "label": "Plan SQL-CLOUD 2",
+                "value": "86 dispositivos respaldados, el plan Bases_Exchange aparece en rojo (fallo) — investigación de saturación de red/NAS"
+              }
+            ],
+            "title": "Ejemplos de alertas (panel)"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Supervisión diaria",
+                "value": "Revisión sistemática del estado de los backups en más de 100 dispositivos cada mañana"
+              },
+              {
+                "label": "Resolución de fallos",
+                "value": "Análisis de causa raíz de 85 alertas — almacenamiento, red, disponibilidad de servidores y corrupción de planes"
+              },
+              {
+                "label": "Gestión de planes",
+                "value": "Planes de backup corruptos recreados sin pérdida de datos, continuidad restablecida"
+              },
+              {
+                "label": "Gestión de almacenamiento",
+                "value": "Capacidad NAS liberada eliminando backups completos obsoletos, evitando futuros fallos"
+              },
+              {
+                "label": "Competencias",
+                "value": "Acronis Cyber Backup, Acronis Cyber Protect Cloud, gestión de planes de backup, almacenamiento NAS, triaje de alertas"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -5426,7 +5807,107 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "pfSense firewall + Squid transparent proxy",
         "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
-        "sections": []
+        "sections": [
+          {
+            "body": "En continuidad con el laboratorio virtualizado (AD DS / DNS / DHCP / WDS en Windows Server 2022), añadí una VM pfSense 2.6.0 como firewall para actuar de pasarela de red. Objetivo: asegurar el acceso saliente a Internet de todas las máquinas de la LAN privada (192.168.100.0/24), filtrar el tráfico web mediante un proxy transparente Squid y aplicar políticas de acceso — reproduciendo la seguridad perimetral de una infraestructura empresarial real.",
+            "type": "text",
+            "title": "Contexto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Hipervisor: VMware Workstation Pro 17",
+              "VM pfSense 2.6.0: FreeBSD 12 de 64 bits, 10 GB de disco, 2 GB de RAM — pasarela LAN/WAN",
+              "WAN (em0): en modo puente sobre el módem 4G del host — DHCP — 192.168.1.110/24",
+              "LAN (em1): VMnet8 (NAT) — 192.168.100.220/24 (pasarela pfSense)",
+              "DCAD22: 192.168.100.250 — AD DS, DNS, DHCP, WDS",
+              "SRVSAMBA: 192.168.100.130 — recursos compartidos Samba | Clientes: 192.168.100.21/22"
+            ],
+            "title": "Arquitectura del laboratorio"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Alias IP: grupo SRV (servidores) y grupo Client (puestos) para reglas específicas",
+              "Reglas LAN: DNS (UDP 53) e ICMP permitidos desde SRV — regla REFUS SRV VERS INTERNET colocada por encima del allow-all",
+              "Proxy transparente Squid en la interfaz LAN (puerto 3128) con inspección SSL activada",
+              "CA interna Pfsense-CA (RSA 2048, SHA-256, 10 años) para SSL bump en el tráfico HTTPS saliente",
+              "SquidGuard: filtrado por categorías de URL con listas negras",
+              "LightSquid: panel de informes de tráfico web por cliente"
+            ],
+            "title": "Configuraciones desplegadas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "pfSense 2.6.0 — Firewall, NAT, enrutamiento (basado en FreeBSD)",
+              "Squid — Proxy transparente con inspección SSL (puerto 3128)",
+              "SquidGuard — Filtrado por categorías de URL (listas negras)",
+              "LightSquid — Panel de informes de uso web por usuario",
+              "VMware Workstation Pro 17 — Hipervisor de tipo 2",
+              "PKI / pfSense CA Manager — Autoridad de certificación interna para inspección HTTPS"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Instalación de pfSense",
+                "description": "VM FreeBSD 12 de 64 bits creada en VMware (10 GB, 2 GB RAM), 2 tarjetas de red: en puente (WAN 4G) + VMnet8 (LAN). ISO de pfSense 2.6.0 instalada. La consola confirma WAN em0 (192.168.1.110) y LAN em1 (192.168.100.220)."
+              },
+              {
+                "label": "Alias y reglas de firewall",
+                "description": "Alias SRV (servidores) y Client (puestos) creados. Reglas LAN: DNS + ICMP permitidos desde SRV, luego REFUS SRV VERS INTERNET colocada antes del allow-all — servidores bloqueados salvo DNS/ICMP."
+              },
+              {
+                "label": "Proxy Squid y SquidGuard",
+                "description": "3 paquetes instalados: squid, squidGuard, LightSquid. Squid configurado como proxy transparente en el puerto 3128 con SSL bump. SquidGuard configurado con listas negras de URL por categoría. LightSquid activado para los informes de tráfico."
+              },
+              {
+                "label": "Autoridad de certificación",
+                "description": "CA Pfsense-CA generada (RSA 2048, SHA-256, 10 años, C=FR). Utilizada por Squid para volver a firmar las conexiones HTTPS interceptadas — debe importarse como CA de confianza en todos los equipos cliente."
+              }
+            ],
+            "title": "Fases de configuración"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Todo el tráfico LAN enrutado vía WAN 4G",
+                "label": "Pasarela",
+                "value": "pfSense operativo"
+              },
+              {
+                "note": "Solo excepciones DNS + ICMP",
+                "label": "Control de acceso",
+                "value": "Servidores aislados de Internet"
+              },
+              {
+                "note": "Categorías de URL bloqueadas",
+                "label": "Filtrado web",
+                "value": "Squid + SquidGuard activos"
+              },
+              {
+                "note": "CA interna para tráfico cifrado",
+                "label": "Inspección HTTPS",
+                "value": "SSL bump desplegado"
+              },
+              {
+                "note": "Estadísticas web por cliente disponibles",
+                "label": "Informes",
+                "value": "LightSquid activo"
+              },
+              {
+                "note": "Laboratorio personal completo",
+                "label": "Competencias",
+                "value": "pfSense, firewall, proxy, PKI"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
