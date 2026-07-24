@@ -35,8 +35,9 @@ export function useTrack() {
  * - Theme provider (dark/light/system)
  * - Track provider ("salesforce" | "itops")
  *
- * We accept an `initialTrack` from the server so SSR + hydration agree
- * (avoids the "flash" when the track is persisted on the client).
+ * We accept an `initialTrack` from the server (read from the `track` cookie
+ * in app/[locale]/layout.tsx) so SSR + hydration agree from the very first
+ * paint, avoiding a flash of the wrong track for returning visitors.
  */
 export default function Providers({
   children,
@@ -49,10 +50,12 @@ export default function Providers({
 }) {
   const [track, setTrackState] = useState<Track>(initialTrack);
 
-  // Hydrate the track from localStorage on mount.
-  // The layout no longer reads cookies (enabling ISR/CDN caching), so we restore
-  // the saved preference client-side. This causes at most one extra render for
-  // users who have previously switched to "itops".
+  // Fallback only: the layout now reads the `track` cookie server-side and
+  // passes the correct value as `initialTrack` (see app/[locale]/layout.tsx),
+  // so this should be a no-op for any returning visitor. Kept for the one
+  // edge case that still needs it: cookies blocked/cleared while localStorage
+  // persists (e.g. some privacy extensions), or the brief window on a
+  // visitor's very first ever page load before setTrack() has posted a cookie.
   useEffect(() => {
     const saved = localStorage.getItem("track");
     if (saved === "itops" || saved === "salesforce") {
