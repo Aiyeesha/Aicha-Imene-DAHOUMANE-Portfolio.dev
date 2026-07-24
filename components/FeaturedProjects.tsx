@@ -58,11 +58,24 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const pathnameLocale = pathname.split("/")[1];
   const locale: "en" | "fr" | "es" = pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en";
 
+  // Les projets is_bridge (croisement Salesforce/Infra) restent visibles quel
+  // que soit le track actif — ils prouvent justement que la séparation par
+  // track est artificielle pour ce type de projet précis. Sans ce
+  // contournement, un projet is_bridge dont le champ `track` vaut "salesforce"
+  // disparaissait entièrement côté IT Ops : le seul projet publié qui répond
+  // à "montrez-moi un exemple concret où vos deux compétences se combinent"
+  // n'était atteignable que par les visiteurs déjà convaincus.
   const featured = useMemo(() => {
-    return projects
+    const trackMatches = projects
       .filter((p) => p.featured && p.track === track)
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
       .slice(0, 5);
+
+    const missingBridgeProjects = projects.filter(
+      (p) => p.featured && p.is_bridge && !trackMatches.some((tm) => tm.slug === p.slug)
+    );
+
+    return [...trackMatches, ...missingBridgeProjects];
   }, [projects, track]);
 
   // ── Empty state ─────────────────────────────────────────────────────────────
