@@ -17,21 +17,42 @@ import { useState } from "react";
 
 const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
 
-export default function ProjectClientLogo({ slug, alt }: { slug: string; alt: string }) {
+// "md" — fiche détail (à côté du H1) : un seul par page, au-dessus de la ligne
+//        de flottaison → chargement eager sûr, pas de coût réseau superflu.
+// "sm" — cartes (grille /projects, Featured projects) : jusqu'à ~39 rendues
+//        sur une même page, la plupart sans logo (404 silencieux). Un
+//        chargement eager systématique enverrait des dizaines de requêtes
+//        inutiles au premier rendu — lazy par défaut, comme CoverImage le
+//        fait déjà pour les cartes de ces mêmes grilles.
+const SIZES = {
+  md: { boxClass: "h-8 max-w-[140px]", imgClass: "h-8 w-auto", width: 140, height: 32 },
+  sm: { boxClass: "h-5 max-w-[90px]", imgClass: "h-5 w-auto", width: 90, height: 20 },
+} as const;
+
+type Props = {
+  slug: string;
+  alt: string;
+  size?: keyof typeof SIZES;
+  loading?: "eager" | "lazy";
+};
+
+export default function ProjectClientLogo({ slug, alt, size = "md", loading = "eager" }: Props) {
   const [failed, setFailed] = useState(false);
 
   if (failed) return null;
 
+  const { boxClass, imgClass, width, height } = SIZES[size];
+
   return (
-    <div className="relative h-8 w-auto max-w-[140px] shrink-0">
+    <div className={`relative w-auto shrink-0 ${boxClass}`}>
       <Image
         src={`${STORAGE_CDN}/${slug}/logo.webp`}
         alt={alt}
-        width={140}
-        height={32}
-        className="h-8 w-auto object-contain object-left"
+        width={width}
+        height={height}
+        className={`object-contain object-left ${imgClass}`}
         unoptimized
-        loading="eager"
+        loading={loading}
         onError={() => setFailed(true)}
       />
     </div>
