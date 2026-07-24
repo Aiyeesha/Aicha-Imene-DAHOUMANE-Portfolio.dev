@@ -38,6 +38,7 @@
     "proof2": "Escalable por diseño",
     "proof3": "Documentado y mantenible",
     "availability": "Indefinido · Temporal · Freelance · Por proyecto",
+    "credentialsSummary": "RNCP6 · Trailhead Expeditioner · Salesforce Admin — sept. 2026",
     "startHere": "Empieza aquí:",
     "switchToSalesforce": "Ver perfil Salesforce →",
     "switchToItops": "Ver perfil IT Ops →"
@@ -269,7 +270,9 @@
     "rmm": "Equipos supervisados (Datto RMM)",
     "tickets": "Tickets IT gestionados",
     "alerts": "Alertas de copia de seguridad clasificadas",
-    "deployments": "Puestos desplegados"
+    "deployments": "Puestos desplegados",
+    "periodSalesforce": "LD Digitales — desde octubre de 2023",
+    "periodItops": "Prácticas en Midrange Group — febrero a mayo de 2023"
   },
   "services": {
     "discuss": "Consultar sobre este servicio"

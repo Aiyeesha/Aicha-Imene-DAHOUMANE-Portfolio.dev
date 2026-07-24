@@ -43,6 +43,12 @@ export default function GlobalMetrics() {
   const t = useTranslations();
   const { track } = useTrack();
   const METRICS = track === "salesforce" ? SALESFORCE_METRICS : ITOPS_METRICS;
+  // Repère temporel — sans lui, les 4 chiffres IT Ops (tous issus d'un stage de
+  // 3 mois terminé en 2023) peuvent se lire comme une activité actuelle. Un
+  // recruteur qui creuse et découvre l'écart de date après coup lit ça comme
+  // une tentative de gonfler la fraîcheur de l'expérience — la datation
+  // explicite évite ce malentendu, quelle que soit la période réelle.
+  const periodKey = track === "salesforce" ? "metrics.periodSalesforce" : "metrics.periodItops";
 
   return (
     <Reveal delayMs={80}>
@@ -65,6 +71,7 @@ export default function GlobalMetrics() {
             </Reveal>
           ))}
         </dl>
+        <p className="mt-4 text-center text-xs text-muted-2">{t(periodKey)}</p>
       </div>
     </Reveal>
   );
