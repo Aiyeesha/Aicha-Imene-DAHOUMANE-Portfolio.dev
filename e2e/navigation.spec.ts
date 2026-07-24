@@ -79,4 +79,23 @@ test.describe("Navigation de base", () => {
     await expect(page).toHaveURL(/\/en\/projects/);
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
+
+  // Régression : About/Certifications/Resources/Projects/Blog restaient bloqués
+  // indéfiniment sur le squelette de app/[locale]/loading.tsx en navigation directe
+  // (URL tapée, lien partagé, reload) — le contenu réel était bien streamé par le
+  // serveur mais jamais appliqué au DOM côté client. Reproductible uniquement en
+  // build de production (`next build && next start`), jamais en `next dev` — d'où
+  // l'ajout explicite ici plutôt que de se fier au seul test "About" déjà présent
+  // ci-dessus, qui ne suffisait pas à couvrir les autres routes touchées.
+  test("Certifications et Resources sont accessibles via URL directe, avec contenu réel", async ({ page }) => {
+    await page.goto("/en/certifications");
+    await expect(page).toHaveURL(/\/en\/certifications/);
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
+    await expect(page.locator("main")).not.toBeEmpty();
+
+    await page.goto("/en/resources");
+    await expect(page).toHaveURL(/\/en\/resources/);
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
+    await expect(page.locator("main")).not.toBeEmpty();
+  });
 });
