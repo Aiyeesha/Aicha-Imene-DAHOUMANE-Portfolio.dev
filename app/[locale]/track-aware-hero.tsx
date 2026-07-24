@@ -16,6 +16,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { useTrack } from "./providers";
@@ -168,8 +169,24 @@ export default function TrackAwareHero() {
       <motion.div variants={shouldReduce ? {} : textBlockVariants} suppressHydrationWarning>
 
         {/* Badge de disponibilité — cliquable → ouvre la modale de détails */}
-        <div className="mb-4">
+        <div className="mb-2">
           <AvailabilityModal />
+        </div>
+
+        {/* Repère certifications/diplômes — visible sans clic, contrairement à la
+            réponse FAQ "Do you have a Salesforce certification?" qui répond déjà
+            bien à cette question mais reste cachée derrière un accordéon. L'absence
+            de certification éditeur est précisément l'objection qui a coûté 3
+            entretiens malgré un CDI sans période d'essai — la contre-preuve
+            (diplôme RNCP6, Trailhead actif, certification en préparation datée)
+            doit être visible dans les 30 premières secondes, pas après un clic. */}
+        <div className="mb-4">
+          <Link
+            href={`/${locale}/certifications`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-muted hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
+          >
+            🎓 {t("hero.credentialsSummary")}
+          </Link>
         </div>
 
         {/* Contenu dynamique (track-dépendant).
