@@ -90,22 +90,42 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     itops:      projects.filter((p) => p.track === "itops"       && (includeFeatured || !p.featured)).length
   }), [projects, includeFeatured]);
 
-  const TRACKS = ["salesforce", "itops"] as const;
-  type ActiveTab = "all" | "salesforce" | "itops";
+  type ActiveTab = "all" | "salesforce" | "itops" | "bridge";
+
+  // Onglet "Cross-domain" — projets is_bridge=true, indépendamment du track.
+  // Sans lui, la seule façon de trouver ces projets était de connaître
+  // l'existence du badge "Salesforce ⇄ Infra bridge" et de tomber dessus par
+  // hasard dans l'onglet Salesforce ou IT Ops — pas de vitrine dédiée pour la
+  // catégorie de preuve la plus rare du portfolio (voir FeaturedProjects.tsx
+  // pour le même contournement sur la home).
+  const bridgeCount = useMemo(
+    () => projects.filter((p) => p.is_bridge && (includeFeatured || !p.featured)).length,
+    [projects, includeFeatured]
+  );
+
+  // Ordre des onglets visibles — utilisé pour la navigation clavier (flèches/Home/End).
+  const visibleTabs = useMemo<ActiveTab[]>(
+    () => (includeFeatured ? ["all", "salesforce", "itops", "bridge"] : ["salesforce", "itops"]),
+    [includeFeatured]
+  );
 
   // Sur la page /projects complète (includeFeatured=true), afficher tous les projets par défaut.
   // Sur la home, respecter le track global (personnalisation cookie).
   const [activeTab, setActiveTab] = useState<ActiveTab>(includeFeatured ? "all" : track as ActiveTab);
 
-  // ── Catégories disponibles pour le track actif ───────────────────
+  // ── Catégories disponibles pour l'onglet actif ───────────────────
   const categories = useMemo(() => {
     const set = new Set<string>();
-    const trackToFilter = includeFeatured && activeTab === "all" ? null : (includeFeatured ? activeTab : track);
     projects
-      .filter((p) => (trackToFilter ? p.track === trackToFilter : true) && (includeFeatured || !p.featured))
+      .filter((p) => {
+        if (!(includeFeatured || !p.featured)) return false;
+        if (activeTab === "all") return true;
+        if (activeTab === "bridge") return !!p.is_bridge;
+        return p.track === activeTab;
+      })
       .forEach((p) => (p.categories ?? []).forEach((c) => set.add(c)));
     return ["All", ...Array.from(set)];
-  }, [activeTab, track, projects, includeFeatured]);
+  }, [activeTab, projects, includeFeatured]);
 
   const allCount = useMemo(() =>
     projects.filter((p) => includeFeatured || !p.featured).length,
@@ -123,25 +143,40 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     setQ("");
   };
 
-  // Navigation clavier dans le tablist (APG pattern)
+  // Sélectionner l'onglet "Cross-domain" (ne touche pas au track global —
+  // contrairement aux onglets Salesforce/IT Ops, celui-ci ne représente pas
+  // une préférence de profil, juste un filtre d'affichage ponctuel).
+  const handleBridgeTabSelect = () => {
+    setActiveTab("bridge");
+    setActive("All");
+    setQ("");
+  };
+
+  // Navigation clavier dans le tablist (APG pattern) — flèches, Home, End,
+  // sur la liste ordonnée des onglets réellement affichés.
   const handleTabKeyDown = (e: React.KeyboardEvent, idx: number) => {
     let target = -1;
-    if (e.key === "ArrowRight") target = (idx + 1) % TRACKS.length;
-    else if (e.key === "ArrowLeft") target = (idx - 1 + TRACKS.length) % TRACKS.length;
+    if (e.key === "ArrowRight") target = (idx + 1) % visibleTabs.length;
+    else if (e.key === "ArrowLeft") target = (idx - 1 + visibleTabs.length) % visibleTabs.length;
     else if (e.key === "Home") target = 0;
-    else if (e.key === "End") target = TRACKS.length - 1;
+    else if (e.key === "End") target = visibleTabs.length - 1;
     if (target === -1) return;
     e.preventDefault();
-    handleTrackChange(TRACKS[target]);
+    const nextTab = visibleTabs[target];
+    if (nextTab === "salesforce" || nextTab === "itops") handleTrackChange(nextTab);
+    else if (nextTab === "bridge") handleBridgeTabSelect();
+    else { setActiveTab("all"); setActive("All"); setQ(""); }
     tabRefs.current[target]?.focus();
   };
 
-  // ── Filtrage : track + catégorie + recherche texte ───────────────
+  // ── Filtrage : onglet + catégorie + recherche texte ───────────────
   const filtered = useMemo(() => {
     const base = includeFeatured
       ? activeTab === "all"
         ? projects.filter((p) => includeFeatured || !p.featured)
-        : projects.filter((p) => p.track === activeTab && (includeFeatured || !p.featured))
+        : activeTab === "bridge"
+          ? projects.filter((p) => p.is_bridge && (includeFeatured || !p.featured))
+          : projects.filter((p) => p.track === activeTab && (includeFeatured || !p.featured))
       : projects.filter((p) => p.track === track && (includeFeatured || !p.featured));
     return base.filter((p) => {
       const inCat = active === "All" ? true : (p.categories ?? []).includes(active);
@@ -162,56 +197,32 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
           aria-label={locale === "fr" ? "Filtrer par parcours" : locale === "es" ? "Filtrar por trayectoria" : "Filter by track"}
           className="flex rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-1"
         >
-          {/* Tab "All" — visible uniquement sur la page /projects complète */}
-          {includeFeatured && (
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === "all" ? "true" : "false"}
-              tabIndex={activeTab === "all" ? 0 : -1}
-              onClick={() => { setActiveTab("all"); setActive("All"); setQ(""); }}
-              onKeyDown={(e) => {
-                if (e.key === "ArrowRight") { setActiveTab("salesforce"); tabRefs.current[0]?.focus(); }
-                else if (e.key === "End") { setActiveTab("itops"); tabRefs.current[1]?.focus(); }
-              }}
-              className={[
-                "rounded-lg px-4 py-2 text-sm font-medium transition-colors soft-ring",
-                "inline-flex items-center gap-2",
-                activeTab === "all"
-                  ? "bg-cyan-500/20 text-cyan-700 dark:text-cyan-200"
-                  : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
-              ].join(" ")}
-            >
-              {locale === "fr" ? "Tous" : locale === "es" ? "Todos" : "All"}
-              <span className={[
-                "rounded-full px-1.5 py-0.5 text-xs leading-none",
-                activeTab === "all"
-                  ? "bg-cyan-500/30 text-cyan-800 dark:text-cyan-100"
-                  : "bg-black/10 dark:bg-white/10 text-slate-600 dark:text-white/70"
-              ].join(" ")}>
-                {allCount}
-              </span>
-            </button>
-          )}
-          {TRACKS.map((tr, idx) => {
-            const count = trackCounts[tr];
-            const label = tr === "salesforce" ? "Salesforce" : "IT Ops";
-            const isActive = activeTab === tr;
+          {visibleTabs.map((tab, idx) => {
+            const isActive = activeTab === tab;
+            const count =
+              tab === "all" ? allCount
+              : tab === "bridge" ? bridgeCount
+              : trackCounts[tab];
+            const label =
+              tab === "all" ? (locale === "fr" ? "Tous" : locale === "es" ? "Todos" : "All")
+              : tab === "bridge" ? (locale === "fr" ? "Croisés" : locale === "es" ? "Cruzados" : "Cross-domain")
+              : tab === "salesforce" ? "Salesforce"
+              : "IT Ops";
+            const onSelect = () => {
+              if (tab === "salesforce" || tab === "itops") handleTrackChange(tab);
+              else if (tab === "bridge") handleBridgeTabSelect();
+              else { setActiveTab("all"); setActive("All"); setQ(""); }
+            };
             return (
               <button
-                key={tr}
+                key={tab}
                 ref={(el) => { tabRefs.current[idx] = el; }}
                 type="button"
                 role="tab"
                 aria-selected={isActive ? "true" : "false"}
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => { handleTrackChange(tr); setActiveTab(tr); }}
-                onKeyDown={(e) => {
-                  handleTabKeyDown(e, idx);
-                  if (includeFeatured) {
-                    if (e.key === "ArrowLeft" && idx === 0) setActiveTab("all");
-                  }
-                }}
+                onClick={onSelect}
+                onKeyDown={(e) => handleTabKeyDown(e, idx)}
                 className={[
                   "rounded-lg px-4 py-2 text-sm font-medium transition-colors soft-ring",
                   "inline-flex items-center gap-2",
