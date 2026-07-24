@@ -11,6 +11,7 @@ import { tBadge, tTag } from "@/i18n/projectTaxonomy";
 import { usePathname } from "next/navigation";
 import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
+import ProjectClientLogo from "./ProjectClientLogo";
 import { useTrack } from "@/app/[locale]/providers";
 import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 
@@ -134,6 +135,11 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   {tBadge(p.badge.label, locale)}
                 </span>
               ) : null}
+            </div>
+
+            {/* Logo client — silencieux si absent, lazy (jusqu'à 6 cartes avec le projet-pont) */}
+            <div className="mt-1">
+              <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
             </div>
 
             {p.is_bridge ? (
