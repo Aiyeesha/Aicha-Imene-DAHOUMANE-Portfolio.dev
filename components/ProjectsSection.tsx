@@ -91,7 +91,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     itops:      projects.filter((p) => p.track === "itops"       && (includeFeatured || !p.featured)).length
   }), [projects, includeFeatured]);
 
-  type ActiveTab = "all" | "salesforce" | "itops" | "bridge";
+  type ActiveTab = "all" | "salesforce" | "itops" | "bridge" | "security";
 
   // Onglet "Cross-domain" — projets is_bridge=true, indépendamment du track.
   // Sans lui, la seule façon de trouver ces projets était de connaître
@@ -104,9 +104,19 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     [projects, includeFeatured]
   );
 
+  // Onglet "Sécurité" — projets is_security=true, indépendamment du track
+  // (même patron que "bridge" ci-dessus). Volontairement transversal plutôt
+  // que rattaché au seul track IT Ops : Légarant-AXG (côté Salesforce) porte
+  // aussi le flag, pour que ce filtre reste une preuve de croisement plutôt
+  // qu'un 3e bucket isolé du narratif hybride.
+  const securityCount = useMemo(
+    () => projects.filter((p) => p.is_security && (includeFeatured || !p.featured)).length,
+    [projects, includeFeatured]
+  );
+
   // Ordre des onglets visibles — utilisé pour la navigation clavier (flèches/Home/End).
   const visibleTabs = useMemo<ActiveTab[]>(
-    () => (includeFeatured ? ["all", "salesforce", "itops", "bridge"] : ["salesforce", "itops"]),
+    () => (includeFeatured ? ["all", "salesforce", "itops", "bridge", "security"] : ["salesforce", "itops"]),
     [includeFeatured]
   );
 
@@ -122,6 +132,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         if (!(includeFeatured || !p.featured)) return false;
         if (activeTab === "all") return true;
         if (activeTab === "bridge") return !!p.is_bridge;
+        if (activeTab === "security") return !!p.is_security;
         return p.track === activeTab;
       })
       .forEach((p) => (p.categories ?? []).forEach((c) => set.add(c)));
@@ -153,6 +164,13 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     setQ("");
   };
 
+  // Sélectionner l'onglet "Sécurité" — même logique que "Cross-domain".
+  const handleSecurityTabSelect = () => {
+    setActiveTab("security");
+    setActive("All");
+    setQ("");
+  };
+
   // Navigation clavier dans le tablist (APG pattern) — flèches, Home, End,
   // sur la liste ordonnée des onglets réellement affichés.
   const handleTabKeyDown = (e: React.KeyboardEvent, idx: number) => {
@@ -166,6 +184,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     const nextTab = visibleTabs[target];
     if (nextTab === "salesforce" || nextTab === "itops") handleTrackChange(nextTab);
     else if (nextTab === "bridge") handleBridgeTabSelect();
+    else if (nextTab === "security") handleSecurityTabSelect();
     else { setActiveTab("all"); setActive("All"); setQ(""); }
     tabRefs.current[target]?.focus();
   };
@@ -177,7 +196,9 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         ? projects.filter((p) => includeFeatured || !p.featured)
         : activeTab === "bridge"
           ? projects.filter((p) => p.is_bridge && (includeFeatured || !p.featured))
-          : projects.filter((p) => p.track === activeTab && (includeFeatured || !p.featured))
+          : activeTab === "security"
+            ? projects.filter((p) => p.is_security && (includeFeatured || !p.featured))
+            : projects.filter((p) => p.track === activeTab && (includeFeatured || !p.featured))
       : projects.filter((p) => p.track === track && (includeFeatured || !p.featured));
     return base.filter((p) => {
       const inCat = active === "All" ? true : (p.categories ?? []).includes(active);
@@ -203,15 +224,18 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
             const count =
               tab === "all" ? allCount
               : tab === "bridge" ? bridgeCount
+              : tab === "security" ? securityCount
               : trackCounts[tab];
             const label =
               tab === "all" ? (locale === "fr" ? "Tous" : locale === "es" ? "Todos" : "All")
               : tab === "bridge" ? (locale === "fr" ? "Croisés" : locale === "es" ? "Cruzados" : "Cross-domain")
+              : tab === "security" ? (locale === "fr" ? "Sécurité" : locale === "es" ? "Seguridad" : "Security")
               : tab === "salesforce" ? "Salesforce"
               : "IT Ops";
             const onSelect = () => {
               if (tab === "salesforce" || tab === "itops") handleTrackChange(tab);
               else if (tab === "bridge") handleBridgeTabSelect();
+              else if (tab === "security") handleSecurityTabSelect();
               else { setActiveTab("all"); setActive("All"); setQ(""); }
             };
             return (
@@ -339,6 +363,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
 
               {p.is_bridge ? (
                 <span className="badge badge-bridge mt-2 inline-flex">{t("bridgeBadge")}</span>
+              ) : null}
+
+              {p.is_security ? (
+                <span className="badge badge-security mt-2 inline-flex">{t("securityBadge")}</span>
               ) : null}
 
               {/* Résumé */}

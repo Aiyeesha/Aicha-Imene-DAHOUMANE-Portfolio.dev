@@ -74,7 +74,8 @@
     "emptyStateSubtitle": "Content is being prepared — please check back soon.",
     "noMatch": "No projects match your search or filters.",
     "resetFilters": "Reset filters",
-    "bridgeBadge": "Salesforce ⇄ Infra bridge"
+    "bridgeBadge": "Salesforce ⇄ Infra bridge",
+    "securityBadge": "Cybersecurity"
   },
   "sections": {
     "testimonials_title": "Testimonials",
