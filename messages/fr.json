@@ -74,7 +74,8 @@
     "emptyStateSubtitle": "Le contenu est en cours de préparation — revenez bientôt.",
     "noMatch": "Aucun projet ne correspond à votre recherche ou vos filtres.",
     "resetFilters": "Réinitialiser les filtres",
-    "bridgeBadge": "Pont Salesforce ⇄ Infra"
+    "bridgeBadge": "Pont Salesforce ⇄ Infra",
+    "securityBadge": "Cybersécurité"
   },
   "sections": {
     "testimonials_title": "Témoignages",
