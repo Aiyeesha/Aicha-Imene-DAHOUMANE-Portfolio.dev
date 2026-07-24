@@ -45,6 +45,11 @@ export async function getPublishedProjectsWithAssets(locale: string) {
 
 // Requête légère pour la navbar — uniquement slug/title/track des projets featured.
 // Appelée dans le layout (serveur) pour passer les données au composant Navbar (client).
+// Pas de .limit() ici : le composant Navbar filtre ensuite par track actif et
+// tronque à 6 par track lui-même. Un limit(6) ici, avant tout filtrage par track,
+// tronquerait la liste globalement (mélange Salesforce/IT Ops) et pourrait ne
+// laisser aucun candidat pour l'un des deux tracks selon le sort_order — ~12
+// projets featured au total (6 par track), le coût de tout récupérer est négligeable.
 export async function getFeaturedProjectsForNav(locale: string) {
   try {
     const supabase = createServerSupabaseClient();
@@ -56,7 +61,6 @@ export async function getFeaturedProjectsForNav(locale: string) {
         .eq("status", "published")
         .eq("featured", true)
         .order("sort_order", { ascending: true })
-        .limit(6)
     );
     if (error) {
       console.error("[projects/nav] Supabase error:", (error as any)?.message ?? error);
