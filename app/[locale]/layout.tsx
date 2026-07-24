@@ -173,7 +173,7 @@ export default async function LocaleLayout({
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/colophon`}
                     >
-                      Colophon
+                      {t("footer.colophon")}
                     </Link>
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
