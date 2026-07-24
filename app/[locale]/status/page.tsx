@@ -34,6 +34,7 @@ const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
   "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam",    es: "Envío de mensajes, limitación de tasa, anti-spam" },
   "Database (Supabase)":  { en: "Projects, certifications, about — PostgreSQL",  fr: "Projets, certifications, à propos — PostgreSQL",       es: "Proyectos, certificaciones, sobre mí — PostgreSQL" },
+  "Content integrity":    { en: "Featured projects have complete case-study content", fr: "Les projets mis en avant ont un contenu complet", es: "Los proyectos destacados tienen contenido completo" },
   "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit",             es: "Cache de respuestas y limitación de tasa" },
   "Blog & MDX":           { en: "Salesforce & IT Ops articles — static build",   fr: "Articles Salesforce & IT Ops — build statique",        es: "Artículos de Salesforce & IT Ops — build estático" },
   "PWA / Service Worker": { en: "Offline mode and static asset caching",         fr: "Mode hors-ligne et cache des fichiers statiques",       es: "Modo sin conexión y cache de archivos estáticos" },
