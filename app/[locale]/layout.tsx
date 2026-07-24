@@ -4,7 +4,7 @@ import Link from "next/link";
 import Providers from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import Navbar from "@/components/Navbar";
 import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -116,13 +116,22 @@ export default async function LocaleLayout({
   // Résout aussi le warning React 19 "Encountered a script tag while rendering".
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
+  // Lu côté serveur pour éviter le flash "Salesforce" au premier paint SSR chez
+  // un visiteur déjà passé sur IT Ops (cookie posé par providers.tsx setTrack()).
+  // Sans danger pour le cache : le nonce CSP ci-dessus force déjà Cache-Control:
+  // no-store / rendu dynamique sur toute cette route (voir commentaire au-dessus
+  // et app/[locale]/status/page.tsx) — lire ce cookie ne dégrade donc rien qui
+  // ne soit pas déjà non mis en cache.
+  const trackCookie = (await cookies()).get("track")?.value;
+  const initialTrack = trackCookie === "itops" ? "itops" : "salesforce";
+
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      {/* initialTrack defaults to "salesforce"; Providers restores the saved
-          preference from localStorage on mount (see providers.tsx useEffect).
-          Note : le cache CDN reste inopérant car le nonce CSP de proxy.ts force
-          Cache-Control: no-store sur toutes les routes HTML (rendu dynamique). */}
-      <Providers initialTrack="salesforce" nonce={nonce}>
+      {/* initialTrack vient du cookie côté serveur (fallback "salesforce" si absent).
+          Providers resynchronise depuis localStorage au montage (providers.tsx
+          useEffect) uniquement comme filet pour le tout premier visiteur avant
+          que le cookie n'existe. */}
+      <Providers initialTrack={initialTrack} nonce={nonce}>
         <CursorSpotlight />
         <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070B1A] dark:text-white">
           <div className="page-gradient" />
