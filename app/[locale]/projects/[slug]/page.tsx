@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import Image from "next/image";
 import SafeImage from "@/components/SafeImage";
+import ProjectClientLogo from "@/components/ProjectClientLogo";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -472,9 +473,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               )}
             </div>
           )}
-          <h1 className="text-3xl md:text-4xl font-bold text-strong leading-tight tracking-tight">
-            {project.title}
-          </h1>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-strong leading-tight tracking-tight">
+              {project.title}
+            </h1>
+            {/* Logo du client — silencieux si absent (la plupart des projets n'en ont pas) */}
+            <ProjectClientLogo slug={project.slug} alt={project.title} />
+          </div>
           {heroSubtitle && (
             <p className="mt-4 text-base md:text-lg text-muted leading-relaxed max-w-3xl">
               {heroSubtitle}
