@@ -84,9 +84,12 @@ export async function POST(request: NextRequest) {
       revalidatePath(`/${loc}`);
       revalidated.push(`/${loc}`);
 
+      // Page d'index /projects (grille complète, ISR 300s — voir
+      // app/[locale]/projects/page.tsx) — distincte de la homepage.
+      revalidatePath(`/${loc}/projects`);
+      revalidated.push(`/${loc}/projects`);
+
       // Page projet individuelle si slug fourni
-      // Note : il n'existe pas de route /[locale]/projects (index) — les projets
-      // sont affichés via l'ancre #projects sur la homepage.
       if (slug) {
         revalidatePath(`/${loc}/projects/${slug}`);
         revalidated.push(`/${loc}/projects/${slug}`);
