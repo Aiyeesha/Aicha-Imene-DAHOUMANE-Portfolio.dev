@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T01:02:52.834Z
+// Last export: 2026-07-25T01:16:18.194Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -9671,39 +9671,53 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Creation of a Lightning application for Avenir Télécom: backlog, testing and CRM interface migration.",
         "sections": [
           {
-            "body": "Avenir Télécom, a Southern France telecom operator, wanted to equip its field teams with a dedicated Salesforce Lightning application for managing customer interventions. The mission ran in two phases: agile delivery of the app in Scrum mode (backlog, sprints, test plan), then managing post-pilot evolutions in Kanban after 3 months in the field. The mission covered both product coordination and technical delivery.",
+            "body": "Following an internal audit, Avenir Télécom's South-zone sales teams needed a Salesforce Lightning app better aligned with their daily workflow (leads, accounts, opportunities, quotes). The mission covered defining the implementation strategy for a small 3-person Salesforce dev team — Romain (senior, Apex & API integrations), Guillaume (mid-level, workflows & automation) and Hélène (junior, UI/UX, testing & documentation) — then, after a 3-month field pilot, consolidating feedback into an evolutions backlog.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Product backlog written in Scrum: user stories with acceptance criteria for each feature",
-              "Story estimation in points with the dev team (planning poker)",
-              "Unit and integration test plan covering nominal and error cases",
-              "Salesforce Lightning application delivered for the South zone: intervention management and customer tracking",
-              "Functional acceptance testing with field users before pilot deployment"
+              "US1 — Lead management: automatic creation via web form, rule-based assignment (sector, potential) with immediate notification, conversion to account/contact/opportunity without data loss (4 days, Romain)",
+              "US2/US11 — Accounts: real-time SIREN verification via Webservice on creation, blocked with an explicit error message on inconsistency (4+2 days, Romain)",
+              "US4/US9 — Opportunities: real-time integration with the DeviQo API to display associated quotes in a dedicated block, auto-refresh, displayed in under 2 seconds, no local storage (4+2 days, Guillaume)",
+              "US14/US15 — Summary PDF generation (merging Opportunity/Account/Contact) with automatic email to the primary contact, send archived in Salesforce (2+2 days, Hélène)",
+              "US13 — GDPR compliance: scheduled job deleting accounts/contacts inactive for over 3 years, with audit logging (3 days, Guillaume)",
+              "US18/US20 — Dev Org hardening: profile and access-rights configuration, Apex tests using \"run as user\" to validate each profile only accesses authorized data (2+1 days, Romain/Guillaume)",
+              "US19 — Datafactory to automate import and continuous synchronization of data from external sources (2 days, Guillaume)"
             ],
-            "title": "Phase Scrum — Initial Delivery"
+            "title": "Product Backlog (Scrum)"
           },
           {
             "type": "bullets",
             "items": [
-              "Field user feedback collected after 3 months of pilot",
-              "Kanban evolution backlog: prioritized by business value and complexity estimate",
-              "Kanban board: To Do / In Progress / In Testing / Done columns",
-              "Acceptance criteria defined for each evolution before development starts"
+              "20 test classes covering unit and integration scenarios (TestLeadsCRUD, TestComptesImport, TestOpportunites, TestRunAsUser, TestSuppressionRGPD...), minimum required coverage: ≥75%",
+              "Systematic bulkification: no SOQL query or DML statement inside a loop, collections used throughout (List/Set/Map)",
+              "One trigger per object, business logic delegated to handler classes — \"One Trigger Framework\" + Service Layer pattern",
+              "Configuration externalized via Custom Settings / Custom Metadata instead of hardcoding",
+              "Async processing matched to the use case: Batch Apex (large volumes), Queueable Apex (sequencing), Future Methods (external calls), Scheduled Apex (periodic jobs)",
+              "Security: systematic with sharing, CRUD/FLS checks in data-access methods"
             ],
-            "title": "Phase Kanban — Post-Pilot Evolutions"
+            "title": "Test Plan & Apex Best Practices"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce Lightning — Field business application",
-              "Scrum — Product backlog and sprint management",
-              "Kanban — Post-pilot evolution management",
-              "User Stories — Functional specifications with acceptance criteria",
-              "Test Plan — Unit and integration testing"
+              "3 evolutions identified: E1 two-way interface with the CaseIn request-management tool, E2 automatic daily backup to a dedicated SFTP server, E3 Dev Org configuration hardening (profiles, access rights, run as user)",
+              "3 fixes: C1 account sync with the external system via SIREN Webservice, C2 standardized opportunity naming format, C3 immediate notification to the rep on lead assignment",
+              "3 production bugs tracked and prioritized: broken lead → opportunity conversion (B001, high priority), incorrect imported account data (B002), lead-assignment notifications not sending (B003, fixed)",
+              "Kanban tracking with To Do / In Progress / In Testing / Done columns and WIP limits, documentation centralized in Notion with dynamic links between the product backlog, test plan and evolutions backlog"
+            ],
+            "title": "Post-Pilot Kanban Backlog"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce Lightning — field business application (App Builder, configuration)",
+              "Apex — triggers, handlers, service classes, Batch/Queueable/Future/Scheduled Apex",
+              "API integrations — SIREN Webservice, DeviQo API (real-time quotes), Datafactory",
+              "Scrum (Trello) — product backlog and sprints; Kanban (Notion) — evolutions management",
+              "Test plan — 20 test classes, ≥75% coverage"
             ],
             "title": "Stack & Technologies"
           },
@@ -9711,28 +9725,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Sprint 0 — Framing",
-                "description": "Requirements gathering, Scrum backlog written with user stories and acceptance criteria"
+                "label": "Framing & team",
+                "description": "Defined objectives, business stakes and the technical team (senior/mid-level/junior) with role split"
               },
               {
-                "label": "Sprints 1-N — Dev",
-                "description": "Iterative implementation of the Salesforce Lightning app, sprint demos at each iteration"
+                "label": "Product backlog",
+                "description": "Wrote 20 prioritized, costed user stories with acceptance criteria and prerequisites for each"
               },
               {
-                "label": "Test Plan",
-                "description": "Unit and integration test plan written — nominal, boundary and error cases covered"
+                "label": "Test plan",
+                "description": "Defined 20 test classes, documented an Apex best-practices reference (bulkification, triggers, async, security)"
               },
               {
-                "label": "3-Month Pilot",
-                "description": "App deployed to Southern zone field teams, real-world feedback collected"
+                "label": "Development sprints",
+                "description": "Iterative implementation in 2-week sprints, tracked via Trello (Backlog → In Sprint → Pending Validation → Done)"
               },
               {
-                "label": "Feedback Analysis",
-                "description": "Synthesis of user feedback: bugs reported, improvements requested, new feature ideas"
+                "label": "3-month pilot",
+                "description": "Deployed to South-zone field teams, production bugs reported (B001-B003)"
               },
               {
-                "label": "Kanban Backlog",
-                "description": "Evolution backlog built, prioritized by business value, Kanban flow started"
+                "label": "Audit & Kanban backlog",
+                "description": "Post-audit evolution and fix requests consolidated into a prioritized Kanban backlog (E1-E3, C1-C3)"
               }
             ],
             "title": "Project Timeline"
@@ -9746,22 +9760,52 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "4/4"
               },
               {
-                "note": "Pivot after field pilot",
-                "label": "Methodologies",
-                "value": "Scrum + Kanban"
+                "note": "Costed and prioritized",
+                "label": "User stories",
+                "value": "20"
+              },
+              {
+                "note": "≥75% coverage required",
+                "label": "Test classes",
+                "value": "20"
               },
               {
                 "note": "South zone — real field feedback",
                 "label": "Pilot duration",
                 "value": "3 months"
-              },
-              {
-                "note": "Complete and documented delivery",
-                "label": "Jury assessment",
-                "value": "Validated"
               }
             ],
             "title": "Results"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
+                "label": "Implementation strategy & product backlog (PDF)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
+                "label": "Requirements specification (PDF)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx",
+                "label": "Initial backlog (XLSX)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/test-workbook.xlsx",
+                "label": "Test workbook (XLSX)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf",
+                "label": "Kanban evolutions backlog (PDF)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/audit-report.pdf",
+                "label": "Audit report (PDF)"
+              }
+            ],
+            "title": "Deliverables"
           }
         ]
       },
@@ -9770,39 +9814,53 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Création d'une application Lightning pour Avenir Télécom : backlog, tests et migration de l'interface CRM.",
         "sections": [
           {
-            "body": "Avenir Télécom, opérateur télécom de la zone Sud, voulait doter ses équipes terrain d'une application Salesforce Lightning dédiée à la gestion des interventions clients. Mission menée en deux temps : livraison agile de l'application en mode Scrum (backlog, sprints, plan de tests), puis gestion des évolutions post-pilote en Kanban après 3 mois de terrain. La mission couvrait aussi bien la coordination produit que la livraison technique.",
+            "body": "À la suite d'un audit interne, les équipes commerciales de la zone Sud d'Avenir Télécom avaient besoin d'une application Salesforce Lightning mieux alignée sur leurs usages quotidiens (gestion des leads, comptes, opportunités, devis). La mission couvrait la définition de la stratégie d'implémentation pour une petite équipe de 3 développeurs Salesforce — Romain (senior, Apex & intégrations API), Guillaume (confirmé, workflows & automatisations) et Hélène (junior, UI/UX, tests & documentation) — puis, après 3 mois de pilote terrain, la consolidation des retours en un backlog d'évolutions.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Rédaction du backlog produit Scrum : user stories avec critères d'acceptation pour chaque fonctionnalité",
-              "Estimation des stories en points avec l'équipe de développement (planning poker)",
-              "Plan de tests unitaires et d'intégration couvrant les cas nominaux et les cas d'erreur",
-              "Application Salesforce Lightning livrée pour la zone Sud : gestion des interventions et suivi client",
-              "Recette fonctionnelle avec les utilisateurs terrain avant déploiement pilote"
+              "US1 — Gestion des leads : création automatique via formulaire web, affectation par règles (secteur, potentiel) avec notification immédiate, conversion en compte/contact/opportunité sans perte de données (4 jours, Romain)",
+              "US2/US11 — Comptes : vérification SIREN en temps réel via Webservice à la création, blocage et message d'erreur explicite en cas d'incohérence (4+2 jours, Romain)",
+              "US4/US9 — Opportunités : intégration temps réel avec l'API DeviQo pour afficher les devis associés dans un bloc dédié, rafraîchissement automatique, affichage en moins de 2 secondes, sans stockage local (4+2 jours, Guillaume)",
+              "US14/US15 — Génération d'un PDF de synthèse (fusion Opportunité/Compte/Contact) et envoi automatique par email au contact principal, archivage de l'envoi dans Salesforce (2+2 jours, Hélène)",
+              "US13 — Conformité RGPD : job planifié supprimant les comptes/contacts inactifs depuis plus de 3 ans, avec journalisation d'audit (3 jours, Guillaume)",
+              "US18/US20 — Sécurisation de la Dev Org : configuration des profils et droits d'accès, tests Apex utilisant « run as user » pour valider que chaque profil n'accède qu'aux données autorisées (2+1 jours, Romain/Guillaume)",
+              "US19 — Datafactory pour automatiser l'import et la synchronisation continue des données depuis des sources externes (2 jours, Guillaume)"
             ],
-            "title": "Phase Scrum — Livraison initiale"
+            "title": "Backlog produit (Scrum)"
           },
           {
             "type": "bullets",
             "items": [
-              "Collecte des retours utilisateurs terrain après 3 mois de pilote",
-              "Backlog Kanban d'évolutions : priorisation par valeur métier et estimation de complexité",
-              "Tableau Kanban : colonnes À faire / En cours / En recette / Terminé",
-              "Critères d'acceptation définis pour chaque évolution avant développement"
+              "20 classes de test couvrant les scénarios unitaires et d'intégration (TestLeadsCRUD, TestComptesImport, TestOpportunites, TestRunAsUser, TestSuppressionRGPD...), couverture minimale exigée : ≥75%",
+              "Bulkification systématique : aucune requête SOQL ni instruction DML dans une boucle, usage de collections (List/Set/Map)",
+              "Un seul trigger par objet, logique métier déléguée à des classes handler — pattern « One Trigger Framework » + Service Layer",
+              "Configuration externalisée via Custom Settings / Custom Metadata plutôt que du hardcoding",
+              "Traitements asynchrones adaptés au cas d'usage : Batch Apex (gros volumes), Queueable Apex (séquencement), Future Methods (appels externes), Scheduled Apex (tâches périodiques)",
+              "Sécurité : with sharing systématique, vérification CRUD/FLS dans les méthodes d'accès aux données"
             ],
-            "title": "Phase Kanban — Évolutions post-pilote"
+            "title": "Cahier de tests & bonnes pratiques Apex"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce Lightning — Application métier terrain",
-              "Scrum — Gestion du backlog produit et des sprints",
-              "Kanban — Gestion des évolutions post-pilote",
-              "User Stories — Spécification fonctionnelle avec critères d'acceptation",
-              "Plan de tests — Tests unitaires et d'intégration"
+              "3 évolutions identifiées : E1 interfaçage bidirectionnel avec l'outil de gestion des requêtes CaseIn, E2 backup quotidien automatique vers un serveur SFTP dédié, E3 durcissement de la configuration Dev Org (profils, droits, run as user)",
+              "3 corrections : C1 synchronisation des comptes avec le système externe via Webservice SIREN, C2 format de nommage standardisé des opportunités, C3 notification immédiate au commercial lors de l'affectation d'un lead",
+              "3 bugs de production tracés et priorisés : conversion lead → opportunité défaillante (B001, haute priorité), données de comptes importés incorrectes (B002), notifications d'affectation de leads non envoyées (B003, corrigé)",
+              "Suivi Kanban avec colonnes À faire / En cours / En recette / Terminé et limites WIP, documentation centralisée sur Notion avec liens dynamiques entre backlog produit, cahier de tests et backlog d'évolutions"
+            ],
+            "title": "Backlog Kanban post-pilote"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce Lightning — application métier terrain (App Builder, configuration)",
+              "Apex — triggers, handlers, classes de service, Batch/Queueable/Future/Scheduled Apex",
+              "Intégrations API — Webservice SIREN, API DeviQo (devis temps réel), Datafactory",
+              "Scrum (Trello) — backlog produit et sprints ; Kanban (Notion) — gestion des évolutions",
+              "Cahier de tests — 20 classes de test, couverture ≥75%"
             ],
             "title": "Stack & Technologies"
           },
@@ -9810,28 +9868,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Sprint 0 — Cadrage",
-                "description": "Recueil des besoins terrain, rédaction du backlog Scrum avec user stories et critères d'acceptation"
+                "label": "Cadrage & équipe",
+                "description": "Définition des objectifs, des enjeux métier et de l'équipe technique (senior/confirmé/junior) avec répartition des rôles"
               },
               {
-                "label": "Sprints 1-N — Dev",
-                "description": "Implémentation de l'application Salesforce Lightning en itérations, démos à chaque sprint"
+                "label": "Backlog produit",
+                "description": "Rédaction de 20 user stories priorisées et chiffrées, critères d'acceptation et prérequis pour chacune"
               },
               {
-                "label": "Plan de tests",
-                "description": "Cahier de tests unitaires et d'intégration — cas nominaux, cas limites et cas d'erreur"
+                "label": "Cahier de tests",
+                "description": "20 classes de test définies, référentiel de bonnes pratiques Apex documenté (bulkification, triggers, asynchrone, sécurité)"
+              },
+              {
+                "label": "Sprints de développement",
+                "description": "Implémentation itérative en sprints de 2 semaines, suivi via Trello (Backlog → Sprint en cours → En attente de validation → Terminé)"
               },
               {
                 "label": "Pilote 3 mois",
-                "description": "Déploiement de l'application auprès des équipes terrain zone Sud, collecte des retours"
+                "description": "Déploiement auprès des équipes terrain zone Sud, remontée de bugs de production (B001-B003)"
               },
               {
-                "label": "Analyse retours",
-                "description": "Synthèse des feedbacks utilisateurs : bugs remontés, améliorations souhaitées, nouvelles fonctionnalités"
-              },
-              {
-                "label": "Backlog Kanban",
-                "description": "Construction du backlog d'évolutions, priorisation par valeur métier et démarrage du flux Kanban"
+                "label": "Audit & backlog Kanban",
+                "description": "Consolidation des demandes d'évolution et de correction post-audit en backlog Kanban priorisé (E1-E3, C1-C3)"
               }
             ],
             "title": "Déroulement du projet"
@@ -9845,105 +9903,176 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "4/4"
               },
               {
-                "note": "Pivot après pilote terrain",
-                "label": "Méthodologies",
-                "value": "Scrum + Kanban"
+                "note": "Chiffrées et priorisées",
+                "label": "User stories",
+                "value": "20"
+              },
+              {
+                "note": "Couverture ≥75% exigée",
+                "label": "Classes de test",
+                "value": "20"
               },
               {
                 "note": "Zone Sud — retours terrain réels",
                 "label": "Durée pilote",
                 "value": "3 mois"
-              },
-              {
-                "note": "Livraison complète et documentée",
-                "label": "Évaluation jury",
-                "value": "Validé"
               }
             ],
             "title": "Résultats"
-          }
-        ]
-      },
-      "es": {
-        "title": "Lightning app delivery & backlog (Avenir Télécom)",
-        "heroSubtitle": "Entrega de una aplicación Lightning, estrategia de pruebas y mejoras continuas (Avenir Télécom)",
-        "sections": [
-          {
-            "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "Tras una auditoría interna, los equipos de venta al consumidor de la zona Sur de Avenir Télécom necesitaban una nueva aplicación Lightning, mejor alineada con sus usos diarios.",
-              "Definí la estrategia de implementación y coordiné la organización de la entrega con un pequeño equipo (3 desarrolladores Salesforce: senior / confirmado / júnior) en dos fases: plan y calidad, y luego backlog de evoluciones tras 3 meses de piloto."
-            ]
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Definir una estrategia de implementación a partir del pliego de requisitos.",
-              "Construir un Product Backlog (buenas prácticas Scrum): valor de negocio, prioridad y estimación.",
-              "Producir un cuaderno de pruebas unitarias y de integración: funcionalidades a probar, clases de test asociadas y buenas prácticas/requisitos.",
-              "Tras 3 meses de uso, consolidar las solicitudes y crear un backlog Kanban (evoluciones / correcciones) con estados y límites WIP."
-            ],
-            "title": "Necesidades de negocio"
-          },
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "title": "Fase 1 — Plan y estrategia de calidad",
-                "description": "Backlog Scrum, estrategia de entrega y cuaderno de pruebas (unitarias + integración) para garantizar una puesta en producción controlada y verificable."
-              },
-              {
-                "title": "Fase 2 — Mejoras continuas",
-                "description": "Tras 3 meses de uso por parte de los comerciales, consolidación de las solicitudes y producción de un backlog Kanban priorizado (estados distintos + límites WIP)."
-              }
-            ],
-            "title": "Enfoque de implementación"
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Valor de negocio + orden + esfuerzo",
-                "label": "Calidad del backlog",
-                "value": "Detallado, priorizado y estimado"
-              },
-              {
-                "note": "Mapeo funcionalidades → clases",
-                "label": "Preparación para pruebas",
-                "value": "Cuaderno de pruebas completo"
-              },
-              {
-                "note": "Flujo de trabajo claro",
-                "label": "Mejora continua",
-                "value": "Kanban + límites WIP"
-              }
-            ],
-            "title": "Lo que demuestra este proyecto"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Salesforce Lightning (App Builder y configuración).",
-              "Ágil: Scrum (Product Backlog), luego Kanban para las evoluciones.",
-              "Calidad: cuaderno de pruebas unitarias/integración + buenas prácticas."
-            ],
-            "title": "Stack y método"
           },
           {
             "type": "resources",
             "items": [
               {
-                "href": "/docs/projects/avenir-telecom-lightning-app/brief.docx",
-                "label": "Brief (DOCX)"
+                "href": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
+                "label": "Stratégie d'implémentation & backlog produit (PDF)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
+                "label": "Cahier des charges (PDF)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx",
+                "label": "Backlog initial (XLSX)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/test-workbook.xlsx",
+                "label": "Cahier de tests (XLSX)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf",
+                "label": "Backlog d'évolutions Kanban (PDF)"
+              },
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/audit-report.pdf",
+                "label": "Rapport d'audit (PDF)"
+              }
+            ],
+            "title": "Livrables"
+          }
+        ]
+      },
+      "es": {
+        "title": "Entrega de app Lightning y backlog (Avenir Télécom)",
+        "heroSubtitle": "Entrega de una aplicación Lightning, estrategia de pruebas y mejoras continuas (Avenir Télécom)",
+        "sections": [
+          {
+            "body": "Tras una auditoría interna, los equipos comerciales de la zona Sur de Avenir Télécom necesitaban una aplicación Salesforce Lightning mejor alineada con su uso diario (leads, cuentas, oportunidades, presupuestos). El encargo cubría la definición de la estrategia de implementación para un pequeño equipo de 3 desarrolladores Salesforce — Romain (senior, Apex e integraciones API), Guillaume (intermedio, workflows y automatizaciones) y Hélène (júnior, UI/UX, pruebas y documentación) — y, tras 3 meses de piloto en campo, la consolidación de los comentarios en un backlog de evoluciones.",
+            "type": "text",
+            "title": "Contexto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "US1 — Gestión de leads: creación automática desde formulario web, asignación por reglas (sector, potencial) con notificación inmediata, conversión a cuenta/contacto/oportunidad sin pérdida de datos (4 días, Romain)",
+              "US2/US11 — Cuentas: verificación del SIREN en tiempo real vía Webservice al crear la cuenta, bloqueo con mensaje de error explícito en caso de inconsistencia (4+2 días, Romain)",
+              "US4/US9 — Oportunidades: integración en tiempo real con la API de DeviQo para mostrar los presupuestos asociados en un bloque dedicado, actualización automática, visualización en menos de 2 segundos, sin almacenamiento local (4+2 días, Guillaume)",
+              "US14/US15 — Generación de un PDF de síntesis (combinando Oportunidad/Cuenta/Contacto) con envío automático por email al contacto principal, envío archivado en Salesforce (2+2 días, Hélène)",
+              "US13 — Cumplimiento RGPD: job planificado que elimina cuentas/contactos inactivos desde hace más de 3 años, con registro de auditoría (3 días, Guillaume)",
+              "US18/US20 — Refuerzo de seguridad de la Dev Org: configuración de perfiles y derechos de acceso, pruebas Apex con «run as user» para validar que cada perfil solo accede a los datos autorizados (2+1 días, Romain/Guillaume)",
+              "US19 — Datafactory para automatizar la importación y sincronización continua de datos desde fuentes externas (2 días, Guillaume)"
+            ],
+            "title": "Backlog de producto (Scrum)"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "20 clases de test que cubren escenarios unitarios y de integración (TestLeadsCRUD, TestComptesImport, TestOpportunites, TestRunAsUser, TestSuppressionRGPD...), cobertura mínima exigida: ≥75%",
+              "Bulkificación sistemática: ninguna consulta SOQL ni instrucción DML dentro de un bucle, uso de colecciones (List/Set/Map)",
+              "Un único trigger por objeto, lógica de negocio delegada a clases handler — patrón «One Trigger Framework» + Service Layer",
+              "Configuración externalizada mediante Custom Settings / Custom Metadata en lugar de hardcoding",
+              "Procesamiento asíncrono adaptado a cada caso: Batch Apex (grandes volúmenes), Queueable Apex (encadenado), Future Methods (llamadas externas), Scheduled Apex (tareas periódicas)",
+              "Seguridad: with sharing sistemático, verificación CRUD/FLS en los métodos de acceso a datos"
+            ],
+            "title": "Cuaderno de pruebas y buenas prácticas Apex"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "3 evoluciones identificadas: E1 interfaz bidireccional con la herramienta de gestión de solicitudes CaseIn, E2 backup diario automático a un servidor SFTP dedicado, E3 refuerzo de la configuración de la Dev Org (perfiles, derechos, run as user)",
+              "3 correcciones: C1 sincronización de cuentas con el sistema externo vía Webservice de SIREN, C2 formato de nomenclatura estandarizado para las oportunidades, C3 notificación inmediata al comercial al asignar un lead",
+              "3 bugs de producción registrados y priorizados: conversión lead → oportunidad fallida (B001, prioridad alta), datos de cuentas importadas incorrectos (B002), notificaciones de asignación de leads no enviadas (B003, corregido)",
+              "Seguimiento Kanban con columnas Por hacer / En curso / En validación / Terminado y límites WIP, documentación centralizada en Notion con enlaces dinámicos entre el backlog de producto, el cuaderno de pruebas y el backlog de evoluciones"
+            ],
+            "title": "Backlog Kanban post-piloto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce Lightning — aplicación de negocio de campo (App Builder, configuración)",
+              "Apex — triggers, handlers, clases de servicio, Batch/Queueable/Future/Scheduled Apex",
+              "Integraciones API — Webservice de SIREN, API DeviQo (presupuestos en tiempo real), Datafactory",
+              "Scrum (Trello) — backlog de producto y sprints; Kanban (Notion) — gestión de evoluciones",
+              "Cuaderno de pruebas — 20 clases de test, cobertura ≥75%"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Enfoque y equipo",
+                "description": "Definición de objetivos, retos de negocio y equipo técnico (senior/intermedio/júnior) con reparto de roles"
+              },
+              {
+                "label": "Backlog de producto",
+                "description": "Redacción de 20 user stories priorizadas y estimadas, con criterios de aceptación y prerrequisitos para cada una"
+              },
+              {
+                "label": "Cuaderno de pruebas",
+                "description": "Definición de 20 clases de test, catálogo de buenas prácticas Apex documentado (bulkificación, triggers, asíncrono, seguridad)"
+              },
+              {
+                "label": "Sprints de desarrollo",
+                "description": "Implementación iterativa en sprints de 2 semanas, seguimiento vía Trello (Backlog → Sprint en curso → Pendiente de validación → Terminado)"
+              },
+              {
+                "label": "Piloto de 3 meses",
+                "description": "Despliegue en los equipos de campo de la zona Sur, bugs de producción reportados (B001-B003)"
+              },
+              {
+                "label": "Auditoría y backlog Kanban",
+                "description": "Consolidación de las solicitudes de evolución y corrección post-auditoría en un backlog Kanban priorizado (E1-E3, C1-C3)"
+              }
+            ],
+            "title": "Desarrollo del proyecto"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Tribunal OpenClassrooms",
+                "label": "Competencias validadas",
+                "value": "4/4"
+              },
+              {
+                "note": "Estimadas y priorizadas",
+                "label": "User stories",
+                "value": "20"
+              },
+              {
+                "note": "Cobertura ≥75% exigida",
+                "label": "Clases de test",
+                "value": "20"
+              },
+              {
+                "note": "Zona Sur — feedback real de campo",
+                "label": "Duración del piloto",
+                "value": "3 meses"
+              }
+            ],
+            "title": "Resultados"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
+                "label": "Estrategia de implementación y backlog de producto (PDF)"
               },
               {
                 "href": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
                 "label": "Pliego de requisitos (PDF)"
-              },
-              {
-                "href": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
-                "label": "Estrategia de implementación (PDF)"
               },
               {
                 "href": "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx",
@@ -9954,33 +10083,15 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Cuaderno de pruebas (XLSX)"
               },
               {
+                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf",
+                "label": "Backlog de evoluciones Kanban (PDF)"
+              },
+              {
                 "href": "/docs/projects/avenir-telecom-lightning-app/audit-report.pdf",
                 "label": "Informe de auditoría (PDF)"
-              },
-              {
-                "href": "/docs/projects/avenir-telecom-lightning-app/requests-evolutions-corrections.pdf",
-                "label": "Solicitudes de evoluciones/correcciones (PDF)"
-              },
-              {
-                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf",
-                "label": "Backlog de evoluciones (export Kanban, PDF)"
-              },
-              {
-                "href": "/docs/projects/avenir-telecom-lightning-app/backlog-evolutions.xlsx",
-                "label": "Backlog de evoluciones (XLSX)"
               }
             ],
-            "title": "Entregables y evidencias"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Cuaderno de pruebas completo.",
-              "Backlog único, detallado, priorizado y estimado.",
-              "Flujo de trabajo claro (estados distintos) y límites WIP respetados.",
-              "Solicitudes clasificadas por prioridad, herramienta adecuada utilizada."
-            ],
-            "title": "Feedback del jurado (síntesis)"
+            "title": "Entregables"
           }
         ]
       }
@@ -10016,40 +10127,55 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Audit and update of the Digit Learning Salesforce application to meet sales team requirements.",
         "sections": [
           {
-            "body": "Digit Learning, an online professional training school, had been using Salesforce for 2 years with custom objects (Student, Mentor, Training). Project manager Jeanne Pierron requested a comprehensive audit followed by a full modernization: a new data model supporting multiple simultaneous enrollments, automation of manual processes via Flows, and reporting dashboards for sales teams and management.",
+            "body": "Digit Learning, an online professional training school, had been using Salesforce for about 2 years with dedicated business objects (Student, Mentor, Training). Project manager Jeanne Pierron requested an internal quality audit followed by a modernization plan. The audit's central finding: the data model only allowed a student to be linked to a single training at a time — a blocking limitation for both sales and pedagogical tracking, flagged by both sales reps and management.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Rigid data model: impossible to enroll a student in multiple trainings simultaneously",
-              "Repetitive manual tasks: enrollment creation, payment tracking, follow-ups — no automation",
-              "No reporting: sales reps and directors had no visibility on key indicators",
-              "Unimported data: students, mentors and trainings managed outside Salesforce in Excel files"
+              "Rigid data model: a student can only be linked to a single training — the audit's central finding",
+              "Time-consuming manual processes: enrollment and mentor assignment took over 30 minutes per student, with no automation",
+              "No structured tracking of former clients to assess satisfaction and encourage loyalty",
+              "Insufficient reports and metrics: sales reps and management had no reliable visibility for decision-making"
             ],
-            "title": "Problems Identified at Audit"
+            "title": "Audit Findings"
           },
           {
             "type": "bullets",
             "items": [
-              "Data model refactored: intermediate Enrollment object enabling multiple enrollments per student",
-              "Salesforce Flows automating enrollment creation, payment status calculation and follow-up reminders",
-              "Sales reports: active students per training, conversion rate, revenue by period",
-              "Management dashboard: real-time KPIs (enrollments, revenue, satisfaction rate)",
-              "Data import via Data Loader: students, mentors and trainings migrated from Excel files",
-              "Quantitative productivity gain analysis: estimated time saved per user per week"
+              "New Purchased Training junction object (master-detail to Student and Training): start/end dates, type and price — lifts the \"one training per student\" limitation and enables multiple enrollments",
+              "Existing objects enriched: Student (training history, active-client/former-client status), Mentor (availability), Training (available seats, maximum headcount)",
+              "Automated enrollment and mentor assignment, recommended by the audit and implemented to reduce sales reps' manual workload",
+              "Structured former-client tracking and a periodic review process for training relevance set up"
             ],
-            "title": "Improvements Deployed"
+            "title": "Data Model & Automation"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce Flows — No-code process automation",
-              "Data Loader — Import and migration of existing data",
-              "Salesforce Reports & Dashboards — Sales and management monitoring",
-              "Custom Objects & Fields — New data schema modeling",
-              "Profiles & Permissions — Role-based access control"
+              "Training availability report — real-time visibility on remaining capacity",
+              "Students grouped by status and mentor report — portfolio tracking for sales reps",
+              "Prospect → active client conversion rate comparison report — commercial performance tracking for management"
+            ],
+            "title": "Reports Delivered"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Mentor assignment + training enrollment: from over 30 min to 5 min per student — automation frees up time for higher-value work",
+              "Former-client tracking: from over 15 min to 10 min — actionable data to improve training quality and win back alumni",
+              "Training catalog management and review: from over 30 min to 15 min — program relevance maintained over time"
+            ],
+            "title": "Measured Impact"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce — custom objects, master-detail relationships, roll-up summaries",
+              "Workbench — app deployment via zip package (Migration > Deploy)",
+              "Data Loader — import and migration of existing data (students, mentors, trainings)",
+              "Reports & Dashboards — sales and management tracking"
             ],
             "title": "Stack & Technologies"
           },
@@ -10057,28 +10183,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Audit",
-                "description": "Analysis of existing objects, manual processes and off-CRM data — prioritized improvement list produced"
+                "label": "Internal quality audit",
+                "description": "Interviews with key users, central finding: a student can only be linked to a single training"
+              },
+              {
+                "label": "Recommendations",
+                "description": "Action plan: data model overhaul, automation, former-client tracking, new reports"
               },
               {
                 "label": "Data model",
-                "description": "Intermediate Enrollment object created and relationships refactored to support multiple enrollments per student"
+                "description": "Built the Purchased Training junction object, master-detail to Student and Training"
               },
               {
-                "label": "Automation",
-                "description": "Salesforce Flows developed: automatic enrollment creation, status calculation and follow-up reminders"
+                "label": "Automation & reporting",
+                "description": "Automated enrollment/mentor assignment, built the 3 management reports"
               },
               {
-                "label": "Reporting",
-                "description": "Sales reports and management dashboard built with KPIs defined together with Jeanne"
+                "label": "Deployment & import",
+                "description": "Deployed via Workbench, migrated existing data via Data Loader"
               },
               {
-                "label": "Data import",
-                "description": "Existing data migrated via Data Loader: students, mentors, trainings — imported records validated"
-              },
-              {
-                "label": "Defense",
-                "description": "Audit and improvements presented — jury: good understanding of business challenges"
+                "label": "Impact analysis",
+                "description": "Qualitative and quantitative analysis of time saved per process — presented to jury"
               }
             ],
             "title": "Project Timeline"
@@ -10092,22 +10218,48 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "5/5"
               },
               {
-                "note": "Enrollment, Payment, Follow-up",
-                "label": "Flows deployed",
-                "value": "3"
+                "note": "Per student",
+                "label": "Mentor assignment + enrollment",
+                "value": "30 → 5 min"
               },
               {
-                "note": "Sales + Management",
-                "label": "Reports created",
-                "value": "4+"
+                "note": "Per contact",
+                "label": "Former-client tracking",
+                "value": "15 → 10 min"
               },
               {
-                "note": "Students + Mentors + Trainings",
-                "label": "Data imported",
-                "value": "100%"
+                "note": "Per review",
+                "label": "Training catalog management",
+                "value": "30 → 15 min"
               }
             ],
             "title": "Results"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/audit-report.docx",
+                "label": "Quality audit report (DOCX)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/analysis-report.docx",
+                "label": "Qualitative and quantitative analysis (DOCX)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
+                "label": "Deployment guide (PDF)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/data-import-guide.pdf",
+                "label": "Data import guide (PDF)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf",
+                "label": "Interview notes (PDF)"
+              }
+            ],
+            "title": "Deliverables"
           }
         ]
       },
@@ -10116,40 +10268,55 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Audit et mise à jour de l'application Salesforce Digit Learning pour répondre aux besoins des commerciaux.",
         "sections": [
           {
-            "body": "Digit Learning, école en ligne de formation professionnelle, utilisait Salesforce depuis 2 ans avec des objets custom (Étudiant, Mentor, Formation). Jeanne Pierron, cheffe de projet, a commandé un audit complet suivi d'une modernisation de l'application : nouveau modèle de données pour gérer les multi-inscriptions, automatisation des processus manuels via Flows, et mise en place de rapports de pilotage pour les équipes commerciales et la direction.",
+            "body": "Digit Learning, école en ligne de formation professionnelle, utilisait Salesforce depuis environ 2 ans avec des objets métier dédiés (Étudiant, Mentor, Formation). Jeanne Pierron, cheffe de projet, a commandé un audit qualité interne suivi d'un plan de modernisation. Le constat central de l'audit : le modèle de données ne permettait à un étudiant d'être associé qu'à une seule formation à la fois — une limitation bloquante pour le suivi commercial et pédagogique, remontée aussi bien par les commerciaux que par la direction.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Modèle de données rigide : impossible d'inscrire un étudiant à plusieurs formations simultanément",
-              "Tâches manuelles répétitives : création d'inscriptions, suivi des paiements, relances — aucune automatisation",
-              "Absence de rapports : commerciaux et directeurs sans visibilité sur les indicateurs clés",
-              "Données non importées : étudiants, mentors et formations gérés hors Salesforce dans des fichiers Excel"
+              "Modèle de données rigide : un étudiant ne peut être associé qu'à une seule formation — constat central de l'audit qualité",
+              "Processus manuels chronophages : inscription aux formations et attribution des mentors prenaient plus de 30 minutes par étudiant, sans automatisation",
+              "Aucun suivi structuré des anciens clients pour évaluer leur satisfaction et encourager leur fidélisation",
+              "Rapports et métriques insuffisants : commerciaux et direction sans visibilité fiable pour la prise de décision"
             ],
-            "title": "Problèmes identifiés à l'audit"
+            "title": "Constats de l'audit"
           },
           {
             "type": "bullets",
             "items": [
-              "Modèle de données refactorisé : objet Inscription intermédiaire permettant les multi-inscriptions par étudiant",
-              "Flows Salesforce automatisant la création d'inscriptions, le calcul du statut de paiement et les relances",
-              "Rapports commerciaux : liste des étudiants actifs par formation, taux de conversion, CA par période",
-              "Tableau de bord direction : KPIs temps réel (inscriptions, CA, taux de satisfaction)",
-              "Import des données via Data Loader : étudiants, mentors et formations migrés depuis les fichiers Excel",
-              "Analyse quantitative du gain de productivité : estimation du temps économisé par utilisateur par semaine"
+              "Nouvel objet de jonction Formation Achetée (master-detail vers Étudiant et Formation) : dates de début/fin, type et prix — lève la limitation « une seule formation par étudiant » et permet les multi-inscriptions",
+              "Objets existants enrichis : Étudiant (historique de formations, statut client actif/ancien client), Mentor (disponibilité), Formation (places disponibles, effectif maximum)",
+              "Automatisation de l'inscription aux formations et de l'attribution des mentors, recommandée par l'audit et implémentée pour réduire la charge manuelle des commerciaux",
+              "Mise en place d'un suivi structuré des anciens clients et d'un processus de révision périodique de la pertinence des formations"
             ],
-            "title": "Améliorations déployées"
+            "title": "Modèle de données & automatisation"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce Flows — Automatisation des processus sans code",
-              "Data Loader — Import et migration des données existantes",
-              "Salesforce Reports & Dashboards — Pilotage commercial et direction",
-              "Objects & Fields Custom — Modélisation du nouveau schéma de données",
-              "Profiles & Permissions — Contrôle d'accès par rôle"
+              "Rapport des formations avec places disponibles — visibilité en temps réel sur la capacité restante",
+              "Rapport groupant les étudiants par statut et par mentor — suivi de portefeuille pour les commerciaux",
+              "Rapport comparatif du taux de transformation prospect → client actif — pilotage de la performance commerciale pour la direction"
+            ],
+            "title": "Rapports livrés"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Attribution de mentor + inscription à une formation : de plus de 30 min à 5 min par étudiant — l'automatisation libère du temps pour les activités à forte valeur ajoutée",
+              "Suivi des anciens clients : de plus de 15 min à 10 min — données exploitables pour améliorer la qualité des formations et le retour des anciens clients",
+              "Gestion et révision du catalogue de formations : de plus de 30 min à 15 min — pertinence des programmes maintenue dans la durée"
+            ],
+            "title": "Impact mesuré"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce — objets personnalisés, relations master-detail, roll-up summaries",
+              "Workbench — déploiement de l'application via package zip (Migration > Deploy)",
+              "Data Loader — import et migration des données existantes (étudiants, mentors, formations)",
+              "Reports & Dashboards — pilotage commercial et direction"
             ],
             "title": "Stack & Technologies"
           },
@@ -10157,28 +10324,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Audit",
-                "description": "Analyse des objets existants, des processus manuels et des données hors-CRM — liste des points d'amélioration priorisés"
+                "label": "Audit qualité interne",
+                "description": "Entretiens avec les utilisateurs clés, constat central : un étudiant ne peut être associé qu'à une seule formation"
+              },
+              {
+                "label": "Recommandations",
+                "description": "Plan d'action : refonte du modèle de données, automatisation, suivi des anciens clients, nouveaux rapports"
               },
               {
                 "label": "Modèle de données",
-                "description": "Création de l'objet Inscription intermédiaire et refactoring des relations pour supporter les multi-inscriptions"
+                "description": "Création de l'objet de jonction Formation Achetée en master-detail vers Étudiant et Formation"
               },
               {
-                "label": "Automatisation",
-                "description": "Développement des Flows Salesforce : création automatique d'inscriptions, calcul des statuts et envoi de relances"
+                "label": "Automatisation & reporting",
+                "description": "Automatisation de l'inscription/attribution de mentors, création des 3 rapports de pilotage"
               },
               {
-                "label": "Reporting",
-                "description": "Création des rapports commerciaux et du tableau de bord direction avec les KPIs définis avec Jeanne"
+                "label": "Déploiement & import",
+                "description": "Déploiement via Workbench, migration des données existantes via Data Loader"
               },
               {
-                "label": "Import des données",
-                "description": "Migration des données existantes via Data Loader : étudiants, mentors, formations — validation des enregistrements importés"
-              },
-              {
-                "label": "Soutenance",
-                "description": "Présentation de l'audit et des améliorations — jury : bonne compréhension des enjeux métier"
+                "label": "Analyse d'impact",
+                "description": "Analyse qualitative et quantitative du gain de temps par processus — soutenance devant jury"
               }
             ],
             "title": "Déroulement du projet"
@@ -10192,91 +10359,173 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "5/5"
               },
               {
-                "note": "Inscription, Paiement, Relance",
-                "label": "Flows déployés",
-                "value": "3"
+                "note": "Par étudiant",
+                "label": "Attribution mentor + inscription",
+                "value": "30 → 5 min"
               },
               {
-                "note": "Commerciaux + Direction",
-                "label": "Rapports créés",
-                "value": "4+"
+                "note": "Par contact",
+                "label": "Suivi anciens clients",
+                "value": "15 → 10 min"
               },
               {
-                "note": "Étudiants + Mentors + Formations",
-                "label": "Données importées",
-                "value": "100%"
+                "note": "Par révision",
+                "label": "Gestion catalogue formations",
+                "value": "30 → 15 min"
               }
             ],
             "title": "Résultats"
-          }
-        ]
-      },
-      "es": {
-        "title": "Salesforce application update (Digit Learning)",
-        "heroSubtitle": "Auditoría y modernización de una org Salesforce para una escuela en línea: rediseño del modelo de datos, automatizaciones (Flows) y reporting.",
-        "sections": [
-          {
-            "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "Digit Learning es una escuela en línea. Los equipos comerciales llevan ~2 años usando Salesforce para gestionar Estudiantes, Mentores y Formaciones.",
-              "Tras entrevistas con usuarios clave, el departamento de IT solicitó una auditoría estructurada y la implementación de mejoras concretas para reducir el trabajo manual, fiabilizar los datos y mejorar la toma de decisiones."
-            ]
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Permitir que un mismo estudiante se inscriba en varias formaciones (el modelo inicial era demasiado restrictivo).",
-              "Automatizar las inscripciones y la asignación de mentores para reducir manipulaciones y errores.",
-              "Implementar un seguimiento de antiguos clientes para mejorar la reactivación y el reenganche.",
-              "Gestionar mejor las formaciones (capacidad, seguimiento) con indicadores fiables.",
-              "Proporcionar informes/paneles accionables (estudiantes por estado, plazas disponibles, tasa de conversión)."
-            ],
-            "title": "Necesidades de los usuarios (entrevistas)"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Actualización del modelo de datos: creación de un objeto de unión «Formaciones compradas» (master-detail hacia Estudiantes y Formaciones) para gestionar varias inscripciones por estudiante + roll-up summaries (historial, contadores…).",
-              "Automatización: Flow record-triggered sobre «Formaciones compradas» para fiabilizar el proceso de inscripción y mantener actualizadas las plazas disponibles.",
-              "Automatización: Flow programado para gestionar el ciclo de vida de los estudiantes (Cliente activo vs Antiguo cliente) según las formaciones activas.",
-              "Reporting: creación de informes (plazas disponibles, estudiantes agrupados por estado y por mentor, comparativo de la tasa de conversión prospecto → cliente activo).",
-              "Documentación: guías de despliegue + importación de datos para un paso a producción reproducible."
-            ],
-            "title": "Lo que implementé"
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Estimación: 75% de tiempo ahorrado por inscripción gracias a la automatización.",
-                "label": "Tiempo de procesamiento de una inscripción",
-                "value": "20 → 5 min / estudiante"
-              },
-              {
-                "note": "Reenganche observado: +15% (seguimiento habilitado y accionable).",
-                "label": "Seguimiento de antiguos clientes",
-                "value": "500 registros"
-              },
-              {
-                "note": "Mejora: +15% gracias a un mejor seguimiento y una gestión más fiable.",
-                "label": "Tasa de éxito de las formaciones",
-                "value": "70% → 85%"
-              }
-            ],
-            "title": "Resultados medidos (cualitativos y cuantitativos)"
           },
           {
             "type": "resources",
             "items": [
               {
                 "href": "/docs/projects/digit-learning-salesforce-update/audit-report.docx",
-                "note": "Hallazgos + recomendaciones basados en entrevistas con usuarios.",
-                "label": "Informe de auditoría (DOCX)"
+                "label": "Rapport d'audit qualité (DOCX)"
               },
               {
                 "href": "/docs/projects/digit-learning-salesforce-update/analysis-report.docx",
-                "note": "Estimaciones de tiempo ahorrado + explicación del impacto en el negocio.",
+                "label": "Analyse qualitative et quantitative (DOCX)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
+                "label": "Guide de déploiement (PDF)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/data-import-guide.pdf",
+                "label": "Guide d'import des données (PDF)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf",
+                "label": "Notes des entretiens (PDF)"
+              }
+            ],
+            "title": "Livrables"
+          }
+        ]
+      },
+      "es": {
+        "title": "Actualización de la aplicación Salesforce (Digit Learning)",
+        "heroSubtitle": "Auditoría y modernización de una org Salesforce para una escuela en línea: rediseño del modelo de datos, automatizaciones (Flows) y reporting.",
+        "sections": [
+          {
+            "body": "Digit Learning, escuela en línea de formación profesional, llevaba unos 2 años usando Salesforce con objetos de negocio dedicados (Estudiante, Mentor, Formación). Jeanne Pierron, jefa de proyecto, encargó una auditoría de calidad interna seguida de un plan de modernización. El hallazgo central de la auditoría: el modelo de datos solo permitía vincular a un estudiante con una única formación a la vez — una limitación bloqueante tanto para el seguimiento comercial como pedagógico, señalada tanto por los comerciales como por la dirección.",
+            "type": "text",
+            "title": "Contexto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Modelo de datos rígido: un estudiante solo puede vincularse a una única formación — hallazgo central de la auditoría de calidad",
+              "Procesos manuales que consumían tiempo: la inscripción a formaciones y la asignación de mentores llevaban más de 30 minutos por estudiante, sin automatización",
+              "Ningún seguimiento estructurado de antiguos clientes para evaluar su satisfacción y fomentar la fidelización",
+              "Informes y métricas insuficientes: comerciales y dirección sin visibilidad fiable para la toma de decisiones"
+            ],
+            "title": "Hallazgos de la auditoría"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Nuevo objeto de unión Formación Comprada (master-detail hacia Estudiante y Formación): fechas de inicio/fin, tipo y precio — elimina la limitación de «una sola formación por estudiante» y permite varias inscripciones",
+              "Objetos existentes enriquecidos: Estudiante (historial de formaciones, estado cliente activo/antiguo cliente), Mentor (disponibilidad), Formación (plazas disponibles, aforo máximo)",
+              "Automatización de la inscripción a formaciones y de la asignación de mentores, recomendada por la auditoría e implementada para reducir la carga manual de los comerciales",
+              "Puesta en marcha de un seguimiento estructurado de antiguos clientes y de un proceso de revisión periódica de la pertinencia de las formaciones"
+            ],
+            "title": "Modelo de datos y automatización"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Informe de formaciones con plazas disponibles — visibilidad en tiempo real de la capacidad restante",
+              "Informe de estudiantes agrupados por estado y por mentor — seguimiento de cartera para los comerciales",
+              "Informe comparativo de la tasa de conversión prospecto → cliente activo — seguimiento del rendimiento comercial para la dirección"
+            ],
+            "title": "Informes entregados"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Asignación de mentor + inscripción a una formación: de más de 30 min a 5 min por estudiante — la automatización libera tiempo para actividades de mayor valor añadido",
+              "Seguimiento de antiguos clientes: de más de 15 min a 10 min — datos útiles para mejorar la calidad de las formaciones y el retorno de antiguos alumnos",
+              "Gestión y revisión del catálogo de formaciones: de más de 30 min a 15 min — pertinencia de los programas mantenida en el tiempo"
+            ],
+            "title": "Impacto medido"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce — objetos personalizados, relaciones master-detail, roll-up summaries",
+              "Workbench — despliegue de la aplicación mediante paquete zip (Migration > Deploy)",
+              "Data Loader — importación y migración de datos existentes (estudiantes, mentores, formaciones)",
+              "Reports & Dashboards — seguimiento comercial y de dirección"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Auditoría de calidad interna",
+                "description": "Entrevistas con usuarios clave, hallazgo central: un estudiante solo puede vincularse a una única formación"
+              },
+              {
+                "label": "Recomendaciones",
+                "description": "Plan de acción: rediseño del modelo de datos, automatización, seguimiento de antiguos clientes, nuevos informes"
+              },
+              {
+                "label": "Modelo de datos",
+                "description": "Creación del objeto de unión Formación Comprada en master-detail hacia Estudiante y Formación"
+              },
+              {
+                "label": "Automatización e informes",
+                "description": "Automatización de la inscripción/asignación de mentores, creación de los 3 informes de seguimiento"
+              },
+              {
+                "label": "Despliegue e importación",
+                "description": "Despliegue vía Workbench, migración de datos existentes vía Data Loader"
+              },
+              {
+                "label": "Análisis de impacto",
+                "description": "Análisis cualitativo y cuantitativo del tiempo ahorrado por proceso — defensa ante el tribunal"
+              }
+            ],
+            "title": "Desarrollo del proyecto"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Tribunal OpenClassrooms",
+                "label": "Competencias validadas",
+                "value": "5/5"
+              },
+              {
+                "note": "Por estudiante",
+                "label": "Asignación mentor + inscripción",
+                "value": "30 → 5 min"
+              },
+              {
+                "note": "Por contacto",
+                "label": "Seguimiento de antiguos clientes",
+                "value": "15 → 10 min"
+              },
+              {
+                "note": "Por revisión",
+                "label": "Gestión del catálogo de formaciones",
+                "value": "30 → 15 min"
+              }
+            ],
+            "title": "Resultados"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/audit-report.docx",
+                "label": "Informe de auditoría de calidad (DOCX)"
+              },
+              {
+                "href": "/docs/projects/digit-learning-salesforce-update/analysis-report.docx",
                 "label": "Análisis cualitativo y cuantitativo (DOCX)"
               },
               {
@@ -10290,27 +10539,9 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf",
                 "label": "Notas de las entrevistas (PDF)"
-              },
-              {
-                "href": "/docs/projects/digit-learning-salesforce-update/package-installation-link.txt",
-                "label": "Enlace de instalación del paquete (TXT)"
-              },
-              {
-                "href": "/docs/projects/digit-learning-salesforce-update/screenshots.zip",
-                "note": "Schema Builder + Flows + reporting.",
-                "label": "Pack de capturas de pantalla (ZIP)"
               }
             ],
-            "title": "Entregables y evidencias"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Salesforce: objetos personalizados, relaciones master-detail, roll-up summaries, validación y reporting.",
-              "Automatización: Flows record-triggered y programados (patrones mantenibles).",
-              "Documentación: guías de despliegue e importación para una operación reproducible."
-            ],
-            "title": "Stack y herramientas"
+            "title": "Entregables"
           }
         ]
       }
@@ -10390,42 +10621,60 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Implementation of a complete Salesforce solution for Tours For Life, a growing travel agency.",
         "sections": [
           {
-            "body": "Tours for Life, a fast-growing travel agency, wanted to fully digitize its commercial management. President Philippe Bouvet needed a Salesforce CRM capable of managing the full cycle: lead acquisition, conversion to travelers, tour and bus fleet management, process automation, and commercial performance tracking. The mission covered design, configuration and delivery of a fully operational Salesforce solution.",
+            "body": "Tours for Life, a fast-growing travel agency, wanted to digitize its commercial management end-to-end. President Philippe Bouvet needed a Salesforce CRM covering the full cycle: prospect acquisition, conversion to travelers, trip management, and sales performance tracking by zone (North/South). An additional need surfaced during scoping: managing the bus fleet directly in Salesforce, since a single bus can be assigned to several trips.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Manage Leads and convert them to travelers via Salesforce Person Accounts",
-              "Create a custom Bus Fleet object linked to tours with seat capacity management",
-              "Automate seat decrement via a Flow triggered on each new confirmed registration",
-              "Set up hierarchical profiles and roles (Sales Rep, Sales Director, Manager)",
-              "Provide reports and dashboards directly accessible from the Salesforce home page"
+              "Prospect: standard Lead object, tab renamed \"Prospect\" (First/Last Name, required Phone, Email, Status)",
+              "Traveler: Account object with Person Accounts enabled, tab renamed \"Traveler\". Dedicated Record Type (\"Account to Traveler\") to allow converting a prospect to a traveler even without an associated business account",
+              "Trip (new object): destination, departure/arrival locations, price, status, available seats — the catalog of offered trips",
+              "Purchased Trip (new object, distinct from Trip): links to Traveler and Trip, luggage count, seats purchased, bus number — represents an actual booking",
+              "Bus Fleet (new object): bus number, capacity, lookup field to Trip — a single bus can be linked to several trips"
             ],
-            "title": "Project Objectives"
+            "title": "Data Model"
           },
           {
             "type": "bullets",
             "items": [
-              "Person Accounts activated: Lead → Traveler conversion with business fields (preferences, loyalty)",
-              "Custom Bus Fleet object: bus number, total capacity, lookup to Tour object",
-              "Record-Triggered Flow: automatic decrement of Available Seats on each validated registration",
-              "3 hierarchical roles + 2 profiles: Sales Rep (read/write on tours) and Director (full access)",
-              "Reports: top destinations, revenue per sales rep, fill rate per tour",
-              "Management dashboard: real-time KPIs accessible from the Salesforce home page"
+              "2 profiles: Sales Director (full access to all objects and fields), Sales Rep (create/edit prospects and convert them to travelers, view travelers and purchased trips)",
+              "3 hierarchical roles: Sales Management, North Sales Rep, South Sales Rep — management sees both teams' data",
+              "Per-object OWD: Private on Prospect/Trip, Public Read-Only on Bus Fleet, Controlled by Parent on Purchased Trip",
+              "Sharing Rules by role (North/South) on Prospect and Trip to keep sales territories separate while retaining read-only visibility on the other zone's travelers"
             ],
-            "title": "Solution Implemented"
+            "title": "Security & Visibility"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce Sales Cloud — Full commercial CRM",
-              "Person Accounts — Managing travelers as individuals",
-              "Salesforce Flows — No-code automation (Record-Triggered Flow)",
-              "Custom Objects & Fields — Bus fleet, tours, registrations",
-              "Profiles, Roles & Sharing — Data security and visibility",
-              "Reports & Dashboards — Real-time commercial monitoring"
+              "Record-triggered Flow #1: confirmation email automatically sent to the prospect when their status changes from \"information gathered\" to \"interested\"",
+              "Record-triggered Flow #2: automatic decrement of the \"Available Seats\" field on the Trip whenever a related Purchased Trip is created or updated",
+              "Phone number made required on Prospect and Traveler to improve sales data reliability",
+              "Automation built entirely no-code (Flow Builder), with no Apex"
+            ],
+            "title": "Automation (Flow)"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "\"Available Trips\" report: filtered on Status = Open, with totals (cumulative price, available seats) — 17 active trips at demo time",
+              "\"Prospects to Travelers\" report: conversion tracking by sales rep and role, with conversion date and linked opportunity",
+              "\"Trips Purchased per Sales Rep\" report: performance stats grouped by role (North/South Sales Rep, Sales Management)",
+              "Reports accessible directly from the Salesforce home page for day-to-day tracking"
+            ],
+            "title": "Reports & Dashboards"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce Sales Cloud — full commercial CRM",
+              "Person Accounts — managing travelers as individuals",
+              "Salesforce Flow — no-code automation (Record-Triggered Flow)",
+              "Custom Objects & Fields — Trip, Purchased Trip, Bus Fleet",
+              "Profiles, Roles & Sharing Rules — security and visibility by sales zone",
+              "Reports & Dashboards — real-time commercial tracking"
             ],
             "title": "Stack & Technologies"
           },
@@ -10433,28 +10682,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Analysis",
-                "description": "Requirements gathered with Philippe Bouvet, data schema identified and processes to automate mapped"
+                "label": "Scoping",
+                "description": "Requirements gathered with Philippe Bouvet; bus fleet management need added during scoping"
               },
               {
                 "label": "Data model",
-                "description": "Person Accounts activated, Bus Fleet custom object created with fields and relations"
+                "description": "Person Accounts enabled, Trip, Purchased Trip and Bus Fleet objects created with their relationships"
               },
               {
                 "label": "Security",
-                "description": "3 hierarchical roles, 2 profiles and object-level permissions configured"
+                "description": "Configured 2 profiles, 3 hierarchical roles, per-object OWD and Sharing Rules by zone (North/South)"
               },
               {
                 "label": "Automation",
-                "description": "Record-Triggered Flow built for automatic available seats management on registration"
+                "description": "Built the 2 record-triggered Flows: confirmation email and available-seats decrement"
               },
               {
                 "label": "Reporting",
-                "description": "Sales reports and management dashboard created — accessible directly from home page"
+                "description": "Built sales reports (available trips, conversions, performance per sales rep)"
               },
               {
                 "label": "Defense",
-                "description": "Full solution demonstration — all features validated by jury"
+                "description": "Full demonstration on sandbox — solution validated by jury"
               }
             ],
             "title": "Project Timeline"
@@ -10468,22 +10717,44 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "4/4"
               },
               {
-                "note": "Sales Rep + Director",
-                "label": "Profiles created",
-                "value": "2"
+                "note": "Traveler (Person Account), Trip, Purchased Trip, Bus Fleet",
+                "label": "Business objects designed",
+                "value": "4"
               },
               {
-                "note": "Data visibility fully controlled",
+                "note": "Management + North/South Sales Rep",
                 "label": "Hierarchical roles",
                 "value": "3"
               },
               {
-                "note": "Seat management without Apex code",
-                "label": "Automations",
-                "value": "1 Flow"
+                "note": "No Apex code",
+                "label": "Flow automations",
+                "value": "2"
               }
             ],
             "title": "Results"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
+                "label": "Detailed specifications (PDF)"
+              },
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/presentation.pptx",
+                "label": "Solution presentation (PPTX)"
+              },
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
+                "label": "Data model (PNG)"
+              },
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
+                "label": "Requirements specification (PDF)"
+              }
+            ],
+            "title": "Deliverables"
           }
         ]
       },
@@ -10492,42 +10763,60 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Implémentation d'une solution Salesforce complète pour Tours For Life, agence de voyages en croissance.",
         "sections": [
           {
-            "body": "Tours for Life, agence de voyages en pleine croissance, souhaitait digitaliser sa gestion commerciale de A à Z. Philippe Bouvet, le président, avait besoin d'un CRM Salesforce capable de gérer le cycle complet : acquisition de prospects, conversion en voyageurs, gestion des voyages et de la flotte de bus, automatisation des processus et suivi des performances commerciales. La mission couvrait la conception, la configuration et la livraison d'une solution Salesforce opérationnelle.",
+            "body": "Tours for Life, agence de voyages en pleine croissance, souhaitait digitaliser sa gestion commerciale de bout en bout. Philippe Bouvet, le président, avait besoin d'un CRM Salesforce couvrant le cycle complet : acquisition de prospects, conversion en voyageurs, gestion des voyages, et suivi des performances commerciales par zone (Nord/Sud). Un besoin complémentaire est apparu en cours de cadrage : gérer la flotte de bus directement dans Salesforce, un même bus pouvant être affecté à plusieurs voyages.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Gérer les prospects (Leads) et les convertir en voyageurs via Person Accounts Salesforce",
-              "Créer un objet custom Flotte de Bus lié aux voyages avec gestion de la capacité",
-              "Automatiser la décrémentation des places disponibles via un Flow à chaque nouvelle inscription",
-              "Mettre en place des profils et rôles hiérarchiques (Commercial, Directeur commercial, Responsable)",
-              "Fournir des rapports et tableaux de bord directement accessibles depuis la page d'accueil Salesforce"
+              "Prospect : objet standard Lead, onglet renommé « Prospect » (Nom, Prénom, Téléphone obligatoire, Email, Statut)",
+              "Voyageur : objet Account avec Person Accounts activé, onglet renommé « Voyageur ». Record Type dédié (« Account to Voyageur ») pour permettre la conversion d'un prospect en voyageur même sans compte entreprise associé",
+              "Voyage (nouvel objet) : destination, lieux de départ/arrivée, prix, statut, nombre de places disponibles — catalogue des voyages proposés",
+              "Voyage Acheté (nouvel objet distinct du Voyage) : lien vers le Voyageur et le Voyage, nombre de bagages, nombre de places achetées, numéro de bus — représente une réservation effective",
+              "Flotte de bus (nouvel objet) : numéro du bus, capacité, champ lookup vers Voyage — un même bus peut être relié à plusieurs voyages"
             ],
-            "title": "Objectifs du projet"
+            "title": "Modèle de données"
           },
           {
             "type": "bullets",
             "items": [
-              "Person Accounts activés : conversion Lead → Voyageur avec champs métier (préférences, fidélité)",
-              "Objet custom Flotte de Bus : numéro de bus, capacité totale, lookup vers Voyage",
-              "Flow Record-Triggered : décrémentation automatique de Places disponibles à chaque inscription validée",
-              "3 rôles hiérarchiques + 2 profils : Commercial (lecture/écriture voyages) et Directeur (accès total)",
-              "Rapports : top destinations, CA par commercial, taux de remplissage par voyage",
-              "Dashboard direction : KPIs temps réel accessibles depuis la page d'accueil Salesforce"
+              "2 profils : Directeur Commercial (accès complet à tous les objets et champs), Commercial (créer/modifier des prospects et les convertir en voyageurs, consulter voyageurs et voyages achetés)",
+              "3 rôles hiérarchiques : Direction Commerciale, Commerciale Nord, Commerciale Sud — la direction voit les données des deux équipes",
+              "OWD différenciés par objet : Private sur Prospect/Voyage, Public Read-Only sur Flotte de bus, Controlled by Parent sur Voyage Acheté",
+              "Sharing Rules par rôle (Nord/Sud) sur Prospect et Voyage pour cloisonner les portefeuilles commerciaux tout en gardant une visibilité en lecture seule sur les voyageurs de l'autre zone"
             ],
-            "title": "Solution mise en place"
+            "title": "Sécurité & visibilité"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Flow record-triggered n°1 : email de confirmation envoyé automatiquement au prospect lorsque son statut passe de « prise d'information » à « intéressé(e) »",
+              "Flow record-triggered n°2 : décrémentation automatique du champ « Nombre de places disponibles » sur le Voyage à chaque création ou modification d'un Voyage Acheté associé",
+              "Champ téléphone rendu obligatoire sur Prospect et Voyageur pour fiabiliser le suivi commercial",
+              "Automatisations réalisées entièrement en no-code (Flow Builder), sans code Apex"
+            ],
+            "title": "Automatisations (Flow)"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Rapport « Voyages disponibles » : filtré sur Statut = Ouvert, avec totaux (prix cumulé, places disponibles) — 17 voyages actifs au moment de la démonstration",
+              "Rapport « Prospects vers voyageurs » : suivi des conversions par commercial et par rôle, avec date de conversion et opportunité liée",
+              "Rapport « Nombre de voyages achetés par commercial » : statistiques de performance groupées par rôle (Commerciale Nord/Sud, Direction Commerciale)",
+              "Rapports accessibles directement depuis la page d'accueil Salesforce pour un pilotage quotidien"
+            ],
+            "title": "Rapports & tableaux de bord"
           },
           {
             "type": "bullets",
             "items": [
               "Salesforce Sales Cloud — CRM commercial complet",
-              "Person Accounts — Gestion des voyageurs comme individus",
-              "Salesforce Flows — Automatisation sans code (Record-Triggered Flow)",
-              "Custom Objects & Fields — Flotte de bus, voyages, inscriptions",
-              "Profiles, Roles & Sharing — Sécurité et visibilité des données",
-              "Reports & Dashboards — Pilotage commercial en temps réel"
+              "Person Accounts — gestion des voyageurs comme particuliers",
+              "Salesforce Flow — automatisation no-code (Record-Triggered Flow)",
+              "Custom Objects & Fields — Voyage, Voyage Acheté, Flotte de bus",
+              "Profiles, Roles & Sharing Rules — sécurité et visibilité par zone commerciale",
+              "Reports & Dashboards — pilotage commercial en temps réel"
             ],
             "title": "Stack & Technologies"
           },
@@ -10535,28 +10824,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Analyse",
-                "description": "Recueil des besoins avec Philippe Bouvet, identification du schéma de données et des processus à automatiser"
+                "label": "Cadrage",
+                "description": "Recueil des besoins avec Philippe Bouvet, ajout du besoin de gestion de flotte de bus en cours de cadrage"
               },
               {
                 "label": "Modèle de données",
-                "description": "Activation Person Accounts, création de l'objet Flotte de Bus avec ses champs et relations"
+                "description": "Activation des Person Accounts, création des objets Voyage, Voyage Acheté et Flotte de bus avec leurs relations"
               },
               {
                 "label": "Sécurité",
-                "description": "Configuration des 3 rôles hiérarchiques, des 2 profils et des permissions sur chaque objet"
+                "description": "Configuration des 2 profils, 3 rôles hiérarchiques, OWD par objet et Sharing Rules par zone (Nord/Sud)"
               },
               {
                 "label": "Automatisation",
-                "description": "Développement du Flow Record-Triggered pour la gestion automatique des places disponibles"
+                "description": "Développement des 2 Flows record-triggered : email de confirmation et décrémentation des places disponibles"
               },
               {
                 "label": "Reporting",
-                "description": "Création des rapports commerciaux et du dashboard direction — accessible depuis la page d'accueil"
+                "description": "Création des rapports commerciaux (voyages disponibles, conversions, performance par commercial)"
               },
               {
                 "label": "Soutenance",
-                "description": "Démonstration complète de la solution — toutes les fonctionnalités validées par le jury"
+                "description": "Démonstration complète sur sandbox — solution validée par le jury"
               }
             ],
             "title": "Déroulement du projet"
@@ -10570,125 +10859,187 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "4/4"
               },
               {
-                "note": "Commercial + Directeur",
-                "label": "Profils créés",
-                "value": "2"
+                "note": "Voyageur (Person Account), Voyage, Voyage Acheté, Flotte de bus",
+                "label": "Objets métier conçus",
+                "value": "4"
               },
               {
-                "note": "Visibilité données maîtrisée",
+                "note": "Direction + Commerciale Nord/Sud",
                 "label": "Rôles hiérarchiques",
                 "value": "3"
               },
               {
-                "note": "Gestion places sans code Apex",
-                "label": "Automatisations",
-                "value": "1 Flow"
+                "note": "Sans code Apex",
+                "label": "Automatisations Flow",
+                "value": "2"
               }
             ],
             "title": "Résultats"
-          }
-        ]
-      },
-      "es": {
-        "title": "Salesforce solution design (Tours For Life)",
-        "heroSubtitle": "Diseño de una solución Salesforce (Tours For Life)",
-        "sections": [
-          {
-            "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "Tours For Life quería acelerar su desarrollo comercial simplificando a la vez la gestión de los viajes (proceso demasiado complejo). El objetivo era diseñar una solución Salesforce realmente utilizable por los comerciales: creación de prospectos, conversión en viajeros, gestión de viajes, informes y paneles de control.",
-              "Durante el encuadre se añadió una necesidad adicional: gestionar la flota de autobuses directamente en Salesforce, controlada por los directores comerciales y vinculada a los viajes (un mismo autobús puede usarse en varios viajes)."
-            ]
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Crear y calificar prospectos en Salesforce (Lead).",
-              "Convertir los prospectos en viajeros (Person Accounts) y centralizar la información del cliente.",
-              "Crear y gestionar viajes para los viajeros, con seguimiento de capacidad y plazas disponibles.",
-              "Generar informes y paneles de control para el seguimiento comercial y operativo.",
-              "Gestionar una flota de autobuses y vincular los autobuses a los viajes (varios viajes por autobús)."
-            ],
-            "title": "Necesidades clave (brief del cliente)"
-          },
-          {
-            "type": "text",
-            "title": "Visión general de la solución",
-            "paragraphs": [
-              "El modelo de datos y la automatización se diseñaron en torno al ciclo completo: Lead → Viajero → Viaje. La implementación prioriza los objetos estándar (Lead, Actividades) e introduce objetos personalizados para la parte operativa (Viaje) y para la gestión de flota (Flota de autobuses).",
-              "Se implementó un Flow record-triggered para decrementar automáticamente el campo «Plazas disponibles» cuando se asignan viajeros a un viaje, garantizando un seguimiento de capacidad fiable."
-            ]
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Los prospectos se gestionan mediante el objeto estándar Lead y luego se convierten en Person Accounts (viajeros).",
-              "Los viajes se crean y se asocian a los viajeros para el seguimiento operativo.",
-              "Nuevo objeto «Flota de autobuses»: número del autobús (Texto), capacidad (Número), lookup hacia «Viaje».",
-              "El modelo está construido para alimentar dashboards en la página de inicio (KPIs + vistas operativas)."
-            ],
-            "title": "Puntos clave del modelo de datos"
-          },
-          {
-            "type": "text",
-            "title": "Seguridad (roles, perfiles, accesos)",
-            "paragraphs": [
-              "Los accesos se diseñaron para dos audiencias: comerciales y directores comerciales. En la configuración entregada se crearon dos perfiles (Comercial y Director comercial) y tres roles para reflejar la jerarquía.",
-              "Con perspectiva, un enfoque más escalable consiste en mantener un único perfil «Comercial» y otorgar los permisos de director mediante un Permission Set: esto reduce el mantenimiento y hace más flexible la evolución de los accesos."
-            ]
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Análisis de necesidades, decisiones técnicas, modelo de datos y reglas de negocio, especificaciones detalladas.",
-                "label": "Competencias validadas",
-                "value": "4/4"
-              },
-              {
-                "note": "Decremento automático de «Plazas disponibles» para un seguimiento fiable de la capacidad.",
-                "label": "Automatización entregada",
-                "value": "Flow"
-              },
-              {
-                "note": "Accesos a objetos documentados y jerarquía implementada (con propuesta de mejora).",
-                "label": "Diseño de seguridad",
-                "value": "2 perfiles + 3 roles"
-              }
-            ],
-            "title": "Lo que demuestra este proyecto"
           },
           {
             "type": "resources",
             "items": [
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
-                "note": "Especificaciones funcionales + técnicas alineadas con el pliego de requisitos.",
+                "label": "Spécifications détaillées (PDF)"
+              },
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/presentation.pptx",
+                "label": "Présentation de la solution (PPTX)"
+              },
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
+                "label": "Modèle de données (PNG)"
+              },
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
+                "label": "Cahier des charges (PDF)"
+              }
+            ],
+            "title": "Livrables"
+          }
+        ]
+      },
+      "es": {
+        "title": "Diseño de solución Salesforce (Tours For Life)",
+        "heroSubtitle": "Diseño de una solución Salesforce (Tours For Life)",
+        "sections": [
+          {
+            "body": "Tours for Life, una agencia de viajes en pleno crecimiento, quería digitalizar su gestión comercial de principio a fin. Philippe Bouvet, el presidente, necesitaba un CRM Salesforce que cubriera el ciclo completo: captación de prospectos, conversión en viajeros, gestión de los viajes y seguimiento del rendimiento comercial por zona (Norte/Sur). Durante el encuadre surgió una necesidad adicional: gestionar la flota de autobuses directamente en Salesforce, ya que un mismo autobús puede asignarse a varios viajes.",
+            "type": "text",
+            "title": "Contexto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Prospecto: objeto estándar Lead, pestaña renombrada «Prospecto» (Nombre, Apellidos, Teléfono obligatorio, Email, Estado)",
+              "Viajero: objeto Account con Person Accounts activado, pestaña renombrada «Viajero». Record Type dedicado («Account to Viajero») para poder convertir un prospecto en viajero incluso sin una cuenta de empresa asociada",
+              "Viaje (objeto nuevo): destino, lugares de salida/llegada, precio, estado, plazas disponibles — catálogo de viajes ofrecidos",
+              "Viaje Comprado (objeto nuevo, distinto de Viaje): vinculado al Viajero y al Viaje, número de maletas, plazas compradas, número de autobús — representa una reserva efectiva",
+              "Flota de autobuses (objeto nuevo): número del autobús, capacidad, campo lookup hacia Viaje — un mismo autobús puede vincularse a varios viajes"
+            ],
+            "title": "Modelo de datos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "2 perfiles: Director Comercial (acceso completo a todos los objetos y campos), Comercial (crear/modificar prospectos y convertirlos en viajeros, consultar viajeros y viajes comprados)",
+              "3 roles jerárquicos: Dirección Comercial, Comercial Norte, Comercial Sur — la dirección ve los datos de ambos equipos",
+              "OWD diferenciado por objeto: Private en Prospecto/Viaje, Public Read-Only en Flota de autobuses, Controlled by Parent en Viaje Comprado",
+              "Sharing Rules por rol (Norte/Sur) en Prospecto y Viaje para separar las carteras comerciales, manteniendo visibilidad de solo lectura sobre los viajeros de la otra zona",
+              "Con perspectiva, un enfoque más escalable consistiría en mantener un único perfil «Comercial» y otorgar los permisos de director mediante un Permission Set, reduciendo el mantenimiento a largo plazo"
+            ],
+            "title": "Seguridad y visibilidad"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Flow record-triggered nº1: email de confirmación enviado automáticamente al prospecto cuando su estado pasa de «información recabada» a «interesado/a»",
+              "Flow record-triggered nº2: decremento automático del campo «Plazas disponibles» del Viaje cada vez que se crea o modifica un Viaje Comprado asociado",
+              "Campo teléfono obligatorio en Prospecto y Viajero para fiabilizar el seguimiento comercial",
+              "Automatización construida enteramente sin código (Flow Builder), sin Apex"
+            ],
+            "title": "Automatización (Flow)"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Informe «Viajes disponibles»: filtrado por Estado = Abierto, con totales (precio acumulado, plazas disponibles) — 17 viajes activos en el momento de la demo",
+              "Informe «Prospectos a viajeros»: seguimiento de conversiones por comercial y rol, con fecha de conversión y oportunidad vinculada",
+              "Informe «Viajes comprados por comercial»: estadísticas de rendimiento agrupadas por rol (Comercial Norte/Sur, Dirección Comercial)",
+              "Informes accesibles directamente desde la página de inicio de Salesforce para el seguimiento diario"
+            ],
+            "title": "Informes y paneles de control"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce Sales Cloud — CRM comercial completo",
+              "Person Accounts — gestión de los viajeros como particulares",
+              "Salesforce Flow — automatización sin código (Record-Triggered Flow)",
+              "Custom Objects & Fields — Viaje, Viaje Comprado, Flota de autobuses",
+              "Profiles, Roles & Sharing Rules — seguridad y visibilidad por zona comercial",
+              "Reports & Dashboards — seguimiento comercial en tiempo real"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Encuadre",
+                "description": "Recogida de requisitos con Philippe Bouvet; se añade la necesidad de gestión de flota durante el encuadre"
+              },
+              {
+                "label": "Modelo de datos",
+                "description": "Activación de Person Accounts, creación de los objetos Viaje, Viaje Comprado y Flota de autobuses con sus relaciones"
+              },
+              {
+                "label": "Seguridad",
+                "description": "Configuración de 2 perfiles, 3 roles jerárquicos, OWD por objeto y Sharing Rules por zona (Norte/Sur)"
+              },
+              {
+                "label": "Automatización",
+                "description": "Desarrollo de los 2 Flows record-triggered: email de confirmación y decremento de plazas disponibles"
+              },
+              {
+                "label": "Informes",
+                "description": "Creación de los informes comerciales (viajes disponibles, conversiones, rendimiento por comercial)"
+              },
+              {
+                "label": "Defensa",
+                "description": "Demostración completa en sandbox — solución validada por el tribunal"
+              }
+            ],
+            "title": "Desarrollo del proyecto"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Tribunal OpenClassrooms",
+                "label": "Competencias validadas",
+                "value": "4/4"
+              },
+              {
+                "note": "Viajero (Person Account), Viaje, Viaje Comprado, Flota de autobuses",
+                "label": "Objetos de negocio diseñados",
+                "value": "4"
+              },
+              {
+                "note": "Dirección + Comercial Norte/Sur",
+                "label": "Roles jerárquicos",
+                "value": "3"
+              },
+              {
+                "note": "Sin código Apex",
+                "label": "Automatizaciones Flow",
+                "value": "2"
+              }
+            ],
+            "title": "Resultados"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
                 "label": "Especificaciones detalladas (PDF)"
               },
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/presentation.pptx",
-                "note": "Soporte de presentación de la solución (encuadre, decisiones, demostración).",
-                "label": "Presentación (PPTX)"
+                "label": "Presentación de la solución (PPTX)"
               },
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
-                "note": "Captura del esquema (objetos y relaciones).",
                 "label": "Modelo de datos (PNG)"
               },
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
-                "note": "Brief inicial + incorporación de la gestión de flota.",
                 "label": "Pliego de requisitos (PDF)"
-              },
-              {
-                "href": "/docs/projects/tours-for-life-salesforce-solution/sandbox-creation-guide.pdf",
-                "note": "Procedimiento utilizado para preparar un entorno de demostración.",
-                "label": "Guía de creación de sandbox (PDF)"
               }
             ],
-            "title": "Entregables y evidencias"
+            "title": "Entregables"
           }
         ]
       }
@@ -11226,41 +11577,47 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Migration of EG Manufacture's Visualforce application to Lightning Web Components at WireBright Consulting.",
         "sections": [
           {
-            "body": "EG Manufacture, a large tapestry manufacturer, was using Salesforce Classic with Visualforce pages and JavaScript buttons — all incompatible with Lightning Experience. WireBright Consulting managed the migration. Mission: inventory all components to migrate, produce technical specifications comparing available options, and convert the components to Lightning (LWC / Quick Actions) with before/after evidence.",
+            "body": "EG Manufacture, a tapestry manufacturer, ran Salesforce Classic to manage its leads and accounts — a Visualforce opportunity-search page and a JavaScript status-update button, both incompatible with Lightning Experience. WireBright Consulting led the migration. Mission: produce complete technical and functional specifications (component inventory, costed conversion options, risk management) then deliver a first prototype of the two most critical components in Lightning.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Complete inventory of active Visualforce pages and JavaScript buttons to migrate",
-              "For each component: feature analysis, migration risks and Lightning alternatives",
-              "Prioritization matrix: business impact × technical complexity × dependencies",
-              "Detailed specifications with 2 to 3 options per component (pros/cons + cost estimate)",
-              "Comparative screenshots Classic vs Lightning for the 3 main screens"
+              "Visualforce page (Account object): search and display opportunities linked to an account via a simple search field → converted to a Lightning Web Component (estimated 8 days)",
+              "JavaScript button (Lead object): updates status to \"Working - Contacted\" — JS buttons don't work in Lightning → converted to an Aura Component deployed as a Quick Action (estimated 2 days)",
+              "Existing Apex controllers: updated for compatibility with the new LWC and Aura components (estimated 2 days)",
+              "Total cost estimate: 17 days (LWC 8d + Aura 2d + controllers 2d + testing/validation 3d + deployment & QA 2d), plus 7-8h of user training"
             ],
-            "title": "Analysis of Existing Setup"
+            "title": "Identified Components & Proposed Solutions"
           },
           {
             "type": "bullets",
             "items": [
-              "Visualforce pages converted to Lightning Web Components (LWC) or Aura Components based on complexity",
-              "JavaScript buttons replaced by Salesforce Lightning Quick Actions",
-              "Migrated components validated: functional tests on Lightning sandbox",
-              "Lightning gains documented: productivity, improved UX, native mobile access",
-              "Code deployed via Salesforce DX and validated on EG sandbox Lightning pages"
+              "AccountOpportunitiesSearch LWC: dynamic search field + lightning-datatable, wired to AccountOpportunitiesController.getOpportunities() (Apex @AuraEnabled cacheable=true, SOQL keyword filtering)",
+              "UpdateLeadStatus Aura component (force:lightningQuickAction, force:hasRecordId): Quick Action button calling LeadStatusController.updateStatus() in Apex, with toast notification (notificationsLibrary) on error and automatic view refresh",
+              "Side-by-side Classic vs Lightning screenshots across 3 screens (home, account record, lead record) documenting concrete UX gains: KPI widgets, no-reload quick actions, visual status path for leads"
             ],
-            "title": "Migration Completed"
+            "title": "Delivered Prototype"
           },
           {
             "type": "bullets",
             "items": [
-              "Lightning Web Components (LWC) — Replacement of Visualforce pages",
-              "Aura Components — For components with existing Aura dependencies",
-              "Quick Actions Salesforce — JavaScript button migration",
-              "Apex Controllers — Server-side logic for Lightning components",
-              "Salesforce DX / SFDX — Metadata deployment and versioning",
-              "Salesforce Classic & Lightning — Comparative test environments"
+              "Apex controller incompatibility (medium impact) → thorough sandbox testing and ongoing code reviews",
+              "User adoption challenges (high probability) → training sessions (~7-8h, including advanced admin training) and support documentation",
+              "LWC performance issues (low impact) → code optimization",
+              "Tooled diagnostic via the Lightning Experience Configuration Converter: 1 unconverted JavaScript button and 18 actions/buttons not yet deployed identified, 0 Visualforce pages requiring immediate action"
+            ],
+            "title": "Risk Management"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Lightning Web Components (LWC) — Visualforce page replacement",
+              "Aura Components — Quick Action for the legacy JavaScript button",
+              "Apex Controllers — AccountOpportunitiesController, LeadStatusController",
+              "Lightning Experience Configuration Converter — migration diagnostic",
+              "Salesforce Classic & Lightning — comparative test environments"
             ],
             "title": "Stack & Technologies"
           },
@@ -11269,27 +11626,31 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Inventory",
-                "description": "All Visualforce pages and JavaScript components to migrate identified — dependencies fully mapped"
+                "description": "Identified Visualforce and JavaScript components to migrate; functional analysis and risk per component"
               },
               {
                 "label": "Specifications",
-                "description": "Technical specs written — 2-3 options per component with pros/cons, cost estimate and recommendation"
+                "description": "Technical specs written: proposed solution per component with cost estimate and pros/cons"
               },
               {
-                "label": "Mockup",
-                "description": "Comparative screenshots Classic vs Lightning for the 3 key screens (quote form, client record, dashboard)"
+                "label": "Comparative screenshots",
+                "description": "Classic vs Lightning screenshots across 3 key screens to document expected gains"
               },
               {
-                "label": "LWC development",
-                "description": "Visualforce pages converted to LWC — server-side Apex logic unchanged, presentation layer rebuilt"
+                "label": "LWC prototype",
+                "description": "Built the AccountOpportunitiesSearch component with its Apex controller"
               },
               {
-                "label": "Button migration",
-                "description": "JavaScript buttons replaced by Lightning Quick Actions — functional tests on sandbox completed"
+                "label": "Aura prototype",
+                "description": "Built the UpdateLeadStatus Quick Action component, with error handling and toast notification"
               },
               {
-                "label": "Validation",
-                "description": "Regression tests, functional validation with simulated client and defense — jury: complete and relevant solutions"
+                "label": "Rollout plan",
+                "description": "Defined post-migration KPIs (adoption, performance) and roadmap (Lightning reports, Flow automation, new LWCs)"
+              },
+              {
+                "label": "Defense",
+                "description": "Presented to jury — solutions assessed as complete and relevant, skills validated"
               }
             ],
             "title": "Project Timeline"
@@ -11303,22 +11664,44 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "2/2"
               },
               {
-                "note": "Classic → Lightning",
-                "label": "Components migrated",
-                "value": "JS Button + VF Page"
+                "note": "AccountOpportunitiesSearch LWC + UpdateLeadStatus Aura",
+                "label": "Components prototyped",
+                "value": "2"
               },
               {
-                "note": "With cost estimate",
-                "label": "Options documented",
-                "value": "2-3 / component"
+                "note": "Dev + testing + deployment",
+                "label": "Project cost estimate",
+                "value": "17 days"
               },
               {
-                "note": "Special mention",
-                "label": "Jury assessment",
-                "value": "Complete & relevant solutions"
+                "note": "Post-migration tracking KPI",
+                "label": "Target Lightning adoption",
+                "value": ">90%"
               }
             ],
             "title": "Results"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
+                "label": "Technical & functional specifications (PDF)"
+              },
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf",
+                "label": "EG Manufacture installation manual (PDF)"
+              },
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf",
+                "label": "Lightning advantages — comparison (PDF)"
+              },
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/screenshots.zip",
+                "label": "Before/after screenshots (ZIP)"
+              }
+            ],
+            "title": "Deliverables"
           }
         ]
       },
@@ -11327,41 +11710,47 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Migration de l'application Visualforce d'EG Manufacture vers Lightning Web Components chez WireBright Consulting.",
         "sections": [
           {
-            "body": "EG Manufacture, grande manufacture de tapisserie, utilisait Salesforce Classic avec des pages Visualforce et des boutons JavaScript — tous incompatibles avec Lightning Experience. Le cabinet WireBright Consulting pilotait la migration. Mission : réaliser l'inventaire des composants à migrer, produire des spécifications techniques comparant les options, et convertir les composants vers Lightning (LWC / Quick Actions) avec preuves avant/après.",
+            "body": "EG Manufacture, spécialisée dans la tapisserie, utilisait Salesforce Classic pour gérer ses leads et ses comptes clients — une page Visualforce de recherche d'opportunités et un bouton JavaScript de mise à jour de statut, tous deux incompatibles avec Lightning Experience. Le cabinet WireBright Consulting pilotait la migration. Mission : produire les spécifications techniques et fonctionnelles complètes (inventaire des composants, options de conversion chiffrées, gestion des risques) puis livrer un premier prototype des deux composants les plus critiques en Lightning.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Inventaire complet des pages Visualforce actives et des boutons JavaScript à migrer",
-              "Pour chaque composant : analyse des fonctionnalités, risques de migration et alternatives Lightning",
-              "Matrice de priorisation : impact métier × complexité technique × dépendances",
-              "Spécifications détaillées avec 2 à 3 options par composant (pour/contre + estimation chiffrage)",
-              "Captures d'écran comparatives Classic vs Lightning pour les 3 écrans principaux"
+              "Page Visualforce (objet Account) : recherche et affichage des opportunités liées à un compte via un champ de recherche simple → conversion en Lightning Web Component (8 jours estimés)",
+              "Bouton JavaScript (objet Lead) : mise à jour du statut en « Working - Contacted » — les boutons JS ne fonctionnent pas en Lightning → conversion en Aura Component déployé en Quick Action (2 jours estimés)",
+              "Contrôleurs Apex existants : mise à jour pour compatibilité avec les nouveaux composants LWC et Aura (2 jours estimés)",
+              "Chiffrage total : 17 jours (LWC 8j + Aura 2j + contrôleurs 2j + tests/validation 3j + déploiement & QA 2j), plus 7-8h de formation utilisateurs"
             ],
-            "title": "Analyse de l'existant"
+            "title": "Composants identifiés & solutions proposées"
           },
           {
             "type": "bullets",
             "items": [
-              "Pages Visualforce converties en Lightning Web Components (LWC) ou Aura Components selon la complexité",
-              "Boutons JavaScript remplacés par des Quick Actions Salesforce Lightning",
-              "Validation des composants migrés : tests fonctionnels sur sandbox Lightning",
-              "Documentation des gains Lightning : productivité, UX améliorée, accès mobile natif",
-              "Code déployé via Salesforce DX et validé sur les pages Lightning de la sandbox EG"
+              "Composant LWC AccountOpportunitiesSearch : champ de recherche dynamique + lightning-datatable, alimenté par @wire vers AccountOpportunitiesController.getOpportunities() (Apex @AuraEnabled cacheable=true, filtrage SOQL par mot-clé)",
+              "Composant Aura UpdateLeadStatus (force:lightningQuickAction, force:hasRecordId) : bouton Quick Action appelant LeadStatusController.updateStatus() côté Apex, avec notification toast (notificationsLibrary) en cas d'erreur et rafraîchissement automatique de la vue",
+              "Captures d'écran comparatives Classic vs Lightning sur 3 écrans (accueil, fiche compte, fiche lead) documentant les gains UX concrets : widgets KPI, actions rapides sans rechargement de page, chemin de statut visuel pour les leads"
             ],
-            "title": "Migration réalisée"
+            "title": "Prototype livré"
           },
           {
             "type": "bullets",
             "items": [
-              "Lightning Web Components (LWC) — Remplacement des pages Visualforce",
-              "Aura Components — Pour les composants avec dépendances Aura",
-              "Quick Actions Salesforce — Migration des boutons JavaScript",
-              "Apex Controllers — Logique serveur pour les composants Lightning",
-              "Salesforce DX / SFDX — Déploiement et versionning des métadonnées",
-              "Salesforce Classic & Lightning — Environnements de test comparatifs"
+              "Incompatibilité des contrôleurs Apex (impact moyen) → tests approfondis en sandbox et revues de code en continu",
+              "Difficultés d'adoption par les utilisateurs (probabilité haute) → sessions de formation (~7-8h, dont formation avancée admin) et documents de support",
+              "Problèmes de performance des LWC (impact faible) → optimisation du code",
+              "Diagnostic outillé via le Lightning Experience Configuration Converter : 1 bouton JavaScript non converti et 18 actions/boutons non encore déployés identifiés, 0 page Visualforce nécessitant une action immédiate"
+            ],
+            "title": "Gestion des risques"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Lightning Web Components (LWC) — remplacement de la page Visualforce",
+              "Aura Components — Quick Action pour le bouton JavaScript legacy",
+              "Apex Controllers — AccountOpportunitiesController, LeadStatusController",
+              "Lightning Experience Configuration Converter — diagnostic de migration",
+              "Salesforce Classic & Lightning — environnements de test comparatifs"
             ],
             "title": "Stack & Technologies"
           },
@@ -11370,27 +11759,31 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Inventaire",
-                "description": "Identification de tous les composants Visualforce et JavaScript à migrer — cartographie des dépendances"
+                "description": "Identification des composants Visualforce et JavaScript à migrer, analyse fonctionnelle et risques par composant"
               },
               {
                 "label": "Spécifications",
-                "description": "Rédaction des specs techniques : 2-3 options par composant avec pros/cons, chiffrage et recommandation"
+                "description": "Rédaction des specs techniques : solution proposée par composant avec chiffrage et avantages/inconvénients"
               },
               {
-                "label": "Maquettage",
-                "description": "Captures d'écran comparatives Classic vs Lightning pour les 3 écrans clés (formulaire devis, fiche client, tableau de bord)"
+                "label": "Captures comparatives",
+                "description": "Captures d'écran Classic vs Lightning sur 3 écrans clés pour documenter les gains attendus"
               },
               {
-                "label": "Développement LWC",
-                "description": "Conversion des pages Visualforce en LWC — logique Apex inchangée côté serveur, refonte de la couche présentation"
+                "label": "Prototype LWC",
+                "description": "Développement du composant AccountOpportunitiesSearch avec son contrôleur Apex"
               },
               {
-                "label": "Migration boutons",
-                "description": "Remplacement des boutons JavaScript par des Quick Actions Lightning — tests fonctionnels sur sandbox"
+                "label": "Prototype Aura",
+                "description": "Développement du composant UpdateLeadStatus en Quick Action, avec gestion d'erreur et notification toast"
               },
               {
-                "label": "Validation",
-                "description": "Tests de non-régression, validation fonctionnelle avec le client simulé et soutenance — jury : solutions complètes et pertinentes"
+                "label": "Plan de suivi",
+                "description": "Définition des KPI post-migration (adoption, performance) et de la feuille de route (rapports Lightning, automatisation Flow, nouveaux LWC)"
+              },
+              {
+                "label": "Soutenance",
+                "description": "Présentation au jury — solutions jugées complètes et pertinentes, compétences validées"
               }
             ],
             "title": "Déroulement du projet"
@@ -11404,74 +11797,155 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "2/2"
               },
               {
-                "note": "Classic → Lightning",
-                "label": "Composants migrés",
-                "value": "Bouton JS + Page VF"
+                "note": "LWC AccountOpportunitiesSearch + Aura UpdateLeadStatus",
+                "label": "Composants prototypés",
+                "value": "2"
               },
               {
-                "note": "Avec chiffrage",
-                "label": "Options documentées",
-                "value": "2-3 / composant"
+                "note": "Dev + tests + déploiement",
+                "label": "Chiffrage projet",
+                "value": "17 jours"
               },
               {
-                "note": "Mention spéciale",
-                "label": "Évaluation jury",
-                "value": "Solutions complètes et pertinentes"
+                "note": "KPI de suivi post-migration",
+                "label": "Adoption Lightning ciblée",
+                "value": ">90%"
               }
             ],
             "title": "Résultats"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
+                "label": "Spécifications techniques et fonctionnelles (PDF)"
+              },
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf",
+                "label": "Manuel d'installation EG Manufacture (PDF)"
+              },
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf",
+                "label": "Avantages de Lightning — comparatif (PDF)"
+              },
+              {
+                "href": "/docs/projects/wirebright-visualforce-to-lightning/screenshots.zip",
+                "label": "Captures avant/après (ZIP)"
+              }
+            ],
+            "title": "Livrables"
           }
         ]
       },
       "es": {
-        "title": "Visualforce to Lightning migration (WireBright)",
+        "title": "Migración de Visualforce a Lightning (WireBright)",
         "heroSubtitle": "Migración de Visualforce a Lightning (WireBright)",
         "sections": [
           {
+            "body": "EG Manufacture, especializada en tapicería, utilizaba Salesforce Classic para gestionar sus leads y cuentas — una página Visualforce de búsqueda de oportunidades y un botón JavaScript de actualización de estado, ambos incompatibles con Lightning Experience. La consultora WireBright Consulting lideró la migración. Misión: producir las especificaciones técnicas y funcionales completas (inventario de componentes, opciones de conversión con coste estimado, gestión de riesgos) y entregar después un primer prototipo de los dos componentes más críticos en Lightning.",
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "EG Manufacturing utilizaba Salesforce Classic con páginas Visualforce y botones JavaScript personalizados.",
-              "El objetivo era migrar a Lightning Experience para acceder a las funcionalidades recientes, modernizar la UX y mantener un comportamiento de negocio equivalente.",
-              "El trabajo incluye un plan de migración (especificaciones), evidencias antes/después (capturas) y las primeras conversiones (Visualforce + botón JavaScript)."
-            ]
+            "title": "Contexto"
           },
           {
             "type": "bullets",
             "items": [
-              "Identificar los componentes Classic afectados por la migración a Lightning (páginas Visualforce, botones JavaScript, UI personalizada).",
-              "Proponer opciones de conversión con pros/contras (patrones Lightning) y estimar el esfuerzo por componente.",
-              "Proporcionar evidencias antes/después y explicar las ventajas de Lightning para cada pantalla.",
-              "Empezar convirtiendo las páginas Visualforce y los botones JavaScript que dejarían de funcionar en Lightning."
+              "Página Visualforce (objeto Account): busca y muestra las oportunidades vinculadas a una cuenta mediante un campo de búsqueda simple → conversión a Lightning Web Component (8 días estimados)",
+              "Botón JavaScript (objeto Lead): actualiza el estado a «Working - Contacted» — los botones JS no funcionan en Lightning → conversión a un componente Aura desplegado como Quick Action (2 días estimados)",
+              "Controladores Apex existentes: actualizados para ser compatibles con los nuevos componentes LWC y Aura (2 días estimados)",
+              "Estimación total: 17 días (LWC 8d + Aura 2d + controladores 2d + pruebas/validación 3d + despliegue y QA 2d), más 7-8h de formación de usuarios"
             ],
-            "title": "Objetivos"
+            "title": "Componentes identificados y soluciones propuestas"
           },
           {
             "type": "bullets",
             "items": [
-              "Especificaciones técnicas y funcionales: inventario de componentes + propuesta de conversión.",
-              "Estrategia de conversión de los botones JavaScript (acciones/patrones compatibles con Lightning).",
-              "Validación mediante capturas de pantalla comparativas (Classic vs Lightning) y controles funcionales."
+              "LWC AccountOpportunitiesSearch: campo de búsqueda dinámico + lightning-datatable, conectado vía @wire a AccountOpportunitiesController.getOpportunities() (Apex @AuraEnabled cacheable=true, filtrado SOQL por palabra clave)",
+              "Componente Aura UpdateLeadStatus (force:lightningQuickAction, force:hasRecordId): botón Quick Action que llama a LeadStatusController.updateStatus() en Apex, con notificación toast (notificationsLibrary) en caso de error y actualización automática de la vista",
+              "Capturas comparativas Classic vs Lightning en 3 pantallas (inicio, ficha de cuenta, ficha de lead) documentando mejoras de UX concretas: widgets de KPI, acciones rápidas sin recargar la página, ruta de estado visual para los leads"
             ],
-            "title": "Solución"
+            "title": "Prototipo entregado"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Incompatibilidad de los controladores Apex (impacto medio) → pruebas exhaustivas en sandbox y revisiones de código continuas",
+              "Dificultades de adopción por parte de los usuarios (probabilidad alta) → sesiones de formación (~7-8h, incluyendo formación avanzada para administradores) y documentación de soporte",
+              "Problemas de rendimiento de los LWC (impacto bajo) → optimización del código",
+              "Diagnóstico apoyado en el Lightning Experience Configuration Converter: 1 botón JavaScript sin convertir y 18 acciones/botones aún sin desplegar identificados, 0 páginas Visualforce que requirieran acción inmediata"
+            ],
+            "title": "Gestión de riesgos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Lightning Web Components (LWC) — sustitución de la página Visualforce",
+              "Aura Components — Quick Action para el botón JavaScript heredado",
+              "Apex Controllers — AccountOpportunitiesController, LeadStatusController",
+              "Lightning Experience Configuration Converter — diagnóstico de migración",
+              "Salesforce Classic y Lightning — entornos de prueba comparativos"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Inventario",
+                "description": "Identificación de los componentes Visualforce y JavaScript a migrar; análisis funcional y riesgo por componente"
+              },
+              {
+                "label": "Especificaciones",
+                "description": "Redacción de las specs técnicas: solución propuesta por componente con coste estimado y pros/contras"
+              },
+              {
+                "label": "Capturas comparativas",
+                "description": "Capturas Classic vs Lightning en 3 pantallas clave para documentar las mejoras esperadas"
+              },
+              {
+                "label": "Prototipo LWC",
+                "description": "Desarrollo del componente AccountOpportunitiesSearch con su controlador Apex"
+              },
+              {
+                "label": "Prototipo Aura",
+                "description": "Desarrollo del componente UpdateLeadStatus como Quick Action, con gestión de errores y notificación toast"
+              },
+              {
+                "label": "Plan de seguimiento",
+                "description": "Definición de los KPI post-migración (adopción, rendimiento) y de la hoja de ruta (informes Lightning, automatización con Flow, nuevos LWC)"
+              },
+              {
+                "label": "Defensa",
+                "description": "Presentación ante el tribunal — soluciones valoradas como completas y pertinentes, competencias validadas"
+              }
+            ],
+            "title": "Desarrollo del proyecto"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "label": "Pantallas comparadas",
-                "value": "3 (antes/después)"
-              },
-              {
-                "label": "Componentes legacy migrados",
-                "value": "2 (Visualforce + botón JS)"
-              },
-              {
-                "label": "Competencias validadas (jurado)",
+                "note": "Tribunal OpenClassrooms",
+                "label": "Competencias validadas",
                 "value": "2/2"
+              },
+              {
+                "note": "LWC AccountOpportunitiesSearch + Aura UpdateLeadStatus",
+                "label": "Componentes prototipados",
+                "value": "2"
+              },
+              {
+                "note": "Desarrollo + pruebas + despliegue",
+                "label": "Estimación del proyecto",
+                "value": "17 días"
+              },
+              {
+                "note": "KPI de seguimiento post-migración",
+                "label": "Adopción Lightning objetivo",
+                "value": ">90%"
               }
             ],
-            "title": "Impacto y evidencias"
+            "title": "Resultados"
           },
           {
             "type": "resources",
@@ -11482,38 +11956,18 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf",
-                "label": "Manual de instalación (PDF)"
+                "label": "Manual de instalación EG Manufacture (PDF)"
               },
               {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf",
-                "label": "Ventajas de Lightning (PDF)"
+                "label": "Ventajas de Lightning — comparativa (PDF)"
               },
               {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/screenshots.zip",
                 "label": "Capturas antes/después (ZIP)"
-              },
-              {
-                "href": "/docs/projects/wirebright-visualforce-to-lightning/brief.docx",
-                "label": "Solicitud / brief del proyecto (DOCX)"
               }
             ],
-            "title": "Entregables y evidencias"
-          },
-          {
-            "type": "text",
-            "title": "Comentarios del jurado",
-            "paragraphs": [
-              "Se validaron las 2 competencias evaluadas: integración de wireframes / evidencias mediante capturas, y producción de documentación técnica y funcional.",
-              "Puntos fuertes señalados: buena comprensión, propuesta de solución completa (pros/contras + estimaciones), y migración efectiva de los componentes clave."
-            ]
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Salesforce Classic → Lightning Experience (Visualforce, patrones Lightning).",
-              "Entrega orientada a documentación (especificaciones, guía de instalación, pack de evidencias)."
-            ],
-            "title": "Stack y herramientas"
+            "title": "Entregables"
           }
         ]
       }
