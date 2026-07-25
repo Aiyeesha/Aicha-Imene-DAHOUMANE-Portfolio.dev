@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T01:16:18.188Z
+// Last export: 2026-07-25T01:57:18.428Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -95,9 +95,9 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Bugfix: correct counts + sorted output",
-      "Refactor to maintainable OOP structure",
-      "Javadoc + clean Git workflow"
+      "Bug fixed via Map.merge() aggregation inside a TreeMap, which solves both counting and alphabetical sorting in a single structure",
+      "Refactored into 4 classes + 2 interfaces (ISymptomReader/ISymptomWriter) — reading, counting and writing separated",
+      "Full Javadoc + public GitHub repository (fork of the OpenClassrooms template)"
     ],
     "featured": false,
     "sortOrder": 200,
@@ -450,9 +450,9 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Mobile-first SPA from wireframes/specs",
-      "Fetch-based API integration + DOM updates",
-      "Sass structure + responsive UI behavior"
+      "Mobile-first SPA built from wireframes and functional specs, with zero JS framework",
+      "Google Books API integration (Fetch) + list persistence via sessionStorage",
+      "Code split into 3 ES6 modules (application.js, search.js, util.js) + structured SASS"
     ],
     "featured": false,
     "sortOrder": 220,
