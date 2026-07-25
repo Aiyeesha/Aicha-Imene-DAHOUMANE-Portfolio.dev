@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T01:57:18.432Z
+// Last export: 2026-07-25T06:52:09.434Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -600,33 +600,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "/docs/projects/hemebiotech-java-debug/brief.docx",
-                "label": "Brief del proyecto (DOCX)"
-              },
-              {
-                "href": "/docs/projects/hemebiotech-java-debug/key-steps-guide.pdf",
-                "label": "Guía de pasos clave (PDF)"
-              },
-              {
-                "href": "/docs/projects/hemebiotech-java-debug/directives.pdf",
-                "label": "Directrices (PDF)"
-              },
-              {
-                "href": "/docs/projects/hemebiotech-java-debug/email-exchange.pdf",
-                "label": "Intercambio de emails (PDF)"
-              },
-              {
-                "href": "/docs/projects/hemebiotech-java-debug/deliverable.pdf",
-                "label": "Entrega (PDF)"
-              },
-              {
-                "href": "/docs/projects/hemebiotech-java-debug/legacy-version-may-2023.pdf",
-                "note": "Referencia",
-                "label": "Versión anterior (PDF)"
-              },
-              {
-                "href": "/docs/projects/hemebiotech-java-debug/repository.txt",
-                "label": "Enlace del repositorio (TXT)"
+                "href": "https://github.com/Aiyeesha/Hemebiotech",
+                "label": "Repositorio GitHub"
               }
             ],
             "title": "Entregables"
@@ -3323,32 +3298,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "/docs/projects/parkit-java-testing/brief-parkit.docx",
-                "label": "Brief del proyecto (DOCX)"
-              },
-              {
-                "href": "/docs/projects/parkit-java-testing/guide-etapes.pdf",
-                "label": "Guía de pasos (PDF)"
-              },
-              {
-                "href": "/docs/projects/parkit-java-testing/guide-etapes-cles.pdf",
-                "label": "Guía de pasos clave (PDF)"
-              },
-              {
-                "href": "/docs/projects/parkit-java-testing/kit-technique-onboarding.pdf",
-                "label": "Kit técnico de incorporación (PDF)"
-              },
-              {
-                "href": "/docs/projects/parkit-java-testing/ancienne-version-mai-2023.pdf",
-                "label": "Versión archivada (PDF)"
-              },
-              {
                 "href": "/docs/projects/parkit-java-testing/screenshots.zip",
                 "label": "Capturas de informes de pruebas (ZIP)"
-              },
-              {
-                "href": "https://github.com/Aiyeesha/ParkingSystem.git",
-                "label": "Repositorio GitHub"
               },
               {
                 "href": "/docs/projects/parkit-java-testing/repository-link.txt",
@@ -3694,14 +3645,6 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "resources",
             "items": [
-              {
-                "href": "/docs/projects/pochlib-ui/functional-specs.pdf",
-                "label": "Especificaciones funcionales (PDF)"
-              },
-              {
-                "href": "/docs/projects/pochlib-ui/brief.docx",
-                "label": "Brief e informe del jurado (DOCX)"
-              },
               {
                 "href": "/docs/projects/pochlib-ui/index.html",
                 "label": "Página HTML de demostración (HTML)"
@@ -9851,10 +9794,6 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Implementation strategy & product backlog (PDF)"
               },
               {
-                "href": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
-                "label": "Requirements specification (PDF)"
-              },
-              {
                 "href": "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx",
                 "label": "Initial backlog (XLSX)"
               },
@@ -9994,10 +9933,6 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Stratégie d'implémentation & backlog produit (PDF)"
               },
               {
-                "href": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
-                "label": "Cahier des charges (PDF)"
-              },
-              {
                 "href": "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx",
                 "label": "Backlog initial (XLSX)"
               },
@@ -10135,10 +10070,6 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
                 "label": "Estrategia de implementación y backlog de producto (PDF)"
-              },
-              {
-                "href": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
-                "label": "Pliego de requisitos (PDF)"
               },
               {
                 "href": "/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx",
@@ -10313,14 +10244,6 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Qualitative and quantitative analysis (DOCX)"
               },
               {
-                "href": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
-                "label": "Deployment guide (PDF)"
-              },
-              {
-                "href": "/docs/projects/digit-learning-salesforce-update/data-import-guide.pdf",
-                "label": "Data import guide (PDF)"
-              },
-              {
                 "href": "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf",
                 "label": "Interview notes (PDF)"
               }
@@ -10454,14 +10377,6 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Analyse qualitative et quantitative (DOCX)"
               },
               {
-                "href": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
-                "label": "Guide de déploiement (PDF)"
-              },
-              {
-                "href": "/docs/projects/digit-learning-salesforce-update/data-import-guide.pdf",
-                "label": "Guide d'import des données (PDF)"
-              },
-              {
                 "href": "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf",
                 "label": "Notes des entretiens (PDF)"
               }
@@ -10593,14 +10508,6 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/digit-learning-salesforce-update/analysis-report.docx",
                 "label": "Análisis cualitativo y cuantitativo (DOCX)"
-              },
-              {
-                "href": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
-                "label": "Guía de despliegue (PDF)"
-              },
-              {
-                "href": "/docs/projects/digit-learning-salesforce-update/data-import-guide.pdf",
-                "label": "Guía de importación de datos (PDF)"
               },
               {
                 "href": "/docs/projects/digit-learning-salesforce-update/interview-notes.pdf",
@@ -10814,10 +10721,6 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
                 "label": "Data model (PNG)"
-              },
-              {
-                "href": "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
-                "label": "Requirements specification (PDF)"
               }
             ],
             "title": "Deliverables"
@@ -10956,10 +10859,6 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
                 "label": "Modèle de données (PNG)"
-              },
-              {
-                "href": "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
-                "label": "Cahier des charges (PDF)"
               }
             ],
             "title": "Livrables"
@@ -11099,10 +10998,6 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/tours-for-life-salesforce-solution/data-model.png",
                 "label": "Modelo de datos (PNG)"
-              },
-              {
-                "href": "/docs/projects/tours-for-life-salesforce-solution/cahier-des-charges.pdf",
-                "label": "Pliego de requisitos (PDF)"
               }
             ],
             "title": "Entregables"
@@ -11755,10 +11650,6 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Technical & functional specifications (PDF)"
               },
               {
-                "href": "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf",
-                "label": "EG Manufacture installation manual (PDF)"
-              },
-              {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf",
                 "label": "Lightning advantages — comparison (PDF)"
               },
@@ -11888,10 +11779,6 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Spécifications techniques et fonctionnelles (PDF)"
               },
               {
-                "href": "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf",
-                "label": "Manuel d'installation EG Manufacture (PDF)"
-              },
-              {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf",
                 "label": "Avantages de Lightning — comparatif (PDF)"
               },
@@ -12019,10 +11906,6 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
                 "label": "Especificaciones técnicas y funcionales (PDF)"
-              },
-              {
-                "href": "/docs/projects/wirebright-visualforce-to-lightning/installation-manual.pdf",
-                "label": "Manual de instalación EG Manufacture (PDF)"
               },
               {
                 "href": "/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf",
