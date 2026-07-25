@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T01:02:52.828Z
+// Last export: 2026-07-25T01:16:18.188Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1303,7 +1303,7 @@ export const projects: Project[] = [
   {
     "slug": "avenir-telecom-lightning-app",
     "title": "Lightning app delivery & backlog (Avenir Télécom)",
-    "excerpt": "South zone Lightning app delivery with a Scrum product backlog + unit/integration test plan, then a Kanban evolutions backlog after a 3‑month pilot.",
+    "excerpt": "Scrum product backlog (20 user stories) and test plan for Avenir Télécom's field Lightning app, with real-time DeviQo integration and Dev Org hardening, then a Kanban evolutions backlog after an audit and a 3-month pilot.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1332,9 +1332,9 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Scrum backlog + acceptance criteria for pilot",
-      "Lightning app delivery for business zone rollout",
-      "Test plan + Kanban evolutions backlog"
+      "20 costed and prioritized user stories (SIREN webservice validation, real-time DeviQo quotes <2s, auto PDF + email generation, GDPR purge)",
+      "Test plan with 20 test classes and an Apex best-practices reference (bulkification, one trigger per object, ≥75% coverage)",
+      "Post-pilot Kanban backlog: 3 evolutions, 3 fixes and 3 production bugs tracked (E1-E3, C1-C3, B001-B003)"
     ],
     "featured": false,
     "sortOrder": 10,
@@ -1343,7 +1343,7 @@ export const projects: Project[] = [
   {
     "slug": "digit-learning-salesforce-update",
     "title": "Salesforce application update (Digit Learning)",
-    "excerpt": "Salesforce audit & modernization: multi-enrollment data model, automated enrollments (Flows), and management-ready reporting.",
+    "excerpt": "Internal quality audit and Salesforce modernization for Digit Learning: a new Purchased Training junction object to lift the \"one student = one training\" limitation, automated enrollment and mentor assignment, and 3 new management reports.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1361,6 +1361,7 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
+    "pdfUrl": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
     "techStack": [
       "Salesforce",
       "Apex",
@@ -1371,9 +1372,9 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Org audit + modernization plan",
-      "Multi-enrollment data model + automated Flows",
-      "Management-ready reporting + quality checklist"
+      "Audit finding fixed: a student could only be linked to a single training — resolved with a Purchased Training junction object (master-detail)",
+      "Measured processing time: mentor assignment + enrollment down from 30+ min to 5 min/student, catalog management from 30+ min to 15 min",
+      "3 reports delivered: available seats per training, students by status/mentor, prospect → active client conversion rate"
     ],
     "featured": false,
     "sortOrder": 20,
@@ -1382,7 +1383,7 @@ export const projects: Project[] = [
   {
     "slug": "tours-for-life-salesforce-solution",
     "title": "Salesforce solution design (Tours For Life)",
-    "excerpt": "End-to-end Salesforce solution design: Lead→Traveler conversion (Person Accounts), trip & fleet management, automation (Flow) and dashboards.",
+    "excerpt": "Salesforce Sales Cloud solution design for Tours for Life: Person Accounts for the Prospect → Traveler conversion, separate Trip / Purchased Trip / Bus Fleet objects, Flow automations (seat decrement, confirmation email) and a North/South role-based security model.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1411,9 +1412,9 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Lead → Traveler conversion with Person Accounts",
-      "Trip + fleet management model + automation (Flow)",
-      "Dashboards/reports + security model"
+      "4-object data model: Prospect (Lead), Traveler (Person Account), distinct Trip and Purchased Trip objects, Bus Fleet linked to multiple trips",
+      "2 production Flows: automatic available-seats decrement + confirmation email on prospect status change",
+      "North/South role-based security with Sharing Rules, per-object OWD (Private / Public Read-Only / Controlled by Parent)"
     ],
     "featured": false,
     "sortOrder": 30,
@@ -1461,7 +1462,7 @@ export const projects: Project[] = [
   {
     "slug": "wirebright-visualforce-to-lightning",
     "title": "Visualforce to Lightning migration (WireBright)",
-    "excerpt": "Migration plan and execution: convert Visualforce pages and JavaScript buttons to Lightning, with specs and before/after evidence.",
+    "excerpt": "Technical specifications and Classic-to-Lightning migration prototype for EG Manufacture: converting a Visualforce page into a Lightning Web Component and a JavaScript button into an Aura Quick Action, with detailed cost estimates and risk management.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1488,9 +1489,9 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Visualforce/JS inventory and migration plan",
-      "Lightning implementation path (modern UI patterns)",
-      "Before/after validation evidence + specs"
+      "AccountOpportunitiesSearch LWC prototype (dynamic opportunity search) + AccountOpportunitiesController Apex class",
+      "UpdateLeadStatus Aura Quick Action prototype, replacing a JavaScript button incompatible with Lightning",
+      "Detailed cost estimate (17 dev days) and per-component risk matrix with mitigation strategies"
     ],
     "featured": true,
     "sortOrder": 2,
