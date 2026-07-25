@@ -287,7 +287,8 @@
     "status": "Status",
     "changelog": "Changelog",
     "workWithMe": "Work with me",
-    "uses": "Uses & Setup"
+    "uses": "Uses & Setup",
+    "colophon": "Colophon"
   },
   "profile": {
     "kicker": "Profile",
