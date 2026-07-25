@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-24T20:31:31.718Z
+// Last export: 2026-07-25T00:11:14.964Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1206,7 +1206,7 @@ export const projects: Project[] = [
   {
     "slug": "incident-response-playbook",
     "title": "Incident Response Playbook (SOC)",
-    "excerpt": "A set of structured playbooks designed for SOC teams and IT admins covering the 5 most common cybersecurity incidents. Each playbook follows the full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned.",
+    "excerpt": "A set of structured playbooks designed for SOC teams and IT admins covering the 6 most common cybersecurity incidents. Each playbook follows the full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned.",
     "track": "itops",
     "categories": [
       "Security"
@@ -1226,10 +1226,10 @@ export const projects: Project[] = [
       "Documentation"
     ],
     "highlights": [
-      "5 playbooks covering malware, ransomware, data breach, phishing, and unauthorized access",
+      "6 playbooks covering malware, ransomware, data breach, phishing, unauthorized access, and denial of service",
       "Full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned",
       "Severity classification and escalation procedures included",
-      "Reusable incident report and post-mortem templates",
+      "Reusable incident report and post-mortem templates, plus a RACI matrix and crisis communication template",
       "Designed for SMB to mid-market SOC environments"
     ],
     "featured": false,
