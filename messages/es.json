@@ -287,7 +287,8 @@
     "status": "Estado",
     "changelog": "Historial de cambios",
     "workWithMe": "Trabajemos juntos",
-    "uses": "Herramientas y configuración"
+    "uses": "Herramientas y configuración",
+    "colophon": "Colophon"
   },
   "profile": {
     "kicker": "Perfil",
