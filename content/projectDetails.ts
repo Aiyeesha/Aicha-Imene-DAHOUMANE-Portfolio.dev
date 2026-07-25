@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T06:52:09.434Z
+// Last export: 2026-07-25T07:28:10.924Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -3697,7 +3697,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Host discovery: local subnet resolution and ping sweep to list all live hosts",
               "Concurrent port scanning via ThreadPoolExecutor — all top ports probed in parallel per host",
-              "100+ known service detection table (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
+              "45-service detection table (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
               "Risk classification (high / medium / low) per port via RISK_MAP (Telnet, RDP, exposed DBs...)",
               "Real-time WebSocket streaming — results pushed to frontend as each host completes",
               "React/Vite frontend: live host cards, risk-colour-coded port badges, scan progress indicator"
@@ -3758,7 +3758,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "KNOWN_SERVICES dict",
                 "label": "Port coverage",
-                "value": "100+ services"
+                "value": "45 services"
               },
               {
                 "note": "High / Medium / Low via RISK_MAP",
@@ -3789,7 +3789,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Découverte d hôtes : résolution du sous-réseau local et ping de chaque IP pour lister les hôtes actifs",
               "Scan de ports concurrent via ThreadPoolExecutor — tous les top ports scannés en parallèle par hôte",
-              "Table de détection de 100+ services connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
+              "Table de détection de 45 services connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
               "Classification des risques (élevé / moyen / faible) par port via RISK_MAP (Telnet, RDP, BDD exposées...)",
               "Streaming WebSocket en temps réel — résultats envoyés au frontend dès que chaque hôte termine",
               "Frontend React/Vite : cartes d hôtes en live, badges de ports colorés par risque, indicateur de progression"
@@ -3850,7 +3850,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Dict KNOWN_SERVICES",
                 "label": "Couverture ports",
-                "value": "100+ services"
+                "value": "45 services"
               },
               {
                 "note": "Élevé / Moyen / Faible via RISK_MAP",
@@ -3884,7 +3884,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Backend FastAPI con un endpoint WebSocket que transmite los resultados a medida que se obtienen — sin polling ni recarga de página.",
               "Escáner de puertos concurrente mediante ThreadPoolExecutor: recorre todos los puertos principales de una subred en paralelo, y luego agrega los resultados por host.",
-              "Tabla de detección de servicios que cubre 100+ puertos conocidos (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
+              "Tabla de detección de servicios que cubre 45 puertos conocidos (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
               "Clasificación de riesgo (alto / medio / bajo) por puerto abierto basada en un RISK_MAP curado (Telnet, RDP, listener de Metasploit, bases de datos expuestas…).",
               "API REST con CORS habilitado en paralelo al endpoint WebSocket para facilitar la integración.",
               "Frontend React/Vite con tarjetas de host actualizadas en tiempo real, badges de puertos coloreados por riesgo e indicador de progreso del escaneo."
@@ -3904,7 +3904,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Cobertura de puertos",
-                "value": "100+ servicios conocidos en el dict KNOWN_SERVICES"
+                "value": "45 servicios conocidos en el dict KNOWN_SERVICES"
               },
               {
                 "label": "Niveles de riesgo",
@@ -3991,7 +3991,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Python 3 stdlib — re, hashlib (SHA-1), math, getpass (input masking)",
-              "Compiled regex — 9 rules (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
+              "Compiled regex — 6 rules (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
               "HIBP k-anonymity — only 5-char SHA-1 prefix sent to the API",
               "requests (optional) — HaveIBeenPwned API call",
               "ANSI escape codes — colored output and terminal progress bar",
@@ -4071,7 +4071,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Calcul d entropie : log₂(pool^longueur) adapté au pool de caractères — score composite 0-100",
-              "9 règles regex compilées : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées",
+              "6 règles regex compilées : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées",
               "Correspondance dictionnaire : 30+ mots de passe courants et mots de base",
               "Estimation du temps de crack à 3 vitesses d attaque (10k/s, 1M/s, 1 milliard/s)",
               "Intégration HaveIBeenPwned par k-anonymat : seuls les 5 premiers caractères du hash SHA-1 envoyés — le mot de passe ne quitte jamais la machine",
@@ -4083,7 +4083,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Python 3 stdlib — re, hashlib (SHA-1), math, getpass (masquage saisie)",
-              "Regex compilés — 9 règles (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
+              "Regex compilés — 6 règles (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
               "k-anonymat HIBP — seul le préfixe SHA-1 de 5 caractères envoyé à l API",
               "requests (optionnel) — appel API HaveIBeenPwned",
               "ANSI escape codes — sortie colorée et barre de progression en terminal",
@@ -4104,7 +4104,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Analyse de patterns",
-                "description": "9 règles regex compilées appliquées : répétitions, séquences, walks clavier, années intégrées. Chaque pattern détecté pénalise le score."
+                "description": "6 règles regex compilées appliquées : répétitions, séquences, walks clavier, années intégrées. Chaque pattern détecté pénalise le score."
               },
               {
                 "label": "Vérification HIBP",
@@ -4133,7 +4133,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...",
                 "label": "Moteur de patterns",
-                "value": "9 règles regex"
+                "value": "6 règles regex"
               },
               {
                 "note": "Bonus longueur, complexité, entropie + pénalités",
@@ -4187,7 +4187,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Motor de patrones",
-                "value": "9 reglas regex compiladas (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD…)"
+                "value": "6 reglas regex compiladas (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD…)"
               },
               {
                 "label": "Rango de puntuación",
