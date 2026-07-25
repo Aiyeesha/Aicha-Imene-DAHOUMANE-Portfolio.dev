@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T01:57:18.428Z
+// Last export: 2026-07-25T06:52:09.430Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -83,7 +83,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/hemebiotech-java-debug/deliverable.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Hemebiotech",
     "techStack": [
       "Java",
@@ -396,7 +395,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/parkit-java-testing/guide-etapes-cles.pdf",
     "repoUrl": "https://github.com/Aiyeesha/ParkingSystem",
     "techStack": [
       "Java",
@@ -437,7 +435,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/pochlib-ui/functional-specs.pdf",
     "repoUrl": "https://github.com/Aiyeesha/PochLib",
     "liveUrl": "https://aiyeesha.github.io/PochLib/",
     "techStack": [
@@ -1320,7 +1317,7 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/avenir-telecom-lightning-app/cahier-des-charges.pdf",
+    "pdfUrl": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Avenir-TELECOM",
     "techStack": [
       "Salesforce",
@@ -1361,7 +1358,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/digit-learning-salesforce-update/deployment-guide.pdf",
     "techStack": [
       "Salesforce",
       "Apex",
@@ -1438,7 +1434,7 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/idemconnect-apex-backend/cahier-des-charges.pdf",
+    "pdfUrl": "/docs/projects/idemconnect-apex-backend/documentation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/iDEM-Connect",
     "techStack": [
       "Salesforce",
@@ -1557,7 +1553,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/fasha-apex-backend-optimization/p9-note-de-cadrage-p9-note-de-cadrage.pdf",
     "repoUrl": "https://github.com/Aiyeesha/FASHA",
     "techStack": [
       "Salesforce",
@@ -1596,7 +1591,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/legarant-axg-salesforce-deployment/requirements.pdf",
     "repoUrl": "https://github.com/Aiyeesha/legarant-axg-crm-sync",
     "techStack": [
       "Salesforce",
