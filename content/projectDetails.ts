@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T01:16:18.194Z
+// Last export: 2026-07-25T01:57:18.432Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -333,16 +333,15 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Debugging and fixing a Java application for medical needs prediction at Hemebiotech.",
         "sections": [
           {
-            "body": "Heme Biotech is a pharmaceutical company specializing in blood disorders. Alex, a chemistry researcher, had started a Java program for counting and alphabetically sorting symptoms — but all counters returned 0. Mission: diagnose the bugs, refactor the codebase to Java OOP standards, and deliver full Javadoc documentation for team handover.",
+            "body": "Heme Biotech (\"Remedies for those we love\"), a pharmaceutical company specializing in blood disorders, had assigned Alex, a chemistry researcher, to build a small Java trend-analysis tool: read a symptom file and output each symptom's count, alphabetically sorted. Alex got stuck with a counter that always returned 0. Caroline, CTO and co-founder, handed the rest to an incoming dev intern: diagnose the bug, refactor to Java OOP standards, and document everything in Javadoc for team handover.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Symptom counter consistently returning 0 — root cause to be identified",
-              "Sort algorithm broken — output not alphabetical",
-              "Monolithic code with no separation of concerns",
+              "Symptom counter consistently returning 0, regardless of the actual number of occurrences in the file (e.g. 3 occurrences of \"headache\" → 0 in the output)",
+              "Monolithic code with no separation of concerns between reading, counting and writing",
               "No interfaces or OOP patterns in place",
               "Naming not compliant with Java camelCase conventions",
               "No Javadoc documentation available for team handover"
@@ -352,13 +351,14 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Replaced data structure with TreeMap — native alphabetical ordering and corrected counting",
-              "Created ISymptomReader and ISymptomWriter interfaces",
-              "Implemented AnalyticsCounter class with 4 methods: getSymptoms, countSymptoms, sortSymptoms, writeSymptoms",
-              "Isolated entry point into a dedicated Main class",
+              "Bug fixed via TreeMap.merge() aggregation: a single data structure handles both exact counting and native alphabetical ordering — no separate sort step needed",
+              "Reading delegated to ReadSymptomDataFromFile, implementing the ISymptomReader interface (getSymptoms())",
+              "Writing encapsulated in WriteSymptomDataToFile, implementing ISymptomWriter",
+              "AnalyticsCounter refocused on 2 responsibilities: countSymptoms() (TreeMap aggregation) and writeSymptoms() (output file generation)",
+              "Entry point isolated into a dedicated Main class orchestrating read → count → write",
               "camelCase naming applied throughout the entire codebase",
               "Full Javadoc on all public methods",
-              "result.out file generated with alphabetically sorted symptoms"
+              "result.out file generated with alphabetically sorted symptoms and exact counts"
             ],
             "title": "Solution & Deliverables"
           },
@@ -429,32 +429,32 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Débogage et correction d'une application Java de prédiction des besoins médicaux chez Hemebiotech.",
         "sections": [
           {
-            "body": "Heme Biotech est une entreprise pharmaceutique spécialisée dans les maladies du sang. Alex, chercheur en chimie, avait développé un programme Java de comptage et de tri alphabétique des symptômes — mais tous les compteurs retournaient 0. Mission : diagnostiquer les bugs, refactoriser la base de code selon les standards OOP Java et livrer une Javadoc complète pour permettre la reprise en équipe.",
+            "body": "Heme Biotech (\"Des remèdes pour ceux qu'on aime\"), entreprise pharmaceutique spécialisée dans les troubles sanguins, avait confié à Alex, chercheur en chimie, le développement d'un petit outil Java d'analyse de tendances : lire un fichier de symptômes et produire le décompte de chacun, trié alphabétiquement. Alex s'est retrouvé bloqué avec un compteur qui retournait toujours 0. Caroline, directrice technique et cofondatrice, a confié la suite à un stagiaire dev : diagnostiquer le bug, refactoriser vers des standards Java OOP, et documenter le tout en Javadoc pour la reprise en équipe.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Compteur de symptômes retournant systématiquement 0 — cause racine à identifier",
-              "Algorithme de tri non fonctionnel — résultats non alphabétiques",
-              "Code monolithique sans séparation des responsabilités",
-              "Absence d interfaces et de patterns OOP",
+              "Compteur de symptômes retournant systématiquement 0, quel que soit le nombre réel d'occurrences dans le fichier (ex. 3 occurrences de \"maux de tête\" → 0 en sortie)",
+              "Code monolithique sans séparation des responsabilités entre lecture, comptage et écriture",
+              "Absence d'interfaces et de patterns OOP",
               "Nommage non conforme aux conventions Java (camelCase)",
-              "Aucune documentation Javadoc disponible pour la reprise par l équipe"
+              "Aucune documentation Javadoc disponible pour la reprise par l'équipe"
             ],
             "title": "Problèmes & Périmètre"
           },
           {
             "type": "bullets",
             "items": [
-              "Remplacement de la structure de données par TreeMap — tri alphabétique natif et comptage corrigé",
-              "Création des interfaces ISymptomReader et ISymptomWriter",
-              "Implémentation de la classe AnalyticsCounter avec 4 méthodes : getSymptoms, countSymptoms, sortSymptoms, writeSymptoms",
-              "Isolation du point d entrée dans une classe Main dédiée",
-              "Nommage camelCase appliqué sur l ensemble du code",
+              "Bug résolu par agrégation via TreeMap.merge() : une seule structure de données gère à la fois le comptage exact et l'ordre alphabétique natif — plus besoin d'étape de tri séparée",
+              "Lecture déléguée à ReadSymptomDataFromFile, qui implémente l'interface ISymptomReader (getSymptoms())",
+              "Écriture encapsulée dans WriteSymptomDataToFile, qui implémente ISymptomWriter",
+              "AnalyticsCounter recentrée sur 2 responsabilités : countSymptoms() (agrégation TreeMap) et writeSymptoms() (génération du fichier de sortie)",
+              "Point d'entrée isolé dans une classe Main dédiée qui orchestre lecture → comptage → écriture",
+              "Nommage camelCase appliqué sur l'ensemble du code",
               "Javadoc complète sur toutes les méthodes publiques",
-              "Fichier result.out généré avec les symptômes triés alphabétiquement"
+              "Fichier result.out généré avec les symptômes triés alphabétiquement et leur décompte exact"
             ],
             "title": "Solution & Livrables"
           },
@@ -529,7 +529,7 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Contexto",
             "paragraphs": [
               "Heme Biotech necesitaba un programa de análisis sencillo: leer un archivo de síntomas y generar el número de ocurrencias por síntoma.",
-              "La lectura del archivo era correcta, pero el conteo era incorrecto (ej. 3 ocurrencias en el archivo → 0 en la salida para todos los síntomas)."
+              "La lectura del archivo era correcta, pero el conteo era incorrecto: el contador siempre devolvía 0, sin importar el número real de apariciones (ej. 3 apariciones de \"dolor de cabeza\" → 0 en la salida). Alex, investigador de química, se quedó bloqueado en este punto; Caroline, directora técnica y cofundadora, encargó el resto a un becario de desarrollo."
             ]
           },
           {
@@ -632,7 +632,7 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Entregables"
           },
           {
-            "code": "https://github.com/Aiyeesha/DAHOUMANE-Aicha-Imene-Debuggez-une-applicationJava.git",
+            "code": "https://github.com/Aiyeesha/Hemebiotech",
             "type": "code",
             "title": "Repositorio GitHub",
             "language": "text"
@@ -3067,7 +3067,7 @@ export const projectDetails: ProjectDetails[] = [
               "TDD Feature 1: tests written first → price = 0 for parking stays under 30 minutes",
               "TDD Feature 2: tests written first → 5% discount applied after license plate lookup",
               "ParkingService unit tests with Mockito — coverage above 90%",
-              "ParkingDatabaseIT integration tests on real database — global coverage above 70%",
+              "ParkingDataBaseIT integration tests on real database — global coverage above 70%",
               "JaCoCo and Surefire reports generated and validated by jury"
             ],
             "title": "Solution & Deliverables"
@@ -3110,7 +3110,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Integration tests",
-                "description": "ParkingDatabaseIT on real database — global coverage above 70%, defense validated 4/4"
+                "description": "ParkingDataBaseIT on real database — global coverage above 70%, defense validated 4/4"
               }
             ],
             "title": "Project Timeline"
@@ -3166,7 +3166,7 @@ export const projectDetails: ProjectDetails[] = [
               "TDD Feature 1 : tests écrits en premier → prix à 0 pour stationnement < 30 min",
               "TDD Feature 2 : tests écrits en premier → réduction 5% après vérification de la plaque d immatriculation",
               "Tests unitaires ParkingService avec Mockito — couverture > 90%",
-              "Tests d intégration ParkingDatabaseIT sur base de données réelle — couverture globale > 70%",
+              "Tests d intégration ParkingDataBaseIT sur base de données réelle — couverture globale > 70%",
               "Rapports JaCoCo et Surefire générés et validés par le jury"
             ],
             "title": "Solution & Livrables"
@@ -3209,7 +3209,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Tests d intégration",
-                "description": "ParkingDatabaseIT sur base réelle — couverture globale > 70%, soutenance validée 4/4"
+                "description": "ParkingDataBaseIT sur base réelle — couverture globale > 70%, soutenance validée 4/4"
               }
             ],
             "title": "Étapes du projet"
@@ -3239,7 +3239,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Java testing & TDD feature delivery (Parkit)",
+        "title": "Tests Java y entrega TDD (Parkit)",
         "heroSubtitle": "TDD + pruebas unitarias y de integración en un sistema de pago de parking en Java (Park’it)",
         "sections": [
           {
@@ -3472,9 +3472,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Book search via Fetch API and add to personal list",
-              "Dynamic book removal with real-time DOM updates",
-              "Full SPA in vanilla ES6 JavaScript — zero framework dependency",
+              "Book search via the Google Books API (Fetch) and add to a personal list (\"Poch'List\")",
+              "List persisted across views via sessionStorage — no loss on navigation, cleared when the tab closes",
+              "Dynamic book removal with real-time DOM updates (solid/empty Font Awesome bookmark icons reflecting state)",
+              "Code organized into 3 ES6 modules (application.js, search.js, util.js) with import/export — zero framework dependency",
               "Mobile-first responsive with media queries for 3 breakpoints",
               "Semantic HTML5 aligned with Charlotte's UX wireframes",
               "Structured SASS (variables, mixins, nesting) — DRY approach validated by jury",
@@ -3487,8 +3488,10 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Semantic HTML5 — interface structure",
               "SASS — CSS preprocessor (variables, mixins, DRY)",
-              "JavaScript ES6 — SPA logic, Fetch API, DOM manipulation",
-              "Fetch API — requests to external book API",
+              "JavaScript ES6 (modules) — SPA logic split across 3 files, DOM manipulation",
+              "Google Books API — book search via Fetch",
+              "sessionStorage — client-side persistence of the book list",
+              "Font Awesome — bookmark and delete icons",
               "Media queries — 3-breakpoint responsive (mobile, tablet, desktop)",
               "Git — versioning and delivery"
             ],
@@ -3564,23 +3567,26 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Recherche de livres via Fetch API et ajout dans une liste personnelle",
-              "Suppression dynamique des livres avec mise à jour du DOM en temps réel",
-              "SPA complète en JavaScript ES6 pur — zéro dépendance framework",
+              "Recherche de livres via la Google Books API (Fetch) et ajout à une liste personnelle (« Poch'List »)",
+              "Persistance de la liste entre les pages via sessionStorage — pas de perte au changement de vue, réinitialisée à la fermeture de l'onglet",
+              "Suppression dynamique des livres avec mise à jour du DOM en temps réel (icônes Font Awesome pleine/vide selon l'état du signet)",
+              "Code organisé en 3 modules ES6 (application.js, search.js, util.js) avec import/export — zéro dépendance framework",
               "Responsive mobile-first avec media queries pour 3 breakpoints",
               "HTML5 sémantique aligné sur les wireframes UX de Charlotte",
               "SASS structuré (variables, mixins, nesting) — approche DRY validée par le jury",
-              "README d installation livré au client final"
+              "README d'installation livré au client final"
             ],
             "title": "Solution & Livrables"
           },
           {
             "type": "bullets",
             "items": [
-              "HTML5 sémantique — structure de l interface",
+              "HTML5 sémantique — structure de l'interface",
               "SASS — préprocesseur CSS (variables, mixins, DRY)",
-              "JavaScript ES6 — logique SPA, Fetch API, manipulation du DOM",
-              "Fetch API — requêtes vers l API externe de livres",
+              "JavaScript ES6 (modules) — logique SPA répartie sur 3 fichiers, manipulation du DOM",
+              "Google Books API — recherche de livres via Fetch",
+              "sessionStorage — persistance de la liste de livres côté navigateur",
+              "Font Awesome — icônes de signet et de suppression",
               "Media queries — responsive 3 breakpoints (mobile, tablette, bureau)",
               "Git — versionning et livraison"
             ],
@@ -3633,14 +3639,14 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "SPA front-end UI (Poch'Lib)",
+        "title": "Interfaz SPA front-end (Poch'Lib)",
         "heroSubtitle": "Interfaz Single Page Application para una librería (Poch’Lib)",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Great’App (Niza) me encargó la realización del front-end de Poch’Lib, una aplicación de gestión de libros solicitada por la librería «La plume enchantée».",
+              "Great'App (Niza) me encargó la realización del front-end de Poch'Lib, una aplicación de gestión de libros solicitada por la librería «La plume enchantée».",
               "El entregable esperado es una Single Page Application responsive (móvil/tablet/escritorio), conforme a las especificaciones funcionales y a los wireframes UX."
             ]
           },
@@ -3656,10 +3662,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Integración mobile-first respetando al máximo los wireframes proporcionados.",
-              "HTML semántico + estilos estructurados (enfoque DRY, Sass).",
-              "JavaScript vanilla para actualizar el DOM (añadir/eliminar, estados de UI).",
-              "Fetch para interactuar con una API y obtener el contenido dinámicamente."
+              "Búsqueda de libros mediante la Google Books API (Fetch) y adición a una lista personal (\"Poch'List\").",
+              "Persistencia de la lista entre vistas vía sessionStorage — sin pérdida al navegar, se reinicia al cerrar la pestaña.",
+              "Eliminación dinámica de libros con actualización del DOM en tiempo real (iconos Font Awesome de marcador lleno/vacío según el estado).",
+              "Código organizado en 3 módulos ES6 (application.js, search.js, util.js) con import/export — sin dependencia de framework."
             ],
             "title": "Puntos técnicos"
           },
@@ -3680,7 +3686,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Dinamismo",
-                "value": "Manipulación del DOM + Fetch (API)"
+                "value": "Google Books API + sessionStorage + manipulación del DOM"
               }
             ],
             "title": "Señales de calidad"
@@ -3701,7 +3707,7 @@ export const projectDetails: ProjectDetails[] = [
                 "label": "Página HTML de demostración (HTML)"
               },
               {
-                "href": "https://github.com/Aiyeesha/Projet-6-Creez-une-interface-utilisateur-pour-votre-application-PochLib.git",
+                "href": "https://github.com/Aiyeesha/PochLib",
                 "label": "Repositorio GitHub"
               },
               {
@@ -3712,7 +3718,7 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Entregables y evidencias"
           },
           {
-            "code": "https://github.com/Aiyeesha/Projet-6-Creez-une-interface-utilisateur-pour-votre-application-PochLib.git",
+            "code": "https://github.com/Aiyeesha/PochLib",
             "type": "code",
             "title": "Repositorio",
             "language": "text"
@@ -4468,7 +4474,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
+        "title": "Matriz de Riesgos — Registro de Riesgos Interactivo (Reconstruido)",
         "heroSubtitle": "Matriz de riesgos interactiva 5×5 probabilidad/impacto — persistencia localStorage, edición en línea, y CLI Python probada para generación de informes.",
         "sections": [
           {
@@ -4923,20 +4929,20 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Infrastructure Monitoring with Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP internship",
+        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "During my internship at MIDRANGE GROUP, a managed service provider (MSP) based in the Île-de-France region, I was assigned to the Exploitation team under the supervision of Théo KACEL, a Systems & Networks Administrator. The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
+              "At MIDRANGE GROUP, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside Théo KACEL (Systems & Networks Administrator). The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
             ]
           },
           {
             "type": "text",
             "title": "Platform: Datto RMM",
             "paragraphs": [
-              "Datto RMM (Remote Monitoring and Management) is an enterprise-grade platform designed for MSPs and IT teams to remotely monitor and manage endpoints, networks, and systems at scale. Théo introduced me to the platform and its core capabilities: real-time device health monitoring, automated patch management, software inventory, remote access, security status tracking, and job automation via Quick Jobs and policies."
+              "Datto RMM (Remote Monitoring and Management) is an enterprise-grade platform designed for MSPs and IT teams to remotely monitor and manage endpoints, networks, and systems at scale. I used its core capabilities day to day: real-time device health monitoring, automated patch management, software inventory, remote access, security status tracking, and job automation via Quick Jobs and policies."
             ]
           },
           {
@@ -4947,7 +4953,7 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "550+ endpoints (desktops, laptops, servers) across multiple client sites"
               },
               {
-                "label": "Site used in training",
+                "label": "Reference site",
                 "value": "MID-S0A (MIDRANGE GROUP internal site)"
               },
               {
@@ -4969,15 +4975,20 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Tasks Performed",
             "paragraphs": [
-              "Under Théo's guidance, I carried out the following operational tasks on the Datto RMM platform: reviewed the Default Dashboard to assess the overall health of the managed fleet (offline device count by type, antivirus coverage across all sites); navigated device profiles to inspect hardware specs, OS version, patch status, and software inventory for individual endpoints; used the Quick Job feature to remotely deploy the MalwareBytes endpoint agent on targeted machines without requiring physical access or user interaction; and connected to client machines via Splashtop for remote troubleshooting and user support sessions."
+              "On the Datto RMM platform, I carried out the following operational tasks: reviewed the Default Dashboard to assess the overall health of the managed fleet (offline device count by type, antivirus coverage across all sites); navigated device profiles to inspect hardware specs, OS version, patch status, and software inventory for individual endpoints; used the Quick Job feature to remotely deploy the MalwareBytes endpoint agent on targeted machines without requiring physical access or user interaction; and connected to client machines via Splashtop for remote troubleshooting and user support sessions."
             ]
           },
           {
             "type": "text",
             "title": "Remote Access: Splashtop",
             "paragraphs": [
-              "Splashtop is integrated natively into Datto RMM and provides secure remote desktop access to managed endpoints. During the internship, I used it for: remote technical support for end users (viewing and controlling the client's screen to resolve issues without physical presence); server management tasks (accessing and checking server configurations remotely); and collaborative troubleshooting alongside Théo on complex incidents affecting client infrastructure."
+              "Splashtop is integrated natively into Datto RMM and provides secure remote desktop access to managed endpoints. I used it for: remote technical support for end users (viewing and controlling the client's screen to resolve issues without physical presence); server management tasks (accessing and checking server configurations remotely); and collaborative troubleshooting alongside Théo on complex incidents affecting client infrastructure."
             ]
+          },
+          {
+            "body": "Antivirus coverage extended across the full monitored fleet (550+ devices), with remote deployment requiring zero on-site travel.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -4995,8 +5006,8 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "End-user issues resolved via Splashtop without physical intervention"
               },
               {
-                "label": "MSP exposure",
-                "value": "First-hand understanding of MSP operations: multi-client management, SLA-driven support, tiered escalation"
+                "label": "MSP operations",
+                "value": "Direct operational view of MSP work: multi-client management, SLA-driven support, tiered escalation"
               },
               {
                 "label": "Skills",
@@ -5009,20 +5020,20 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision d'infrastructure avec Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · Stage MIDRANGE GROUP",
+        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Lors de mon stage chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'ai été intégrée à l'équipe Exploitation sous la tutelle de Théo KACEL, Administrateur Systèmes & Réseaux. Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon affectation à l'Exploitation m'a donné un accès opérationnel direct à la plateforme RMM de l'entreprise."
+              "Chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux). Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
             ]
           },
           {
             "type": "text",
             "title": "Plateforme : Datto RMM",
             "paragraphs": [
-              "Datto RMM (Remote Monitoring and Management) est une plateforme professionnelle conçue pour les MSP et les équipes IT afin de surveiller et gérer à distance les équipements, réseaux et systèmes à grande échelle. Théo m'a présenté la plateforme et ses fonctionnalités principales : surveillance en temps réel de la santé des équipements, gestion automatisée des correctifs, inventaire logiciel, accès à distance, suivi de l'état de sécurité et automatisation des tâches via Quick Jobs et politiques."
+              "Datto RMM (Remote Monitoring and Management) est une plateforme professionnelle conçue pour les MSP et les équipes IT afin de surveiller et gérer à distance les équipements, réseaux et systèmes à grande échelle. J'en exploitais au quotidien les fonctionnalités principales : surveillance en temps réel de la santé des équipements, gestion automatisée des correctifs, inventaire logiciel, accès à distance, suivi de l'état de sécurité et automatisation des tâches via Quick Jobs et politiques."
             ]
           },
           {
@@ -5033,7 +5044,7 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "550+ postes (desktops, laptops, serveurs) sur plusieurs sites clients"
               },
               {
-                "label": "Site utilisé en stage",
+                "label": "Site de référence",
                 "value": "MID-S0A (site interne MIDRANGE GROUP)"
               },
               {
@@ -5055,15 +5066,20 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Tâches effectuées",
             "paragraphs": [
-              "Sous l'encadrement de Théo, j'ai réalisé les opérations suivantes sur la plateforme Datto RMM : consultation du tableau de bord Default Dashboard pour évaluer l'état global du parc (comptage des équipements hors ligne par type, couverture antivirus sur l'ensemble des sites) ; navigation dans les profils d'équipements pour inspecter les caractéristiques matérielles, la version OS, le statut des correctifs et l'inventaire logiciel ; utilisation de la fonctionnalité Quick Job pour déployer à distance l'agent MalwareBytes sur les postes ciblés, sans accès physique ni intervention utilisateur ; connexion aux postes clients via Splashtop pour des sessions de dépannage et de support à distance."
+              "Sur la plateforme Datto RMM, je réalisais les opérations suivantes : consultation du tableau de bord Default Dashboard pour évaluer l'état global du parc (comptage des équipements hors ligne par type, couverture antivirus sur l'ensemble des sites) ; navigation dans les profils d'équipements pour inspecter les caractéristiques matérielles, la version OS, le statut des correctifs et l'inventaire logiciel ; utilisation de la fonctionnalité Quick Job pour déployer à distance l'agent MalwareBytes sur les postes ciblés, sans accès physique ni intervention utilisateur ; connexion aux postes clients via Splashtop pour des sessions de dépannage et de support à distance."
             ]
           },
           {
             "type": "text",
             "title": "Accès distant : Splashtop",
             "paragraphs": [
-              "Splashtop est intégré nativement à Datto RMM et fournit un accès bureau à distance sécurisé aux équipements gérés. Durant le stage, je l'ai utilisé pour : le support technique à distance aux utilisateurs finaux (visualisation et contrôle du poste client pour résoudre les incidents sans déplacement) ; la gestion à distance des serveurs (accès et vérification des configurations) ; et le dépannage collaboratif avec Théo sur des incidents complexes affectant l'infrastructure clients."
+              "Splashtop est intégré nativement à Datto RMM et fournit un accès bureau à distance sécurisé aux équipements gérés. Je l'utilisais pour : le support technique à distance aux utilisateurs finaux (visualisation et contrôle du poste client pour résoudre les incidents sans déplacement) ; la gestion à distance des serveurs (accès et vérification des configurations) ; et le dépannage collaboratif avec Théo sur des incidents complexes affectant l'infrastructure clients."
             ]
+          },
+          {
+            "body": "Couverture antivirus étendue à l'ensemble du parc supervisé (550+ postes), avec un déploiement à distance ne nécessitant aucun déplacement sur site.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -5082,7 +5098,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Contexte MSP",
-                "value": "Découverte des opérations MSP réelles : gestion multi-clients, support orienté SLA, escalade en niveaux"
+                "value": "Vision opérationnelle directe d'un MSP : gestion multi-clients, support orienté SLA, escalade en niveaux"
               },
               {
                 "label": "Compétences",
@@ -5095,20 +5111,20 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Remote monitoring & endpoint security (Datto RMM)",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · Prácticas en MIDRANGE GROUP",
+        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Durante mis prácticas en MIDRANGE GROUP, un proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, fui asignada al equipo de Explotación bajo la supervisión de Théo KACEL, Administrador de Sistemas y Redes. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi puesto en Explotación me dio acceso operativo directo a la plataforma RMM de la empresa."
+              "En MIDRANGE GROUP, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto a Théo KACEL (Administrador de Sistemas y Redes). El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
             ]
           },
           {
             "type": "text",
             "title": "Plataforma: Datto RMM",
             "paragraphs": [
-              "Datto RMM (Remote Monitoring and Management) es una plataforma de nivel empresarial diseñada para que los MSP y equipos de IT supervisen y gestionen de forma remota equipos, redes y sistemas a gran escala. Théo me presentó la plataforma y sus capacidades principales: supervisión en tiempo real del estado de los equipos, gestión automatizada de parches, inventario de software, acceso remoto, seguimiento del estado de seguridad y automatización de tareas mediante Quick Jobs y políticas."
+              "Datto RMM (Remote Monitoring and Management) es una plataforma de nivel empresarial diseñada para que los MSP y equipos de IT supervisen y gestionen de forma remota equipos, redes y sistemas a gran escala. Utilizaba a diario sus capacidades principales: supervisión en tiempo real del estado de los equipos, gestión automatizada de parches, inventario de software, acceso remoto, seguimiento del estado de seguridad y automatización de tareas mediante Quick Jobs y políticas."
             ]
           },
           {
@@ -5119,7 +5135,7 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "550+ dispositivos (desktops, laptops, servidores) en varios sitios de clientes"
               },
               {
-                "label": "Sitio utilizado en la formación",
+                "label": "Sitio de referencia",
                 "value": "MID-S0A (sitio interno de MIDRANGE GROUP)"
               },
               {
@@ -5141,15 +5157,20 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Tareas realizadas",
             "paragraphs": [
-              "Bajo la supervisión de Théo, realicé las siguientes tareas operativas en la plataforma Datto RMM: revisión del Default Dashboard para evaluar el estado general del parque gestionado (recuento de equipos fuera de línea por tipo, cobertura antivirus en todos los sitios); navegación por los perfiles de equipos para inspeccionar las especificaciones de hardware, la versión del SO, el estado de los parches y el inventario de software de cada equipo; uso de la función Quick Job para desplegar de forma remota el agente MalwareBytes en los equipos seleccionados sin necesidad de acceso físico ni intervención del usuario; y conexión a los equipos de los clientes vía Splashtop para sesiones de resolución de incidencias y soporte remoto."
+              "En la plataforma Datto RMM, realizaba las siguientes tareas operativas: revisión del Default Dashboard para evaluar el estado general del parque gestionado (recuento de equipos fuera de línea por tipo, cobertura antivirus en todos los sitios); navegación por los perfiles de equipos para inspeccionar las especificaciones de hardware, la versión del SO, el estado de los parches y el inventario de software de cada equipo; uso de la función Quick Job para desplegar de forma remota el agente MalwareBytes en los equipos seleccionados sin necesidad de acceso físico ni intervención del usuario; y conexión a los equipos de los clientes vía Splashtop para sesiones de resolución de incidencias y soporte remoto."
             ]
           },
           {
             "type": "text",
             "title": "Acceso remoto: Splashtop",
             "paragraphs": [
-              "Splashtop está integrado de forma nativa en Datto RMM y ofrece acceso de escritorio remoto seguro a los equipos gestionados. Durante las prácticas, lo utilicé para: soporte técnico remoto a usuarios finales (ver y controlar la pantalla del cliente para resolver incidencias sin presencia física); tareas de gestión de servidores (acceso y verificación remota de configuraciones); y resolución de incidencias colaborativa junto a Théo en incidentes complejos que afectaban a la infraestructura de los clientes."
+              "Splashtop está integrado de forma nativa en Datto RMM y ofrece acceso de escritorio remoto seguro a los equipos gestionados. Lo utilizaba para: soporte técnico remoto a usuarios finales (ver y controlar la pantalla del cliente para resolver incidencias sin presencia física); tareas de gestión de servidores (acceso y verificación remota de configuraciones); y resolución de incidencias colaborativa junto a Théo en incidentes complejos que afectaban a la infraestructura de los clientes."
             ]
+          },
+          {
+            "body": "Cobertura antivirus ampliada a todo el parque supervisado (550+ equipos), con despliegue remoto sin necesidad de desplazamientos.",
+            "type": "text",
+            "title": "Impacto"
           },
           {
             "type": "metrics",
@@ -5168,7 +5189,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Exposición MSP",
-                "value": "Comprensión directa de las operaciones de un MSP: gestión multi-cliente, soporte orientado a SLA, escalado por niveles"
+                "value": "Visión operativa directa de un MSP: gestión multi-cliente, soporte orientado a SLA, escalado por niveles"
               },
               {
                 "label": "Competencias",
@@ -5252,13 +5273,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Mass Workstation Deployment — 264 Dell Devices",
-        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed during an internship at MIDRANGE GROUP.",
+        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed at MIDRANGE GROUP.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "During an internship at MIDRANGE GROUP (Alternative Partner Solutions team), I was tasked with deploying two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
+              "At MIDRANGE GROUP (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
               "The two fleets required completely different workflows: the Optiplex machines were repurposed hardware that needed certified wiping before reuse, while the Latitude laptops were brand-new units destined for zero-touch remote deployment via Windows Autopilot."
             ]
           },
@@ -5290,6 +5311,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "How it was done — 3 phases"
+          },
+          {
+            "body": "264 devices deployed on schedule with zero compliance gaps — certified erasure for all repurposed hardware, under 5 minutes of IT time per new device.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -5326,7 +5352,7 @@ export const projectDetails: ProjectDetails[] = [
               "Staggering Autopilot rollouts (batch of 20–30/day) is critical: it surfaces Intune policy failures early, before they affect hundreds of users.",
               "Generating Blancco certificates at the time of erasure (not retroactively) is the only way to guarantee an unbroken chain of custody for compliance audits."
             ],
-            "title": "Key learnings"
+            "title": "Best Practices"
           },
           {
             "type": "resources",
@@ -5354,13 +5380,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Déploiement en masse de postes de travail — 264 appareils Dell",
-        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés lors d'un stage chez MIDRANGE GROUP.",
+        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés chez MIDRANGE GROUP.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Lors d'un stage chez MIDRANGE GROUP (équipe Alternative Partner Solutions), j'ai été chargée de déployer deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
+              "Chez MIDRANGE GROUP (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
               "Les deux flottes nécessitaient des workflows entièrement différents : les machines Optiplex étaient du matériel reconditionné qui devait être effacé de manière certifiée avant réutilisation, tandis que les laptops Latitude étaient du matériel neuf destiné à un déploiement zero-touch à distance via Windows Autopilot."
             ]
           },
@@ -5392,6 +5418,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Déroulement — 3 phases"
+          },
+          {
+            "body": "264 appareils déployés dans les délais sans écart de conformité — effacement certifié pour l'intégralité du matériel reconditionné, moins de 5 minutes d'intervention IT par poste neuf.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -5428,7 +5459,7 @@ export const projectDetails: ProjectDetails[] = [
               "Échelonner les déploiements Autopilot (lots de 20–30/jour) est critique : cela fait remonter les échecs de stratégie Intune tôt, avant qu'ils touchent des centaines d'utilisateurs.",
               "Générer les certificats Blancco au moment de l'effacement (pas rétroactivement) est le seul moyen de garantir une chaîne de traçabilité ininterrompue pour les audits de conformité."
             ],
-            "title": "Apprentissages clés"
+            "title": "Bonnes pratiques"
           },
           {
             "type": "resources",
@@ -5456,13 +5487,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Windows Autopilot & mass imaging (Dell fleet)",
-        "heroSubtitle": "Windows Autopilot · Dell Image Assist · Blancco · Intune · Prácticas en MIDRANGE GROUP",
+        "heroSubtitle": "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Durante unas prácticas en MIDRANGE GROUP (equipo Alternative Partner Solutions), se me encargó desplegar dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
+              "En MIDRANGE GROUP (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
               "Las dos flotas requerían flujos de trabajo completamente distintos: las máquinas Optiplex eran hardware reacondicionado que debía borrarse de forma certificada antes de su reutilización, mientras que los portátiles Latitude eran unidades nuevas destinadas a un despliegue remoto zero-touch vía Windows Autopilot."
             ]
           },
@@ -5494,6 +5525,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Cómo se hizo — 3 fases"
+          },
+          {
+            "body": "264 dispositivos desplegados en plazo sin brechas de conformidad — borrado certificado para todo el hardware reacondicionado, menos de 5 minutos de intervención de IT por equipo nuevo.",
+            "type": "text",
+            "title": "Impacto"
           },
           {
             "type": "metrics",
@@ -5530,7 +5566,7 @@ export const projectDetails: ProjectDetails[] = [
               "Escalonar los despliegues de Autopilot (lotes de 20–30/día) es crítico: permite detectar fallos de política de Intune de forma temprana, antes de que afecten a cientos de usuarios.",
               "Generar los certificados Blancco en el momento del borrado (no de forma retroactiva) es la única forma de garantizar una cadena de custodia ininterrumpida para las auditorías de conformidad."
             ],
-            "title": "Aprendizajes clave"
+            "title": "Buenas prácticas"
           },
           {
             "type": "resources",
@@ -5591,8 +5627,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "During an internship at MIDRANGE GROUP (Support Technique team), I was placed under the supervision of Théo KACEL, a Systems & Network Administrator. The team handles support requests for managed clients across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
-              "Once a ticket is opened in Autotask, it is routed either to the Support Technique team (user-facing incidents) or to the Exploitation team (infrastructure and monitoring). Théo assigned me a live client ticket to handle under his guidance."
+              "At MIDRANGE GROUP, within the Support Technique team alongside Théo KACEL (Systems & Network Administrator), I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
+              "Once a ticket is opened in Autotask, it is routed either to the Support Technique team (user-facing incidents) or to the Exploitation team (infrastructure and monitoring). Here's how I handled a live client ticket from intake to resolution."
             ]
           },
           {
@@ -5609,7 +5645,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Step 1 — Ticket received in Autotask",
-                "description": "A client reported being unable to access a specific website. Webroot was displaying a 'site blocked' warning on their machine. The ticket was assigned to Théo and delegated to me for hands-on resolution."
+                "description": "A client reported being unable to access a specific website. Webroot was displaying a 'site blocked' warning on their machine. The ticket was assigned to me, with Théo on hand for support."
               },
               {
                 "title": "Step 2 — Remote access via Datto RMM",
@@ -5629,6 +5665,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Incident resolution — step by step"
+          },
+          {
+            "body": "Incident resolved in a single session, entirely remote, with no onsite trip and no software reinstall on the client's machine.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -5665,7 +5706,7 @@ export const projectDetails: ProjectDetails[] = [
               "Routing matters: distinguishing between a Support Technique ticket (user-facing) and an Exploitation ticket (infrastructure) from the first description saves time and avoids wrong-team assignments.",
               "Always reproduce the issue remotely before touching any configuration — confirming the exact symptom prevents premature or incorrect changes."
             ],
-            "title": "Key learnings"
+            "title": "Best Practices"
           },
           {
             "type": "resources",
@@ -5695,8 +5736,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Lors d'un stage chez MIDRANGE GROUP (équipe Support Technique), j'ai été placée sous la tutelle de Théo KACEL, Administrateur Systèmes et Réseaux. L'équipe traite les demandes de support des clients gérés via trois canaux d'entrée : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
-              "Une fois un ticket ouvert dans Autotask, il est routé soit vers l'équipe Support Technique (incidents utilisateurs), soit vers l'équipe Exploitation (infrastructure et supervision). Théo m'a confié un ticket client en production à traiter sous sa supervision."
+              "Chez MIDRANGE GROUP, au sein de l'équipe Support Technique aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux), je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
+              "Une fois un ticket ouvert dans Autotask, il est routé soit vers l'équipe Support Technique (incidents utilisateurs), soit vers l'équipe Exploitation (infrastructure et supervision). Voici le traitement d'un ticket client en production, de la prise en charge à la résolution."
             ]
           },
           {
@@ -5713,7 +5754,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Étape 1 — Ticket reçu dans Autotask",
-                "description": "Un client signalait ne pas pouvoir accéder à un site internet spécifique. Webroot affichait un message « site bloqué » sur son poste. Le ticket a été assigné à Théo et délégué pour une résolution en conditions réelles."
+                "description": "Un client signalait ne pas pouvoir accéder à un site internet spécifique. Webroot affichait un message « site bloqué » sur son poste. Le ticket m'a été assigné, avec Théo en soutien pour la résolution."
               },
               {
                 "title": "Étape 2 — Prise en main à distance via Datto RMM",
@@ -5733,6 +5774,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Résolution de l'incident — étape par étape"
+          },
+          {
+            "body": "Incident résolu en une seule session, entièrement à distance, sans déplacement ni réinstallation logicielle sur le poste du client.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -5769,7 +5815,7 @@ export const projectDetails: ProjectDetails[] = [
               "Le routage des tickets est essentiel : distinguer dès le premier signalement un ticket Support Technique (utilisateur) d'un ticket Exploitation (infrastructure) évite les mauvaises attributions et les pertes de temps.",
               "Toujours reproduire le problème à distance avant de modifier une configuration — confirmer le symptôme exact prévient les changements prématurés ou incorrects."
             ],
-            "title": "Apprentissages clés"
+            "title": "Bonnes pratiques"
           },
           {
             "type": "resources",
@@ -5793,14 +5839,14 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "IT helpdesk & incident management (Autotask PSA)",
-        "heroSubtitle": "Autotask PSA · Splashtop · Webroot · Datto RMM · Prácticas en MIDRANGE GROUP",
+        "heroSubtitle": "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Durante unas prácticas en MIDRANGE GROUP (equipo de Soporte Técnico), fui asignada bajo la supervisión de Théo KACEL, Administrador de Sistemas y Redes. El equipo atiende las solicitudes de soporte de los clientes gestionados a través de tres canales de entrada: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
-              "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). Théo me confió un ticket real de un cliente para gestionarlo bajo su supervisión."
+              "En MIDRANGE GROUP, dentro del equipo de Soporte Técnico junto a Théo KACEL (Administrador de Sistemas y Redes), atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
+              "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). A continuación, el tratamiento de un ticket real de cliente, de la recepción a la resolución."
             ]
           },
           {
@@ -5817,7 +5863,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Paso 1 — Ticket recibido en Autotask",
-                "description": "Un cliente informó que no podía acceder a un sitio web específico. Webroot mostraba una advertencia de sitio bloqueado en su equipo. El ticket fue asignado a Théo y delegado para su resolución práctica."
+                "description": "Un cliente informó que no podía acceder a un sitio web específico. Webroot mostraba una advertencia de sitio bloqueado en su equipo. El ticket me fue asignado, con Théo como apoyo."
               },
               {
                 "title": "Paso 2 — Acceso remoto vía Datto RMM",
@@ -5837,6 +5883,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Resolución del incidente — paso a paso"
+          },
+          {
+            "body": "Incidencia resuelta en una única sesión, totalmente en remoto, sin desplazamiento ni reinstalación de software en el equipo del cliente.",
+            "type": "text",
+            "title": "Impacto"
           },
           {
             "type": "metrics",
@@ -5873,7 +5924,7 @@ export const projectDetails: ProjectDetails[] = [
               "El enrutamiento importa: distinguir desde la primera descripción un ticket de Soporte Técnico (usuario) de un ticket de Explotación (infraestructura) ahorra tiempo y evita asignaciones incorrectas.",
               "Reproducir siempre el problema de forma remota antes de tocar cualquier configuración — confirmar el síntoma exacto evita cambios prematuros o incorrectos."
             ],
-            "title": "Aprendizajes clave"
+            "title": "Buenas prácticas"
           },
           {
             "type": "resources",
@@ -5928,13 +5979,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP internship",
+        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "Continuing my internship at MIDRANGE GROUP under Théo KACEL, I was involved in managing cloud and local backup operations for one of the company's clients. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My daily task was to open the Acronis dashboard, review the alert status, and investigate any failures to restore backup continuity."
+              "At MIDRANGE GROUP (a French IT services / MSP firm), within the Operations team alongside Théo KACEL (Systems & Network Administrator), I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
             ]
           },
           {
@@ -5950,11 +6001,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "NAS destination 1",
-                "value": "smb://10.15.231.11/backups — 8.77 Tio / 10.5 Tio"
+                "value": "smb://10.20.30.11/backups — 8.77 Tio / 10.5 Tio"
               },
               {
                 "label": "NAS destination 2",
-                "value": "smb://10.15.231.11/backups-new — 9.57 Tio / 10.5 Tio"
+                "value": "smb://10.20.30.11/backups-new — 9.57 Tio / 10.5 Tio"
               },
               {
                 "label": "Cloud destination",
@@ -5998,7 +6049,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "SRV-BDD.acces.local error",
-                "value": "Replication failed — storage quota exceeded for stchristophecloud@hotmail.fr, new backups will fail"
+                "value": "Replication failed — client cloud account storage quota exceeded, new backups will fail"
               },
               {
                 "label": "SQL-CLOUD 2 plan",
@@ -6006,6 +6057,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Example Alerts (from dashboard)"
+          },
+          {
+            "body": "Backup continuity restored across all 105 protected endpoints, with no data loss and no recurring manual intervention once root causes were fixed.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -6037,13 +6093,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision des sauvegardes Cloud avec Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · Stage MIDRANGE GROUP",
+        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Dans la continuité de mon stage chez MIDRANGE GROUP sous la tutelle de Théo KACEL, j'ai participé à la gestion des opérations de sauvegarde cloud et locales pour un des clients de l'entreprise. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma tâche quotidienne était d'ouvrir le tableau de bord Acronis, contrôler l'état des alertes et investiguer les échecs pour rétablir la continuité des sauvegardes."
+              "Chez MIDRANGE GROUP (ESN/MSP), au sein de l'équipe Exploitation aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux), j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
             ]
           },
           {
@@ -6059,11 +6115,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Destination NAS 1",
-                "value": "smb://10.15.231.11/backups — 8,77 Tio / 10,5 Tio"
+                "value": "smb://10.20.30.11/backups — 8,77 Tio / 10,5 Tio"
               },
               {
                 "label": "Destination NAS 2",
-                "value": "smb://10.15.231.11/backups-new — 9,57 Tio / 10,5 Tio"
+                "value": "smb://10.20.30.11/backups-new — 9,57 Tio / 10,5 Tio"
               },
               {
                 "label": "Destination cloud",
@@ -6107,7 +6163,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Erreur SRV-BDD.acces.local",
-                "value": "Réplication échouée — quota de stockage dépassé pour stchristophecloud@hotmail.fr, les nouvelles sauvegardes échoueront"
+                "value": "Réplication échouée — quota de stockage du compte cloud client dépassé, les nouvelles sauvegardes échoueront"
               },
               {
                 "label": "Plan SQL-CLOUD 2",
@@ -6115,6 +6171,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Exemples d'alertes (tableau de bord)"
+          },
+          {
+            "body": "Continuité de sauvegarde rétablie sur l'ensemble des 105 postes protégés, sans perte de données ni intervention manuelle récurrente une fois les causes racines corrigées.",
+            "type": "text",
+            "title": "Impact"
           },
           {
             "type": "metrics",
@@ -6146,13 +6207,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Backup operations & alert triage (Acronis)",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · Prácticas en MIDRANGE GROUP",
+        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En la continuidad de mis prácticas en MIDRANGE GROUP bajo la tutela de Théo KACEL, participé en la gestión de las operaciones de copia de seguridad en la nube y locales para uno de los clientes de la empresa. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi tarea diaria consistía en abrir el panel de Acronis, revisar el estado de las alertas e investigar los fallos para restablecer la continuidad de las copias de seguridad."
+              "En MIDRANGE GROUP (ESN/MSP francesa), dentro del equipo de Operaciones junto a Théo KACEL (Administrador de Sistemas y Redes), me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
             ]
           },
           {
@@ -6168,11 +6229,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Destino NAS 1",
-                "value": "smb://10.15.231.11/backups — 8,77 Tio / 10,5 Tio"
+                "value": "smb://10.20.30.11/backups — 8,77 Tio / 10,5 Tio"
               },
               {
                 "label": "Destino NAS 2",
-                "value": "smb://10.15.231.11/backups-new — 9,57 Tio / 10,5 Tio"
+                "value": "smb://10.20.30.11/backups-new — 9,57 Tio / 10,5 Tio"
               },
               {
                 "label": "Destino en la nube",
@@ -6216,7 +6277,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Error SRV-BDD.acces.local",
-                "value": "Replicación fallida — cuota de almacenamiento superada para stchristophecloud@hotmail.fr, los próximos backups fallarán"
+                "value": "Replicación fallida — cuota de almacenamiento de la cuenta cloud del cliente superada, los próximos backups fallarán"
               },
               {
                 "label": "Plan SQL-CLOUD 2",
@@ -6224,6 +6285,11 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Ejemplos de alertas (panel)"
+          },
+          {
+            "body": "Continuidad de backup restablecida en los 105 endpoints protegidos, sin pérdida de datos ni intervención manual recurrente una vez corregidas las causas raíz.",
+            "type": "text",
+            "title": "Impacto"
           },
           {
             "type": "metrics",
@@ -8242,7 +8308,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Vulnerability Assessment Tool (Python + CVSS)",
+        "title": "Herramienta de evaluación de vulnerabilidades (Python + CVSS)",
         "heroSubtitle": "Evaluación de vulnerabilidades Tenable SecurityCenter — resumen ejecutivo, clasificación por severidad y remediación mapeada a CVE.",
         "sections": [
           {
@@ -9094,7 +9160,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Incident Response Playbook (SOC)",
+        "title": "Playbook de respuesta a incidentes (SOC)",
         "heroSubtitle": "Playbook de respuesta a incidentes de phishing — detectar, triar, contener, erradicar, recuperar.",
         "sections": [
           {
