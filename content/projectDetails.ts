@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-24T20:31:31.721Z
+// Last export: 2026-07-25T00:11:14.972Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -224,7 +224,94 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Laptop hardware upgrade (RAM + SSD)",
         "heroSubtitle": "Samsung DDR4 · Samsung SSD · Clonado Acronis · HP Laptop · Proyecto personal",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "El portátil HP de una amiga sufría dos problemas bloqueantes: falta de fluidez (16 GB de RAM insuficientes para un uso diario con múltiples pestañas) y espacio en disco saturado (HDD de 500 GB casi lleno). En lugar de comprar un ordenador nuevo, propuse una actualización de hardware específica: duplicar la RAM y sustituir el HDD por un SSD de mayor capacidad — clonando los datos para garantizar cero pérdidas y cero reinstalación."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Dos cuellos de botella identificados: RAM insuficiente (paginación constante) y HDD mecánico lento (arranque y apertura de apps)",
+              "Manual de servicio de HP consultado: 2 ranuras SO-DIMM DDR4-2666 (máx. 32 GB) y bahía SATA de 2,5 pulgadas",
+              "2 módulos Samsung DDR4-2666 SO-DIMM de 16 GB seleccionados — misma marca que el original para compatibilidad dual-channel",
+              "SSD Samsung de 2 TB SATA seleccionado — misma interfaz, sin adaptador necesario",
+              "Acronis True Image verificado como compatible con la clonación HDD→SSD en Windows antes de la intervención"
+            ],
+            "title": "Diagnóstico y selección de componentes"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Samsung DDR4-2666 SO-DIMM 16 GB × 2 — actualización de RAM en dual-channel",
+              "SSD Samsung 2 TB SATA 2,5 pulgadas — sustitución del HDD mecánico",
+              "Acronis True Image — clonación completa del disco (SO + datos + particiones)",
+              "Adaptador USB-SATA — conexión del SSD para clonar antes de abrir el equipo",
+              "Destornillador Phillips + spudger de plástico — desmontaje sin dañar el chasis",
+              "Windows Task Manager y Administración de discos — validación posterior (RAM detectada, capacidad del SSD)"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Recepción y verificación",
+                "description": "2 módulos DDR4 de 16 GB y SSD Samsung de 2 TB recibidos. Referencias cruzadas con las especificaciones del portátil — compatibilidad confirmada antes de abrir el equipo."
+              },
+              {
+                "label": "Clonación con Acronis",
+                "description": "SSD conectado mediante adaptador USB-SATA. Acronis True Image → clonación completa del HDD de 500 GB (SO, apps, datos, particiones) al SSD de 2 TB. Particiones preservadas — cero riesgo de pérdida de datos."
+              },
+              {
+                "label": "Desmontaje",
+                "description": "Equipo apagado, cargador desconectado. Tapa inferior retirada (≈10 tornillos). Spudger de plástico para liberar los clips. Conector de batería desconectado antes de tocar los componentes."
+              },
+              {
+                "label": "Sustitución de la RAM",
+                "description": "Clips liberados, módulo original de 16 GB retirado. 2 nuevos módulos DDR4 de 16 GB insertados a 45° en ambas ranuras hasta el clic de los clips."
+              },
+              {
+                "label": "Sustitución HDD → SSD",
+                "description": "Soporte del HDD desatornillado, conector SATA + alimentación desconectados del HDD de 500 GB. SSD clonado de 2 TB conectado en su lugar. Soporte fijado de nuevo."
+              },
+              {
+                "label": "Primer arranque y validación",
+                "description": "Tapa colocada de nuevo. Windows arranca desde el SSD clonado a la primera — sin mensajes de recuperación. Task Manager: 32 GB de RAM detectados. Administración de discos: 2 TB visibles. Windows Update y controladores actualizados."
+              }
+            ],
+            "title": "Procedimiento paso a paso"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "DDR4-2666 dual-channel",
+                "label": "RAM",
+                "value": "16 → 32 GB"
+              },
+              {
+                "note": "Interfaz SATA conservada",
+                "label": "Almacenamiento",
+                "value": "500 GB HDD → 2 TB SSD"
+              },
+              {
+                "note": "Clon completo con Acronis",
+                "label": "Pérdida de datos",
+                "value": "Cero"
+              },
+              {
+                "note": "Sistema clonado — primer arranque exitoso",
+                "label": "Reinstalación",
+                "value": "Ninguna"
+              }
+            ],
+            "title": "Antes / Después"
+          }
+        ]
       }
     }
   },
@@ -1728,7 +1815,97 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Disk backup & partition management (AOMEI + WSB)",
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Copia de seguridad Windows Server · VirtualBox · Greta du Val d'Oise",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Ejercicio de formación en el Greta du Val d Oise (Lycée Louis Jouvet, Taverny) bajo la dirección de Miguel MI-POUDOU. La misión abarcaba dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "VM cliente Windows 10: partición E: sobredimensionada a reducir sin pérdida de datos",
+              "VM servidor Windows Server 2012: ninguna estrategia de copia de seguridad programada en marcha",
+              "Necesidad de una imagen de disco completa de la VM cliente como punto de restauración",
+              "Necesidad de una copia de seguridad diaria automatizada del servidor, incluyendo el estado del sistema",
+              "Entorno virtualizado VirtualBox — ejercicio en condiciones de formación reales"
+            ],
+            "title": "Alcance y objetivos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Partición E: reducida de 50,04 GB a 47,71 GB mediante AOMEI Partition Assistant — sin pérdida de datos",
+              "Imagen de disco completa creada con AOMEI Backupper Standard — operación completada con éxito",
+              "Rol Copia de seguridad de Windows Server instalado y activado en Windows Server 2012",
+              "Copia de seguridad programada configurada: recuperación completa + estado del sistema, VSS completa, diaria a las 14:00",
+              "22,67 GB transferidos al disco virtual dedicado de 60 GB en la primera ejecución"
+            ],
+            "title": "Solución y entregables"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "AOMEI Partition Assistant — redimensionamiento de particiones sin pérdida de datos",
+              "AOMEI Backupper Standard — copia de seguridad de imagen de disco completa",
+              "Copia de seguridad de Windows Server — rol nativo de Windows Server 2012",
+              "VSS (Volume Shadow Copy Service) — copia de seguridad coherente del estado del sistema",
+              "VirtualBox — hipervisor de tipo 2 para el entorno de formación",
+              "Windows 10 / Windows Server 2012 — sistemas operativos de las VM"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Redimensionamiento — AOMEI Partition Assistant",
+                "description": "Clic derecho en E: → Redimensionar/Mover. Reducción de 50,04 GB a 47,71 GB (NTFS, clúster de 4 KB, Disco 3). Clic en Aplicar para confirmar la operación pendiente."
+              },
+              {
+                "label": "Copia de seguridad de disco — AOMEI Backupper",
+                "description": "Copia de seguridad → Copia de seguridad de disco. Nombrado de la tarea, selección de los discos origen, elección del destino. Operación finalizada con éxito."
+              },
+              {
+                "label": "Instalación del rol Copia de seguridad de Windows Server",
+                "description": "Administrador del servidor → Administrar → Agregar roles y características. Marcado de Copia de seguridad de Windows Server en las características. Reinicio automático activado, luego Instalar."
+              },
+              {
+                "label": "Configuración de la copia programada",
+                "description": "Adición de un disco virtual dedicado de 60 GB. Copia configurada: recuperación completa + estado del sistema, VSS completa, diaria a las 14:00. Ejecución: 22,67 GB transferidos a SRV2 2022_03_21 13:18 DISK_01."
+              }
+            ],
+            "title": "Procedimiento"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Sin pérdida de datos",
+                "label": "Particionamiento",
+                "value": "50,04 GB → 47,71 GB"
+              },
+              {
+                "note": "AOMEI Backupper — exitosa",
+                "label": "Copia cliente",
+                "value": "Imagen de disco completa"
+              },
+              {
+                "note": "Programada diariamente a las 14:00",
+                "label": "Copia servidor",
+                "value": "22,67 GB transferidos"
+              },
+              {
+                "note": "AOMEI PA, AOMEI Backupper, WSB, VirtualBox",
+                "label": "Competencias",
+                "value": "4 herramientas dominadas"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -1958,7 +2135,101 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Active Directory roaming profiles",
         "heroSubtitle": "Active Directory · Perfiles móviles · Windows Server · Dominio EBTAI · Greta du Val d'Oise",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Ejercicio de formación en el Greta du Val d Oise bajo la supervisión de Marc HAZAN. Configuración de perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verificación de la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Crear una carpeta compartida en el servidor para alojar los perfiles itinerantes",
+              "Configurar los permisos NTFS y de recurso compartido para el grupo Usuarios del dominio",
+              "Configurar la ruta de perfil en Active Directory con la variable %username%",
+              "Verificar la creación automática de la subcarpeta de perfil en el primer inicio de sesión del cliente",
+              "Validar la sincronización completa desde la VM cliente Windows 10"
+            ],
+            "title": "Alcance y objetivos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Carpeta Perfil itinerante creada en C: y compartida mediante Uso compartido avanzado",
+              "Permisos de recurso compartido: EBTAI\\\\Utilisateurs — Modificar + Leer (Todos eliminado)",
+              "Permisos NTFS verificados para la apropiación de los perfiles de usuario",
+              "Ruta de perfil AD configurada: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%",
+              "Subcarpeta technicien.tai.V6 creada automáticamente en el primer inicio de sesión de Windows 10"
+            ],
+            "title": "Solución y entregables"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Windows Server 2016 — controlador de dominio (ebtai.fr)",
+              "Active Directory Users and Computers — configuración de la ruta de perfil",
+              "Permisos NTFS — control de acceso a nivel de sistema de archivos",
+              "Recurso compartido SMB / Uso compartido avanzado — recurso de red de la carpeta de perfiles",
+              "Variable %username% — personalización automática de la ruta por usuario",
+              "VirtualBox — hipervisor de tipo 2 para el entorno de formación"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Creación de la carpeta compartida",
+                "description": "Carpeta Perfil itinerante creada en C:. Propiedades → Compartir → Uso compartido avanzado → activación del recurso compartido con el nombre Perfil itinerante."
+              },
+              {
+                "label": "Configuración de los permisos de recurso compartido",
+                "description": "Permisos → eliminación de Todos → adición de EBTAI\\\\Utilisateurs con Modificar + Leer. Clic en Aplicar."
+              },
+              {
+                "label": "Configuración de los permisos NTFS",
+                "description": "Seguridad de la carpeta verificada para garantizar el Control total necesario para la apropiación de los perfiles. Ruta de red: \\\\\\\\servidor\\\\Perfil itinerante."
+              },
+              {
+                "label": "Configuración de la ruta AD",
+                "description": "Usuarios y equipos de AD (ebtai.fr) → clic derecho en técnico → Propiedades → pestaña Perfil. Ruta: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%. Aplicar."
+              },
+              {
+                "label": "Verificación desde la VM cliente",
+                "description": "Inicio de sesión Windows 10 con EBTAI\\\\technicien. Subcarpeta technicien.tai.V6 aparecida en el recurso compartido (15/06/2022) — perfil itinerante vinculado y sincronizado."
+              }
+            ],
+            "title": "Procedimiento"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "EBTAI\\\\Utilisateurs: Modificar + Leer",
+                "label": "Carpeta compartida",
+                "value": "Perfil itinerante"
+              },
+              {
+                "note": "Personalizada por usuario",
+                "label": "Ruta AD",
+                "value": "\\\\\\\\DC1\\\\Profil itinérants\\\\%username%"
+              },
+              {
+                "note": "Automáticamente en el primer inicio de sesión",
+                "label": "Verificación",
+                "value": "technicien.tai.V6 creado"
+              },
+              {
+                "note": "Validadas de forma autónoma",
+                "label": "Competencias",
+                "value": "AD DS, perfiles itinerantes, NTFS, SMB"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -2262,7 +2533,110 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Virtualized lab: Windows Server 2022 + AD DS",
         "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Laboratorio personal realizado en el marco de una formación en Sistemas y Redes. Desplegué un entorno Windows Server 2022 completo bajo VMware Workstation Pro 17 para reproducir una infraestructura IT empresarial: dominio Active Directory, DNS, DHCP y despliegue automatizado de SO vía WDS/PXE — sobre una red NAT privada de VMware totalmente gestionada."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Hipervisor: VMware Workstation Pro 17 (tipo 2) — red NAT de VMware 192.168.100.0/24",
+              "DCAD22 — Windows Server 2022: IP estática 192.168.100.250, puerta de enlace 192.168.100.2",
+              "Dominio AD: DP-AICHA.LAN (raíz del bosque), DNS con reenviador 8.8.8.8",
+              "Ámbito DHCP POOL1: 192.168.100.1–254, exclusiones .1–.20 y .240–.254, opción PXEClient",
+              "WDS vinculado al dominio AD, imagen boot.wim importada, validación manual de máquinas desconocidas",
+              "Cliente Windows 10 Pro — unido como PC LYES, perfil itinerante y unidad de red configurados"
+            ],
+            "title": "Arquitectura del laboratorio"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "AD DS: bosque DP-AICHA.LAN, UO, cuentas LYES (estándar) y Technicien (admin IT)",
+              "DNS: zona DP-AICHA.LAN con reenviador 8.8.8.8 para resolución de Internet",
+              "DHCP: ámbito POOL1 con opción 060 PXEClient para el despliegue por red",
+              "WDS / PXE: despliegue del SO Windows 10 por red — sin llave USB ni instalación manual",
+              "GPO: perfiles itinerantes y unidad de red (\\\\\\\\DCAD22\\\\Partage) montada al iniciar sesión",
+              "Permisos: carpeta compartida Modificar+Leer para LYES, Leer para Technicien"
+            ],
+            "title": "Servicios desplegados"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "VMware Workstation Pro 17 — Hipervisor de tipo 2, red NAT de VMware",
+              "Windows Server 2022 — Controlador de dominio (DCAD22)",
+              "Active Directory DS — Gestión de identidades, UO, cuentas y directivas",
+              "DNS Server — Resolución de nombres de dominio con reenviador a Internet",
+              "DHCP Server — Asignación dinámica de direcciones IP con opciones PXE",
+              "WDS (Windows Deployment Services) — Despliegue de SO por red (PXE/TFTP)",
+              "Directiva de grupo (GPO) — Perfiles itinerantes y asignación de unidades de red"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "VM y promoción a DC",
+                "description": "Windows Server 2022 instalado desde ISO. IP estática 192.168.100.250, nombre de host DCAD22. Promoción a DC mediante el asistente AD DS — creación del bosque DP-AICHA.LAN. DNS instalado con reenviador 8.8.8.8."
+              },
+              {
+                "label": "DHCP y WDS",
+                "description": "Rol DHCP instalado y autorizado. Ámbito POOL1 creado con la opción PXEClient. WDS vinculado al dominio AD, boot.wim importado. Modo de validación manual activado para máquinas desconocidas."
+              },
+              {
+                "label": "Active Directory y GPO",
+                "description": "UO y cuentas creadas: LYES (estándar) y Technicien (admin). GPO aplicadas para los perfiles itinerantes y la asignación de la unidad de red \\\\\\\\DCAD22\\\\Partage al iniciar sesión."
+              },
+              {
+                "label": "Unión al dominio y despliegue PXE",
+                "description": "VM Windows 10 sin SO iniciada por NIC. IP obtenida vía DHCP, opciones PXE recibidas, WDS contactado. Tras la validación en la consola WDS, Windows 10 desplegado por red. Máquina renombrada PC LYES y unida a DP-AICHA.LAN."
+              }
+            ],
+            "title": "Fases de implementación"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Sobre red NAT de VMware completa",
+                "label": "Infraestructura",
+                "value": "Dominio AD operativo"
+              },
+              {
+                "note": "Sin llave USB ni instalación manual",
+                "label": "Despliegue del SO",
+                "value": "PXE/WDS funcional"
+              },
+              {
+                "note": "Perfiles itinerantes + unidades asignadas",
+                "label": "Directivas",
+                "value": "GPO activas"
+              },
+              {
+                "note": "Máquinas desconocidas aprobadas por el administrador",
+                "label": "Seguridad WDS",
+                "value": "Validación manual"
+              },
+              {
+                "note": "Laboratorio personal completo",
+                "label": "Competencias",
+                "value": "AD DS, DNS, DHCP, WDS, GPO"
+              },
+              {
+                "note": "Perfil y unidad de red verificados",
+                "label": "Cliente validado",
+                "value": "PC LYES unido"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -2490,7 +2864,102 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Windows 10 provisioning + automated software install",
         "heroSubtitle": "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "Ejercicio de formación en el Greta du Val d Oise bajo la dirección de Miguel MI-POUDOU. Un cliente trajo un portátil HP extremadamente lento, sin datos que recuperar. La misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Reinstalar Windows 10 Pro de 64 bits desde un soporte USB de arranque",
+              "Validar todos los controladores (audio, red, tarjeta gráfica) tras la instalación",
+              "Desplegar rápidamente el conjunto de software profesional requerido (7+ aplicaciones)",
+              "Configurar el equipo para su entrega inmediata al cliente (accesos directos, copias de seguridad, antivirus)",
+              "Intervenir sin pérdida de datos — equipo vacío, sin necesidad de recuperación"
+            ],
+            "title": "Alcance y objetivos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Arranque USB configurado vía BIOS, Windows 10 Pro de 64 bits instalado con clave OEM del formador",
+              "OOBE finalizado: región Francia, creación de la cuenta de usuario, Cortana, Microsoft Hello, geolocalización",
+              "Todos los controladores validados en el Administrador de dispositivos — red, audio, GPU",
+              "7+ aplicaciones desplegadas en una sola pasada vía Ninite.com sin interacción del usuario ni barras de herramientas",
+              "Office 2016 Professional Plus instalado y activado simultáneamente",
+              "Accesos directos de escritorio, fondo de pantalla y copia de seguridad de Windows configurados — equipo validado por el formador"
+            ],
+            "title": "Solución y entregables"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Windows 10 Pro de 64 bits — SO reinstalado desde ISO en llave USB",
+              "BIOS/UEFI — configuración del orden de arranque",
+              "Administrador de dispositivos — validación de controladores tras la instalación",
+              "Ninite.com — despliegue por lotes de aplicaciones sin interacción (Chrome, Firefox, 7-Zip, Zoom, LibreOffice, TeamViewer, MalwareBytes)",
+              "Office 2016 Professional Plus — suite ofimática",
+              "Copia de seguridad de Windows — configuración posterior a la instalación"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "BIOS y arranque USB",
+                "description": "Entrada en la BIOS (F2/DEL), orden de arranque modificado para colocar la llave USB con la ISO de Windows 10 Pro en primer lugar. Guardado F10 y reinicio."
+              },
+              {
+                "label": "Instalación de Windows 10 Pro",
+                "description": "Francés, Instalación personalizada, Windows 10 Pro de 64 bits con clave OEM. Licencia aceptada, cuenta de usuario creada, OOBE finalizado (región Francia, Cortana, Microsoft Hello)."
+              },
+              {
+                "label": "Validación de controladores",
+                "description": "Administrador de dispositivos abierto — controladores de audio, red (Ethernet + Wi-Fi) y GPU verificados. Conexión de red establecida, antivirus instalado."
+              },
+              {
+                "label": "Despliegue por lotes vía Ninite",
+                "description": "Ninite.com utilizado para instalar Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15 y MalwareBytes en una sola pasada. Office 2016 Pro Plus instalado simultáneamente."
+              },
+              {
+                "label": "Finalización",
+                "description": "Accesos directos de escritorio configurados, fondo de pantalla aplicado, copia de seguridad de Windows activada. Equipo entregado al cliente tras la validación del formador."
+              }
+            ],
+            "title": "Procedimiento"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Instalación limpia — todos los controladores validados",
+                "label": "SO",
+                "value": "Windows 10 Pro 64 bits"
+              },
+              {
+                "note": "Desplegadas vía Ninite — sin intervención",
+                "label": "Software",
+                "value": "7+ aplicaciones"
+              },
+              {
+                "note": "Instalado y activado",
+                "label": "Office",
+                "value": "Office 2016 Pro Plus"
+              },
+              {
+                "note": "Equipo operativo entregado al cliente",
+                "label": "Tiempo",
+                "value": "Sesión única"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -3799,66 +4268,303 @@ export const projectDetails: ProjectDetails[] = [
       "en": {
         "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
         "heroSubtitle": "Interactive 5×5 likelihood/impact risk matrix — localStorage persistence, in-place editing, and a tested Python CLI for report generation",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Context",
+            "paragraphs": [
+              "matrice-risques rebuilds and extends risk-assessment-matrix, an open-source risk assessment project. Goal: an interactive risk register with a live Likelihood × Impact heat map (5×5), paired with a Python CLI for automation (bulk import, HTML report generation) — while fixing several blocking limitations of the original along the way."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Likelihood × Impact matrix (5×5) with automatic scoring and color coding (Critical / High / Moderate / Low)",
+              "Risk register: categories, owners, mitigations, due dates, statuses",
+              "Client-side persistence (localStorage) — the register survives a page reload",
+              "In-place editing of existing risks (not just add/remove)",
+              "Search and filtering, including click-to-filter on a matrix cell (drill-down)",
+              "JSON and CSV export (UTF-8 BOM for Excel compatibility)",
+              "Python CLI: HTML report generation from a JSON register, on-demand risk scoring",
+              "pytest test suite covering the scoring engine"
+            ],
+            "title": "Features"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "No persistence, the register was lost on page reload → Persistence via localStorage, full register serialization/deserialization",
+              "README documented a flat CLI (--input, --risk) but the code required undocumented subcommands (report, eval) → CLI rewritten to match exactly what's documented",
+              "The register class's update() method was never called by the UI → Full \"Edit\" button, pre-filled form, in-place save",
+              "Likelihood/impact labels hardcoded in JS despite already existing in JSON → JS now loads categories_risques.json dynamically (single source of truth)",
+              "No automated tests → 6 pytest tests covering scoring, level boundaries, sorting, and example-data validation",
+              "Windows CLI output mis-encoded (cp1252) → sys.stdout.reconfigure(encoding=\"utf-8\") — correct accented characters in console"
+            ],
+            "title": "What was fixed vs. the original"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Vanilla HTML/CSS/JS (ES modules, zero dependencies) — standalone browser app",
+              "Python CLI (argparse, Jinja2, pytest) — automation and reporting",
+              "localStorage — client-side persistence",
+              "JSON / CSV export with UTF-8 BOM"
+            ],
+            "title": "Stack & Technologies"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Immediate remediation",
+                "label": "Critical",
+                "value": "Score 20-25"
+              },
+              {
+                "note": "Remediation within 30 days",
+                "label": "High",
+                "value": "Score 12-19"
+              },
+              {
+                "note": "Remediation within 90 days",
+                "label": "Moderate",
+                "value": "Score 6-11"
+              },
+              {
+                "note": "Acceptance or monitoring",
+                "label": "Low",
+                "value": "Score 1-5"
+              }
+            ],
+            "title": "Risk scoring"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "argparse, Jinja2, pytest",
+                "label": "Stack",
+                "value": "Vanilla HTML/CSS/JS + Python CLI"
+              },
+              {
+                "note": "Scoring, level boundaries, sorting, data validation",
+                "label": "Tests",
+                "value": "6 pytest tests"
+              },
+              {
+                "note": "Fixes the original's main limitation",
+                "label": "Persistence",
+                "value": "localStorage"
+              },
+              {
+                "note": "matrice-risques later became the base for a platform combining STRIDE, vendor risk, and incident-driven recalibration",
+                "label": "Foundation for",
+                "value": "risque360"
+              }
+            ],
+            "title": "Outcomes"
+          }
+        ]
       },
       "fr": {
         "title": "Matrice de Risques — Registre de Risques Interactif (Reconstruit)",
         "heroSubtitle": "Matrice de risque interactive 5×5 Probabilité/Impact — persistance localStorage, édition en place, et CLI Python testée pour la génération de rapports",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexte",
+            "paragraphs": [
+              "matrice-risques reconstruit et enrichit risk-assessment-matrix, un projet open source d'évaluation des risques. Objectif : un registre de risques interactif avec matrice de chaleur Probabilité × Impact (5×5) en direct, assorti d'une CLI Python pour l'automatisation (import en masse, génération de rapport HTML) — et corriger au passage plusieurs limites bloquantes de l'original."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Matrice Probabilité × Impact (5×5) avec scoring automatique et code couleur (Critique / Élevé / Modéré / Faible)",
+              "Registre de risques : catégories, responsables, mitigations, échéances, statuts",
+              "Persistance locale (localStorage) — le registre survit au rechargement de page",
+              "Modification en place des risques existants (pas seulement ajout/suppression)",
+              "Recherche et filtrage, y compris par clic sur une cellule de la matrice (drill-down)",
+              "Export JSON et CSV (BOM UTF-8 pour compatibilité Excel)",
+              "CLI Python : génération de rapport HTML à partir d'un registre JSON, évaluation ponctuelle d'un risque",
+              "Suite de tests pytest sur le moteur de scoring"
+            ],
+            "title": "Fonctionnalités"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Aucune persistance, le registre était perdu au rechargement de la page → Persistance via localStorage, sérialisation/désérialisation du registre complet",
+              "Le README documentait une CLI à plat (--input, --risk) mais le code exigeait des sous-commandes non documentées (report, eval) → CLI réécrite pour correspondre exactement à ce qui est documenté",
+              "La méthode update() de la classe de registre n'était jamais appelée par l'interface → Bouton « Modifier » complet, formulaire pré-rempli, sauvegarde en place",
+              "Libellés probabilité/impact codés en dur en JS alors qu'ils existaient déjà en JSON → Le JS charge désormais dynamiquement categories_risques.json (source unique)",
+              "Aucun test automatisé → 6 tests pytest sur le scoring, les bornes de niveaux, le tri et la validation des données d'exemple",
+              "Sortie CLI Windows mal encodée (cp1252) → sys.stdout.reconfigure(encoding=\"utf-8\") — accents corrects en console"
+            ],
+            "title": "Ce qui a été corrigé par rapport à l'original"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "HTML/CSS/JS vanilla (ES modules, aucune dépendance) — application navigateur autonome",
+              "CLI Python (argparse, Jinja2, pytest) — automatisation et rapports",
+              "localStorage — persistance côté client",
+              "Export JSON / CSV avec BOM UTF-8"
+            ],
+            "title": "Stack & Technologies"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Remédiation immédiate",
+                "label": "Critique",
+                "value": "Score 20-25"
+              },
+              {
+                "note": "Remédiation sous 30 jours",
+                "label": "Élevé",
+                "value": "Score 12-19"
+              },
+              {
+                "note": "Remédiation sous 90 jours",
+                "label": "Modéré",
+                "value": "Score 6-11"
+              },
+              {
+                "note": "Acceptation ou surveillance",
+                "label": "Faible",
+                "value": "Score 1-5"
+              }
+            ],
+            "title": "Scoring des risques"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "argparse, Jinja2, pytest",
+                "label": "Stack",
+                "value": "HTML/CSS/JS vanilla + CLI Python"
+              },
+              {
+                "note": "Scoring, bornes de niveaux, tri, validation des données",
+                "label": "Tests",
+                "value": "6 tests pytest"
+              },
+              {
+                "note": "Corrige la principale limite de l'original",
+                "label": "Persistance",
+                "value": "localStorage"
+              },
+              {
+                "note": "matrice-risques a ensuite servi de socle à une plateforme combinant STRIDE, risques fournisseurs et recalibration par incidents",
+                "label": "Base de",
+                "value": "risque360"
+              }
+            ],
+            "title": "Résultats"
+          }
+        ]
       },
       "es": {
-        "title": "Risk Assessment Matrix (5×5)",
+        "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
         "heroSubtitle": "Matriz de riesgos interactiva 5×5 probabilidad/impacto — persistencia localStorage, edición en línea, y CLI Python probada para generación de informes.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Construcción de una matriz de riesgos 5×5 estructurada como herramienta reutilizable para evaluar los riesgos de TI, infraestructura y cumplimiento dentro de una organización.",
-              "La matriz cruza la probabilidad (1–5) con el impacto (1–5) para producir una puntuación de riesgo, con zonas coloreadas (verde / amarillo / naranja / rojo) que guían la priorización y las decisiones de tratamiento."
+              "matrice-risques reconstruye y amplía risk-assessment-matrix, un proyecto open source de evaluación de riesgos. Objetivo: un registro de riesgos interactivo con un mapa de calor Probabilidad × Impacto (5×5) en vivo, junto con una CLI de Python para automatización (importación masiva, generación de informes HTML) — corrigiendo de paso varias limitaciones bloqueantes del original."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Matriz 5×5: probabilidad (1 = rara → 5 = casi segura) × impacto (1 = insignificante → 5 = catastrófico).",
-              "Zonas de severidad coloreadas: Baja (1–4), Media (5–9), Alta (10–16), Crítica (17–25).",
-              "Plantilla de registro de riesgos: ID, descripción, probabilidad, impacto, puntuación, propietario, tratamiento y fecha de revisión.",
-              "Ejemplos de riesgos que cubren infraestructura, control de acceso, exposición de datos y continuidad de negocio."
+              "Matriz Probabilidad × Impacto (5×5) con puntuación automática y código de colores (Crítico / Alto / Moderado / Bajo)",
+              "Registro de riesgos: categorías, responsables, mitigaciones, plazos, estados",
+              "Persistencia local (localStorage) — el registro sobrevive a la recarga de la página",
+              "Edición en línea de riesgos existentes (no solo añadir/eliminar)",
+              "Búsqueda y filtrado, incluido el filtrado por clic en una celda de la matriz (drill-down)",
+              "Exportación JSON y CSV (BOM UTF-8 para compatibilidad con Excel)",
+              "CLI Python: generación de informe HTML a partir de un registro JSON, evaluación puntual de un riesgo",
+              "Suite de tests pytest sobre el motor de puntuación"
             ],
-            "title": "Lo que construí"
+            "title": "Funcionalidades"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Sin persistencia, el registro se perdía al recargar la página → Persistencia mediante localStorage, serialización/deserialización completa del registro",
+              "El README documentaba una CLI plana (--input, --risk) pero el código exigía subcomandos no documentados (report, eval) → CLI reescrita para coincidir exactamente con lo documentado",
+              "El método update() de la clase de registro nunca era llamado por la interfaz → Botón «Modificar» completo, formulario precargado, guardado en línea",
+              "Etiquetas de probabilidad/impacto codificadas en JS aunque ya existían en JSON → El JS carga dinámicamente categories_risques.json (fuente única)",
+              "Sin tests automatizados → 6 tests pytest sobre la puntuación, los límites de nivel, el ordenamiento y la validación de datos de ejemplo",
+              "Salida de la CLI de Windows mal codificada (cp1252) → sys.stdout.reconfigure(encoding=\"utf-8\") — acentos correctos en consola"
+            ],
+            "title": "Qué se corrigió respecto al original"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "HTML/CSS/JS vanilla (módulos ES, sin dependencias) — aplicación de navegador autónoma",
+              "CLI Python (argparse, Jinja2, pytest) — automatización e informes",
+              "localStorage — persistencia del lado del cliente",
+              "Exportación JSON / CSV con BOM UTF-8"
+            ],
+            "title": "Stack y tecnologías"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "label": "Dimensiones",
-                "value": "5×5 — probabilidad × impacto"
+                "note": "Remediación inmediata",
+                "label": "Crítico",
+                "value": "Puntuación 20-25"
               },
               {
-                "label": "Rango de puntuación",
-                "value": "1 (baja) → 25 (crítica)"
+                "note": "Remediación en 30 días",
+                "label": "Alto",
+                "value": "Puntuación 12-19"
               },
               {
-                "label": "Zonas de severidad",
-                "value": "Baja / Media / Alta / Crítica"
+                "note": "Remediación en 90 días",
+                "label": "Moderado",
+                "value": "Puntuación 6-11"
               },
               {
-                "label": "Casos de uso",
-                "value": "Infraestructura IT, cloud, GRC, auditorías de cumplimiento"
+                "note": "Aceptación o supervisión",
+                "label": "Bajo",
+                "value": "Puntuación 1-5"
               }
             ],
-            "title": "Estructura de la matriz"
+            "title": "Puntuación de riesgos"
           },
           {
-            "type": "bullets",
+            "type": "metrics",
             "items": [
-              "Identificación, puntuación y planificación del tratamiento de riesgos (alineado con ISO 27005 / NIST RMF).",
-              "Herramientas GRC: diseño de registro de riesgos y gestión del ciclo de vida.",
-              "Traducción de riesgos técnicos a un lenguaje de impacto de negocio para las partes interesadas.",
-              "Aplicable a riesgos de infraestructura, seguridad cloud y marcos de cumplimiento (ISO 27001, NIS2, RGPD)."
+              {
+                "note": "argparse, Jinja2, pytest",
+                "label": "Stack",
+                "value": "HTML/CSS/JS vanilla + CLI Python"
+              },
+              {
+                "note": "Puntuación, límites de nivel, ordenamiento, validación de datos",
+                "label": "Tests",
+                "value": "6 tests pytest"
+              },
+              {
+                "note": "Corrige la principal limitación del original",
+                "label": "Persistencia",
+                "value": "localStorage"
+              },
+              {
+                "note": "matrice-risques sirvió después de base para una plataforma que combina STRIDE, riesgo de proveedores y recalibración por incidentes",
+                "label": "Base de",
+                "value": "risque360"
+              }
             ],
-            "title": "Competencias demostradas"
+            "title": "Resultados"
           }
         ]
       }
@@ -6479,7 +7185,107 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Wi-Fi access point configuration (TP-Link)",
         "heroSubtitle": "Punto de acceso TP-Link · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "En el marco de la formación TAI en el Greta du Val d Oise (Lycée Louis Jouvet, Taverny), se me encargó configurar un punto de acceso Wi-Fi TP-Link de principio a fin de forma autónoma. El ejercicio simula una misión real de técnico IT: desplegar la conectividad inalámbrica para una oficina o una sala de formación, desde la conexión física hasta la validación completa de la red."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Conectar físicamente el punto de acceso TP-Link al switch de red del laboratorio (RJ45)",
+              "Acceder a la interfaz de administración web del PA (http://192.168.0.1)",
+              "Configurar el direccionamiento WAN (DHCP o IP estática según la topología)",
+              "Activar el servidor DHCP integrado para los clientes Wi-Fi",
+              "Configurar la red inalámbrica: SSID, banda, canal y seguridad WPA2-PSK",
+              "Validar la conectividad Wi-Fi desde un dispositivo de prueba (DHCP + acceso a Internet)"
+            ],
+            "title": "Alcance y objetivos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Punto de acceso TP-Link conectado al switch y alimentado — LED de enlace confirmados",
+              "Interfaz de administración accesible vía http://192.168.0.1 con credenciales del fabricante",
+              "Direccionamiento WAN configurado en DHCP — IP válida obtenida del router upstream",
+              "Servidor DHCP integrado activado para distribución automática de direcciones a los clientes",
+              "SSID configurado, banda 2,4 GHz, cifrado WPA2-PSK con frase de contraseña robusta",
+              "Dispositivo de prueba conectado con IP DHCP obtenida, ping a 8.8.8.8 validado, acceso a Internet confirmado"
+            ],
+            "title": "Solución y entregables"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Punto de acceso TP-Link — punto de acceso Wi-Fi del laboratorio de formación",
+              "Interfaz de administración web TP-Link — configuración vía navegador (192.168.0.1)",
+              "WPA2-PSK — protocolo de seguridad Wi-Fi con frase de contraseña",
+              "DHCP integrado — asignación automática de direcciones IP a los clientes",
+              "RJ45 / Switch LAN — infraestructura cableada de conexión del PA",
+              "Ping / prueba de red — validación de la conectividad a Internet"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Conexión física",
+                "description": "PA TP-Link conectado al switch del laboratorio mediante cable RJ45. Encendido y verificación de los LED que indican el establecimiento del enlace de red."
+              },
+              {
+                "label": "Acceso a la interfaz de administración",
+                "description": "Navegador → http://192.168.0.1. Introducción de las credenciales del fabricante (etiqueta del dispositivo). Acceso al panel de configuración de TP-Link."
+              },
+              {
+                "label": "Direccionamiento WAN",
+                "description": "Configuración WAN → modo DHCP seleccionado para obtener automáticamente una IP del router upstream. Dirección WAN válida verificada."
+              },
+              {
+                "label": "LAN y DHCP",
+                "description": "IP local del PA confirmada. Servidor DHCP integrado activado para la asignación automática a los clientes Wi-Fi."
+              },
+              {
+                "label": "Red inalámbrica",
+                "description": "SSID configurado, banda 2,4 GHz, canal y modo de transmisión seleccionados. Seguridad: WPA2-PSK con frase de contraseña robusta."
+              },
+              {
+                "label": "Verificación",
+                "description": "Conexión del dispositivo de prueba al SSID. IP DHCP obtenida, ping a 8.8.8.8 exitoso, acceso a Internet confirmado, PA visible en el panel de administración."
+              }
+            ],
+            "title": "Procedimiento de configuración"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "DHCP + acceso a Internet validados",
+                "label": "Conectividad",
+                "value": "Red Wi-Fi operativa"
+              },
+              {
+                "note": "SSID y frase de contraseña personalizados",
+                "label": "Seguridad",
+                "value": "WPA2-PSK"
+              },
+              {
+                "note": "Direcciones distribuidas a los clientes",
+                "label": "DHCP",
+                "value": "Activo en el PA"
+              },
+              {
+                "note": "Configuración completa sin asistencia",
+                "label": "Modo",
+                "value": "Autónomo"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -6683,7 +7489,98 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "IT hardware procurement quote (Excel devis)",
         "heroSubtitle": "Dimensionamiento de hardware · Presupuesto Excel · Investigación de componentes · Greta du Val d'Oise",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "En el marco de la formación TAI en el Greta du Val d Oise, recibí un pliego de condiciones de cliente describiendo un caso de uso de puesto de trabajo (ofimática + virtualización ligera) y tuve que elaborar un presupuesto de hardware completo. El ejercicio cubría todo el proceso de aprovisionamiento B2B: análisis de necesidades, búsqueda de componentes compatibles, validación de las limitaciones técnicas y formalización en una tabla Excel estructurada — entregable estándar en contexto profesional IT."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Puesto de trabajo de gama media: ofimática diaria + 1-2 VM simultáneas (VirtualBox)",
+              "Soporte multi-monitor requerido y almacenamiento local de archivos profesionales",
+              "Restricción presupuestaria: menos de 1.000 € sin IVA",
+              "Compatibilidad Windows 11 Pro y unión a un dominio Active Directory existente",
+              "Formato ATX torre estándar para facilitar el mantenimiento en empresa"
+            ],
+            "title": "Alcance y restricciones"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Análisis del pliego de condiciones y extracción de las restricciones de hardware (RAM mín., SSD, GPU, TPM 2.0)",
+              "Búsqueda de componentes en catálogos B2B franceses (LDLC Pro, Materiel.net, Inmac Wstore)",
+              "Validación de compatibilidades: zócalo CPU/placa base, generación DDR, interfaz de almacenamiento, cálculo de TDP",
+              "Verificación de los requisitos de Windows 11: TPM 2.0, Secure Boot, lista de CPU compatibles",
+              "Presupuesto Excel estructurado: referencia, proveedor, precio sin IVA, cantidad, total sin IVA, IVA 20%, total con IVA",
+              "Presupuesto validado por debajo de 1.000 € sin IVA y presentado al formador para revisión"
+            ],
+            "title": "Solución y entregables"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "AMD Ryzen 5 / Intel Core i5 (12ª-13ª gen) — CPU según relación calidad-precio",
+              "16 GB DDR4 (2× 8 GB) — ampliable hasta 32 GB para virtualización",
+              "SSD M.2 NVMe de 512 GB (SO) + HDD de 1 TB (datos)",
+              "Windows 11 Pro OEM — licencia incluida en el presupuesto",
+              "LDLC Pro / Materiel.net / Inmac Wstore — catálogos de proveedores B2B",
+              "Excel — formalización del presupuesto con cálculos sin IVA/con IVA"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Análisis de necesidades",
+                "description": "Lectura del pliego de condiciones, extracción de las restricciones: RAM mín. 16 GB, SSD para el SO, iGPU o GPU dedicada, TPM 2.0, formato ATX torre."
+              },
+              {
+                "label": "Búsqueda de componentes",
+                "description": "Consulta de catálogos B2B (LDLC Pro, Materiel.net, Inmac Wstore). Identificación de candidatos por categoría: CPU, placa base, RAM, almacenamiento, fuente de alimentación, chasis."
+              },
+              {
+                "label": "Validación de compatibilidades",
+                "description": "Verificación de zócalo CPU/placa base, generación DDR compatible, interfaz M.2 NVMe o SATA, cálculo de TDP, requisitos de Windows 11 (TPM 2.0, Secure Boot)."
+              },
+              {
+                "label": "Formalización del presupuesto",
+                "description": "Introducción en Excel: referencia, proveedor, precio sin IVA, cantidad, total sin IVA, IVA 20%, total con IVA. Línea de resumen con el total global — conformidad presupuestaria verificada."
+              }
+            ],
+            "title": "Proceso de aprovisionamiento"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Conforme al límite del cliente",
+                "label": "Presupuesto",
+                "value": "< 1.000 € sin IVA"
+              },
+              {
+                "note": "Ampliable a 32 GB — virtualización lista",
+                "label": "RAM",
+                "value": "16 GB DDR4"
+              },
+              {
+                "note": "SO rápido + datos separados",
+                "label": "Almacenamiento",
+                "value": "512 GB NVMe + 1 TB HDD"
+              },
+              {
+                "note": "Sin IVA / IVA / con IVA — validado por el formador",
+                "label": "Entregable",
+                "value": "Presupuesto Excel completo"
+              }
+            ],
+            "title": "Resumen"
+          }
+        ]
       }
     }
   },
@@ -6887,7 +7784,96 @@ export const projectDetails: ProjectDetails[] = [
       "es": {
         "title": "Outlook 2016 email provisioning (Day-1 onboarding)",
         "heroSubtitle": "Outlook 2016 · Exchange ActiveSync · Incorporación de usuarios · Greta du Val d'Oise",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "En el marco de la formación TAI en el Greta du Val d Oise, realicé un ejercicio de aprovisionamiento de correo con Microsoft Outlook 2016. El escenario reproduce una tarea real de técnico IT: un nuevo empleado llega el primer día, su equipo está instalado (Windows 10, Office 2016), y el técnico debe configurar su cuenta de correo profesional para que esté operativa de inmediato."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Configurar una cuenta de correo Microsoft/Exchange (tai7@outlook.fr) en Outlook 2016",
+              "Validar la comunicación bidireccional con una cuenta par (tai12@outlook.fr)",
+              "Dejar el equipo operativo en menos de 5 minutos tras la entrega al usuario",
+              "Simular un onboarding de Día 1 — correo, calendario y contactos accesibles de inmediato",
+              "Documentar el procedimiento para su reproducción en contexto profesional"
+            ],
+            "title": "Alcance y objetivos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Perfil de Outlook 2016 creado con detección automática Exchange ActiveSync para outlook.fr",
+              "Ninguna configuración manual de servidor necesaria — asistente de configuración automática utilizado",
+              "Correo de prueba enviado desde tai7@outlook.fr a tai12@outlook.fr y confirmado como recibido",
+              "Buzón, calendario y contactos accesibles de inmediato en Outlook 2016",
+              "Correo operativo en menos de 5 minutos tras la entrega del equipo"
+            ],
+            "title": "Solución y entregables"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Microsoft Outlook 2016 — cliente de correo de escritorio",
+              "Exchange ActiveSync — protocolo de sincronización detectado automáticamente",
+              "Autodiscover — mecanismo de detección automática de los parámetros del servidor",
+              "Windows 10 — sistema operativo del equipo aprovisionado",
+              "Office 2016 — suite ofimática preinstalada"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Iniciar Outlook 2016",
+                "description": "Apertura de Outlook 2016 por primera vez — asistente de bienvenida iniciado automáticamente para agregar la cuenta."
+              },
+              {
+                "label": "Introducción de los datos de la cuenta",
+                "description": "Nombre del usuario, dirección (tai7@outlook.fr) y contraseña introducidos. Outlook 2016 admite configuración automática y manual."
+              },
+              {
+                "label": "Configuración automática",
+                "description": "Autodiscover contacta con los servidores de Microsoft y detecta automáticamente los parámetros Exchange ActiveSync. No se requiere configuración manual de servidor."
+              },
+              {
+                "label": "Verificación — envío y recepción",
+                "description": "Correo de prueba enviado desde tai7 a tai12. Confirmación de recepción cambiando a la cuenta tai12 — comunicación bidireccional validada."
+              }
+            ],
+            "title": "Procedimiento de configuración"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Perfil de Outlook 2016 operativo",
+                "label": "Cuenta configurada",
+                "value": "tai7@outlook.fr"
+              },
+              {
+                "note": "Detectado automáticamente",
+                "label": "Protocolo",
+                "value": "Exchange ActiveSync"
+              },
+              {
+                "note": "Onboarding Día 1",
+                "label": "Tiempo de puesta en servicio",
+                "value": "< 5 minutos"
+              },
+              {
+                "note": "Bidireccional tai7 ↔ tai12",
+                "label": "Validación",
+                "value": "Correo de prueba confirmado"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
@@ -7084,66 +8070,261 @@ export const projectDetails: ProjectDetails[] = [
       "en": {
         "title": "Vulnerability Assessment Tool (Python + CVSS)",
         "heroSubtitle": "CLI tool for structured vulnerability assessments with CVSS v3.1 scoring and HTML report generation",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Context",
+            "paragraphs": [
+              "The initial plan called for a report based on a simulated Nessus scan against a fictional network. In practice, I built my own scanner instead of replaying an existing tool's output — a stronger signal for a SOC/Pentest/AppSec role: the ability to design and code a vulnerability assessment tool (check architecture, CVSS scoring engine, report generation), not just read Nessus output."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Network: concurrent port scan (ThreadPoolExecutor, 1-1024), risky-service detection (SMB/445, Telnet/23, unauthenticated Redis/6379, RDP/3389), DNS zone transfer attempt (AXFR)",
+              "System: inspects the machine running the tool (not the target) — OS version, SSH configuration (sshd_config), world-writable files in /tmp",
+              "Web: missing security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), TLS certificate validity"
+            ],
+            "title": "Methodology — 3 check families"
+          },
+          {
+            "type": "text",
+            "title": "The CVSS v3.1 engine",
+            "paragraphs": [
+              "Each finding carries a CVSS vector (attack vector, complexity, privileges required, user interaction, confidentiality/integrity/availability impact). The score isn't a hand-picked constant — it's computed via the standard's official formula (Exploitability × Impact, with the CVSS spec's Roundup algorithm). Real example — an exposed, unauthenticated SMB service computes CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8 (Critical). Severity is then derived from the computed score, not assigned separately, which eliminates any risk of a mismatch between score and displayed severity."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "TLS check never triggered: getpeercert() returns {} when verify_mode=CERT_NONE, so expired-certificate detection silently never worked. Fixed by reading the certificate in DER form (binary_form=True) and parsing via cryptography — verified against expired.badssl.com, correctly detecting a certificate expired since 2015",
+              "Sequential port scan: 1024 ports × 0.5s timeout, up to 8-9 minutes per scan. Fixed with ThreadPoolExecutor (concurrent scan) — 8.5 min → 6.4 sec measured live against localhost",
+              "Hardcoded CVSS score: the README advertised CVSS v3.1 scoring but the scores were hand-picked constants. Implemented the real formula (Exploitability, Impact, Roundup)",
+              "Scope confusion: system checks were analyzing the local machine, not the --target host, undocumented anywhere. IDs renamed to LOCAL-*, with explicit docstrings, README notes, and a console banner",
+              "No authorization guard: the tool scanned any target without confirmation. Added an interactive confirmation prompt plus an --i-am-authorized flag for non-interactive/CI use"
+            ],
+            "title": "Bugs found and fixed during code review"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "SMB/445 → Critical (9.8), MSRPC/135 → Medium (5.3) — down from 8.5 min before the concurrency fix",
+                "label": "localhost scan",
+                "value": "6.4 sec"
+              },
+              {
+                "note": "expired.badssl.com — expired since 2015-04-12",
+                "label": "Expired TLS certificate",
+                "value": "Correctly detected"
+              },
+              {
+                "note": "example.com — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy",
+                "label": "Security headers",
+                "value": "5 missing headers detected"
+              }
+            ],
+            "title": "Real test results"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "No external scanner binaries (nmap, Nessus...)",
+                "label": "Stack",
+                "value": "Python 3.11+, Jinja2, cryptography"
+              },
+              {
+                "note": "CVSS engine + data models",
+                "label": "Tests",
+                "value": "12 pytest tests"
+              },
+              {
+                "note": "SIEM/ticketing-compatible",
+                "label": "Output",
+                "value": "Self-contained HTML report + JSON export"
+              },
+              {
+                "note": "Confirmation required, or --i-am-authorized",
+                "label": "Legal framework",
+                "value": "Built-in authorization guard"
+              }
+            ],
+            "title": "Outcomes"
+          }
+        ]
       },
       "fr": {
         "title": "Outil d'évaluation de vulnérabilités (Python + CVSS)",
         "heroSubtitle": "CLI Python pour des audits de vulnérabilités structurés avec scoring CVSS v3.1 et génération de rapports HTML",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexte",
+            "paragraphs": [
+              "Le plan initial prévoyait un rapport basé sur un scan Nessus simulé contre un réseau fictif. En pratique, j'ai construit mon propre scanner plutôt que de rejouer la sortie d'un outil existant — un signal plus fort pour un poste SOC/Pentest/AppSec : la capacité à concevoir et coder un outil d'évaluation de vulnérabilités (architecture des checks, moteur de scoring CVSS, génération de rapport), pas seulement à lire la sortie de Nessus."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Network : scan de ports concurrent (ThreadPoolExecutor, 1-1024), détection de services à risque (SMB/445, Telnet/23, Redis/6379 sans auth, RDP/3389), tentative de zone transfer DNS (AXFR)",
+              "System : inspecte la machine qui exécute l'outil (pas la cible) — version OS, configuration SSH (sshd_config), fichiers world-writable dans /tmp",
+              "Web : headers de sécurité manquants (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), validité du certificat TLS"
+            ],
+            "title": "Méthodologie — 3 familles de checks"
+          },
+          {
+            "type": "text",
+            "title": "Le moteur CVSS v3.1",
+            "paragraphs": [
+              "Chaque finding porte un vecteur CVSS (vecteur d'attaque, complexité, privilèges requis, interaction utilisateur, impact confidentialité/intégrité/disponibilité). Le score n'est pas une constante choisie à la main : il est calculé via la formule officielle du standard (Exploitability × Impact, algorithme Roundup du spec CVSS). Exemple réel — un SMB exposé sans authentification calcule CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8 (Critical). La sévérité est ensuite dérivée du score calculé, pas assignée séparément, ce qui élimine tout risque d'incohérence entre score et sévérité affichée."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Check TLS jamais déclenché : getpeercert() retourne {} quand verify_mode=CERT_NONE, donc la détection de certificat expiré ne fonctionnait jamais, silencieusement. Corrigé par une lecture du certificat en DER (binary_form=True) + parsing via cryptography — vérifié contre expired.badssl.com, qui détecte bien un certificat expiré depuis 2015",
+              "Scan de ports séquentiel : 1024 ports × 0,5 s de timeout, jusqu'à 8-9 minutes par scan. Corrigé avec ThreadPoolExecutor (scan concurrent) — 8,5 min → 6,4 s mesuré en réel sur localhost",
+              "Score CVSS codé en dur : le README annonçait un calcul CVSS v3.1 mais les scores étaient des constantes choisies à la main. Implémentation de la vraie formule (Exploitability, Impact, Roundup)",
+              "Confusion de périmètre : les checks system analysaient la machine locale, pas la cible --target, sans que ce soit documenté nulle part. IDs renommés LOCAL-*, docstrings + README + bannière console explicites",
+              "Aucun garde-fou d'autorisation : l'outil scannait n'importe quelle cible sans confirmation. Ajout d'un prompt de confirmation interactif + flag --i-am-authorized pour usage non-interactif/CI"
+            ],
+            "title": "Bugs trouvés et corrigés pendant la revue de code"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "SMB/445 → Critical (9.8), MSRPC/135 → Medium (5.3) — contre 8,5 min avant le fix de concurrence",
+                "label": "Scan localhost",
+                "value": "6,4 s"
+              },
+              {
+                "note": "expired.badssl.com — expiré depuis le 12/04/2015",
+                "label": "Certificat TLS expiré",
+                "value": "Détecté correctement"
+              },
+              {
+                "note": "example.com — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy",
+                "label": "Headers de sécurité",
+                "value": "5 headers manquants détectés"
+              }
+            ],
+            "title": "Résultats de tests réels"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Aucun binaire de scan externe (nmap, Nessus...)",
+                "label": "Stack",
+                "value": "Python 3.11+, Jinja2, cryptography"
+              },
+              {
+                "note": "Moteur CVSS + modèles de données",
+                "label": "Tests",
+                "value": "12 tests pytest"
+              },
+              {
+                "note": "Compatible SIEM/ticketing",
+                "label": "Sortie",
+                "value": "Rapport HTML autonome + export JSON"
+              },
+              {
+                "note": "Confirmation requise ou --i-am-authorized",
+                "label": "Cadre légal",
+                "value": "Garde-fou d'autorisation intégré"
+              }
+            ],
+            "title": "Résultats"
+          }
+        ]
       },
       "es": {
-        "title": "Vulnerability Assessment Report (Tenable SecurityCenter)",
+        "title": "Vulnerability Assessment Tool (Python + CVSS)",
         "heroSubtitle": "Evaluación de vulnerabilidades Tenable SecurityCenter — resumen ejecutivo, clasificación por severidad y remediación mapeada a CVE.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Realización de una evaluación estructurada de vulnerabilidades con Tenable SecurityCenter para evaluar la postura de seguridad de un segmento de red objetivo.",
-              "El entregable cubre dos niveles: un resumen ejecutivo para las partes interesadas, y un informe técnico de detalles de vulnerabilidades por puerto para el equipo de remediación — cada hallazgo vinculado a referencias CVE y puntuaciones CVSS."
+              "El plan inicial preveía un informe basado en un escaneo Nessus simulado contra una red ficticia. En la práctica, construí mi propio escáner en lugar de reproducir la salida de una herramienta existente — una señal más fuerte para un puesto SOC/Pentest/AppSec: la capacidad de diseñar y programar una herramienta de evaluación de vulnerabilidades (arquitectura de checks, motor de puntuación CVSS, generación de informes), no solo leer la salida de Nessus."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Definición del alcance y ejecución de un escaneo Tenable SecurityCenter sobre el entorno objetivo.",
-              "Informe de resumen ejecutivo: puntuación de riesgo global, recuentos crítico/alto/medio/bajo, comparación de tendencias.",
-              "Informe de detalles de vulnerabilidades por puerto: desglose por host y por puerto con CVE, puntuaciones CVSS y salida de los plugins.",
-              "Lista de prioridades de remediación: hallazgos críticos y altos clasificados por explotabilidad, con las correcciones recomendadas."
+              "Network: escaneo de puertos concurrente (ThreadPoolExecutor, 1-1024), detección de servicios de riesgo (SMB/445, Telnet/23, Redis/6379 sin autenticación, RDP/3389), intento de transferencia de zona DNS (AXFR)",
+              "System: inspecciona la máquina que ejecuta la herramienta (no el objetivo) — versión del SO, configuración SSH (sshd_config), archivos con permisos de escritura global en /tmp",
+              "Web: cabeceras de seguridad ausentes (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), validez del certificado TLS"
             ],
-            "title": "Lo que entregué"
+            "title": "Metodología — 3 familias de checks"
+          },
+          {
+            "type": "text",
+            "title": "El motor CVSS v3.1",
+            "paragraphs": [
+              "Cada hallazgo lleva un vector CVSS (vector de ataque, complejidad, privilegios requeridos, interacción del usuario, impacto en confidencialidad/integridad/disponibilidad). La puntuación no es una constante elegida a mano: se calcula mediante la fórmula oficial del estándar (Exploitability × Impact, con el algoritmo Roundup de la especificación CVSS). Ejemplo real — un servicio SMB expuesto sin autenticación calcula CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8 (Crítico). La severidad se deriva después de la puntuación calculada, no se asigna por separado, lo que elimina cualquier riesgo de incoherencia entre la puntuación y la severidad mostrada."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "El check TLS nunca se activaba: getpeercert() devuelve {} cuando verify_mode=CERT_NONE, por lo que la detección de certificados expirados nunca funcionaba, de forma silenciosa. Corregido leyendo el certificado en formato DER (binary_form=True) y analizándolo con cryptography — verificado contra expired.badssl.com, que detecta correctamente un certificado expirado desde 2015",
+              "Escaneo de puertos secuencial: 1024 puertos × 0,5 s de timeout, hasta 8-9 minutos por escaneo. Corregido con ThreadPoolExecutor (escaneo concurrente) — 8,5 min → 6,4 s medido en real contra localhost",
+              "Puntuación CVSS codificada a mano: el README anunciaba un cálculo CVSS v3.1 pero las puntuaciones eran constantes elegidas manualmente. Implementación de la fórmula real (Exploitability, Impact, Roundup)",
+              "Confusión de alcance: los checks system analizaban la máquina local, no el objetivo --target, sin documentarlo en ningún sitio. IDs renombrados a LOCAL-*, con docstrings, notas en el README y un aviso en consola explícitos",
+              "Sin garantía de autorización: la herramienta escaneaba cualquier objetivo sin confirmación. Se añadió un aviso de confirmación interactivo más un flag --i-am-authorized para uso no interactivo/CI"
+            ],
+            "title": "Errores encontrados y corregidos durante la revisión de código"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "label": "Herramienta",
-                "value": "Tenable SecurityCenter"
+                "note": "SMB/445 → Crítico (9.8), MSRPC/135 → Medio (5.3) — frente a 8,5 min antes de la corrección de concurrencia",
+                "label": "Escaneo de localhost",
+                "value": "6,4 s"
               },
               {
-                "label": "Capas del informe",
-                "value": "Resumen ejecutivo + detalles de vulnerabilidades por puerto"
+                "note": "expired.badssl.com — expirado desde el 12/04/2015",
+                "label": "Certificado TLS expirado",
+                "value": "Detectado correctamente"
               },
               {
-                "label": "Puntuación",
-                "value": "CVSS v3 — crítica / alta / media / baja"
-              },
-              {
-                "label": "Entregable",
-                "value": "Hallazgos mapeados a CVE con guía de remediación"
+                "note": "example.com — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy",
+                "label": "Cabeceras de seguridad",
+                "value": "5 cabeceras ausentes detectadas"
               }
             ],
-            "title": "Resumen de la evaluación"
+            "title": "Resultados de pruebas reales"
           },
           {
-            "type": "bullets",
+            "type": "metrics",
             "items": [
-              "Configuración del escáner de vulnerabilidades y definición de la política de escaneo.",
-              "Interpretación de las puntuaciones CVSS y mapeo de los hallazgos al riesgo de negocio.",
-              "Producción de informes de doble audiencia (ejecutivo + técnico).",
-              "Priorización de la remediación por explotabilidad y criticidad de los activos."
+              {
+                "note": "Sin binarios de escaneo externos (nmap, Nessus...)",
+                "label": "Stack",
+                "value": "Python 3.11+, Jinja2, cryptography"
+              },
+              {
+                "note": "Motor CVSS + modelos de datos",
+                "label": "Tests",
+                "value": "12 tests pytest"
+              },
+              {
+                "note": "Compatible con SIEM/ticketing",
+                "label": "Salida",
+                "value": "Informe HTML autónomo + exportación JSON"
+              },
+              {
+                "note": "Confirmación requerida, o --i-am-authorized",
+                "label": "Marco legal",
+                "value": "Garantía de autorización integrada"
+              }
             ],
-            "title": "Competencias demostradas"
+            "title": "Resultados"
           }
         ]
       }
@@ -7773,70 +8954,213 @@ export const projectDetails: ProjectDetails[] = [
       "en": {
         "title": "Incident Response Playbook (SOC)",
         "heroSubtitle": "Structured incident response procedures for malware, ransomware, data breaches, phishing, and unauthorized access",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Context",
+            "paragraphs": [
+              "This playbook builds on and extends incident-response-playbook, an open-source repository of incident response procedures. Goal: a set of structured procedures for the 6 most common cybersecurity threats, designed for SOC teams and IT admins at SMBs and mid-market companies alike — beyond theory, with documents a team can actually use."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "P01 — Malware infection (High to Critical severity)",
+              "P02 — Ransomware attack (Critical)",
+              "P03 — Data breach (High to Critical)",
+              "P04 — Phishing (Medium to High)",
+              "P05 — Unauthorized access (High to Critical)",
+              "P06 — Denial of service, DoS/DDoS (Medium to Critical) — playbook added on top of the original"
+            ],
+            "title": "6 available playbooks"
+          },
+          {
+            "type": "text",
+            "title": "Incident response lifecycle",
+            "paragraphs": [
+              "Every playbook follows the same cycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned, with concrete, checkable actions as checklists — not a theoretical description of the NIST SP 800-61 process, but documents actually usable during a live response."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Identify the incident type using the severity matrix",
+              "Open the matching playbook and follow the steps in order",
+              "Check the RACI matrix to know who does what",
+              "Document every action in real time with the incident report",
+              "Escalate per the defined escalation procedures",
+              "Communicate internally/externally with the crisis communication template",
+              "Capitalize on lessons learned with the post-mortem"
+            ],
+            "title": "How to use this playbook"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Malware, ransomware, data breach, phishing, unauthorized access, denial of service",
+                "label": "Playbooks",
+                "value": "6"
+              },
+              {
+                "note": "Added on top of the original",
+                "label": "Supporting deliverables",
+                "value": "RACI matrix + crisis communication template"
+              },
+              {
+                "note": "Detection → Containment → Eradication → Recovery cycle",
+                "label": "Framework",
+                "value": "NIST SP 800-61"
+              },
+              {
+                "note": "SMB to mid-market",
+                "label": "Target audience",
+                "value": "SOC & IT admin teams"
+              }
+            ],
+            "title": "Outcomes"
+          }
+        ]
       },
       "fr": {
         "title": "Playbook de réponse aux incidents (SOC)",
         "heroSubtitle": "Procédures structurées de réponse aux incidents : malware, ransomware, violations de données, phishing et accès non autorisés",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexte",
+            "paragraphs": [
+              "Ce playbook reprend et enrichit incident-response-playbook, un dépôt open source de procédures de réponse aux incidents. Objectif : un ensemble de procédures structurées pour les 6 menaces de cybersécurité les plus courantes, conçu pour des équipes SOC et administrateurs IT en PME comme en ETI — au-delà de la théorie, avec des documents directement utilisables par une équipe."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "P01 — Infection par malware (sévérité Élevée à Critique)",
+              "P02 — Attaque par ransomware (Critique)",
+              "P03 — Fuite de données (Élevée à Critique)",
+              "P04 — Hameçonnage / phishing (Moyenne à Élevée)",
+              "P05 — Accès non autorisé (Élevée à Critique)",
+              "P06 — Déni de service, DoS/DDoS (Moyenne à Critique) — playbook ajouté par rapport à l'original"
+            ],
+            "title": "6 playbooks disponibles"
+          },
+          {
+            "type": "text",
+            "title": "Cycle de vie de la réponse à incident",
+            "paragraphs": [
+              "Chaque playbook suit le même cycle : Détection → Triage → Confinement → Éradication → Récupération → Retour d'expérience, avec des actions concrètes et vérifiables sous forme de checklists — pas une description théorique du processus NIST SP 800-61, mais des documents réellement exploitables en intervention."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Identifier le type d'incident à l'aide de la matrice de sévérité",
+              "Ouvrir le playbook correspondant et suivre les étapes dans l'ordre",
+              "Consulter la matrice RACI pour savoir qui fait quoi",
+              "Documenter toutes les actions en temps réel avec le rapport d'incident",
+              "Escalader selon les procédures d'escalade définies",
+              "Communiquer en interne/externe avec le template de communication de crise",
+              "Capitaliser avec le post-mortem"
+            ],
+            "title": "Comment utiliser ce playbook"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Malware, ransomware, fuite de données, phishing, accès non autorisé, déni de service",
+                "label": "Playbooks",
+                "value": "6"
+              },
+              {
+                "note": "Ajoutés par rapport à l'original",
+                "label": "Livrables complémentaires",
+                "value": "Matrice RACI + template de communication de crise"
+              },
+              {
+                "note": "Cycle Détection → Confinement → Éradication → Récupération",
+                "label": "Cadre",
+                "value": "NIST SP 800-61"
+              },
+              {
+                "note": "PME comme ETI",
+                "label": "Public visé",
+                "value": "Équipes SOC & admin IT"
+              }
+            ],
+            "title": "Résultats"
+          }
+        ]
       },
       "es": {
-        "title": "Incident Response Playbook (Phishing)",
+        "title": "Incident Response Playbook (SOC)",
         "heroSubtitle": "Playbook de respuesta a incidentes de phishing — detectar, triar, contener, erradicar, recuperar.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "El phishing sigue siendo uno de los vectores de acceso inicial más frecuentes. Este playbook proporciona a los analistas un flujo de trabajo estructurado y guiado por decisiones para tratar los incidentes de phishing de manera coherente y eficaz.",
-              "Cubre el ciclo de vida completo del incidente — desde la detección inicial hasta la revisión posterior — con puntos de decisión explícitos, rutas de escalado y directrices de comunicación en cada etapa."
+              "Este playbook retoma y amplía incident-response-playbook, un repositorio open source de procedimientos de respuesta a incidentes. Objetivo: un conjunto de procedimientos estructurados para las 6 amenazas de ciberseguridad más comunes, diseñado para equipos SOC y administradores IT tanto en pymes como en empresas medianas — más allá de la teoría, con documentos que un equipo puede usar directamente."
             ]
           },
           {
-            "type": "timeline",
-            "steps": [
+            "type": "bullets",
+            "items": [
+              "P01 — Infección por malware (Severidad Alta a Crítica)",
+              "P02 — Ataque de ransomware (Crítica)",
+              "P03 — Fuga de datos (Alta a Crítica)",
+              "P04 — Phishing (Media a Alta)",
+              "P05 — Acceso no autorizado (Alta a Crítica)",
+              "P06 — Denegación de servicio, DoS/DDoS (Media a Crítica) — playbook añadido respecto al original"
+            ],
+            "title": "6 playbooks disponibles"
+          },
+          {
+            "type": "text",
+            "title": "Ciclo de vida de la respuesta a incidentes",
+            "paragraphs": [
+              "Cada playbook sigue el mismo ciclo: Detección → Triaje → Contención → Erradicación → Recuperación → Lecciones aprendidas, con acciones concretas y verificables en forma de checklists — no una descripción teórica del proceso NIST SP 800-61, sino documentos realmente utilizables durante una intervención."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Identificar el tipo de incidente con la matriz de severidad",
+              "Abrir el playbook correspondiente y seguir los pasos en orden",
+              "Consultar la matriz RACI para saber quién hace qué",
+              "Documentar todas las acciones en tiempo real con el informe de incidente",
+              "Escalar según los procedimientos de escalado definidos",
+              "Comunicar interna/externamente con la plantilla de comunicación de crisis",
+              "Capitalizar con el post-mortem"
+            ],
+            "title": "Cómo usar este playbook"
+          },
+          {
+            "type": "metrics",
+            "items": [
               {
-                "title": "Detección y notificación",
-                "description": "Alerta generada por la pasarela de correo, una regla SIEM o una notificación de usuario. Triaje inicial: confirmar los indicadores de phishing (remitente, enlaces, adjuntos, cabeceras)."
+                "note": "Malware, ransomware, fuga de datos, phishing, acceso no autorizado, denegación de servicio",
+                "label": "Playbooks",
+                "value": "6"
               },
               {
-                "title": "Contención",
-                "description": "Bloquear el remitente/dominio malicioso a nivel de pasarela. Poner en cuarentena los buzones afectados. Aislar cualquier endpoint que haya abierto un enlace o adjunto. Restablecer credenciales si se sospecha compromiso."
+                "note": "Añadidos respecto al original",
+                "label": "Entregables complementarios",
+                "value": "Matriz RACI + plantilla de comunicación de crisis"
               },
               {
-                "title": "Erradicación",
-                "description": "Eliminar los correos de phishing de todos los buzones (purga de administrador). Revocar las sesiones activas. Escanear los endpoints en busca de malware depositado por algún payload abierto."
+                "note": "Ciclo Detección → Contención → Erradicación → Recuperación",
+                "label": "Marco",
+                "value": "NIST SP 800-61"
               },
               {
-                "title": "Recuperación",
-                "description": "Restaurar el acceso a cuentas y endpoints tras la verificación. Reactivar los servicios progresivamente. Confirmar la ausencia de mecanismos de persistencia."
-              },
-              {
-                "title": "Revisión post-incidente",
-                "description": "Documentar la cronología, la causa raíz y las lecciones aprendidas. Actualizar las reglas de detección y la formación de concienciación. Producir un informe de incidente para las partes interesadas."
+                "note": "Pymes y empresas medianas",
+                "label": "Público objetivo",
+                "value": "Equipos SOC y admin IT"
               }
             ],
-            "title": "Etapas del playbook"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Organigrama de decisión con puertas de rombo en cada punto de triaje (¿Es phishing? ¿Se hizo clic en un enlace? ¿Se introdujeron credenciales?).",
-              "Matriz de escalado: analista L1 → responsable SOC → CISO según el alcance y el compromiso confirmado.",
-              "Plantillas de comunicación para notificaciones a usuarios y actualizaciones a la dirección.",
-              "Checklist de recopilación de evidencias para transferencia forense o requisitos legales."
-            ],
-            "title": "Características del playbook"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Diseño del ciclo de vida de respuesta a incidentes (alineado con NIST SP 800-61).",
-              "Modelado de amenazas para vectores de ataque de phishing.",
-              "Diseño de organigramas de proceso para el apoyo a la decisión de los analistas.",
-              "Planificación de comunicación con partes interesadas y escalado."
-            ],
-            "title": "Competencias demostradas"
+            "title": "Resultados"
           }
         ]
       }
@@ -7848,15 +9172,300 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "risque360 — STRIDE Threat Modeling, Vendor Risk & Incident Recalibration",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Context",
+            "paragraphs": [
+              "risque360 extends matrice-risques (itself a French rebuild of the open-source risk-assessment-matrix project): a classic risk register poorly captures threats specific to an application's architecture, risks carried by vendors/third parties, and how a history of incidents should shift a probability declared \"in the abstract\". risque360 brings these three angles together in a single register, with a data-driven probability recalibration mechanism — the most differentiating part of the project."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Organizational risk register — same spirit as matrice-risques (manual form, business categories)",
+              "Application threat modeling (STRIDE) — for a given component (API Gateway, auth service, database...), generates one risk per STRIDE category: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
+              "Vendor/third-party risk register — a vendor (access level, security questionnaire status, known incident) automatically generates a risk, with an initial probability estimated by a transparent heuristic — never enforced, always editable",
+              "Incident log & recalibration — each risk carries a correlation key; incidents logged under that same key are used to compute a suggested probability over a rolling 12-month window. The suggestion is never auto-applied — an explicit \"Apply\" button is required"
+            ],
+            "title": "The 4 modules"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "0-2 incidents / rolling 12 months",
+                "value": "No adjustment"
+              },
+              {
+                "label": "3-5 incidents",
+                "value": "Probability +1 (capped at 5)"
+              },
+              {
+                "label": "6+ incidents",
+                "value": "Probability +2 (capped at 5)"
+              },
+              {
+                "label": "Test-validated example",
+                "value": "\"Phishing — credential theft\" (declared probability 2/5): 4 related incidents in 12 months → suggested 3/5, shown with an explicit \"Apply\" button"
+              }
+            ],
+            "title": "Recalibration algorithm"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Base",
+                "value": "High access: 3 · medium: 2 · low: 1"
+              },
+              {
+                "label": "+1",
+                "value": "If security questionnaire not completed"
+              },
+              {
+                "label": "+1",
+                "value": "If questionnaire compliant with reservations"
+              },
+              {
+                "label": "+1",
+                "value": "If a known incident occurred in the last 12 months"
+              },
+              {
+                "label": "Cap",
+                "value": "5"
+              }
+            ],
+            "title": "Vendor heuristic (transparent, editable)"
+          },
+          {
+            "type": "text",
+            "title": "Bug found and fixed during development",
+            "paragraphs": [
+              "Automatic correlation-key generation (from a vendor name or a STRIDE component) didn't strip punctuation — for example \"PayGateway Inc.\" generated the vendor key fournisseur-paygateway-inc. with a trailing period, which would have silently broken the link to incidents logged under that same key. Fixed with a shared slugifier() function that strips diacritics and punctuation before generating the key, verified with a direct isolated-module test (cache-busting import) to rule out any ES module caching effect during debugging."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Stack",
+                "value": "Vanilla HTML/CSS/JS (ES modules, no dependencies) + Python CLI (argparse, Jinja2, pytest)"
+              },
+              {
+                "label": "Tests",
+                "value": "6 pytest tests — level boundaries, vendor heuristic, 12-month window, recalibration tiers, preview non-mutation, combined example-data validation"
+              },
+              {
+                "label": "JS ↔ Python parity",
+                "value": "Recalibration logic duplicated identically in the Python CLI (recalibration.py), tested separately"
+              },
+              {
+                "label": "Interface",
+                "value": "Tabbed app: Dashboard (heatmap + global register), Register, STRIDE, Vendors, Incidents"
+              }
+            ],
+            "title": "Outcomes"
+          }
+        ]
       },
       "fr": {
         "title": "risque360 — Modélisation STRIDE, Risques Fournisseurs & Recalibration par Incidents",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexte",
+            "paragraphs": [
+              "risque360 étend matrice-risques (elle-même une reconstruction française du projet open source risk-assessment-matrix) : un registre de risques classique capture mal les menaces propres à une architecture applicative, les risques portés par les fournisseurs/tiers, et la façon dont un historique d'incidents devrait faire évoluer une probabilité déclarée « à froid ». risque360 réunit ces trois angles dans un registre unique, avec un mécanisme de recalibration de probabilité piloté par les données — la partie la plus différenciante du projet."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Registre de risques organisationnels — identique dans l'esprit à matrice-risques (formulaire manuel, catégories métier)",
+              "Modélisation de menaces applicatives (STRIDE) — pour un composant donné (API Gateway, service d'auth, base de données...), génère un risque par catégorie STRIDE : Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
+              "Registre des risques fournisseurs/tiers — un fournisseur (niveau d'accès, statut du questionnaire de sécurité, incident connu) génère automatiquement un risque, avec une probabilité initiale estimée par une heuristique transparente, jamais imposée, toujours modifiable",
+              "Journal d'incidents & recalibration — chaque risque porte une clé de corrélation ; les incidents journalisés partageant cette clé permettent de calculer une probabilité suggérée sur une fenêtre glissante de 12 mois. La suggestion n'est jamais appliquée automatiquement : un bouton « Appliquer » explicite est requis"
+            ],
+            "title": "Les 4 modules"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "0-2 incidents / 12 mois glissants",
+                "value": "Aucun ajustement"
+              },
+              {
+                "label": "3-5 incidents",
+                "value": "Probabilité +1 (plafonné à 5)"
+              },
+              {
+                "label": "6+ incidents",
+                "value": "Probabilité +2 (plafonné à 5)"
+              },
+              {
+                "label": "Exemple validé par les tests",
+                "value": "« Hameçonnage — vol d'identifiants » (probabilité déclarée 2/5) : 4 incidents liés sur 12 mois → suggestion 3/5, affichée avec un bouton « Appliquer » explicite"
+              }
+            ],
+            "title": "Algorithme de recalibration"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Base",
+                "value": "Accès élevé : 3 · moyen : 2 · faible : 1"
+              },
+              {
+                "label": "+1",
+                "value": "Si questionnaire de sécurité non réalisé"
+              },
+              {
+                "label": "+1",
+                "value": "Si questionnaire conforme avec réserves"
+              },
+              {
+                "label": "+1",
+                "value": "Si incident connu dans les 12 derniers mois"
+              },
+              {
+                "label": "Plafond",
+                "value": "5"
+              }
+            ],
+            "title": "Heuristique fournisseur (transparente, éditable)"
+          },
+          {
+            "type": "text",
+            "title": "Bug détecté et corrigé pendant le développement",
+            "paragraphs": [
+              "La génération automatique de clé de corrélation (à partir du nom d'un fournisseur ou d'un composant STRIDE) ne retirait pas la ponctuation — par exemple « PayGateway Inc. » générait la clé fournisseur-paygateway-inc. avec un point final, ce qui aurait cassé silencieusement le lien avec les incidents journalisés partageant cette clé. Corrigé par une fonction slugifier() partagée qui retire diacritiques et ponctuation avant de générer la clé, vérifiée par un test direct du module en isolation (import avec cache-busting) pour écarter tout effet de cache de module ES pendant le débogage."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Stack",
+                "value": "HTML/CSS/JS vanilla (ES modules, sans dépendance) + CLI Python (argparse, Jinja2, pytest)"
+              },
+              {
+                "label": "Tests",
+                "value": "6 tests pytest — bornes de niveaux, heuristique fournisseur, fenêtre 12 mois, paliers de recalibration, non-mutation de l'aperçu, validation du jeu d'exemple combiné"
+              },
+              {
+                "label": "Parité JS ↔ Python",
+                "value": "Logique de recalibration dupliquée à l'identique côté CLI Python (recalibration.py), testée séparément"
+              },
+              {
+                "label": "Interface",
+                "value": "App à onglets : Tableau de bord (heatmap + registre global), Registre, STRIDE, Fournisseurs, Incidents"
+              }
+            ],
+            "title": "Résultats"
+          }
+        ]
       },
       "es": {
         "title": "risque360 — Modelado STRIDE, Riesgo de Proveedores y Recalibración por Incidentes",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "paragraphs": [
+              "risque360 amplía matrice-risques (a su vez una reconstrucción francesa del proyecto open source risk-assessment-matrix): un registro de riesgos clásico capta mal las amenazas propias de una arquitectura de aplicación, los riesgos que aportan los proveedores/terceros, y cómo un historial de incidentes debería modificar una probabilidad declarada «en frío». risque360 reúne estos tres ángulos en un único registro, con un mecanismo de recalibración de probabilidad impulsado por datos — la parte más diferenciadora del proyecto."
+            ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Registro de riesgos organizacionales — mismo espíritu que matrice-risques (formulario manual, categorías de negocio)",
+              "Modelado de amenazas de aplicación (STRIDE) — para un componente dado (API Gateway, servicio de autenticación, base de datos...), genera un riesgo por categoría STRIDE: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
+              "Registro de riesgos de proveedores/terceros — un proveedor (nivel de acceso, estado del cuestionario de seguridad, incidente conocido) genera automáticamente un riesgo, con una probabilidad inicial estimada mediante una heurística transparente — nunca impuesta, siempre editable",
+              "Registro de incidentes y recalibración — cada riesgo lleva una clave de correlación; los incidentes registrados bajo esa misma clave permiten calcular una probabilidad sugerida en una ventana móvil de 12 meses. La sugerencia nunca se aplica automáticamente — se requiere un botón «Aplicar» explícito"
+            ],
+            "title": "Los 4 módulos"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "0-2 incidentes / 12 meses móviles",
+                "value": "Sin ajuste"
+              },
+              {
+                "label": "3-5 incidentes",
+                "value": "Probabilidad +1 (tope 5)"
+              },
+              {
+                "label": "6+ incidentes",
+                "value": "Probabilidad +2 (tope 5)"
+              },
+              {
+                "label": "Ejemplo validado por los tests",
+                "value": "«Phishing — robo de credenciales» (probabilidad declarada 2/5): 4 incidentes relacionados en 12 meses → sugerencia 3/5, mostrada con un botón «Aplicar» explícito"
+              }
+            ],
+            "title": "Algoritmo de recalibración"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Base",
+                "value": "Acceso alto: 3 · medio: 2 · bajo: 1"
+              },
+              {
+                "label": "+1",
+                "value": "Si el cuestionario de seguridad no se ha completado"
+              },
+              {
+                "label": "+1",
+                "value": "Si el cuestionario es conforme con reservas"
+              },
+              {
+                "label": "+1",
+                "value": "Si hubo un incidente conocido en los últimos 12 meses"
+              },
+              {
+                "label": "Tope",
+                "value": "5"
+              }
+            ],
+            "title": "Heurística de proveedores (transparente, editable)"
+          },
+          {
+            "type": "text",
+            "title": "Error detectado y corregido durante el desarrollo",
+            "paragraphs": [
+              "La generación automática de la clave de correlación (a partir del nombre de un proveedor o un componente STRIDE) no eliminaba la puntuación — por ejemplo, «PayGateway Inc.» generaba la clave fournisseur-paygateway-inc. con un punto final, lo que habría roto silenciosamente el enlace con los incidentes registrados bajo esa misma clave. Corregido con una función slugifier() compartida que elimina diacríticos y puntuación antes de generar la clave, verificada con una prueba directa del módulo en aislamiento (importación con cache-busting) para descartar cualquier efecto de caché de módulos ES durante la depuración."
+            ]
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "label": "Stack",
+                "value": "HTML/CSS/JS vanilla (módulos ES, sin dependencias) + CLI Python (argparse, Jinja2, pytest)"
+              },
+              {
+                "label": "Tests",
+                "value": "6 tests pytest — límites de nivel, heurística de proveedores, ventana de 12 meses, niveles de recalibración, no mutación de la vista previa, validación del conjunto de datos de ejemplo combinado"
+              },
+              {
+                "label": "Paridad JS ↔ Python",
+                "value": "Lógica de recalibración duplicada de forma idéntica en la CLI Python (recalibration.py), probada por separado"
+              },
+              {
+                "label": "Interfaz",
+                "value": "App con pestañas: Panel (mapa de calor + registro global), Registro, STRIDE, Proveedores, Incidentes"
+              }
+            ],
+            "title": "Resultados"
+          }
+        ]
       }
     }
   },
