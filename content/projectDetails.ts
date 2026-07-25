@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T00:11:14.972Z
+// Last export: 2026-07-25T01:02:52.834Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -10772,41 +10772,51 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Development of an Apex backend for iDEM Connect: trigger, service classes and batch scheduler.",
         "sections": [
           {
-            "body": "iDEM Connect is a global internet service provider (€1.8B revenue, 3,950 employees). Frédéric Lambert, senior Salesforce architect, needed a complete Apex backend to manage customer subscriptions on Account and Order objects. The mission covered writing technical specifications, developing Apex components (trigger, service classes, batch, scheduler) and delivering test coverage above 75%.",
+            "body": "iDEM Connect is an international internet service provider (€1.8B revenue, 3,950 employees). Need: a full Apex backend to equip the sales force on Salesforce — managing accounts, contracts, and orders, with three precise business rules to implement and a strict test coverage requirement. Mission: design the architecture (trigger, handlers, batch, scheduler), implement it, and deliver complete technical documentation (per-class fact sheets, requirements-to-tests traceability matrix).",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Apex Trigger on Account and Order — delegates business logic to service classes (handler pattern)",
-              "3 Apex service classes implementing the business feature grid",
-              "Batch Apex for bulk processing of the subscription lifecycle",
-              "Apex Scheduler for automatic daily batch scheduling",
-              "Unit tests with 3 scenarios per method — coverage above 75% on all classes",
-              "Complete PDF documentation: classes, methods, parameters and test cases"
+              "RG-01 — Block activating an Order with no OrderItem: the Draft → Activated transition is intercepted on OrderTrigger.before update, with an aggregate SOQL count of OrderItem per Order, and a blocking addError() when the count is zero",
+              "RG-02 — Keep Account.Active__c in sync with order existence: true on Order insert (after insert), false only when the account's last remaining Order is deleted (after delete) — handled by two dedicated handlers, never in the trigger itself",
+              "RG-03 — Automatic re-engagement of dormant accounts: every 1st Monday of the month at 9am (CRON 0 0 9 ? * MON#1), a batch creates a J+5 \"Call\" Task for every Account with no Order and no existing Call (manual or automated)",
+              "One-trigger-per-object architecture: OrderTrigger contains zero business logic, only orchestration to 3 dedicated handlers — bulk-safe by design"
             ],
-            "title": "Technical Scope"
+            "title": "Business rules & architecture"
           },
           {
             "type": "bullets",
             "items": [
-              "Zero DML and SOQL inside FOR loops — all queries externalized",
-              "Handler pattern: triggers with no direct logic, clear separation of concerns",
-              "Full bulkification — correct processing of 1 to 200 records per transaction",
-              "Code coverage above 75% on each Apex class (platform requirement)",
-              "Salesforce naming conventions respected (classes, methods, variables)"
+              "OrderValidationHandler — read-only, aggregate SOQL COUNT(OrderItem) grouped by OrderId, addError() on the Status field",
+              "OrderInsertionHandler / OrderDeletionHandler — bulk Account.Active__c updates, secured with Security.stripInaccessible(UPDATABLE) before every update",
+              "AccountReminderBatch (Database.Batchable) — SOQL anti-join (Accounts with no Order) at start(), \"Call\" Task deduplication via a GROUP BY WhatId aggregate at execute(), with a strict-deduplication mode toggled by a flag (DEDUPE_USING_AUTO_FLAG)",
+              "AccountReminderScheduler (Schedulable) — triggers the batch on the monthly CRON, falling back to the running user if the account owner is inactive or missing",
+              "AppConfig — centralizes every business constant (statuses, labels, follow-up delay): no magic values in the code, a single place to change behavior",
+              "TestDataFactory — decoupled test data factory (generateX() with no DML / createX() with DML), reused across all 6 test classes"
             ],
-            "title": "Apex Best Practices Applied"
+            "title": "Solutions built"
           },
           {
             "type": "bullets",
             "items": [
-              "Apex — Triggers, Service Classes, Batch Apex, Schedulable",
-              "SOQL — Queries on Account, Order and related objects",
-              "Salesforce DX — Deployment and metadata management",
-              "Apex Test Framework — @isTest, Test.startTest/stopTest",
-              "PDF Documentation — Complete technical specifications"
+              "WITH SECURITY_ENFORCED on the batch's anti-join query (simple query, eligible)",
+              "On the deduplication aggregate, not eligible for WITH SECURITY_ENFORCED: explicit CRUD/FLS checks (Task.isAccessible(), access to the WhatId/Subject/Auto_Created__c fields) before running it",
+              "Security.stripInaccessible(AccessType.CREATABLE) before every Task insert, (UPDATABLE) before every Account update — silently strips inaccessible fields instead of throwing",
+              "Database.insert/update(..., allOrNone=false): resilient inserts with detailed logging of partial failures, instead of a full rollback over a single bad row",
+              "Strict bulkification: no SOQL or DML inside a loop, everything via Set/Map and aggregates — validated by a test processing 250 accounts in a single transaction"
+            ],
+            "title": "Security & best practices"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex — Triggers, Handler pattern, Batchable, Schedulable",
+              "SOQL — GROUP BY aggregates, anti-join, WITH SECURITY_ENFORCED",
+              "Salesforce DX (sfdx force:source:deploy) — metadata deployment",
+              "Apex Test Framework — TestDataFactory, Test.startTest/stopTest, per-class coverage",
+              "Structured technical documentation — per-class fact sheets + requirements-to-tests traceability matrix"
             ],
             "title": "Stack & Technologies"
           },
@@ -10815,56 +10825,70 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Specifications",
-                "description": "Feature grid analyzed, detailed technical specs written for the 3 business features"
+                "description": "Analyzed the 3 business rules, designed the one-trigger-per-object architecture and the requirements-to-tests traceability matrix"
               },
               {
-                "label": "Trigger & Handler",
-                "description": "Account/Order Trigger built with handler pattern — business logic delegated to dedicated service classes"
-              },
-              {
-                "label": "Service classes",
-                "description": "3 business features implemented in specialized Apex classes, each method unit tested"
+                "label": "Trigger & Handlers",
+                "description": "Built OrderTrigger and the 3 dedicated handlers (validation, insertion, deletion), each tested in isolation"
               },
               {
                 "label": "Batch & Scheduler",
-                "description": "Batch Apex for bulk subscription processing and Scheduler for daily automated execution"
+                "description": "AccountReminderBatch (anti-join + configurable deduplication) and AccountReminderScheduler (monthly CRON), with a fallback to the running user when needed"
               },
               {
-                "label": "Tests & Coverage",
-                "description": "Unit test suite with 3 scenarios per method (nominal, boundary, error) — coverage validated above 75%"
+                "label": "Security",
+                "description": "Systematically added WITH SECURITY_ENFORCED, stripInaccessible, and manual CRUD/FLS checks wherever the SOQL aggregate couldn't cover them"
+              },
+              {
+                "label": "Tests & coverage",
+                "description": "23 unit tests (nominal, edge, error cases, 250-account bulk) via TestDataFactory — 100% pass rate, 90% org-wide coverage"
               },
               {
                 "label": "Documentation",
-                "description": "Complete PDF documentation written and defense prepared — jury assessment: Félicitations!"
+                "description": "Wrote the per-class technical fact sheets and the complete traceability matrix — jury evaluation: Distinction"
               }
             ],
-            "title": "Project Timeline"
+            "title": "Project timeline"
           },
           {
             "type": "metrics",
             "items": [
               {
                 "note": "OpenClassrooms jury",
-                "label": "Skills validated",
+                "label": "Validated competencies",
                 "value": "3/3"
               },
               {
-                "note": "On all Apex classes",
-                "label": "Code coverage",
-                "value": "> 75%"
+                "note": "100% pass rate",
+                "label": "Tests run",
+                "value": "23"
               },
               {
-                "note": "Trigger + Services + Batch + Scheduler",
-                "label": "Components delivered",
-                "value": "4"
+                "note": "OrderTrigger, AppConfig, AccountReminderScheduler at 100%",
+                "label": "Org-wide coverage",
+                "value": "90%"
               },
               {
-                "note": "Special mention from evaluator",
-                "label": "Jury assessment",
-                "value": "Félicitations!"
+                "note": "deduplication + owner fallback + resilient insert",
+                "label": "Most complex class",
+                "value": "AccountReminderBatch — 86%"
+              },
+              {
+                "note": "Clean, well-documented architecture",
+                "label": "Jury evaluation",
+                "value": "Distinction!"
               }
             ],
-            "title": "Results"
+            "title": "Outcomes"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "RG-01: detection only targets the Draft → Activated transition — an Order moving straight from Cancelled to Activated would bypass the check. Documented and accepted as an out-of-scope limitation, with a known fix path (broadening the transition condition in OrderValidationHandler).",
+              "No Permission Set or Custom Metadata for configuration: a deliberate choice for this project — all configuration flows through the AppConfig class, simpler to audit at this scale, would migrate to a Custom Metadata Type on a multi-environment project.",
+              "Reminder deduplication: two possible modes (any \"Call\" Task blocks the reminder, or only auto-created ones) driven by a testable flag — lets the business behavior be tuned without touching the batch logic."
+            ],
+            "title": "Known limitations & decisions"
           }
         ]
       },
@@ -10873,41 +10897,51 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Développement d'un backend Apex pour iDEM Connect : trigger, classes de service et batch scheduler.",
         "sections": [
           {
-            "body": "iDEM Connect est un fournisseur d'accès à Internet mondial (CA 1,8 Md€, 3 950 salariés). Frédéric Lambert, architecte Salesforce senior, avait besoin d'un backend Apex complet pour gérer les abonnements clients sur les objets Account et Order. La mission couvrait la rédaction des spécifications techniques, le développement des composants Apex (trigger, classes de service, batch, scheduler) et la livraison d'une couverture de tests supérieure à 75%.",
+            "body": "iDEM Connect est un fournisseur d'accès à Internet international (CA 1,8 Md€, 3 950 salariés). Besoin : un backend Apex complet pour outiller la force de vente sur Salesforce — gestion des comptes, contrats et commandes, avec trois règles métier précises à implémenter et une exigence de couverture de tests stricte. Mission : concevoir l'architecture (trigger, handlers, batch, scheduler), l'implémenter, et livrer une documentation technique complète (fiches par classe, matrice de traçabilité exigences → tests).",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Apex Trigger sur Account et Order — délègue la logique métier aux classes de service (handler pattern)",
-              "3 classes de service Apex implémentant les fonctionnalités de la grille métier",
-              "Batch Apex pour le traitement en masse du cycle de vie des abonnements",
-              "Scheduler Apex pour la planification automatique du batch (exécution journalière)",
-              "Tests unitaires avec 3 scénarios par méthode — couverture > 75% sur toutes les classes",
-              "Documentation complète PDF : classes, méthodes, paramètres et cas de test"
+              "RG-01 — Bloquer l'activation d'une Order sans OrderItem : transition Draft → Activated interceptée sur OrderTrigger.before update, comptage agrégé des OrderItem par Order, addError() bloquant si zéro item",
+              "RG-02 — Maintenir Account.Active__c synchronisé avec l'existence de commandes : true à l'insertion d'une Order (after insert), false uniquement quand le dernier Order du compte est supprimé (after delete) — gérés par deux handlers dédiés, jamais dans le trigger lui-même",
+              "RG-03 — Relance automatique des comptes dormants : chaque 1er lundi du mois à 9h (CRON 0 0 9 ? * MON#1), un batch crée une Task « Call » à J+5 pour chaque Account sans Order et sans Call existante (manuelle ou automatique)",
+              "Architecture one-trigger-per-object : OrderTrigger ne contient aucune logique métier, uniquement l'orchestration vers 3 handlers dédiés — bulk-safe par construction"
             ],
-            "title": "Périmètre technique"
+            "title": "Règles métier & architecture"
           },
           {
             "type": "bullets",
             "items": [
-              "Zéro DML et SOQL dans les boucles FOR — toutes les requêtes externalisées",
-              "Handler pattern : triggers sans logique directe, séparation claire des responsabilités",
-              "Bulkification complète — traitement correct de 1 à 200 enregistrements par transaction",
-              "Couverture de code > 75% sur chaque classe Apex (exigence plateforme)",
-              "Conventions de nommage Salesforce respectées (classes, méthodes, variables)"
+              "OrderValidationHandler — lecture seule, agrégat SOQL COUNT(OrderItem) group by OrderId, addError() sur le champ Status",
+              "OrderInsertionHandler / OrderDeletionHandler — mise à jour groupée d'Account.Active__c, sécurisée par Security.stripInaccessible(UPDATABLE) avant chaque update",
+              "AccountReminderBatch (Database.Batchable) — anti-join SOQL (Account sans Order) au start(), dé-duplication des Task « Call » par agrégat GROUP BY WhatId à l'execute(), option de dé-duplication stricte pilotée par un flag (DEDUPE_USING_AUTO_FLAG)",
+              "AccountReminderScheduler (Schedulable) — déclenche le batch selon le CRON mensuel, avec repli sur l'utilisateur courant si le propriétaire du compte est inactif ou absent",
+              "AppConfig — centralise toutes les constantes métier (statuts, libellés, délai de relance) : aucune valeur magique dans le code, un seul point de modification",
+              "TestDataFactory — usine à données de test découplée (generateX() sans DML / createX() avec DML), réutilisée par les 6 classes de test"
             ],
-            "title": "Bonnes pratiques Apex respectées"
+            "title": "Solutions développées"
           },
           {
             "type": "bullets",
             "items": [
-              "Apex — Triggers, Classes de service, Batch Apex, Schedulable",
-              "SOQL — Requêtes sur Account, Order, objets liés",
-              "Salesforce DX — Déploiement et gestion des métadonnées",
-              "Test Framework Apex — @isTest, Test.startTest/stopTest",
-              "PDF Documentation — Spécifications techniques complètes"
+              "WITH SECURITY_ENFORCED sur la requête anti-join du batch (requête simple, éligible)",
+              "Sur l'agrégat de dé-duplication, non éligible à WITH SECURITY_ENFORCED : vérifications CRUD/FLS explicites (Task.isAccessible(), accès aux champs WhatId/Subject/Auto_Created__c) avant l'exécution",
+              "Security.stripInaccessible(AccessType.CREATABLE) avant chaque insertion de Task, (UPDATABLE) avant chaque mise à jour d'Account — retire silencieusement les champs non accessibles plutôt que de lever une exception",
+              "Database.insert/update(..., allOrNone=false) : insertion résiliente avec journalisation détaillée des échecs partiels, plutôt qu'un rollback total sur une seule ligne en erreur",
+              "Bulkification stricte : aucun SOQL ni DML dans une boucle, tout en Set/Map et agrégats — validé par un test à 250 comptes traités en une seule transaction"
+            ],
+            "title": "Sécurité & bonnes pratiques"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex — Triggers, Handler pattern, Batchable, Schedulable",
+              "SOQL — agrégats GROUP BY, anti-join, WITH SECURITY_ENFORCED",
+              "Salesforce DX (sfdx force:source:deploy) — déploiement des métadonnées",
+              "Apex Test Framework — TestDataFactory, Test.startTest/stopTest, couverture par classe",
+              "Documentation technique structurée — fiches par classe + matrice de traçabilité exigences → tests"
             ],
             "title": "Stack & Technologies"
           },
@@ -10916,27 +10950,27 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Spécifications",
-                "description": "Analyse de la grille de fonctionnalités, rédaction des spécifications techniques détaillées pour les 3 fonctionnalités métier"
+                "description": "Analyse des 3 règles métier, conception de l'architecture one-trigger-per-object et de la matrice de traçabilité exigences → tests"
               },
               {
-                "label": "Trigger & Handler",
-                "description": "Développement du Trigger sur Account/Order avec handler pattern — logique déportée dans des classes de service dédiées"
-              },
-              {
-                "label": "Classes de service",
-                "description": "Implémentation des 3 fonctionnalités métier dans des classes Apex spécialisées, chaque méthode testée unitairement"
+                "label": "Trigger & Handlers",
+                "description": "Développement d'OrderTrigger et des 3 handlers dédiés (validation, insertion, suppression), chacun testé isolément"
               },
               {
                 "label": "Batch & Scheduler",
-                "description": "Développement du Batch Apex pour le traitement masse et du Scheduler pour l'exécution planifiée quotidienne"
+                "description": "AccountReminderBatch (anti-join + dé-duplication configurable) et AccountReminderScheduler (CRON mensuel), avec repli sur l'utilisateur courant si besoin"
               },
               {
-                "label": "Tests & Couverture",
-                "description": "Suite de tests unitaires couvrant 3 scénarios par méthode (cas nominal, limite, erreur) — couverture validée > 75%"
+                "label": "Sécurité",
+                "description": "Ajout systématique de WITH SECURITY_ENFORCED, stripInaccessible et des vérifications CRUD/FLS manuelles là où l'agrégat SOQL ne les couvre pas"
+              },
+              {
+                "label": "Tests & couverture",
+                "description": "23 tests unitaires (cas nominal, limite, erreur, bulk 250 comptes) via TestDataFactory — 100 % de réussite, 90 % de couverture org-wide"
               },
               {
                 "label": "Documentation",
-                "description": "Rédaction de la documentation PDF complète et préparation de la soutenance — évaluation jury : Félicitations"
+                "description": "Rédaction des fiches techniques par classe et de la matrice de traçabilité complète — évaluation jury : Félicitations"
               }
             ],
             "title": "Déroulement du projet"
@@ -10950,111 +10984,161 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "3/3"
               },
               {
-                "note": "Sur toutes les classes Apex",
-                "label": "Couverture de code",
-                "value": "> 75%"
+                "note": "100 % de réussite",
+                "label": "Tests exécutés",
+                "value": "23"
               },
               {
-                "note": "Trigger + Services + Batch + Scheduler",
-                "label": "Composants livrés",
-                "value": "4"
+                "note": "OrderTrigger, AppConfig, AccountReminderScheduler à 100 %",
+                "label": "Couverture org-wide",
+                "value": "90 %"
               },
               {
-                "note": "Mention spéciale de l'évaluateur",
+                "note": "dé-duplication + repli propriétaire + insertion résiliente",
+                "label": "Classe la plus complexe",
+                "value": "AccountReminderBatch — 86 %"
+              },
+              {
+                "note": "Architecture propre et bien documentée",
                 "label": "Évaluation jury",
                 "value": "Félicitations !"
               }
             ],
             "title": "Résultats"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "RG-01 : la détection ne cible que la transition Draft → Activated — un Order passant de Cancelled directement à Activated échapperait au contrôle. Limite documentée et assumée plutôt que corrigée hors scope, avec un chemin de correction identifié (élargir la condition de transition dans OrderValidationHandler).",
+              "Pas de Permission Set ni de Custom Metadata pour la configuration : choix délibéré pour ce projet, toute la configuration passe par la classe AppConfig — plus simple à auditer à cette échelle, migrerait vers un Custom Metadata Type sur un projet à plusieurs environnements.",
+              "Dé-duplication des relances : deux modes possibles (toute Task « Call » bloque la relance, ou seulement les Task auto-créées) pilotés par un flag testable — permet d'ajuster le comportement métier sans retoucher la logique du batch."
+            ],
+            "title": "Limites connues & décisions"
           }
         ]
       },
       "es": {
-        "title": "Apex backend development (iDEM Connect)",
+        "title": "Desarrollo backend Apex (iDEM Connect)",
         "heroSubtitle": "Entrega de un backend Apex (iDEM Connect)",
         "sections": [
           {
+            "body": "iDEM Connect es un proveedor de acceso a Internet internacional (1.800 M€ de facturación, 3.950 empleados). Necesidad: un backend Apex completo para dotar de herramientas al equipo de ventas en Salesforce — gestión de cuentas, contratos y pedidos, con tres reglas de negocio precisas por implementar y un requisito estricto de cobertura de tests. Misión: diseñar la arquitectura (trigger, handlers, batch, scheduler), implementarla y entregar documentación técnica completa (fichas por clase, matriz de trazabilidad requisitos → tests).",
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "iDEM Connect es un proveedor de acceso a Internet global y un actor de las tecnologías de conexión. Se diseñó una nueva aplicación Salesforce para ayudar a los equipos comerciales a vender mejor, hacer seguimiento de clientes y gestionar contratos de suscripción.",
-              "Mi alcance: entregar el backend Apex (trigger, clases de servicio, batch + scheduler) con un enfoque «listo para producción»: documentación, pruebas unitarias y trazabilidad requisitos → implementación."
-            ]
+            "title": "Contexto"
           },
           {
             "type": "bullets",
             "items": [
-              "Desarrollar un Trigger Apex y clases Apex que cubran las funcionalidades de la grilla.",
-              "Proporcionar un Batch Apex y su Scheduler para los procesos recurrentes.",
-              "Respetar las buenas prácticas de Apex (bulkificación, límites de Salesforce).",
-              "Producir la documentación de las clases (PDF) y un informe de ejecución de pruebas mostrando la cobertura."
+              "RG-01 — Bloquear la activación de un Order sin OrderItem: la transición Draft → Activated se intercepta en OrderTrigger.before update, con un conteo agregado de OrderItem por Order, y un addError() bloqueante si el conteo es cero",
+              "RG-02 — Mantener Account.Active__c sincronizado con la existencia de pedidos: true al insertar un Order (after insert), false solo cuando se elimina el último Order de la cuenta (after delete) — gestionado por dos handlers dedicados, nunca en el propio trigger",
+              "RG-03 — Reactivación automática de cuentas inactivas: cada primer lunes del mes a las 9h (CRON 0 0 9 ? * MON#1), un batch crea una Task «Call» a J+5 para cada Account sin Order y sin ninguna Call existente (manual o automática)",
+              "Arquitectura one-trigger-per-object: OrderTrigger no contiene ninguna lógica de negocio, solo orquestación hacia 3 handlers dedicados — bulk-safe por diseño"
             ],
-            "title": "Lo que se solicitaba"
+            "title": "Reglas de negocio y arquitectura"
           },
           {
             "type": "bullets",
             "items": [
-              "Arquitectura en capa de servicio: triggers «ligeros», responsabilidades claras, mejor mantenibilidad.",
-              "Bulkificación sistemática (colecciones/maps), con 0 SOQL/DML dentro de bucles.",
-              "Batch + Scheduler para ejecutar actualizaciones recurrentes de forma fiable y predecible.",
-              "Pruebas unitarias alineadas con la grilla funcional + informe de pruebas para demostrar la cobertura."
+              "OrderValidationHandler — solo lectura, agregado SOQL COUNT(OrderItem) agrupado por OrderId, addError() sobre el campo Status",
+              "OrderInsertionHandler / OrderDeletionHandler — actualización masiva de Account.Active__c, asegurada con Security.stripInaccessible(UPDATABLE) antes de cada update",
+              "AccountReminderBatch (Database.Batchable) — anti-join SOQL (Accounts sin Order) en start(), desduplicación de Tasks «Call» mediante un agregado GROUP BY WhatId en execute(), con un modo de desduplicación estricta controlado por un flag (DEDUPE_USING_AUTO_FLAG)",
+              "AccountReminderScheduler (Schedulable) — dispara el batch según el CRON mensual, con reserva al usuario en ejecución si el propietario de la cuenta está inactivo o ausente",
+              "AppConfig — centraliza todas las constantes de negocio (estados, etiquetas, plazo de reactivación): ningún valor mágico en el código, un único punto de cambio",
+              "TestDataFactory — fábrica de datos de test desacoplada (generateX() sin DML / createX() con DML), reutilizada por las 6 clases de test"
             ],
-            "title": "Enfoque de implementación"
+            "title": "Soluciones desarrolladas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "WITH SECURITY_ENFORCED en la consulta anti-join del batch (consulta simple, elegible)",
+              "En el agregado de desduplicación, no elegible para WITH SECURITY_ENFORCED: verificaciones CRUD/FLS explícitas (Task.isAccessible(), acceso a los campos WhatId/Subject/Auto_Created__c) antes de ejecutarlo",
+              "Security.stripInaccessible(AccessType.CREATABLE) antes de cada inserción de Task, (UPDATABLE) antes de cada actualización de Account — elimina silenciosamente los campos no accesibles en lugar de lanzar una excepción",
+              "Database.insert/update(..., allOrNone=false): inserciones resilientes con registro detallado de fallos parciales, en lugar de un rollback total por una sola fila con error",
+              "Bulkificación estricta: ningún SOQL ni DML dentro de un bucle, todo mediante Set/Map y agregados — validado con un test que procesa 250 cuentas en una sola transacción"
+            ],
+            "title": "Seguridad y buenas prácticas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex — Triggers, patrón Handler, Batchable, Schedulable",
+              "SOQL — agregados GROUP BY, anti-join, WITH SECURITY_ENFORCED",
+              "Salesforce DX (sfdx force:source:deploy) — despliegue de metadatos",
+              "Apex Test Framework — TestDataFactory, Test.startTest/stopTest, cobertura por clase",
+              "Documentación técnica estructurada — fichas por clase + matriz de trazabilidad requisitos → tests"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Especificaciones",
+                "description": "Análisis de las 3 reglas de negocio, diseño de la arquitectura one-trigger-per-object y de la matriz de trazabilidad requisitos → tests"
+              },
+              {
+                "label": "Trigger y handlers",
+                "description": "Desarrollo de OrderTrigger y de los 3 handlers dedicados (validación, inserción, eliminación), cada uno probado de forma aislada"
+              },
+              {
+                "label": "Batch y scheduler",
+                "description": "AccountReminderBatch (anti-join + desduplicación configurable) y AccountReminderScheduler (CRON mensual), con reserva al usuario en ejecución cuando es necesario"
+              },
+              {
+                "label": "Seguridad",
+                "description": "Incorporación sistemática de WITH SECURITY_ENFORCED, stripInaccessible y verificaciones CRUD/FLS manuales donde el agregado SOQL no las cubría"
+              },
+              {
+                "label": "Tests y cobertura",
+                "description": "23 tests unitarios (caso nominal, límite, error, bulk de 250 cuentas) vía TestDataFactory — 100% de éxito, 90% de cobertura a nivel de org"
+              },
+              {
+                "label": "Documentación",
+                "description": "Redacción de las fichas técnicas por clase y de la matriz de trazabilidad completa — evaluación del jurado: Felicitaciones"
+              }
+            ],
+            "title": "Desarrollo del proyecto"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "label": "Competencias validadas (evaluación)",
+                "note": "Jurado de OpenClassrooms",
+                "label": "Competencias validadas",
                 "value": "3/3"
               },
               {
-                "label": "Cobertura de código",
-                "value": "> 75%"
+                "note": "100% de éxito",
+                "label": "Tests ejecutados",
+                "value": "23"
               },
               {
-                "label": "SOQL/DML en bucles",
-                "value": "0"
+                "note": "OrderTrigger, AppConfig, AccountReminderScheduler al 100%",
+                "label": "Cobertura a nivel de org",
+                "value": "90%"
+              },
+              {
+                "note": "desduplicación + reserva de propietario + inserción resiliente",
+                "label": "Clase más compleja",
+                "value": "AccountReminderBatch — 86%"
+              },
+              {
+                "note": "Arquitectura limpia y bien documentada",
+                "label": "Evaluación del jurado",
+                "value": "¡Felicitaciones!"
               }
             ],
-            "title": "Calidad y evidencias"
+            "title": "Resultados"
           },
           {
-            "type": "text",
-            "title": "Comentarios de la evaluación",
-            "paragraphs": [
-              "Los comentarios destacan entregables completos y pertinentes: clases documentadas, pruebas unitarias ejecutadas correctamente cubriendo las funcionalidades, respeto de los estándares Apex (bulk-safe), y un backend que combina trigger, servicios y batch/scheduler para responder a los casos de uso sobre Account y Order."
-            ]
-          },
-          {
-            "type": "resources",
+            "type": "bullets",
             "items": [
-              {
-                "href": "/docs/projects/idemconnect-apex-backend/brief.docx",
-                "label": "Brief del proyecto (DOCX)"
-              },
-              {
-                "href": "/docs/projects/idemconnect-apex-backend/cahier-des-charges.pdf",
-                "label": "Requisitos (PDF)"
-              },
-              {
-                "href": "/docs/projects/idemconnect-apex-backend/grille-de-fonctionnalites.pdf",
-                "label": "Grilla de funcionalidades (PDF)"
-              },
-              {
-                "href": "/docs/projects/idemconnect-apex-backend/code-repo.txt",
-                "label": "Enlace del repositorio / código (TXT)"
-              },
-              {
-                "href": "/docs/projects/idemconnect-apex-backend/documentation.pdf",
-                "label": "Documentación de las clases (PDF)"
-              },
-              {
-                "href": "/docs/projects/idemconnect-apex-backend/rapport-tests.pdf",
-                "label": "Informe de ejecución de pruebas (PDF)"
-              }
+              "RG-01: la detección solo cubre la transición Draft → Activated — un Order que pase directamente de Cancelled a Activated eludiría el control. Limitación documentada y asumida en lugar de corregida fuera de alcance, con una vía de corrección identificada (ampliar la condición de transición en OrderValidationHandler).",
+              "Sin Permission Set ni Custom Metadata para la configuración: decisión deliberada para este proyecto — toda la configuración pasa por la clase AppConfig, más simple de auditar a esta escala, migraría a un Custom Metadata Type en un proyecto con varios entornos.",
+              "Desduplicación de reactivaciones: dos modos posibles (cualquier Task «Call» bloquea la reactivación, o solo las creadas automáticamente) controlados por un flag testeable — permite ajustar el comportamiento de negocio sin tocar la lógica del batch."
             ],
-            "title": "Entregables y evidencias"
+            "title": "Limitaciones conocidas y decisiones"
           }
         ]
       }
@@ -11477,7 +11561,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Design of an Apex backend prototype for LTP (luxury & fashion): data model, security, import strategy.",
         "sections": [
           {
-            "body": "Le Temps des Papillons (LTP), France's leading bridal couture house, needed a Salesforce CRM to manage 2 million accounts and integrate 3 carriers with distinct interfaces. Marie Dupont (delivery tracking) and Sébastien Nozerac (sales team) led the project client-side. Mission: design the complete architecture — UML data model, security matrix, import strategy and integration plan — before any development began.",
+            "body": "Le Temps des Papillons (LTP), a French bridal couture house, tracked its deliveries through 3 carriers with disparate interfaces — generating roughly 194 support calls/day just to check a delivery status. Marie Dupont (delivery tracking) and Sébastien Nozerac (sales team) owned the need client-side. Mission: design the complete technical architecture of the Salesforce application before any development began — UML data model, security matrix, import strategy and carrier integration plan — targeting a 70% cut in inbound calls through automation and a 360° customer view.",
             "type": "text",
             "title": "Context"
           },
@@ -11485,33 +11569,55 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Massive data volume: 2,123,000 accounts, 3,239,870 contacts, 234,000 opportunities, 56,700 products",
-              "3 carriers with heterogeneous interfaces: REST (Livreur LTP France + Transport Luxe Europe), ETL (Rapid International Transport)",
-              "Data security: read-only OWD, sharing via profile-based sharing rules",
-              "Initial data import without loss or duplicates — parent-child dependency order critical"
+              "3 carriers with heterogeneous interfaces: real-time REST API (LTP France, Transport Luxe Europe) vs. CSV over SFTP (Rapid International Transport)",
+              "≈194 support calls/day for a simple delivery status — target: -70% through automation",
+              "Initial import without loss or duplicates, respecting the parent-child dependency order across 10 objects"
             ],
             "title": "Project Challenges"
           },
           {
             "type": "bullets",
             "items": [
-              "Complete UML data model diagram (standard objects + 5 custom objects)",
-              "Security matrix: profiles, OWD, sharing rules — least-privilege access",
-              "Import strategy: Data Loader for FR/EU carriers, Talend ETL for Rapid International",
-              "Integration plan: REST webservices for French carriers, ETL connector for international",
-              "Automation: Salesforce Flow triggering customer notification on each delivery status change",
-              "Complete technical specifications (PDF) — delivered to jury and simulated client"
+              "Real-time channel (LTP France + Transport Luxe Europe): Apex REST endpoint (@RestResource /delivery-webhook, DeliveryWebhook class) receiving carrier webhooks, publishing to a Platform Event (DeliveryEvent__e) to decouple processing, consumed by a record-triggered Flow",
+              "On-demand refresh: RefreshStatusQueueable class with limit checks (Limits.getCallouts()) and automatic re-enqueue when callouts are exhausted; DeliveryService / TransporterCalloutService service classes (@future(callout=true)) for outbound GET /track calls",
+              "deliveryTracker Lightning Web Component + DeliveryController Apex controller (@AuraEnabled, isAccessible() check before reads) for status display and the \"Refresh\" button",
+              "Batch channel (Rapid International Transport): SFTP drop every 2h → Talend job (tSftpInput → tMap → tSalesforceOutputBulkExec) → Bulk API v2 upsert on Tracking_Number__c (External Id) → logged to CSV_Import_Log__c",
+              "Secure authentication via Named Credentials (OAuth2) on both channels, mandatory Remote Site Settings, tested with HttpCalloutMock"
             ],
-            "title": "Architecture & Deliverables"
+            "title": "Architecture & Carrier Integration"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce — Objects, Profiles, OWD, Sharing Rules, Flows",
-              "Data Loader — Bulk CSV data import",
-              "Talend ETL — Rapid International Transport integration",
-              "REST Webservices — FR/EU carrier integration",
-              "UML — Data schema modeling",
-              "Postman — REST endpoint documentation and testing"
+              "A single \"Support Agent\" profile across all 3 zones — restriction handled via role hierarchy (Manager → France / Europe / International) + sharing rules on Zone__c, not by multiplying profiles",
+              "Private OWD on Livraison__c, Public Read Only on Account / Contact / Opportunity / Transporter_Config__c",
+              "Targeted Field-Level Security: Zone__c read-only for support (filter lockdown), CSV_Imported__c read-only on both sides (writable only by Apex), financial fields (AnnualRevenue, ExpectedRevenue) masked from support",
+              "Validation Rule blocking any \"Delivered\" status without a Tracking_Number__c set",
+              "Point Permission Sets (ReportingAccess, ImportControl, API_Access_Extension) to extend access without multiplying profiles"
+            ],
+            "title": "Security & Access Rights"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Load order respecting dependencies: Product2 → Pricebook2 → PricebookEntry → Account → Contact → AccountContactRelation → Opportunity → OpportunityLineItem → Livraison__c → Transporter_Config__c",
+              "Data Loader CLI for the initial import (50k-row batches), Talend + Bulk API v2 for carrier flows (500,000 lines/hour, 10,000 records/request)",
+              "Defined test scenarios: 500k-line CSV import on Talend sandbox (< 15 min), simulated API timeout via HttpCalloutMock, duplicate Tracking Numbers auto-merged via External Id",
+              "Target test coverage: ≥90% on integration Apex classes, 100% on error handlers",
+              "\"Import Monitor\" dashboard (imports/day, rejection rate) and Flow/Apex email alerts on critical failure"
+            ],
+            "title": "Import Strategy & Governance"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce — Objects, Profiles, Roles, Sharing Rules, Platform Events, Flow, Apex (Queueable, Future, REST)",
+              "Lightning Web Components — deliveryTracker component",
+              "Talend Open Studio — ETL orchestration, CSV → Bulk API transformation",
+              "Salesforce Data Loader — initial bulk CSV import",
+              "Bulk API v2 & REST Webservices — carrier integration",
+              "UML — data schema modeling",
+              "Workbench — API testing and post-import verification"
             ],
             "title": "Stack & Technologies"
           },
@@ -11520,31 +11626,31 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Business analysis",
-                "description": "Requirements gathered from Marie and Sébastien, standard and custom Salesforce objects identified"
+                "description": "Requirements gathered from Marie and Sébastien; the -70% support-call target identified as the project's driver"
               },
               {
                 "label": "Data model",
-                "description": "UML diagram designed — 5 custom objects (Delivery, Carrier, Parcel…) with relations and fields"
+                "description": "UML diagram: 5 custom objects (Livraison__c, Transporter_Config__c, CSV_Import_Log__c...) with relations and fields"
               },
               {
                 "label": "Security",
-                "description": "Access matrix configured — read-only OWD, role-based sharing rules, Sales and Manager profiles"
+                "description": "Profile/role/OWD/sharing-rule matrix by zone, targeted FLS, validation rule on \"Delivered\" status"
               },
               {
                 "label": "Import strategy",
-                "description": "Import order defined respecting parent-child dependencies: Accounts → Contacts → Products → Opportunities"
+                "description": "Dependency order across 10 objects, tool selection (Data Loader, Talend, Bulk API v2) and test scenarios"
               },
               {
-                "label": "Integration plan",
-                "description": "Architecture of the 3 carrier connectors — REST (2 FR carriers), Talend ETL (international)"
+                "label": "Integration architecture",
+                "description": "Apex REST webhook + Platform Event + Queueable for real-time; Talend + Bulk API v2 for the SFTP batch"
               },
               {
-                "label": "Automation",
-                "description": "Customer notification Flow triggered on delivery status change — no Apex code required"
+                "label": "Lightning component",
+                "description": "deliveryTracker LWC + DeliveryController Apex controller for one-click customer tracking"
               },
               {
                 "label": "Defense",
-                "description": "Presentation to jury with model demonstration and architecture choices — skills fully validated"
+                "description": "Presentation to jury with model demonstration and architecture rationale — skills fully validated"
               }
             ],
             "title": "Project Timeline"
@@ -11553,12 +11659,12 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "Production data volume",
+                "note": "Target production data volume",
                 "label": "Accounts to manage",
                 "value": "2.1M"
               },
               {
-                "note": "2 REST + 1 ETL",
+                "note": "2 real-time REST APIs + 1 batch CSV/Talend",
                 "label": "Carriers integrated",
                 "value": "3"
               },
@@ -11574,6 +11680,28 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Results"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/specifications.pdf",
+                "label": "Technical specifications (PDF)"
+              },
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/uml-data-model.pdf",
+                "label": "UML diagram (PDF)"
+              },
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/access-rights.pdf",
+                "label": "Access rights & sharing (PDF)"
+              },
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/import-strategy.pdf",
+                "label": "Import strategy (PDF)"
+              }
+            ],
+            "title": "Deliverables"
           }
         ]
       },
@@ -11582,7 +11710,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Conception d'un prototype backend Apex pour LTP (luxe & mode) : modèle de données, sécurité, stratégie d'import.",
         "sections": [
           {
-            "body": "Le Temps des Papillons (LTP), leader français des maisons de couture et robes de mariée, avait besoin d'un CRM Salesforce pour gérer 2 millions de comptes et intégrer 3 transporteurs aux interfaces distinctes. Marie Dupont (suivi des livraisons) et Sébastien Nozerac (équipe commerciale) portaient le projet côté client. La mission : concevoir l'architecture complète — modèle de données UML, sécurité, stratégie d'import et plan d'intégration — avant tout développement.",
+            "body": "Le Temps des Papillons (LTP), maison française de couture et robes de mariée, gérait le suivi de ses livraisons via 3 transporteurs aux interfaces disparates — d'où environ 194 appels/jour vers le support pour connaître un simple statut de livraison. Marie Dupont (suivi des livraisons) et Sébastien Nozerac (équipe commerciale) portaient le besoin côté client. Objectif du projet : concevoir l'architecture technique complète de l'application Salesforce avant tout développement — modèle de données UML, matrice de sécurité, stratégie d'import et plan d'intégration transporteurs — avec pour cible fonctionnelle une réduction de 70% des appels entrants via l'automatisation et une vision 360° du client.",
             "type": "text",
             "title": "Contexte"
           },
@@ -11590,33 +11718,55 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Volumétrie massive : 2 123 000 comptes, 3 239 870 contacts, 234 000 opportunités, 56 700 produits",
-              "3 transporteurs avec interfaces hétérogènes : REST (Livreur LTP France + Transport Luxe Europe), ETL (Rapid International Transport)",
-              "Sécurité des données : OWD lecture seule, partage par règles de partage configurées par profil",
-              "Import des données initiales sans perte ni doublon — ordre des dépendances parent-enfant critique"
+              "3 transporteurs aux interfaces hétérogènes : API REST temps réel (LTP France, Transport Luxe Europe) vs flux CSV via SFTP (Rapid International Transport)",
+              "≈194 appels/jour au support pour un simple statut de livraison — cible : -70% via automatisation",
+              "Import initial sans perte ni doublon, en respectant l'ordre de dépendance parent-enfant entre 10 objets"
             ],
             "title": "Enjeux du projet"
           },
           {
             "type": "bullets",
             "items": [
-              "Diagramme UML complet du modèle de données (objets standard + 5 objets custom)",
-              "Matrice de sécurité : profils, OWD, règles de partage — accès least-privilege",
-              "Stratégie d'import : Data Loader pour les 2 transporteurs FR/EU, ETL Talend pour Rapid International",
-              "Plan d'intégration : webservices REST pour les transporteurs français, connecteur ETL pour l'international",
-              "Automatisation : Flow Salesforce déclenchant une notification client à chaque changement de statut de livraison",
-              "Spécifications techniques complètes (PDF) — livrées au jury et au client simulé"
+              "Canal temps réel (LTP France + Transport Luxe Europe) : endpoint Apex REST (@RestResource /delivery-webhook, classe DeliveryWebhook) recevant les webhooks transporteurs, publication sur un Platform Event (DeliveryEvent__e) pour découpler le traitement, consommé par un Flow record-triggered",
+              "Rafraîchissement à la demande : classe Queueable RefreshStatusQueueable avec vérification des limites (Limits.getCallouts()) et ré-enfilement automatique en cas de callouts épuisés ; classes de service DeliveryService / TransporterCalloutService (@future(callout=true)) pour les appels sortants GET /track",
+              "Composant Lightning deliveryTracker (LWC) + contrôleur Apex DeliveryController (@AuraEnabled, vérification isAccessible() avant lecture) pour l'affichage du statut et le bouton \"Actualiser\"",
+              "Canal batch (Rapid International Transport) : dépôt SFTP toutes les 2h → job Talend (tSftpInput → tMap → tSalesforceOutputBulkExec) → Bulk API v2 en upsert sur Tracking_Number__c (External Id) → journalisation dans CSV_Import_Log__c",
+              "Authentification sécurisée par Named Credentials (OAuth2) des deux côtés, Remote Site Settings obligatoires, tests via HttpCalloutMock"
             ],
-            "title": "Architecture & Livrables"
+            "title": "Architecture & intégration transporteurs"
           },
           {
             "type": "bullets",
             "items": [
-              "Salesforce — Objects, Profiles, OWD, Sharing Rules, Flows",
-              "Data Loader — Import massif de données CSV",
-              "Talend ETL — Intégration Rapid International Transport",
-              "Webservices REST — Intégration transporteurs FR/EU",
-              "UML — Modélisation du schéma de données",
-              "Postman — Documentation et test des endpoints REST"
+              "Un seul profil \"Support Agent\" pour les 3 zones — la restriction se fait par rôle hiérarchique (Responsable → France / Europe / International) + règles de partage sur Zone__c, pas par la multiplication des profils",
+              "OWD Private sur Livraison__c, Public Read Only sur Account / Contact / Opportunity / Transporter_Config__c",
+              "Field-Level Security ciblée : Zone__c en lecture seule pour le support (verrouillage du filtre), CSV_Imported__c protégé en lecture seule des deux côtés (modifiable uniquement par Apex), champs financiers (AnnualRevenue, ExpectedRevenue) masqués pour le support",
+              "Validation Rule bloquant tout statut \"Livré\" sans Tracking_Number__c renseigné",
+              "Permission Sets ponctuels (ReportingAccess, ImportControl, API_Access_Extension) pour étendre l'accès sans multiplier les profils"
+            ],
+            "title": "Sécurité & droits d'accès"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Ordre de charge respectant les dépendances : Product2 → Pricebook2 → PricebookEntry → Account → Contact → AccountContactRelation → Opportunity → OpportunityLineItem → Livraison__c → Transporter_Config__c",
+              "Data Loader CLI pour l'import initial (lots de 50k), Talend + Bulk API v2 pour les flux transporteur (500 000 lignes/heure, 10 000 enregistrements/requête)",
+              "Scénarios de test définis : import CSV de 500k lignes en sandbox Talend (< 15 min), timeout API simulé via HttpCalloutMock, doublons de Tracking Number fusionnés automatiquement via l'External Id",
+              "Couverture de test cible : ≥90% sur les classes Apex d'intégration, 100% sur les handlers d'erreur",
+              "Dashboard \"Import Monitor\" (imports/jour, taux de rejet) et alertes email Flow/Apex en cas d'échec critique"
+            ],
+            "title": "Stratégie d'import & gouvernance"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce — Objects, Profiles, Roles, Sharing Rules, Platform Events, Flow, Apex (Queueable, Future, REST)",
+              "Lightning Web Components — composant deliveryTracker",
+              "Talend Open Studio — orchestration ETL, transformation CSV → Bulk API",
+              "Salesforce Data Loader — import massif initial (CSV)",
+              "Bulk API v2 & Webservices REST — intégration transporteurs",
+              "UML — modélisation du schéma de données",
+              "Workbench — tests API et vérification post-import"
             ],
             "title": "Stack & Technologies"
           },
@@ -11625,31 +11775,31 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Analyse métier",
-                "description": "Recueil des besoins de Marie et Sébastien, identification des objets Salesforce standard et custom nécessaires"
+                "description": "Recueil des besoins de Marie et Sébastien, objectif -70% d'appels support identifié comme moteur du projet"
               },
               {
                 "label": "Modèle de données",
-                "description": "Conception du diagramme UML : 5 objets custom (Livraison, Transporteur, Colis...) avec relations et champs"
+                "description": "Diagramme UML : 5 objets custom (Livraison__c, Transporter_Config__c, CSV_Import_Log__c...) avec relations et champs"
               },
               {
                 "label": "Sécurité",
-                "description": "Configuration de la matrice d'accès : OWD lecture seule, règles de partage par rôle, profils Commercial et Manager"
+                "description": "Matrice profils/rôles/OWD/sharing rules par zone, FLS ciblée, règle de validation sur le statut \"Livré\""
               },
               {
                 "label": "Stratégie d'import",
-                "description": "Définition de l'ordre d'import respectant les dépendances parent-enfant : Accounts → Contacts → Products → Opportunities"
+                "description": "Ordre de dépendances sur 10 objets, choix des outils (Data Loader, Talend, Bulk API v2) et scénarios de test"
               },
               {
-                "label": "Plan d'intégration",
-                "description": "Architecture des 3 connecteurs transporteurs : REST (2 transporteurs FR), ETL Talend (international)"
+                "label": "Architecture d'intégration",
+                "description": "Webhook Apex REST + Platform Event + Queueable pour le temps réel ; Talend + Bulk API v2 pour le batch SFTP"
               },
               {
-                "label": "Automatisation",
-                "description": "Flow de notification client déclenché sur changement de statut de livraison — sans code Apex"
+                "label": "Composant Lightning",
+                "description": "LWC deliveryTracker + contrôleur Apex DeliveryController pour le suivi client en un clic"
               },
               {
                 "label": "Soutenance",
-                "description": "Présentation au jury avec démonstration du modèle et des choix d'architecture — compétences validées"
+                "description": "Présentation au jury avec démonstration du modèle et justification des choix d'architecture — compétences validées"
               }
             ],
             "title": "Déroulement du projet"
@@ -11658,12 +11808,12 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "Volumétrie de production",
+                "note": "Volumétrie de production visée",
                 "label": "Comptes à gérer",
                 "value": "2,1M"
               },
               {
-                "note": "2 REST + 1 ETL",
+                "note": "2 API REST temps réel + 1 batch CSV/Talend",
                 "label": "Transporteurs intégrés",
                 "value": "3"
               },
@@ -11679,88 +11829,155 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Résultats"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/specifications.pdf",
+                "label": "Spécifications techniques (PDF)"
+              },
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/uml-data-model.pdf",
+                "label": "Diagramme UML (PDF)"
+              },
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/access-rights.pdf",
+                "label": "Droits d'accès et partage (PDF)"
+              },
+              {
+                "href": "/docs/projects/ltp-apex-backend-prototype/import-strategy.pdf",
+                "label": "Stratégie d'import (PDF)"
+              }
+            ],
+            "title": "Livrables"
           }
         ]
       },
       "es": {
-        "title": "Delivery tracking CRM design (LTP)",
+        "title": "Diseño de CRM de seguimiento de entregas (LTP)",
         "heroSubtitle": "CRM Salesforce de seguimiento de entregas — diseño y entregables (LTP)",
         "sections": [
           {
+            "body": "Le Temps des Papillons (LTP), casa francesa de alta costura nupcial, gestionaba el seguimiento de sus entregas a través de 3 transportistas con interfaces dispares — lo que generaba unas 194 llamadas/día al soporte solo para conocer un estado de entrega. Marie Dupont (seguimiento de entregas) y Sébastien Nozerac (equipo comercial) lideraron la necesidad del lado del cliente. Misión: diseñar la arquitectura técnica completa de la aplicación Salesforce antes de cualquier desarrollo — modelo de datos UML, matriz de seguridad, estrategia de importación y plan de integración de transportistas — con el objetivo funcional de reducir un 70% las llamadas entrantes mediante la automatización y ofrecer una visión 360° del cliente.",
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "Le Temps des Papillons (LTP) es un grupo francés (lujo / moda / belleza). Los comerciales necesitan un CRM fluido para gestionar el ciclo Lead → Cuenta/Contacto/Oportunidad, y luego crear entregas.",
-              "Los agentes de soporte reciben ~194 llamadas/día de clientes que quieren conocer el estado de su entrega, pero los datos están repartidos entre 3 transportistas (Francia, Europa, Internacional).",
-              "El objetivo del proyecto: producir un diseño técnico completo de la aplicación Salesforce (especificaciones, modelo de datos, seguridad, estrategia de importación e integración)."
-            ]
+            "title": "Contexto"
           },
           {
             "type": "bullets",
             "items": [
-              "Acceder rápidamente a la ficha del cliente desde un número de pedido, el nombre o el email.",
-              "Automatizar el seguimiento de entregas e informar automáticamente a los clientes de los cambios de estado.",
-              "Diseñar un modelo de datos claro (objetos estándar + personalizados) para las entregas y el tracking.",
-              "Definir un modelo de seguridad (perfiles / roles / reglas de colaboración) adaptado a los usos de Comercial vs Soporte.",
-              "Preparar una estrategia de importación inicial realista y compatible con un alto volumen de datos."
+              "Volumetría masiva: 2.123.000 cuentas, 3.239.870 contactos, 234.000 oportunidades, 56.700 productos",
+              "3 transportistas con interfaces heterogéneas: API REST en tiempo real (LTP Francia, Transport Luxe Europe) frente a CSV vía SFTP (Rapid International Transport)",
+              "≈194 llamadas/día al soporte por un simple estado de entrega — objetivo: -70% mediante automatización",
+              "Importación inicial sin pérdidas ni duplicados, respetando el orden de dependencia padre-hijo entre 10 objetos"
             ],
-            "title": "Necesidades clave"
+            "title": "Retos del proyecto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Canal en tiempo real (LTP Francia + Transport Luxe Europe): endpoint Apex REST (@RestResource /delivery-webhook, clase DeliveryWebhook) que recibe los webhooks de los transportistas, publicando en un Platform Event (DeliveryEvent__e) para desacoplar el procesamiento, consumido por un Flow record-triggered",
+              "Actualización bajo demanda: clase Queueable RefreshStatusQueueable con verificación de límites (Limits.getCallouts()) y reencolado automático cuando se agotan los callouts; clases de servicio DeliveryService / TransporterCalloutService (@future(callout=true)) para las llamadas salientes GET /track",
+              "Componente Lightning deliveryTracker (LWC) + controlador Apex DeliveryController (@AuraEnabled, verificación isAccessible() antes de leer) para mostrar el estado y el botón \"Actualizar\"",
+              "Canal batch (Rapid International Transport): depósito SFTP cada 2h → job Talend (tSftpInput → tMap → tSalesforceOutputBulkExec) → Bulk API v2 en upsert sobre Tracking_Number__c (External Id) → registro en CSV_Import_Log__c",
+              "Autenticación segura mediante Named Credentials (OAuth2) en ambos canales, Remote Site Settings obligatorios, pruebas mediante HttpCalloutMock"
+            ],
+            "title": "Arquitectura e integración de transportistas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Un único perfil \"Support Agent\" para las 3 zonas — la restricción se aplica por jerarquía de roles (Responsable → Francia / Europa / Internacional) + reglas de colaboración sobre Zone__c, no multiplicando perfiles",
+              "OWD Private en Livraison__c, Public Read Only en Account / Contact / Opportunity / Transporter_Config__c",
+              "Field-Level Security específica: Zone__c en solo lectura para soporte (bloqueo del filtro), CSV_Imported__c protegido en solo lectura en ambos lados (modificable solo por Apex), campos financieros (AnnualRevenue, ExpectedRevenue) ocultos para soporte",
+              "Validation Rule que bloquea cualquier estado \"Entregado\" sin un Tracking_Number__c informado",
+              "Permission Sets puntuales (ReportingAccess, ImportControl, API_Access_Extension) para ampliar el acceso sin multiplicar perfiles"
+            ],
+            "title": "Seguridad y derechos de acceso"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Orden de carga respetando las dependencias: Product2 → Pricebook2 → PricebookEntry → Account → Contact → AccountContactRelation → Opportunity → OpportunityLineItem → Livraison__c → Transporter_Config__c",
+              "Data Loader CLI para la importación inicial (lotes de 50k), Talend + Bulk API v2 para los flujos de transportista (500.000 líneas/hora, 10.000 registros/petición)",
+              "Escenarios de prueba definidos: importación CSV de 500k líneas en sandbox de Talend (< 15 min), timeout de API simulado vía HttpCalloutMock, Tracking Numbers duplicados fusionados automáticamente vía External Id",
+              "Cobertura de pruebas objetivo: ≥90% en las clases Apex de integración, 100% en los handlers de error",
+              "Dashboard \"Import Monitor\" (importaciones/día, tasa de rechazo) y alertas por email vía Flow/Apex ante fallos críticos"
+            ],
+            "title": "Estrategia de importación y gobernanza"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce — Objects, Profiles, Roles, Sharing Rules, Platform Events, Flow, Apex (Queueable, Future, REST)",
+              "Lightning Web Components — componente deliveryTracker",
+              "Talend Open Studio — orquestación ETL, transformación CSV → Bulk API",
+              "Salesforce Data Loader — importación masiva inicial (CSV)",
+              "Bulk API v2 y Webservices REST — integración de transportistas",
+              "UML — modelado del esquema de datos",
+              "Workbench — pruebas de API y verificación post-importación"
+            ],
+            "title": "Stack y tecnologías"
           },
           {
             "type": "timeline",
             "steps": [
               {
-                "title": "Especificaciones técnicas",
-                "description": "Definición del alcance, lista de objetos (estándar + personalizados), procesos clave e interfaces de integración por transportista."
+                "label": "Análisis de negocio",
+                "description": "Recogida de requisitos de Marie y Sébastien; el objetivo de -70% de llamadas al soporte se identifica como motor del proyecto"
               },
               {
-                "title": "Diagrama UML (modelo de datos)",
-                "description": "Formalización de entidades y relaciones para dar soporte a Oportunidades, Pedidos/Entregas, Transportistas y estados de tracking."
+                "label": "Modelo de datos",
+                "description": "Diagrama UML: 5 objetos personalizados (Livraison__c, Transporter_Config__c, CSV_Import_Log__c...) con relaciones y campos"
               },
               {
-                "title": "Seguridad y visibilidad",
-                "description": "Perfiles + roles, permisos de acceso por objeto y reglas de colaboración (quién ve qué) para los equipos comerciales y de soporte."
+                "label": "Seguridad",
+                "description": "Matriz de perfiles/roles/OWD/reglas de colaboración por zona, FLS específica, regla de validación sobre el estado \"Entregado\""
               },
               {
-                "title": "Estrategia de importación / migración",
-                "description": "Plan de carga (Data Loader / ETL), External IDs, orden de dependencias y validaciones para conjuntos de datos voluminosos."
+                "label": "Estrategia de importación",
+                "description": "Orden de dependencias entre 10 objetos, elección de herramientas (Data Loader, Talend, Bulk API v2) y escenarios de prueba"
+              },
+              {
+                "label": "Arquitectura de integración",
+                "description": "Webhook Apex REST + Platform Event + Queueable para tiempo real; Talend + Bulk API v2 para el batch SFTP"
+              },
+              {
+                "label": "Componente Lightning",
+                "description": "LWC deliveryTracker + controlador Apex DeliveryController para el seguimiento del cliente en un clic"
+              },
+              {
+                "label": "Defensa",
+                "description": "Presentación ante el tribunal con demostración del modelo y justificación de las decisiones de arquitectura — competencias validadas"
               }
             ],
-            "title": "Enfoque de entrega"
+            "title": "Desarrollo del proyecto"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "note": "Francia / Europa / Internacional",
-                "label": "Transportistas",
+                "note": "Volumetría de producción objetivo",
+                "label": "Cuentas a gestionar",
+                "value": "2,1M"
+              },
+              {
+                "note": "2 API REST en tiempo real + 1 batch CSV/Talend",
+                "label": "Transportistas integrados",
                 "value": "3"
               },
               {
-                "note": "Solicitudes de seguimiento de entrega",
-                "label": "Soporte",
-                "value": "≈194 llamadas/día"
+                "note": "Modelo de datos UML",
+                "label": "Objetos personalizados diseñados",
+                "value": "5"
               },
               {
-                "note": "Volumetría inicial",
-                "label": "Cuentas",
-                "value": "2.123.000"
-              },
-              {
-                "note": "Volumetría inicial",
-                "label": "Contactos",
-                "value": "3.239.870"
+                "note": "Tribunal OpenClassrooms",
+                "label": "Competencias validadas",
+                "value": "4/4"
               }
             ],
-            "title": "Cifras clave (alcance)"
-          },
-          {
-            "type": "text",
-            "title": "Evaluación y comentarios",
-            "paragraphs": [
-              "⚠️ Nota: el documento proporcionado contiene dos bloques de evaluación distintos (uno indicando las competencias validadas, el otro listando puntos a corregir). Para evitar cualquier interpretación errónea, destaco a continuación los comentarios accionables.",
-              "Puntos de mejora mencionados: (1) orden de dependencias en la importación (ej. Productos antes que PricebookEntry), (2) respetar el punto de partida «Público de solo lectura» cuando se solicita explícitamente, (3) integración SFTP: preferir un ETL en lugar de un Batch Apex."
-            ]
+            "title": "Resultados"
           },
           {
             "type": "resources",
@@ -11780,17 +11997,9 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "href": "/docs/projects/ltp-apex-backend-prototype/import-strategy.pdf",
                 "label": "Estrategia de importación (PDF)"
-              },
-              {
-                "href": "/docs/projects/ltp-apex-backend-prototype/requirements.pdf",
-                "label": "Requisitos (PDF)"
-              },
-              {
-                "href": "/docs/projects/ltp-apex-backend-prototype/brief.docx",
-                "label": "Escenario del proyecto (DOCX)"
               }
             ],
-            "title": "Entregables y evidencias"
+            "title": "Entregables"
           }
         ]
       }
@@ -11874,40 +12083,51 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Optimization of FASHA's Apex backend: refactoring, removal of DML in loops and batch improvements.",
         "sections": [
           {
-            "body": "FASHA, a multinational clothing distribution company (present in 60 countries), used Salesforce to manage accounts, orders and revenue calculations. Three critical issues affected CRM reliability: abnormally slow revenue update batches, deadlocks during simultaneous modifications on Account and Order objects, and disorganized code with no naming conventions. Mission via SFQUAL consulting: audit, optimize and refactor the entire Apex backend.",
+            "body": "FASHA, a multinational clothing distributor (350 employees, operating in Europe, the US, and APAC), used Salesforce to manage accounts, contacts, and orders. The app was slowing down and accumulating bugs. Mission assigned via the SFQUAL consultancy: diagnose, fix, and reorganize an existing Apex backend — not build from scratch, but take over production code with real users affected.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Weekly revenue update batches: abnormally high execution time after price changes",
-              "Deadlocks during simultaneous modifications on Account and Order — intermittent data loss",
-              "SOQL and DML inside FOR loops: N+1 queries, Salesforce governor limits at risk",
-              "Code with no separation of concerns: triggers with inline business logic, overly long classes",
-              "No unit tests — no guarantee of non-regression during future evolutions"
+              "The UpdateAccountCA trigger threw an error whenever a sales rep updated an order on an account that already had 100 orders or more — a sign of non-bulk-safe processing that didn't scale",
+              "The NetAmount__c field (TotalAmount − ShipmentCost) recalculated correctly when a line was added from the UI, but only the first order was updated during a bulk Data Loader import — the logic implicitly depended on a single-record context",
+              "Disorganized code: no naming conventions, overly long classes, business logic sitting directly in triggers",
+              "Test classes that didn't follow Salesforce result-validation best practices — tests existed but weren't reliable",
+              "The weekly revenue recalculation batch (triggered after product price updates) took several hours to run"
             ],
-            "title": "Problems Identified"
+            "title": "Bugs diagnosed"
           },
           {
             "type": "bullets",
             "items": [
-              "Extracted all SOQL queries out of loops — collections used for bulk operations",
-              "Removed all DML inside loops: upsert/update lists processed in a single operation",
-              "Handler pattern applied: triggers emptied of logic, delegated to dedicated service classes",
-              "Batch Apex refactored with filtered SOQL queries and bulk-safe processing",
-              "Unit test suite covering nominal, boundary and error scenarios for each method — 0 SOQL/DML in loops confirmed"
+              "OrderTriggerHandler + TriggerHelper: logic extracted from the trigger, NetAmount now recalculates correctly whether triggered from the UI or a bulk import (collection-based processing, no more dependency on a single-row context)",
+              "AccountService: revenue field (Chiffre_d_affaire__c) updated on after update via async processing (@future) — no longer blocks the sales rep's transaction",
+              "UpdateAllAccountsBatch + UpdateAllAccountsScheduler: global revenue recalculation scheduled weekly (Sunday 10pm), replacing the old multi-hour synchronous process",
+              "MyTeamOrdersController: new controller displaying orders for an entire team (same UserRoleId) — a feature requested on top of the bug fixes",
+              "TestDataFactory + @testSetup: restructured test suite, over 85% coverage, nominal/edge/error cases for every class"
             ],
-            "title": "Optimizations Made"
+            "title": "Fixes & refactoring"
           },
           {
             "type": "bullets",
             "items": [
-              "Apex Triggers — Handler pattern, logic/presentation separation",
-              "Batch Apex — Bulk processing of revenue updates",
-              "SOQL — Query optimization (collections, filters, one-shot)",
-              "Apex Test Framework — Unit tests with @isTest and assertions",
-              "Salesforce DX — Deployment and versioning"
+              "One trigger per object (OrderTrigger), all logic in dedicated handlers",
+              "100% bulkified code: zero SOQL or DML inside a loop, everything via Set/Map",
+              "Async done right: @future to avoid blocking the user transaction, Batchable + Schedulable for scheduled bulk processing",
+              "Security: with sharing throughout, explicit FLS checks",
+              "ApexDoc documentation and consistent naming conventions across the entire codebase taken over"
+            ],
+            "title": "Best practices applied"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex — Triggers, Handler pattern, @future, Batchable, Schedulable",
+              "Visualforce — MyTeamOrders page for the team view",
+              "SOQL — Bulkified queries, Set/Map collections",
+              "Apex Test Framework — TestDataFactory, @testSetup, per-class coverage",
+              "Salesforce DX — Compliant project structure, scratch org deployment"
             ],
             "title": "Stack & Technologies"
           },
@@ -11915,57 +12135,62 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Code audit",
-                "description": "Analysis of existing code — SOQL/DML in loops, inline trigger logic and untested classes mapped"
+                "label": "Auditing the existing code",
+                "description": "Reproduced both reported bugs (trigger failing past 100 orders, NetAmount broken on Data Loader import), analyzed the disorganized codebase"
               },
               {
-                "label": "Trigger refactoring",
-                "description": "All trigger logic extracted to dedicated handler classes — clean, testable architecture"
+                "label": "Refactoring the triggers",
+                "description": "Extracted all logic into OrderTriggerHandler and TriggerHelper — testable architecture, bulk-safe by design"
               },
               {
-                "label": "SOQL/DML optimization",
-                "description": "All queries moved out of loops, collection-based processing, dramatic reduction of consumed governor limits"
+                "label": "Async processing",
+                "description": "AccountService via @future for one-off updates, UpdateAllAccountsBatch + Scheduler for the scheduled weekly recalculation"
               },
               {
-                "label": "Batch Apex",
-                "description": "Revenue update batch refactored: filtered queries, bulk-safe processing, corrected net calculation"
+                "label": "Team feature",
+                "description": "Built MyTeamOrdersController for team-level order visibility, the sponsor's original feature request"
               },
               {
-                "label": "Unit tests",
-                "description": "Tests written for each method (3 scenarios: nominal, boundary, error) — coverage validated, 0 regression"
+                "label": "Tests & coverage",
+                "description": "Fully rewrote the test suite via TestDataFactory — over 85% coverage, zero regression on either fixed bug"
               },
               {
                 "label": "Defense",
-                "description": "Audit and corrections presented — jury: Félicitations! Corrections complètes et bien justifiées"
+                "description": "Presented the audit and fixes to the jury — evaluation: Distinction, complete and well-justified fixes"
               }
             ],
-            "title": "Project Timeline"
+            "title": "Project timeline"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "note": "After full refactoring",
-                "label": "SOQL in loops",
+                "note": "Non-bulk-safe trigger (100+ orders), NetAmount broken on bulk import",
+                "label": "Real bugs fixed",
+                "value": "2"
+              },
+              {
+                "note": "After the full refactor",
+                "label": "SOQL/DML in loops",
                 "value": "0"
               },
               {
-                "note": "All operations externalized",
-                "label": "DML in loops",
-                "value": "0"
+                "note": "TestDataFactory + @testSetup",
+                "label": "Test coverage",
+                "value": ">85%"
               },
               {
                 "note": "OpenClassrooms jury",
-                "label": "Skills validated",
+                "label": "Validated competencies",
                 "value": "2/2"
               },
               {
-                "note": "Special mention",
-                "label": "Jury assessment",
-                "value": "Félicitations!"
+                "note": "Complete and well-justified fixes",
+                "label": "Jury evaluation",
+                "value": "Distinction!"
               }
             ],
-            "title": "Results"
+            "title": "Outcomes"
           }
         ]
       },
@@ -11974,40 +12199,51 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Optimisation du backend Apex de FASHA : refactoring, suppression des DML en boucle et amélioration des batchs.",
         "sections": [
           {
-            "body": "FASHA, multinationale de distribution de vêtements (présente dans 60 pays), utilisait Salesforce pour gérer ses comptes, commandes et calculs de chiffre d'affaires. Trois problèmes critiques affectaient la fiabilité du CRM : des batchs de mise à jour du CA anormalement lents, des blocages lors de modifications simultanées sur Account et Order, et un code désorganisé sans conventions. Mission via le cabinet SFQUAL : auditer, optimiser et refactoriser le backend Apex.",
+            "body": "FASHA, distributeur de vêtements multinational (350 collaborateurs, présent en Europe, aux États-Unis et en zone APEC), utilisait Salesforce pour gérer comptes, contacts et commandes. L'application ralentissait et accumulait les bugs. Mission confiée via le cabinet SFQUAL : diagnostiquer, corriger et réorganiser un backend Apex existant — pas construire depuis une page blanche, mais reprendre du code en production avec de vrais utilisateurs impactés.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Batchs de mise à jour du CA hebdomadaire : temps d'exécution anormalement élevé après changements de prix",
-              "Deadlocks lors de modifications simultanées sur Account et Order — pertes de données intermittentes",
-              "SOQL et DML dans les boucles FOR : N+1 queries, risques de governor limits Salesforce",
-              "Code sans séparation des responsabilités : triggers avec logique métier inline, classes trop longues",
-              "Absence de tests unitaires — aucune garantie de non-régression lors des évolutions"
+              "Le trigger UpdateAccountCA levait une erreur dès qu'un commercial modifiait une commande sur un compte ayant déjà 100 commandes ou plus — signe d'un traitement non bulk-safe qui ne passait pas à l'échelle",
+              "Le champ NetAmount__c (TotalAmount − ShipmentCost) se recalculait correctement pour un ajout de ligne depuis l'interface, mais seule la première commande était mise à jour lors d'un import en masse via Data Loader — la logique dépendait implicitement d'un contexte mono-enregistrement",
+              "Code désorganisé : aucune convention de nommage, classes trop longues, logique métier directement dans les triggers",
+              "Classes de test ne respectant pas les bonnes pratiques Salesforce de validation des résultats — tests présents mais peu fiables",
+              "Le batch hebdomadaire de recalcul du chiffre d'affaires (déclenché après la mise à jour des prix produits) prenait plusieurs heures"
             ],
-            "title": "Problèmes identifiés"
+            "title": "Bugs diagnostiqués"
           },
           {
             "type": "bullets",
             "items": [
-              "Extraction de toutes les requêtes SOQL hors boucles — collections utilisées pour les opérations en masse",
-              "Suppression de tous les DML dans les boucles : listes d'upsert/update traitées en une seule opération",
-              "Handler pattern : triggers vidés de leur logique, déléguée à des classes de service dédiées",
-              "Batch Apex refactorisé avec requêtes SOQL filtrées et traitement bulk-safe",
-              "Suite de tests unitaires couvrant nominal, limite et erreur pour chaque méthode — 0 SOQL/DML dans les boucles confirmé"
+              "OrderTriggerHandler + TriggerHelper : logique extraite du trigger, calcul de NetAmount recalculé correctement que ce soit via l'UI ou un import en masse (traitement par collections, plus de dépendance à un contexte mono-ligne)",
+              "AccountService : mise à jour du chiffre d'affaires (Chiffre_d_affaire__c) déclenchée en after update via un traitement asynchrone (@future) — ne bloque plus la transaction du commercial",
+              "UpdateAllAccountsBatch + UpdateAllAccountsScheduler : recalcul global du CA planifié chaque semaine (dimanche 22h), remplace l'ancien traitement synchrone de plusieurs heures",
+              "MyTeamOrdersController : nouveau contrôleur affichant les commandes de toute une équipe (même UserRoleId) — fonctionnalité demandée en plus de la correction des bugs",
+              "TestDataFactory + @testSetup : suite de tests restructurée, couverture supérieure à 85%, cas nominal/limite/erreur pour chaque classe"
             ],
-            "title": "Optimisations réalisées"
+            "title": "Corrections & refactoring"
           },
           {
             "type": "bullets",
             "items": [
-              "Apex Triggers — Handler pattern, séparation logique/présentation",
-              "Batch Apex — Traitement masse des mises à jour CA",
-              "SOQL — Optimisation des requêtes (collections, filtres, one-shot)",
-              "Test Framework Apex — Tests unitaires avec @isTest et assertions",
-              "Salesforce DX — Déploiement et versionning"
+              "Un seul trigger par objet (OrderTrigger), toute la logique dans des handlers dédiés",
+              "Code 100% bulkifié : zéro SOQL ou DML dans une boucle, tout en Set/Map",
+              "Asynchrone maîtrisé : @future pour ne pas bloquer la transaction utilisateur, Batchable + Schedulable pour le traitement de masse planifié",
+              "Sécurité : with sharing systématique, vérifications FLS explicites",
+              "Documentation ApexDoc et conventions de nommage cohérentes sur l'ensemble du code repris"
+            ],
+            "title": "Bonnes pratiques appliquées"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex — Triggers, Handler pattern, @future, Batchable, Schedulable",
+              "Visualforce — Page MyTeamOrders pour la vue d'équipe",
+              "SOQL — Requêtes bulkifiées, collections (Set/Map)",
+              "Apex Test Framework — TestDataFactory, @testSetup, couverture par classe",
+              "Salesforce DX — Structure de projet conforme, déploiement scratch org"
             ],
             "title": "Stack & Technologies"
           },
@@ -12015,28 +12251,28 @@ export const projectDetails: ProjectDetails[] = [
             "type": "timeline",
             "steps": [
               {
-                "label": "Audit du code",
-                "description": "Analyse du code existant : identification des SOQL/DML dans les boucles, des triggers avec logique inline et des classes sans tests"
+                "label": "Audit du code existant",
+                "description": "Reproduction des deux bugs signalés (trigger à 100+ commandes, NetAmount cassé sur import Data Loader), analyse du code désorganisé"
               },
               {
-                "label": "Refactoring Triggers",
-                "description": "Extraction de toute la logique des triggers vers des classes handler dédiées — architecture propre et testable"
+                "label": "Refactoring des triggers",
+                "description": "Extraction de toute la logique vers OrderTriggerHandler et TriggerHelper — architecture testable, bulk-safe par construction"
               },
               {
-                "label": "Optimisation SOQL/DML",
-                "description": "Déplacement de toutes les requêtes hors boucles, traitement par collections, réduction drastique des governor limits consommées"
+                "label": "Traitement asynchrone",
+                "description": "AccountService en @future pour la mise à jour ponctuelle, UpdateAllAccountsBatch + Scheduler pour le recalcul hebdomadaire planifié"
               },
               {
-                "label": "Batch Apex",
-                "description": "Refactorisation du batch de mise à jour du CA : requêtes filtrées, traitement bulk-safe, correction du calcul net"
+                "label": "Fonctionnalité équipe",
+                "description": "Développement de MyTeamOrdersController pour l'affichage des commandes par équipe, demande initiale du commanditaire"
               },
               {
-                "label": "Tests unitaires",
-                "description": "Rédaction des tests pour chaque méthode (3 scénarios : nominal, limite, erreur) — couverture validée, 0 régression"
+                "label": "Tests & couverture",
+                "description": "Réécriture complète de la suite de tests via TestDataFactory — couverture >85%, 0 régression sur les deux bugs corrigés"
               },
               {
                 "label": "Soutenance",
-                "description": "Présentation de l'audit et des corrections — jury : Félicitations ! Corrections complètes et bien justifiées"
+                "description": "Présentation de l'audit et des corrections devant le jury — évaluation : Félicitations, corrections complètes et bien justifiées"
               }
             ],
             "title": "Déroulement du projet"
@@ -12045,14 +12281,19 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
+                "note": "Trigger non bulk-safe (100+ commandes), NetAmount cassé sur import en masse",
+                "label": "Bugs réels corrigés",
+                "value": "2"
+              },
+              {
                 "note": "Après refactoring complet",
-                "label": "SOQL dans boucles",
+                "label": "SOQL/DML dans boucles",
                 "value": "0"
               },
               {
-                "note": "Toutes les opérations externalisées",
-                "label": "DML dans boucles",
-                "value": "0"
+                "note": "TestDataFactory + @testSetup",
+                "label": "Couverture de tests",
+                "value": ">85%"
               },
               {
                 "note": "Jury OpenClassrooms",
@@ -12060,7 +12301,7 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "2/2"
               },
               {
-                "note": "Mention spéciale",
+                "note": "Corrections complètes et bien justifiées",
                 "label": "Évaluation jury",
                 "value": "Félicitations !"
               }
@@ -12070,77 +12311,118 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Apex backend optimization (FASHA)",
+        "title": "Optimización de un backend Apex (FASHA)",
         "heroSubtitle": "Optimización de backend Apex (FASHA)",
         "sections": [
           {
+            "body": "FASHA, distribuidora multinacional de ropa (350 empleados, presente en Europa, Estados Unidos y la zona APAC), usaba Salesforce para gestionar cuentas, contactos y pedidos. La aplicación se ralentizaba y acumulaba errores. Misión encargada a través de la consultora SFQUAL: diagnosticar, corregir y reorganizar un backend Apex existente — no construir desde cero, sino hacerse cargo de código en producción con usuarios reales afectados.",
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "FASHA (distribución de ropa) presentaba problemas de rendimiento y fiabilidad en el backend de Salesforce.",
-              "Los batches semanales se volvían demasiado lentos tras las actualizaciones de precios de productos, la aplicación se bloqueaba al editar simultáneamente Cuentas y Pedidos, y el código estaba poco estructurado (naming, clases demasiado largas)."
-            ]
+            "title": "Contexto"
           },
           {
             "type": "bullets",
             "items": [
-              "Optimizar los batches que recalculan la facturación de las cuentas tras cambios de precio de los productos.",
-              "Evitar comportamientos bloqueantes durante ediciones concurrentes en Cuentas y Pedidos.",
-              "Reorganizar el código Apex para mejorar la mantenibilidad (responsabilidades claras, convenciones de nombres)."
+              "El trigger UpdateAccountCA lanzaba un error cada vez que un comercial actualizaba un pedido en una cuenta que ya tenía 100 pedidos o más — señal de un procesamiento no bulk-safe que no escalaba",
+              "El campo NetAmount__c (TotalAmount − ShipmentCost) se recalculaba correctamente al añadir una línea desde la interfaz, pero solo se actualizaba el primer pedido en una importación masiva con Data Loader — la lógica dependía implícitamente de un contexto de un solo registro",
+              "Código desorganizado: sin convenciones de nomenclatura, clases demasiado largas, lógica de negocio directamente en los triggers",
+              "Clases de test que no seguían las buenas prácticas de Salesforce para validar resultados — existían tests, pero no eran fiables",
+              "El batch semanal de recálculo de facturación (disparado tras la actualización de precios de productos) tardaba varias horas"
             ],
-            "title": "Necesidades del cliente"
+            "title": "Errores diagnosticados"
           },
           {
             "type": "bullets",
             "items": [
-              "Refactorización en arquitectura trigger → handler/servicios: triggers «ligeros», DML/SOQL trasladados a clases dedicadas (bulk-safe).",
-              "Bulkificación de los cálculos (facturación / importe neto) mediante colecciones y maps; consolidación de consultas; eliminación de todo SOQL/DML en bucles.",
-              "Optimización de las consultas sobre pedidos (filtros selectivos) y refuerzo del batch para procesar mayores volúmenes sin timeout."
+              "OrderTriggerHandler + TriggerHelper: lógica extraída del trigger, el NetAmount ahora se recalcula correctamente tanto desde la interfaz como en una importación masiva (procesamiento por colecciones, sin dependencia de un contexto de una sola fila)",
+              "AccountService: actualización del campo de facturación (Chiffre_d_affaire__c) en after update mediante procesamiento asíncrono (@future) — ya no bloquea la transacción del comercial",
+              "UpdateAllAccountsBatch + UpdateAllAccountsScheduler: recálculo global de la facturación programado semanalmente (domingo 22h), sustituyendo el antiguo proceso síncrono de varias horas",
+              "MyTeamOrdersController: nuevo controlador que muestra los pedidos de todo un equipo (mismo UserRoleId) — funcionalidad solicitada además de la corrección de errores",
+              "TestDataFactory + @testSetup: suite de tests reestructurada, cobertura superior al 85%, casos nominal/límite/error para cada clase"
             ],
-            "title": "Implementación"
+            "title": "Correcciones y refactorización"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Un único trigger por objeto (OrderTrigger), toda la lógica en handlers dedicados",
+              "Código 100% bulkificado: cero SOQL o DML dentro de un bucle, todo mediante Set/Map",
+              "Asíncrono bien gestionado: @future para no bloquear la transacción del usuario, Batchable + Schedulable para el procesamiento masivo programado",
+              "Seguridad: with sharing sistemático, verificaciones FLS explícitas",
+              "Documentación ApexDoc y convenciones de nomenclatura coherentes en todo el código heredado"
+            ],
+            "title": "Buenas prácticas aplicadas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex — Triggers, patrón Handler, @future, Batchable, Schedulable",
+              "Visualforce — Página MyTeamOrders para la vista de equipo",
+              "SOQL — Consultas bulkificadas, colecciones Set/Map",
+              "Apex Test Framework — TestDataFactory, @testSetup, cobertura por clase",
+              "Salesforce DX — Estructura de proyecto conforme, despliegue en scratch org"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Auditoría del código existente",
+                "description": "Reproducción de los dos errores señalados (trigger fallando con 100+ pedidos, NetAmount roto en importación con Data Loader), análisis del código desorganizado"
+              },
+              {
+                "label": "Refactorización de los triggers",
+                "description": "Extracción de toda la lógica hacia OrderTriggerHandler y TriggerHelper — arquitectura testeable, bulk-safe por diseño"
+              },
+              {
+                "label": "Procesamiento asíncrono",
+                "description": "AccountService en @future para actualizaciones puntuales, UpdateAllAccountsBatch + Scheduler para el recálculo semanal programado"
+              },
+              {
+                "label": "Funcionalidad de equipo",
+                "description": "Desarrollo de MyTeamOrdersController para la visualización de pedidos por equipo, solicitud inicial del cliente"
+              },
+              {
+                "label": "Tests y cobertura",
+                "description": "Reescritura completa de la suite de tests mediante TestDataFactory — cobertura >85%, cero regresión en ambos errores corregidos"
+              },
+              {
+                "label": "Defensa",
+                "description": "Presentación de la auditoría y las correcciones ante el jurado — evaluación: Felicitaciones, correcciones completas y bien justificadas"
+              }
+            ],
+            "title": "Desarrollo del proyecto"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "label": "Competencias validadas (jurado)",
-                "value": "2/2"
+                "note": "Trigger no bulk-safe (100+ pedidos), NetAmount roto en importación masiva",
+                "label": "Errores reales corregidos",
+                "value": "2"
               },
               {
+                "note": "Tras la refactorización completa",
                 "label": "SOQL/DML en bucles",
                 "value": "0"
               },
               {
-                "label": "Cobertura de pruebas",
-                "value": "Buena (feedback del jurado)"
-              }
-            ],
-            "title": "Calidad y evidencias"
-          },
-          {
-            "type": "text",
-            "title": "Comentarios de la evaluación",
-            "paragraphs": [
-              "El jurado destaca: triggers sin operaciones de BD/DML (trasladadas a clases separadas), código bien testeado con buena cobertura, cálculos de facturación/importe neto correctos, batch + controlador funcionales, consultas SOQL optimizadas con filtro y capacidad de procesar varias líneas de pedido."
-            ]
-          },
-          {
-            "type": "resources",
-            "items": [
-              {
-                "href": "/docs/projects/fasha-apex-backend-optimization/brief.docx",
-                "label": "Brief del proyecto (DOCX)"
+                "note": "TestDataFactory + @testSetup",
+                "label": "Cobertura de tests",
+                "value": ">85%"
               },
               {
-                "href": "/docs/projects/fasha-apex-backend-optimization/note-de-cadrage.pdf",
-                "label": "Nota de encuadre (PDF)"
+                "note": "Jurado de OpenClassrooms",
+                "label": "Competencias validadas",
+                "value": "2/2"
               },
               {
-                "href": "/docs/projects/fasha-apex-backend-optimization/repository.txt",
-                "label": "Enlace del repositorio (TXT)"
+                "note": "Correcciones completas y bien justificadas",
+                "label": "Evaluación del jurado",
+                "value": "¡Felicitaciones!"
               }
             ],
-            "title": "Entregables y evidencias"
+            "title": "Resultados"
           }
         ]
       }
@@ -12196,46 +12478,60 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Salesforce deployment and integration for LEGARANT-AXG: REST API, Heroku synchronization and go-live.",
         "sections": [
           {
-            "body": "LEGARANT, a life insurance company founded in 1980 in Nantes, acquired AXG in Germany. Integrating both CRMs required one-way synchronization of AXG data to Salesforce France, REST APIs documented via Postman, and deployment of a mobile application via Heroku Connect. Mission: design and deploy the complete technical architecture following Salesforce best practices.",
+            "body": "LEGARANT, a life insurance company founded in 1980 in Nantes by Émile Gordon, serves over 1.2 million individuals in France. To accelerate its expansion into Germany, the company acquired AXG, which already managed over 50,000 customers on its own internal CRM. LEGARANT chose to keep Salesforce as its system of record rather than running two systems side by side: AXG data had to be synchronized into Salesforce (one-way, Germany → France), with REST APIs documented via Postman, and a mobile app for insurance agents deployed on Heroku Connect. Mission: design and deploy the complete technical architecture following Salesforce best practices.",
             "type": "text",
             "title": "Context"
           },
           {
-            "body": "This project is the clearest evidence that my Salesforce and infrastructure skills aren't two separate résumés: I built the Apex REST layer AND the Heroku app that runs beside it, then wrote the deployment runbook a real ops handoff needs. It's also the first step toward a deeper crossover already scoped next — a real-time Heroku↔Salesforce sync via Platform Events and OAuth 2.0 JWT Bearer Flow.",
+            "body": "This project is the clearest proof that my Salesforce and infrastructure skills aren't two separate résumés: I built the Apex REST layer AND the Heroku application that accompanies it (Express + PostgreSQL API, separate staging and production environments on a Heroku pipeline), then wrote the deployment runbook a real ops handover requires. It's also the first step toward a deeper crossover project already scoped — a real-time Heroku↔Salesforce sync via Platform Events and OAuth 2.0 JWT Bearer Flow.",
             "type": "text",
-            "title": "The hybrid-skill proof point"
+            "title": "Proof of the skill crossover"
           },
           {
             "type": "bullets",
             "items": [
-              "One-way AXG → Salesforce sync without creating duplicates (idempotency required)",
-              "DELETE on contact = deactivation, not physical deletion (insurance industry business rule)",
-              "Unique External ID to guarantee AXG ↔ Salesforce record matching",
-              "Heroku ↔ Salesforce bidirectional connector for the Heroku mobile application"
+              "One-way AXG → Salesforce sync without creating duplicates (idempotency)",
+              "DELETE on a contact = deactivation, not physical deletion (insurance sector business rule)",
+              "Unique External ID to guarantee AXG ↔ Salesforce correspondence",
+              "Bidirectional Heroku ↔ Salesforce connector for the mobile app",
+              "Two isolated Heroku environments (staging tied to the sandbox, production tied to the Prod org) linked by a promotion pipeline, each with its own Connected Apps and its own Postgres database"
             ],
-            "title": "Technical Challenges"
+            "title": "Technical challenges"
           },
           {
             "type": "bullets",
             "items": [
-              "Custom Apex REST controller: contact creation with email verification before insertion",
+              "Custom Apex REST controller: contact creation with prior email verification before insert",
               "Apex DELETE endpoint: contact deactivation (IsActive = false) instead of physical deletion",
-              "Apex Trigger for automatic External ID population — uniqueness guaranteed on creation",
-              "Heroku Connect configured for bidirectional sync: Heroku PostgreSQL ↔ Salesforce",
-              "Complete Postman collection: GET, POST, PATCH, DELETE — all endpoints tested and documented",
-              "Deployment document: delivered components, manual steps, installation order"
+              "Apex trigger for automatic External ID population — guarantees uniqueness on creation",
+              "Heroku Connect configured for bidirectional Heroku PostgreSQL ↔ Salesforce sync, with per-object mapping (RW on Account/Contact/Contract, RO on Order/OrderItem/Product2/Pricebook2/PricebookEntry)",
+              "Matching Rule + Duplicate Rule on Contact (email, first name, last name) in alert mode — blocks silent duplicate creation without blocking data entry",
+              "Complete Postman collection: GET, POST, PATCH, DELETE — every endpoint tested and documented",
+              "Deployment document: components, manual steps, install order"
             ],
-            "title": "Solutions Developed"
+            "title": "Solutions built"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Dedicated Permission Set (INTG_API_Policies_CRUD): explicit RW/RO rights per object, assigned only to the integration user — no API access via a generic profile",
+              "Postman calls batched via the REST Composite API (up to 25 sub-requests / 200 objects per call): reduces API limit consumption and guarantees transactional consistency (rollback if a sub-request fails)",
+              "API limits monitored via the Sforce-Limit-Info header on every HTTP response, instead of being discovered after the fact via a 403 error",
+              "Contact Matching Rule + Duplicate Rule active in Alert only mode: a duplicate is flagged on create/edit without blocking the user — a product decision, not just a technical one"
+            ],
+            "title": "Governance & data quality"
           },
           {
             "type": "bullets",
             "items": [
               "Apex REST (@RestResource) — Custom endpoints exposed over HTTPS",
-              "Postman — Complete REST API calls collection",
-              "Heroku Connect — PostgreSQL ↔ Salesforce synchronization",
+              "Node.js + Express + PostgreSQL (pg) — SOCMOB API on the Heroku side, with a front-end test console (index.html/app.js)",
+              "Heroku Connect (Demo Edition) — PostgreSQL ↔ Salesforce sync",
+              "Heroku Postgres (Essential-2) — one database per environment (staging, production)",
+              "Papertrail — centralized, real-time application log tracking across both environments",
+              "Postman — Complete REST API call collection, with an automated test suite",
               "Apex Trigger — Automatic External ID population",
-              "Salesforce DX — Metadata deployment",
-              "JSON — REST API data exchange format"
+              "Salesforce DX — Metadata deployment"
             ],
             "title": "Stack & Technologies"
           },
@@ -12244,37 +12540,37 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Architecture",
-                "description": "Integration schema defined — AXG→Salesforce flow, required endpoints, External ID strategy"
+                "description": "Defined the integration schema: AXG→Salesforce flow, required endpoints, External ID strategy"
               },
               {
-                "label": "REST API (Postman)",
-                "description": "4 standard endpoints implemented (GET/POST/PATCH/DELETE) on Salesforce objects, tested via Postman"
+                "label": "Postman REST API",
+                "description": "Implemented the 4 standard endpoints (GET/POST/PATCH/DELETE) on Salesforce objects via Postman, with pre-request/test scripts chaining calls without manually re-entering credentials"
               },
               {
                 "label": "Apex controller",
-                "description": "Custom Apex REST endpoint built — contact creation with email check + deactivation on DELETE"
+                "description": "Built the custom Apex REST endpoint: contact creation with email check + deactivation on DELETE"
               },
               {
-                "label": "External ID",
-                "description": "Apex Trigger auto-populating External ID on contact creation — uniqueness guaranteed"
+                "label": "External ID & deduplication",
+                "description": "Apex trigger for automatic External ID population on contact creation, complemented by a Matching Rule + Duplicate Rule to block duplicates at data entry"
               },
               {
                 "label": "Heroku Connect",
-                "description": "Bidirectional Heroku PostgreSQL ↔ Salesforce sync configured for the mobile application"
+                "description": "Configured bidirectional Heroku PostgreSQL ↔ Salesforce sync for the mobile app, with per-object RW/RO mapping"
               },
               {
-                "label": "Documentation",
-                "description": "Complete deployment document written — delivered components, manual steps, installation order"
+                "label": "Documentation & validation",
+                "description": "Wrote the complete deployment document (delivered components, manual actions, install order) and ran the full Postman test suite end-to-end on the sandbox environment"
               }
             ],
-            "title": "Project Timeline"
+            "title": "Project timeline"
           },
           {
             "type": "metrics",
             "items": [
               {
                 "note": "OpenClassrooms jury",
-                "label": "Skills validated",
+                "label": "Validated competencies",
                 "value": "2/2"
               },
               {
@@ -12284,38 +12580,45 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "note": "Heroku ↔ Salesforce",
-                "label": "Synchronization",
+                "label": "Sync",
                 "value": "Bidirectional"
               },
               {
-                "note": "Clean architecture, well documented",
-                "label": "Jury assessment",
-                "value": "Félicitations!"
+                "note": "5.7s total run time, 232ms average response time — auth, CRUD, deduplication, batch upsert",
+                "label": "Postman test suite",
+                "value": "17 tests, 100% passed"
+              },
+              {
+                "note": "Clean, well-documented architecture",
+                "label": "Jury evaluation",
+                "value": "Distinction!"
               }
             ],
-            "title": "Results"
+            "title": "Outcomes"
           },
           {
             "type": "bullets",
             "items": [
-              "Heroku over Azure: the Azure free-tier limits (see PDF) didn't cover the need, and Heroku Connect gave a native Salesforce sync without hand-rolling an ETL layer.",
-              "OAuth Username-Password Flow over JWT Bearer: faster to stand up for this server-to-server flow, at the cost of a stored client secret (in Heroku config vars) instead of a certificate — the deliberate first step before the JWT Bearer migration already scoped next.",
-              "External ID + Apex Trigger for uniqueness, not Heroku Connect dedup: keeps the source of truth for identity matching inside Salesforce, so it survives a future replacement of the sync layer.",
-              "DELETE = deactivation, not physical delete: driven by the insurance industry's data retention rules, not a technical default."
+              "Heroku over Azure: Azure's free-tier thresholds (see PDF) didn't cover the need, and Heroku Connect offered native Salesforce sync without coding a custom ETL layer.",
+              "Different OAuth flow per environment rather than a single choice: Client Credentials Flow (server-to-server, no stored user credentials) for production, with Username-Password Flow confined to the sandbox/Postman PoC — production never relied on a stored password, unlike a \"fast but temporary\" choice that would have put everything behind Username-Password.",
+              "External ID + Apex trigger for uniqueness, rather than deduplication on the Heroku Connect side: the source of truth for identity stays in Salesforce, which survives a future replacement of the sync layer.",
+              "Duplicate Rule in Alert only mode rather than a hard block: a flagged-but-not-blocked duplicate leaves the final call to the business user, consistent with an integration flow where the contact may legitimately already exist on the AXG side.",
+              "DELETE = deactivation, not physical deletion: mandated by insurance-sector data retention rules, not a default technical choice."
             ],
             "title": "Decisions & trade-offs"
           },
           {
             "type": "bullets",
             "items": [
-              "Auth: OAuth 2.0 (Username-Password Flow), short-lived tokens, no credentials in code — stored as Heroku config vars.",
-              "Apex REST endpoints are HTTPS-only and require a valid Salesforce token; no anonymous access.",
-              "Assumed limit: no conflict resolution — accepted because the sync is one-way (AXG to Salesforce), not because it was solved.",
-              "Assumed limit: no documented retry/backoff on Heroku Connect calls — a real scale-up would need a queue or retry mechanism.",
-              "Data flow: AXG (Germany) contact data moves into the Salesforce France org — intra-EU only, access restricted by permission sets rather than by geography.",
-              "Next step already scoped: migrate to OAuth 2.0 JWT Bearer Flow (certificate instead of a stored password) — the exact starting point for the deeper Heroku-Salesforce crossover project."
+              "Production authentication: OAuth 2.0 Client Credentials Flow (server-to-server) — no Salesforce user credentials stored on the Heroku side, only client_id/client_secret as config vars.",
+              "Sandbox/PoC-only authentication: OAuth 2.0 Username-Password Flow, used exclusively for manual Postman testing — never exposed in production.",
+              "Apex REST endpoints exposed over HTTPS only, accessible only with a valid Salesforce token and the INTG_API_Policies_CRUD Permission Set — no anonymous access.",
+              "Accepted limitation: no conflict resolution — acceptable since the sync is one-way (AXG to Salesforce), not a problem code needs to solve.",
+              "Accepted limitation: no documented retry/backoff on Heroku Connect calls — real-world scale would require a queue or retry mechanism.",
+              "Data flow: AXG contact data (Germany) flows into the Salesforce France org — intra-EU flow, access restricted by permission sets rather than by geography.",
+              "Next step already scoped: migrating the sandbox/PoC flow to OAuth 2.0 JWT Bearer Flow (certificate instead of password) to align every environment on a server-to-server flow — the exact starting point of the deeper Heroku-Salesforce crossover project."
             ],
-            "title": "Security & limits"
+            "title": "Security & limitations"
           }
         ]
       },
@@ -12324,12 +12627,12 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Déploiement et intégration Salesforce pour LEGARANT-AXG : API REST, synchronisation Heroku et mise en production.",
         "sections": [
           {
-            "body": "LEGARANT, société d'assurance vie fondée en 1980 à Nantes, a racheté AXG en Allemagne. L'intégration des deux CRM nécessitait une synchronisation des données AXG vers Salesforce France (sens unique), des APIs REST documentées via Postman, et un déploiement d'une application mobile via Heroku Connect. Mission : concevoir et déployer l'architecture technique complète en respectant les bonnes pratiques Salesforce.",
+            "body": "LEGARANT, société d'assurance vie fondée en 1980 à Nantes par Émile Gordon, sert plus de 1,2 million de particuliers en France. Pour accélérer son implantation en Allemagne, l'entreprise a racheté AXG, qui gérait déjà plus de 50 000 clients sur son propre CRM interne. LEGARANT a choisi de conserver Salesforce comme CRM de référence plutôt que de faire cohabiter deux systèmes : les données AXG devaient être synchronisées vers Salesforce (sens unique, Allemagne → France), avec des APIs REST documentées via Postman, et une application mobile pour les assureurs déployée sur Heroku Connect. Mission : concevoir et déployer l'architecture technique complète en respectant les bonnes pratiques Salesforce.",
             "type": "text",
             "title": "Contexte"
           },
           {
-            "body": "Ce projet est la preuve la plus claire que mes compétences Salesforce et infrastructure ne sont pas deux CV séparés : j'ai construit la couche Apex REST ET l'application Heroku qui l'accompagne, puis rédigé le runbook de déploiement qu'exige une vraie passation ops. C'est aussi la première marche vers un projet de croisement plus poussé déjà cadré — une synchronisation temps réel Heroku↔Salesforce via Platform Events et OAuth 2.0 JWT Bearer Flow.",
+            "body": "Ce projet est la preuve la plus claire que mes compétences Salesforce et infrastructure ne sont pas deux CV séparés : j'ai construit la couche Apex REST ET l'application Heroku qui l'accompagne (API Express + PostgreSQL, environnements staging et production distincts sur une pipeline Heroku), puis rédigé le runbook de déploiement qu'exige une vraie passation ops. C'est aussi la première marche vers un projet de croisement plus poussé déjà cadré — une synchronisation temps réel Heroku↔Salesforce via Platform Events et OAuth 2.0 JWT Bearer Flow.",
             "type": "text",
             "title": "La preuve du croisement de compétences"
           },
@@ -12339,7 +12642,8 @@ export const projectDetails: ProjectDetails[] = [
               "Synchronisation unidirectionnelle AXG → Salesforce sans création de doublons (idempotence)",
               "DELETE sur contact = désactivation et non suppression physique (règle métier Assurance)",
               "External ID unique pour garantir la correspondance AXG ↔ Salesforce",
-              "Connecteur Heroku ↔ Salesforce bidirectionnel pour l'application mobile Heroku"
+              "Connecteur Heroku ↔ Salesforce bidirectionnel pour l'application mobile Heroku",
+              "Deux environnements Heroku isolés (staging lié à la sandbox, production liée à l'org Prod) reliés par une pipeline de promotion, chacun avec ses propres Connected Apps et sa propre base Postgres"
             ],
             "title": "Défis techniques"
           },
@@ -12349,7 +12653,8 @@ export const projectDetails: ProjectDetails[] = [
               "Contrôleur REST Apex custom : création de contact avec vérification email préalable avant insertion",
               "Endpoint DELETE Apex : désactivation du contact (IsActive = false) au lieu de suppression physique",
               "Trigger Apex pour le remplissage automatique de l'External ID — garantit l'unicité à la création",
-              "Heroku Connect configuré pour la synchronisation bidirectionnelle Heroku PostgreSQL ↔ Salesforce",
+              "Heroku Connect configuré pour la synchronisation bidirectionnelle Heroku PostgreSQL ↔ Salesforce, avec mapping différencié par objet (RW sur Account/Contact/Contract, RO sur Order/OrderItem/Product2/Pricebook2/PricebookEntry)",
+              "Matching Rule + Duplicate Rule sur Contact (email, prénom, nom) en mode alerte — bloque la création silencieuse de doublons sans empêcher la saisie",
               "Collection Postman complète : GET, POST, PATCH, DELETE — tous les endpoints testés et documentés",
               "Document de déploiement : composants, étapes manuelles, ordre d'installation"
             ],
@@ -12358,12 +12663,24 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
+              "Permission Set dédié (INTG_API_Policies_CRUD) : droits RW/RO explicites par objet, assigné uniquement à l'utilisateur d'intégration — aucun accès API via un profil générique",
+              "Appels Postman groupés via l'API REST Composite (jusqu'à 25 sous-requêtes / 200 objets par appel) : réduit la consommation de limites API et garantit la cohérence transactionnelle (rollback si une sous-requête échoue)",
+              "Limites API surveillées via l'en-tête Sforce-Limit-Info sur chaque réponse HTTP, plutôt que découvertes après coup par une erreur 403",
+              "Matching Rule + Duplicate Rule Contact actives en mode Alert only : le doublon est signalé à la création/modification sans bloquer l'utilisateur — un choix produit, pas juste technique"
+            ],
+            "title": "Gouvernance & qualité des données"
+          },
+          {
+            "type": "bullets",
+            "items": [
               "Apex REST (@RestResource) — Endpoints custom exposés en HTTPS",
-              "Postman — Collection complète des appels API REST",
-              "Heroku Connect — Synchronisation PostgreSQL ↔ Salesforce",
+              "Node.js + Express + PostgreSQL (pg) — API SOCMOB côté Heroku, avec une console front-end de test (index.html/app.js)",
+              "Heroku Connect (Demo Edition) — Synchronisation PostgreSQL ↔ Salesforce",
+              "Heroku Postgres (Essential-2) — une base par environnement (staging, production)",
+              "Papertrail — centralisation et suivi temps réel des logs applicatifs sur les deux environnements",
+              "Postman — Collection complète des appels API REST, avec suite de tests automatisés",
               "Apex Trigger — Remplissage automatique External ID",
-              "Salesforce DX — Déploiement des métadonnées",
-              "JSON — Format d'échange des APIs REST"
+              "Salesforce DX — Déploiement des métadonnées"
             ],
             "title": "Stack & Technologies"
           },
@@ -12376,23 +12693,23 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "API REST Postman",
-                "description": "Implémentation des 4 endpoints standard (GET/POST/PATCH/DELETE) sur les objets Salesforce via Postman"
+                "description": "Implémentation des 4 endpoints standard (GET/POST/PATCH/DELETE) sur les objets Salesforce via Postman, avec scripts de test pre-request/test pour enchaîner les appels sans ressaisie manuelle des identifiants"
               },
               {
                 "label": "Contrôleur Apex",
                 "description": "Développement du endpoint REST Apex custom : création de contact avec vérification email + désactivation sur DELETE"
               },
               {
-                "label": "External ID",
-                "description": "Trigger Apex pour le remplissage automatique de l'External ID à la création du contact — garantie d'unicité"
+                "label": "External ID & dédoublonnage",
+                "description": "Trigger Apex pour le remplissage automatique de l'External ID à la création du contact, complété par une Matching Rule + Duplicate Rule pour bloquer les doublons dès la saisie"
               },
               {
                 "label": "Heroku Connect",
-                "description": "Configuration de la synchronisation bidirectionnelle Heroku PostgreSQL ↔ Salesforce pour l'application mobile"
+                "description": "Configuration de la synchronisation bidirectionnelle Heroku PostgreSQL ↔ Salesforce pour l'application mobile, avec mapping RW/RO différencié par objet"
               },
               {
-                "label": "Documentation",
-                "description": "Rédaction du document de déploiement complet : composants livrés, actions manuelles, ordre d'installation"
+                "label": "Documentation & validation",
+                "description": "Rédaction du document de déploiement complet (composants livrés, actions manuelles, ordre d'installation) et exécution de la suite de tests Postman de bout en bout sur l'environnement sandbox"
               }
             ],
             "title": "Déroulement du projet"
@@ -12416,6 +12733,11 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "Bidirectionnelle"
               },
               {
+                "note": "5,7 s d'exécution totale, 232 ms de temps de réponse moyen — auth, CRUD, dédoublonnage, upsert par lots",
+                "label": "Suite de tests Postman",
+                "value": "17 tests, 100% passés"
+              },
+              {
                 "note": "Architecture propre et bien documentée",
                 "label": "Évaluation jury",
                 "value": "Félicitations !"
@@ -12427,8 +12749,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Heroku plutôt qu'Azure : les seuils du tier gratuit Azure (cf. PDF) ne couvraient pas le besoin, et Heroku Connect offrait une synchronisation native avec Salesforce sans coder une couche ETL maison.",
-              "OAuth Username-Password Flow plutôt que JWT Bearer : plus rapide à mettre en place pour ce flux serveur-à-serveur, au prix d'un secret client stocké (variables de config Heroku) plutôt qu'un certificat — le premier palier assumé avant la migration JWT Bearer déjà cadrée.",
+              "Flow OAuth différencié par environnement plutôt qu'un choix unique : Client Credentials Flow (server-to-server, sans identifiant utilisateur stocké) pour la production, contre Username-Password Flow réservé au sandbox/PoC Postman — la production n'a jamais reposé sur un mot de passe stocké, contrairement à un choix « rapide mais provisoire » qui aurait tout mis derrière Username-Password.",
               "External ID + Trigger Apex pour l'unicité, plutôt qu'une déduplication côté Heroku Connect : la source de vérité de l'identité reste dans Salesforce, ce qui survit à un futur remplacement de la couche de synchronisation.",
+              "Duplicate Rule en mode Alert only plutôt que blocage strict : un doublon signalé mais pas bloqué laisse la décision finale à l'utilisateur métier, cohérent avec un flux d'intégration où le contact peut légitimement déjà exister côté AXG.",
               "DELETE = désactivation et non suppression physique : imposé par les règles de conservation des données du secteur assurance, pas un choix technique par défaut."
             ],
             "title": "Décisions & compromis"
@@ -12436,187 +12759,164 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Authentification : OAuth 2.0 (Username-Password Flow), tokens à durée de vie limitée, aucun identifiant en clair dans le code — stockés en variables de config Heroku.",
-              "Endpoints Apex REST exposés uniquement en HTTPS, accessibles uniquement avec un token Salesforce valide — pas d'accès anonyme.",
+              "Authentification en production : OAuth 2.0 Client Credentials Flow (server-to-server) — aucun identifiant utilisateur Salesforce stocké côté Heroku, seuls client_id/client_secret en variables de config.",
+              "Authentification en sandbox/PoC uniquement : OAuth 2.0 Username-Password Flow, utilisé exclusivement pour les tests Postman manuels — jamais exposé en production.",
+              "Endpoints Apex REST exposés uniquement en HTTPS, accessibles uniquement avec un token Salesforce valide et le Permission Set INTG_API_Policies_CRUD — pas d'accès anonyme.",
               "Limite assumée : pas de résolution de conflit — acceptable car la synchronisation est unidirectionnelle (AXG vers Salesforce), pas un problème résolu par du code.",
               "Limite assumée : pas de retry/backoff documenté sur les appels Heroku Connect — un passage à l'échelle réel demanderait une file d'attente ou un mécanisme de nouvelle tentative.",
               "Flux de données : les données de contact AXG (Allemagne) rejoignent l'org Salesforce France — flux intra-UE, accès restreint par permission sets plutôt que par la géographie.",
-              "Prochaine étape déjà cadrée : migration vers OAuth 2.0 JWT Bearer Flow (certificat plutôt que mot de passe stocké) — le point de départ exact du projet de croisement Heroku-Salesforce plus poussé."
+              "Prochaine étape déjà cadrée : migration du flux sandbox/PoC vers OAuth 2.0 JWT Bearer Flow (certificat plutôt que mot de passe) pour aligner tous les environnements sur un flow server-to-server — le point de départ exact du projet de croisement Heroku-Salesforce plus poussé."
             ],
             "title": "Sécurité & limites"
           }
         ]
       },
       "es": {
-        "title": "Salesforce deployment with Heroku (Legarant‑AXG)",
+        "title": "Despliegue de Salesforce con Heroku (Legarant‑AXG)",
         "heroSubtitle": "Integrar AXG en Salesforce (Legarant) y entregar una capa de integración lista para una app móvil (REST + Heroku).",
         "sections": [
           {
+            "body": "LEGARANT, compañía de seguros de vida fundada en 1980 en Nantes por Émile Gordon, atiende a más de 1,2 millones de particulares en Francia. Para acelerar su implantación en Alemania, la empresa adquirió AXG, que ya gestionaba más de 50.000 clientes en su propio CRM interno. LEGARANT eligió mantener Salesforce como sistema de referencia en lugar de hacer convivir dos sistemas: los datos de AXG debían sincronizarse hacia Salesforce (en un solo sentido, Alemania → Francia), con APIs REST documentadas vía Postman, y una aplicación móvil para los agentes de seguros desplegada sobre Heroku Connect. Misión: diseñar y desplegar la arquitectura técnica completa siguiendo las buenas prácticas de Salesforce.",
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "LEGARANT (seguro de vida) adquirió AXG para expandirse en Alemania. El objetivo era mantener la org de Salesforce de Legarant como CRM principal e integrar en ella los datos clave de AXG.",
-              "La integración es unidireccional (AXG → Salesforce). Como se preveía una app móvil, también se necesitaba una capa aplicativa (tipo Heroku) conectada a Salesforce, y llamadas REST para consultar la base de clientes."
-            ]
+            "title": "Contexto"
           },
           {
+            "body": "Este proyecto es la prueba más clara de que mis competencias en Salesforce e infraestructura no son dos currículums separados: construí la capa Apex REST Y la aplicación Heroku que la acompaña (API Express + PostgreSQL, entornos de staging y producción separados en un pipeline de Heroku), y luego redacté el runbook de despliegue que exige una entrega real a operaciones. También es el primer paso hacia un proyecto de cruce más profundo ya definido — una sincronización en tiempo real Heroku↔Salesforce vía Platform Events y OAuth 2.0 JWT Bearer Flow.",
             "type": "text",
-            "title": "La prueba del cruce de competencias",
-            "paragraphs": [
-              "Este proyecto es la prueba más clara de que mis competencias en Salesforce e infraestructura no son dos currículums separados: construí la capa Apex REST Y la aplicación Heroku que la acompaña, y redacté el runbook de despliegue que exige un traspaso operativo real.",
-              "También es el primer paso hacia un proyecto de cruce más avanzado ya definido — una sincronización en tiempo real Heroku↔Salesforce mediante Platform Events y OAuth 2.0 JWT Bearer Flow."
-            ]
+            "title": "La prueba del cruce de competencias"
           },
           {
             "type": "bullets",
             "items": [
-              "Una colección Postman que cubre las llamadas REST solicitadas (API estándar + endpoints personalizados cuando fue necesario).",
-              "Controladores REST Apex personalizados para implementar reglas de negocio no cubiertas por la API estándar de Contact (crear o devolver el Id, borrado lógico vía DELETE).",
-              "Una aplicación desplegada en Heroku y conectada a Salesforce, con replicación de datos y documentación de los cambios de configuración.",
-              "Un paquete de despliegue + runbook: lista de componentes, acciones manuales y checklist de validación (test y producción)."
+              "Sincronización unidireccional AXG → Salesforce sin crear duplicados (idempotencia)",
+              "DELETE sobre un contacto = desactivación, no eliminación física (regla de negocio del sector seguros)",
+              "External ID único para garantizar la correspondencia AXG ↔ Salesforce",
+              "Conector Heroku ↔ Salesforce bidireccional para la aplicación móvil",
+              "Dos entornos Heroku aislados (staging vinculado a la sandbox, producción vinculada al org Prod) unidos por un pipeline de promoción, cada uno con sus propias Connected Apps y su propia base Postgres"
             ],
-            "title": "Lo que entregué"
+            "title": "Retos técnicos"
           },
           {
             "type": "bullets",
             "items": [
-              "POST /services/oauth2/token — Token OAuth (Password Flow / client credentials).",
-              "POST /services/apexrest/v1/contacts — Creación de Contact (crear o devolver según la especificación).",
-              "GET /services/apexrest/v1/contacts/{idOrExt} — Lectura de Contact por Id o External Id.",
-              "PATCH /services/apexrest/v1/contacts/{externalId} — Actualización de Contact por External Id.",
-              "PATCH /services/apexrest/v1/contacts/{id} — Desactivación de Contact (borrado lógico).",
-              "POST /services/apexrest/v1/accounts — Creación de Account.",
-              "GET /services/apexrest/v1/accounts/{idOrExt} — Lectura de Account por Id o External Id.",
-              "PATCH /services/apexrest/v1/accounts/{externalId} — Actualización de Account por External Id.",
-              "POST /services/apexrest/v1/contracts — Creación de Contract.",
-              "GET /services/apexrest/v1/contracts/{idOrExt} — Lectura de Contract por Id o External Id.",
-              "PATCH /services/apexrest/v1/contracts/{externalId} — Actualización de Contract por External Id."
+              "Controlador REST Apex personalizado: creación de contacto con verificación previa del email antes de insertar",
+              "Endpoint DELETE Apex: desactivación del contacto (IsActive = false) en lugar de eliminación física",
+              "Trigger Apex para el relleno automático del External ID — garantiza la unicidad en la creación",
+              "Heroku Connect configurado para la sincronización bidireccional Heroku PostgreSQL ↔ Salesforce, con mapeo diferenciado por objeto (RW en Account/Contact/Contract, RO en Order/OrderItem/Product2/Pricebook2/PricebookEntry)",
+              "Matching Rule + Duplicate Rule en Contact (email, nombre, apellido) en modo alerta — bloquea la creación silenciosa de duplicados sin impedir la introducción de datos",
+              "Colección Postman completa: GET, POST, PATCH, DELETE — todos los endpoints probados y documentados",
+              "Documento de despliegue: componentes, pasos manuales, orden de instalación"
             ],
-            "title": "Endpoints REST cubiertos"
+            "title": "Soluciones desarrolladas"
           },
           {
-            "code": "POST <instance_url>/services/apexrest/v1/contacts\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campos LastName, city, Email\n  Ejemplo:\n    {\n      \"LastName\": \"axG -tests Contact Test\",\n      \"city\" : \"Berlin\",\n      \"Email\": \"test.Contact@example.com\"\n    }\n\nGET <instance_url>/services/apexrest/v1/contacts/{{idOrExt}}\n  Parámetros de ruta: idOrExt\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n\nPATCH <instance_url>/services/apexrest/v1/contacts/{{lastContactExt}}\n  Parámetros de ruta: lastContactExt\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campo MobilePhone\n  Ejemplo:\n    {\n      \"MobilePhone\": \"+491111\"\n    }\n\nPATCH <instance_url>/services/apexrest/v1/contacts/{{lastContactId}}\n  Parámetros de ruta: lastContactId\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campo Active\n  Ejemplo:\n    {\n      \"Active\": \"false\"\n    }\n\nPOST <instance_url>/services/apexrest/v1/accounts\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campos Name, Phone\n  Ejemplo:\n    {\n      \"Name\": \"AXG GmbH\",\n      \"Phone\": \"12345\"\n    }\n\nGET <instance_url>/services/apexrest/v1/accounts/{{idOrExt}}\n  Parámetros de ruta: idOrExt\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n\nPATCH <instance_url>/services/apexrest/v1/accounts/{{lastAccountExt}}\n  Parámetros de ruta: lastAccountExt\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campo Website\n  Ejemplo:\n    {\n      \"Website\": \"https://axg.de\"\n    }\n\nPOST <instance_url>/services/apexrest/v1/contracts\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campos AccountId, Status, StartDate, ContractTerm\n  Ejemplo:\n    {\n      \"AccountId\": \"<axgAccountId>\",\n      \"Status\": \"Draft\",\n      \"StartDate\": \"2025-01-01\",\n      \"ContractTerm\": 12\n    }\n\nGET <instance_url>/services/apexrest/v1/contracts/{{idOrExt}}\n  Parámetros de ruta: idOrExt\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n\nPATCH <instance_url>/services/apexrest/v1/contracts/{{lastContractExt}}\n  Parámetros de ruta: lastContractExt\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n  Cuerpo (JSON): campo Description\n  Ejemplo:\n    {\n      \"Description\": \"Actualizado\"\n    }\n\nGET <instance_url>/services/data/v59.0/limits\n  Headers:\n    - Authorization: Bearer <access_token>\n    - Content-Type: application/json\n\nPOST <instance_url>/services/oauth2/token\n  Cuerpo (x-www-form-urlencoded): grant_type, client_id, client_secret",
-            "type": "code",
-            "title": "Parámetros de los endpoints (desde Postman)",
-            "language": "text"
+            "type": "bullets",
+            "items": [
+              "Permission Set dedicado (INTG_API_Policies_CRUD): derechos RW/RO explícitos por objeto, asignado únicamente al usuario de integración — sin acceso a la API mediante un perfil genérico",
+              "Llamadas Postman agrupadas mediante la API REST Composite (hasta 25 subsolicitudes / 200 objetos por llamada): reduce el consumo de límites de API y garantiza la coherencia transaccional (rollback si falla una subsolicitud)",
+              "Límites de API monitorizados mediante la cabecera Sforce-Limit-Info en cada respuesta HTTP, en lugar de descubrirlos a posteriori con un error 403",
+              "Matching Rule + Duplicate Rule de Contact activas en modo Alert only: el duplicado se señala al crear/editar sin bloquear al usuario — una decisión de producto, no solo técnica"
+            ],
+            "title": "Gobernanza y calidad de datos"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Apex REST (@RestResource) — Endpoints personalizados expuestos por HTTPS",
+              "Node.js + Express + PostgreSQL (pg) — API SOCMOB del lado de Heroku, con una consola front-end de pruebas (index.html/app.js)",
+              "Heroku Connect (Demo Edition) — Sincronización PostgreSQL ↔ Salesforce",
+              "Heroku Postgres (Essential-2) — una base de datos por entorno (staging, producción)",
+              "Papertrail — centralización y seguimiento en tiempo real de los logs de aplicación en ambos entornos",
+              "Postman — Colección completa de llamadas a la API REST, con suite de pruebas automatizadas",
+              "Apex Trigger — Relleno automático del External ID",
+              "Salesforce DX — Despliegue de metadatos"
+            ],
+            "title": "Stack y tecnologías"
           },
           {
             "type": "timeline",
             "steps": [
               {
-                "title": "Diseño de la integración",
-                "description": "Validación del sentido de los datos (AXG → Salesforce), identificación de los endpoints y elección de la autenticación (Connected App + OAuth username/password flow)."
+                "label": "Arquitectura",
+                "description": "Definición del esquema de integración: flujo AXG→Salesforce, endpoints necesarios, estrategia de External ID"
               },
               {
-                "title": "Implementación y pruebas de la API",
-                "description": "Construcción y validación de las llamadas en Postman. Se añadió REST Apex personalizado cuando la API estándar no cumplía con la especificación (creación de Contact y comportamiento DELETE)."
+                "label": "API REST con Postman",
+                "description": "Implementación de los 4 endpoints estándar (GET/POST/PATCH/DELETE) sobre los objetos Salesforce vía Postman, con scripts pre-request/test que encadenan las llamadas sin reintroducir credenciales manualmente"
               },
               {
-                "title": "Capa Heroku para el móvil",
-                "description": "Despliegue en Heroku, conexión a Salesforce y verificación de la sincronización bidireccional (Heroku ↔ Salesforce) en los objetos necesarios."
+                "label": "Controlador Apex",
+                "description": "Desarrollo del endpoint REST Apex personalizado: creación de contacto con verificación de email + desactivación en DELETE"
               },
               {
-                "title": "Fiabilización de la sincronización",
-                "description": "Automatización del llenado del External ID utilizado para la sincronización (trigger) para garantizar la unicidad y evitar errores manuales."
+                "label": "External ID y desduplicación",
+                "description": "Trigger Apex para el relleno automático del External ID al crear el contacto, complementado con una Matching Rule + Duplicate Rule para bloquear duplicados desde la introducción de datos"
               },
               {
-                "title": "Despliegue y documentación",
-                "description": "Redacción del documento de despliegue (componentes + acciones manuales) y del documento de cambios de Heroku, seguido de la preparación de la demo."
+                "label": "Heroku Connect",
+                "description": "Configuración de la sincronización bidireccional Heroku PostgreSQL ↔ Salesforce para la aplicación móvil, con mapeo RW/RO diferenciado por objeto"
+              },
+              {
+                "label": "Documentación y validación",
+                "description": "Redacción del documento de despliegue completo (componentes entregados, acciones manuales, orden de instalación) y ejecución de la suite de pruebas Postman de extremo a extremo en el entorno sandbox"
               }
             ],
-            "title": "Flujo de implementación"
+            "title": "Desarrollo del proyecto"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "label": "Conformidad de la API",
-                "value": "Colección Postman validada según las especificaciones"
+                "note": "Jurado de OpenClassrooms",
+                "label": "Competencias validadas",
+                "value": "2/2"
               },
               {
-                "label": "Reglas de negocio",
-                "value": "REST Apex personalizado para los requisitos de create/DELETE"
+                "note": "GET, POST, PATCH, DELETE",
+                "label": "Endpoints de API",
+                "value": "4"
               },
               {
-                "label": "Fiabilidad de la sincronización",
-                "value": "External ID autocompletado con unicidad garantizada"
+                "note": "Heroku ↔ Salesforce",
+                "label": "Sincronización",
+                "value": "Bidireccional"
               },
               {
-                "label": "Listo para producción",
-                "value": "Runbook de despliegue + checklist de validación"
+                "note": "5,7 s de ejecución total, 232 ms de tiempo de respuesta medio — auth, CRUD, desduplicación, upsert por lotes",
+                "label": "Suite de pruebas Postman",
+                "value": "17 pruebas, 100% superadas"
+              },
+              {
+                "note": "Arquitectura limpia y bien documentada",
+                "label": "Evaluación del jurado",
+                "value": "¡Felicitaciones!"
               }
             ],
-            "title": "Calidad y garantías"
-          },
-          {
-            "type": "resources",
-            "items": [
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/postman-collection.json",
-                "label": "Colección Postman (JSON)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/heroku-changes.pdf",
-                "label": "Cambios en Heroku (PDF)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/deployment.pdf",
-                "label": "Guía de despliegue (PDF)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/requirements.pdf",
-                "label": "Requisitos / especificación (PDF)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/brief.docx",
-                "label": "Brief del proyecto (DOCX)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/legacy-heroku-guide.pdf",
-                "label": "Guía Heroku anterior (PDF)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/azure-free-tier-thresholds.pdf",
-                "label": "Umbrales del nivel gratuito de Azure (PDF)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/repository-link.txt",
-                "label": "Enlace del repositorio (TXT)"
-              },
-              {
-                "href": "/docs/projects/legarant-axg-salesforce-deployment/sandbox-link.txt",
-                "label": "Enlace de staging (TXT)"
-              }
-            ],
-            "title": "Entregables"
-          },
-          {
-            "code": "Repository: https://github.com/Aiyeesha/Projet-12/tree/main\nStaging app: https://legarant-staging-78a7880351d1.herokuapp.com",
-            "type": "code",
-            "title": "Enlaces (repo + staging)",
-            "language": "text"
+            "title": "Resultados"
           },
           {
             "type": "bullets",
             "items": [
-              "Heroku en lugar de Azure: los límites del nivel gratuito de Azure (ver PDF) no cubrían la necesidad, y Heroku Connect ofrecía una sincronización nativa con Salesforce sin programar una capa ETL propia.",
-              "OAuth Username-Password Flow en lugar de JWT Bearer: más rápido de implementar para este flujo servidor-a-servidor, a costa de un secreto de cliente almacenado (variables de configuración de Heroku) en vez de un certificado — el primer escalón asumido antes de la migración a JWT Bearer ya prevista.",
-              "External ID + Trigger Apex para la unicidad, en lugar de la deduplicación de Heroku Connect: la fuente de verdad de la identidad permanece en Salesforce, lo que sobrevive a un futuro reemplazo de la capa de sincronización.",
-              "DELETE = desactivación y no borrado físico: exigido por las normas de conservación de datos del sector seguros, no una elección técnica por defecto."
+              "Heroku en lugar de Azure: los umbrales del nivel gratuito de Azure (ver PDF) no cubrían la necesidad, y Heroku Connect ofrecía sincronización nativa con Salesforce sin programar una capa ETL propia.",
+              "Flujo OAuth diferenciado por entorno en lugar de una única elección: Client Credentials Flow (servidor-a-servidor, sin credenciales de usuario almacenadas) para producción, con Username-Password Flow confinado al sandbox/PoC de Postman — la producción nunca dependió de una contraseña almacenada, a diferencia de una elección «rápida pero provisional» que habría puesto todo detrás de Username-Password.",
+              "External ID + trigger Apex para la unicidad, en lugar de desduplicación del lado de Heroku Connect: la fuente de verdad de la identidad permanece en Salesforce, lo que sobrevive a un futuro reemplazo de la capa de sincronización.",
+              "Duplicate Rule en modo Alert only en lugar de bloqueo estricto: un duplicado señalado pero no bloqueado deja la decisión final al usuario de negocio, coherente con un flujo de integración donde el contacto puede legítimamente existir ya del lado de AXG.",
+              "DELETE = desactivación y no eliminación física: impuesto por las normas de conservación de datos del sector seguros, no una elección técnica por defecto."
             ],
             "title": "Decisiones y compromisos"
           },
           {
             "type": "bullets",
             "items": [
-              "Autenticación: OAuth 2.0 (Username-Password Flow), tokens de vida corta, ninguna credencial en el código — almacenadas como variables de configuración de Heroku.",
-              "Los endpoints Apex REST solo son accesibles vía HTTPS y requieren un token de Salesforce válido — sin acceso anónimo.",
-              "Límite asumido: sin resolución de conflictos — aceptable porque la sincronización es unidireccional (AXG hacia Salesforce), no un problema resuelto con código.",
-              "Límite asumido: sin reintento/backoff documentado en las llamadas de Heroku Connect — un paso a mayor escala real requeriría una cola o un mecanismo de reintento.",
-              "Flujo de datos: los datos de contacto de AXG (Alemania) llegan a la org de Salesforce Francia — flujo intra-UE, acceso restringido por permission sets y no por geografía.",
-              "Siguiente paso ya previsto: migrar a OAuth 2.0 JWT Bearer Flow (certificado en lugar de contraseña almacenada) — el punto de partida exacto del proyecto de cruce Heroku-Salesforce más avanzado."
+              "Autenticación en producción: OAuth 2.0 Client Credentials Flow (servidor-a-servidor) — ninguna credencial de usuario Salesforce almacenada del lado de Heroku, solo client_id/client_secret como variables de configuración.",
+              "Autenticación solo en sandbox/PoC: OAuth 2.0 Username-Password Flow, utilizado exclusivamente para pruebas manuales con Postman — nunca expuesto en producción.",
+              "Endpoints Apex REST expuestos únicamente por HTTPS, accesibles solo con un token Salesforce válido y el Permission Set INTG_API_Policies_CRUD — sin acceso anónimo.",
+              "Limitación asumida: sin resolución de conflictos — aceptable porque la sincronización es unidireccional (de AXG a Salesforce), no un problema que deba resolver el código.",
+              "Limitación asumida: sin retry/backoff documentado en las llamadas de Heroku Connect — un escalado real requeriría una cola o un mecanismo de reintento.",
+              "Flujo de datos: los datos de contacto de AXG (Alemania) llegan al org Salesforce de Francia — flujo intra-UE, acceso restringido por permission sets en lugar de por geografía.",
+              "Próximo paso ya definido: migrar el flujo de sandbox/PoC a OAuth 2.0 JWT Bearer Flow (certificado en lugar de contraseña) para alinear todos los entornos en un flujo servidor-a-servidor — el punto de partida exacto del proyecto de cruce Heroku-Salesforce más profundo."
             ],
-            "title": "Seguridad y límites"
+            "title": "Seguridad y limitaciones"
           }
         ]
       }
