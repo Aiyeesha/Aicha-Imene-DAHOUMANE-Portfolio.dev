@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import LocaleSwitcher from "./LocaleSwitcher";
 import NavbarPill from "./NavbarPill";
@@ -49,6 +49,17 @@ type FeaturedProjectForNav = { slug: string; title: string; track: string | null
 export default function Navbar({ featuredProjects = [] }: { featuredProjects?: FeaturedProjectForNav[] }) {
   const t = useTranslations();
   const { track } = useTrack();
+
+  // Filtered by the active track, not the raw fetch order — otherwise the dropdown
+  // mixes Salesforce/IT Ops items regardless of the toggle, which is the exact
+  // inconsistency flagged in the audit (a toggle that only affects the hero, not
+  // the one nav element that already carries per-project track data). Capped at 6,
+  // matching the original dropdown size before this became track-aware.
+  const trackFeaturedProjects = useMemo(
+    () => featuredProjects.filter((p) => p.track === track).slice(0, 6),
+    [featuredProjects, track]
+  );
+
   const pathname = usePathname();
   const locale = (pathname.split("/")[1] || "en") as "en" | "fr";
   const [avatarSrc, setAvatarSrc] = useState<string | null>(process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp");
@@ -357,9 +368,9 @@ useEffect(() => {
                           role="menu"
                           className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-[60]"
                         >
-                          {featuredProjects.length > 0 && (
+                          {trackFeaturedProjects.length > 0 && (
                             <>
-                              {featuredProjects.map((p) => (
+                              {trackFeaturedProjects.map((p) => (
                                 <Link
                                   key={p.slug}
                                   href={`/${locale}/projects/${p.slug}`}
@@ -368,11 +379,6 @@ useEffect(() => {
                                   onClick={() => setProjectsDropdownOpen(false)}
                                 >
                                   <span className="truncate">{p.title}</span>
-                                  {p.track && (
-                                    <span className="ml-2 shrink-0 rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs text-cyan-700 dark:text-cyan-300 capitalize">
-                                      {p.track}
-                                    </span>
-                                  )}
                                 </Link>
                               ))}
                               <div className="my-1 border-t border-black/10 dark:border-white/10" />
