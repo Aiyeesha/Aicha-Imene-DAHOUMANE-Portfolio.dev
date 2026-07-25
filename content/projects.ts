@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T00:11:14.964Z
+// Last export: 2026-07-25T01:02:52.828Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1422,7 +1422,7 @@ export const projects: Project[] = [
   {
     "slug": "idemconnect-apex-backend",
     "title": "Apex backend development (iDEM Connect)",
-    "excerpt": "Trigger, service layer, and batch/scheduler to manage subscriptions and contracts, with full documentation and >75% test coverage.",
+    "excerpt": "Full Apex backend (trigger + handlers, batch, scheduler) for iDEM Connect: 3 business rules implemented, 23 tests at 100% pass rate, 90% org-wide coverage, structured technical documentation with a requirements-to-tests traceability matrix.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1449,9 +1449,10 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Trigger handlers + service layer (bulk-safe Apex)",
-      "Batch/Scheduler for subscription lifecycle",
-      ">75% test coverage + delivery documentation"
+      "3 business rules (RG-01/02/03) implemented via a strict trigger-handler pattern, zero logic in the trigger",
+      "Batch + Scheduler for the monthly automatic re-engagement of dormant accounts, with configurable deduplication",
+      "23 unit tests, 100% pass rate, 90% org-wide coverage — per-class breakdown documented",
+      "Security enforced throughout: WITH SECURITY_ENFORCED, stripInaccessible, explicit CRUD/FLS checks wherever the aggregate query can''t cover them"
     ],
     "featured": true,
     "sortOrder": 1,
@@ -1498,7 +1499,7 @@ export const projects: Project[] = [
   {
     "slug": "ltp-apex-backend-prototype",
     "title": "Delivery tracking CRM design (LTP)",
-    "excerpt": "Salesforce solution blueprint for shipment tracking: data model (UML), security & sharing rules, and a realistic import strategy for high volumes, with an integration plan for 3 carriers.",
+    "excerpt": "Complete design of a multi-carrier Salesforce delivery-tracking backend for Le Temps des Papillons: real-time architecture (Apex REST webhook + Queueable + LWC) for 2 carriers, Talend/Bulk API v2 batch flow for the 3rd, zone-based security model and import strategy for 2.1M accounts.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1528,9 +1529,10 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "UML data model + sharing rules blueprint",
-      "High-volume import strategy (bulk + dedupe-ready)",
-      "Integration plan for 3 carriers (API approach)"
+      "Real-time architecture: Apex REST webhook (DeliveryWebhook) + Platform Event + limit-aware Queueable (RefreshStatusQueueable) + deliveryTracker LWC",
+      "Batch integration: Talend + Bulk API v2, 500,000 lines/hour, upsert on External Id (Tracking_Number__c)",
+      "Zone-based security model: single profile + roles + sharing rules, targeted FLS (locked Zone__c, masked financial fields)",
+      "Import strategy for 2.1M accounts / 3.2M contacts with a validated dependency order across 10 objects"
     ],
     "featured": true,
     "sortOrder": 3,
@@ -1539,7 +1541,7 @@ export const projects: Project[] = [
   {
     "slug": "fasha-apex-backend-optimization",
     "title": "Apex backend optimization (FASHA)",
-    "excerpt": "Backend reliability & performance improvements: weekly revenue batch optimization after price updates, safer updates to Accounts/Orders, and a clean refactor (bulk-safe Apex).",
+    "excerpt": "Audited and fixed a buggy Apex backend for FASHA: a trigger that broke past 100 orders per account, an amount calculation that silently failed on bulk import, code with no reliable tests — full refactor into a bulk-safe handler pattern, >85% coverage.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1566,9 +1568,10 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Weekly revenue batch optimized after price updates",
-      "Safer bulk updates for Accounts/Orders",
-      "Refactor for reliability + maintainability"
+      "Real bug diagnosed and fixed: the original trigger specifically failed once an account had more than 100 orders (not bulk-safe)",
+      "Second bug: the NetAmount calculation worked from the UI but silently broke on bulk Data Loader imports",
+      "Full refactor into a handler pattern (AccountService, OrderTriggerHandler, TriggerHelper) + async processing (@future, Batch, Scheduler)",
+      ">85% test coverage with TestDataFactory, up from unreliable tests at the start"
     ],
     "featured": true,
     "sortOrder": 4,
@@ -1592,7 +1595,7 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/legarant-axg-salesforce-deployment/deployment.pdf",
+    "pdfUrl": "/docs/projects/legarant-axg-salesforce-deployment/requirements.pdf",
     "repoUrl": "https://github.com/Aiyeesha/legarant-axg-crm-sync",
     "techStack": [
       "Salesforce",
