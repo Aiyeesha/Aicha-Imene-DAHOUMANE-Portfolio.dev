@@ -129,7 +129,9 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                       ? "badge badge-client"
                       : p.badge.tone === "personal"
                         ? "badge badge-personal"
-                        : "badge badge-training"
+                        : p.badge.tone === "simulation"
+                          ? "badge badge-simulation"
+                          : "badge badge-training"
                   }
                 >
                   {tBadge(p.badge.label, locale)}

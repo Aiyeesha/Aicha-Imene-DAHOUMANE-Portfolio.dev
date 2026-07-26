@@ -132,6 +132,15 @@ html.dark .card:hover {
   @apply border-amber-300 bg-amber-50 text-amber-800;
   @apply dark:border-amber-400/30 dark:bg-amber-500/15 dark:text-amber-200;
 }
+/* Badge "simulation professionnelle" — projets construits dans une org DE
+   personnelle pour reproduire un cas d'usage métier réaliste (secret
+   professionnel oblige côté clients réels), avec la même rigueur qu'une
+   livraison en production. Indigo pour rester distinct des tons mono-track
+   (client/personal/training) et du dégradé bridge. */
+.badge-simulation {
+  @apply border-indigo-300 bg-indigo-50 text-indigo-800;
+  @apply dark:border-indigo-400/30 dark:bg-indigo-500/15 dark:text-indigo-200;
+}
 
 html.dark .chip {
   @apply border-white/10 bg-white/5 text-white/80;

@@ -394,9 +394,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const fileAssets  = assets.filter((a) => !looksLikeImage(a));
 
   const badgeClass =
-    badge?.tone === "client"   ? "badge badge-client"   :
-    badge?.tone === "personal" ? "badge badge-personal" :
-    badge?.tone === "training" ? "badge badge-training" : "";
+    badge?.tone === "client"     ? "badge badge-client"     :
+    badge?.tone === "personal"   ? "badge badge-personal"   :
+    badge?.tone === "training"   ? "badge badge-training"   :
+    badge?.tone === "simulation" ? "badge badge-simulation" : "";
 
   const repoHref = safeHref(project.repo_url);
   const liveHref = safeHref(project.live_url);
