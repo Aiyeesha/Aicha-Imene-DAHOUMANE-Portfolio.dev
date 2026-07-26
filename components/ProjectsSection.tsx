@@ -65,7 +65,8 @@ import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 const tones: Record<string, string> = {
   client: "badge badge-client",
   personal: "badge badge-personal",
-  training: "badge badge-training"
+  training: "badge badge-training",
+  simulation: "badge badge-simulation"
 };
 
 type ProjectsSectionProps = {

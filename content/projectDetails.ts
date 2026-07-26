@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T07:28:10.924Z
+// Last export: 2026-07-26T10:46:32.084Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 

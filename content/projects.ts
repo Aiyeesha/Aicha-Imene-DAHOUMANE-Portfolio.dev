@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-25T07:28:10.917Z
+// Last export: 2026-07-26T10:46:32.080Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1423,7 +1423,8 @@ export const projects: Project[] = [
     "track": "salesforce",
     "categories": [
       "Salesforce",
-      "Back-end"
+      "Back-end",
+      "Security"
     ],
     "tags": [
       "Apex",
@@ -1580,7 +1581,8 @@ export const projects: Project[] = [
     "track": "salesforce",
     "categories": [
       "Salesforce",
-      "DevOps"
+      "DevOps",
+      "Security"
     ],
     "tags": [
       "Deployment",
