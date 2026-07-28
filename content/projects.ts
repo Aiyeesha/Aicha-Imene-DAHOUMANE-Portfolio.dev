@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-26T21:23:29.080Z
+// Last export: 2026-07-28T19:37:11.605Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -46,7 +46,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "personal",
-      "label": "Personal project"
+      "label": "PERSONAL PROJECT"
     },
     "techStack": [
       "Acronis True Image",
@@ -354,7 +354,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "client",
-      "label": "Field practice"
+      "label": "FIELD PRACTICE"
     },
     "techStack": [
       "Windows 10",
@@ -473,7 +473,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "personal",
-      "label": "Personal project"
+      "label": "PERSONAL PROJECT"
     },
     "repoUrl": "https://github.com/Aiyeesha/Python-network-scanner-project",
     "techStack": [
@@ -506,7 +506,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "personal",
-      "label": "Personal project"
+      "label": "PERSONAL PROJECT"
     },
     "repoUrl": "https://github.com/Aiyeesha/Python-Password-Checker-project",
     "techStack": [
@@ -646,7 +646,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "client",
-      "label": "Field practice"
+      "label": "FIELD PRACTICE"
     },
     "techStack": [
       "Datto RMM",
@@ -685,7 +685,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "client",
-      "label": "Field practice"
+      "label": "FIELD PRACTICE"
     },
     "techStack": [
       "Windows Autopilot",
@@ -726,7 +726,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "client",
-      "label": "Field practice"
+      "label": "FIELD PRACTICE"
     },
     "techStack": [
       "Autotask",
@@ -765,7 +765,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "client",
-      "label": "Field practice"
+      "label": "FIELD PRACTICE"
     },
     "techStack": [
       "Acronis Cyber Backup",
@@ -803,7 +803,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "personal",
-      "label": "Personal project"
+      "label": "PERSONAL PROJECT"
     },
     "techStack": [
       "pfSense",
@@ -841,7 +841,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "personal",
-      "label": "Personal project"
+      "label": "PERSONAL PROJECT"
     },
     "repoUrl": "https://github.com/Aiyeesha/portfolio-next",
     "techStack": [
@@ -1630,7 +1630,7 @@ export const projects: Project[] = [
     ],
     "badge": {
       "tone": "personal",
-      "label": "Personal project"
+      "label": "PERSONAL PROJECT"
     },
     "techStack": [
       "Salesforce DX",
