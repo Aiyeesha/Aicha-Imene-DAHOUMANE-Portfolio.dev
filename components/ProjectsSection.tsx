@@ -274,6 +274,17 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         </div>
       </div>
 
+      {/* ── Note de cadrage — pourquoi IT Ops (30) dépasse largement Salesforce (9) ──
+          Sans contexte, le ratio brut raconte l'histoire inverse du positionnement.
+          Uniquement sur la page /projects complète (ce composant n'est monté que là). */}
+      <div className="mb-6 rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] px-4 py-3 text-sm text-muted">
+        {locale === "fr"
+          ? "Ce déséquilibre (30 IT Ops vs 9 Salesforce) reflète une contrainte de confidentialité, pas un écart de compétence : mon travail Salesforce en poste relève du secret professionnel et ne peut pas être publié tel quel — les projets IT Ops, très majoritairement personnels, n'ont pas cette contrainte."
+          : locale === "es"
+          ? "Este desequilibrio (30 IT Ops frente a 9 Salesforce) refleja una restricción de confidencialidad, no una diferencia de nivel: mi trabajo Salesforce en el puesto está sujeto a confidencialidad con el cliente y no puede publicarse tal cual — los proyectos IT Ops, mayoritariamente personales, no tienen esa restricción."
+          : "This imbalance (30 IT Ops vs 9 Salesforce) reflects a confidentiality constraint, not a skill gap: my Salesforce work in post is bound by client confidentiality and can't be published as-is — the IT Ops projects, mostly personal, don't carry that constraint."}
+      </div>
+
       {/* ── Recherche full-text ─────────────────────────────────── */}
       <div className="mb-5">
         <label htmlFor="projects-search" className="sr-only">{t("search")}</label>
