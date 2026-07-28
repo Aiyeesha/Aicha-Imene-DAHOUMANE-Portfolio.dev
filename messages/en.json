@@ -95,7 +95,10 @@
     "blog_title": "Blog / Tutorials",
     "blog_subtitle": "Short, practical guides you can apply immediately.",
     "profile_title": "Profile",
-    "profile_subtitle": "From systems & networks to Salesforce development"
+    "profile_subtitle": "From systems & networks to Salesforce development",
+    "bridge_title": "Where my two worlds meet",
+    "bridge_body": "On the Légarant-AXG deployment, I didn't just write the Apex REST endpoints on the Salesforce side — I also built and deployed the Heroku application that consumes them: a Node.js/PostgreSQL API, two isolated environments connected by a Heroku pipeline, Heroku Connect configured object by object, down to the deployment runbook. A Salesforce-only profile would have stopped at the Apex layer and handed the infrastructure piece to someone else, with the usual risk of decisions made without knowing the constraints on the other side. An infra-only profile could have deployed the Heroku app, but not designed the Apex External ID trigger or the Matching Rule that stops duplicates at the source. Delivering both together removed the usual back-and-forth between Salesforce and DevOps teams — the staging environment existed before the first line of Apex was written, not after. This project, not a badge, is the proof that Salesforce, infrastructure, and security aren't two overlapping résumés — they're one person making both decisions at once.",
+    "bridge_cta": "See the full case study"
   },
   "contact": {
     "nameLabel": "Name",
