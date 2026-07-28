@@ -66,7 +66,8 @@ const tones: Record<string, string> = {
   client: "badge badge-client",
   personal: "badge badge-personal",
   training: "badge badge-training",
-  simulation: "badge badge-simulation"
+  simulation: "badge badge-simulation",
+  anonymized: "badge badge-anonymized"
 };
 
 type ProjectsSectionProps = {

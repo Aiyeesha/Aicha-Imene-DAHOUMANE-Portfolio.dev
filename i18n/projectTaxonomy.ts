@@ -342,7 +342,8 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "Personal — In Progress": "Personal — In Progress",
   "TRAINING LAB": "TRAINING LAB",
   "TRAINING PROJECT": "Case study",
-  "SIMULATION PROJECT": "Professional simulation"
+  "SIMULATION PROJECT": "Professional simulation",
+  "ANONYMIZED ENGAGEMENT": "Anonymized engagement"
 },
   fr: {
   "CLIENT CONTEXT": "Contexte client",
@@ -351,7 +352,8 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "Personal — In Progress": "Personnel — En cours",
   "TRAINING LAB": "Lab de formation",
   "TRAINING PROJECT": "Étude de cas",
-  "SIMULATION PROJECT": "Simulation professionnelle"
+  "SIMULATION PROJECT": "Simulation professionnelle",
+  "ANONYMIZED ENGAGEMENT": "Mission anonymisée"
 },
   es: {
   "CLIENT CONTEXT": "Contexto cliente",
@@ -360,7 +362,8 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "Personal — In Progress": "Personal — En curso",
   "TRAINING LAB": "Laboratorio de formación",
   "TRAINING PROJECT": "Caso de estudio",
-  "SIMULATION PROJECT": "Simulación profesional"
+  "SIMULATION PROJECT": "Simulación profesional",
+  "ANONYMIZED ENGAGEMENT": "Encargo anonimizado"
 },
 };
 
