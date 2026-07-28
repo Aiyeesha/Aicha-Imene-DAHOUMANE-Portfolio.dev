@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-28T20:24:59.001Z
+// Last export: 2026-07-28T20:50:39.142Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -620,8 +620,8 @@ export const projects: Project[] = [
       "Automation"
     ],
     "badge": {
-      "color": "amber",
-      "label": "In Progress"
+      "tone": "personal",
+      "label": "Personal — In Progress"
     },
     "featured": false,
     "sortOrder": 5,
@@ -882,8 +882,8 @@ export const projects: Project[] = [
       "Dashboard"
     ],
     "badge": {
-      "tone": "professional",
-      "label": "TOOL"
+      "tone": "personal",
+      "label": "Personal — In Progress"
     },
     "repoUrl": "https://github.com/Aiyeesha/playbook-reponse-incidents",
     "techStack": [
@@ -1008,8 +1008,8 @@ export const projects: Project[] = [
       "Threat Hunting"
     ],
     "badge": {
-      "color": "amber",
-      "label": "In Progress"
+      "tone": "personal",
+      "label": "Personal — In Progress"
     },
     "featured": false,
     "sortOrder": 260,
@@ -1193,8 +1193,8 @@ export const projects: Project[] = [
       "TypeScript"
     ],
     "badge": {
-      "color": "blue",
-      "label": "Coming Soon"
+      "tone": "personal",
+      "label": "Personal — Coming Soon"
     },
     "featured": false,
     "sortOrder": 265,
@@ -1290,8 +1290,8 @@ export const projects: Project[] = [
       "Automation"
     ],
     "badge": {
-      "color": "green",
-      "label": "Delivered v1"
+      "tone": "personal",
+      "label": "PERSONAL PROJECT"
     },
     "featured": false,
     "sortOrder": -5,
@@ -1704,8 +1704,8 @@ export const projects: Project[] = [
       "Flows"
     ],
     "badge": {
-      "color": "blue",
-      "label": "Coming Soon"
+      "tone": "personal",
+      "label": "Personal — Coming Soon"
     },
     "techStack": [
       "Salesforce",
