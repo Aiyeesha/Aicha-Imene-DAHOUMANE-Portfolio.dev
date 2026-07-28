@@ -141,6 +141,16 @@ html.dark .card:hover {
   @apply border-indigo-300 bg-indigo-50 text-indigo-800;
   @apply dark:border-indigo-400/30 dark:bg-indigo-500/15 dark:text-indigo-200;
 }
+/* Badge "mission anonymisée" — projet inspiré d'une mission réelle en
+   environnement professionnel, mais dont noms/données/éléments spécifiques
+   ont été modifiés pour respecter la confidentialité client. Distinct de
+   badge-simulation (aucune mission réelle sous-jacente) et de badge-client
+   (contexte client nommé/traçable, ex. stages) : ici la mission est réelle,
+   la restitution est anonymisée. Teal pour rester hors des tons déjà pris. */
+.badge-anonymized {
+  @apply border-teal-300 bg-teal-50 text-teal-800;
+  @apply dark:border-teal-400/30 dark:bg-teal-500/15 dark:text-teal-200;
+}
 
 html.dark .chip {
   @apply border-white/10 bg-white/5 text-white/80;

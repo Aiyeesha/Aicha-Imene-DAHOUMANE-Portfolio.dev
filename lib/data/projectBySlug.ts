@@ -17,7 +17,7 @@ type ProjectAsset = {
   sort_order?: number | null;
 };
 
-export type ProjectBadge = { label: string; tone: "client" | "personal" | "training" | "simulation" };
+export type ProjectBadge = { label: string; tone: "client" | "personal" | "training" | "simulation" | "anonymized" };
 
 export type ProjectWithAssets = {
   id: string;
