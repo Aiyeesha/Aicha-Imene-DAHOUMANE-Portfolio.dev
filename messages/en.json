@@ -279,7 +279,11 @@
     "periodItops": "Internship at Midrange Group — February to May 2023"
   },
   "services": {
-    "discuss": "Discuss this service"
+    "discuss": "Discuss this service",
+    "maturityTitle": "Operational maturity",
+    "maturityBody": "This portfolio is itself run like a production product, not just presented as one: /status exposes the real state of its services (database, cache, contact form) with live-measured latency and uptime — not a static page. /changelog documents every incident actually handled, including a client data leak that was found and fixed, and several security alerts (CVEs) remediated with the technical reasoning behind the fix, not a blind patch.",
+    "maturityStatusCta": "See live status",
+    "maturityChangelogCta": "See the changelog"
   },
   "footer": {
     "builtWith": "Built with Next.js",
