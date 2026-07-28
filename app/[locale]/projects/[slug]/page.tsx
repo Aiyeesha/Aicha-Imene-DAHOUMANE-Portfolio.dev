@@ -397,7 +397,8 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     badge?.tone === "client"     ? "badge badge-client"     :
     badge?.tone === "personal"   ? "badge badge-personal"   :
     badge?.tone === "training"   ? "badge badge-training"   :
-    badge?.tone === "simulation" ? "badge badge-simulation" : "";
+    badge?.tone === "simulation" ? "badge badge-simulation" :
+    badge?.tone === "anonymized" ? "badge badge-anonymized" : "";
 
   const repoHref = safeHref(project.repo_url);
   const liveHref = safeHref(project.live_url);

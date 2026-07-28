@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-26T10:46:32.080Z
+// Last export: 2026-07-26T21:23:29.080Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1716,6 +1716,47 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 99,
+    "status": "draft"
+  },
+  {
+    "slug": "nova-manufacturing-classic-to-lightning",
+    "title": "Salesforce Classic to Lightning Experience Migration (Nova Manufacturing)",
+    "excerpt": "Full Classic to Lightning migration for an international industrial equipment manufacturer (~150 sales reps across 3 sites/hubs in Europe): rebuilt Visualforce pages and JS buttons as LWC/Flow, and systematically hardened legacy Apex security (with sharing, stripInaccessible, consolidating 14 profiles into 5 Permission Set Groups).",
+    "track": "salesforce",
+    "categories": [
+      "Salesforce",
+      "Architecture",
+      "Security",
+      "Migration"
+    ],
+    "tags": [
+      "Apex",
+      "LWC",
+      "Flow",
+      "Security",
+      "Migration"
+    ],
+    "badge": {
+      "tone": "anonymized",
+      "label": "ANONYMIZED ENGAGEMENT"
+    },
+    "techStack": [
+      "Lightning Web Components",
+      "Apex",
+      "SOQL",
+      "Flow",
+      "Permission Set Groups",
+      "Named Credentials",
+      "Salesforce Security Model"
+    ],
+    "updatedAt": "2026-07-26T20:41:45.278831+00:00",
+    "highlights": [
+      "Hardened security on 4 legacy Apex classes plus secure-by-design on 4 new classes built for the project: systematic with sharing and stripInaccessible() across all 8",
+      "Consolidated 8 near-duplicate profiles into 5 Permission Set Groups",
+      "Full Visualforce/JS Buttons/Process Builder migration to LWC/Flow, bulk-tested on 200+ records"
+    ],
+    "featured": false,
+    "sortOrder": 100,
     "status": "draft"
   },
 ];
