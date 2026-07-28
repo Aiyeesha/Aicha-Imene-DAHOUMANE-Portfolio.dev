@@ -95,7 +95,10 @@
     "blog_title": "Blog / Tutoriels",
     "blog_subtitle": "Guides courts et concrets, applicables immédiatement.",
     "profile_title": "Profil",
-    "profile_subtitle": "Des systèmes & réseaux au développement Salesforce"
+    "profile_subtitle": "Des systèmes & réseaux au développement Salesforce",
+    "bridge_title": "Où mes deux mondes se rencontrent",
+    "bridge_body": "Sur le déploiement Légarant-AXG, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps.",
+    "bridge_cta": "Voir l'étude de cas complète"
   },
   "contact": {
     "nameLabel": "Nom",

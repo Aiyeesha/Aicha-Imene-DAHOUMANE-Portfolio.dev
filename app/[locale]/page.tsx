@@ -175,6 +175,31 @@ export default async function Home({ params }: Props) {
         )}
       </section>
 
+      {/* PONT SALESFORCE ⇄ INFRA — callout distinct juste avant les projets, pour que
+          le seul projet réellement croisé (Légarant-AXG, badge-bridge) soit expliqué
+          en clair avant que le visiteur ne tombe sur sa carte parmi d'autres.
+          Dégradé cyan→violet repris de .badge-bridge (globals.css) pour le lien visuel. */}
+      <section id="bridge" className="py-14">
+        <Reveal>
+          <div
+            className="rounded-2xl border-transparent bg-gradient-to-r from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10 p-6 md:p-8"
+            style={{ borderImage: "linear-gradient(to right, rgb(34 211 238 / 0.4), rgb(167 139 250 / 0.4)) 1", borderWidth: "1px", borderStyle: "solid" }}
+          >
+            <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
+            <p className="mt-4 text-muted leading-[1.8]">{t("sections.bridge_body")}</p>
+            <div className="mt-5">
+              <Link
+                href={`/${locale}/projects/legarant-axg-salesforce-deployment`}
+                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("sections.bridge_cta")}
+                <span aria-hidden="true"> →</span>
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* PROJETS — section-stripe (fond alterné) */}
       <section id="projects" className="section-stripe py-14">
         <div>
