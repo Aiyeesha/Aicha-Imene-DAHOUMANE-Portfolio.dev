@@ -11,6 +11,7 @@ import Reveal from "@/components/Reveal";
 import { getServices, type Locale } from "@/content/services";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 // ── Icônes SVG inline (24×24, stroke-based) ──────────────────────────
 // Chaque icône représente visuellement le type de service.
@@ -135,6 +136,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   }
 
   return (
+    <>
     <div className="mt-6 grid gap-4 md:grid-cols-2">
       {cards.map((c, idx) => (
         <Reveal key={c.title} delayMs={110 + idx * 60}>
@@ -204,5 +206,35 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
         </Reveal>
       ))}
     </div>
+
+    {/* MATURITÉ D'EXPLOITATION — /status et /changelog présentés comme preuve
+        DevSecOps (observabilité réelle, remédiation CVE documentée), pas comme
+        de simples liens de pied de page. IT Ops uniquement : ce sont des artefacts
+        d'exploitation, pas un argument de vente Salesforce. */}
+    {mounted && effectiveTrack === "itops" && (
+      <Reveal delayMs={110 + cards.length * 60}>
+        <div className="mt-4 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04] dark:bg-violet-400/[0.06] p-6 md:p-7">
+          <h3 className="font-semibold text-slate-900 dark:text-white">{t("services.maturityTitle")}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted dark:text-slate-400">{t("services.maturityBody")}</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link
+              href={`/${locale}/status`}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+            >
+              {t("services.maturityStatusCta")}
+              <span aria-hidden="true"> ↗</span>
+            </Link>
+            <Link
+              href={`/${locale}/changelog`}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+            >
+              {t("services.maturityChangelogCta")}
+              <span aria-hidden="true"> ↗</span>
+            </Link>
+          </div>
+        </div>
+      </Reveal>
+    )}
+    </>
   );
 }
