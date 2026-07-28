@@ -377,7 +377,7 @@
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
-        "a": "Pas encore de certification éditeur — elle est en préparation active pour septembre 2026 (Salesforce Administrator, puis App Builder et Platform Developer I d'ici fin 2026). En attendant, deux preuves vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, OpenClassrooms, 2025) et un profil Trailhead actif — rang Expeditioner, 90+ badges, 57 000+ points (consultable en ligne). Le détail complet est sur la page Certifications."
+        "a": "Le marché me pose souvent cette question, et trois entretiens récents m'ont appris ce qu'elle cachait vraiment : ce qui manquait n'était pas une ligne de plus sur un CV, mais une preuve visible que je conçois et j'exploite les deux couches — voir l'étude de cas Légarant-AXG, où le trigger Apex et le déploiement Heroku sont livrés par la même personne. Côté certification éditeur : Salesforce Administrator en préparation active (prévu sept. 2026), App Builder et Platform Developer I d'ici fin 2026. Déjà acquis et vérifiables : titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et profil Trailhead actif (rang Expeditioner, 90+ badges, 57 000+ points)."
       },
       {
         "q": "Travaillez-vous à distance ?",
