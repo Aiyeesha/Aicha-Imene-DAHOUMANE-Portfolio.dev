@@ -385,6 +385,15 @@ useEffect(() => {
                             </>
                           )}
                           <Link
+                            href={`/${locale}/projects?tab=security`}
+                            role="menuitem"
+                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-amber-700 dark:text-amber-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                            onClick={() => setProjectsDropdownOpen(false)}
+                          >
+                            {t("nav.securityClusterLink")}
+                          </Link>
+                          <div className="my-1 border-t border-black/10 dark:border-white/10" />
+                          <Link
                             href={`/${locale}/projects`}
                             role="menuitem"
                             className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-cyan-700 dark:text-cyan-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
