@@ -200,6 +200,28 @@ export default async function Home({ params }: Props) {
         </Reveal>
       </section>
 
+      {/* CLUSTER SÉCURITÉ — même logique que la section bridge ci-dessus : le
+          sous-cluster le plus dense du portfolio (16/39 projets, STRIDE, CVSS,
+          machine à états SLA, sync NVD réelle) était invisible hors du 5e onglet
+          de /projects. Ambre repris de .badge-security pour le lien visuel. */}
+      <section id="security-cluster" className="py-14">
+        <Reveal>
+          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] dark:bg-amber-400/[0.06] p-6 md:p-8">
+            <h2 className="text-2xl font-semibold">{t("sections.security_title")}</h2>
+            <p className="mt-4 text-muted leading-[1.8]">{t("sections.security_body")}</p>
+            <div className="mt-5">
+              <Link
+                href={`/${locale}/projects?tab=security`}
+                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("sections.security_cta")}
+                <span aria-hidden="true"> →</span>
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* PROJETS — section-stripe (fond alterné) */}
       <section id="projects" className="section-stripe py-14">
         <div>

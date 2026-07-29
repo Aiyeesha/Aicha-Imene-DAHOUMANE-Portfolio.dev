@@ -121,18 +121,21 @@ export default function TrackAwareHero() {
   );
   const [src, setSrc] = useState<string>(avatarUrl);
 
-  // Proof tags différenciés par track
-  const proofTags =
+  // Proof tags différenciés par track. Le 3e tag IT Ops ("Mindset ops-first")
+  // devient un deep-link vers le cluster Sécurité (/projects?tab=security) —
+  // le sous-cluster le plus dense du track (16 projets) ne se mentionnait nulle
+  // part dans les 5 premières secondes de lecture du site, sa zone la plus vue.
+  const proofTags: { label: string; href?: string }[] =
     track === "salesforce"
       ? [
-          t("hero.proof1_salesforce"),
-          t("hero.proof2_salesforce"),
-          t("hero.proof3_salesforce"),
+          { label: t("hero.proof1_salesforce") },
+          { label: t("hero.proof2_salesforce") },
+          { label: t("hero.proof3_salesforce") },
         ]
       : [
-          t("hero.proof1_itops"),
-          t("hero.proof2_itops"),
-          t("hero.proof3_itops"),
+          { label: t("hero.proof1_itops") },
+          { label: t("hero.proof2_itops") },
+          { label: t("hero.proof3_itops"), href: `/${locale}/projects?tab=security` },
         ];
 
   return (
@@ -235,9 +238,19 @@ export default function TrackAwareHero() {
 
             {/* Proof tags — différents selon le track */}
             <div className="mt-4 flex flex-wrap gap-2">
-              {proofTags.map((tag) => (
-                <span key={tag} className="chip">{tag}</span>
-              ))}
+              {proofTags.map((tag) =>
+                tag.href ? (
+                  <Link
+                    key={tag.label}
+                    href={tag.href}
+                    className="chip transition-colors hover:bg-amber-500/20 hover:text-amber-800 dark:hover:text-amber-200 soft-ring"
+                  >
+                    {tag.label} →
+                  </Link>
+                ) : (
+                  <span key={tag.label} className="chip">{tag.label}</span>
+                )
+              )}
             </div>
         </div>
 

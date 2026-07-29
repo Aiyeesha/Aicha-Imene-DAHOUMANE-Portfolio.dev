@@ -11,6 +11,7 @@
 // - Réinitialisation auto du filtre catégorie et de la recherche au changement de track
 
 import { useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
 import ProjectClientLogo from "./ProjectClientLogo";
@@ -81,6 +82,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
   const t = useTranslations("projects");
   const { track, setTrack } = useTrack();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const pathnameLocale = pathname.split("/")[1];
   const locale: "en" | "fr" | "es" = localeProp ?? (pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en");
 
@@ -122,9 +124,16 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     [includeFeatured]
   );
 
-  // Sur la page /projects complète (includeFeatured=true), afficher tous les projets par défaut.
+  // Sur la page /projects complète (includeFeatured=true), afficher tous les projets par défaut,
+  // sauf si l'URL porte ?tab=… (deep-link depuis la home ou la nav — ex. /projects?tab=security) :
+  // le paramètre n'a de sens que sur cette page, "bridge"/"security" n'existant pas sur la home.
   // Sur la home, respecter le track global (personnalisation cookie).
-  const [activeTab, setActiveTab] = useState<ActiveTab>(includeFeatured ? "all" : track as ActiveTab);
+  const tabParam = includeFeatured ? searchParams.get("tab") : null;
+  const initialTab: ActiveTab =
+    tabParam === "security" || tabParam === "bridge" || tabParam === "salesforce" || tabParam === "itops"
+      ? tabParam
+      : includeFeatured ? "all" : (track as ActiveTab);
+  const [activeTab, setActiveTab] = useState<ActiveTab>(initialTab);
 
   // ── Catégories disponibles pour l'onglet actif ───────────────────
   const categories = useMemo(() => {
