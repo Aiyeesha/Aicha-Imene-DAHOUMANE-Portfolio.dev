@@ -8,6 +8,7 @@
 // ISR identique à la page de détail (revalidate = 300 s).
 
 import Link from "next/link";
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
@@ -124,11 +125,16 @@ export default async function ProjectsPage({ params }: PageProps) {
         <p className="mt-12 text-center text-muted">{L.empty}</p>
       ) : (
         <div className="mt-10">
-          <ProjectsSection
-            projects={projects}
-            locale={uiLocale}
-            includeFeatured
-          />
+          {/* useSearchParams() dans ProjectsSection (support de ?tab=… pour les
+              deep-links /projects?tab=security) exige une frontière Suspense sur
+              cette route ISR (revalidate = 300), sans quoi le build échoue. */}
+          <Suspense fallback={null}>
+            <ProjectsSection
+              projects={projects}
+              locale={uiLocale}
+              includeFeatured
+            />
+          </Suspense>
         </div>
       )}
 
