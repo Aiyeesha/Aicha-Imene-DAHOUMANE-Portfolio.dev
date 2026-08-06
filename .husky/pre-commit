@@ -14,3 +14,14 @@ else
   echo "⚠️  gitleaks non trouvé — scan de secrets ignoré."
   echo "   Installez-le pour activer la protection : https://github.com/gitleaks/gitleaks"
 fi
+
+# Rappel changelog — avertit (ne bloque pas) si des fichiers de contenu/code
+# sont stagés sans que CHANGELOG.md le soit. Volontairement un warning, pas
+# un blocage : certains commits (typo, refactor pur, resync de fichier généré
+# déjà documenté ailleurs) n'ont légitimement rien à ajouter au changelog.
+STAGED=$(git diff --cached --name-only)
+if echo "$STAGED" | grep -qE '^(app|components|content|i18n|lib|messages)/' \
+  && ! echo "$STAGED" | grep -q '^CHANGELOG.md$'; then
+  echo "📝 Rappel : ce commit touche du code/contenu mais pas CHANGELOG.md."
+  echo "   Si le changement est notable, ajoute une entrée avant de committer."
+fi
