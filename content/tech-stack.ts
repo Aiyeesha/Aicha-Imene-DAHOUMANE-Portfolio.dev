@@ -12,6 +12,8 @@
 //   context  — phrase courte de contexte (EN, traduite en FR ci-dessous)
 //   track    — "salesforce" | "itops" | "both"
 
+export type Locale = "en" | "fr" | "es";
+
 export type TechLevel = 1 | 2 | 3 | 4;
 
 export type TechCategory =
@@ -29,7 +31,7 @@ export type TechItem = {
   category: TechCategory;
   level: TechLevel;
   years: number;
-  context: { en: string; fr: string };
+  context: Record<Locale, string>;
   track: "salesforce" | "itops" | "both";
 };
 
@@ -47,6 +49,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "10+ classes, triggers and batch jobs in production.",
       fr: "10+ classes, triggers et batchs en production.",
+      es: "10+ classes, triggers y batch jobs en producción.",
     },
     track: "salesforce",
   },
@@ -60,6 +63,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "20+ Flows built, reducing manual workload by 30%.",
       fr: "20+ Flows créés, réduisant la charge manuelle de 30 %.",
+      es: "20+ Flows creados, reduciendo la carga manual en un 30 %.",
     },
     track: "salesforce",
   },
@@ -73,6 +77,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Reusable Lightning Web Components for custom UI.",
       fr: "Composants LWC réutilisables pour interfaces personnalisées.",
+      es: "Componentes LWC reutilizables para interfaces personalizadas.",
     },
     track: "salesforce",
   },
@@ -86,6 +91,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Complex queries, governor limits awareness, optimized reports.",
       fr: "Requêtes complexes, respect des governor limits, rapports optimisés.",
+      es: "Consultas complejas, respeto de los governor limits, informes optimizados.",
     },
     track: "salesforce",
   },
@@ -99,6 +105,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Deployments, scratch orgs, metadata management.",
       fr: "Déploiements, scratch orgs, gestion des métadonnées.",
+      es: "Despliegues, scratch orgs, gestión de metadatos.",
     },
     track: "salesforce",
   },
@@ -112,6 +119,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Sandbox-to-production deployments.",
       fr: "Déploiements sandbox → production.",
+      es: "Despliegues sandbox → producción.",
     },
     track: "salesforce",
   },
@@ -127,6 +135,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Used for LWC, Next.js and scripting.",
       fr: "Utilisé pour LWC, Next.js et l'automatisation.",
+      es: "Usado para LWC, Next.js y automatización.",
     },
     track: "both",
   },
@@ -140,6 +149,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Type-safe Next.js application and API routes.",
       fr: "Application Next.js typée et routes API.",
+      es: "Aplicación Next.js tipada y rutas API.",
     },
     track: "both",
   },
@@ -153,6 +163,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "OOP fundamentals, training context.",
       fr: "Fondamentaux POO, contexte formation.",
+      es: "Fundamentos POO, contexto de formación.",
     },
     track: "salesforce",
   },
@@ -166,6 +177,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Automation scripts for system administration tasks.",
       fr: "Scripts d'automatisation pour l'administration systèmes.",
+      es: "Scripts de automatización para tareas de administración de sistemas.",
     },
     track: "itops",
   },
@@ -181,6 +193,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "CI pipelines: lint, typecheck, test, build.",
       fr: "Pipelines CI : lint, typecheck, tests, build.",
+      es: "Pipelines CI: lint, typecheck, tests, build.",
     },
     track: "both",
   },
@@ -194,6 +207,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Daily use: branching, PRs, conflict resolution.",
       fr: "Usage quotidien : branches, PRs, résolution de conflits.",
+      es: "Uso diario: ramas, PRs, resolución de conflictos.",
     },
     track: "both",
   },
@@ -207,6 +221,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Containerized dev environments and CI images.",
       fr: "Environnements de dev conteneurisés et images CI.",
+      es: "Entornos de desarrollo en contenedores e imágenes CI.",
     },
     track: "itops",
   },
@@ -220,6 +235,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "This portfolio. App Router, SSR, i18n, Supabase.",
       fr: "Ce portfolio. App Router, SSR, i18n, Supabase.",
+      es: "Este portfolio. App Router, SSR, i18n, Supabase.",
     },
     track: "salesforce",
   },
@@ -235,6 +251,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Server admin, scripting, package management.",
       fr: "Admin serveurs, scripting, gestion de paquets.",
+      es: "Administración de servidores, scripting, gestión de paquetes.",
     },
     track: "itops",
   },
@@ -248,6 +265,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "AD DS, DNS, DHCP, GPO — internship at MIDRANGE GROUP.",
       fr: "AD DS, DNS, DHCP, GPO — stage chez MIDRANGE GROUP.",
+      es: "AD DS, DNS, DHCP, GPO — prácticas en MIDRANGE GROUP.",
     },
     track: "itops",
   },
@@ -261,6 +279,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "User management, group policies, LDAP.",
       fr: "Gestion utilisateurs, stratégies de groupe, LDAP.",
+      es: "Gestión de usuarios, directivas de grupo, LDAP.",
     },
     track: "itops",
   },
@@ -274,6 +293,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Firewall, VPN, traffic filtering with Squid.",
       fr: "Pare-feu, VPN, filtrage trafic avec Squid.",
+      es: "Firewall, VPN, filtrado de tráfico con Squid.",
     },
     track: "itops",
   },
@@ -289,6 +309,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "PostgreSQL backend: RLS, API routes, real-time.",
       fr: "Backend PostgreSQL : RLS, routes API, temps réel.",
+      es: "Backend PostgreSQL: RLS, rutas API, tiempo real.",
     },
     track: "salesforce",
   },
@@ -302,6 +323,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Salesforce integrations with external systems.",
       fr: "Intégrations Salesforce avec des systèmes externes.",
+      es: "Integraciones Salesforce con sistemas externos.",
     },
     track: "salesforce",
   },
@@ -315,6 +337,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Cache layer and rate-limiting on this portfolio.",
       fr: "Cache et rate-limiting sur ce portfolio.",
+      es: "Capa de caché y limitación de tasa en este portfolio.",
     },
     track: "salesforce",
   },
@@ -330,6 +353,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Primary IDE: extensions, debugging, CLI integration.",
       fr: "IDE principal : extensions, débogage, intégration CLI.",
+      es: "IDE principal: extensiones, depuración, integración CLI.",
     },
     track: "both",
   },
@@ -343,6 +367,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Remote monitoring & management — MIDRANGE GROUP.",
       fr: "Supervision et gestion à distance — MIDRANGE GROUP.",
+      es: "Supervisión y gestión remota — MIDRANGE GROUP.",
     },
     track: "itops",
   },
@@ -356,6 +381,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "Backup & disaster recovery configuration.",
       fr: "Configuration sauvegardes et reprise après sinistre.",
+      es: "Configuración de copias de seguridad y recuperación ante desastres.",
     },
     track: "itops",
   },
@@ -374,11 +400,11 @@ export function getTechStack(track: "salesforce" | "itops"): TechItem[] {
 /**
  * Labels de niveau selon la locale.
  */
-export const LEVEL_LABELS: Record<TechLevel, { en: string; fr: string }> = {
-  1: { en: "Beginner",     fr: "Débutant"      },
-  2: { en: "Intermediate", fr: "Intermédiaire" },
-  3: { en: "Advanced",     fr: "Avancé"        },
-  4: { en: "Expert",       fr: "Expert"        },
+export const LEVEL_LABELS: Record<TechLevel, Record<Locale, string>> = {
+  1: { en: "Beginner",     fr: "Débutant",      es: "Principiante" },
+  2: { en: "Intermediate", fr: "Intermédiaire", es: "Intermedio"   },
+  3: { en: "Advanced",     fr: "Avancé",        es: "Avanzado"     },
+  4: { en: "Expert",       fr: "Expert",        es: "Experto"      },
 };
 
 /**
