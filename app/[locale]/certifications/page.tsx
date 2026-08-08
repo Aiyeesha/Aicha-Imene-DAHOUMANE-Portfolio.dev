@@ -5,9 +5,7 @@
 //   2. Actif   (↻ cyan) — Trailhead Ranger
 //   3. En préparation (◎ ambre) — Salesforce Admin, PDI, ISC2 CC
 //
-// Source : content/certifications.ts (données statiques fiables) +
-//          lib/data/certifications.cached.ts (Supabase, complément futur).
-// Si Supabase retourne des données supplémentaires elles s'ajoutent à la section "Obtenu".
+// Source : content/certifications.ts (données statiques fiables).
 
 import { trailheadProfile } from "@/content/certifications";
 import AnimatedCounter from "@/components/AnimatedCounter";
