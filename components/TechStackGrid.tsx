@@ -24,7 +24,13 @@ import {
   CATEGORY_COLORS,
   type TechItem,
   type TechLevel,
+  type Locale,
 } from "@/content/tech-stack";
+
+const LOCALES: Locale[] = ["en", "fr", "es"];
+function toLocale(locale: string): Locale {
+  return (LOCALES as string[]).includes(locale) ? (locale as Locale) : "en";
+}
 
 // ── Sous-composant : pastilles de niveau ──────────────────────────────────
 function LevelDots({ level }: { level: TechLevel }) {
@@ -48,9 +54,10 @@ function LevelDots({ level }: { level: TechLevel }) {
 
 // ── Sous-composant : badge individuel + tooltip ───────────────────────────
 function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
+  const safeLocale = toLocale(locale);
   const colors  = CATEGORY_COLORS[tech.category];
-  const label   = LEVEL_LABELS[tech.level][locale === "fr" ? "fr" : "en"];
-  const context = tech.context[locale === "fr" ? "fr" : "en"];
+  const label   = LEVEL_LABELS[tech.level][safeLocale];
+  const context = tech.context[safeLocale];
   const yearsLabel = locale === "fr"
     ? `${tech.years} an${tech.years > 1 ? "s" : ""}`
     : locale === "es"
