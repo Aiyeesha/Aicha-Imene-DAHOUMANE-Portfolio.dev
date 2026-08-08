@@ -1,8 +1,8 @@
 // sitemap.ts
 // ----------
-// Sitemap dynamique — inclut toutes les pages indexables dans les deux langues.
-// Chaque entrée bilingue expose ses alternates hreflang (EN / FR / x-default)
-// pour que Google indexe correctement les deux versions linguistiques.
+// Sitemap dynamique — inclut toutes les pages indexables dans les trois langues.
+// Chaque entrée expose ses alternates hreflang (EN / FR / ES / x-default)
+// pour que Google indexe correctement les trois versions linguistiques.
 //
 // Pages statiques : accueil, about, certifications, blog, tags, resources, uses,
 //                   work-with-me, colophon, changelog, legal, privacy, accessibility
