@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/lib/frontmatter";
 
 export type BlogLocale = "en" | "fr" | "es";
 
@@ -60,7 +60,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
     const abs = path.join(dir, file);
     const slug = file.replace(/\.mdx$/, "");
     const raw = fs.readFileSync(abs, "utf-8");
-    const parsed = matter(raw);
+    const parsed = parseFrontmatter(raw);
     const fm = (parsed.data || {}) as BlogFrontmatter;
 
     const title = fm.title || slug.replace(/-/g, " ");
@@ -101,7 +101,7 @@ export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | n
   if (!fs.existsSync(abs)) return null;
 
   const raw = fs.readFileSync(abs, "utf-8");
-  const parsed = matter(raw);
+  const parsed = parseFrontmatter(raw);
   const fm = (parsed.data || {}) as BlogFrontmatter;
 
   return {
