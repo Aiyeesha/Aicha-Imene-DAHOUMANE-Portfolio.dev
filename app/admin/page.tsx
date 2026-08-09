@@ -12,6 +12,7 @@
 //   - Revalidation de cache ISR
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { certifications as staticCertifications } from "@/content/certifications";
 import { readdir } from "fs/promises";
 import { join } from "path";
 import Link from "next/link";
@@ -30,10 +31,6 @@ type MessageRow = {
   id: string; name: string; email: string; topic: string | null;
   subject: string | null; message: string; locale: string | null;
   created_at: string | null;
-};
-
-type CertRow = {
-  id: string; name: string; issuer: string | null; locale: string;
 };
 
 type TestimonialRow = {
@@ -78,7 +75,7 @@ async function countBlogArticles() {
 async function fetchDashboardData() {
   const supabase = createAdminSupabaseClient();
 
-  const [projects, messages, certifications, testimonials, blog] = await Promise.all([
+  const [projects, messages, testimonials, blog] = await Promise.all([
     supabase
       .from("projects")
       .select("id, slug, locale, title, status, track, featured, sort_order, created_at")
@@ -92,10 +89,6 @@ async function fetchDashboardData() {
       .limit(20),
 
     supabase
-      .from("certifications")
-      .select("id, name, issuer, locale"),
-
-    supabase
       .from("testimonials")
       .select("id, name, role, company, quote, locale, is_published, sort_order, created_at")
       .order("sort_order", { ascending: true })
@@ -105,16 +98,14 @@ async function fetchDashboardData() {
   ]);
 
   return {
-    projects:       (projects.data      ?? []) as ProjectRow[],
-    messages:       (messages.data      ?? []) as MessageRow[],
-    certifications: (certifications.data ?? []) as CertRow[],
-    testimonials:   (testimonials.data  ?? []) as TestimonialRow[],
+    projects:     (projects.data     ?? []) as ProjectRow[],
+    messages:     (messages.data     ?? []) as MessageRow[],
+    testimonials: (testimonials.data ?? []) as TestimonialRow[],
     blog,
     errors: {
-      projects:       projects.error?.message,
-      messages:       messages.error?.message,
-      certifications: certifications.error?.message,
-      testimonials:   testimonials.error?.message,
+      projects:     projects.error?.message,
+      messages:     messages.error?.message,
+      testimonials: testimonials.error?.message,
     },
   };
 }
@@ -177,7 +168,7 @@ function SectionHeader({ title, count, right }: { title: string; count?: number;
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AdminPage() {
-  const { projects, messages, certifications, testimonials, blog, errors } =
+  const { projects, messages, testimonials, blog, errors } =
     await fetchDashboardData();
 
   // Stats projets
@@ -187,10 +178,6 @@ export default async function AdminPage() {
   const projectsArchived   = enProjects.filter((p) => p.status === "archived").length;
   const projectsSalesforce = enProjects.filter((p) => p.track === "salesforce").length;
   const projectsItops      = enProjects.filter((p) => p.track === "itops").length;
-
-  // Stats certifs
-  const certsEn = certifications.filter((c) => c.locale === "en").length;
-  const certsFr = certifications.filter((c) => c.locale === "fr").length;
 
   // Stats témoignages
   const testimonialsPublished = testimonials.filter((t) => t.is_published).length;
@@ -268,8 +255,8 @@ export default async function AdminPage() {
           />
           <StatCard
             label="Certifications"
-            value={certifications.length / 2}
-            sub={`EN: ${certsEn} · FR: ${certsFr}`}
+            value={staticCertifications.length}
+            sub="Source statique — content/certifications.ts"
             color="violet"
           />
           <StatCard
@@ -445,29 +432,27 @@ export default async function AdminPage() {
 
       {/* ── Certifications ────────────────────────────────────────────────────── */}
       <section>
-        <SectionHeader title="Certifications" count={certsEn} />
+        <SectionHeader title="Certifications" count={staticCertifications.length} />
         <div className="overflow-x-auto rounded-xl border border-white/10">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-slate-500">
                 <th className="px-4 py-3">Nom</th>
                 <th className="px-4 py-3">Émetteur</th>
-                <th className="px-4 py-3">Locale</th>
+                <th className="px-4 py-3">Obtenue le</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {certifications.length === 0 ? (
+              {staticCertifications.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="px-4 py-6 text-center text-slate-500">Aucune certification.</td>
                 </tr>
               ) : (
-                certifications.map((c) => (
+                staticCertifications.map((c) => (
                   <tr key={c.id} className="hover:bg-white/[0.03] transition-colors">
                     <td className="px-4 py-3 font-medium text-slate-200">{c.name}</td>
-                    <td className="px-4 py-3 text-slate-400">{c.issuer ?? "—"}</td>
-                    <td className="px-4 py-3">
-                      <Badge label={c.locale} color="bg-slate-500/15 text-slate-400" />
-                    </td>
+                    <td className="px-4 py-3 text-slate-400">{c.issuer}</td>
+                    <td className="px-4 py-3 text-xs text-slate-500">{c.earnedDate}</td>
                   </tr>
                 ))
               )}
