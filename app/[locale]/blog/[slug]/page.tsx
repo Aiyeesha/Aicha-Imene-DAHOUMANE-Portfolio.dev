@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import fs from "node:fs";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/lib/frontmatter";
 import { getTranslations } from "next-intl/server";
 
 import { readAllPosts, readPostMeta } from "@/content/blog/fs";
@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   if (!meta) notFound();
 
   const raw = fs.readFileSync(meta.file, "utf-8");
-  const parsed = matter(raw);
+  const parsed = parseFrontmatter(raw);
   const content = String(parsed.content || "");
   const toc = extractToc(content);
   const nav = getPrevNext(locale, slug);

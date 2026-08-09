@@ -11,7 +11,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import MiniSearch from "minisearch";
 import { readAllPosts } from "@/content/blog/fs";
 import fs from "node:fs";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/lib/frontmatter";
 import type { BlogLocale } from "@/content/blog/fs";
 
 export const revalidate = 86400;
@@ -64,7 +64,7 @@ function buildIndex(locale: BlogLocale): { index: MiniSearch<SearchDoc>; docs: S
     let rawContent = "";
     try {
       const raw = fs.readFileSync(post.file, "utf-8");
-      const parsed = matter(raw);
+      const parsed = parseFrontmatter(raw);
       rawContent = stripMarkdown(String(parsed.content || ""));
     } catch {
       // file unreadable — index metadata only
