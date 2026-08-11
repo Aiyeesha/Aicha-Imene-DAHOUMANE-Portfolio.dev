@@ -414,8 +414,8 @@
   "availModal": {
     "badge": "Disponible — CDI · CDD · Freelance · Mission",
     "title": "Mes disponibilités",
-    "delay": "Statut actuel",
-    "delayValue": "En CDI chez LD Digitales depuis oct. 2025",
+    "delay": "Disponibilité",
+    "delayValue": "Disponible immédiatement",
     "contracts": "Prochaine étape",
     "contractValues": "CDI · CDD · Freelance · Mission — France & international",
     "workMode": "Modes de travail",
