@@ -87,32 +87,33 @@ export default function TrackAwareHero() {
   const { scrollY } = useScroll();
   const parallaxY = useTransform(scrollY, [0, 400], [0, -28]);
 
-  // URL du CV — toujours calculée en fonction du track ET de la locale.
+  // URLs des CV — deux boutons explicites (IT Ops / Salesforce), toujours
+  // visibles tous les deux quel que soit le track actif du toggle : les deux
+  // CV ont un contenu réellement différent (titre, résumé, bullets, skills
+  // mis en avant), donc les cacher l'un derrière l'autre forçait le visiteur
+  // à comprendre puis actionner le toggle avant de trouver le bon PDF.
   //
-  // Priorité :
+  // Priorité par CV :
   //   1. NEXT_PUBLIC_CV_PDF_URL si elle contient les tokens {locale} et/ou {track}
   //      (ex: "https://storage.example.com/cv-{locale}-{track}.pdf")
-  //   2. Pattern local : /cv/cv-{locale}-{track}.pdf  (4 fichiers dans /public/cv/)
-  //
-  // Une URL statique sans token dans NEXT_PUBLIC_CV_PDF_URL est ignorée
-  // volontairement : elle servirait le même PDF quelle que soit la langue/le track,
-  // ce qui est précisément le bug à corriger.
-  const cvPdfUrl = useMemo(() => {
+  //   2. Pattern local : /cv/cv-{locale}-{track}.pdf  (6 fichiers dans /public/cv/)
+  const getCvUrl = (cvTrack: "itops" | "salesforce") => {
     const envUrl =
       process.env.NEXT_PUBLIC_CV_PDF_URL ||
       process.env.NEXT_PUBLIC_CV_URL ||
       process.env.NEXT_PUBLIC_PROFILE_PDF_URL;
 
     if (envUrl && (envUrl.includes("{locale}") || envUrl.includes("{track}"))) {
-      // L'env var est un template : remplace les tokens
       return envUrl
         .replace(/\{locale\}/g, locale)
-        .replace(/\{track\}/g, track);
+        .replace(/\{track\}/g, cvTrack);
     }
 
-    // Fallback : fichiers locaux dans /public/cv/
-    return `/cv/cv-${locale}-${track}.pdf`;
-  }, [locale, track]);
+    return `/cv/cv-${locale}-${cvTrack}.pdf`;
+  };
+
+  const cvItopsUrl = getCvUrl("itops");
+  const cvSalesforceUrl = getCvUrl("salesforce");
 
   // Avatar : env var ou image locale
   const avatarUrl = useMemo(
@@ -268,15 +269,26 @@ export default function TrackAwareHero() {
           {/* CTA secondaire 1 : ouvre la modale Calendly (disparaît si URL non configurée) */}
           <CalendlyModal variant="hero" />
 
-          {/* CTA secondaire 2 : télécharge le CV PDF */}
+          {/* CTA secondaire 2 & 3 : télécharge le CV PDF — un bouton par track,
+              toujours tous les deux visibles (indépendants du toggle), car le
+              contenu des deux CV diffère réellement (titre, résumé, bullets). */}
           <a
             className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
-            href={cvPdfUrl}
+            href={cvItopsUrl}
             target="_blank"
             rel="noreferrer"
-            onClick={() => trackEvent("cv_download", { locale, track })}
+            onClick={() => trackEvent("cv_download", { locale, track: "itops" })}
           >
-            {t("cta.downloadCv")} ↓
+            {t("cta.downloadCvItops")} ↓
+          </a>
+          <a
+            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+            href={cvSalesforceUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackEvent("cv_download", { locale, track: "salesforce" })}
+          >
+            {t("cta.downloadCvSalesforce")} ↓
           </a>
         </div>
 
