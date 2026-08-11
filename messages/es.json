@@ -414,8 +414,8 @@
   "availModal": {
     "badge": "Disponible — Indefinido · Temporal · Freelance · Por proyecto",
     "title": "Mi disponibilidad",
-    "delay": "Situación actual",
-    "delayValue": "Puesto a tiempo completo en LD Digitales desde oct. de 2025",
+    "delay": "Disponibilidad",
+    "delayValue": "Disponible de inmediato",
     "contracts": "Siguiente paso",
     "contractValues": "Indefinido · Temporal · Freelance · Por proyecto — Francia y a nivel mundial",
     "workMode": "Modalidades de trabajo",
