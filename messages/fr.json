@@ -47,7 +47,8 @@
   "cta": {
     "call": "Planifier un appel",
     "projects": "Voir les projets",
-    "downloadCv": "Télécharger mon CV (PDF)",
+    "downloadCvItops": "CV IT Ops (PDF)",
+    "downloadCvSalesforce": "CV Salesforce (PDF)",
     "workWithMe": "Travailler avec moi",
     "message": "Message",
     "call15": "Appel 30 min",
