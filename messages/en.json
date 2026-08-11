@@ -414,8 +414,8 @@
   "availModal": {
     "badge": "Available — Permanent · Fixed-term · Freelance · Contract",
     "title": "My availability",
-    "delay": "Current status",
-    "delayValue": "Full-time position at LD Digitales since Oct. 2025",
+    "delay": "Availability",
+    "delayValue": "Available immediately",
     "contracts": "Next step",
     "contractValues": "Permanent · Fixed-term · Freelance · Contract — France & worldwide",
     "workMode": "Work modes",
