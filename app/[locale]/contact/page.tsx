@@ -83,12 +83,12 @@ export default async function ContactPage({ params }: PageProps) {
 
   const L = {
     breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    title: isFr ? "Me contacter" : isEs ? "Contáctame" : "Get in touch",
+    title: isFr ? "Qualifier une mission" : isEs ? "Calificar una misión" : "Start an engagement",
     subtitle: isFr
-      ? "Disponible pour des missions freelance, des opportunités CDI/CDD et des projets en remote. Réponse sous 48h."
+      ? "Un message rapide suffit toujours, mais ce formulaire structuré (secteur, délai, budget indicatif) m'aide à préparer une première réponse déjà cadrée sur votre contexte. Réponse sous 48h."
       : isEs
-      ? "Disponible para misiones freelance, oportunidades de contrato indefinido/temporal y proyectos en remoto. Respondo en 48h."
-      : "Available for freelance missions, permanent/fixed-term roles, and remote projects. I reply within 48h.",
+      ? "Un mensaje rápido siempre es suficiente, pero este formulario estructurado (sector, plazo, presupuesto indicativo) me ayuda a preparar una primera respuesta ya adaptada a tu contexto. Respondo en 48h."
+      : "A quick message always works, but this structured form (sector, timeline, indicative budget) helps me prepare a first reply that's already grounded in your context. I reply within 48h.",
   };
 
   return (
@@ -115,7 +115,7 @@ export default async function ContactPage({ params }: PageProps) {
         <p className="mt-3 text-muted">{L.subtitle}</p>
 
         <div className="mt-10">
-          <ContactForm />
+          <ContactForm extended />
         </div>
       </div>
     </>

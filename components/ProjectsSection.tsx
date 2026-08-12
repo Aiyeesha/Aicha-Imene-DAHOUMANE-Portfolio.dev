@@ -59,17 +59,8 @@ import { useTrack } from "@/app/[locale]/providers";
 import { usePathname } from "next/navigation";
 import { trackEvent } from "@/lib/analytics";
 import { useTranslations } from "next-intl";
-import { tBadge, tCategory, tTag } from "@/i18n/projectTaxonomy";
+import { getBadgeClass, tBadge, tCategory, tTag } from "@/i18n/projectTaxonomy";
 import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
-
-// Correspondance badge → classes Tailwind
-const tones: Record<string, string> = {
-  client: "badge badge-client",
-  personal: "badge badge-personal",
-  training: "badge badge-training",
-  simulation: "badge badge-simulation",
-  anonymized: "badge badge-anonymized"
-};
 
 type ProjectsSectionProps = {
   locale?: "en" | "fr" | "es";
@@ -374,7 +365,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-lg font-semibold">{p.title}</h3>
                 {p.badge ? (
-                  <span className={tones[p.badge.tone]}>{tBadge(p.badge.label, locale)}</span>
+                  <span className={getBadgeClass(p.badge.tone)}>{tBadge(p.badge.label, locale)}</span>
                 ) : null}
               </div>
 

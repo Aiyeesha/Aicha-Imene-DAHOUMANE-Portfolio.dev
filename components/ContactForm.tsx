@@ -60,7 +60,7 @@ function errorToKey(code: string) {
   }
 }
 
-export default function ContactForm() {
+export default function ContactForm({ extended = false }: { extended?: boolean }) {
   const t = useTranslations();
   const locale = useLocale();
   const { track } = useTrack();
@@ -71,7 +71,32 @@ export default function ContactForm() {
   // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
   const [topic, setTopic] = useState("general");
   const [msgLen,  setMsgLen]  = useState(0);
-  const MSG_MAX = 2000;
+  const MSG_MAX_HARD = 2000; // doit rester égal à MAX_MESSAGE_LEN (lib/contactValidation.ts)
+
+  // ── Champs de qualification, uniquement rendus quand extended=true (page
+  // /contact) — le formulaire rapide de la home (ancre #contact, prérempli
+  // par TrackAwareServices via contact:prefill) reste inchangé, sans ces champs.
+  // Tous facultatifs : composés dans le corps du message avant envoi plutôt
+  // que d'ajouter des colonnes en base (voir onSubmit) — aucune donnée
+  // structurée n'est perdue, mais aucun changement de schéma n'était requis.
+  const [sector, setSector] = useState("");
+  const [timeline, setTimeline] = useState("");
+  const [budget, setBudget] = useState("");
+
+  // Le préfixe de contexte est compté dans les 2000 caractères imposés par
+  // lib/contactValidation.ts (MAX_MESSAGE_LEN) côté serveur — sans ce calcul,
+  // un message déjà proche du maximum pourrait dépasser la limite une fois le
+  // préfixe ajouté et échouer silencieusement à l'envoi (message_too_long).
+  const intakePrefix = useMemo(() => {
+    const lines: string[] = [];
+    if (sector)   lines.push(`${t("contact.intake.sectorLabel")}: ${t(`contact.intake.sector.${sector}`)}`);
+    if (timeline) lines.push(`${t("contact.intake.timelineLabel")}: ${t(`contact.intake.timeline.${timeline}`)}`);
+    if (budget)   lines.push(`${t("contact.intake.budgetLabel")}: ${t(`contact.intake.budget.${budget}`)}`);
+    return lines.length > 0 ? `[${t("contact.intake.messagePrefixHeading")}]\n${lines.join("\n")}\n\n` : "";
+  }, [sector, timeline, budget, t]);
+
+  // Espace restant pour le texte libre une fois le préfixe de contexte réservé.
+  const MSG_MAX = Math.max(200, MSG_MAX_HARD - intakePrefix.length);
 
   // Listener pour l'événement custom `contact:prefill` dispatché par TrackAwareServices.
   // Quand l'utilisateur clique "Discuter de ce service", le formulaire se pré-remplit
@@ -129,11 +154,21 @@ export default function ContactForm() {
     // Honeypot field (should stay empty)
     const company = String(form.get("company") || "");
 
+    // Préfixe le message avec le contexte de qualification (secteur/délai/
+    // budget) plutôt que d'étendre le schéma de l'API /api/contact — celle-ci
+    // ne connaît que { name, email, topic, message, ... } et ignore déjà
+    // silencieusement tout champ inconnu, donc composer côté client est le
+    // chemin qui ne touche ni la validation, ni la table Supabase `messages`,
+    // ni Formspree. `intakePrefix` (mémoïsé plus haut) est aussi ce qui borne
+    // maxMessageLen ci-dessous, donc les deux restent toujours cohérents.
+    const rawMessage = String(form.get("message") || "");
+    const message = `${intakePrefix}${rawMessage}`;
+
     const payload = {
       name: String(form.get("name") || ""),
       email: String(form.get("email") || ""),
       topic: String(form.get("topic") || "general"),
-      message: String(form.get("message") || ""),
+      message,
       // Explicit RGPD consent (required)
       acceptedPolicy: Boolean(form.get("acceptedPolicy")),
       company,
@@ -171,6 +206,9 @@ export default function ContactForm() {
       // Reset le formulaire (champs non contrôlés) + réinitialise les états contrôlés.
       formEl.reset();
       setTopic("general");
+      setSector("");
+      setTimeline("");
+      setBudget("");
       setStatus({ kind: "success" });
     } catch (err: any) {
       setStatus({ kind: "error", message: err?.message || t("contact.errors.generic") });
@@ -234,6 +272,63 @@ export default function ContactForm() {
             <option value="other">{t("contact.topicOther")}</option>
           </select>
         </div>
+
+        {extended && (
+          <div className="rounded-xl border border-black/10 dark:border-white/10 p-4 space-y-3">
+            <div>
+              <p className="text-sm font-semibold">{t("contact.intake.title")}</p>
+              <p className="mt-0.5 text-xs text-muted-2">{t("contact.intake.subtitle")}</p>
+            </div>
+
+            <div>
+              <label htmlFor="contact-sector" className="text-xs text-muted-2">{t("contact.intake.sectorLabel")}</label>
+              <select
+                id="contact-sector"
+                autoComplete="off"
+                value={sector}
+                onChange={(e) => setSector(e.target.value)}
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
+              >
+                <option value="">{t("contact.intake.sectorPlaceholder")}</option>
+                {["automotive","industry","logistics","supplyChain","maintenance","quality","energy","cybersecurity","supervision","automation","fieldService","operationalData","traceability","healthcare","luxury","other"].map((key) => (
+                  <option key={key} value={key}>{t(`contact.intake.sector.${key}`)}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="contact-timeline" className="text-xs text-muted-2">{t("contact.intake.timelineLabel")}</label>
+              <select
+                id="contact-timeline"
+                autoComplete="off"
+                value={timeline}
+                onChange={(e) => setTimeline(e.target.value)}
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
+              >
+                <option value="">{t("contact.intake.timelinePlaceholder")}</option>
+                {["asap","thisMonth","oneToThree","threeToSix","tbd"].map((key) => (
+                  <option key={key} value={key}>{t(`contact.intake.timeline.${key}`)}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="contact-budget" className="text-xs text-muted-2">{t("contact.intake.budgetLabel")}</label>
+              <select
+                id="contact-budget"
+                autoComplete="off"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
+              >
+                <option value="">{t("contact.intake.budgetPlaceholder")}</option>
+                {["under5k","from5to15k","from15to40k","over40k","tbd"].map((key) => (
+                  <option key={key} value={key}>{t(`contact.intake.budget.${key}`)}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
 
         {/* Honeypot (hidden for humans) */}
         <input name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
