@@ -12,7 +12,7 @@ import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { GITHUB_URL } from "@/lib/social";
-import { getFeaturedProjectsForNav } from "@/lib/data/projects";
+import { getFeaturedProjectsForNav, getSecurityClusterCount } from "@/lib/data/projects";
 
 /**
  * Locale layout
@@ -110,7 +110,10 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages({ locale: locale });
   const t = await getTranslations({ locale });
-  const featuredProjectsForNav = await getFeaturedProjectsForNav(locale);
+  const [featuredProjectsForNav, securityClusterCount] = await Promise.all([
+    getFeaturedProjectsForNav(locale),
+    getSecurityClusterCount(locale),
+  ]);
   // Nonce CSP posé par proxy.ts — transmis à ThemeProvider pour que son script
   // inline de détection de thème soit autorisé par la CSP strict-dynamic.
   // Résout aussi le warning React 19 "Encountered a script tag while rendering".
@@ -138,7 +141,7 @@ export default async function LocaleLayout({
 
           <div className="relative z-10">
             <SkipToContent targetId="main" label={t("a11y.skip")} />
-            <Navbar featuredProjects={featuredProjectsForNav} />
+            <Navbar featuredProjects={featuredProjectsForNav} securityClusterCount={securityClusterCount} />
             {/* Palette de commandes globale — ⌘K / Ctrl+K */}
             <CommandPaletteLoader />
 
@@ -168,6 +171,14 @@ export default async function LocaleLayout({
                       href={`/${locale}/work-with-me`}
                     >
                       {t("footer.workWithMe")}
+                    </Link>
+                    {/* Formulaire de qualification étendu (secteur/délai/budget) — jusqu'ici
+                        orphelin de toute navigation, voir audit 2026-08-12. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/contact`}
+                    >
+                      {t("footer.qualifyMission")}
                     </Link>
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
