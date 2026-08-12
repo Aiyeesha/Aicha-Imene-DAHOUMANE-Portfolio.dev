@@ -7,8 +7,8 @@
  *   - Pages HTML                       : Network First → Cache → Offline fallback
  *   - Routes API (/api/*)              : Network Only (jamais mis en cache)
  *
- * CACHE_VERSION est injecté automatiquement en postbuild (scripts/inject-sw-version.mjs)
- * avec le hash court du commit Git — ne pas modifier manuellement.
+ * CACHE_VERSION est injecté au runtime par app/sw.js/route.ts, avec le hash
+ * court du commit Git (VERCEL_GIT_COMMIT_SHA) — ne pas modifier manuellement.
  * L'ancienne version est supprimée automatiquement à l'activation.
  */
 
