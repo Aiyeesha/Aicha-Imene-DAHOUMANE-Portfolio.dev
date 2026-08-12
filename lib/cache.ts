@@ -40,8 +40,3 @@ export async function cacheGetOrSet<T>(
     return fetcher();
   }
 }
-
-export async function cacheDel(key: string) {
-  if (!redis) return;
-  await redis.del(key).catch(() => {});
-}

@@ -34,20 +34,6 @@ if (!url || !anon) {
 const supabase = createClient(url, anon, { auth: { persistSession: false } });
 
 async function run() {
-  const cert = await supabase
-    .from("certifications")
-    .select("id, locale, name, status")
-    .eq("locale", "fr")
-    .eq("status", "published");
-
-  console.log("certifications:", {
-    error: cert.error
-      ? { message: cert.error.message, code: (cert.error as any).code }
-      : null,
-    count: cert.data?.length ?? 0,
-    first: cert.data?.[0] ?? null,
-  });
-
   const about = await supabase
     .from("about_pages")
     .select("locale, headline, status")
