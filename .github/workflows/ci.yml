@@ -52,8 +52,13 @@ jobs:
       - name: Install gitleaks
         env:
           GITLEAKS_VERSION: "8.22.1"
+        # --retry-all-errors : la CDN des releases GitHub renvoie parfois des
+        # 503/connexions coupées transitoires (observé 2 fois de suite le
+        # 2026-08-12) ; -sSfL seul ne retente jamais. 5 tentatives, backoff
+        # démarrant à 2s, sans quoi cette étape fait échouer tout le check
+        # secret-scan sur un incident réseau sans rapport avec le contenu scanné.
         run: |
-          curl -sSfL \
+          curl -sSfL --retry 5 --retry-all-errors --retry-delay 2 \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
             -o /tmp/gitleaks.tar.gz
           tar xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
