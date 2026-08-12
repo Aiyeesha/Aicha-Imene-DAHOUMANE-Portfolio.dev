@@ -72,6 +72,32 @@ export async function getFeaturedProjectsForNav(locale: string) {
   }
 }
 
+// Comptage léger pour le lien "Cluster Sécurité" (navbar + home) — head:true +
+// count:"exact" ne transfère aucune ligne de données, juste le total. Évite de
+// coder ce nombre en dur dans les traductions (voir audit du 2026-08-12 : le
+// texte marketing affichait "16" alors que /projects en comptait déjà 17).
+// Appel direct (pas withRetry) : ce wrapper ne propage pas `count` sur les
+// requêtes head:true, et un raté ici ne fait que retomber sur 0 — pas critique
+// au point de justifier des tentatives supplémentaires.
+export async function getSecurityClusterCount(locale: string) {
+  try {
+    const supabase = createServerSupabaseClient();
+    const { count, error } = await supabase
+      .from("projects")
+      .select("id", { count: "exact", head: true })
+      .in("locale", [locale, "multi"])
+      .eq("status", "published")
+      .eq("is_security", true);
+    if (error) {
+      console.error("[projects/security-count] Supabase error:", (error as any)?.message ?? error);
+      return 0;
+    }
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 export function getAssetUrl(
   supabase: ReturnType<typeof createServerSupabaseClient>,
   asset: {
