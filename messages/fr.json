@@ -15,7 +15,7 @@
     "workWithMeMenu": "Travailler avec moi",
     "home": "Accueil",
     "seeAllProjects": "Voir tous les projets",
-    "securityClusterLink": "Cluster Sécurité (16)"
+    "securityClusterLink": "Cluster Sécurité ({count})"
   },
   "hero": {
     "title": "Développeuse Salesforce & Consultante IT",
@@ -101,8 +101,8 @@
     "bridge_title": "Où mes deux mondes se rencontrent",
     "bridge_body": "Sur le déploiement Légarant-AXG, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps.",
     "bridge_cta": "Voir l'étude de cas complète",
-    "security_title": "Le cluster Sécurité — 16 projets, une seule discipline",
-    "security_body": "Modélisation de menaces STRIDE, scoring CVSS, machine à états avec SLA par sévérité, triage synchronisé en temps réel avec l'API publique du NVD — ce n'est pas une ligne de plus dans une liste de compétences, c'est le sous-cluster le plus dense du portfolio : 16 projets sur 39, à cheval sur les deux tracks. Invisible aujourd'hui hors du 5e onglet de la page Projets, alors que c'est l'actif le plus riche du site.",
+    "security_title": "Le cluster Sécurité — {count} projets, une seule discipline",
+    "security_body": "Modélisation de menaces STRIDE, scoring CVSS, machine à états avec SLA par sévérité, triage synchronisé en temps réel avec l'API publique du NVD — ce n'est pas une ligne de plus dans une liste de compétences, c'est le sous-cluster le plus dense du portfolio : {count} projets sur {total}, à cheval sur les deux tracks.",
     "security_cta": "Explorer le cluster Sécurité"
   },
   "contact": {
@@ -343,7 +343,8 @@
     "changelog": "Changelog",
     "workWithMe": "Travaillons ensemble",
     "uses": "Setup & Outils",
-    "colophon": "Colophon"
+    "colophon": "Colophon",
+    "qualifyMission": "Qualifier une mission"
   },
   "profile": {
     "kicker": "Profil",
