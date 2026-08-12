@@ -1,0 +1,72 @@
+---
+title: "Un bug d'intégrité de données silencieux dans mon propre pipeline de tagging sécurité"
+excerpt: "Comment un script de ré-import aurait pu effacer silencieusement le flag derrière le cluster Security (16 projets) du site — la cause racine, le correctif, et le check de monitoring qui protège désormais contre ça."
+date: "2026-08-12"
+tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
+featured: false
+---
+
+Les données projets de ce site vivent à deux endroits : Supabase (la source de vérité à l'exécution) et deux fichiers TypeScript générés, `content/projects.ts` et `content/projectDetails.ts`, conservés comme filet de sécurité local. Deux scripts assurent la synchronisation : `scripts/export-projects-from-supabase.ts` tire Supabase → fichiers, `scripts/seed.ts` pousse fichiers → Supabase.
+
+En auditant cet aller-retour, j'ai trouvé que `is_security` — le flag booléen qui pilote le regroupement "Security cluster" sur `/projects` — n'en avait jamais fait partie.
+
+---
+
+## Le bug
+
+`scripts/export-projects-from-supabase.ts` sélectionne une liste de colonnes fixe depuis Supabase et l'écrit dans le type `Project` ainsi que dans chaque entrée de `content/projects.ts`. `is_bridge` était dans cette liste. `is_security` non :
+
+```ts
+// Avant
+.select(
+  `slug, locale, title, summary, hero_subtitle, sections, gallery,
+   tech_stack, repo_url, live_url, track, categories, tags, badge,
+   pdf_url, content_updated_at, highlights, featured, sort_order,
+   status, is_bridge`
+)
+```
+
+Symétriquement, `scripts/seed.ts` construit champ par champ la ligne qu'il réinsère dans Supabase — et `is_security` (ainsi que `is_bridge`, et le vrai `status`) en étaient tout simplement absents. Chaque insertion aurait écrit `null`/`undefined` pour `is_security`, et un `status: "published"` codé en dur quel que soit le statut réel du fichier source.
+
+Aucun des deux scripts ne lève d'erreur quand une colonne est silencieusement oubliée — il n'existe aucune validation de schéma entre "ce que Supabase peut renvoyer" et "ce que le script d'export prend la peine de demander." Le bug ne produisait ni stack trace, ni test en échec, ni CI rouge. Il signifiait simplement que `content/projects.ts` avait un type sans aucun champ `isSecurity`, et que ré-exécuter `seed.ts` — un DELETE + réinsertion complète de la table `projects` — aurait remis à zéro le flag sur les 49 projets d'un coup, et republié de force chaque brouillon (y compris ceux encore sous embargo).
+
+## Pourquoi ce flag comptait
+
+Ce n'est pas cosmétique. `/projects?tab=security` et le bandeau "Security cluster" de la home filtrent tous les deux sur `is_security = true` — c'est le mécanisme qui regroupe 16 projets publiés (outillage SOC, threat modeling, veille CVE, la dimension sécurité d'un projet pont Salesforce↔Heroku) en un seul point de preuve consultable. Une régression silencieuse au reseed n'aurait fait 404 nulle part et n'aurait cassé aucun build. Elle aurait simplement fait disparaître silencieusement tout ce cluster de son propre onglet — le genre de régression facile à manquer jusqu'à ce que quelqu'un demande "attends, ils sont passés où les projets sécurité ?"
+
+## Le correctif
+
+Trois changements petits et mécaniques :
+
+1. Ajouter `is_security` au `select()` Supabase du script d'export, et `isSecurity?: boolean` au type `Project`.
+2. Faire écrire à `scripts/seed.ts` `is_bridge` et `is_security` depuis le fichier source au lieu de les omettre — et lire le vrai champ `status` au lieu de coder `"published"` en dur.
+3. Ré-exécuter le script d'export pour que `content/projects.ts` reflète réellement le pipeline corrigé.
+
+Rien de tout ça n'est intéressant en soi. Ce qui mérite d'être écrit, c'est la quatrième étape.
+
+## Rendre la régression visible plutôt que mémorisable
+
+Un correctif de code empêche seulement *ce* reseed précis d'avoir le bug. Il ne fait rien pour empêcher la prochaine personne (moi, plus tard) d'ajouter une nouvelle colonne à la table `projects` et d'oublier de la câbler dans ces deux mêmes scripts — exactement l'erreur à l'origine de tout ça.
+
+Ce site fait déjà tourner une page `/status` adossée à `lib/health.ts` — de vrais checks de santé (accessibilité Supabase, cache Redis, un check "Content integrity" qui signale tout projet mis en avant avec un corps vide) rendus avec de vraies latences, pas une page statique "tout va bien". Alors plutôt que de corriger uniquement la donnée, j'ai ajouté un check à ce pipeline :
+
+```ts
+async function checkSecurityClusterIntegrity(): Promise<ServiceHealth> {
+  const { data, error } = await withRetry(() =>
+    supabase.from("projects").select("slug")
+      .eq("status", "published")
+      .eq("is_security", true)
+      .limit(1)
+  );
+  if (!data || data.length === 0) {
+    return { name: "Security cluster integrity", status: "degraded", /* … */ };
+  }
+  return { name: "Security cluster integrity", status: "operational", /* … */ };
+}
+```
+
+Le choix de conception déliberé ici : il vérifie qu'**au moins un** projet publié a `is_security = true`, pas un nombre figé comme "16". Un seuil codé en dur se remettrait à sonner l'alarme dès le 17e projet sécurité publié — une fausse alerte déguisée en vraie. Le mode de défaillance réel contre lequel ce check protège est binaire : le bug effaçait le flag sur *toutes* les lignes simultanément, parce qu'il était structurel (absent de l'aller-retour), pas une erreur de donnée par projet. Un check d'existence capture exactement cette forme de régression sans avoir besoin de savoir, ni de se soucier, de la taille que le cluster est censé avoir aujourd'hui.
+
+## À retenir
+
+La partie intéressante de ce bug n'était pas le correctif — c'était que "synchroniser du contenu entre une base de données et un fichier de secours" est exactement le genre d'infrastructure que la plupart des gens construisent une fois et cessent ensuite de surveiller. Traiter le pipeline de contenu de son propre portfolio avec la même rigueur qu'on appliquerait à la couche de données d'un client — le boucler, puis surveiller l'invariant, pas seulement le bug ponctuel — c'est tout l'intérêt de faire tourner une page `/status` en premier lieu.

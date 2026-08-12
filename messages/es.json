@@ -161,7 +161,50 @@
     "acceptPolicyAria": "Acepto la política de privacidad",
     "acceptPolicyPrefix": "He leído y acepto la",
     "acceptPolicyLink": "política de privacidad",
-    "availability": "Indefinido · Temporal · Freelance · Por proyecto"
+    "availability": "Indefinido · Temporal · Freelance · Por proyecto",
+    "intake": {
+      "title": "Contexto de la misión (opcional)",
+      "subtitle": "Me ayuda a responder con el contexto adecuado desde el primer mensaje — nada de esto es vinculante.",
+      "sectorLabel": "Sector",
+      "sectorPlaceholder": "Selecciona un sector",
+      "sector": {
+        "automotive": "Automoción",
+        "industry": "Industria",
+        "logistics": "Logística",
+        "supplyChain": "Cadena de suministro",
+        "maintenance": "Mantenimiento",
+        "quality": "Calidad",
+        "energy": "Energía",
+        "cybersecurity": "Ciberseguridad",
+        "supervision": "Supervisión",
+        "automation": "Automatización",
+        "fieldService": "Servicio de campo",
+        "operationalData": "Datos operativos",
+        "traceability": "Trazabilidad",
+        "healthcare": "Salud",
+        "luxury": "Lujo / Moda",
+        "other": "Otro"
+      },
+      "timelineLabel": "Plazo",
+      "timelinePlaceholder": "Selecciona un plazo",
+      "timeline": {
+        "asap": "Lo antes posible",
+        "thisMonth": "En el próximo mes",
+        "oneToThree": "1 a 3 meses",
+        "threeToSix": "3 a 6 meses",
+        "tbd": "Aún sin definir"
+      },
+      "budgetLabel": "Rango de presupuesto",
+      "budgetPlaceholder": "Selecciona un rango (opcional)",
+      "budget": {
+        "under5k": "Menos de 5.000 €",
+        "from5to15k": "5.000 € – 15.000 €",
+        "from15to40k": "15.000 € – 40.000 €",
+        "over40k": "40.000 € o más",
+        "tbd": "A negociar"
+      },
+      "messagePrefixHeading": "Contexto de la misión"
+    }
   },
   "blog": {
     "card_tutorials_kicker": "Nuevo",

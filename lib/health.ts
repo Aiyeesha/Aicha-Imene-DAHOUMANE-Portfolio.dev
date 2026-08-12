@@ -174,6 +174,51 @@ async function checkContentIntegrity(): Promise<ServiceHealth> {
   }
 }
 
+// ── Intégrité du flag is_security ──────────────────────────────────────────────
+// Backstop applicatif pour un bug corrigé le 2026-08-12 : `is_security` n'était
+// round-tripé ni par scripts/export-projects-from-supabase.ts ni par
+// scripts/seed.ts — un reseed depuis content/projects.ts effaçait silencieusement
+// le flag sur les 49 projets d'un coup (régression totale, pas partielle).
+// On vérifie donc juste qu'au moins un projet publié porte encore is_security
+// = true, plutôt qu'un nombre figé (16 aujourd'hui) : le cluster Security a
+// vocation à grandir, un seuil exact se serait remis à sonner l'alarme au
+// premier nouveau projet ajouté sans être le signe d'une vraie régression.
+async function checkSecurityClusterIntegrity(): Promise<ServiceHealth> {
+  const start = Date.now();
+  try {
+    const { createServerSupabaseClient } = await import("@/lib/supabase/server");
+    const { withRetry } = await import("@/lib/supabase/withRetry");
+    const supabase = createServerSupabaseClient();
+
+    const { data, error } = await withRetry<{ slug: string }[]>(() =>
+      supabase
+        .from("projects")
+        .select("slug")
+        .eq("status", "published")
+        .eq("is_security", true)
+        .limit(1)
+    );
+
+    const latencyMs = Date.now() - start;
+    if (error) {
+      return { name: "Security cluster integrity", status: "degraded", latencyMs, message: String((error as { message?: string })?.message ?? error) };
+    }
+
+    if (!data || data.length === 0) {
+      return {
+        name: "Security cluster integrity",
+        status: "degraded",
+        latencyMs,
+        message: "0 published project has is_security = true — likely a reseed regression (see lib/health.ts).",
+      };
+    }
+
+    return { name: "Security cluster integrity", status: "operational", latencyMs };
+  } catch (e) {
+    return { name: "Security cluster integrity", status: "degraded", latencyMs: Date.now() - start, message: String(e) };
+  }
+}
+
 // ── Services statiques (toujours opérationnels si le serveur répond) ──────────
 
 function checkWebsite(): ServiceHealth {
@@ -201,11 +246,12 @@ function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
 
 export async function runHealthChecks(): Promise<HealthReport> {
   // Checks réseau en parallèle — les checks statiques sont instantanés
-  const [supabase, redis, contact, contentIntegrity] = await Promise.all([
+  const [supabase, redis, contact, contentIntegrity, securityCluster] = await Promise.all([
     checkSupabase(),
     checkRedis(),
     checkContactForm(),
     checkContentIntegrity(),
+    checkSecurityClusterIntegrity(),
   ]);
 
   const services: ServiceHealth[] = [
@@ -214,6 +260,7 @@ export async function runHealthChecks(): Promise<HealthReport> {
     supabase,
     redis,
     contentIntegrity,
+    securityCluster,
     checkBlog(),
     checkPwa(),
   ];
