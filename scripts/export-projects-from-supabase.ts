@@ -70,6 +70,7 @@ type DbRow = {
   sort_order: number | null;
   status: string | null;
   is_bridge: boolean | null;
+  is_security: boolean | null;
 };
 
 function jsonLiteral(value: unknown, indent = 2): string {
@@ -83,7 +84,7 @@ async function main() {
       `slug, locale, title, summary, hero_subtitle, sections, gallery,
        tech_stack, repo_url, live_url, track, categories, tags, badge,
        pdf_url, content_updated_at, highlights, featured, sort_order,
-       status, is_bridge`
+       status, is_bridge, is_security`
     )
     .order("track", { ascending: true })
     .order("sort_order", { ascending: true })
@@ -134,6 +135,7 @@ async function main() {
       sortOrder: en.sort_order ?? 0,
       status: en.status ?? "published",
       ...(en.is_bridge ? { isBridge: true } : {}),
+      ...(en.is_security ? { isSecurity: true } : {}),
     };
 
     return `  ${jsonLiteral(entry).replace(/\n/g, "\n  ")},`;
@@ -166,6 +168,7 @@ export type Project = {
   sortOrder: number;
   status: string;
   isBridge?: boolean;
+  isSecurity?: boolean;
 };
 
 export const projects: Project[] = [

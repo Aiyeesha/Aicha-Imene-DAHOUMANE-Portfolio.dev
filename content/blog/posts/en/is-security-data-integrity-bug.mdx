@@ -1,0 +1,72 @@
+---
+title: "A Silent Data-Integrity Bug in My Own Security-Tagging Pipeline"
+excerpt: "How a re-seed script could have silently wiped the flag behind this site's 16-project Security cluster — the root cause, the fix, and the monitoring check that now guards against it."
+date: "2026-08-12"
+tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
+featured: false
+---
+
+This site's project data lives in two places: Supabase (the source of truth at runtime) and two generated TypeScript files, `content/projects.ts` and `content/projectDetails.ts`, kept as a local fallback. Two scripts keep them in sync: `scripts/export-projects-from-supabase.ts` pulls Supabase → files, `scripts/seed.ts` pushes files → Supabase.
+
+While auditing that round trip, I found that `is_security` — the boolean flag that drives the "Security cluster" grouping on `/projects` — was never part of it.
+
+---
+
+## The bug
+
+`scripts/export-projects-from-supabase.ts` selects a fixed column list from Supabase and writes it into the `Project` type and each entry in `content/projects.ts`. `is_bridge` was in that list. `is_security` wasn't:
+
+```ts
+// Before
+.select(
+  `slug, locale, title, summary, hero_subtitle, sections, gallery,
+   tech_stack, repo_url, live_url, track, categories, tags, badge,
+   pdf_url, content_updated_at, highlights, featured, sort_order,
+   status, is_bridge`
+)
+```
+
+Symmetrically, `scripts/seed.ts` builds the row it inserts back into Supabase field by field — and `is_security` (and `is_bridge`, and the real `status`) were simply absent from that object. Every insert would have written `null`/`undefined` for `is_security` and hardcoded `status: "published"` regardless of what the source file said.
+
+Neither script errors when a column is silently dropped — there's no schema validation between "what Supabase can return" and "what the export script bothers to ask for." The bug produced no stack trace, no failed test, no red CI. It just meant that content/projects.ts had a type with no `isSecurity` field at all, and that re-running `seed.ts` — a full delete-and-reinsert of the `projects` table — would have reset the flag on all 49 projects at once, and force-published every draft (including work still under embargo).
+
+## Why this one mattered
+
+The flag isn't cosmetic. `/projects?tab=security` and the "Security cluster" banner on the homepage both filter on `is_security = true` — it's the mechanism that groups 16 published projects (SOC tooling, threat modeling, CVE tracking, the security dimension of a Salesforce↔Heroku bridge project) into a single, browsable proof point. A silent reseed regression wouldn't 404 anything or break a build. It would just make that entire cluster quietly vanish from its own tab — the kind of regression that's easy to miss until someone asks "wait, where did the security projects go?"
+
+## The fix
+
+Three small, mechanical changes:
+
+1. Add `is_security` to the Supabase `select()` in the export script, and `isSecurity?: boolean` to the `Project` type.
+2. Have `scripts/seed.ts` write `is_bridge` and `is_security` back from the source file instead of omitting them — and read the real `status` field instead of hardcoding `"published"`.
+3. Re-run the export script so `content/projects.ts` actually reflects the fixed pipeline.
+
+None of that is interesting on its own. What's worth writing down is the fourth step.
+
+## Making the regression visible instead of memorable
+
+A code fix only prevents *this* reseed from having the bug. It does nothing to stop the next person (future me) from adding a new column to the `projects` table and forgetting to wire it through the same two scripts — the exact mistake that caused this in the first place.
+
+This site already runs a `/status` page backed by `lib/health.ts` — real health checks (Supabase reachability, Redis cache, a "Content integrity" check that flags any featured project with an empty body) rendered with actual latencies, not a static "all good" page. So instead of just fixing the data, I added a check to that pipeline:
+
+```ts
+async function checkSecurityClusterIntegrity(): Promise<ServiceHealth> {
+  const { data, error } = await withRetry(() =>
+    supabase.from("projects").select("slug")
+      .eq("status", "published")
+      .eq("is_security", true)
+      .limit(1)
+  );
+  if (!data || data.length === 0) {
+    return { name: "Security cluster integrity", status: "degraded", /* … */ };
+  }
+  return { name: "Security cluster integrity", status: "operational", /* … */ };
+}
+```
+
+The one deliberate design choice here: it checks for **at least one** published project with `is_security = true`, not for a fixed count like "16." A hardcoded threshold would start failing the moment a 17th security project ships — a false alarm dressed up as a real one. The actual failure mode this guards against is binary: the bug wiped the flag on *every* row simultaneously, because it was structural (missing from the round trip), not a per-project data error. An existence check catches exactly that shape of regression without needing to know, or care, how large the cluster is supposed to be today.
+
+## Takeaway
+
+The interesting part of this bug wasn't the fix — it was that "sync content between a database and a fallback file" is exactly the kind of infrastructure most people build once and stop looking at. Treating your own portfolio's content pipeline with the same scrutiny you'd apply to a client's data layer — round-trip it, then monitor the invariant, not just the individual bug — is the whole point of running a `/status` page in the first place.

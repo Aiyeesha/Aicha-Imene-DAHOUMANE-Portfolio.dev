@@ -161,7 +161,50 @@
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",
-    "availability": "CDI · CDD · Freelance · Mission"
+    "availability": "CDI · CDD · Freelance · Mission",
+    "intake": {
+      "title": "Contexte de la mission (facultatif)",
+      "subtitle": "M'aide à répondre avec le bon contexte dès le premier message — rien n'est engageant.",
+      "sectorLabel": "Secteur",
+      "sectorPlaceholder": "Sélectionner un secteur",
+      "sector": {
+        "automotive": "Automobile",
+        "industry": "Industrie",
+        "logistics": "Logistique",
+        "supplyChain": "Supply chain",
+        "maintenance": "Maintenance",
+        "quality": "Qualité",
+        "energy": "Énergie",
+        "cybersecurity": "Cybersécurité",
+        "supervision": "Supervision",
+        "automation": "Automatisation",
+        "fieldService": "Service terrain",
+        "operationalData": "Data opérationnelle",
+        "traceability": "Traçabilité",
+        "healthcare": "Santé",
+        "luxury": "Luxe / Mode",
+        "other": "Autre"
+      },
+      "timelineLabel": "Délai",
+      "timelinePlaceholder": "Sélectionner un délai",
+      "timeline": {
+        "asap": "Dès que possible",
+        "thisMonth": "Dans le mois",
+        "oneToThree": "1 à 3 mois",
+        "threeToSix": "3 à 6 mois",
+        "tbd": "Non défini"
+      },
+      "budgetLabel": "Enveloppe budgétaire",
+      "budgetPlaceholder": "Sélectionner une fourchette (facultatif)",
+      "budget": {
+        "under5k": "Moins de 5k€",
+        "from5to15k": "5k€ – 15k€",
+        "from15to40k": "15k€ – 40k€",
+        "over40k": "40k€ et plus",
+        "tbd": "À discuter"
+      },
+      "messagePrefixHeading": "Contexte de la mission"
+    }
   },
   "blog": {
     "card_tutorials_kicker": "Nouveau",
