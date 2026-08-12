@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-12T08:00:41.822Z
+// Last export: 2026-08-12T18:32:31.902Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1660,13 +1660,15 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
+      "🔗 Cross-domain proof: a Salesforce release pipeline designed and run as a real DevOps infrastructure — secrets management, branch protection, rollback — not just a deployment checklist.",
       "Branching strategy + environment promotions",
       "Automated validations + SFDX deployments",
       "Secrets management + rollback guidelines"
     ],
     "featured": true,
     "sortOrder": 6,
-    "status": "published"
+    "status": "published",
+    "isBridge": true
   },
   {
     "slug": "crm-healthcare-salesforce",

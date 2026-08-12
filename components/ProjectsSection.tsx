@@ -279,10 +279,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
           Uniquement sur la page /projects complète (ce composant n'est monté que là). */}
       <div className="mb-6 rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] px-4 py-3 text-sm text-muted">
         {locale === "fr"
-          ? "Ce déséquilibre (30 IT Ops vs 9 Salesforce) reflète une contrainte de confidentialité, pas un écart de compétence : mon travail Salesforce en poste relève du secret professionnel et ne peut pas être publié tel quel — les projets IT Ops, très majoritairement personnels, n'ont pas cette contrainte."
+          ? `Ce déséquilibre (${trackCounts.itops} IT Ops vs ${trackCounts.salesforce} Salesforce) reflète une contrainte de confidentialité, pas un écart de compétence : mon travail Salesforce en poste relève du secret professionnel et ne peut pas être publié tel quel — les projets IT Ops, très majoritairement personnels, n'ont pas cette contrainte.`
           : locale === "es"
-          ? "Este desequilibrio (30 IT Ops frente a 9 Salesforce) refleja una restricción de confidencialidad, no una diferencia de nivel: mi trabajo Salesforce en el puesto está sujeto a confidencialidad con el cliente y no puede publicarse tal cual — los proyectos IT Ops, mayoritariamente personales, no tienen esa restricción."
-          : "This imbalance (30 IT Ops vs 9 Salesforce) reflects a confidentiality constraint, not a skill gap: my Salesforce work in post is bound by client confidentiality and can't be published as-is — the IT Ops projects, mostly personal, don't carry that constraint."}
+          ? `Este desequilibrio (${trackCounts.itops} IT Ops frente a ${trackCounts.salesforce} Salesforce) refleja una restricción de confidencialidad, no una diferencia de nivel: mi trabajo Salesforce en el puesto está sujeto a confidencialidad con el cliente y no puede publicarse tal cual — los proyectos IT Ops, mayoritariamente personales, no tienen esa restricción.`
+          : `This imbalance (${trackCounts.itops} IT Ops vs ${trackCounts.salesforce} Salesforce) reflects a confidentiality constraint, not a skill gap: my Salesforce work in post is bound by client confidentiality and can't be published as-is — the IT Ops projects, mostly personal, don't carry that constraint.`}
       </div>
 
       {/* ── Recherche full-text ─────────────────────────────────── */}

@@ -50,6 +50,10 @@ export default async function Home({ params }: Props) {
   const t = await getTranslations({ locale });
   const experienceItems = getExperienceItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
+  // Comptes réels du cluster Sécurité — remplace les "16"/"39" figés dans les
+  // traductions (voir audit 2026-08-12 : /projects affichait déjà 17/40).
+  const securityProjectCount = supabaseProjects.filter((p: any) => p.is_security).length;
+  const totalProjectCount = supabaseProjects.length;
 
   // FAQPage JSON-LD — généré côté serveur depuis les traductions i18n (même source que ServicesFaq).
   // Pattern identique à app/[locale]/blog/[slug]/page.tsx:138-181.
@@ -207,8 +211,8 @@ export default async function Home({ params }: Props) {
       <section id="security-cluster" className="py-14">
         <Reveal>
           <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] dark:bg-amber-400/[0.06] p-6 md:p-8">
-            <h2 className="text-2xl font-semibold">{t("sections.security_title")}</h2>
-            <p className="mt-4 text-muted leading-[1.8]">{t("sections.security_body")}</p>
+            <h2 className="text-2xl font-semibold">{t("sections.security_title", { count: securityProjectCount })}</h2>
+            <p className="mt-4 text-muted leading-[1.8]">{t("sections.security_body", { count: securityProjectCount, total: totalProjectCount })}</p>
             <div className="mt-5">
               <Link
                 href={`/${locale}/projects?tab=security`}

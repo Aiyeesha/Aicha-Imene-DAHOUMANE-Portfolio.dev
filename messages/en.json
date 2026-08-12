@@ -15,7 +15,7 @@
     "workWithMeMenu": "Work with me",
     "home": "Home",
     "seeAllProjects": "See all projects",
-    "securityClusterLink": "Security cluster (16)"
+    "securityClusterLink": "Security cluster ({count})"
   },
   "hero": {
     "title": "Salesforce Developer & IT Consultant",
@@ -101,8 +101,8 @@
     "bridge_title": "Where my two worlds meet",
     "bridge_body": "On the Légarant-AXG deployment, I didn't just write the Apex REST endpoints on the Salesforce side — I also built and deployed the Heroku application that consumes them: a Node.js/PostgreSQL API, two isolated environments connected by a Heroku pipeline, Heroku Connect configured object by object, down to the deployment runbook. A Salesforce-only profile would have stopped at the Apex layer and handed the infrastructure piece to someone else, with the usual risk of decisions made without knowing the constraints on the other side. An infra-only profile could have deployed the Heroku app, but not designed the Apex External ID trigger or the Matching Rule that stops duplicates at the source. Delivering both together removed the usual back-and-forth between Salesforce and DevOps teams — the staging environment existed before the first line of Apex was written, not after. This project, not a badge, is the proof that Salesforce, infrastructure, and security aren't two overlapping résumés — they're one person making both decisions at once.",
     "bridge_cta": "See the full case study",
-    "security_title": "The Security cluster — 16 projects, one discipline",
-    "security_body": "STRIDE threat modeling, CVSS scoring, a state machine with per-severity SLAs, triage synced in real time with the public NVD API — not one more line on a skills list, this is the densest sub-cluster on the portfolio: 16 projects out of 39, spanning both tracks. Invisible today outside the 5th tab of the Projects page, despite being the richest asset on the site.",
+    "security_title": "The Security cluster — {count} projects, one discipline",
+    "security_body": "STRIDE threat modeling, CVSS scoring, a state machine with per-severity SLAs, triage synced in real time with the public NVD API — not one more line on a skills list, this is the densest sub-cluster on the portfolio: {count} projects out of {total}, spanning both tracks.",
     "security_cta": "Explore the Security cluster"
   },
   "contact": {
@@ -343,7 +343,8 @@
     "changelog": "Changelog",
     "workWithMe": "Work with me",
     "uses": "Uses & Setup",
-    "colophon": "Colophon"
+    "colophon": "Colophon",
+    "qualifyMission": "Start an engagement"
   },
   "profile": {
     "kicker": "Profile",

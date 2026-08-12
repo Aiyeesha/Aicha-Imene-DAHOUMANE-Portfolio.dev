@@ -15,7 +15,7 @@
     "workWithMeMenu": "Trabajemos juntos",
     "home": "Inicio",
     "seeAllProjects": "Ver todos los proyectos",
-    "securityClusterLink": "Clúster Seguridad (16)"
+    "securityClusterLink": "Clúster Seguridad ({count})"
   },
   "hero": {
     "title": "Desarrolladora Salesforce & Consultora IT",
@@ -101,8 +101,8 @@
     "bridge_title": "Donde mis dos mundos se encuentran",
     "bridge_body": "En el despliegue de Légarant-AXG, no me limité a escribir los endpoints Apex REST del lado Salesforce — también construí y desplegué la aplicación Heroku que los consume: una API Node.js/PostgreSQL, dos entornos aislados conectados por un pipeline de Heroku, Heroku Connect configurado objeto por objeto, hasta el runbook de despliegue. Un perfil solo-Salesforce se habría detenido en la capa Apex y habría delegado la infraestructura a otra persona, con el riesgo habitual de decisiones tomadas sin conocer las restricciones del otro lado. Un perfil solo-infraestructura podría haber desplegado la app Heroku, pero no diseñar el trigger Apex de External ID ni la Matching Rule que evita duplicados en el origen. Entregar ambas partes juntas eliminó el vaivén habitual entre equipos Salesforce y DevOps — el entorno de staging ya existía antes de escribir la primera línea de Apex, no después. Este proyecto, no una insignia, es la prueba de que Salesforce, infraestructura y seguridad no son dos currículums superpuestos, sino una sola persona tomando ambas decisiones a la vez.",
     "bridge_cta": "Ver el caso de estudio completo",
-    "security_title": "El clúster Seguridad — 16 proyectos, una sola disciplina",
-    "security_body": "Modelado de amenazas STRIDE, puntuación CVSS, una máquina de estados con SLA por severidad, triaje sincronizado en tiempo real con la API pública de NVD — no es una línea más en una lista de habilidades, es el subclúster más denso del portfolio: 16 proyectos de 39, repartidos entre ambos tracks. Invisible hoy fuera de la 5ª pestaña de la página Proyectos, pese a ser el activo más rico del sitio.",
+    "security_title": "El clúster Seguridad — {count} proyectos, una sola disciplina",
+    "security_body": "Modelado de amenazas STRIDE, puntuación CVSS, una máquina de estados con SLA por severidad, triaje sincronizado en tiempo real con la API pública de NVD — no es una línea más en una lista de habilidades, es el subclúster más denso del portfolio: {count} proyectos de {total}, repartidos entre ambos tracks.",
     "security_cta": "Explorar el clúster Seguridad"
   },
   "contact": {
@@ -343,7 +343,8 @@
     "changelog": "Historial de cambios",
     "workWithMe": "Trabajemos juntos",
     "uses": "Herramientas y configuración",
-    "colophon": "Colophon"
+    "colophon": "Colophon",
+    "qualifyMission": "Calificar una misión"
   },
   "profile": {
     "kicker": "Perfil",
