@@ -409,3 +409,38 @@ export function tTag(label: string, locale: SupportedLocale): string {
 export function tBadge(label: string, locale: SupportedLocale): string {
   return translateTaxonomyLabel(label, locale, "badge");
 }
+
+// Source unique tone → classe CSS. Remplace 3 implémentations qui avaient
+// divergé (ProjectsSection.tsx, FeaturedProjects.tsx, projects/[slug]/page.tsx)
+// avec 3 comportements différents sur une tone inconnue : classe absente
+// silencieusement (badge non stylé), repli silencieux sur "badge-training"
+// (un projet client affiché comme exercice de formation), ou classe vide.
+const BADGE_TONE_CLASSES: Record<string, string> = {
+  client: "badge badge-client",
+  personal: "badge badge-personal",
+  training: "badge badge-training",
+  simulation: "badge badge-simulation",
+  anonymized: "badge badge-anonymized",
+};
+
+/**
+ * Tone → classe CSS pour le badge d'un projet.
+ * Une tone absente ou inconnue retombe sur la classe `.badge` nue (neutre,
+ * visiblement stylée, aucune couleur/étiquette trompeuse) plutôt que sur un
+ * badge invisible ou mal étiqueté — et prévient en dev pour que l'oubli
+ * d'une nouvelle tone dans BADGE_TONE_CLASSES soit détecté immédiatement
+ * plutôt que livré comme un badge de crédibilité mal étiqueté.
+ */
+export function getBadgeClass(tone: string | undefined | null): string {
+  if (!tone) return "badge";
+  const cls = BADGE_TONE_CLASSES[tone];
+  if (!cls) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        `[projectTaxonomy] Unknown badge tone "${tone}" — falling back to the neutral badge class. Add it to BADGE_TONE_CLASSES.`
+      );
+    }
+    return "badge";
+  }
+  return cls;
+}

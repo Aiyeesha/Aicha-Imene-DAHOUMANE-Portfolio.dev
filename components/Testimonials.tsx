@@ -17,10 +17,19 @@ export default function Testimonials({ items }: { items: Testimonial[] }) {
   const t = useTranslations();
   const [index, setIndex] = useState(0);
 
-  const current = useMemo(() => items[index], [items, index]);
+  // Real guard against shipping unattributed template testimonials — see the
+  // isPlaceholder doc comment in content/testimonials.ts. Filtering here (not
+  // just gating with NEXT_PUBLIC_SHOW_TESTIMONIALS at the call site) means a
+  // future caller can't accidentally render a placeholder just by passing the
+  // raw content array.
+  const publishable = useMemo(() => items.filter((item) => !item.isPlaceholder), [items]);
 
-  const prev = () => setIndex((i) => (i - 1 + items.length) % items.length);
-  const next = () => setIndex((i) => (i + 1) % items.length);
+  const current = useMemo(() => publishable[index], [publishable, index]);
+
+  if (publishable.length === 0) return null;
+
+  const prev = () => setIndex((i) => (i - 1 + publishable.length) % publishable.length);
+  const next = () => setIndex((i) => (i + 1) % publishable.length);
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
@@ -70,7 +79,7 @@ export default function Testimonials({ items }: { items: Testimonial[] }) {
         <div className="card p-6">
           <div className="text-sm text-muted-2">{t("testimonials.all")}</div>
           <div className="mt-4 space-y-2">
-            {items.map((item, i) => (
+            {publishable.map((item, i) => (
               <button
                 key={item.id}
                 type="button"

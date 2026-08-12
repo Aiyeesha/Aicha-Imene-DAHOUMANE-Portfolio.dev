@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-07-28T20:50:39.142Z
+// Last export: 2026-08-12T08:00:41.822Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -25,6 +25,7 @@ export type Project = {
   sortOrder: number;
   status: string;
   isBridge?: boolean;
+  isSecurity?: boolean;
 };
 
 export const projects: Project[] = [
@@ -142,7 +143,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 0,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "homelab-network-sniffing",
@@ -181,7 +183,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 0,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "homelab-password-cracking-lab",
@@ -220,7 +223,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 0,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "it-ops-disk-backup",
@@ -486,7 +490,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 240,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "python-password-checker",
@@ -559,7 +564,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 290,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "security-monitoring-dashboard",
@@ -603,7 +609,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 280,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "second-brain-claude-code",
@@ -822,7 +829,8 @@ export const projects: Project[] = [
     ],
     "featured": true,
     "sortOrder": 50,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "nextjs-admin-dashboard",
@@ -1046,7 +1054,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 260,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "incident-response-tracker",
@@ -1089,7 +1098,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 261,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "cve-watchlist",
@@ -1133,7 +1143,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 262,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "log-anomaly-detector",
@@ -1175,7 +1186,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 263,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "cosmonote-clone",
@@ -1231,7 +1243,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 270,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "risque360",
@@ -1272,7 +1285,8 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 300,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "bdr-prospection-tool",
@@ -1454,7 +1468,8 @@ export const projects: Project[] = [
     ],
     "featured": true,
     "sortOrder": 1,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "wirebright-visualforce-to-lightning",
@@ -1535,7 +1550,8 @@ export const projects: Project[] = [
     ],
     "featured": true,
     "sortOrder": 3,
-    "status": "published"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "fasha-apex-backend-optimization",
@@ -1614,7 +1630,8 @@ export const projects: Project[] = [
     "featured": true,
     "sortOrder": 5,
     "status": "published",
-    "isBridge": true
+    "isBridge": true,
+    "isSecurity": true
   },
   {
     "slug": "cicd-pipeline-setup",
@@ -1758,6 +1775,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 100,
-    "status": "draft"
+    "status": "published",
+    "isSecurity": true
   },
 ];

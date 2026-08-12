@@ -3,7 +3,10 @@
  * - content/projects.ts
  * - content/projectDetails.ts
  * - content/about.ts
- * - content/certifications.ts
+ *
+ * (Les certifications ne sont plus seedées ici : la table Supabase
+ * "certifications" a été supprimée, /certifications lit directement
+ * content/certifications.ts — voir la note dans resetTables() ci-dessous.)
  *
  * Exécution :
  *   npx tsx scripts/seed.ts
@@ -32,7 +35,6 @@ if (fs.existsSync(envLocalPath)) {
 
 // ✅ Imports TS directs (tsx les gère)
 import { aboutContent } from "../content/about";
-import { certifications } from "../content/certifications";
 import { projectDetails } from "../content/projectDetails";
 import { projects } from "../content/projects";
 
@@ -109,9 +111,13 @@ const detailsMap = buildDetailsMap(projectDetails);
  * Construit la ligne à insérer en table "projects".
  * - EN : base + details.locales.en si dispo
  * - FR : details.locales.fr si dispo sinon fallback EN
+ * - ES : details.locales.es si dispo sinon fallback EN (les brouillons du
+ *   futur framework Salesforce/Cloud n'ont pas encore de bloc `es` dans
+ *   content/projectDetails.ts — cf. app/[locale]/projects/[slug]/page.tsx
+ *   qui affiche déjà un bandeau "non disponible dans cette langue" pour ce cas)
  */
 function buildProjectRow(params: {
-  locale: "en" | "fr";
+  locale: "en" | "fr" | "es";
   base: ProjectListItem;
   detailsRaw?: AnyObj | null;
 }) {
@@ -119,7 +125,7 @@ function buildProjectRow(params: {
 
   const slug = normalizeSlug(base.slug);
   const locales = detailsRaw?.locales ?? {};
-  const d = (locale === "fr" ? locales.fr : locales.en) ?? null;
+  const d = (locale === "fr" ? locales.fr : locale === "es" ? locales.es : locales.en) ?? null;
 
   // Titre : projectDetails.locales.<lang>.title prioritaire, sinon list EN (projects.ts)
   const title = (d?.title as string) || (base.title as string) || slug;
@@ -191,7 +197,13 @@ function buildProjectRow(params: {
     featured: Boolean(base.featured),
     sort_order: Number.isFinite(base.sortOrder) ? (base.sortOrder as number) : 0,
 
-    status: "published",
+    // Respecte le statut réel de content/projects.ts (draft reste draft) —
+    // hardcoder "published" ici republierait les projets brouillon (dont
+    // orgdocs-saas / sfrelease-saas, sous embargo public jusqu'en 2027) à
+    // chaque reseed, quel que soit leur statut réel en base.
+    status: (base.status as string) || "draft",
+    is_bridge: Boolean(base.isBridge),
+    is_security: Boolean(base.isSecurity),
   };
 }
 
@@ -199,7 +211,12 @@ function buildProjectRow(params: {
 // 3) Reset tables
 // ------------------------------
 async function resetTables() {
-  const tables = ["project_assets", "projects", "certifications", "about_pages"] as const;
+  // "certifications" n'est plus une table de la base (confirmé via
+  // information_schema.tables) — supprimée pour de bon après la migration
+  // de /admin et /certifications vers content/certifications.ts comme
+  // source unique (voir CHANGELOG.md). La référencer ici ferait échouer
+  // resetTables() avant même que seedProjects() ne s'exécute.
+  const tables = ["project_assets", "projects", "about_pages"] as const;
 
   for (const t of tables) {
     console.log(`🧹 Resetting table: ${t} ...`);
@@ -229,6 +246,7 @@ async function seedProjects() {
 
     rows.push(buildProjectRow({ locale: "en", base, detailsRaw }));
     rows.push(buildProjectRow({ locale: "fr", base, detailsRaw }));
+    rows.push(buildProjectRow({ locale: "es", base, detailsRaw }));
   }
 
   console.log(`📤 Inserting ${rows.length} rows into public.projects ...`);
@@ -238,7 +256,7 @@ async function seedProjects() {
     throw new Error(`Insert projects failed: ${error.message}`);
   }
 
-  console.log(`✅ Projects inserted: ${rows.length} rows (EN + FR)`);
+  console.log(`✅ Projects inserted: ${rows.length} rows (EN + FR + ES)`);
 }
 
 
@@ -287,49 +305,12 @@ async function seedAbout() {
 }
 
 // ------------------------------
-// 6) Seed Certifications (EN + FR fallback)
+// 6) Verify (stats)
 // ------------------------------
-async function seedCertifications() {
-  console.log("📦 Seeding certifications from content/certifications.ts ...");
-
-  const frFallback = (enText: string) => enText; // fallback rapide (tu pourras remplacer par vraie traduction)
-
-  const rows: AnyObj[] = [];
-  const list = certifications as AnyObj[];
-
-  list.forEach((c, idx) => {
-    const common = {
-      name: c.title ?? c.name,
-      issuer: c.issuer ?? "Salesforce",
-      badge_image_url: c.badgeImage ?? c.badge_image_url ?? null,
-      credential_url: c.credentialUrl ?? c.credential_url ?? null,
-      obtained_at: null,
-      expires_at: null,
-      earned_label: c.earnedDate ?? c.earned_label ?? null,
-      description: c.description ?? null,
-      skills: toArray<string>(c.skills),
-      sort_order: Number.isFinite(c.sortOrder) ? c.sortOrder : idx + 1,
-      status: "published",
-    };
-
-    rows.push({ locale: "en", ...common });
-
-    rows.push({
-      locale: "fr",
-      ...common,
-      description: c.descriptionFr ?? frFallback(c.description ?? ""),
-    });
-  });
-
-  const { error } = await supabase.from("certifications").insert(rows);
-  if (error) throw new Error(`Insert certifications failed: ${error.message}`);
-
-  console.log(`✅ certifications inserted: ${rows.length} rows (EN + FR)`);
-}
-
-// ------------------------------
-// 7) Verify (stats)
-// ------------------------------
+// NOTE: pas de seedCertifications() — la table Supabase "certifications" a
+// été supprimée (voir le commentaire dans resetTables()). Les certifications
+// sont servies exclusivement depuis content/certifications.ts, en dehors de
+// ce script.
 async function verifyStats() {
   const { data: pData, error: pErr } = await supabase
     .from("projects")
@@ -348,15 +329,7 @@ async function verifyStats() {
   const { data: aData, error: aErr } = await supabase.from("about_pages").select("locale");
   if (aErr) throw new Error(`Verify about_pages failed: ${aErr.message}`);
 
-  const { data: cData, error: cErr } = await supabase.from("certifications").select("locale");
-  if (cErr) throw new Error(`Verify certifications failed: ${cErr.message}`);
-
   const aboutCounts = (aData ?? []).reduce((acc: Record<string, number>, r: AnyObj) => {
-    acc[r.locale] = (acc[r.locale] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  const certCounts = (cData ?? []).reduce((acc: Record<string, number>, r: AnyObj) => {
     acc[r.locale] = (acc[r.locale] ?? 0) + 1;
     return acc;
   }, {});
@@ -366,7 +339,6 @@ async function verifyStats() {
   console.log("🖼️ Projects rows with gallery:", withGallery);
   console.log("🏷️ Projects rows with hero_subtitle:", withHeroSubtitle);
   console.log("📄 About locale counts:", aboutCounts);
-  console.log("🎓 Certifications locale counts:", certCounts);
 }
 
 // ------------------------------
@@ -378,7 +350,6 @@ async function verifyStats() {
     await resetTables();
     await seedProjects();
     await seedAbout();
-    await seedCertifications();
     await verifyStats();
     console.log("🎉 Seed done");
     process.exit(0);

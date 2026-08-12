@@ -161,7 +161,50 @@
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
-    "availability": "Permanent · Fixed-term · Freelance · Contract"
+    "availability": "Permanent · Fixed-term · Freelance · Contract",
+    "intake": {
+      "title": "Mission context (optional)",
+      "subtitle": "Helps me reply with the right context on the first message — none of this is binding.",
+      "sectorLabel": "Sector",
+      "sectorPlaceholder": "Select a sector",
+      "sector": {
+        "automotive": "Automotive",
+        "industry": "Industry",
+        "logistics": "Logistics",
+        "supplyChain": "Supply chain",
+        "maintenance": "Maintenance",
+        "quality": "Quality",
+        "energy": "Energy",
+        "cybersecurity": "Cybersecurity",
+        "supervision": "Supervision / Monitoring",
+        "automation": "Automation",
+        "fieldService": "Field service",
+        "operationalData": "Operational data",
+        "traceability": "Traceability",
+        "healthcare": "Healthcare",
+        "luxury": "Luxury / Fashion",
+        "other": "Other"
+      },
+      "timelineLabel": "Timeline",
+      "timelinePlaceholder": "Select a timeline",
+      "timeline": {
+        "asap": "As soon as possible",
+        "thisMonth": "Within a month",
+        "oneToThree": "1–3 months",
+        "threeToSix": "3–6 months",
+        "tbd": "Not defined yet"
+      },
+      "budgetLabel": "Budget range",
+      "budgetPlaceholder": "Select a range (optional)",
+      "budget": {
+        "under5k": "Under €5k",
+        "from5to15k": "€5k – €15k",
+        "from15to40k": "€15k – €40k",
+        "over40k": "€40k+",
+        "tbd": "To be discussed"
+      },
+      "messagePrefixHeading": "Mission context"
+    }
   },
   "blog": {
     "card_tutorials_kicker": "New",

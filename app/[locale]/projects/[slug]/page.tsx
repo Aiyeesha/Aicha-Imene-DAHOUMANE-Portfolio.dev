@@ -8,7 +8,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
-import { tBadge } from "@/i18n/projectTaxonomy";
+import { getBadgeClass, tBadge } from "@/i18n/projectTaxonomy";
 
 // ISR : revalide les pages projet toutes les 5 minutes
 export const revalidate = 300;
@@ -393,12 +393,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const imageAssets = assets.filter(looksLikeImage).filter((a) => !assetAlreadyInGallery(a));
   const fileAssets  = assets.filter((a) => !looksLikeImage(a));
 
-  const badgeClass =
-    badge?.tone === "client"     ? "badge badge-client"     :
-    badge?.tone === "personal"   ? "badge badge-personal"   :
-    badge?.tone === "training"   ? "badge badge-training"   :
-    badge?.tone === "simulation" ? "badge badge-simulation" :
-    badge?.tone === "anonymized" ? "badge badge-anonymized" : "";
+  const badgeClass = getBadgeClass(badge?.tone);
 
   const repoHref = safeHref(project.repo_url);
   const liveHref = safeHref(project.live_url);

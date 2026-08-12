@@ -7,7 +7,7 @@ import Image from "next/image";
 const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { tBadge, tTag } from "@/i18n/projectTaxonomy";
+import { getBadgeClass, tBadge, tTag } from "@/i18n/projectTaxonomy";
 import { usePathname } from "next/navigation";
 import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
@@ -123,19 +123,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-lg font-semibold">{p.title}</h3>
               {p.badge ? (
-                <span
-                  className={
-                    p.badge.tone === "client"
-                      ? "badge badge-client"
-                      : p.badge.tone === "personal"
-                        ? "badge badge-personal"
-                        : p.badge.tone === "simulation"
-                          ? "badge badge-simulation"
-                          : p.badge.tone === "anonymized"
-                            ? "badge badge-anonymized"
-                            : "badge badge-training"
-                  }
-                >
+                <span className={getBadgeClass(p.badge.tone)}>
                   {tBadge(p.badge.label, locale)}
                 </span>
               ) : null}
