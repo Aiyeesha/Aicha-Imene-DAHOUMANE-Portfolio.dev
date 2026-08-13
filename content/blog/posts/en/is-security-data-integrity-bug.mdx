@@ -1,6 +1,6 @@
 ---
 title: "A Silent Data-Integrity Bug in My Own Security-Tagging Pipeline"
-excerpt: "How a re-seed script could have silently wiped the flag behind this site's 16-project Security cluster — the root cause, the fix, and the monitoring check that now guards against it."
+excerpt: "How a re-seed script could have silently wiped the flag behind this site's 17-project Security cluster — the root cause, the fix, and the monitoring check that now guards against it."
 date: "2026-08-12"
 tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
 featured: false
@@ -32,7 +32,7 @@ Neither script errors when a column is silently dropped — there's no schema va
 
 ## Why this one mattered
 
-The flag isn't cosmetic. `/projects?tab=security` and the "Security cluster" banner on the homepage both filter on `is_security = true` — it's the mechanism that groups 16 published projects (SOC tooling, threat modeling, CVE tracking, the security dimension of a Salesforce↔Heroku bridge project) into a single, browsable proof point. A silent reseed regression wouldn't 404 anything or break a build. It would just make that entire cluster quietly vanish from its own tab — the kind of regression that's easy to miss until someone asks "wait, where did the security projects go?"
+The flag isn't cosmetic. `/projects?tab=security` and the "Security cluster" banner on the homepage both filter on `is_security = true` — it's the mechanism that groups 17 published projects (SOC tooling, threat modeling, CVE tracking, the security dimension of a Salesforce↔Heroku bridge project) into a single, browsable proof point. A silent reseed regression wouldn't 404 anything or break a build. It would just make that entire cluster quietly vanish from its own tab — the kind of regression that's easy to miss until someone asks "wait, where did the security projects go?"
 
 ## The fix
 

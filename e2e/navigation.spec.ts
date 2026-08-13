@@ -98,4 +98,39 @@ test.describe("Navigation de base", () => {
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
     await expect(page.locator("main")).not.toBeEmpty();
   });
+
+  // Régression — audit 2026-08-13 : #desktop-nav (overflow-x-auto, scrollbar
+  // masquée) débordait silencieusement autour du seuil xl=1280px. Mesuré en
+  // conditions réelles : ~1011px de contenu pour ~512px de large sur un des
+  // viewports testés — Services/Projects/Blog/Contact/Security cluster hors
+  // champ sans scrollbar visible, sans dégradé, et la molette verticale ne
+  // redirigeait pas vers le scroll horizontal du conteneur. Ce test ne suppose
+  // pas qu'un débordement se produit à 1280px dans tous les environnements CI —
+  // il vérifie que SI ça déborde, l'affordance de scroll existe, et que dans
+  // tous les cas le lien le plus à droite (Cluster Sécurité) est réellement
+  // atteignable dans le viewport, pas juste présent dans le DOM.
+  test("le nav desktop reste utilisable à 1280px — le lien Security cluster reste atteignable", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/en");
+
+    const nav = page.locator("#desktop-nav");
+    await expect(nav).toBeVisible();
+
+    const securityLink = page.locator('#desktop-nav a[href="/en/projects?tab=security"]');
+    await expect(securityLink).toBeAttached();
+
+    const [scrollWidth, clientWidth] = await Promise.all([
+      nav.evaluate((el) => el.scrollWidth),
+      nav.evaluate((el) => el.clientWidth),
+    ]);
+
+    if (scrollWidth > clientWidth + 4) {
+      const rightChevron = page.getByRole("button", { name: /scroll menu right/i });
+      await expect(rightChevron).toBeVisible();
+      await rightChevron.click();
+    }
+
+    await securityLink.scrollIntoViewIfNeeded();
+    await expect(securityLink).toBeInViewport();
+  });
 });
