@@ -7,7 +7,7 @@ name: Drift Check
 #
 # Secrets requis dans les paramètres du dépôt :
 #   VERCEL_TOKEN           — token Vercel (scope : read deployments)
-#   NEXT_PUBLIC_SITE_URL   — URL du site (ex: https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app)
+#   NEXT_PUBLIC_SITE_URL   — URL du site (ex: https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app)
 #
 # Le check monitoring (step 3) consomme le champ `lastStoredCheckAt` exposé
 # par GET /api/health — ajouté par T2. Si NEXT_PUBLIC_SITE_URL n'est pas
@@ -43,7 +43,7 @@ jobs:
         id: main
         run: |
           SHA=$(git ls-remote \
-            https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev.git \
+            https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev.git \
             refs/heads/main | cut -f1)
           if [ -z "$SHA" ]; then
             echo "::error::Could not retrieve main HEAD SHA."

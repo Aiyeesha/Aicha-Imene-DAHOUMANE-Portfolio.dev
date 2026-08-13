@@ -6726,7 +6726,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
+                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
                 "label": "GitHub repository"
               },
               {
@@ -6833,7 +6833,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
+                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
                 "label": "Dépôt GitHub"
               },
               {
@@ -6940,7 +6940,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
+                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
                 "label": "Repositorio GitHub"
               },
               {

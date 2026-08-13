@@ -36,7 +36,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 // URL absolue requise par la spec W3C Reporting API (Report-To + Reporting-Endpoints).
 // Les URLs relatives sont ignorées silencieusement par Firefox et Safari.
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
