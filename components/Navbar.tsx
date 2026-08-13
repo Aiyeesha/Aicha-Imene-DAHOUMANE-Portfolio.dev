@@ -176,6 +176,24 @@ export default function Navbar({
 
     updateNavOverflow();
 
+    // Débordement non détecté au premier rendu (audit 2026-08-13, itération 3) :
+    // vérifié en prod par instrumentation directe — au tout premier paint,
+    // #desktop-nav mesure clientWidth === scrollWidth (pas de débordement),
+    // puis clientWidth rétrécit de plusieurs dizaines de px dans les instants
+    // qui suivent pendant que les autres contrôles du header (toggle track,
+    // thème, sélecteur de langue — plusieurs ont leurs propres gardes
+    // `mounted` post-hydratation pour éviter un mismatch SSR/client) montent
+    // et réclament leur espace flex. Un simple `window.dispatchEvent(new
+    // Event("resize"))` recalcule correctement et fait apparaître le chevron
+    // — la logique elle-même est juste, seul le calcul initial est pris trop
+    // tôt. `ResizeObserver` sur #desktop-nav n'a pas suffi à rattraper ce cas
+    // en pratique ; on ajoute donc des recalculs différés (charge des polices
+    // + deux délais courts) en filet de sécurité pendant que le reste du
+    // header finit de se stabiliser après hydratation.
+    document.fonts?.ready?.then(updateNavOverflow);
+    const t1 = setTimeout(updateNavOverflow, 150);
+    const t2 = setTimeout(updateNavOverflow, 600);
+
     const onWheel = (e: WheelEvent) => {
       // Ne redirige que si le conteneur a réellement quelque chose à défiler
       // horizontalement — sinon on casse le scroll vertical de la page pour rien.
@@ -192,6 +210,8 @@ export default function Navbar({
 
     return () => {
       ro.disconnect();
+      clearTimeout(t1);
+      clearTimeout(t2);
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", updateNavOverflow);
       window.removeEventListener("resize", updateNavOverflow);
