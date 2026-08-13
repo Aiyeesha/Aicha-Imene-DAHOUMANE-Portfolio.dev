@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV — Aïcha Imène DAHOUMANE — Salesforce &amp; Infrastructure</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Liberation Sans', 'DejaVu Sans', Arial, sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.45;
+      color: #1e293b;
+      background: white;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+    .cv-header {
+      background: #0f766e;
+      color: white;
+      padding: 20px 28px 16px;
+    }
+    .cv-name { font-size: 20pt; font-weight: 700; letter-spacing: -0.3px; }
+    .cv-title { font-size: 11pt; margin-top: 3px; opacity: 0.9; }
+    .cv-contacts {
+      display: flex; flex-wrap: wrap; gap: 5px 18px;
+      margin-top: 10px; font-size: 8.5pt; opacity: 0.85;
+    }
+    .cv-contacts a { color: inherit; text-decoration: none; }
+    .cv-body { display: flex; align-items: stretch; }
+    .cv-main { flex: 1; padding: 16px 22px; min-width: 0; }
+    .cv-aside {
+      width: 190px; flex-shrink: 0;
+      background: #f0fdfa;
+      padding: 16px 14px;
+      border-left: 3px solid #0f766e;
+    }
+    .section { margin-bottom: 14px; }
+    .section-title {
+      font-size: 7.5pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: #0f766e;
+      border-bottom: 1.5px solid #0f766e;
+      padding-bottom: 3px; margin-bottom: 8px;
+    }
+    .summary { font-size: 9.5pt; line-height: 1.55; color: #334155; }
+    .exp-item { margin-bottom: 11px; }
+    .exp-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 3px; }
+    .exp-title { font-weight: 700; font-size: 10pt; }
+    .exp-period { font-size: 8pt; color: #64748b; white-space: nowrap; font-style: italic; }
+    .exp-company { font-size: 8.5pt; color: #475569; margin-bottom: 3px; }
+    .exp-note { font-size: 8pt; color: #64748b; font-style: italic; margin-top: 3px; }
+    ul.exp-ul { padding-left: 14px; margin-top: 3px; }
+    ul.exp-ul li { font-size: 9pt; margin-bottom: 2px; }
+    .edu-item { margin-bottom: 8px; }
+    .edu-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .edu-title { font-weight: 600; font-size: 9.5pt; }
+    .edu-year { font-size: 8pt; color: #64748b; font-style: italic; white-space: nowrap; }
+    .edu-school { font-size: 8.5pt; color: #475569; }
+    .edu-detail { font-size: 8pt; color: #64748b; margin-top: 1px; }
+    .aside-section { margin-bottom: 12px; }
+    .aside-title {
+      font-size: 7pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #0f766e;
+      border-bottom: 1px solid #0f766e;
+      padding-bottom: 2px; margin-bottom: 6px;
+    }
+    .sg-title { font-weight: 600; font-size: 8pt; color: #334155; margin-top: 5px; margin-bottom: 2px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 3px; }
+    .tag { background: #0f766e; color: white; font-size: 7pt; padding: 2px 6px; border-radius: 9px; }
+    .tag-light { background: #ccfbf1; color: #0f766e; font-size: 7pt; padding: 2px 6px; border-radius: 9px; }
+    .cert-item { margin-bottom: 4px; font-size: 8pt; }
+    .done { color: #0d9488; font-weight: 700; }
+    .avail { color: #4ade80; font-weight: 700; }
+    .wip  { color: #d97706; font-weight: 700; }
+    .plan { color: #2563eb; font-weight: 700; }
+    .lang-item { font-size: 8pt; margin-bottom: 3px; }
+    .lang-name { font-weight: 600; }
+    .int-item { font-size: 8pt; margin-bottom: 3px; }
+    @media print {
+      body { font-size: 8pt; line-height: 1.3; }
+      @page { margin: 6mm 8mm; size: A4; }
+      .cv-header { padding: 13px 20px 9px; }
+      .cv-main { padding: 11px 16px; }
+      .cv-aside { padding: 11px 11px; }
+      .section { margin-bottom: 8px; }
+      .exp-item { margin-bottom: 7px; }
+      .edu-item { margin-bottom: 5px; }
+      .aside-section { margin-bottom: 8px; }
+      .sg-title { margin-top: 3px; margin-bottom: 1px; }
+      .cert-item { margin-bottom: 2px; }
+      ul.exp-ul { margin-top: 2px; }
+      ul.exp-ul li { margin-bottom: 1px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="cv-header">
+  <div class="cv-name">Aïcha Imène DAHOUMANE</div>
+  <div class="cv-title">Salesforce &amp; Infrastructure Engineer &nbsp;·&nbsp; Integrated DevSecOps</div>
+  <div class="cv-contacts">
+    <span class="avail">● Available immediately</span>
+    <span>Permanent · Fixed-term · Freelance · Contract</span>
+    <a href="mailto:ai.dahoumane@proton.me">ai.dahoumane@proton.me</a>
+    <a href="tel:[numéro retiré]">[numéro retiré]</a>
+    <a href="https://www.linkedin.com/in/aicha-imene-dahoumane">linkedin.com/in/aicha-imene-dahoumane</a>
+    <a href="https://aicha-imene-dahoumane-portfolio.vercel.app">aicha-imene-dahoumane-portfolio.vercel.app</a>
+    <a href="https://trailblazer.me/id/aidahoumane">trailblazer.me/id/aidahoumane</a>
+    <span>Île-de-France / Provence-Alpes-Côte d'Azur</span>
+    <span>100 % Remote · Hybrid · On-site · Mobility &amp; relocation considered</span>
+  </div>
+</header>
+
+<div class="cv-body">
+
+  <main class="cv-main">
+
+    <div class="section">
+      <div class="section-title">Profile</div>
+      <p class="summary">
+        Hybrid Salesforce &amp; Infrastructure engineer — <strong>almost 4 years of combined practice</strong> (Salesforce development and systems/network administration), with particular attention to environments where the CRM and the infrastructure hosting it must be designed together: <strong>industry, energy, logistics, automotive, healthcare, luxury</strong>. Apex, Flows, LWC on the platform side; Windows Server, AD DS, PfSense, security and CI/CD on the infra side. RNCP Level 6 — Développeur Concepteur Logiciel, Salesforce specialization (OpenClassrooms, Oct 2025) and RNCP Level 5 — Systems &amp; Networks. Concrete proof: on Légarant-AXG (insurance), I delivered the Apex REST endpoint AND the Heroku application that consumes it — one person making both decisions at once, not two juxtaposed skill sets.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Work Experience</div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Salesforce Developer (Full-time)</span>
+          <span class="exp-period">Oct 2025 — Present</span>
+        </div>
+        <div class="exp-company">LD Digitales &nbsp;·&nbsp; Remote</div>
+        <div class="exp-note">↳ Direct conversion from apprenticeship — no probation period.</div>
+        <ul class="exp-ul">
+          <li>Designed and delivered advanced Salesforce solutions with business stakeholders</li>
+          <li>CI/CD pipelines with Salesforce CLI and GitHub Actions (multi-environment deployments)</li>
+          <li>Refactored existing Apex codebases (performance, maintainability, security)</li>
+          <li>Code reviews and enforcement of engineering best practices</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Salesforce Developer (Apprenticeship)</span>
+          <span class="exp-period">Oct 2023 — Oct 2025</span>
+        </div>
+        <div class="exp-company">LD Digitales &nbsp;·&nbsp; Remote</div>
+        <ul class="exp-ul">
+          <li>10+ Apex classes and batch jobs · 20+ automation Flows (−30% manual workload) · reusable LWC</li>
+          <li>Cross-sandbox CI/CD with Salesforce CLI · data migrations</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Junior Systems &amp; Network Administrator (Intern)</span>
+          <span class="exp-period">Feb 2023 — May 2023</span>
+        </div>
+        <div class="exp-company">MIDRANGE GROUP &nbsp;·&nbsp; France &nbsp;·&nbsp; On-site</div>
+        <ul class="exp-ul">
+          <li>Deployed <strong>200+ Dell workstations</strong> via Windows Autopilot (Sysprep, WDS, PXE)</li>
+          <li>Administered Windows Server 2022: AD DS, DNS, DHCP, GPO &nbsp;·&nbsp; PfSense/Squid &nbsp;·&nbsp; Acronis &nbsp;·&nbsp; Datto RMM</li>
+          <li>Monitored network infrastructure and responded to security incidents (ransomware drills)</li>
+        </ul>
+        <div class="exp-note">↳ This dual practice isn't two overlapping résumés — it's one person making both decisions at once.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Education</div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Développeur Concepteur Logiciel — RNCP Level 6 (Bac+3/4 equivalent)</span>
+          <span class="edu-year">Oct 2025</span>
+        </div>
+        <div class="edu-school">OpenClassrooms &nbsp;·&nbsp; Salesforce specialization (Oct 2023 – Oct 2025)</div>
+        <div class="edu-detail">Apex &amp; Triggers · Flow Automation · CI/CD · API integration · Database administration</div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">Higher Technician in Systems &amp; Networks — RNCP Level 5 (Bac+2)</span>
+          <span class="edu-year">Jun 2023</span>
+        </div>
+        <div class="edu-school">GRETA du Val d'Oise &nbsp;·&nbsp; Oct 2022 – Jun 2023</div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-top">
+          <span class="edu-title">IT Support Technician — RNCP Level 4 (Bac)</span>
+          <span class="edu-year">Jul 2022</span>
+        </div>
+        <div class="edu-school">GRETA du Val d'Oise &nbsp;·&nbsp; Lycée Louis Jouvet, Taverny</div>
+      </div>
+    </div>
+
+  </main>
+
+  <aside class="cv-aside">
+
+    <div class="aside-section">
+      <div class="aside-title">Salesforce</div>
+      <div class="tags">
+        <span class="tag">Apex</span><span class="tag">Triggers</span>
+        <span class="tag">Flows</span><span class="tag">LWC</span>
+        <span class="tag">SOQL/SOSL</span><span class="tag">Permission Sets</span>
+        <span class="tag">Sharing Rules</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Infrastructure &amp; Security</div>
+      <div class="tags">
+        <span class="tag">Windows Server</span><span class="tag">AD DS</span>
+        <span class="tag">PfSense</span><span class="tag">Acronis</span>
+        <span class="tag">Datto RMM</span><span class="tag">Endpoint Security</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">DevOps &amp; CI/CD</div>
+      <div class="tags">
+        <span class="tag-light">GitHub Actions</span><span class="tag-light">Salesforce CLI</span>
+        <span class="tag-light">Git</span><span class="tag-light">CI/CD</span>
+        <span class="tag-light">Postman</span><span class="tag-light">VS Code</span>
+      </div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Certifications</div>
+      <div class="cert-item"><span class="done">✓</span> Dev. Concepteur Logiciel RNCP L6 <em>(Oct 2025)</em></div>
+      <div class="cert-item"><span class="done">✓</span> TSSR RNCP Level 5 <em>(Jun 2023)</em></div>
+      <div class="cert-item"><span class="done">✓</span> IT Support Tech. RNCP Level 4 <em>(Jul 2022)</em></div>
+      <div class="cert-item"><span class="done">✓</span> Linguaskill Business C1+ — Cambridge <em>(Apr 2021)</em></div>
+      <div class="cert-item"><span class="wip">●</span> Trailhead Expeditioner — 90+ badges, 57,000+ pts</div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Languages</div>
+      <div class="lang-item"><span class="lang-name">French</span> &nbsp;·&nbsp; native</div>
+      <div class="lang-item"><span class="lang-name">English</span> &nbsp;·&nbsp; C1+ (Linguaskill Cambridge)</div>
+      <div class="lang-item"><span class="lang-name">Spanish</span> &nbsp;·&nbsp; B1</div>
+      <div class="lang-item"><span class="lang-name">Italian</span> &nbsp;·&nbsp; A1</div>
+    </div>
+
+    <div class="aside-section">
+      <div class="aside-title">Interests</div>
+      <div class="int-item">Martial arts · Dance</div>
+      <div class="int-item">Fashion — design, sketch, runways</div>
+      <div class="int-item">Cybersecurity, CTF</div>
+      <div class="int-item">Travel, cultural discovery</div>
+    </div>
+
+  </aside>
+
+</div>
+</body>
+</html>
