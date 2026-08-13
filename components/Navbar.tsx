@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import LocaleSwitcher from "./LocaleSwitcher";
 import NavbarPill from "./NavbarPill";
@@ -148,6 +149,10 @@ export default function Navbar({
   const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false);
   const projectsDropdownRef = useRef<HTMLDivElement | null>(null);
   const projectsTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const projectsMenuRef = useRef<HTMLDivElement | null>(null);
+  // Position calculée du menu Projets — voir le useEffect plus bas pour le pourquoi
+  // (portail hors de #desktop-nav, qui clippe verticalement le menu en position absolute).
+  const [projectsMenuPos, setProjectsMenuPos] = useState<{ top: number; left: number } | null>(null);
 
   // Débordement du nav desktop — voir audit 2026-08-13 : #desktop-nav est
   // overflow-x-auto avec scrollbar masquée ([scrollbar-width:none]), ce qui
@@ -298,8 +303,34 @@ useEffect(() => {
   }
 }, [mobileOpen]);
 
+  // Menu Projets rendu en portail (voir plus bas) : #desktop-nav a overflow-x-auto,
+  // ce qui force le navigateur à traiter overflow-y comme "auto" aussi (règle CSS
+  // implicite — un seul axe ne peut pas rester "visible" si l'autre ne l'est pas).
+  // Résultat en prod (audit temps réel 2026-08-13) : le menu déroulant "Projets"
+  // s'ouvrait bien côté React (chevron, aria-expanded, items dans le DOM) mais
+  // restait totalement invisible — entièrement clippé par la boîte de #desktop-nav
+  // (h-11) puisqu'il dépasse en position absolute/top-full. Un simple overflow-y
+  // explicite ne suffit pas à contourner cette règle CSS. Fix : sortir le menu de
+  // l'arbre DOM de #desktop-nav via un portail vers document.body, positionné en
+  // fixed à partir du rect du bouton déclencheur.
   useEffect(() => {
     if (!projectsDropdownOpen) return;
+
+    const computePosition = () => {
+      const trigger = projectsTriggerRef.current;
+      if (!trigger) return;
+      const rect = trigger.getBoundingClientRect();
+      const MENU_WIDTH = 288; // w-72
+      const MARGIN = 8;
+      const left = Math.min(
+        Math.max(rect.left + rect.width / 2 - MENU_WIDTH / 2, MARGIN),
+        window.innerWidth - MENU_WIDTH - MARGIN
+      );
+      setProjectsMenuPos({ top: rect.bottom + MARGIN, left });
+    };
+
+    computePosition();
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setProjectsDropdownOpen(false);
@@ -307,15 +338,27 @@ useEffect(() => {
       }
     };
     const onClickOutside = (e: MouseEvent) => {
-      if (projectsDropdownRef.current && !projectsDropdownRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const insideTrigger = projectsDropdownRef.current?.contains(target);
+      const insideMenu = projectsMenuRef.current?.contains(target);
+      if (!insideTrigger && !insideMenu) {
         setProjectsDropdownOpen(false);
       }
     };
+    // Le menu est positionné en fixed à partir du rect du déclencheur — un scroll
+    // ou un resize le désynchroniserait visuellement de son bouton. Le fermer est
+    // plus simple et plus sûr qu'un recalcul en continu pour un menu de nav.
+    const onScrollOrResize = () => setProjectsDropdownOpen(false);
+
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("mousedown", onClickOutside);
+    window.addEventListener("scroll", onScrollOrResize, { capture: true, passive: true });
+    window.addEventListener("resize", onScrollOrResize);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("scroll", onScrollOrResize, { capture: true });
+      window.removeEventListener("resize", onScrollOrResize);
     };
   }, [projectsDropdownOpen]);
 
@@ -499,10 +542,12 @@ useEffect(() => {
                           <path d="M2 3.5 L5 6.5 L8 3.5" />
                         </svg>
                       </button>
-                      {projectsDropdownOpen && (
+                      {projectsDropdownOpen && projectsMenuPos && createPortal(
                         <div
+                          ref={projectsMenuRef}
                           role="menu"
-                          className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-[60]"
+                          style={{ top: projectsMenuPos.top, left: projectsMenuPos.left }}
+                          className="fixed w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-[60]"
                         >
                           {trackFeaturedProjects.length > 0 && (
                             <>
@@ -542,7 +587,8 @@ useEffect(() => {
                               <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
                             </svg>
                           </Link>
-                        </div>
+                        </div>,
+                        document.body
                       )}
                     </div>
                   );
