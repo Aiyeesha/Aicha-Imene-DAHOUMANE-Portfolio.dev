@@ -27,6 +27,10 @@ type ProjectRow = {
   sort_order: number | null; created_at: string | null;
 };
 
+type ProjectTranslationRow = {
+  slug: string; locale: string; title: string | null; summary: string | null;
+};
+
 type MessageRow = {
   id: string; name: string; email: string; topic: string | null;
   subject: string | null; message: string; locale: string | null;
@@ -75,12 +79,17 @@ async function countBlogArticles() {
 async function fetchDashboardData() {
   const supabase = createAdminSupabaseClient();
 
-  const [projects, messages, testimonials, blog] = await Promise.all([
+  const [projects, projectTranslations, messages, testimonials, blog] = await Promise.all([
     supabase
       .from("projects")
       .select("id, slug, locale, title, status, track, featured, sort_order, created_at")
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false }),
+
+    supabase
+      .from("projects")
+      .select("slug, locale, title, summary")
+      .eq("status", "published"),
 
     supabase
       .from("messages")
@@ -98,9 +107,10 @@ async function fetchDashboardData() {
   ]);
 
   return {
-    projects:     (projects.data     ?? []) as ProjectRow[],
-    messages:     (messages.data     ?? []) as MessageRow[],
-    testimonials: (testimonials.data ?? []) as TestimonialRow[],
+    projects:             (projects.data             ?? []) as ProjectRow[],
+    projectTranslations:  (projectTranslations.data   ?? []) as ProjectTranslationRow[],
+    messages:             (messages.data              ?? []) as MessageRow[],
+    testimonials:         (testimonials.data          ?? []) as TestimonialRow[],
     blog,
     errors: {
       projects:     projects.error?.message,
@@ -108,6 +118,46 @@ async function fetchDashboardData() {
       testimonials: testimonials.error?.message,
     },
   };
+}
+
+// ── Translation-completeness check (published projects only) ──────────────────
+//
+// Heuristic, not a hard schema check: a locale row "exists" in Supabase even
+// when its title/summary was never actually translated — the FR/ES text just
+// silently equals the EN source (this is exactly how the ES gap on the two
+// Salesforce⇄Infra bridge projects went unnoticed, see audit 2026-08-13).
+// Flags any fr/es title or summary that's byte-identical (case/space-insensitive)
+// to its en counterpart, or missing outright.
+type TranslationGap = { slug: string; locale: "fr" | "es"; field: "title" | "summary"; reason: "missing" | "matches_en" };
+
+function findProjectTranslationGaps(rows: ProjectTranslationRow[]): TranslationGap[] {
+  const bySlug = new Map<string, Record<string, ProjectTranslationRow>>();
+  for (const r of rows) {
+    const entry = bySlug.get(r.slug) ?? {};
+    entry[r.locale] = r;
+    bySlug.set(r.slug, entry);
+  }
+
+  const norm = (s: string | null) => (s ?? "").trim().toLowerCase();
+  const gaps: TranslationGap[] = [];
+
+  for (const [slug, byLocale] of bySlug) {
+    const en = byLocale.en;
+    if (!en) continue;
+
+    for (const locale of ["fr", "es"] as const) {
+      const row = byLocale[locale];
+      for (const field of ["title", "summary"] as const) {
+        if (!row || !norm(row[field])) {
+          gaps.push({ slug, locale, field, reason: "missing" });
+        } else if (norm(row[field]) === norm(en[field]) && norm(en[field])) {
+          gaps.push({ slug, locale, field, reason: "matches_en" });
+        }
+      }
+    }
+  }
+
+  return gaps;
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
@@ -168,8 +218,10 @@ function SectionHeader({ title, count, right }: { title: string; count?: number;
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AdminPage() {
-  const { projects, messages, testimonials, blog, errors } =
+  const { projects, projectTranslations, messages, testimonials, blog, errors } =
     await fetchDashboardData();
+
+  const projectTranslationGaps = findProjectTranslationGaps(projectTranslations);
 
   // Stats projets
   const enProjects = projects.filter((p) => p.locale === "en");
@@ -296,6 +348,54 @@ export default async function AdminPage() {
                 {slug}
               </span>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Projets — traductions à vérifier ──────────────────────────────────── */}
+      {/* Un slug "present" en FR/ES ne veut pas dire "traduit" — voir le gap ES
+          trouvé sur les 2 projets pont (audit 2026-08-13) : titre/description
+          identiques à l'EN, jamais rédigés en espagnol. Cette section rend ce
+          genre d'écart visible avant qu'un visiteur ne le découvre. */}
+      {projectTranslationGaps.length > 0 && (
+        <section>
+          <SectionHeader
+            title="Projets — traductions à vérifier"
+            count={projectTranslationGaps.length}
+            right={
+              <div className="text-xs text-slate-500">
+                Champ identique à l&apos;EN ou manquant
+              </div>
+            }
+          />
+          <div className="overflow-x-auto rounded-xl border border-white/10">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-slate-500">
+                  <th className="px-4 py-3">Slug</th>
+                  <th className="px-4 py-3">Locale</th>
+                  <th className="px-4 py-3">Champ</th>
+                  <th className="px-4 py-3">Problème</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {projectTranslationGaps.map((g) => (
+                  <tr key={`${g.slug}-${g.locale}-${g.field}`} className="hover:bg-white/[0.03] transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs text-slate-300">{g.slug}</td>
+                    <td className="px-4 py-3">
+                      <Badge label={g.locale.toUpperCase()} color="bg-slate-500/15 text-slate-400" />
+                    </td>
+                    <td className="px-4 py-3 text-slate-400">{g.field}</td>
+                    <td className="px-4 py-3">
+                      <Badge
+                        label={g.reason === "missing" ? "manquant" : "= EN"}
+                        color={g.reason === "missing" ? "bg-rose-500/15 text-rose-400" : "bg-amber-500/15 text-amber-400"}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       )}

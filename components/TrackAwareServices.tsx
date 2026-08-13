@@ -209,13 +209,27 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
 
     {/* MATURITÉ D'EXPLOITATION — /status et /changelog présentés comme preuve
         DevSecOps (observabilité réelle, remédiation CVE documentée), pas comme
-        de simples liens de pied de page. IT Ops uniquement : ce sont des artefacts
-        d'exploitation, pas un argument de vente Salesforce. */}
-    {mounted && effectiveTrack === "itops" && (
+        de simples liens de pied de page. Affiché sur les deux tracks depuis
+        l'audit 2026-08-13 : c'était auparavant IT Ops uniquement au motif que
+        /status et /changelog sont des artefacts d'exploitation, pas un argument
+        de vente Salesforce — mais la discipline qu'ils prouvent (rigueur,
+        traçabilité, incidents documentés plutôt que cachés) est exactement le
+        même argument que le pont Salesforce ⇄ Infra fait déjà sur cette page,
+        donc la cacher côté Salesforce affaiblissait le positionnement hybride
+        plus qu'elle ne le servait. Le texte (maturityBodySalesforce) recadre
+        l'exemple sur le pipeline CI/CD Salesforce plutôt que de dupliquer le
+        texte IT Ops tel quel. */}
+    {mounted && (
       <Reveal delayMs={110 + cards.length * 60}>
-        <div className="mt-4 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04] dark:bg-violet-400/[0.06] p-6 md:p-7">
+        <div className={`mt-4 rounded-2xl border p-6 md:p-7 ${
+          effectiveTrack === "salesforce"
+            ? "border-cyan-500/20 bg-cyan-500/[0.04] dark:bg-cyan-400/[0.06]"
+            : "border-violet-500/20 bg-violet-500/[0.04] dark:bg-violet-400/[0.06]"
+        }`}>
           <h3 className="font-semibold text-slate-900 dark:text-white">{t("services.maturityTitle")}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted dark:text-slate-400">{t("services.maturityBody")}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted dark:text-slate-400">
+            {t(effectiveTrack === "salesforce" ? "services.maturityBodySalesforce" : "services.maturityBody")}
+          </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href={`/${locale}/status`}
