@@ -147,6 +147,67 @@ export default function Navbar({
   const projectsDropdownRef = useRef<HTMLDivElement | null>(null);
   const projectsTriggerRef = useRef<HTMLButtonElement | null>(null);
 
+  // Débordement du nav desktop — voir audit 2026-08-13 : #desktop-nav est
+  // overflow-x-auto avec scrollbar masquée ([scrollbar-width:none]), ce qui
+  // veut dire qu'un contenu débordant (mesuré : ~1011px de contenu pour
+  // ~512px de large sur un des viewports testés, autour du seuil xl=1280px)
+  // était invisible ET indétectable — pas de scrollbar, pas de dégradé, pas
+  // de molette (le scroll vertical natif ne redirige pas vers le scroll
+  // horizontal d'un conteneur overflow-x-auto). Résultat : Projets/Blog/
+  // Contact/Cluster Sécurité pouvaient être hors champ sans aucun indice.
+  // Fix : boutons chevron visibles uniquement quand il y a réellement du
+  // contenu cliqué hors champ de ce côté, + molette redirigée en scroll
+  // horizontal pendant le survol.
+  const desktopNavRef = useRef<HTMLDivElement | null>(null);
+  const [navOverflow, setNavOverflow] = useState({ left: false, right: false });
+
+  const updateNavOverflow = () => {
+    const el = desktopNavRef.current;
+    if (!el) return;
+    setNavOverflow({
+      left: el.scrollLeft > 4,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+    });
+  };
+
+  useEffect(() => {
+    const el = desktopNavRef.current;
+    if (!el) return;
+
+    updateNavOverflow();
+
+    const onWheel = (e: WheelEvent) => {
+      // Ne redirige que si le conteneur a réellement quelque chose à défiler
+      // horizontalement — sinon on casse le scroll vertical de la page pour rien.
+      if (el.scrollWidth <= el.clientWidth) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+
+    const ro = new ResizeObserver(updateNavOverflow);
+    ro.observe(el);
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("scroll", updateNavOverflow, { passive: true });
+    window.addEventListener("resize", updateNavOverflow);
+
+    return () => {
+      ro.disconnect();
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("scroll", updateNavOverflow);
+      window.removeEventListener("resize", updateNavOverflow);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, securityClusterCount, featuredProjects]);
+
+  const scrollNavBy = (delta: number) => {
+    // Pas de behavior:"smooth" — sur certains environnements (navigateurs
+    // automatisés/CI notamment) l'animation ne se termine jamais et scrollLeft
+    // reste bloqué à 0, ce qui a rendu le bouton silencieusement inopérant
+    // pendant la vérification de ce correctif. Un scroll instantané est fiable
+    // partout et reste un pattern courant pour ce type de chevrons de nav.
+    desktopNavRef.current?.scrollBy({ left: delta });
+  };
+
   const menuRef = useRef<HTMLDivElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 // Single keydown handler: Escape closes menu + Tab focus-trap + scroll-lock.
@@ -340,10 +401,26 @@ useEffect(() => {
           </Link>
 
           {/* Desktop nav — visible seulement à xl (≥1280px) pour éviter le débordement.
-              En dessous de xl, le menu hamburger prend le relais. */}
-          <div className="hidden xl:flex flex-1 min-w-0 items-center justify-center">
+              En dessous de xl, le menu hamburger prend le relais.
+              `relative` ajouté pour ancrer les boutons chevron de scroll (voir plus bas). */}
+          <div className="hidden xl:flex relative flex-1 min-w-0 items-center justify-center">
+            {/* Chevron gauche — visible seulement s'il y a du contenu défilé hors champ à gauche */}
+            {navOverflow.left && (
+              <button
+                type="button"
+                onClick={() => scrollNavBy(-140)}
+                aria-label={t("a11y.scrollNavLeft")}
+                className="absolute left-0 z-20 grid h-8 w-8 place-items-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-md hover:bg-black/5 dark:hover:bg-white/10 soft-ring"
+              >
+                <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6.5 1.5 3.5 5l3 3.5" />
+                </svg>
+              </button>
+            )}
             <div
               id="desktop-nav"
+              ref={desktopNavRef}
               className="relative flex h-11 max-w-full min-w-0 items-center gap-0 overflow-x-auto rounded-full px-1
                          [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
@@ -467,6 +544,22 @@ useEffect(() => {
                 {t("nav.securityClusterLink", { count: securityClusterCount })}
               </Link>
             </div>
+            {/* Chevron droit — visible seulement s'il reste du contenu hors champ à droite.
+                C'est précisément ce qui manquait avant le fix : Projets/Blog/Contact/Cluster
+                Sécurité pouvaient être dans cet état sans aucun signal visuel. */}
+            {navOverflow.right && (
+              <button
+                type="button"
+                onClick={() => scrollNavBy(140)}
+                aria-label={t("a11y.scrollNavRight")}
+                className="absolute right-0 z-20 grid h-8 w-8 place-items-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-md hover:bg-black/5 dark:hover:bg-white/10 soft-ring"
+              >
+                <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3.5 1.5 6.5 5l-3 3.5" />
+                </svg>
+              </button>
+            )}
           </div>
 
           <div className="flex flex-shrink-0 items-center gap-3">
