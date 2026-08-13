@@ -1,0 +1,75 @@
+name: Content Publish Safety
+
+# ── Objectif ──────────────────────────────────────────────────────────────────
+# Vérifie quotidiennement que `public.projects` (Supabase) ne viole aucune des
+# deux règles de publication trouvées lors de l'audit du 2026-08-13 :
+#   1. Aucun projet publié dans une locale sans l'être dans les 3 (en/fr/es
+#      ou 'multi') — sinon le site ES diverge silencieusement de EN/FR.
+#   2. Aucun projet SaaS de l'auteure (orgdocs-saas, sfrelease-saas, et tout
+#      futur produit ajouté à SAAS_EMBARGO_SLUGS dans le script) ne doit
+#      jamais être `published` ou porter de `live_url` avant 2027 — une
+#      contrainte de stratégie de carrière, pas une règle que le schéma
+#      applique tout seul.
+#
+# Contrairement à drift-check.yml, ce check ne "skip" pas silencieusement si
+# le secret manque : son unique rôle est la sécurité de contenu, un skip
+# silencieux masquerait exactement le risque qu'il existe pour attraper.
+#
+# Secret requis dans les paramètres du dépôt (Settings → Secrets and
+# variables → Actions) :
+#   SUPABASE_SERVICE_ROLE_KEY   — clé service_role (lecture seule utilisée ici,
+#                                  mais la clé elle-même a des droits d'écriture,
+#                                  donc à traiter comme un secret sensible)
+# Réutilise le secret existant NEXT_PUBLIC_SUPABASE_URL (déjà configuré pour
+# le job build-test de ci.yml).
+
+on:
+  schedule:
+    # Quotidien à 05:00 UTC — avant drift-check.yml (06:00 UTC).
+    - cron: "0 5 * * *"
+  workflow_dispatch: {}
+
+# Permissions minimales — principe du moindre privilège (Scorecard).
+# Ce workflow n'écrit rien dans le dépôt ni dans Supabase (script read-only).
+permissions: read-all
+
+jobs:
+  publish-safety:
+    name: Publish safety (locale parity + SaaS embargo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: npm ci
+
+      - name: Check secret is configured
+        run: |
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY}" ]; then
+            echo "::error::SUPABASE_SERVICE_ROLE_KEY is not configured in repo secrets."
+            echo "This check exists to catch a real risk (SaaS products published"
+            echo "early, or a locale silently missing on the ES site) — it fails"
+            echo "loudly instead of skipping so the gap doesn't go unnoticed."
+            echo "Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+      - name: Run publish safety check
+        run: npm run content:safety
