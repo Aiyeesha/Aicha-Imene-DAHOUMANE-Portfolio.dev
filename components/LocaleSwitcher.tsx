@@ -36,12 +36,12 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1 min-[1850px]:gap-2">
       {routing.locales.map((l) => (
         <Link
           key={l}
           href={hrefFor(l)}
-          className={`rounded-full border px-3 py-1.5 text-sm ${
+          className={`rounded-full border px-2 min-[1850px]:px-3 py-1.5 text-sm ${
             l === current
               ? track === "salesforce"
                 ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
