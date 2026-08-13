@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-13T08:35:44.862Z
+// Last export: 2026-08-13T09:37:53.642Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -222,7 +222,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Laptop hardware upgrade (RAM + SSD)",
+        "title": "Actualización de hardware del portátil HP — RAM y SSD",
         "heroSubtitle": "Samsung DDR4 · Samsung SSD · Clonado Acronis · HP Laptop · Proyecto personal",
         "sections": [
           {
@@ -521,7 +521,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Java debugging & refactor (Heme Biotech)",
+        "title": "Depuración y refactorización Java (Heme Biotech)",
         "heroSubtitle": "Depurar y refactorizar una aplicación Java de análisis de síntomas (Heme Biotech)",
         "sections": [
           {
@@ -1788,7 +1788,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Disk backup & partition management (AOMEI + WSB)",
+        "title": "Particionado y copia de seguridad de disco (AOMEI + Windows Server Backup)",
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Copia de seguridad Windows Server · VirtualBox · Greta du Val d'Oise",
         "sections": [
           {
@@ -2108,7 +2108,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Active Directory roaming profiles",
+        "title": "Configuración de perfiles móviles de AD DS",
         "heroSubtitle": "Active Directory · Perfiles móviles · Windows Server · Dominio EBTAI · Greta du Val d'Oise",
         "sections": [
           {
@@ -2506,7 +2506,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Virtualized lab: Windows Server 2022 + AD DS",
+        "title": "Mantener un entorno IT virtualizado",
         "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS",
         "sections": [
           {
@@ -2837,7 +2837,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Windows 10 provisioning + automated software install",
+        "title": "Preparación de puesto de trabajo: instalación de Windows 10 y despliegue de software",
         "heroSubtitle": "Windows 10 · Ninite · Office 2016 · OOBE · Greta du Val d'Oise",
         "sections": [
           {
@@ -3868,7 +3868,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Network Scanner (FastAPI + React)",
+        "title": "Escáner de red (FastAPI + React)",
         "heroSubtitle": "Escáner de red en tiempo real — backend FastAPI + WebSocket + interfaz React/Vite",
         "sections": [
           {
@@ -4151,7 +4151,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Password Strength Analyzer (Python CLI)",
+        "title": "Analizador de fortaleza de contraseñas (CLI Python)",
         "heroSubtitle": "Analizador de fortaleza de contraseñas — entropía, regex, HaveIBeenPwned (CLI Python)",
         "sections": [
           {
@@ -5053,7 +5053,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Remote monitoring & endpoint security (Datto RMM)",
+        "title": "Supervisión de infraestructura con Datto RMM",
         "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
         "sections": [
           {
@@ -5429,7 +5429,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Windows Autopilot & mass imaging (Dell fleet)",
+        "title": "Despliegue masivo de puestos de trabajo — 264 dispositivos Dell",
         "heroSubtitle": "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP",
         "sections": [
           {
@@ -5781,7 +5781,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "IT helpdesk & incident management (Autotask PSA)",
+        "title": "Gestión de incidencias IT — Autotask, Webroot y Datto RMM",
         "heroSubtitle": "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP",
         "sections": [
           {
@@ -6149,7 +6149,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Backup operations & alert triage (Acronis)",
+        "title": "Supervisión de copias de seguridad en la nube con Acronis Cyber Backup",
         "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
         "sections": [
           {
@@ -6520,7 +6520,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "pfSense firewall + Squid transparent proxy",
+        "title": "Asegurar el acceso a Internet con pfSense y Squid",
         "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
         "sections": [
           {
@@ -6743,7 +6743,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "fr": {
-        "title": "Admin Dashboard — Next.js 16 + Supabase",
+        "title": "Tableau de bord admin — Next.js 16 + Supabase",
         "heroSubtitle": "Une route /admin sécurisée par HTTP Basic Auth, client Supabase service_role, et zéro dépendance supplémentaire.",
         "sections": [
           {
@@ -6850,7 +6850,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Admin Dashboard — Next.js 16 + Supabase",
+        "title": "Panel de administración — Next.js 16 + Supabase",
         "heroSubtitle": "Una ruta /admin segura construida con HTTP Basic Auth, Supabase service_role, y cero dependencias adicionales.",
         "sections": [
           {
@@ -7192,7 +7192,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Wi-Fi access point configuration (TP-Link)",
+        "title": "Configuración de un punto de acceso Wi-Fi (TP-Link)",
         "heroSubtitle": "Punto de acceso TP-Link · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise",
         "sections": [
           {
@@ -7496,7 +7496,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "IT hardware procurement quote (Excel devis)",
+        "title": "Aprovisionamiento de hardware IT: elaboración de un presupuesto Excel",
         "heroSubtitle": "Dimensionamiento de hardware · Presupuesto Excel · Investigación de componentes · Greta du Val d'Oise",
         "sections": [
           {
@@ -7791,7 +7791,7 @@ export const projectDetails: ProjectDetails[] = [
         ]
       },
       "es": {
-        "title": "Outlook 2016 email provisioning (Day-1 onboarding)",
+        "title": "Aprovisionamiento de correo Outlook 2016 (incorporación día 1)",
         "heroSubtitle": "Outlook 2016 · Exchange ActiveSync · Incorporación de usuarios · Greta du Val d'Oise",
         "sections": [
           {

@@ -404,7 +404,19 @@ useEffect(() => {
               En dessous de xl, le menu hamburger prend le relais.
               `relative` ajouté pour ancrer les boutons chevron de scroll (voir plus bas). */}
           <div className="hidden xl:flex relative flex-1 min-w-0 items-center justify-center">
-            {/* Chevron gauche — visible seulement s'il y a du contenu défilé hors champ à gauche */}
+            {/* Chevron gauche — visible seulement s'il y a du contenu défilé hors champ à gauche.
+                Dégradé de fondu (audit 2026-08-13, itération 2) : le chevron seul, à 8x8px,
+                s'est révélé trop discret en usage réel (repéré par l'utilisatrice elle-même
+                sur le site de prod) — la moitié des items de nav (Services/Projets/Blog/
+                Contact/Cluster Sécurité) pouvait rester hors champ sans qu'un visiteur ne le
+                remarque. Le dégradé rend le "il y a plus de contenu ici" perceptible même
+                sans regarder le petit bouton rond. z-10, sous le chevron (z-20). */}
+            {navOverflow.left && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute left-0 z-10 h-11 w-12 bg-gradient-to-r from-white/95 dark:from-[#070B1A]/95 to-transparent"
+              />
+            )}
             {navOverflow.left && (
               <button
                 type="button"
@@ -545,8 +557,14 @@ useEffect(() => {
               </Link>
             </div>
             {/* Chevron droit — visible seulement s'il reste du contenu hors champ à droite.
-                C'est précisément ce qui manquait avant le fix : Projets/Blog/Contact/Cluster
-                Sécurité pouvaient être dans cet état sans aucun signal visuel. */}
+                Voir le commentaire du chevron gauche : dégradé ajouté en itération 2 de
+                l'audit 2026-08-13, le chevron seul ne suffisait pas comme affordance. */}
+            {navOverflow.right && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute right-0 z-10 h-11 w-12 bg-gradient-to-l from-white/95 dark:from-[#070B1A]/95 to-transparent"
+              />
+            )}
             {navOverflow.right && (
               <button
                 type="button"
