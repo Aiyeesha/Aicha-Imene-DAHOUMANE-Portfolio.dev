@@ -107,7 +107,7 @@ UPDATE projects SET
       "title": "Source & references",
       "items": [
         {
-          "href": "https://github.com/Aiyeesha/portfolio-next",
+          "href": "https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
           "label": "GitHub repository"
         },
         {
@@ -225,7 +225,7 @@ UPDATE projects SET
       "title": "Source & références",
       "items": [
         {
-          "href": "https://github.com/Aiyeesha/portfolio-next",
+          "href": "https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
           "label": "Dépôt GitHub"
         },
         {

@@ -3,7 +3,7 @@
 # OSSF Scorecard — évalue automatiquement le niveau de sécurité supply chain.
 # Publie les résultats dans GitHub Security → Code Scanning (onglet Security).
 #
-# Score public visible sur : https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/portfolio-next
+# Score public visible sur : https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev
 #
 # Critères analysés : branch protection, code review, signed commits, CI tests,
 # dependency pinning, vulnerability disclosure, token permissions, SAST…

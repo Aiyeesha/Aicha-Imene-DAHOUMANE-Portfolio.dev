@@ -106,7 +106,7 @@ async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
   pdfDoc.setTitle(title);
   pdfDoc.setAuthor(author);
   pdfDoc.setSubject(title);
-  pdfDoc.setCreator("portfolio-next / Puppeteer + pdf-lib");
+  pdfDoc.setCreator("Aicha_Imene_DAHOUMANE_Portfolio.dev / Puppeteer + pdf-lib");
   pdfDoc.setProducer("Aïcha Imène DAHOUMANE");
   const patchedBytes = await pdfDoc.save();
   writeFileSync(pdfPath, patchedBytes);
