@@ -4,7 +4,7 @@
 
 If you discover a security vulnerability in this portfolio, please report it responsibly:
 
-**Email** : ai.dahoumane@gmail.com
+**Email** : ai.dahoumane@proton.me
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
