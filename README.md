@@ -152,7 +152,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Recommended | Displayed contact email |
 | `NEXT_PUBLIC_LINKEDIN_URL` | Recommended | LinkedIn profile URL |
 | `NEXT_PUBLIC_CALENDLY_URL` | Optional | Calendly booking link |
-| `NEXT_PUBLIC_CV_PDF_URL` | Optional | CV PDF URL (fallback: `/cv/cv-{locale}-{track}.pdf`) |
+| `NEXT_PUBLIC_CV_PDF_URL` | Optional | CV PDF URL (fallback: `/cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf`) |
 | `NEXT_PUBLIC_AVATAR_URL` | Optional | Avatar image URL (fallback: `/avatar.webp`) |
 | `NEXT_PUBLIC_SAME_AS` | Optional | Comma-separated social profile URLs (JSON-LD sameAs) |
 | `CACHE_INVALIDATE_SECRET` | Optional | Secret for `/api/cache/invalidate` endpoint |

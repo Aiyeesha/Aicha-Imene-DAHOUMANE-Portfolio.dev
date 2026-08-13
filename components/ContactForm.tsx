@@ -124,7 +124,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
     return () => clearTimeout(timer);
   }, [status]);
 
-  const cvUrl = `/cv/cv-${locale}-${track}.pdf`;
+  const cvUrl = `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-${track}.pdf`;
 
   // Show configuration hints only in non-production builds.
   // The page should not display internal setup instructions to visitors.
