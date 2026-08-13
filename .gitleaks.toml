@@ -1,4 +1,4 @@
-title = "gitleaks config — Aicha_Imene_DAHOUMANE_Portfolio.dev"
+title = "gitleaks config — Aicha-Imene-DAHOUMANE-Portfolio.dev"
 
 [allowlist]
   description = "Known false positives"

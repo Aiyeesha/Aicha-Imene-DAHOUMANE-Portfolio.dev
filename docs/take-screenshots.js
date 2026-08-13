@@ -6,7 +6,7 @@
 const { chromium } = require("playwright");
 const path = require("path");
 
-const BASE   = "https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app";
+const BASE   = "https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app";
 const OUT    = path.join(__dirname, "screenshots");
 const VPORT  = { width: 1280, height: 800 };
 
