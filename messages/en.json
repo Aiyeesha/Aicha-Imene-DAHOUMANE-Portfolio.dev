@@ -296,6 +296,8 @@
     "chooseTrack": "Choose a track",
     "chooseItOps": "Switch to IT Ops track",
     "chooseSalesforce": "Switch to Salesforce track",
+    "scrollNavLeft": "Scroll menu left",
+    "scrollNavRight": "Scroll menu right",
     "scrollToTop": "Back to top",
     "opensPage": "Opens a dedicated page"
   },
@@ -305,7 +307,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce Developer & IT Consultant | Remote · Europe",
-    "description": "Salesforce Developer & IT Consultant (Marseille, remote) — Apex, LWC, CI/CD. 55 technical articles, concrete projects. Available immediately. Missions Europe & worldwide."
+    "description": "Salesforce Developer & IT Consultant (Marseille, remote) — Apex, LWC, CI/CD. 55 technical articles, concrete projects. Available immediately. Missions Europe & worldwide.",
+    "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Remote · Europe",
+    "descriptionItops": "Systems & IT Ops Engineer (Marseille, remote) — Infrastructure, security, automation, CI/CD. 55 technical articles, concrete projects. Available immediately. Missions Europe & worldwide."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -330,6 +334,7 @@
     "discuss": "Discuss this service",
     "maturityTitle": "Operational maturity",
     "maturityBody": "This portfolio is itself run like a production product, not just presented as one: /status exposes the real state of its services (database, cache, contact form) with live-measured latency and uptime — not a static page. /changelog documents every incident actually handled, including a client data leak that was found and fixed, and several security alerts (CVEs) remediated with the technical reasoning behind the fix, not a blind patch.",
+    "maturityBodySalesforce": "The same discipline carries over to my Salesforce delivery work: a CI/CD pipeline with automated Apex validations and traceable sandbox-to-production deployments (see the Salesforce ⇄ Infra bridge project above). This portfolio is that discipline applied at scale: /status exposes the real health of its services live, and /changelog documents every incident actually handled — including a client data leak that was found and fixed — with the technical reasoning behind the fix, not a blind patch.",
     "maturityStatusCta": "See live status",
     "maturityChangelogCta": "See the changelog"
   },

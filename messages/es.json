@@ -296,6 +296,8 @@
     "chooseTrack": "Elegir un área",
     "chooseItOps": "Cambiar al área IT Ops",
     "chooseSalesforce": "Cambiar al área Salesforce",
+    "scrollNavLeft": "Desplazar el menú a la izquierda",
+    "scrollNavRight": "Desplazar el menú a la derecha",
     "scrollToTop": "Volver arriba",
     "opensPage": "Abre una página dedicada"
   },
@@ -305,7 +307,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce & Consultora IT | Remoto · Europa",
-    "description": "Desarrolladora Salesforce & Consultora IT (Marsella, remoto) — Apex, LWC, CI/CD. 55 artículos técnicos, proyectos concretos. Disponible de inmediato. Proyectos en Europa y a nivel mundial."
+    "description": "Desarrolladora Salesforce & Consultora IT (Marsella, remoto) — Apex, LWC, CI/CD. 55 artículos técnicos, proyectos concretos. Disponible de inmediato. Proyectos en Europa y a nivel mundial.",
+    "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Remoto · Europa",
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Marsella, remoto) — Infraestructura, seguridad, automatización, CI/CD. 55 artículos técnicos, proyectos concretos. Disponible de inmediato. Proyectos en Europa y a nivel mundial."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -329,6 +333,7 @@
   "services": {
     "maturityTitle": "Madurez operativa",
     "maturityBody": "Este portfolio se explota como un producto en producción, no solo se presenta como tal: /status muestra el estado real de sus servicios (base de datos, caché, formulario de contacto) con latencia y disponibilidad medidas en directo — no una página estática. El /changelog documenta cada incidente realmente gestionado, incluida una fuga de datos de cliente detectada y corregida, y varias alertas de seguridad (CVE) resueltas con la justificación técnica de la solución elegida, no un parche aplicado a ciegas.",
+    "maturityBodySalesforce": "La misma disciplina se aplica a mis entregas Salesforce: un pipeline CI/CD con validaciones Apex automatizadas y despliegues trazables de sandbox a producción (ver el proyecto puente Salesforce ⇄ Infra más arriba). Este portfolio es esa disciplina aplicada a escala: /status muestra en directo el estado real de sus servicios, y el /changelog documenta cada incidente realmente gestionado — incluida una fuga de datos de cliente detectada y corregida — con la justificación técnica de la solución elegida, no un parche aplicado a ciegas.",
     "maturityStatusCta": "Ver el estado en directo",
     "maturityChangelogCta": "Ver el changelog",
     "discuss": "Consultar sobre este servicio"
