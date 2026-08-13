@@ -1,6 +1,6 @@
 // scripts/generate-cv-pdf.mjs
 // ---------------------------
-// Génère les 4 fichiers PDF des CV à partir de leurs sources HTML.
+// Génère les 6 fichiers PDF des CV à partir de leurs sources HTML.
 // Utilise Puppeteer (Chromium headless) pour un rendu fidèle au navigateur.
 //
 // Usage : node scripts/generate-cv-pdf.mjs
@@ -20,43 +20,43 @@ const CV_DIR     = join(__dirname, "../public/cv");
 // Liste des CV à générer : source HTML → PDF cible + métadonnées
 const CV_FILES = [
   {
-    html: "cv-en-itops.html",
-    pdf: "cv-en-itops.pdf",
+    html: "Aicha-Imene-DAHOUMANE-CV-en-itops.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-en-itops.pdf",
     scale: 1.02,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systems & Networks — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
-    html: "cv-en-salesforce.html",
-    pdf: "cv-en-salesforce.pdf",
+    html: "Aicha-Imene-DAHOUMANE-CV-en-salesforce.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-en-salesforce.pdf",
     scale: 1.02,
     title: "Aïcha Imène DAHOUMANE — Salesforce Developer — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
-    html: "cv-fr-itops.html",
-    pdf: "cv-fr-itops.pdf",
+    html: "Aicha-Imene-DAHOUMANE-CV-fr-itops.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops.pdf",
     scale: 1.02,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
-    html: "cv-fr-salesforce.html",
-    pdf: "cv-fr-salesforce.pdf",
+    html: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.pdf",
     scale: 1.02,
     title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
-    html: "cv-es-itops.html",
-    pdf: "cv-es-itops.pdf",
+    html: "Aicha-Imene-DAHOUMANE-CV-es-itops.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-es-itops.pdf",
     scale: 1.02,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
-    html: "cv-es-salesforce.html",
-    pdf: "cv-es-salesforce.pdf",
+    html: "Aicha-Imene-DAHOUMANE-CV-es-salesforce.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-es-salesforce.pdf",
     scale: 0.97,
     title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
