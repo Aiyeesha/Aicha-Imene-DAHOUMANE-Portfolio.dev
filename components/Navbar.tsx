@@ -26,7 +26,9 @@ function CommandPaletteTrigger() {
         // Simule le raccourci clavier pour ouvrir la palette
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
       }}
-      className="hidden 2xl:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+      // Repoussé de 2xl à 1850px avec le reste du relâchement d'espacement du
+      // header (audit 2026-08-13, itération 4) — voir desktopLinkClass.
+      className="hidden min-[1850px]:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
     >
       <span>⌘K</span>
     </button>
@@ -333,8 +335,14 @@ useEffect(() => {
   // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
   // FR/ES sont plus longs qu'en anglais et débordaient le conteneur scrollable à 1280px
   // (ex: "Contact"/"Contacto" tronqué, ~32-48px de débordement mesuré) — voir audit.
+  // Seuil d'élargissement repoussé de 2xl (1536px) à 1850px (itération 4) : le
+  // relâchement pile à 2xl (padding + taille de texte qui grossissent en même
+  // temps que ⌘K et le tagline de marque réapparaissent) recréait un pic de
+  // débordement à 1536-1849px (jusqu'à 244px mesuré à 1536px pile) — pire que
+  // sans aucun relâchement. Vérifié empiriquement : 0 débordement de 1280 à
+  // 1849px avec ce seuil, ≤5px à 1920px une fois tout relâché ensemble.
   const desktopLinkClass = (id: string) =>
-    `relative z-10 rounded-full px-1 2xl:px-3 py-2 text-[13px] 2xl:text-sm leading-none transition-colors soft-ring ${
+    `relative z-10 rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none transition-colors soft-ring ${
       desktopActiveId === id
         ? "text-cyan-700 dark:text-cyan-200"
         : "text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white"
@@ -387,8 +395,19 @@ useEffect(() => {
           - Left: brand
           - Center: menu (flex-1, min-w-0)
           - Right: toggles + CTA
-        */}
-        <div className="mx-auto flex h-full max-w-7xl items-center gap-3 px-4 lg:px-6">
+
+          max-w élargi de 7xl (1280px) à 1600px (audit 2026-08-13, itération 4) :
+          au-delà de 1280px de viewport, ce conteneur restait plafonné à 1280px
+          quelle que soit la largeur d'écran réelle — un moniteur large n'apportait
+          donc AUCUNE marge supplémentaire au nav, alors que ⌘K (dès 2xl=1536px) et
+          le tagline de marque (masqué à xl, réaffiché à 2xl) réclament tous deux
+          plus d'espace pile à ce seuil. Résultat mesuré en prod : le débordement
+          était pire à 1920px (1011px de contenu pour 526px de large) qu'à 1280px,
+          alors qu'un écran plus large devrait justement donner plus de place.
+          `main` reste à max-w-6xl (1152px) — un header plus large que le corps de
+          page est déjà le pattern existant du site (7xl vs 6xl), donc pas un
+          changement visuel nouveau, juste un plafond relevé. */}
+        <div className="mx-auto flex h-full max-w-[1780px] items-center gap-3 px-4 lg:px-4 min-[1850px]:px-6">
           <Link
             href={`/${locale}`}
             className={`flex flex-shrink-0 items-center gap-3 rounded-2xl border px-2.5 py-1.5 -mx-2.5 -my-1.5 transition-colors soft-ring ${
@@ -413,8 +432,10 @@ useEffect(() => {
                 BRAND_INITIALS
               )}
             </div>
-            {/* Texte du brand — masqué à xl pour libérer de l'espace au desktop nav (6 items) */}
-            <div className="hidden sm:block xl:hidden 2xl:block leading-tight">
+            {/* Texte du brand — masqué à xl pour libérer de l'espace au desktop nav.
+                Réapparaît à 1850px plutôt que 2xl (1536px), même seuil que le
+                reste du relâchement d'espacement du header — voir desktopLinkClass. */}
+            <div className="hidden sm:block xl:hidden min-[1850px]:block leading-tight">
               <div className="text-sm font-semibold">Aïcha Imène DAHOUMANE</div>
               <div className="text-xs text-muted-2">{t("nav.tagline")}</div>
             </div>
@@ -571,7 +592,7 @@ useEffect(() => {
               <Link
                 href={`/${locale}/projects?tab=security`}
                 data-section="security-cluster"
-                className="relative z-10 whitespace-nowrap rounded-full px-1 2xl:px-3 py-2 text-[13px] 2xl:text-sm leading-none inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 transition-colors soft-ring"
+                className="relative z-10 whitespace-nowrap rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 transition-colors soft-ring"
               >
                 {t("nav.securityClusterLink", { count: securityClusterCount })}
               </Link>
@@ -600,12 +621,15 @@ useEffect(() => {
             )}
           </div>
 
-          <div className="flex flex-shrink-0 items-center gap-3">
+          <div className="flex flex-shrink-0 items-center gap-2 min-[1850px]:gap-3">
             {/*
               Desktop / tablet controls. On very small screens we move these into the mobile drawer
               to prevent them from being pushed out of view by the brand.
+              gap resserré à xl (audit 2026-08-13, itération 4) : quelques px de
+              marge en plus pour le nav central pile là où l'espace est le plus
+              contraint (voir aussi LocaleSwitcher et le max-w du header).
             */}
-            <div className="hidden sm:flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 min-[1850px]:gap-3">
               <TrackToggle />
               <ThemeToggle />
               <LocaleSwitcher current={locale} />
