@@ -96,7 +96,7 @@ export default function TrackAwareHero() {
   // Priorité par CV :
   //   1. NEXT_PUBLIC_CV_PDF_URL si elle contient les tokens {locale} et/ou {track}
   //      (ex: "https://storage.example.com/cv-{locale}-{track}.pdf")
-  //   2. Pattern local : /cv/cv-{locale}-{track}.pdf  (6 fichiers dans /public/cv/)
+  //   2. Pattern local : /cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf  (6 fichiers dans /public/cv/)
   const getCvUrl = (cvTrack: "itops" | "salesforce") => {
     const envUrl =
       process.env.NEXT_PUBLIC_CV_PDF_URL ||
@@ -109,7 +109,7 @@ export default function TrackAwareHero() {
         .replace(/\{track\}/g, cvTrack);
     }
 
-    return `/cv/cv-${locale}-${cvTrack}.pdf`;
+    return `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-${cvTrack}.pdf`;
   };
 
   const cvItopsUrl = getCvUrl("itops");
