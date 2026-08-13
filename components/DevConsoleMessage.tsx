@@ -30,7 +30,7 @@ export default function DevConsoleMessage() {
       process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact via the form on the site"
     );
     console.log(
-      "%c💼 GitHub: https://github.com/Aiyeesha/portfolio-next",
+      "%c💼 GitHub: https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
       "font-size:13px; color:#94a3b8;"
     );
   }, []);
