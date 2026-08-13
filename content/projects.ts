@@ -851,7 +851,7 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev",
+    "repoUrl": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
     "techStack": [
       "Next.js 16",
       "Supabase",

@@ -1,6 +1,6 @@
 Contact: mailto:ai.dahoumane@gmail.com
 Expires: 2027-01-01T00:00:00.000Z
 Preferred-Languages: fr, en
-Policy: https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/en/privacy
-Canonical: https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/.well-known/security.txt
-Acknowledgments: https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/en/security/acknowledgments
+Policy: https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en/privacy
+Canonical: https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/.well-known/security.txt
+Acknowledgments: https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en/security/acknowledgments
