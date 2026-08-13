@@ -1,6 +1,6 @@
 ---
 title: "Un bug d'intégrité de données silencieux dans mon propre pipeline de tagging sécurité"
-excerpt: "Comment un script de ré-import aurait pu effacer silencieusement le flag derrière le cluster Security (16 projets) du site — la cause racine, le correctif, et le check de monitoring qui protège désormais contre ça."
+excerpt: "Comment un script de ré-import aurait pu effacer silencieusement le flag derrière le cluster Security (17 projets) du site — la cause racine, le correctif, et le check de monitoring qui protège désormais contre ça."
 date: "2026-08-12"
 tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
 featured: false
@@ -32,7 +32,7 @@ Aucun des deux scripts ne lève d'erreur quand une colonne est silencieusement o
 
 ## Pourquoi ce flag comptait
 
-Ce n'est pas cosmétique. `/projects?tab=security` et le bandeau "Security cluster" de la home filtrent tous les deux sur `is_security = true` — c'est le mécanisme qui regroupe 16 projets publiés (outillage SOC, threat modeling, veille CVE, la dimension sécurité d'un projet pont Salesforce↔Heroku) en un seul point de preuve consultable. Une régression silencieuse au reseed n'aurait fait 404 nulle part et n'aurait cassé aucun build. Elle aurait simplement fait disparaître silencieusement tout ce cluster de son propre onglet — le genre de régression facile à manquer jusqu'à ce que quelqu'un demande "attends, ils sont passés où les projets sécurité ?"
+Ce n'est pas cosmétique. `/projects?tab=security` et le bandeau "Security cluster" de la home filtrent tous les deux sur `is_security = true` — c'est le mécanisme qui regroupe 17 projets publiés (outillage SOC, threat modeling, veille CVE, la dimension sécurité d'un projet pont Salesforce↔Heroku) en un seul point de preuve consultable. Une régression silencieuse au reseed n'aurait fait 404 nulle part et n'aurait cassé aucun build. Elle aurait simplement fait disparaître silencieusement tout ce cluster de son propre onglet — le genre de régression facile à manquer jusqu'à ce que quelqu'un demande "attends, ils sont passés où les projets sécurité ?"
 
 ## Le correctif
 
