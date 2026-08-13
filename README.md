@@ -1,15 +1,15 @@
 # Aïcha Imène DAHOUMANE — Portfolio
 
-[![CI](https://github.com/Aiyeesha/portfolio-next/actions/workflows/ci.yml/badge.svg)](https://github.com/Aiyeesha/portfolio-next/actions/workflows/ci.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Aiyeesha/portfolio-next/badge)](https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/portfolio-next)
-[![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://portfolio-next-one-gold.vercel.app/en)
-[![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://portfolio-next-one-gold.vercel.app/en)
+[![CI](https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev/actions/workflows/ci.yml/badge.svg)](https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev/badge)](https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev)
+[![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/en)
+[![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Professional portfolio of a **Salesforce Developer & Consultant** with a background in systems, networks, and DevOps.
 Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills, services, and projects sections.
 
-**Live → [portfolio-next-one-gold.vercel.app/en](https://portfolio-next-one-gold.vercel.app/en)**
+**Live → [Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/en](https://Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app/en)**
 
 ---
 
@@ -117,8 +117,8 @@ Browser
 ### Install & run
 
 ```bash
-git clone https://github.com/Aiyeesha/portfolio-next.git
-cd portfolio-next/portfolio
+git clone https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev.git
+cd Aicha_Imene_DAHOUMANE_Portfolio.dev/portfolio
 npm install
 cp .env.example .env.local   # then fill in the required values
 npm run dev
