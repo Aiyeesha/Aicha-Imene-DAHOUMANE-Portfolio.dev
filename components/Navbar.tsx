@@ -15,6 +15,7 @@ import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
 import { useTrack } from "@/app/[locale]/providers";
+import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
 
 /** Petit bouton discret ⌘K pour rappeler le raccourci palette de commandes. */
@@ -70,7 +71,11 @@ export default function Navbar({
   );
 
   const pathname = usePathname();
-  const locale = (pathname.split("/")[1] || "en") as "en" | "fr";
+  // Was cast to "en" | "fr" only, missing "es" — i18n/routing.ts has supported
+  // 3 locales all along, so the runtime value could already be "es" here
+  // (harmless in template strings, but the type lied about it). AppLocale is
+  // the single source of truth for the locale union, shared with routing/middleware.
+  const locale = (pathname.split("/")[1] || routing.defaultLocale) as AppLocale;
   const [avatarSrc, setAvatarSrc] = useState<string | null>(process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp");
 
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
