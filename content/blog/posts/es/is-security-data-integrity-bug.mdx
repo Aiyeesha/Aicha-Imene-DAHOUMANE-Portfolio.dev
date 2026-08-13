@@ -1,6 +1,6 @@
 ---
 title: "Un bug silencioso de integridad de datos en mi propio pipeline de etiquetado de seguridad"
-excerpt: "Cómo un script de reimportación podría haber borrado silenciosamente el flag detrás del cluster Security (16 proyectos) del sitio — la causa raíz, la corrección y el chequeo de monitorización que ahora protege contra ello."
+excerpt: "Cómo un script de reimportación podría haber borrado silenciosamente el flag detrás del cluster Security (17 proyectos) del sitio — la causa raíz, la corrección y el chequeo de monitorización que ahora protege contra ello."
 date: "2026-08-12"
 tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
 featured: false
@@ -32,7 +32,7 @@ Ninguno de los dos scripts genera un error cuando se omite silenciosamente una c
 
 ## Por qué importaba este flag
 
-No es cosmético. `/projects?tab=security` y el banner "Security cluster" de la portada filtran ambos por `is_security = true` — es el mecanismo que agrupa 16 proyectos publicados (herramientas SOC, threat modeling, seguimiento de CVEs, la dimensión de seguridad de un proyecto puente Salesforce↔Heroku) en un único punto de prueba navegable. Una regresión silenciosa en el reseed no habría dado 404 en ningún sitio ni roto ningún build. Simplemente habría hecho desaparecer silenciosamente todo ese cluster de su propia pestaña — el tipo de regresión fácil de pasar por alto hasta que alguien pregunta "espera, ¿dónde están los proyectos de seguridad?".
+No es cosmético. `/projects?tab=security` y el banner "Security cluster" de la portada filtran ambos por `is_security = true` — es el mecanismo que agrupa 17 proyectos publicados (herramientas SOC, threat modeling, seguimiento de CVEs, la dimensión de seguridad de un proyecto puente Salesforce↔Heroku) en un único punto de prueba navegable. Una regresión silenciosa en el reseed no habría dado 404 en ningún sitio ni roto ningún build. Simplemente habría hecho desaparecer silenciosamente todo ese cluster de su propia pestaña — el tipo de regresión fácil de pasar por alto hasta que alguien pregunta "espera, ¿dónde están los proyectos de seguridad?".
 
 ## La corrección
 
