@@ -16,6 +16,7 @@
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --coverage",
     "db:migrate": "tsx scripts/apply-supabase-sql.ts",
+    "content:safety": "tsx scripts/check-publish-safety.ts",
     "cv:pdf": "node scripts/generate-cv-pdf.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
     "images:upload": "node --env-file=.env.local scripts/upload-to-supabase-storage.mjs",
