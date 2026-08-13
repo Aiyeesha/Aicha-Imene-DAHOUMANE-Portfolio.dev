@@ -17,7 +17,7 @@ export default function DevConsoleMessage() {
     );
     console.log(
       "%cThis portfolio is built with:\n" +
-        "  → Next.js 15 (App Router) + React 19 + TypeScript\n" +
+        "  → Next.js 16 (App Router) + React 19 + TypeScript\n" +
         "  → Tailwind CSS + next-themes (dark mode)\n" +
         "  → Supabase (PostgreSQL) + Upstash Redis\n" +
         "  → next-intl (EN/FR) + MDX blog\n" +
