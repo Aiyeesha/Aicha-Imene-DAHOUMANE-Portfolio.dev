@@ -138,7 +138,7 @@ export async function POST(req: Request) {
     const resp = await fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ name, email, topic, subject, message, source: "Aicha_Imene_DAHOUMANE_Portfolio.dev" })
+      body: JSON.stringify({ name, email, topic, subject, message, source: "Aicha-Imene-DAHOUMANE-Portfolio.dev" })
     });
 
     if (!resp.ok) {
