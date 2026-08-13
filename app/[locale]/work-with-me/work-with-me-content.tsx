@@ -261,7 +261,11 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
             label={isFr ? "Réserver un appel" : isEs ? "Reservar una llamada" : "Book a call"}
             className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}
           />
-          <Link href={`/${locale}/#contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">
+          {/* Pointait vers /#contact (formulaire simple de la home) au lieu du
+              formulaire structuré /contact que cette page est censée amener —
+              repéré à l'audit 2026-08-13 : un visiteur qui lit ce pitch de bout
+              en bout retombait sur le formulaire le moins qualifiant des deux. */}
+          <Link href={`/${locale}/contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">
             {labels.ctaContact}
           </Link>
           <Link href={`/${locale}/#services`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">

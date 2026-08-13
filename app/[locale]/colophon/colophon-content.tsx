@@ -46,7 +46,10 @@ export default function ColophonContent({ locale }: { locale: string }) {
     },
     {
       title: "i18n",
-      items: [{ name: "next-intl", role: isFr ? "Internationalisation EN/FR (App Router, middleware)" : isEs ? "Internacionalización EN/FR/ES (App Router, middleware)" : "EN/FR internationalisation (App Router, middleware)", link: "https://next-intl-docs.vercel.app" }],
+      // EN/FR (sans ES) sur les libellés FR et EN — trace d'avant l'ajout de
+      // l'espagnol, jamais mis à jour ici alors que la version ES, elle,
+      // était déjà correcte (audit 2026-08-13).
+      items: [{ name: "next-intl", role: isFr ? "Internationalisation EN/FR/ES (App Router, middleware)" : isEs ? "Internacionalización EN/FR/ES (App Router, middleware)" : "EN/FR/ES internationalisation (App Router, middleware)", link: "https://next-intl-docs.vercel.app" }],
     },
     {
       title: "Blog",

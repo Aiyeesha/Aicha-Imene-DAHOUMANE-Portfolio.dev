@@ -98,7 +98,18 @@ export default async function ContactPage({ params }: PageProps) {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }}
       />
-      <div className="mx-auto max-w-2xl px-4 py-10">
+      {/*
+        max-w-2xl (672px) était hérité du gabarit "page de contenu" du reste du
+        site, pensé pour du texte en colonne unique — mais ContactForm en mode
+        `extended` rend une grille large `lg:grid-cols-[1fr_420px]` (formulaire +
+        sidebar "Liens rapides"). À 672px, la colonne 1fr retombait à ~200-250px :
+        les <select> Secteur/Délai/Budget tronquaient leur propre placeholder
+        (repéré par l'utilisatrice sur le site de prod, audit 2026-08-13).
+        max-w-4xl (896px) laisse ~430px à la colonne formulaire une fois les
+        420px fixes de la sidebar et le gap soustraits — le texte d'en-tête
+        (h1/breadcrumb/subtitle) n'a pas de max-width propre donc en hérite
+        aussi, ce qui reste confortable à lire à cette largeur. */}
+      <div className="mx-auto max-w-4xl px-4 py-10">
         {/* Breadcrumb */}
         <nav
           aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
@@ -112,7 +123,7 @@ export default async function ContactPage({ params }: PageProps) {
         </nav>
 
         <h1 className="text-3xl font-semibold">{L.title}</h1>
-        <p className="mt-3 text-muted">{L.subtitle}</p>
+        <p className="mt-3 max-w-2xl text-muted">{L.subtitle}</p>
 
         <div className="mt-10">
           <ContactForm extended />
