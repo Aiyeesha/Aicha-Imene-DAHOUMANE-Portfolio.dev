@@ -151,7 +151,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**CORS restreint** : `/api/health` scoped à l'origine du site uniquement — les outils de monitoring opèrent en serveur-à-serveur.",
         "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116) — contact de divulgation responsable.",
         "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (service role, token Redis, credentials admin) restent strictement côté serveur.",
-        "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=portfolio-next-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/portfolio-next-one-gold.vercel.app) — posture HTTP vérifiée indépendamment du site.",
+        "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app) — posture HTTP vérifiée indépendamment du site.",
       ]
     : isEs
     ? [
@@ -165,7 +165,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**CORS restringido**: `/api/health` limitado únicamente al origen del sitio — las herramientas de monitorización operan servidor a servidor.",
         "**security.txt** disponible en `/.well-known/security.txt` (RFC 9116) — contacto de divulgación responsable.",
         "**Ningún secreto** en las variables `NEXT_PUBLIC_*` — todas las claves sensibles (service role, token de Redis, credenciales de admin) permanecen estrictamente en el servidor.",
-        "**Validación externa (terceros neutrales)**: [securityheaders.com](https://securityheaders.com/?q=portfolio-next-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/portfolio-next-one-gold.vercel.app) — postura HTTP verificada de forma independiente al sitio.",
+        "**Validación externa (terceros neutrales)**: [securityheaders.com](https://securityheaders.com/?q=Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app) — postura HTTP verificada de forma independiente al sitio.",
       ]
     : [
         "**HTTP headers** in `next.config.mjs`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Framework fingerprinting suppressed via `poweredByHeader: false`.",
@@ -177,7 +177,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**CORS restricted**: `/api/health` scoped to the site origin only — monitoring tools call server-to-server, no browser CORS needed.",
         "**security.txt** at `/.well-known/security.txt` (RFC 9116) — responsible disclosure contact.",
         "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (service role, Redis token, admin credentials) remain strictly server-side.",
-        "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=portfolio-next-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/portfolio-next-one-gold.vercel.app) — HTTP security posture verified independently from the site.",
+        "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/Aicha_Imene_DAHOUMANE_Portfolio.dev-one-gold.vercel.app) — HTTP security posture verified independently from the site.",
       ];
 
   function renderMarkdown(text: string): React.ReactNode[] {
@@ -282,7 +282,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
       <section aria-labelledby="section-oss" className="mt-14">
         <h2 id="section-oss" className="text-xl font-semibold">{labels.openSourceTitle}</h2>
         <div className="mt-5 flex flex-wrap gap-3">
-          <a href="https://github.com/Aiyeesha/portfolio-next" target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
+          <a href="https://github.com/Aiyeesha/Aicha_Imene_DAHOUMANE_Portfolio.dev" target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
             {labels.learnMore}<span aria-hidden="true"> ↗</span>
           </a>
           <a href={`/${locale}`} target="_blank" rel="noreferrer noopener" className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium soft-ring ${ctaBtnClass}`}>
