@@ -49,8 +49,18 @@ export async function generateMetadata({
   const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   const t = await getTranslations({ locale: locale });
 
-  const title = t("metadata.title");
-  const description = t("metadata.description");
+  // Track a le même problème que le flash "Salesforce" résolu plus bas pour le
+  // rendu de page (cookie posé par providers.tsx setTrack()) : sans lecture ici,
+  // un lien partagé par un visiteur de retour en IT Ops affiche toujours un
+  // <title>/description Salesforce dans l'aperçu (réseaux sociaux, onglet
+  // navigateur), quel que soit le contenu réellement affiché — voir audit
+  // 2026-08-13. Ne change rien pour un tout premier visiteur (pas de cookie) :
+  // le titre générique reste le même qu'avant, pas de régression SEO.
+  const trackCookie = (await cookies()).get("track")?.value;
+  const isItops = trackCookie === "itops";
+
+  const title = t(isItops ? "metadata.titleItops" : "metadata.title");
+  const description = t(isItops ? "metadata.descriptionItops" : "metadata.description");
 
   const siteUrl = getSiteUrl();
 
