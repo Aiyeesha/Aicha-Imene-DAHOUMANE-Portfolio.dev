@@ -82,6 +82,75 @@ const CV_FILES = [
     title: "Aïcha Imène DAHOUMANE — Ingeniera Salesforce & Infraestructura — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
+  // ── Versions ATS (une colonne, sans sidebar) ──────────────────────────────
+  // Complémentaires aux versions ci-dessus (pas un remplacement) — destinées
+  // aux dépôts sur plateformes de recrutement à parsing automatique
+  // (Taleo/Workday/SmartRecruiters), là où un layout à 2 colonnes risque de
+  // faire perdre le contenu de la sidebar (compétences, certifications) selon
+  // le parseur utilisé.
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-fr-itops-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — Salesforce & Infrastructure — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-en-itops-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-en-itops-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — IT Ops / Systems & Networks — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-en-salesforce-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-en-salesforce-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — Salesforce Developer — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-en-hybrid-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-en-hybrid-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — Salesforce & Infrastructure Engineer — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-es-itops-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-es-itops-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-es-salesforce-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-es-salesforce-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
+  {
+    html: "Aicha-Imene-DAHOUMANE-CV-es-hybrid-ats.html",
+    pdf: "Aicha-Imene-DAHOUMANE-CV-es-hybrid-ats.pdf",
+    scale: 1,
+    title: "Aïcha Imène DAHOUMANE — Ingeniera Salesforce & Infraestructura — CV (ATS)",
+    author: "Aïcha Imène DAHOUMANE",
+  },
 ];
 
 async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
