@@ -174,10 +174,10 @@ export default async function CertificationsPage({ params }: PageProps) {
     trailheadTrails: isFr ? "parcours" : isEs ? "trails" : "trails",
     trailheadProfile: isFr ? "Voir le profil Trailhead" : isEs ? "Ver el perfil de Trailhead" : "View Trailhead profile",
     trailheadHint: isFr
-      ? "Classement Trailhead : Expeditioner — vérifiable en ligne · 10 badges pour atteindre Ranger"
+      ? "Classement Trailhead : Expeditioner — vérifiable en ligne · 6 badges pour atteindre Ranger"
       : isEs
-      ? "Rango Trailhead: Expeditioner — verificable en línea · 10 badges para alcanzar Ranger"
-      : "Trailhead rank: Expeditioner — verifiable online · 10 badges to reach Ranger",
+      ? "Rango Trailhead: Expeditioner — verificable en línea · 6 badges para alcanzar Ranger"
+      : "Trailhead rank: Expeditioner — verifiable online · 6 badges to reach Ranger",
     activelyPreparing: isFr ? "Préparation active" : isEs ? "Preparación activa" : "Actively preparing",
     plannedRoadmap: isFr ? "Roadmap" : isEs ? "Roadmap" : "Roadmap",
     backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
