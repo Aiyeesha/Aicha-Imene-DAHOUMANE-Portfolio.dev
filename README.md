@@ -3,13 +3,13 @@
 [![CI](https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/actions/workflows/ci.yml/badge.svg)](https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/badge)](https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev)
 [![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en)
-[![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en)
+[![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://Aicha-Imene-DAHOUMANE-Portfolio.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Professional portfolio of a **Salesforce Developer & Consultant** with a background in systems, networks, and DevOps.
 Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills, services, and projects sections.
 
-**Live → [Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en](https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en)**
+**Live → [Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en](https://Aicha-Imene-DAHOUMANE-Portfolio.vercel.app/en)**
 
 ---
 
