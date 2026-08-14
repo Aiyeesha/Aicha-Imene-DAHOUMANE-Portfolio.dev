@@ -48,6 +48,7 @@
     "projects": "Ver proyectos seleccionados",
     "downloadCvItops": "CV IT Ops (PDF)",
     "downloadCvSalesforce": "CV Salesforce (PDF)",
+    "downloadCvHybrid": "CV Híbrido Salesforce/Infra (PDF)",
     "workWithMe": "Trabajemos juntos",
     "message": "Mensaje",
     "call15": "Reservar llamada de 30 min",
@@ -360,7 +361,7 @@
     "p1_salesforce": "Desarrolladora y consultora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
     "p2_salesforce": "Trabajo con Apex, Flows, modelos de datos, seguridad (permission sets, sharing) y pipelines de CI/CD (Salesforce CLI, GitHub Actions) para llevar el código a producción de forma limpia.",
     "p3_salesforce": "Mi base en sistemas y DevOps me permite abordar Salesforce con mentalidad de operaciones: observabilidad, gestión de riesgos, documentación y automatización, para que las soluciones se mantengan sólidas con el tiempo.",
-    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, con 2 años de experiencia Salesforce en producción — y en paralelo, el desarrollo de dos productos SaaS Salesforce (OrgDocs y SFRelease). El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 90+ badges) — la certificación Salesforce Administrator está en preparación activa para septiembre de 2026.",
+    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, con 2 años de experiencia Salesforce en producción — y en paralelo, el desarrollo de dos productos SaaS Salesforce (OrgDocs y SFRelease). El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — la certificación Salesforce Administrator está en preparación activa para septiembre de 2026.",
     "p1_itops": "IT Ops & DevOps: ayudo a los equipos a diseñar, mantener y proteger infraestructuras resilientes, con procesos operativos pragmáticos (runbooks, monitorización, remediación).",
     "p2_itops": "Implemento estándares operativos: monitorización y alertas accionables, reducción del ruido, procedimientos de escalado, documentación y automatización (scripts, jobs, playbooks).",
     "p3_itops": "Presto especial atención a la seguridad y la continuidad: copias de seguridad, hardening, gestión de accesos y prácticas de gestión del cambio para reducir incidentes.",
@@ -430,7 +431,7 @@
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
-        "a": "El mercado me hace esta pregunta a menudo, y tres entrevistas recientes me enseñaron lo que realmente escondía: lo que faltaba no era una línea más en un currículum, sino una prueba visible de que diseño y opero ambas capas — ver el caso de estudio Légarant-AXG, donde el trigger Apex y el despliegue Heroku los entrega la misma persona. En cuanto a certificación oficial: Salesforce Administrator en preparación activa (previsto para sept. 2026), App Builder y Platform Developer I antes de fin de 2026. Ya obtenidos y verificables: título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, 2025) y perfil Trailhead activo (rango Expeditioner, 90+ insignias, 57.000+ puntos)."
+        "a": "El mercado me hace esta pregunta a menudo, y tres entrevistas recientes me enseñaron lo que realmente escondía: lo que faltaba no era una línea más en un currículum, sino una prueba visible de que diseño y opero ambas capas — ver el caso de estudio Légarant-AXG, donde el trigger Apex y el despliegue Heroku los entrega la misma persona. En cuanto a certificación oficial: Salesforce Administrator en preparación activa (previsto para sept. 2026), App Builder y Platform Developer I antes de fin de 2026. Ya obtenidos y verificables: título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, 2025) y perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos)."
       },
       {
         "q": "¿Trabajas en remoto?",
