@@ -174,10 +174,10 @@ export default async function CertificationsPage({ params }: PageProps) {
     trailheadTrails: isFr ? "parcours" : isEs ? "trails" : "trails",
     trailheadProfile: isFr ? "Voir le profil Trailhead" : isEs ? "Ver el perfil de Trailhead" : "View Trailhead profile",
     trailheadHint: isFr
-      ? "Classement Trailhead : Expeditioner — vérifiable en ligne · 10 badges pour atteindre Ranger"
+      ? "Classement Trailhead : Expeditioner — vérifiable en ligne · 6 badges pour atteindre Ranger"
       : isEs
-      ? "Rango Trailhead: Expeditioner — verificable en línea · 10 badges para alcanzar Ranger"
-      : "Trailhead rank: Expeditioner — verifiable online · 10 badges to reach Ranger",
+      ? "Rango Trailhead: Expeditioner — verificable en línea · 6 badges para alcanzar Ranger"
+      : "Trailhead rank: Expeditioner — verifiable online · 6 badges to reach Ranger",
     activelyPreparing: isFr ? "Préparation active" : isEs ? "Preparación activa" : "Actively preparing",
     plannedRoadmap: isFr ? "Roadmap" : isEs ? "Roadmap" : "Roadmap",
     backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
@@ -204,7 +204,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         ? "Técnico/a de Asistencia Informática"
         : "IT Support Technician",
       issuer: "GRETA du Val d'Oise — Lycée Louis Jouvet",
-      earnedDate: isFr ? "Juil. 2022" : isEs ? "Jul. 2022" : "Jul 2022",
+      earnedDate: isFr ? "Janv. 2022 – Juil. 2022" : isEs ? "Ene. 2022 – Jul. 2022" : "Jan 2022 – Jul 2022",
       level: isFr ? "Titre RNCP niveau 4 (Bac)" : isEs ? "Título RNCP nivel 4 (equivalente a Bachillerato)" : "RNCP Level 4 (Bac)",
       description: isFr
         ? "Support et assistance informatique. Formation au Lycée Louis Jouvet (Taverny). Installation Windows 10, virtualisation VirtualBox, configuration réseau TP-Link, profils itinérants Active Directory, diagnostic matériel."
@@ -226,7 +226,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         ? "Técnica Superior en Sistemas y Redes"
         : "Higher Technician in Systems & Networks",
       issuer: "GRETA du Val d'Oise",
-      earnedDate: isFr ? "Juin 2023" : isEs ? "Jun. 2023" : "Jun 2023",
+      earnedDate: isFr ? "Oct. 2022 – Juin 2023" : isEs ? "Oct. 2022 – Jun. 2023" : "Oct 2022 – Jun 2023",
       level: isFr ? "Titre RNCP niveau 5 (Bac+2)" : isEs ? "Título RNCP nivel 5 (equivalente a Bac+2)" : "RNCP Level 5 (Bac+2)",
       description: isFr
         ? "Administration systèmes & réseaux. Stage chez Midrange Group : déploiement de 200+ postes via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
