@@ -97,7 +97,7 @@ export default function TrackAwareHero() {
   //   1. NEXT_PUBLIC_CV_PDF_URL si elle contient les tokens {locale} et/ou {track}
   //      (ex: "https://storage.example.com/cv-{locale}-{track}.pdf")
   //   2. Pattern local : /cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf  (6 fichiers dans /public/cv/)
-  const getCvUrl = (cvTrack: "itops" | "salesforce") => {
+  const getCvUrl = (cvTrack: "itops" | "salesforce" | "hybrid") => {
     const envUrl =
       process.env.NEXT_PUBLIC_CV_PDF_URL ||
       process.env.NEXT_PUBLIC_CV_URL ||
@@ -114,6 +114,7 @@ export default function TrackAwareHero() {
 
   const cvItopsUrl = getCvUrl("itops");
   const cvSalesforceUrl = getCvUrl("salesforce");
+  const cvHybridUrl = getCvUrl("hybrid");
 
   // Avatar : env var ou image locale
   const avatarUrl = useMemo(
@@ -289,6 +290,19 @@ export default function TrackAwareHero() {
             onClick={() => trackEvent("cv_download", { locale, track: "salesforce" })}
           >
             {t("cta.downloadCvSalesforce")} ↓
+          </a>
+          {/* CTA secondaire 4 : télécharge le CV hybride — mène avec la combinaison
+              Salesforce + infra + DevSecOps comme identité propre, plutôt qu'un
+              choix binaire itops/salesforce. Toujours visible, indépendant du
+              toggle, même logique que les deux boutons ci-dessus. */}
+          <a
+            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+            href={cvHybridUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackEvent("cv_download", { locale, track: "hybrid" })}
+          >
+            {t("cta.downloadCvHybrid")} ↓
           </a>
         </div>
 
