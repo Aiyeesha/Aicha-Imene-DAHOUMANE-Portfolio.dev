@@ -1,5 +1,6 @@
 export const aboutContent = {
   fr: {
+    headline: "À propos",
     introduction: `Passionnée par la technologie depuis toujours, j'ai construit un solide bagage en support informatique, systèmes et réseaux avant de me spécialiser dans le développement Salesforce. Ce parcours ancré dans le terrain m'a appris la rigueur, l'importance des fondations techniques et le sens du service.`,
 
     journey: {
@@ -50,6 +51,7 @@ export const aboutContent = {
   },
 
   en: {
+    headline: "About",
     introduction: `Passionate about technology from the start, I built a solid foundation in IT support, systems, and network administration before specializing in Salesforce development. This hands-on background taught me rigor, the importance of technical fundamentals, and a genuine sense of service.`,
 
     journey: {
@@ -103,6 +105,7 @@ export const aboutContent = {
   // ausente de este archivo — versionado aquí para que scripts/seed.ts pueda
   // reproducirlo y para que un futur reset de la tabla no lo borre en silencio.
   es: {
+    headline: "Sobre mí",
     introduction: `Desarrolladora y consultora Salesforce con contrato indefinido en LD Digitales, diseño soluciones fiables, seguras y mantenibles. Mi formación en sistemas y redes (TAI, TSSR, prácticas en MIDRANGE GROUP) me enseñó a abordar la plataforma con una mentalidad de operaciones: CI/CD, seguridad, documentación y automatización.`,
 
     journey: {
