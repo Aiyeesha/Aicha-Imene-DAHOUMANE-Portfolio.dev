@@ -1,5 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { withRetry } from "@/lib/supabase/withRetry";
+import { aboutContent } from "@/content/about";
 
 export type AboutPageRow = {
   locale: "fr" | "en" | "es";
@@ -11,20 +10,16 @@ export type AboutPageRow = {
 };
 
 export async function getAboutPage(locale: "fr" | "en" | "es") {
-  const supabase = createServerSupabaseClient();
+  const content = aboutContent[locale];
+  if (!content) return null;
 
-  const { data, error } = await withRetry(() =>
-    supabase
-      .from("about_pages")
-      .select("locale, headline, intro, body, status, updated_at")
-      .eq("locale", locale)
-      .eq("status", "published")
-      .maybeSingle()
-  );
+  const { headline, introduction, ...body } = content;
 
-  if (error) {
-    console.error("[about_pages] error:", (error as any)?.message ?? error);
-    return null;
-  }
-  return (data ?? null) as AboutPageRow | null;
+  return {
+    locale,
+    headline,
+    intro: introduction,
+    body,
+    status: "published",
+  } satisfies AboutPageRow;
 }

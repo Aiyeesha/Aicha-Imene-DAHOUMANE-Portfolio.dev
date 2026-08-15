@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **`/about` ne dépend plus de Supabase** — Premier pas d'une bascule progressive hors Supabase : `getAboutPage()` (`lib/data/about.ts`) lit désormais `content/about.ts` en statique au lieu d'interroger la table `about_pages`, avec exactement la même forme de retour (`AboutPageRow`) donc aucun changement nécessaire côté page ou cache Redis. Contenu vérifié champ par champ (`headline`, `intro`, `journey`, `values`, `passions`) contre la base sur les 3 locales avant bascule — identique partout. Un champ `goals2026` présent en base (FR/EN) n'a pas été repris : il n'était déjà affiché nulle part sur la page (référencé dans un commentaire obsolète, jamais dans le JSX), et la section a été explicitement écartée plutôt que migrée. La table `about_pages` et ses scripts de seed restent en place pour l'instant, à nettoyer lors de la bascule complète hors Supabase.
+
 ### Security
 
 - **Workflow CI en échec sur `main` — `js-yaml` 3.15.0 (CVE-2026-59870)** — Le job `Security audit` de la CI (`npm audit --audit-level=high --omit=dev --omit=optional`) échouait depuis le merge de la PR #326, qui avait laissé `js-yaml 3.0.0–3.15.0` ouvert (transitif de `gray-matter`, pas de correctif rétroporté sur la 3.x). Un précédent saut vers la 4.x avait cassé le build (voir entrée « Audit sécurité/perf/i18n » ci-dessous) car `gray-matter@4.0.3` appelle en interne `yaml.safeLoad`/`yaml.safeDump` — retirés en v4. Corrigé cette fois-ci à la racine : override `js-yaml: ^4.3.1` (au lieu de `^3.15.0`) + nouveau wrapper `lib/frontmatter.ts` fournissant à `gray-matter` un engine YAML basé sur `load`/`dump` (l'API v4) à ses 4 points d'appel (`content/blog/fs.ts` ×2, `app/[locale]/blog/[slug]/page.tsx`, `app/api/search/route.ts`), qui ne passe donc jamais par le moteur par défaut cassé. Vérifié : `npm ci` + `npm audit` propres (0 vulnérabilité), 144 tests, build complet, et rendu réel d'un article de blog + `/api/search` en local. `nanoid` (GHSA-2v37-7h3g-55p8, transitif de `postcss`, surfacé par la même PR) reste corrigé via l'override `^3.3.17` déjà en place.
