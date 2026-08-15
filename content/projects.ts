@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-13T09:37:53.636Z
+// Last export: 2026-08-15T13:06:35.305Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -292,7 +292,7 @@ export const projects: Project[] = [
     "highlights": [
       "Created shared folder \"Profil itinérant\" on the server with permissions: EBTAI\\\\Utilisateurs (Modify + Read)",
       "Configured NTFS Full Control permissions for profile folder ownership",
-      "Set user profile path in AD Users & Computers: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%",
+      "Set user profile path in AD Users & Computers: \\\\DC1\\Profil itinérants\\%username%",
       "Verified roaming profile creation: technicien.tai.V6 folder appeared in share after first client login",
       "Domain: ebtai.fr — supervised by trainer Marc HAZAN"
     ],
@@ -851,7 +851,7 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
+    "repoUrl": "https://github.com/Aiyeesha/portfolio-next",
     "techStack": [
       "Next.js 16",
       "Supabase",

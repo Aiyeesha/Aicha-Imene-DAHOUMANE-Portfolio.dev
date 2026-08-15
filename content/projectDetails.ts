@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-13T09:37:53.642Z
+// Last export: 2026-08-15T13:06:35.309Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -136,7 +136,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "RAM doublée, HDD remplacé par un SSD, système cloné avec Acronis — upgrade complet d'un PC portable HP sans aucune perte de données.",
         "sections": [
           {
-            "body": "Le PC portable HP d une amie souffrait de deux problèmes bloquants : un manque de réactivité (16 Go de RAM insuffisants pour un usage quotidien multi-onglets) et un espace disque saturé (HDD 500 Go presque plein). Plutôt qu acheter un nouveau PC, j ai proposé un upgrade matériel ciblé : doubler la RAM et remplacer le HDD par un SSD plus grand — en clonant les données pour garantir zéro perte, zéro réinstallation.",
+            "body": "Le PC portable HP d'une amie souffrait de deux problèmes bloquants : un manque de réactivité (16 Go de RAM insuffisants pour un usage quotidien multi-onglets) et un espace disque saturé (HDD 500 Go presque plein). Plutôt qu'acheter un nouveau PC, j'ai proposé un upgrade matériel ciblé : doubler la RAM et remplacer le HDD par un SSD plus grand — en clonant les données pour garantir zéro perte, zéro réinstallation.",
             "type": "text",
             "title": "Contexte"
           },
@@ -145,7 +145,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Deux goulots identifiés : RAM insuffisante (pagination constante) et HDD mécanique lent (démarrage et lancement des apps)",
               "Manuel de service HP consulté : 2 emplacements SO-DIMM DDR4-2666 (max 32 Go) et slot SATA 2,5\"",
-              "2 barrettes Samsung DDR4-2666 SO-DIMM 16 Go sélectionnées — même marque que l origine pour compatibilité dual-channel",
+              "2 barrettes Samsung DDR4-2666 SO-DIMM 16 Go sélectionnées — même marque que l'origine pour compatibilité dual-channel",
               "SSD Samsung 2 To SATA sélectionné — même interface, aucun adaptateur nécessaire",
               "Acronis True Image vérifié comme compatible avec le clonage HDD→SSD sous Windows avant intervention"
             ],
@@ -180,7 +180,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Échange de la RAM",
-                "description": "Clips libérés, barrette d origine 16 Go retirée. 2 nouvelles barrettes DDR4 16 Go insérées à 45° dans les deux emplacements jusqu au clic des clips."
+                "description": "Clips libérés, barrette d'origine 16 Go retirée. 2 nouvelles barrettes DDR4 16 Go insérées à 45° dans les deux emplacements jusqu'au clic des clips."
               },
               {
                 "label": "Remplacement HDD → SSD",
@@ -483,7 +483,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Refactorisation OOP",
-                "description": "Création des interfaces, classes séparées, nommage camelCase sur l ensemble du code"
+                "description": "Création des interfaces, classes séparées, nommage camelCase sur l'ensemble du code"
               },
               {
                 "label": "Documentation",
@@ -1606,7 +1606,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Windows Server 2012 Backup · VirtualBox",
         "sections": [
           {
-            "body": "Training exercise at Greta du Val d Oise (Lycée Louis Jouvet, Taverny) under trainer Miguel MI-POUDOU. The task covered two VMs in VirtualBox: a Windows 10 client VM (partition resize + disk backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup role installation + scheduled daily backup).",
+            "body": "Training exercise at Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) under trainer Miguel MI-POUDOU. The task covered two VMs in VirtualBox: a Windows 10 client VM (partition resize + disk backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup role installation + scheduled daily backup).",
             "type": "text",
             "title": "Context"
           },
@@ -1699,7 +1699,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Sauvegarde Windows Server 2012 · VirtualBox",
         "sections": [
           {
-            "body": "Exercice de formation au Greta du Val d Oise (Lycée Louis Jouvet, Taverny) sous la direction de Miguel MI-POUDOU. La mission couvrait deux VM VirtualBox : une VM cliente Windows 10 (redimensionnement de partition + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée quotidienne).",
+            "body": "Exercice de formation au Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) sous la direction de Miguel MI-POUDOU. La mission couvrait deux VM VirtualBox : une VM cliente Windows 10 (redimensionnement de partition + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée quotidienne).",
             "type": "text",
             "title": "Contexte"
           },
@@ -1708,8 +1708,8 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "VM cliente Windows 10 : partition E: surdimensionnée à réduire sans perte de données",
               "VM serveur Windows Server 2012 : aucune stratégie de sauvegarde planifiée en place",
-              "Besoin d une image disque complète de la VM cliente comme point de restauration",
-              "Besoin d une sauvegarde quotidienne automatisée du serveur incluant l état système",
+              "Besoin d'une image disque complète de la VM cliente comme point de restauration",
+              "Besoin d'une sauvegarde quotidienne automatisée du serveur incluant l'état système",
               "Environnement virtualisé VirtualBox — exercice en conditions de formation réelles"
             ],
             "title": "Périmètre & Objectifs"
@@ -1731,9 +1731,9 @@ export const projectDetails: ProjectDetails[] = [
               "AOMEI Partition Assistant — redimensionnement de partitions sans perte de données",
               "AOMEI Backupper Standard — sauvegarde image disque complète",
               "Sauvegarde Windows Server — rôle natif Windows Server 2012",
-              "VSS (Volume Shadow Copy Service) — sauvegarde cohérente de l état système",
-              "VirtualBox — hyperviseur de type 2 pour l environnement de formation",
-              "Windows 10 / Windows Server 2012 — systèmes d exploitation des VM"
+              "VSS (Volume Shadow Copy Service) — sauvegarde cohérente de l'état système",
+              "VirtualBox — hyperviseur de type 2 pour l'environnement de formation",
+              "Windows 10 / Windows Server 2012 — systèmes d'exploitation des VM"
             ],
             "title": "Stack & Technologies"
           },
@@ -1742,7 +1742,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Redimensionnement — AOMEI Partition Assistant",
-                "description": "Clic droit sur E: → Redimensionner/Déplacer. Réduction de 50,04 Go à 47,71 Go (NTFS, cluster 4 Ko, Disque 3). Clic Appliquer pour valider l opération en attente."
+                "description": "Clic droit sur E: → Redimensionner/Déplacer. Réduction de 50,04 Go à 47,71 Go (NTFS, cluster 4 Ko, Disque 3). Clic Appliquer pour valider l'opération en attente."
               },
               {
                 "label": "Sauvegarde disque — AOMEI Backupper",
@@ -1754,7 +1754,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Configuration de la sauvegarde planifiée",
-                "description": "Ajout d un disque virtuel dédié de 60 Go. Sauvegarde configurée : récupération complète + état système, VSS complète, quotidienne à 14h00. Exécution : 22,67 Go transférés vers SRV2 2022_03_21 13:18 DISK_01."
+                "description": "Ajout d'un disque virtuel dédié de 60 Go. Sauvegarde configurée : récupération complète + état système, VSS complète, quotidienne à 14h00. Exécution : 22,67 Go transférés vers SRV2 2022_03_21 13:18 DISK_01."
               }
             ],
             "title": "Procédure"
@@ -1795,7 +1795,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Ejercicio de formación en el Greta du Val d Oise (Lycée Louis Jouvet, Taverny) bajo la dirección de Miguel MI-POUDOU. La misión abarcaba dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
+              "Ejercicio de formación en el Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) bajo la dirección de Miguel MI-POUDOU. La misión abarcaba dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
             ]
           },
           {
@@ -1918,7 +1918,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows Server 2016 · AD DS · Roaming Profiles · ebtai.fr domain",
         "sections": [
           {
-            "body": "Training exercise at Greta du Val d Oise under trainer Marc HAZAN. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM — both running in VirtualBox. Goal: allow users to retrieve their full work environment (desktop, documents, settings) on any domain-joined machine they log into.",
+            "body": "Training exercise at Greta du Val d'Oise under trainer Marc HAZAN. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM — both running in VirtualBox. Goal: allow users to retrieve their full work environment (desktop, documents, settings) on any domain-joined machine they log into.",
             "type": "text",
             "title": "Context"
           },
@@ -1939,7 +1939,7 @@ export const projectDetails: ProjectDetails[] = [
               "Profil itinérant folder created on C: and shared via Advanced Sharing",
               "Share permissions: EBTAI\\Utilisateurs — Modify + Read (Everyone removed)",
               "NTFS permissions verified to allow profile ownership by users",
-              "AD profile path configured: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%",
+              "AD profile path configured: \\\\DC1\\Profil itinérants\\%username%",
               "Subfolder technicien.tai.V6 auto-created on first Windows 10 login — sync confirmed"
             ],
             "title": "Solution & Deliverables"
@@ -1969,11 +1969,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Configure NTFS permissions",
-                "description": "Folder security verified to ensure Full Control for profile ownership. Network path: \\\\\\\\serveur\\\\Profil itinérant."
+                "description": "Folder security verified to ensure Full Control for profile ownership. Network path: \\\\serveur\\Profil itinérant."
               },
               {
                 "label": "Set AD profile path",
-                "description": "AD Users and Computers (ebtai.fr) → right-clicked technicien → Properties → Profile tab. Set path: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%. Applied."
+                "description": "AD Users and Computers (ebtai.fr) → right-clicked technicien → Properties → Profile tab. Set path: \\\\DC1\\Profil itinérants\\%username%. Applied."
               },
               {
                 "label": "Verify from client VM",
@@ -1993,7 +1993,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Per-user automatic path",
                 "label": "AD profile path",
-                "value": "\\\\\\\\DC1\\\\Profil itinérants\\\\%username%"
+                "value": "\\\\DC1\\Profil itinérants\\%username%"
               },
               {
                 "note": "Automatically on first login",
@@ -2015,7 +2015,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows Server 2016 · AD DS · Profils itinérants · domaine ebtai.fr",
         "sections": [
           {
-            "body": "Exercice de formation au Greta du Val d Oise sous la supervision de Marc HAZAN. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification de la synchronisation depuis une VM cliente Windows 10 — les deux sous VirtualBox. L objectif : permettre aux utilisateurs de retrouver leur environnement de travail (bureau, documents, paramètres) quelle que soit la machine du domaine sur laquelle ils se connectent.",
+            "body": "Exercice de formation au Greta du Val d'Oise sous la supervision de Marc HAZAN. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification de la synchronisation depuis une VM cliente Windows 10 — les deux sous VirtualBox. L objectif : permettre aux utilisateurs de retrouver leur environnement de travail (bureau, documents, paramètres) quelle que soit la machine du domaine sur laquelle ils se connectent.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2035,8 +2035,8 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Dossier Profil itinérant créé sur C: et partagé via Partage avancé",
               "Permissions de partage : EBTAI\\Utilisateurs — Modifier + Lire (Everyone supprimé)",
-              "Permissions NTFS vérifiées pour l appropriation des profils utilisateurs",
-              "Chemin de profil AD configuré : \\\\\\\\DC1\\\\Profil itinérants\\\\%username%",
+              "Permissions NTFS vérifiées pour l'appropriation des profils utilisateurs",
+              "Chemin de profil AD configuré : \\\\DC1\\Profil itinérants\\%username%",
               "Sous-dossier technicien.tai.V6 créé automatiquement à la première connexion Windows 10"
             ],
             "title": "Solution & Livrables"
@@ -2046,10 +2046,10 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Windows Server 2016 — contrôleur de domaine (ebtai.fr)",
               "Active Directory Users and Computers — configuration du chemin de profil",
-              "NTFS Permissions — contrôle d accès au niveau fichier système",
+              "NTFS Permissions — contrôle d'accès au niveau fichier système",
               "SMB Share / Partage avancé — partage réseau du dossier de profils",
               "Variable %username% — personnalisation automatique du chemin par utilisateur",
-              "VirtualBox — hyperviseur de type 2 pour l environnement de formation"
+              "VirtualBox — hyperviseur de type 2 pour l'environnement de formation"
             ],
             "title": "Stack & Technologies"
           },
@@ -2066,11 +2066,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Configuration des permissions NTFS",
-                "description": "Sécurité du dossier vérifiée pour garantir le Contrôle total nécessaire à l appropriation des profils. Chemin réseau : \\\\\\\\serveur\\\\Profil itinérant."
+                "description": "Sécurité du dossier vérifiée pour garantir le Contrôle total nécessaire à l'appropriation des profils. Chemin réseau : \\\\serveur\\Profil itinérant."
               },
               {
                 "label": "Paramétrage du chemin AD",
-                "description": "Utilisateurs et ordinateurs AD (ebtai.fr) → clic droit sur technicien → Propriétés → onglet Profil. Chemin : \\\\\\\\DC1\\\\Profil itinérants\\\\%username%. Appliquer."
+                "description": "Utilisateurs et ordinateurs AD (ebtai.fr) → clic droit sur technicien → Propriétés → onglet Profil. Chemin : \\\\DC1\\Profil itinérants\\%username%. Appliquer."
               },
               {
                 "label": "Vérification depuis la VM cliente",
@@ -2090,7 +2090,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Personnalisé par utilisateur",
                 "label": "Chemin AD",
-                "value": "\\\\\\\\DC1\\\\Profil itinérants\\\\%username%"
+                "value": "\\\\DC1\\Profil itinérants\\%username%"
               },
               {
                 "note": "Automatiquement à la première connexion",
@@ -2115,7 +2115,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Ejercicio de formación en el Greta du Val d Oise bajo la supervisión de Marc HAZAN. Configuración de perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verificación de la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
+              "Ejercicio de formación en el Greta du Val d'Oise bajo la supervisión de Marc HAZAN. Configuración de perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verificación de la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
             ]
           },
           {
@@ -2135,7 +2135,7 @@ export const projectDetails: ProjectDetails[] = [
               "Carpeta Perfil itinerante creada en C: y compartida mediante Uso compartido avanzado",
               "Permisos de recurso compartido: EBTAI\\\\Utilisateurs — Modificar + Leer (Todos eliminado)",
               "Permisos NTFS verificados para la apropiación de los perfiles de usuario",
-              "Ruta de perfil AD configurada: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%",
+              "Ruta de perfil AD configurada: \\\\DC1\\Profil itinérants\\%username%",
               "Subcarpeta technicien.tai.V6 creada automáticamente en el primer inicio de sesión de Windows 10"
             ],
             "title": "Solución y entregables"
@@ -2165,11 +2165,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Configuración de los permisos NTFS",
-                "description": "Seguridad de la carpeta verificada para garantizar el Control total necesario para la apropiación de los perfiles. Ruta de red: \\\\\\\\servidor\\\\Perfil itinerante."
+                "description": "Seguridad de la carpeta verificada para garantizar el Control total necesario para la apropiación de los perfiles. Ruta de red: \\\\servidor\\Perfil itinerante."
               },
               {
                 "label": "Configuración de la ruta AD",
-                "description": "Usuarios y equipos de AD (ebtai.fr) → clic derecho en técnico → Propiedades → pestaña Perfil. Ruta: \\\\\\\\DC1\\\\Profil itinérants\\\\%username%. Aplicar."
+                "description": "Usuarios y equipos de AD (ebtai.fr) → clic derecho en técnico → Propiedades → pestaña Perfil. Ruta: \\\\DC1\\Profil itinérants\\%username%. Aplicar."
               },
               {
                 "label": "Verificación desde la VM cliente",
@@ -2189,7 +2189,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Personalizada por usuario",
                 "label": "Ruta AD",
-                "value": "\\\\\\\\DC1\\\\Profil itinérants\\\\%username%"
+                "value": "\\\\DC1\\Profil itinérants\\%username%"
               },
               {
                 "note": "Automáticamente en el primer inicio de sesión",
@@ -2321,7 +2321,7 @@ export const projectDetails: ProjectDetails[] = [
               "DNS: DP-AICHA.LAN zone with 8.8.8.8 forwarder for internet resolution",
               "DHCP: POOL1 scope with option 060 PXEClient for network deployment",
               "WDS / PXE: Windows 10 OS deployment over the network — no USB or manual install",
-              "GPO: roaming profiles and mapped drive (\\\\\\\\DCAD22\\\\Partage) applied at logon",
+              "GPO: roaming profiles and mapped drive (\\\\DCAD22\\Partage) applied at logon",
               "Permissions: shared folder Modify+Read for LYES, Read for Technicien"
             ],
             "title": "Services Deployed"
@@ -2352,7 +2352,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Active Directory & GPO",
-                "description": "OUs and accounts created: LYES (standard) and Technicien (admin). GPOs applied for roaming profiles and mapped drive \\\\\\\\DCAD22\\\\Partage at logon."
+                "description": "OUs and accounts created: LYES (standard) and Technicien (admin). GPOs applied for roaming profiles and mapped drive \\\\DCAD22\\Partage at logon."
               },
               {
                 "label": "Domain join & PXE deployment",
@@ -2404,7 +2404,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS / DNS / DHCP / WDS",
         "sections": [
           {
-            "body": "Lab personnel réalisé dans le cadre d une formation Systèmes & Réseaux. J ai déployé un environnement Windows Server 2022 complet sous VMware Workstation Pro 17 pour reproduire une infrastructure IT d entreprise : domaine Active Directory, DNS, DHCP et déploiement automatisé d OS via WDS/PXE — sur un réseau NAT VMware privé entièrement géré.",
+            "body": "Lab personnel réalisé dans le cadre d'une formation Systèmes & Réseaux. J ai déployé un environnement Windows Server 2022 complet sous VMware Workstation Pro 17 pour reproduire une infrastructure IT d'entreprise : domaine Active Directory, DNS, DHCP et déploiement automatisé d'OS via WDS/PXE — sur un réseau NAT VMware privé entièrement géré.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2427,7 +2427,7 @@ export const projectDetails: ProjectDetails[] = [
               "DNS : zone DP-AICHA.LAN avec redirecteur 8.8.8.8 pour résolution Internet",
               "DHCP : étendue POOL1 avec option 060 PXEClient pour le déploiement réseau",
               "WDS / PXE : déploiement OS Windows 10 via réseau — sans clé USB ni installation manuelle",
-              "GPO : profils itinérants et lecteur réseau (\\\\\\\\DCAD22\\\\Partage) mappé à l ouverture de session",
+              "GPO : profils itinérants et lecteur réseau (\\\\DCAD22\\Partage) mappé à l'ouverture de session",
               "Permissions : dossier partagé Modifier+Lire pour LYES, Lire pour Technicien"
             ],
             "title": "Services déployés"
@@ -2439,7 +2439,7 @@ export const projectDetails: ProjectDetails[] = [
               "Windows Server 2022 — Contrôleur de domaine (DCAD22)",
               "Active Directory DS — Gestion des identités, OUs, comptes et politiques",
               "DNS Server — Résolution de noms de domaine avec redirecteur Internet",
-              "DHCP Server — Attribution dynamique d adresses IP avec options PXE",
+              "DHCP Server — Attribution dynamique d'adresses IP avec options PXE",
               "WDS (Windows Deployment Services) — Déploiement OS via réseau (PXE/TFTP)",
               "Group Policy (GPO) — Profils itinérants et mappage de lecteurs réseau"
             ],
@@ -2450,7 +2450,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "VM & promotion DC",
-                "description": "Windows Server 2022 installé depuis ISO. IP statique 192.168.100.250, hostname DCAD22. Promotion DC via l assistant AD DS — création de la forêt DP-AICHA.LAN. DNS installé avec redirecteur 8.8.8.8."
+                "description": "Windows Server 2022 installé depuis ISO. IP statique 192.168.100.250, hostname DCAD22. Promotion DC via l'assistant AD DS — création de la forêt DP-AICHA.LAN. DNS installé avec redirecteur 8.8.8.8."
               },
               {
                 "label": "DHCP & WDS",
@@ -2458,7 +2458,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Active Directory & GPO",
-                "description": "OUs et comptes créés : LYES (standard) et Technicien (admin). GPO appliquées pour les profils itinérants et le mappage du lecteur réseau \\\\\\\\DCAD22\\\\Partage à l ouverture de session."
+                "description": "OUs et comptes créés : LYES (standard) et Technicien (admin). GPO appliquées pour les profils itinérants et le mappage du lecteur réseau \\\\DCAD22\\Partage à l'ouverture de session."
               },
               {
                 "label": "Jonction domaine & déploiement PXE",
@@ -2535,7 +2535,7 @@ export const projectDetails: ProjectDetails[] = [
               "DNS: zona DP-AICHA.LAN con reenviador 8.8.8.8 para resolución de Internet",
               "DHCP: ámbito POOL1 con opción 060 PXEClient para el despliegue por red",
               "WDS / PXE: despliegue del SO Windows 10 por red — sin llave USB ni instalación manual",
-              "GPO: perfiles itinerantes y unidad de red (\\\\\\\\DCAD22\\\\Partage) montada al iniciar sesión",
+              "GPO: perfiles itinerantes y unidad de red (\\\\DCAD22\\Partage) montada al iniciar sesión",
               "Permisos: carpeta compartida Modificar+Leer para LYES, Leer para Technicien"
             ],
             "title": "Servicios desplegados"
@@ -2566,7 +2566,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Active Directory y GPO",
-                "description": "UO y cuentas creadas: LYES (estándar) y Technicien (admin). GPO aplicadas para los perfiles itinerantes y la asignación de la unidad de red \\\\\\\\DCAD22\\\\Partage al iniciar sesión."
+                "description": "UO y cuentas creadas: LYES (estándar) y Technicien (admin). GPO aplicadas para los perfiles itinerantes y la asignación de la unidad de red \\\\DCAD22\\Partage al iniciar sesión."
               },
               {
                 "label": "Unión al dominio y despliegue PXE",
@@ -2645,7 +2645,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows 10 Pro · Ninite · Office 2016 · BIOS · Driver setup",
         "sections": [
           {
-            "body": "Training exercise at Greta du Val d Oise under trainer Miguel MI-POUDOU. A client brought in an extremely slow HP laptop with no data to recover. Mission: full workstation rebuild — clean OS reinstall, driver validation, batch software deployment, and final configuration before client handover.",
+            "body": "Training exercise at Greta du Val d'Oise under trainer Miguel MI-POUDOU. A client brought in an extremely slow HP laptop with no data to recover. Mission: full workstation rebuild — clean OS reinstall, driver validation, batch software deployment, and final configuration before client handover.",
             "type": "text",
             "title": "Context"
           },
@@ -2743,7 +2743,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows 10 Pro · Ninite · Office 2016 · BIOS · Installation pilotes",
         "sections": [
           {
-            "body": "Exercice de formation au Greta du Val d Oise sous la direction de Miguel MI-POUDOU. Un client a apporté un portable HP extrêmement lent, sans données à récupérer. La mission : remise à neuf complète du poste — réinstallation propre de l OS, validation des pilotes, déploiement automatisé des logiciels métier et configuration finale avant remise au client.",
+            "body": "Exercice de formation au Greta du Val d'Oise sous la direction de Miguel MI-POUDOU. Un client a apporté un portable HP extrêmement lent, sans données à récupérer. La mission : remise à neuf complète du poste — réinstallation propre de l'OS, validation des pilotes, déploiement automatisé des logiciels métier et configuration finale avant remise au client.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2752,7 +2752,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Réinstaller Windows 10 Pro 64 bits depuis un support USB bootable",
               "Valider tous les pilotes (audio, réseau, carte graphique) après installation",
-              "Déployer rapidement l ensemble des logiciels métier requis (7+ applications)",
+              "Déployer rapidement l'ensemble des logiciels métier requis (7+ applications)",
               "Configurer le poste pour remise immédiate au client (raccourcis, sauvegardes, antivirus)",
               "Intervenir sans perte de données — poste vierge, aucune récupération nécessaire"
             ],
@@ -2766,7 +2766,7 @@ export const projectDetails: ProjectDetails[] = [
               "Tous les pilotes validés dans le Gestionnaire de périphériques — réseau, audio, GPU",
               "7+ applications déployées en une passe via Ninite.com sans interaction utilisateur ni toolbars",
               "Office 2016 Professionnel Plus installé et activé simultanément",
-              "Raccourcis bureau, fond d écran et sauvegarde Windows configurés — poste validé par le formateur"
+              "Raccourcis bureau, fond d'écran et sauvegarde Windows configurés — poste validé par le formateur"
             ],
             "title": "Solution & Livrables"
           },
@@ -2774,9 +2774,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Windows 10 Pro 64 bits — OS réinstallé depuis ISO sur clé USB",
-              "BIOS/UEFI — configuration de l ordre de démarrage",
+              "BIOS/UEFI — configuration de l'ordre de démarrage",
               "Gestionnaire de périphériques — validation des pilotes post-installation",
-              "Ninite.com — déploiement batch d applications sans interaction (Chrome, Firefox, 7-Zip, Zoom, LibreOffice, TeamViewer, MalwareBytes)",
+              "Ninite.com — déploiement batch d'applications sans interaction (Chrome, Firefox, 7-Zip, Zoom, LibreOffice, TeamViewer, MalwareBytes)",
               "Office 2016 Professionnel Plus — suite bureautique",
               "Sauvegarde Windows — configuration post-installation"
             ],
@@ -2803,7 +2803,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Finalisation",
-                "description": "Raccourcis bureau configurés, fond d écran appliqué, sauvegarde Windows activée. Poste remis au client après validation formateur."
+                "description": "Raccourcis bureau configurés, fond d'écran appliqué, sauvegarde Windows activée. Poste remis au client après validation formateur."
               }
             ],
             "title": "Procédure"
@@ -2844,7 +2844,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Ejercicio de formación en el Greta du Val d Oise bajo la dirección de Miguel MI-POUDOU. Un cliente trajo un portátil HP extremadamente lento, sin datos que recuperar. La misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
+              "Ejercicio de formación en el Greta du Val d'Oise bajo la dirección de Miguel MI-POUDOU. Un cliente trajo un portátil HP extremadamente lento, sin datos que recuperar. La misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
             ]
           },
           {
@@ -3130,7 +3130,7 @@ export const projectDetails: ProjectDetails[] = [
               "Fonctionnalité manquante : gratuité des 30 premières minutes de stationnement",
               "Fonctionnalité manquante : réduction de 5% pour les utilisateurs récurrents",
               "Couverture de tests insuffisante sur ParkingService",
-              "Absence de tests d intégration sur la base de données réelle"
+              "Absence de tests d'intégration sur la base de données réelle"
             ],
             "title": "Problèmes & Périmètre"
           },
@@ -3139,9 +3139,9 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Correction du bug de durée : remplacement de la logique de calcul pour les séjours > 24h",
               "TDD Feature 1 : tests écrits en premier → prix à 0 pour stationnement < 30 min",
-              "TDD Feature 2 : tests écrits en premier → réduction 5% après vérification de la plaque d immatriculation",
+              "TDD Feature 2 : tests écrits en premier → réduction 5% après vérification de la plaque d'immatriculation",
               "Tests unitaires ParkingService avec Mockito — couverture > 90%",
-              "Tests d intégration ParkingDataBaseIT sur base de données réelle — couverture globale > 70%",
+              "Tests d'intégration ParkingDataBaseIT sur base de données réelle — couverture globale > 70%",
               "Rapports JaCoCo et Surefire générés et validés par le jury"
             ],
             "title": "Solution & Livrables"
@@ -3153,8 +3153,8 @@ export const projectDetails: ProjectDetails[] = [
               "JUnit 5 — framework de tests unitaires",
               "Mockito — mocks (TicketDAO, ParkingSpotDAO, InputReaderUtil)",
               "JaCoCo — rapport de couverture de code",
-              "Surefire — rapport d exécution des tests",
-              "MySQL — base de données pour les tests d intégration",
+              "Surefire — rapport d'exécution des tests",
+              "MySQL — base de données pour les tests d'intégration",
               "Git — versionning avec branches feature/fix"
             ],
             "title": "Stack & Technologies"
@@ -3172,18 +3172,18 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "TDD Feature 1",
-                "description": "Écriture des tests d abord → implémentation de la gratuité des 30 premières minutes"
+                "description": "Écriture des tests d'abord → implémentation de la gratuité des 30 premières minutes"
               },
               {
                 "label": "TDD Feature 2",
-                "description": "Écriture des tests d abord → implémentation de la remise 5% pour les utilisateurs récurrents"
+                "description": "Écriture des tests d'abord → implémentation de la remise 5% pour les utilisateurs récurrents"
               },
               {
                 "label": "Tests unitaires",
                 "description": "Mockito mocks sur ParkingService — couverture > 90%"
               },
               {
-                "label": "Tests d intégration",
+                "label": "Tests d'intégration",
                 "description": "ParkingDataBaseIT sur base réelle — couverture globale > 70%, soutenance validée 4/4"
               }
             ],
@@ -3499,7 +3499,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Développement de l'interface frontend SPA de Poch'Lib, une librairie de gestion de livres en HTML/CSS/JS.",
         "sections": [
           {
-            "body": "Great'App, startup niçoise de 20 personnes, a chargé sa CTO Marie de livrer Poch'Lib — une SPA de gestion de livres commandée par la librairie « La plume enchantée ». Mission : construire l intégralité du frontend de zéro, en respectant les wireframes de l UX designer Charlotte, avec un rendu responsive sur 3 formats (mobile, tablette, bureau), sans aucun framework JavaScript.",
+            "body": "Great'App, startup niçoise de 20 personnes, a chargé sa CTO Marie de livrer Poch'Lib — une SPA de gestion de livres commandée par la librairie « La plume enchantée ». Mission : construire l'intégralité du frontend de zéro, en respectant les wireframes de l'UX designer Charlotte, avec un rendu responsive sur 3 formats (mobile, tablette, bureau), sans aucun framework JavaScript.",
             "type": "text",
             "title": "Contexte"
           },
@@ -3507,11 +3507,11 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Aucune base de code existante — projet à créer intégralement de zéro",
-              "Wireframes fournis par l UX designer à respecter à la lettre",
+              "Wireframes fournis par l'UX designer à respecter à la lettre",
               "Affichage multi-format requis : mobile, tablette et bureau",
-              "Consommation d une API externe pour la recherche de livres (Fetch API)",
+              "Consommation d'une API externe pour la recherche de livres (Fetch API)",
               "Contrainte SPA : aucun rechargement de page autorisé",
-              "Livraison d un README d installation pour la prise en main client"
+              "Livraison d'un README d'installation pour la prise en main client"
             ],
             "title": "Problèmes & Périmètre"
           },
@@ -3564,7 +3564,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Documentation & livraison",
-                "description": "Rédaction du README d installation, soutenance validée avec 4/4 compétences"
+                "description": "Rédaction du README d'installation, soutenance validée avec 4/4 compétences"
               }
             ],
             "title": "Étapes du projet"
@@ -3780,19 +3780,19 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Scanner réseau temps réel — backend FastAPI + WebSocket + interface React/Vite",
         "sections": [
           {
-            "body": "Projet personnel de sécurité réseau : un scanner de réseau local full-stack capable d identifier les hôtes actifs et les ports ouverts sur un segment LAN, de diffuser les résultats en temps réel via WebSocket, et de classifier chaque service par niveau de risque. Conçu en deux couches : un backend Python FastAPI avec threads concurrents, et un frontend React/Vite affichant les résultats en direct.",
+            "body": "Projet personnel de sécurité réseau : un scanner de réseau local full-stack capable d'identifier les hôtes actifs et les ports ouverts sur un segment LAN, de diffuser les résultats en temps réel via WebSocket, et de classifier chaque service par niveau de risque. Conçu en deux couches : un backend Python FastAPI avec threads concurrents, et un frontend React/Vite affichant les résultats en direct.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Découverte d hôtes : résolution du sous-réseau local et ping de chaque IP pour lister les hôtes actifs",
+              "Découverte d'hôtes : résolution du sous-réseau local et ping de chaque IP pour lister les hôtes actifs",
               "Scan de ports concurrent via ThreadPoolExecutor — tous les top ports scannés en parallèle par hôte",
               "Table de détection de 45 services connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
               "Classification des risques (élevé / moyen / faible) par port via RISK_MAP (Telnet, RDP, BDD exposées...)",
               "Streaming WebSocket en temps réel — résultats envoyés au frontend dès que chaque hôte termine",
-              "Frontend React/Vite : cartes d hôtes en live, badges de ports colorés par risque, indicateur de progression"
+              "Frontend React/Vite : cartes d'hôtes en live, badges de ports colorés par risque, indicateur de progression"
             ],
             "title": "Fonctionnalités développées"
           },
@@ -3821,7 +3821,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Classification des risques",
-                "description": "Chaque port ouvert est recherché dans RISK_MAP et étiqueté élevé / moyen / faible selon le risque d exposition connu."
+                "description": "Chaque port ouvert est recherché dans RISK_MAP et étiqueté élevé / moyen / faible selon le risque d'exposition connu."
               },
               {
                 "label": "Streaming WebSocket",
@@ -3829,7 +3829,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Rendu React",
-                "description": "Le frontend reçoit les événements JSON via WebSocket et affiche des cartes d hôtes avec badges de ports colorés à la volée."
+                "description": "Le frontend reçoit les événements JSON via WebSocket et affiche des cartes d'hôtes avec badges de ports colorés à la volée."
               }
             ],
             "title": "Fonctionnement"
@@ -3979,7 +3979,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "Entropy calculation: log₂(pool^length) character-pool-aware — composite 0–100 score",
-              "9 compiled regex rules: repeated chars, numeric/alphabetic sequences, keyboard walks (qwerty/azerty), embedded years",
+              "6 compiled regex rules: repeated chars, numeric/alphabetic sequences, keyboard walks (qwerty/azerty), embedded years",
               "Dictionary matching against 30+ common passwords and base words",
               "Crack-time estimation at 3 attack speeds (10k/s, 1M/s, 1B/s)",
               "HaveIBeenPwned integration via k-anonymity: only the first 5 SHA-1 chars sent to the API — the password never leaves the machine",
@@ -4012,7 +4012,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Pattern analysis",
-                "description": "9 compiled regex rules applied: repetitions, sequences, keyboard walks, embedded years. Each detected pattern penalizes the score."
+                "description": "6 compiled regex rules applied: repetitions, sequences, keyboard walks, embedded years. Each detected pattern penalizes the score."
               },
               {
                 "label": "HIBP check",
@@ -4041,7 +4041,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...",
                 "label": "Pattern engine",
-                "value": "9 regex rules"
+                "value": "6 regex rules"
               },
               {
                 "note": "Length, complexity, entropy bonuses + penalties",
@@ -4063,19 +4063,19 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Analyseur de force de mot de passe — entropie, regex, HaveIBeenPwned (CLI Python)",
         "sections": [
           {
-            "body": "Outil CLI personnel centré sur la sécurité : évalue rigoureusement la force d un mot de passe sans jamais le transmettre en clair. Conçu pour explorer le moteur regex de Python, le calcul d entropie et la conception d API respectueuses de la vie privée (k-anonymat HaveIBeenPwned). L outil fonctionne en mode interactif dans le terminal et produit un rapport structuré complet en une seule passe.",
+            "body": "Outil CLI personnel centré sur la sécurité : évalue rigoureusement la force d'un mot de passe sans jamais le transmettre en clair. Conçu pour explorer le moteur regex de Python, le calcul d'entropie et la conception d'API respectueuses de la vie privée (k-anonymat HaveIBeenPwned). L outil fonctionne en mode interactif dans le terminal et produit un rapport structuré complet en une seule passe.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Calcul d entropie : log₂(pool^longueur) adapté au pool de caractères — score composite 0-100",
+              "Calcul d'entropie : log₂(pool^longueur) adapté au pool de caractères — score composite 0-100",
               "6 règles regex compilées : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées",
               "Correspondance dictionnaire : 30+ mots de passe courants et mots de base",
-              "Estimation du temps de crack à 3 vitesses d attaque (10k/s, 1M/s, 1 milliard/s)",
+              "Estimation du temps de crack à 3 vitesses d'attaque (10k/s, 1M/s, 1 milliard/s)",
               "Intégration HaveIBeenPwned par k-anonymat : seuls les 5 premiers caractères du hash SHA-1 envoyés — le mot de passe ne quitte jamais la machine",
-              "Sortie terminal ANSI colorée avec barre de progression, checklist par critère et suggestions d amélioration"
+              "Sortie terminal ANSI colorée avec barre de progression, checklist par critère et suggestions d'amélioration"
             ],
             "title": "Fonctionnalités développées"
           },
@@ -4084,7 +4084,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Python 3 stdlib — re, hashlib (SHA-1), math, getpass (masquage saisie)",
               "Regex compilés — 6 règles (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
-              "k-anonymat HIBP — seul le préfixe SHA-1 de 5 caractères envoyé à l API",
+              "k-anonymat HIBP — seul le préfixe SHA-1 de 5 caractères envoyé à l'API",
               "requests (optionnel) — appel API HaveIBeenPwned",
               "ANSI escape codes — sortie colorée et barre de progression en terminal",
               "Aucune dépendance obligatoire — fonctionne avec la stdlib seule"
@@ -4099,7 +4099,7 @@ export const projectDetails: ProjectDetails[] = [
                 "description": "getpass.getpass() utilisé pour masquer la saisie du mot de passe dans le terminal — jamais affiché en clair."
               },
               {
-                "label": "Calcul d entropie & score",
+                "label": "Calcul d'entropie & score",
                 "description": "Pool de caractères détecté (minuscules, majuscules, chiffres, spéciaux). Entropie calculée : log₂(pool^longueur). Score composite 0-100 avec bonus longueur et complexité."
               },
               {
@@ -4108,11 +4108,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Vérification HIBP",
-                "description": "Hash SHA-1 du mot de passe calculé. Seuls les 5 premiers caractères envoyés à l API HIBP (k-anonymat). Réponse analysée pour détecter une compromission sans révéler le mot de passe."
+                "description": "Hash SHA-1 du mot de passe calculé. Seuls les 5 premiers caractères envoyés à l'API HIBP (k-anonymat). Réponse analysée pour détecter une compromission sans révéler le mot de passe."
               },
               {
                 "label": "Rapport terminal",
-                "description": "Sortie ANSI colorée : score, barre de progression, checklist des critères, estimation du temps de crack, suggestions d amélioration ciblées."
+                "description": "Sortie ANSI colorée : score, barre de progression, checklist des critères, estimation du temps de crack, suggestions d'amélioration ciblées."
               }
             ],
             "title": "Fonctionnement"
@@ -4122,7 +4122,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               {
                 "note": "Adapté au pool de caractères",
-                "label": "Modèle d entropie",
+                "label": "Modèle d'entropie",
                 "value": "log₂(pool^longueur)"
               },
               {
@@ -5298,6 +5298,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Best Practices"
           },
           {
+            "type": "bullets",
+            "items": [
+              "No documented fallback for a device failing mid-process — a Optiplex failing Blancco erasure (disk fault) or a Latitude failing Autopilot enrollment (hardware defect) was handled case-by-case, not as part of the repeatable process",
+              "The rollout covers day-1 provisioning only: no defined re-provisioning path for a device that comes back later (employee offboarding, hardware swap, repair return) — that's a separate lifecycle process this project didn't scope",
+              "Zero-touch Autopilot assumes reliable internet at first boot to reach Intune — no offline or on-prem fallback was built for sites where that assumption might not hold",
+              "20–30 devices/day was chosen to catch Intune policy failures early without slowing the rollout to a crawl — untested whether a larger batch size would have surfaced the same failures just as fast"
+            ],
+            "title": "Known Limitations & Decisions"
+          },
+          {
             "type": "resources",
             "items": [
               {
@@ -5405,6 +5415,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Bonnes pratiques"
           },
           {
+            "type": "bullets",
+            "items": [
+              "Aucun repli documenté pour un poste en échec en cours de process — un Optiplex échouant à l'effacement Blancco (disque défectueux) ou un Latitude échouant à l'enrôlement Autopilot (défaut matériel) était traité au cas par cas, pas intégré au processus reproductible",
+              "Le déploiement couvre uniquement la mise en service jour 1 : aucun parcours de re-provisioning défini pour un poste qui revient plus tard (départ collaborateur, échange matériel, retour SAV) — c'est un processus de cycle de vie séparé, hors périmètre de ce projet",
+              "L'Autopilot zero-touch suppose une connexion internet fiable au premier démarrage pour joindre Intune — aucun repli hors-ligne ou on-prem n'a été construit pour les sites où cette hypothèse pourrait ne pas tenir",
+              "Le rythme de 20-30 postes/jour a été choisi pour détecter tôt les échecs de policy Intune sans ralentir excessivement le déploiement — jamais vérifié si un lot plus large aurait révélé les mêmes échecs aussi vite"
+            ],
+            "title": "Limites connues & décisions"
+          },
+          {
             "type": "resources",
             "items": [
               {
@@ -5510,6 +5530,16 @@ export const projectDetails: ProjectDetails[] = [
               "Generar los certificados Blancco en el momento del borrado (no de forma retroactiva) es la única forma de garantizar una cadena de custodia ininterrumpida para las auditorías de conformidad."
             ],
             "title": "Buenas prácticas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Sin repliegue documentado para un equipo que falla a mitad de proceso — un Optiplex que falla en el borrado Blancco (disco defectuoso) o un Latitude que falla en la inscripción Autopilot (defecto de hardware) se gestionaba caso por caso, sin formar parte del proceso repetible",
+              "El despliegue cubre solo la puesta en marcha del día 1: no hay un proceso de re-aprovisionamiento definido para un equipo que vuelve más tarde (baja de empleado, cambio de hardware, retorno de reparación) — es un proceso de ciclo de vida aparte, fuera del alcance de este proyecto",
+              "El Autopilot zero-touch asume una conexión a internet fiable en el primer arranque para llegar a Intune — no se construyó ningún repliegue offline u on-prem para sedes donde esa hipótesis pudiera no cumplirse",
+              "El ritmo de 20-30 equipos/día se eligió para detectar pronto los fallos de política de Intune sin ralentizar demasiado el despliegue — nunca se verificó si un lote mayor habría revelado los mismos fallos igual de rápido"
+            ],
+            "title": "Límites conocidos y decisiones"
           },
           {
             "type": "resources",
@@ -6419,7 +6449,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
         "sections": [
           {
-            "body": "En prolongement du lab virtualisé (AD DS / DNS / DHCP / WDS sur Windows Server 2022), j ai ajouté une VM pfSense 2.6.0 pour jouer le rôle de passerelle réseau. Objectif : sécuriser les accès Internet sortants de toutes les machines du LAN privé (192.168.100.0/24), filtrer le trafic web via un proxy transparent Squid et appliquer des politiques d accès — reproduisant la sécurité périmétrique d une infrastructure d entreprise réelle.",
+            "body": "En prolongement du lab virtualisé (AD DS / DNS / DHCP / WDS sur Windows Server 2022), j'ai ajouté une VM pfSense 2.6.0 pour jouer le rôle de passerelle réseau. Objectif : sécuriser les accès Internet sortants de toutes les machines du LAN privé (192.168.100.0/24), filtrer le trafic web via un proxy transparent Squid et appliquer des politiques d'accès — reproduisant la sécurité périmétrique d'une infrastructure d'entreprise réelle.",
             "type": "text",
             "title": "Contexte"
           },
@@ -6428,7 +6458,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Hyperviseur : VMware Workstation Pro 17",
               "VM pfSense 2.6.0 : FreeBSD 12 64-bit, 10 Go HDD, 2 Go RAM — passerelle LAN/WAN",
-              "WAN (em0) : Bridge sur clé 4G USB de l hôte — DHCP — 192.168.1.110/24",
+              "WAN (em0) : Bridge sur clé 4G USB de l'hôte — DHCP — 192.168.1.110/24",
               "LAN (em1) : VMnet8 (NAT) — 192.168.100.220/24 (passerelle pfSense)",
               "DCAD22 : 192.168.100.250 — AD DS, DNS, DHCP, WDS",
               "SRVSAMBA : 192.168.100.130 — Partages Samba | Clients : 192.168.100.21/22"
@@ -6440,9 +6470,9 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Alias IP : groupe SRV (serveurs) et groupe Client (postes) pour règles ciblées",
               "Règles LAN : DNS (UDP 53) et ICMP autorisés depuis SRV — règle REFUS SRV VERS INTERNET au-dessus du allow-all",
-              "Proxy Squid transparent sur l interface LAN (port 3128) avec inspection SSL activée",
+              "Proxy Squid transparent sur l'interface LAN (port 3128) avec inspection SSL activée",
               "CA interne Pfsense-CA (RSA 2048, SHA-256, 10 ans) pour SSL bump sur HTTPS sortant",
-              "SquidGuard : filtrage par catégories d URL avec listes noires",
+              "SquidGuard : filtrage par catégories d'URL avec listes noires",
               "LightSquid : tableau de bord de reporting du trafic web par client"
             ],
             "title": "Configurations déployées"
@@ -6452,7 +6482,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "pfSense 2.6.0 — Firewall, NAT, routage (basé FreeBSD)",
               "Squid — Proxy transparent avec inspection SSL (port 3128)",
-              "SquidGuard — Filtrage par catégories d URL (listes noires)",
+              "SquidGuard — Filtrage par catégories d'URL (listes noires)",
               "LightSquid — Tableau de bord de reporting web par utilisateur",
               "VMware Workstation Pro 17 — Hyperviseur de type 2",
               "PKI / CA Manager pfSense — Autorité de certification interne pour HTTPS"
@@ -6491,8 +6521,8 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "note": "Exceptions DNS + ICMP uniquement",
-                "label": "Contrôle d accès",
-                "value": "Serveurs isolés d Internet"
+                "label": "Contrôle d'accès",
+                "value": "Serveurs isolés d'Internet"
               },
               {
                 "note": "Catégories URL bloquées",
@@ -6726,7 +6756,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
+                "href": "https://github.com/Aiyeesha/portfolio-next",
                 "label": "GitHub repository"
               },
               {
@@ -6833,7 +6863,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
+                "href": "https://github.com/Aiyeesha/portfolio-next",
                 "label": "Dépôt GitHub"
               },
               {
@@ -6940,7 +6970,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
+                "href": "https://github.com/Aiyeesha/portfolio-next",
                 "label": "Repositorio GitHub"
               },
               {
@@ -6990,7 +7020,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "TP-Link Access Point · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise",
         "sections": [
           {
-            "body": "As part of the TAI training at Greta du Val d Oise (Lycée Louis Jouvet, Taverny), I was tasked with configuring a TP-Link Wi-Fi access point from scratch, working independently. The exercise simulates a real-world IT technician task: deploying wireless connectivity for an office or training room, from physical cabling to full network validation.",
+            "body": "As part of the TAI training at Greta du Val d'Oise (Lycée Louis Jouvet, Taverny), I was tasked with configuring a TP-Link Wi-Fi access point from scratch, working independently. The exercise simulates a real-world IT technician task: deploying wireless connectivity for an office or training room, from physical cabling to full network validation.",
             "type": "text",
             "title": "Context"
           },
@@ -7093,16 +7123,16 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Point d'accès TP-Link · LAN/WAN · DHCP · SSID · WPA2 · Greta du Val d'Oise",
         "sections": [
           {
-            "body": "Dans le cadre de la formation TAI au Greta du Val d Oise (Lycée Louis Jouvet, Taverny), j ai été chargée de configurer un point d accès Wi-Fi TP-Link de A à Z en autonomie. L exercice simule une mission réelle de technicien IT : déployer la connectivité sans fil pour un bureau ou une salle de formation, du raccordement physique à la validation réseau complète.",
+            "body": "Dans le cadre de la formation TAI au Greta du Val d'Oise (Lycée Louis Jouvet, Taverny), j'ai été chargée de configurer un point d'accès Wi-Fi TP-Link de A à Z en autonomie. L exercice simule une mission réelle de technicien IT : déployer la connectivité sans fil pour un bureau ou une salle de formation, du raccordement physique à la validation réseau complète.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Raccorder physiquement le point d accès TP-Link au switch réseau du labo (RJ45)",
-              "Accéder à l interface d administration web du PA (http://192.168.0.1)",
-              "Configurer l adressage WAN (DHCP ou IP statique selon la topologie)",
+              "Raccorder physiquement le point d'accès TP-Link au switch réseau du labo (RJ45)",
+              "Accéder à l'interface d'administration web du PA (http://192.168.0.1)",
+              "Configurer l'adressage WAN (DHCP ou IP statique selon la topologie)",
               "Activer le serveur DHCP intégré pour les clients Wi-Fi",
               "Configurer le réseau sans fil : SSID, bande, canal et sécurité WPA2-PSK",
               "Valider la connectivité Wi-Fi depuis un appareil test (DHCP + accès Internet)"
@@ -7112,10 +7142,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Point d accès TP-Link raccordé au switch et alimenté — LEDs de lien confirmées",
-              "Interface d administration accessible via http://192.168.0.1 avec identifiants constructeur",
+              "Point d'accès TP-Link raccordé au switch et alimenté — LEDs de lien confirmées",
+              "Interface d'administration accessible via http://192.168.0.1 avec identifiants constructeur",
               "Adressage WAN configuré en DHCP — IP valide obtenue depuis le routeur amont",
-              "Serveur DHCP intégré activé pour distribution automatique d adresses aux clients",
+              "Serveur DHCP intégré activé pour distribution automatique d'adresses aux clients",
               "SSID configuré, bande 2,4 GHz, chiffrement WPA2-PSK avec phrase de passe robuste",
               "Appareil test connecté avec IP DHCP obtenue, ping 8.8.8.8 validé, accès Internet confirmé"
             ],
@@ -7124,10 +7154,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "TP-Link Access Point — point d accès Wi-Fi du labo de formation",
-              "Interface d administration web TP-Link — configuration via navigateur (192.168.0.1)",
+              "TP-Link Access Point — point d'accès Wi-Fi du labo de formation",
+              "Interface d'administration web TP-Link — configuration via navigateur (192.168.0.1)",
               "WPA2-PSK — protocole de sécurité Wi-Fi avec phrase de passe",
-              "DHCP intégré — attribution automatique d adresses IP aux clients",
+              "DHCP intégré — attribution automatique d'adresses IP aux clients",
               "RJ45 / Switch LAN — infrastructure filaire de connexion du PA",
               "Ping / test réseau — validation de la connectivité Internet"
             ],
@@ -7138,11 +7168,11 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Connexion physique",
-                "description": "PA TP-Link raccordé au switch labo via câble RJ45. Mise sous tension et vérification des LEDs indiquant l établissement du lien réseau."
+                "description": "PA TP-Link raccordé au switch labo via câble RJ45. Mise sous tension et vérification des LEDs indiquant l'établissement du lien réseau."
               },
               {
-                "label": "Accès à l interface admin",
-                "description": "Navigateur → http://192.168.0.1. Saisie des identifiants constructeur (étiquette de l appareil). Accès au panneau de configuration TP-Link."
+                "label": "Accès à l'interface admin",
+                "description": "Navigateur → http://192.168.0.1. Saisie des identifiants constructeur (étiquette de l'appareil). Accès au panneau de configuration TP-Link."
               },
               {
                 "label": "Adressage WAN",
@@ -7199,7 +7229,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En el marco de la formación TAI en el Greta du Val d Oise (Lycée Louis Jouvet, Taverny), se me encargó configurar un punto de acceso Wi-Fi TP-Link de principio a fin de forma autónoma. El ejercicio simula una misión real de técnico IT: desplegar la conectividad inalámbrica para una oficina o una sala de formación, desde la conexión física hasta la validación completa de la red."
+              "En el marco de la formación TAI en el Greta du Val d'Oise (Lycée Louis Jouvet, Taverny), se me encargó configurar un punto de acceso Wi-Fi TP-Link de principio a fin de forma autónoma. El ejercicio simula una misión real de técnico IT: desplegar la conectividad inalámbrica para una oficina o una sala de formación, desde la conexión física hasta la validación completa de la red."
             ]
           },
           {
@@ -7312,7 +7342,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Hardware Sizing · Excel Devis · Component Research · Greta du Val d'Oise",
         "sections": [
           {
-            "body": "As part of the TAI training at Greta du Val d Oise, I was given a client brief describing a workstation use case (office productivity + light virtualization) and asked to produce a complete hardware procurement quote. The exercise covered the full B2B sourcing workflow: requirements analysis, compatible component research, technical validation, and formalizing the quote in a structured Excel document — the standard deliverable in professional IT procurement.",
+            "body": "As part of a group project during the TAI training at Greta du Val d'Oise, I was given a client brief describing a workstation use case (office productivity + light virtualization) and asked to produce a complete hardware procurement quote. The exercise covered the full B2B sourcing workflow: requirements analysis, compatible component research, technical validation, and formalizing the quote in a structured Excel document — the standard deliverable in professional IT procurement.",
             "type": "text",
             "title": "Context"
           },
@@ -7406,7 +7436,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Dimensionnement matériel · Devis Excel · Recherche composants · Greta du Val d'Oise",
         "sections": [
           {
-            "body": "Dans le cadre de la formation TAI au Greta du Val d Oise, j ai reçu un cahier des charges client décrivant un cas d usage de poste de travail (bureautique + virtualisation légère) et j ai dû produire un devis matériel complet. L exercice couvrait l intégralité du processus d approvisionnement B2B : analyse des besoins, recherche de composants compatibles, validation des contraintes techniques et formalisation dans un tableau Excel structuré — livrable standard en contexte professionnel IT.",
+            "body": "Dans le cadre d'un projet de groupe pendant la formation TAI au Greta du Val d'Oise, j'ai reçu un cahier des charges client décrivant un cas d'usage de poste de travail (bureautique + virtualisation légère) et j'ai dû produire un devis matériel complet. L exercice couvrait l'intégralité du processus d'approvisionnement B2B : analyse des besoins, recherche de composants compatibles, validation des contraintes techniques et formalisation dans un tableau Excel structuré — livrable standard en contexte professionnel IT.",
             "type": "text",
             "title": "Contexte"
           },
@@ -7437,7 +7467,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "bullets",
             "items": [
               "AMD Ryzen 5 / Intel Core i5 (12e-13e gen) — CPU selon rapport qualité/prix",
-              "16 Go DDR4 (2× 8 Go) — évolutif jusqu à 32 Go pour la virtualisation",
+              "16 Go DDR4 (2× 8 Go) — évolutif jusqu'à 32 Go pour la virtualisation",
               "512 Go SSD M.2 NVMe (OS) + 1 To HDD (données)",
               "Windows 11 Pro OEM — licence incluse dans le devis",
               "LDLC Pro / Materiel.net / Inmac Wstore — catalogues fournisseurs B2B",
@@ -7450,7 +7480,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Analyse des besoins",
-                "description": "Lecture du cahier des charges, extraction des contraintes : RAM min 16 Go, SSD pour l OS, iGPU ou GPU discret, TPM 2.0, format ATX tour."
+                "description": "Lecture du cahier des charges, extraction des contraintes : RAM min 16 Go, SSD pour l'OS, iGPU ou GPU discret, TPM 2.0, format ATX tour."
               },
               {
                 "label": "Recherche de composants",
@@ -7465,13 +7495,13 @@ export const projectDetails: ProjectDetails[] = [
                 "description": "Saisie dans Excel : référence, fournisseur, prix HT, quantité, total HT, TVA 20%, total TTC. Ligne récapitulative avec total global — conformité budgétaire vérifiée."
               }
             ],
-            "title": "Processus d approvisionnement"
+            "title": "Processus d'approvisionnement"
           },
           {
             "type": "metrics",
             "items": [
               {
-                "note": "Conforme à l enveloppe client",
+                "note": "Conforme à l'enveloppe client",
                 "label": "Budget",
                 "value": "< 1 000 € HT"
               },
@@ -7503,7 +7533,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En el marco de la formación TAI en el Greta du Val d Oise, recibí un pliego de condiciones de cliente describiendo un caso de uso de puesto de trabajo (ofimática + virtualización ligera) y tuve que elaborar un presupuesto de hardware completo. El ejercicio cubría todo el proceso de aprovisionamiento B2B: análisis de necesidades, búsqueda de componentes compatibles, validación de las limitaciones técnicas y formalización en una tabla Excel estructurada — entregable estándar en contexto profesional IT."
+              "En el marco de un proyecto en grupo durante la formación TAI en el Greta du Val d'Oise, recibí un pliego de condiciones de cliente describiendo un caso de uso de puesto de trabajo (ofimática + virtualización ligera) y tuve que elaborar un presupuesto de hardware completo. El ejercicio cubría todo el proceso de aprovisionamiento B2B: análisis de necesidades, búsqueda de componentes compatibles, validación de las limitaciones técnicas y formalización en una tabla Excel estructurada — entregable estándar en contexto profesional IT."
             ]
           },
           {
@@ -7611,7 +7641,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Outlook 2016 · IMAP/Exchange · User Onboarding · Email Provisioning · Greta du Val d'Oise",
         "sections": [
           {
-            "body": "As part of the TAI training at Greta du Val d Oise, I completed an email provisioning exercise using Microsoft Outlook 2016. The scenario mirrors a real-world IT technician task: a new employee arrives on their first day, their workstation is already set up (Windows 10, Office 2016 installed), and the technician must configure their professional email account so they can start working immediately.",
+            "body": "As part of the TAI training at Greta du Val d'Oise, I completed an email provisioning exercise using Microsoft Outlook 2016. The scenario mirrors a real-world IT technician task: a new employee arrives on their first day, their workstation is already set up (Windows 10, Office 2016 installed), and the technician must configure their professional email account so they can start working immediately.",
             "type": "text",
             "title": "Context"
           },
@@ -7703,7 +7733,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Outlook 2016 · IMAP/Exchange · Onboarding utilisateur · Provisioning messagerie · Greta du Val d'Oise",
         "sections": [
           {
-            "body": "Dans le cadre de la formation TAI au Greta du Val d Oise, j ai réalisé un exercice de provisioning de messagerie avec Microsoft Outlook 2016. Le scénario reproduit une tâche réelle de technicien IT : un nouvel employé arrive le premier jour, son poste est installé (Windows 10, Office 2016), et le technicien doit configurer son compte de messagerie professionnel pour qu il soit opérationnel immédiatement.",
+            "body": "Dans le cadre de la formation TAI au Greta du Val d'Oise, j'ai réalisé un exercice de provisioning de messagerie avec Microsoft Outlook 2016. Le scénario reproduit une tâche réelle de technicien IT : un nouvel employé arrive le premier jour, son poste est installé (Windows 10, Office 2016), et le technicien doit configurer son compte de messagerie professionnel pour qu'il soit opérationnel immédiatement.",
             "type": "text",
             "title": "Contexte"
           },
@@ -7712,7 +7742,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Configurer un compte de messagerie Microsoft/Exchange (tai7@outlook.fr) dans Outlook 2016",
               "Valider la communication bidirectionnelle avec un compte pair (tai12@outlook.fr)",
-              "Rendre le poste opérationnel en moins de 5 minutes après remise à l utilisateur",
+              "Rendre le poste opérationnel en moins de 5 minutes après remise à l'utilisateur",
               "Simuler un onboarding Jour 1 — messagerie, calendrier et contacts accessibles immédiatement",
               "Documenter la procédure pour reproduction en contexte professionnel"
             ],
@@ -7735,7 +7765,7 @@ export const projectDetails: ProjectDetails[] = [
               "Microsoft Outlook 2016 — client de messagerie bureautique",
               "Exchange ActiveSync — protocole de synchronisation détecté automatiquement",
               "Autodiscover — mécanisme de découverte automatique des paramètres serveur",
-              "Windows 10 — système d exploitation du poste provisionné",
+              "Windows 10 — système d'exploitation du poste provisionné",
               "Office 2016 — suite bureautique préinstallée"
             ],
             "title": "Stack & Technologies"
@@ -7745,11 +7775,11 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Lancer Outlook 2016",
-                "description": "Ouverture d Outlook 2016 pour la première fois — assistant de bienvenue lancé automatiquement pour l ajout du compte."
+                "description": "Ouverture d'Outlook 2016 pour la première fois — assistant de bienvenue lancé automatiquement pour l'ajout du compte."
               },
               {
                 "label": "Saisie des informations du compte",
-                "description": "Nom de l utilisateur, adresse (tai7@outlook.fr) et mot de passe saisis. Outlook 2016 supporte la configuration automatique et manuelle."
+                "description": "Nom de l'utilisateur, adresse (tai7@outlook.fr) et mot de passe saisis. Outlook 2016 supporte la configuration automatique et manuelle."
               },
               {
                 "label": "Configuration automatique",
@@ -7798,7 +7828,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En el marco de la formación TAI en el Greta du Val d Oise, realicé un ejercicio de aprovisionamiento de correo con Microsoft Outlook 2016. El escenario reproduce una tarea real de técnico IT: un nuevo empleado llega el primer día, su equipo está instalado (Windows 10, Office 2016), y el técnico debe configurar su cuenta de correo profesional para que esté operativa de inmediato."
+              "En el marco de la formación TAI en el Greta du Val d'Oise, realicé un ejercicio de aprovisionamiento de correo con Microsoft Outlook 2016. El escenario reproduce una tarea real de técnico IT: un nuevo empleado llega el primer día, su equipo está instalado (Windows 10, Office 2016), y el técnico debe configurar su cuenta de correo profesional para que esté operativa de inmediato."
             ]
           },
           {
@@ -8252,7 +8282,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Herramienta de evaluación de vulnerabilidades (Python + CVSS)",
-        "heroSubtitle": "Evaluación de vulnerabilidades Tenable SecurityCenter — resumen ejecutivo, clasificación por severidad y remediación mapeada a CVE.",
+        "heroSubtitle": "Herramienta CLI para evaluaciones de vulnerabilidades estructuradas con puntuación CVSS v3.1 y generación de informes HTML",
         "sections": [
           {
             "type": "text",
@@ -9104,7 +9134,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Playbook de respuesta a incidentes (SOC)",
-        "heroSubtitle": "Playbook de respuesta a incidentes de phishing — detectar, triar, contener, erradicar, recuperar.",
+        "heroSubtitle": "Procedimientos estructurados de respuesta a incidentes: malware, ransomware, filtraciones de datos, phishing y accesos no autorizados",
         "sections": [
           {
             "type": "text",
@@ -11964,7 +11994,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Design of an Apex backend prototype for LTP (luxury & fashion): data model, security, import strategy.",
         "sections": [
           {
-            "body": "Le Temps des Papillons (LTP), a French bridal couture house, tracked its deliveries through 3 carriers with disparate interfaces — generating roughly 194 support calls/day just to check a delivery status. Marie Dupont (delivery tracking) and Sébastien Nozerac (sales team) owned the need client-side. Mission: design the complete technical architecture of the Salesforce application before any development began — UML data model, security matrix, import strategy and carrier integration plan — targeting a 70% cut in inbound calls through automation and a 360° customer view.",
+            "body": "Le Temps des Papillons (LTP), a French bridal couture house, tracked its deliveries through 3 carriers with disparate interfaces — generating roughly 194 support calls/day just to check a delivery status. For a bridal house, that status isn't a routine question: a couture gown tied to a wedding date has no slack for \"we'll check and call you back,\" and every one of those daily calls was a client anxious about a date that can't move. That urgency, multiplied across 2.1M accounts and 3 carriers with no shared status format, is what made a unified view a business requirement rather than a convenience. Marie Dupont (delivery tracking) and Sébastien Nozerac (sales team) owned the need client-side. Mission: design the complete technical architecture of the Salesforce application before any development began — UML data model, security matrix, import strategy and carrier integration plan — targeting a 70% cut in inbound calls through automation and a 360° customer view.",
             "type": "text",
             "title": "Context"
           },
@@ -12059,6 +12089,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Project Timeline"
           },
           {
+            "type": "bullets",
+            "items": [
+              "Real-time webhook was only viable for LTP France and Transport Luxe Europe because both exposed a REST API — Rapid International Transport doesn't, which is why it stayed on SFTP/CSV batch rather than a design preference for two integration patterns",
+              "No reconciliation logic between the two channels: if a batch import lands after a real-time webhook already updated the same delivery, the batch write can overwrite a fresher status — acceptable at a 2h SFTP cadence for this carrier's volume, but the first gap I'd close before scaling batch frequency",
+              "Single \"Support Agent\" profile across all 3 zones relies entirely on role hierarchy and sharing rules for isolation, not profile-level restriction — simpler to maintain with one profile, but any future zone needing a genuinely different permission set (not just different data visibility) would require restructuring the role hierarchy, not just adding a sharing rule",
+              "Architecture validated by the OpenClassrooms jury on its design merits, not load-tested against the target 2.1M-account volume — this is a specification and prototype, not a system proven at production scale"
+            ],
+            "title": "Known Limitations & Decisions"
+          },
+          {
             "type": "metrics",
             "items": [
               {
@@ -12113,7 +12153,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Conception d'un prototype backend Apex pour LTP (luxe & mode) : modèle de données, sécurité, stratégie d'import.",
         "sections": [
           {
-            "body": "Le Temps des Papillons (LTP), maison française de couture et robes de mariée, gérait le suivi de ses livraisons via 3 transporteurs aux interfaces disparates — d'où environ 194 appels/jour vers le support pour connaître un simple statut de livraison. Marie Dupont (suivi des livraisons) et Sébastien Nozerac (équipe commerciale) portaient le besoin côté client. Objectif du projet : concevoir l'architecture technique complète de l'application Salesforce avant tout développement — modèle de données UML, matrice de sécurité, stratégie d'import et plan d'intégration transporteurs — avec pour cible fonctionnelle une réduction de 70% des appels entrants via l'automatisation et une vision 360° du client.",
+            "body": "Le Temps des Papillons (LTP), maison française de couture et robes de mariée, gérait le suivi de ses livraisons via 3 transporteurs aux interfaces disparates — d'où environ 194 appels/jour vers le support pour connaître un simple statut de livraison. Pour une maison de couture nuptiale, ce statut n'a rien d'anodin : une robe sur-mesure liée à une date de mariage ne tolère pas un « on vérifie et on vous rappelle », et chacun de ces appels quotidiens venait d'une cliente anxieuse pour une date qui ne peut pas bouger. Cette urgence, multipliée par 2,1 millions de comptes et 3 transporteurs sans format de statut commun, est ce qui a transformé une vue unifiée en exigence métier plutôt qu'en simple confort. Marie Dupont (suivi des livraisons) et Sébastien Nozerac (équipe commerciale) portaient le besoin côté client. Objectif du projet : concevoir l'architecture technique complète de l'application Salesforce avant tout développement — modèle de données UML, matrice de sécurité, stratégie d'import et plan d'intégration transporteurs — avec pour cible fonctionnelle une réduction de 70% des appels entrants via l'automatisation et une vision 360° du client.",
             "type": "text",
             "title": "Contexte"
           },
@@ -12208,6 +12248,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Déroulement du projet"
           },
           {
+            "type": "bullets",
+            "items": [
+              "Le webhook temps réel n'était viable que pour LTP France et Transport Luxe Europe parce que ces deux transporteurs exposent une API REST — Rapid International Transport n'en propose pas, d'où le choix du batch SFTP/CSV pour ce dernier, pas une préférence de conception pour deux modes d'intégration",
+              "Aucune logique de réconciliation entre les deux canaux : si un import batch arrive après qu'un webhook temps réel a déjà mis à jour la même livraison, l'écriture batch peut écraser un statut plus récent — acceptable à une cadence SFTP de 2h pour le volume de ce transporteur, mais la première limite à traiter avant d'augmenter la fréquence du batch",
+              "Le profil unique \"Support Agent\" sur les 3 zones repose entièrement sur la hiérarchie de rôles et les règles de partage pour l'isolation, pas sur une restriction au niveau profil — plus simple à maintenir avec un seul profil, mais toute future zone nécessitant un vrai jeu de permissions différent (pas seulement une visibilité de données différente) demanderait de restructurer la hiérarchie de rôles, pas juste d'ajouter une règle de partage",
+              "Architecture validée par le jury OpenClassrooms sur ses mérites de conception, jamais testée en charge sur le volume cible de 2,1M de comptes — c'est une spécification et un prototype, pas un système éprouvé à l'échelle de production"
+            ],
+            "title": "Limites connues & décisions"
+          },
+          {
             "type": "metrics",
             "items": [
               {
@@ -12262,7 +12312,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "CRM Salesforce de seguimiento de entregas — diseño y entregables (LTP)",
         "sections": [
           {
-            "body": "Le Temps des Papillons (LTP), casa francesa de alta costura nupcial, gestionaba el seguimiento de sus entregas a través de 3 transportistas con interfaces dispares — lo que generaba unas 194 llamadas/día al soporte solo para conocer un estado de entrega. Marie Dupont (seguimiento de entregas) y Sébastien Nozerac (equipo comercial) lideraron la necesidad del lado del cliente. Misión: diseñar la arquitectura técnica completa de la aplicación Salesforce antes de cualquier desarrollo — modelo de datos UML, matriz de seguridad, estrategia de importación y plan de integración de transportistas — con el objetivo funcional de reducir un 70% las llamadas entrantes mediante la automatización y ofrecer una visión 360° del cliente.",
+            "body": "Le Temps des Papillons (LTP), casa francesa de alta costura nupcial, gestionaba el seguimiento de sus entregas a través de 3 transportistas con interfaces dispares — lo que generaba unas 194 llamadas/día al soporte solo para conocer un estado de entrega. Para una casa de novias, ese estado no es una pregunta rutinaria: un vestido de alta costura ligado a una fecha de boda no admite un «lo comprobamos y le devolvemos la llamada», y cada una de esas llamadas diarias era una clienta angustiada por una fecha que no se puede mover. Esa urgencia, multiplicada por 2,1 millones de cuentas y 3 transportistas sin un formato de estado común, es lo que convirtió una vista unificada en un requisito de negocio, no en una comodidad. Marie Dupont (seguimiento de entregas) y Sébastien Nozerac (equipo comercial) lideraron la necesidad del lado del cliente. Misión: diseñar la arquitectura técnica completa de la aplicación Salesforce antes de cualquier desarrollo — modelo de datos UML, matriz de seguridad, estrategia de importación y plan de integración de transportistas — con el objetivo funcional de reducir un 70% las llamadas entrantes mediante la automatización y ofrecer una visión 360° del cliente.",
             "type": "text",
             "title": "Contexto"
           },
@@ -12355,6 +12405,16 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Desarrollo del proyecto"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "El webhook en tiempo real solo era viable para LTP Francia y Transport Luxe Europe porque ambos exponen una API REST — Rapid International Transport no lo hace, de ahí el batch SFTP/CSV para este último, no una preferencia de diseño por dos patrones de integración",
+              "Sin lógica de reconciliación entre los dos canales: si una importación batch llega después de que un webhook en tiempo real ya actualizó la misma entrega, la escritura batch puede sobrescribir un estado más reciente — aceptable con una cadencia SFTP de 2h para el volumen de este transportista, pero la primera brecha a cerrar antes de aumentar la frecuencia del batch",
+              "El perfil único \"Support Agent\" en las 3 zonas depende por completo de la jerarquía de roles y las reglas de colaboración para el aislamiento, no de una restricción a nivel de perfil — más simple de mantener con un solo perfil, pero cualquier zona futura que necesite un conjunto de permisos realmente distinto (no solo visibilidad de datos distinta) exigiría reestructurar la jerarquía de roles, no solo añadir una regla de colaboración",
+              "Arquitectura validada por el tribunal de OpenClassrooms por sus méritos de diseño, nunca probada bajo carga con el volumen objetivo de 2,1M de cuentas — es una especificación y un prototipo, no un sistema probado a escala de producción"
+            ],
+            "title": "Límites conocidos y decisiones"
           },
           {
             "type": "metrics",
@@ -13336,10 +13396,10 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "CI/CD Pipeline — Multi-environment Salesforce Deployment",
-        "heroSubtitle": "CI/CD pipeline setup",
+        "heroSubtitle": "Git branching, automated Apex validation, and a documented rollback path for Salesforce releases — not a deployment checklist",
         "sections": [
           {
-            "body": "To ensure quality and traceability of Salesforce deployments across multiple environments, I designed and implemented a complete CI/CD pipeline. The goal: automate Apex validations, tests, and deployments from the development sandbox all the way to production — with a structured Git branching strategy and automated checks on every Pull Request.",
+            "body": "Salesforce doesn't ship a native CI/CD story: deployments between sandboxes and production are either point-and-click Change Sets or hand-rolled scripts, and \"it worked in my sandbox\" is a common failure mode. I built this pipeline as a personal project to apply the release discipline I'd use on any platform — branch protection, automated validation on every Pull Request, staged promotion, a documented rollback path — specifically to the constraints of Salesforce metadata deployments: no partial rollback, mandatory Apex test coverage, environment-specific metadata.",
             "type": "text",
             "title": "Context"
           },
@@ -13383,18 +13443,28 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "CD Pipeline",
-                "description": "Deployment automation: sandbox on develop merge, staging on main merge — with Quick Deploy to production after validation"
+                "description": "Deployment automation: sandbox on develop merge, staging on main merge — with Quick Deploy to production reusing the already-validated test run instead of re-running the full suite"
               },
               {
                 "label": "Security",
                 "description": "SFDX Auth URL credentials stored in GitHub Secrets, main and staging branch protection, mandatory review rules"
               },
               {
-                "label": "Documentation",
-                "description": "Git contribution guide, naming conventions and rollback procedures in case of deployment failure"
+                "label": "Rollback procedure",
+                "description": "Salesforce metadata deployments have no native undo. Documented procedure: revert the merge commit on main, re-tag the last known-good package, and re-run it through the same CI pipeline — as long as a forward deploy, by design, since no shortcut exists for Salesforce metadata"
               }
             ],
             "title": "Implementation steps"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Quick Deploy reuses the CI stage's already-validated test run instead of re-running the full Apex suite — Salesforce allows this within a 10-day validation window, cutting minutes off every release without skipping coverage",
+              "No automated rollback trigger: rollback is the documented manual procedure above, not a one-click tool — building true rollback tooling for Salesforce metadata would be its own separate project",
+              "Branch protection requires one review before merge to main — sized for a single-maintainer pipeline, not yet exercised at multi-developer scale",
+              "No post-deploy smoke tests: the pipeline validates before deploying, not after — a gap I'd close first if this pipeline had to support a live production org today"
+            ],
+            "title": "Decisions & Limitations"
           },
           {
             "type": "metrics",
@@ -13426,10 +13496,10 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Pipeline CI/CD — Déploiement Salesforce multi-environnements",
-        "heroSubtitle": "CI/CD pipeline setup",
+        "heroSubtitle": "Branches Git, validation Apex automatisée et procédure de rollback documentée pour les releases Salesforce — pas une simple checklist de déploiement",
         "sections": [
           {
-            "body": "Pour garantir la qualité et la traçabilité des déploiements Salesforce sur plusieurs environnements, j'ai conçu et mis en place un pipeline CI/CD complet. L'objectif : automatiser les validations Apex, les tests, et les déploiements de la sandbox de développement jusqu'à la production — avec une stratégie de branches Git structurée et des checks automatiques à chaque Pull Request.",
+            "body": "Salesforce n'a pas de story CI/CD native : les déploiements entre sandboxes et production se font soit via des Change Sets en point-and-click, soit via des scripts maison — et « ça marchait dans ma sandbox » est un mode d'échec classique. J'ai construit ce pipeline en projet personnel pour appliquer la discipline de release que j'appliquerais sur n'importe quelle plateforme — protection des branches, validation automatique à chaque Pull Request, promotion par étapes, procédure de rollback documentée — mais adaptée aux contraintes propres aux déploiements de métadonnées Salesforce : pas de rollback partiel, couverture de tests Apex obligatoire, métadonnées propres à chaque environnement.",
             "type": "text",
             "title": "Contexte"
           },
@@ -13439,7 +13509,7 @@ export const projectDetails: ProjectDetails[] = [
               "Stratégie de branches Git : feature → develop → staging → main avec protection des branches critiques",
               "Workflow GitHub Actions : validation Apex + tests automatiques à chaque Pull Request",
               "Déploiement automatique en sandbox dès merge sur develop, déploiement en staging sur main",
-              "Quickdeploy en production après validation complète du test run",
+              "Quick Deploy en production après validation complète du test run",
               "Gestion des credentials Salesforce via GitHub Secrets (SFDX Auth URL chiffrée)",
               "Notifications de statut de déploiement intégrées à chaque étape du pipeline"
             ],
@@ -13473,18 +13543,28 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Pipeline CD",
-                "description": "Automatisation des déploiements : sandbox au merge sur develop, staging au merge sur main — avec Quickdeploy en production après validation"
+                "description": "Automatisation des déploiements : sandbox au merge sur develop, staging au merge sur main — avec Quick Deploy en production réutilisant le test run déjà validé plutôt que de relancer toute la suite"
               },
               {
                 "label": "Sécurisation",
                 "description": "Stockage des credentials SFDX Auth URL dans GitHub Secrets, protection des branches main et staging, règles de review obligatoires"
               },
               {
-                "label": "Documentation",
-                "description": "Rédaction du guide de contribution Git, des conventions de nommage et des procédures de rollback en cas d'échec"
+                "label": "Procédure de rollback",
+                "description": "Les déploiements de métadonnées Salesforce n'ont pas d'annulation native. Procédure documentée : revert du commit de merge sur main, re-tag du dernier package validé, puis re-déploiement via le même pipeline CI — aussi long qu'un déploiement normal, par construction, faute de raccourci possible sur les métadonnées Salesforce"
               }
             ],
             "title": "Étapes de mise en place"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Le Quick Deploy réutilise le test run déjà validé côté CI plutôt que de relancer toute la suite Apex — Salesforce l'autorise dans une fenêtre de validation de 10 jours, ce qui réduit chaque release de plusieurs minutes sans sacrifier la couverture",
+              "Aucun déclenchement automatique de rollback : le rollback reste la procédure manuelle documentée ci-dessus, pas un outil en un clic — un vrai outillage de rollback pour les métadonnées Salesforce serait un projet à part entière",
+              "La protection de branche exige une seule revue avant merge sur main — dimensionné pour un pipeline à un seul mainteneur, jamais éprouvé à l'échelle d'une équipe de plusieurs développeurs",
+              "Aucun test de fumée post-déploiement : le pipeline valide avant de déployer, pas après — la première limite que je comblerais si ce pipeline devait servir une org de production réelle aujourd'hui"
+            ],
+            "title": "Décisions & Limites"
           },
           {
             "type": "metrics",
@@ -13516,16 +13596,101 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Pipeline CI/CD — Despliegue Salesforce multi-entorno",
-        "heroSubtitle": "CI/CD pipeline setup",
+        "heroSubtitle": "Branching Git, validación Apex automatizada y un procedimiento de rollback documentado para releases de Salesforce — no una simple checklist de despliegue",
         "sections": [
+          {
+            "body": "Salesforce no tiene una historia CI/CD nativa: los despliegues entre sandboxes y producción se hacen con Change Sets point-and-click o con scripts caseros — y «funcionaba en mi sandbox» es un modo de fallo habitual. Construí este pipeline como proyecto personal para aplicar la misma disciplina de release que aplicaría en cualquier plataforma — protección de ramas, validación automática en cada Pull Request, promoción por etapas, procedimiento de rollback documentado — adaptada a las restricciones propias de los despliegues de metadatos de Salesforce: sin rollback parcial, cobertura de tests Apex obligatoria, metadatos específicos de cada entorno.",
+            "type": "text",
+            "title": "Contexto"
+          },
           {
             "type": "bullets",
             "items": [
-              "Definición del alcance: objetivos, entregables, criterios de aceptación.",
-              "Realización: implementación y/o documentación de principio a fin.",
-              "Validación: pruebas / evidencias + redacción de la documentación."
+              "Estrategia de ramas Git: feature → develop → staging → main con reglas de protección de ramas",
+              "Workflow de GitHub Actions: validación Apex + tests automáticos en cada Pull Request",
+              "Despliegue automático a sandbox al hacer merge en develop, despliegue a staging al hacer merge en main",
+              "Quick Deploy a producción tras la validación completa del test run",
+              "Gestión de credenciales Salesforce vía GitHub Secrets (SFDX Auth URL cifrada)",
+              "Notificaciones de estado de despliegue integradas en cada etapa del pipeline"
             ],
-            "title": "Lo que hice"
+            "title": "Lo que construí"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Salesforce CLI (SFDX) — empaquetado y despliegue de metadatos",
+              "GitHub Actions — orquestación del pipeline CI/CD",
+              "GitHub Secrets — gestión segura de credenciales SFDX",
+              "Apex Test Run — ejecución automatizada de pruebas unitarias",
+              "SFDX Source Format — control de versiones de metadatos Salesforce"
+            ],
+            "title": "Herramientas y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Análisis",
+                "description": "Mapeo de entornos (Dev, Staging, Prod) y definición de una estrategia de ramas adaptada al ciclo de release de Salesforce"
+              },
+              {
+                "label": "Configuración SFDX",
+                "description": "Inicialización del proyecto en SFDX Source Format, configuración de .forceignore y autenticación vía SFDX Auth URL"
+              },
+              {
+                "label": "Pipeline CI",
+                "description": "Workflows de GitHub Actions: job de validación Apex con ejecución de tests unitarios en cada Pull Request hacia develop"
+              },
+              {
+                "label": "Pipeline CD",
+                "description": "Automatización de despliegues: sandbox al merge en develop, staging al merge en main — con Quick Deploy a producción reutilizando el test run ya validado en vez de repetir toda la suite"
+              },
+              {
+                "label": "Seguridad",
+                "description": "Credenciales SFDX Auth URL almacenadas en GitHub Secrets, protección de ramas main y staging, revisión obligatoria antes de merge"
+              },
+              {
+                "label": "Procedimiento de rollback",
+                "description": "Los despliegues de metadatos de Salesforce no tienen deshacer nativo. Procedimiento documentado: revertir el commit de merge en main, re-etiquetar el último paquete validado y volver a desplegarlo por el mismo pipeline CI — tan largo como un despliegue normal, por diseño, ya que no existe atajo posible para metadatos Salesforce"
+              }
+            ],
+            "title": "Pasos de implementación"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "El Quick Deploy reutiliza el test run ya validado en la etapa de CI en vez de repetir toda la suite Apex — Salesforce lo permite dentro de una ventana de validación de 10 días, recortando minutos en cada release sin sacrificar cobertura",
+              "Sin disparador automático de rollback: el rollback sigue siendo el procedimiento manual documentado arriba, no una herramienta de un clic — construir un rollback automatizado real para metadatos Salesforce sería un proyecto aparte",
+              "La protección de rama exige una sola revisión antes del merge a main — dimensionado para un pipeline con un único mantenedor, nunca probado a la escala de un equipo con varios desarrolladores",
+              "Sin pruebas de humo tras el despliegue: el pipeline valida antes de desplegar, no después — la primera limitación que resolvería si este pipeline tuviera que dar servicio a una org de producción real hoy"
+            ],
+            "title": "Decisiones y límites"
+          },
+          {
+            "type": "metrics",
+            "items": [
+              {
+                "note": "Dev, Staging, Production",
+                "label": "Entornos cubiertos",
+                "value": "3"
+              },
+              {
+                "note": "Por Pull Request",
+                "label": "Tiempo de validación",
+                "value": "< 5 min"
+              },
+              {
+                "note": "Totalmente automatizado",
+                "label": "Despliegues manuales",
+                "value": "0"
+              },
+              {
+                "note": "Apex — requerida para el despliegue",
+                "label": "Cobertura de tests",
+                "value": "> 75%"
+              }
+            ],
+            "title": "Resultados"
           }
         ]
       }
