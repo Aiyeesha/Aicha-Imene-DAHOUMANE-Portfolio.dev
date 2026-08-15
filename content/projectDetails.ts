@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-15T13:06:35.309Z
+// Last export: 2026-08-15T13:33:33.928Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -605,12 +605,6 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Entregables"
-          },
-          {
-            "code": "https://github.com/Aiyeesha/Hemebiotech",
-            "type": "code",
-            "title": "Repositorio GitHub",
-            "language": "text"
           }
         ]
       }
@@ -3621,26 +3615,66 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Puntos técnicos"
           },
           {
+            "type": "bullets",
+            "items": [
+              "HTML5 semántico — estructura de la interfaz",
+              "SASS — preprocesador CSS (variables, mixins, DRY)",
+              "JavaScript ES6 (módulos) — lógica de la SPA repartida en 3 archivos, manipulación del DOM",
+              "Google Books API — búsqueda de libros vía Fetch",
+              "sessionStorage — persistencia de la lista en el cliente",
+              "Font Awesome — iconos de marcador y eliminación",
+              "Media queries — responsive en 3 breakpoints (móvil, tablet, escritorio)",
+              "Git — control de versiones y entrega"
+            ],
+            "title": "Stack y tecnologías"
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "label": "Análisis de wireframes",
+                "description": "Revisión de las maquetas de Charlotte, descomposición en componentes HTML/CSS"
+              },
+              {
+                "label": "Integración HTML/SASS",
+                "description": "Estructura semántica, estilos mobile-first, configuración de variables y mixins SASS"
+              },
+              {
+                "label": "Lógica JavaScript",
+                "description": "Integración de la Fetch API, añadir/eliminar libros, actualizaciones dinámicas del DOM"
+              },
+              {
+                "label": "Ajuste responsive",
+                "description": "Ajustes de media queries para los 3 formatos: móvil, tablet y escritorio"
+              },
+              {
+                "label": "Documentación y entrega",
+                "description": "README de instalación redactado, defensa validada con 4/4 competencias"
+              }
+            ],
+            "title": "Cronograma del proyecto"
+          },
+          {
             "type": "metrics",
             "items": [
               {
-                "label": "Responsive",
-                "value": "3 formatos (móvil / tablet / escritorio)"
+                "label": "Competencias validadas",
+                "value": "4/4"
+              },
+              {
+                "label": "Formatos responsive",
+                "value": "3"
+              },
+              {
+                "label": "Valoración del jurado",
+                "value": "Dominio excelente"
               },
               {
                 "label": "Coherencia visual",
                 "value": "Wireframes respetados + tipografía/espaciados coherentes"
-              },
-              {
-                "label": "Buenas prácticas",
-                "value": "HTML/CSS/JS + Sass (CSS estructurado)"
-              },
-              {
-                "label": "Dinamismo",
-                "value": "Google Books API + sessionStorage + manipulación del DOM"
               }
             ],
-            "title": "Señales de calidad"
+            "title": "Resultados de la defensa"
           },
           {
             "type": "resources",
@@ -3659,12 +3693,6 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Entregables y evidencias"
-          },
-          {
-            "code": "https://github.com/Aiyeesha/PochLib",
-            "type": "code",
-            "title": "Repositorio",
-            "language": "text"
           }
         ]
       }
@@ -4212,7 +4240,16 @@ export const projectDetails: ProjectDetails[] = [
   },
   {
     "slug": "risk-assessment-matrix",
-    "gallery": [],
+    "gallery": [
+      {
+        "alt": "Risk heat map and add-risk form",
+        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/risk-assessment-matrix/screenshot-1.png"
+      },
+      {
+        "alt": "Risk register table with scored entries",
+        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/risk-assessment-matrix/screenshot-2.png"
+      }
+    ],
     "locales": {
       "en": {
         "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
@@ -10146,6 +10183,14 @@ export const projectDetails: ProjectDetails[] = [
       {
         "alt": "Screenshot 4",
         "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-4.webp"
+      },
+      {
+        "alt": "Data model — Mentor, Étudiants, Formations, Formations achetées",
+        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-data-model.png"
+      },
+      {
+        "alt": "Dashboard — prospect-to-client conversion reports",
+        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-dashboard.png"
       }
     ],
     "locales": {
@@ -10645,7 +10690,8 @@ export const projectDetails: ProjectDetails[] = [
               "2 profiles: Sales Director (full access to all objects and fields), Sales Rep (create/edit prospects and convert them to travelers, view travelers and purchased trips)",
               "3 hierarchical roles: Sales Management, North Sales Rep, South Sales Rep — management sees both teams' data",
               "Per-object OWD: Private on Prospect/Trip, Public Read-Only on Bus Fleet, Controlled by Parent on Purchased Trip",
-              "Sharing Rules by role (North/South) on Prospect and Trip to keep sales territories separate while retaining read-only visibility on the other zone's travelers"
+              "Sharing Rules by role (North/South) on Prospect and Trip to keep sales territories separate while retaining read-only visibility on the other zone's travelers",
+              "With hindsight, a more scalable approach would be a single \"Sales Rep\" profile with director-level permissions granted via a Permission Set, reducing long-term maintenance overhead."
             ],
             "title": "Security & Visibility"
           },
@@ -10783,7 +10829,8 @@ export const projectDetails: ProjectDetails[] = [
               "2 profils : Directeur Commercial (accès complet à tous les objets et champs), Commercial (créer/modifier des prospects et les convertir en voyageurs, consulter voyageurs et voyages achetés)",
               "3 rôles hiérarchiques : Direction Commerciale, Commerciale Nord, Commerciale Sud — la direction voit les données des deux équipes",
               "OWD différenciés par objet : Private sur Prospect/Voyage, Public Read-Only sur Flotte de bus, Controlled by Parent sur Voyage Acheté",
-              "Sharing Rules par rôle (Nord/Sud) sur Prospect et Voyage pour cloisonner les portefeuilles commerciaux tout en gardant une visibilité en lecture seule sur les voyageurs de l'autre zone"
+              "Sharing Rules par rôle (Nord/Sud) sur Prospect et Voyage pour cloisonner les portefeuilles commerciaux tout en gardant une visibilité en lecture seule sur les voyageurs de l'autre zone",
+              "Avec le recul, une approche plus évolutive consisterait à ne garder qu'un seul profil « Commercial » et à accorder les droits de direction via un Permission Set, réduisant la maintenance à long terme."
             ],
             "title": "Sécurité & visibilité"
           },
