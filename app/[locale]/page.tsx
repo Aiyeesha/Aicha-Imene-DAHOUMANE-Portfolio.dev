@@ -191,12 +191,19 @@ export default async function Home({ params }: Props) {
           >
             <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
             <p className="mt-4 text-muted leading-[1.8]">{t("sections.bridge_body")}</p>
-            <div className="mt-5">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href={`/${locale}/projects/legarant-axg-salesforce-deployment`}
                 className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
               >
                 {t("sections.bridge_cta")}
+                <span aria-hidden="true"> →</span>
+              </Link>
+              <Link
+                href={`/${locale}/projects/cicd-pipeline-setup`}
+                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("sections.bridge_cta2")}
                 <span aria-hidden="true"> →</span>
               </Link>
             </div>
