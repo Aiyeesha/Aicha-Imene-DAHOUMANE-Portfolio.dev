@@ -389,6 +389,22 @@
     "copy": "Copiar",
     "copied": "Copiado"
   },
+  "about": {
+    "breadcrumbAria": "Ruta de navegación",
+    "breadcrumbHome": "Inicio",
+    "breadcrumbCurrent": "Sobre mí",
+    "title": "Sobre mí",
+    "contentUnavailable": "Contenido no disponible por el momento.",
+    "positioningTitle": "Posicionamiento",
+    "techStackTitle": "Stack técnico",
+    "techStackSubtitle": "Pasa el cursor sobre cada insignia para ver el nivel de dominio y el contexto de uso.",
+    "careerGlanceTitle": "Trayectoria de un vistazo",
+    "careerGlanceSubtitle": "Formación → Prácticas → Alternancia → Contrato indefinido — una mejora continua de competencias.",
+    "journeyTitle": "Trayectoria",
+    "valuesTitle": "Valores",
+    "passionsTitle": "Fuera del trabajo",
+    "backHome": "Volver al inicio"
+  },
   "privacy": {
     "title": "Política de privacidad",
     "analyticsTitle": "Analítica y rendimiento",
