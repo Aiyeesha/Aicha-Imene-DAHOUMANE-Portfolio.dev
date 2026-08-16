@@ -1,7 +1,7 @@
 // app/api/health/route.ts
 // ----------------------
 // Endpoint JSON public de health check.
-// Pinge Supabase, Redis, Formspree et renvoie l'état de chaque service.
+// Pinge Supabase, Redis, Formhook et renvoie l'état de chaque service.
 //
 // GET /api/health → HealthReport JSON
 //
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
   // Strip internal details from public response:
   //   - latencyMs : reveals infrastructure timings (Supabase: 117ms, Redis: 66ms)
   //                 enabling fingerprinting and timing attacks.
-  //   - message   : reveals internal configuration state ("Formspree not configured",
+  //   - message   : reveals internal configuration state ("Formhook not configured",
   //                 "Redis unavailable", etc.) — information an attacker can use to
   //                 identify which fallbacks are active and plan targeted attacks.
   // The cron job stores the full data server-side — they never need to be public.

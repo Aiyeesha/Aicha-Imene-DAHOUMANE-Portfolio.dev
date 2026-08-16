@@ -159,7 +159,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
     // ne connaît que { name, email, topic, message, ... } et ignore déjà
     // silencieusement tout champ inconnu, donc composer côté client est le
     // chemin qui ne touche ni la validation, ni la table Supabase `messages`,
-    // ni Formspree. `intakePrefix` (mémoïsé plus haut) est aussi ce qui borne
+    // ni Formhook. `intakePrefix` (mémoïsé plus haut) est aussi ce qui borne
     // maxMessageLen ci-dessous, donc les deux restent toujours cohérents.
     const rawMessage = String(form.get("message") || "");
     const message = `${intakePrefix}${rawMessage}`;
