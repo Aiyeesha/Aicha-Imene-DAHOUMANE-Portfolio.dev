@@ -95,8 +95,32 @@ async function main() {
     process.exit(1);
   }
 
-  const rows = (data ?? []) as DbRow[];
-  console.log(`Fetched ${rows.length} rows from Supabase.`);
+  const allRows = (data ?? []) as DbRow[];
+  console.log(`Fetched ${allRows.length} rows from Supabase.`);
+
+  // ── Embargoed SaaS products — never written to these files ──────────────
+  // These files are committed to a PUBLIC git repo (unlike the Supabase table,
+  // which is protected by RLS + the app's own status="published" filter).
+  // Any product tagged "SaaS" is under a standing embargo until 2027 — no
+  // public exposure of its content in any form, source included. This is a
+  // blanket rule covering all current and future SaaS products, not a
+  // slug-specific denylist, so a new SaaS project is covered automatically
+  // the moment it's tagged.
+  //
+  // Belt-and-suspenders: EMBARGOED_SLUGS below is a second, independent check.
+  // sfrelease-saas shipped with an empty `categories` array once (2026-08-16)
+  // and the tag-only filter silently missed it — the category tag is a data
+  // field someone can forget to set; this list isn't. Add any current/future
+  // embargoed SaaS slug here even if you're confident its tags are correct.
+  const EMBARGOED_SLUGS = new Set(["orgdocs-saas", "sfrelease-saas"]);
+  const embargoed = allRows.filter(
+    (r) => (r.categories ?? []).includes("SaaS") || EMBARGOED_SLUGS.has(r.slug)
+  );
+  const embargoedSlugs = new Set(embargoed.map((r) => r.slug));
+  if (embargoedSlugs.size > 0) {
+    console.log(`Excluding ${embargoedSlugs.size} embargoed SaaS slug(s) from export: ${[...embargoedSlugs].join(", ")}`);
+  }
+  const rows = allRows.filter((r) => !embargoedSlugs.has(r.slug));
 
   const bySlug = new Map<string, DbRow[]>();
   for (const row of rows) {
