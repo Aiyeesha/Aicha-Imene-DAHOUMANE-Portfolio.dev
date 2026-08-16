@@ -69,8 +69,8 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Aucun script client ne contacte Upstash directement — l'autoriser dans
     // la CSP du navigateur serait une permission inutile (overpermission).
     isDev
-      ? "connect-src 'self' data: https://*.supabase.co https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
-      : "connect-src 'self' https://*.supabase.co https://formspree.io https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
+      ? "connect-src 'self' data: https://*.supabase.co https://formhook.app https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
+      : "connect-src 'self' https://*.supabase.co https://formhook.app https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
     "object-src 'none'",
     "base-uri 'self'",
     // Empêche les <form action="..."> de soumettre vers une URL externe.

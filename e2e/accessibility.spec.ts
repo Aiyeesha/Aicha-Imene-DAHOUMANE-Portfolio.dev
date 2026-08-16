@@ -26,7 +26,7 @@ import type { Result } from "axe-core";
 async function runAxe(page: Page) {
   return new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    // Exclure les iframes tiers potentiels (Formspree, Calendly embeds)
+    // Exclure les iframes tiers potentiels (Formhook, Calendly embeds)
     .exclude("iframe")
     .analyze();
 }
