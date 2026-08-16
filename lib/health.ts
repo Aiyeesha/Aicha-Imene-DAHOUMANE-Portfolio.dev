@@ -106,8 +106,16 @@ async function checkContactForm(): Promise<ServiceHealth> {
       return { name: "Contact form", status: "operational", latencyMs: null, message: "Formhook not configured" };
     }
 
+    // X-Auth-Token requis par Formhook pour les requêtes serveur-à-serveur (même
+    // sans lui un HEAD reste < 500, donc le check resterait "operational" — envoyé
+    // quand même pour vérifier l'accès réel, pas juste la joignabilité réseau.
+    const authToken = process.env.FORMHOOK_AUTH_TOKEN;
     const res = await withTimeout(
-      fetch(endpoint, { method: "HEAD", cache: "no-store" }),
+      fetch(endpoint, {
+        method: "HEAD",
+        cache: "no-store",
+        headers: authToken ? { "X-Auth-Token": authToken } : undefined,
+      }),
       2000 // 2 s max — Formhook ne doit pas retarder le cron au-delà de 2 s
     );
 
