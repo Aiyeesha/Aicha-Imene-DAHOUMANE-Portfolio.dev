@@ -21,7 +21,7 @@ type Payload = {
   locale?: string;
 };
 
-const FORMSPREE_ENDPOINT = process.env.FORMSPREE_ENDPOINT || "";
+const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
 
 // Basic origin guard (helps reduce cross-site spam).
 // If NEXT_PUBLIC_SITE_URL is set in production, we only accept requests from that origin.
@@ -74,7 +74,7 @@ async function saveToSupabase(input: {
  * - Validates input
  * - Honeypot field ("company") anti-spam
  * - Rate limit (Upstash Redis, multi-instance safe)
- * - If FORMSPREE_ENDPOINT is set, forwards to Formspree and maps errors
+ * - If FORMHOOK_ENDPOINT is set, forwards to Formhook and maps errors
  */
 export async function POST(req: Request) {
   // Origin guard strict : en production, exiger que l'en-tête Origin soit présent
@@ -133,9 +133,9 @@ export async function POST(req: Request) {
   // Store in Supabase first (non-blocking if Supabase env/policy isn't ready)
   await saveToSupabase({ name, email, topic, subject, message, ip, userAgent, locale: clientLocale });
 
-  // Forward to Formspree if configured
-  if (FORMSPREE_ENDPOINT) {
-    const resp = await fetch(FORMSPREE_ENDPOINT, {
+  // Forward to Formhook if configured
+  if (FORMHOOK_ENDPOINT) {
+    const resp = await fetch(FORMHOOK_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ name, email, topic, subject, message, source: "Aicha-Imene-DAHOUMANE-Portfolio.dev" })
@@ -143,11 +143,11 @@ export async function POST(req: Request) {
 
     if (!resp.ok) {
       const data = (await resp.json().catch(() => null)) as Record<string, unknown> | null;
-      log.error("contact/formspree-failed", { status: resp.status, body: data });
+      log.error("contact/formhook-failed", { status: resp.status, body: data });
       return NextResponse.json({ ok: false, error: "upstream_failed" }, { status: 502 });
     }
 
-    log.info("contact/sent-via-formspree", { topic, locale: clientLocale });
+    log.info("contact/sent-via-formhook", { topic, locale: clientLocale });
     return NextResponse.json({ ok: true }, { status: 200 });
   }
 
