@@ -16,7 +16,7 @@
 //   - 'unsafe-inline' et 'unsafe-eval' sont nécessaires pour next-intl et Tailwind en développement.
 //   - Calendly requiert frame-src et script-src supplémentaires.
 //   - Supabase requiert connect-src *.supabase.co (Upstash est server-side uniquement — absent de connect-src).
-//   - Formspree requiert connect-src formspree.io.
+//   - Formhook requiert connect-src formhook.app.
 //   - Si vous ajoutez Google Analytics / Plausible / autres, mettez à jour script-src et connect-src.
 
 import bundleAnalyzer from "@next/bundle-analyzer";
