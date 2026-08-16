@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-15T13:33:33.928Z
+// Last export: 2026-08-16T09:41:45.679Z
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -14021,12 +14021,12 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "All FSL objects configured",
                 "label": "FSL Coverage",
-                "value": "100%"
+                "value": "Target: 100%"
               },
               {
                 "note": "Emergencies, SLA, parts, reports",
                 "label": "Business scenarios",
-                "value": "8+"
+                "value": "Target: 8+"
               },
               {
                 "note": "Portfolio publication planned Q2 2026",
@@ -14106,12 +14106,12 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Tous les objets FSL configurés",
                 "label": "Couverture FSL",
-                "value": "100%"
+                "value": "Cible : 100%"
               },
               {
                 "note": "Urgences, SLA, pièces, rapports",
                 "label": "Scenarios métier",
-                "value": "8+"
+                "value": "Cible : 8+"
               },
               {
                 "note": "Publication portfolio prévue Q2 2026",

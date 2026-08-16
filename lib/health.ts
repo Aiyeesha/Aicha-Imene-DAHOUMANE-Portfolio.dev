@@ -93,27 +93,26 @@ async function checkRedis(): Promise<ServiceHealth> {
 }
 
 // ── Vérification formulaire de contact ───────────────────────────────────────
-// Le formulaire dépend de Supabase (messages) + Formspree.
-// On vérifie Formspree via un HEAD sur son endpoint (pas d'envoi de données).
+// Le formulaire dépend de Supabase (messages) + Formhook.
+// On vérifie Formhook via un HEAD sur son endpoint (pas d'envoi de données).
 
 async function checkContactForm(): Promise<ServiceHealth> {
   const start = Date.now();
   try {
-    // Utilise FORMSPREE_ENDPOINT (même variable que app/api/contact/route.ts)
-    // pour éviter la désynchronisation avec FORMSPREE_ID.
+    // Utilise FORMHOOK_ENDPOINT (même variable que app/api/contact/route.ts).
     // Si non configuré → Supabase seul gère les messages, ce n'est pas une dégradation.
-    const endpoint = process.env.FORMSPREE_ENDPOINT;
+    const endpoint = process.env.FORMHOOK_ENDPOINT;
     if (!endpoint) {
-      return { name: "Contact form", status: "operational", latencyMs: null, message: "Formspree not configured" };
+      return { name: "Contact form", status: "operational", latencyMs: null, message: "Formhook not configured" };
     }
 
     const res = await withTimeout(
       fetch(endpoint, { method: "HEAD", cache: "no-store" }),
-      2000 // 2 s max — Formspree ne doit pas retarder le cron au-delà de 2 s
+      2000 // 2 s max — Formhook ne doit pas retarder le cron au-delà de 2 s
     );
 
     const latencyMs = Date.now() - start;
-    // Tout code < 500 = Formspree est joignable (400 = HEAD non supporté, 405 = méthode refusée, etc.)
+    // Tout code < 500 = Formhook est joignable (400 = HEAD non supporté, 405 = méthode refusée, etc.)
     // Seul un 5xx ou un timeout indique une vraie indisponibilité du service.
     const ok = res.status < 500;
     return {
