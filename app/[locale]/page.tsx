@@ -12,9 +12,20 @@ import SkeletonCard from "@/components/SkeletonCard";
 // Above-the-fold — chargés immédiatement
 import TrackAwareSkills from "@/components/TrackAwareSkills";
 // Below-the-fold — lazy-loadés pour réduire le JS initial
-const TrackAwareServices = dynamic(() => import("@/components/TrackAwareServices"), {
-  loading: () => <div className="mt-8 grid gap-4 md:grid-cols-2"><SkeletonCard /><SkeletonCard /></div>,
-});
+//
+// TrackAwareServices : importé via TrackAwareServicesLoader plutôt qu'un
+// dynamic() direct ici — ssr:false délibéré (audit 2026-08-16), mais
+// `next/dynamic(..., { ssr: false })` n'est pas autorisé directement dans un
+// Server Component, d'où le wrapper Client Component. Le composant a
+// toujours son propre garde-fou `mounted` pour éviter un flash de mauvais
+// contenu, mais avec ssr:true la chaîne dynamic() + Reveal produisait parfois
+// un DOM serveur non réconcilié (icônes et bloc "Maturité d'exploitation"
+// absents, cookie de track ignoré) qui restait figé tant qu'aucun re-render
+// externe (ex: bascule du toggle) ne forçait React à rejouer l'hydratation.
+// ssr:false supprime la source du mismatch : plus de HTML serveur à
+// réconcilier pour ce sous-arbre, donc plus de tentative d'hydratation qui
+// peut échouer silencieusement.
+import TrackAwareServices from "@/components/TrackAwareServicesLoader";
 const ServicesFaq        = dynamic(() => import("@/components/ServicesFaq"));
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
 const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
