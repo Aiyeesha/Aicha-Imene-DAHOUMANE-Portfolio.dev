@@ -33,7 +33,7 @@ type DisplayStatus = ServiceStatus | "maintenance";
 const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
   "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam",    es: "Envío de mensajes, limitación de tasa, anti-spam" },
-  "Database (Supabase)":  { en: "Projects, certifications, about — PostgreSQL",  fr: "Projets, certifications, à propos — PostgreSQL",       es: "Proyectos, certificaciones, sobre mí — PostgreSQL" },
+  "Database (Supabase)":  { en: "Projects, contact, testimonials — PostgreSQL",  fr: "Projets, contact, témoignages — PostgreSQL",       es: "Proyectos, contacto, testimonios — PostgreSQL" },
   "Content integrity":    { en: "Featured projects have complete case-study content", fr: "Les projets mis en avant ont un contenu complet", es: "Los proyectos destacados tienen contenido completo" },
   "Security cluster integrity": { en: "is_security flag survives content re-seeds", fr: "Le flag is_security résiste aux ré-imports de contenu", es: "El flag is_security resiste las reimportaciones de contenido" },
   "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit",             es: "Cache de respuestas y limitación de tasa" },

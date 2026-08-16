@@ -226,8 +226,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
         )}
-        {/* Formspree : formulaire de contact (chargé à la demande) */}
-        <link rel="dns-prefetch" href="https://formspree.io" />
+        {/* Formhook : formulaire de contact (chargé à la demande) */}
+        <link rel="dns-prefetch" href="https://formhook.app" />
         {/* Identité sociale — vérification IndieWeb */}
         <link rel="me" href="https://www.linkedin.com/in/aicha-imene-dahoumane" />
         <link rel="me" href="https://github.com/Aiyeesha" />
