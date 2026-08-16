@@ -1,7 +1,8 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
+import { ReactNode, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 // next-themes intentionally renders an inline <script> (via React.createElement)
 // to set the theme class before hydration and avoid a flash of the wrong theme.
@@ -49,6 +50,23 @@ export default function Providers({
   nonce?: string;
 }) {
   const [track, setTrackState] = useState<Track>(initialTrack);
+  const t = useTranslations();
+
+  // The <title>/<meta description> are computed server-side from the track
+  // cookie (generateMetadata in app/[locale]/layout.tsx) — correct on first
+  // load, but a same-session toggle only updates the DOM (data-track, cookie),
+  // never the tab title, until the next full navigation. A CTO watching the
+  // toggle in an interview would see everything else switch except the tab —
+  // audit 2026-08-16. Skipped on the very first render since the server
+  // title already matches initialTrack; only client-side changes need this.
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    document.title = t(track === "itops" ? "metadata.titleItops" : "metadata.title");
+  }, [track, t]);
 
   // Fallback only: the layout now reads the `track` cookie server-side and
   // passes the correct value as `initialTrack` (see app/[locale]/layout.tsx),
