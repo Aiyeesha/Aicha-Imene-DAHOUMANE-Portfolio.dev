@@ -389,6 +389,22 @@
     "copy": "Copier",
     "copied": "Copié"
   },
+  "about": {
+    "breadcrumbAria": "Fil d'Ariane",
+    "breadcrumbHome": "Accueil",
+    "breadcrumbCurrent": "À propos",
+    "title": "À propos",
+    "contentUnavailable": "Contenu indisponible pour le moment.",
+    "positioningTitle": "Positionnement",
+    "techStackTitle": "Stack technique",
+    "techStackSubtitle": "Survolez chaque badge pour voir le niveau de maîtrise et le contexte d'utilisation.",
+    "careerGlanceTitle": "Parcours en un coup d'œil",
+    "careerGlanceSubtitle": "Formation → Stage → Alternance → CDI — une montée en compétences continue.",
+    "journeyTitle": "Parcours",
+    "valuesTitle": "Valeurs",
+    "passionsTitle": "En dehors du travail",
+    "backHome": "Retour à l'accueil"
+  },
   "privacy": {
     "title": "Politique de confidentialité",
     "analyticsTitle": "Analytics & Performance",

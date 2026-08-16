@@ -389,6 +389,22 @@
     "copy": "Copy",
     "copied": "Copied"
   },
+  "about": {
+    "breadcrumbAria": "Breadcrumb",
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "About",
+    "title": "About",
+    "contentUnavailable": "Content not available yet.",
+    "positioningTitle": "Positioning",
+    "techStackTitle": "Tech stack",
+    "techStackSubtitle": "Hover each badge to see proficiency level and usage context.",
+    "careerGlanceTitle": "Career at a glance",
+    "careerGlanceSubtitle": "Training → Internship → Work-study → Full-time — continuous upskilling.",
+    "journeyTitle": "Journey",
+    "valuesTitle": "Values",
+    "passionsTitle": "Outside of work",
+    "backHome": "Back to home"
+  },
   "privacy": {
     "title": "Privacy policy",
     "analyticsTitle": "Analytics & Performance",
