@@ -22,6 +22,9 @@ type Payload = {
 };
 
 const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
+// Server-to-server submissions are rejected by Formhook unless this header is
+// present — Origin-based allow-listing only covers browser <form> submissions.
+const FORMHOOK_AUTH_TOKEN = process.env.FORMHOOK_AUTH_TOKEN || "";
 
 // Basic origin guard (helps reduce cross-site spam).
 // If NEXT_PUBLIC_SITE_URL is set in production, we only accept requests from that origin.
@@ -137,7 +140,11 @@ export async function POST(req: Request) {
   if (FORMHOOK_ENDPOINT) {
     const resp = await fetch(FORMHOOK_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(FORMHOOK_AUTH_TOKEN ? { "X-Auth-Token": FORMHOOK_AUTH_TOKEN } : {}),
+      },
       body: JSON.stringify({ name, email, topic, subject, message, source: "Aicha-Imene-DAHOUMANE-Portfolio.dev" })
     });
 
