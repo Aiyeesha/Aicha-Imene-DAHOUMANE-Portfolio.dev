@@ -149,6 +149,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `UPSTASH_REDIS_REST_URL` | ✅ | Upstash Redis REST endpoint |
 | `UPSTASH_REDIS_REST_TOKEN` | ✅ | Upstash Redis REST token (server-only) |
 | `FORMHOOK_ENDPOINT` | Recommended | Formhook form endpoint URL |
+| `FORMHOOK_AUTH_TOKEN` | Recommended | Formhook X-Auth-Token — required for server-to-server submissions, Origin allow-listing alone rejects them |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Recommended | Displayed contact email |
 | `NEXT_PUBLIC_LINKEDIN_URL` | Recommended | LinkedIn profile URL |
 | `NEXT_PUBLIC_CALENDLY_URL` | Optional | Calendly booking link |
