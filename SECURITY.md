@@ -50,7 +50,7 @@ style-src 'self' 'unsafe-inline' https://assets.calendly.com
 img-src 'self' data: https://*.supabase.co https://*.supabase.in
 font-src 'self'
 frame-src https://calendly.com
-connect-src 'self' https://*.supabase.co https://*.upstash.io https://formspree.io
+connect-src 'self' https://*.supabase.co https://*.upstash.io https://formhook.app
             https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de
 object-src 'none'
 base-uri 'self'
@@ -107,7 +107,7 @@ IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controll
 - **Honeypot field** (`company`) filters automated bots — silent 200 response on detection
 - Origin validation (production only): rejects requests not matching `NEXT_PUBLIC_SITE_URL`
 - Input validation server-side: name (2–80 chars), email (regex + 254 char cap), message (10–2000 chars), topic enum, max 3 URLs
-- Dual submission: Supabase (primary) + Formspree (fallback) — failure of one does not block the other
+- Dual submission: Supabase (primary) + Formhook (fallback) — failure of one does not block the other
 - Stores IP and User-Agent for audit purposes (server-side only, never exposed to client)
 
 ---

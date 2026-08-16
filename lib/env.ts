@@ -38,7 +38,8 @@ const serverSchema = z.object({
   ADMIN_USERNAME: z.string().min(1),
   ADMIN_PASSWORD: z.string().min(8),
   CRON_SECRET:    z.string().min(32),
-  FORMSPREE_ENDPOINT: z.string().url(),
+  FORMHOOK_ENDPOINT: z.string().url(),
+  FORMHOOK_AUTH_TOKEN: z.string().min(1).optional(),
 });
 
 // ── Validation ────────────────────────────────────────────────────────────────
