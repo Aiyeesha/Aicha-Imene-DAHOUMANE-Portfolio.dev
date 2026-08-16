@@ -374,13 +374,16 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
               </div>
 
-              {p.is_bridge ? (
-                <span className="badge badge-bridge mt-2 inline-flex">{t("bridgeBadge")}</span>
-              ) : null}
-
-              {p.is_security ? (
-                <span className="badge badge-security mt-2 inline-flex">{t("securityBadge")}</span>
-              ) : null}
+              {(p.is_bridge || p.is_security) && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {p.is_bridge && (
+                    <span className="badge badge-bridge inline-flex">{t("bridgeBadge")}</span>
+                  )}
+                  {p.is_security && (
+                    <span className="badge badge-security inline-flex">{t("securityBadge")}</span>
+                  )}
+                </div>
+              )}
 
               {/* Résumé */}
               <p className="mt-3 text-sm text-muted line-clamp-2">{p.summary}</p>
