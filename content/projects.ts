@@ -1,7 +1,7 @@
 // AUTO-GENERATED — do not hand-edit.
 // Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
 // Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-16T13:33:30.722Z
+// Last export: 2026-08-16T15:41:26.637Z
 //
 // Kept in sync so this file remains a safe fallback if the Supabase dependency
 // is ever dropped, and so scripts/seed.ts (which reads this file) never
@@ -1669,44 +1669,6 @@ export const projects: Project[] = [
     "sortOrder": 6,
     "status": "published",
     "isBridge": true
-  },
-  {
-    "slug": "crm-healthcare-salesforce",
-    "title": "CRM Healthcare — Patient & Appointment Management",
-    "excerpt": "Building a complete Healthcare CRM on a Salesforce Developer Org — from scratch to reporting dashboard — with a business data model, advanced security, and automation.",
-    "track": "salesforce",
-    "categories": [],
-    "tags": [
-      "CRM",
-      "Healthcare",
-      "Salesforce Admin",
-      "Flow Builder",
-      "Data Modeling",
-      "Security"
-    ],
-    "badge": {
-      "tone": "personal",
-      "label": "Personal — In Progress"
-    },
-    "liveUrl": "https://medicare-solutions-port-dev-ed.develop.my.salesforce.com/",
-    "techStack": [
-      "Salesforce",
-      "Flow Builder",
-      "Apex",
-      "Data Modeling",
-      "Profiles & Permission Sets",
-      "Validation Rules",
-      "Reports & Dashboards"
-    ],
-    "highlights": [
-      "6 custom objects and 41 business fields",
-      "4 profiles and 1 Permission Set",
-      "6 Validation Rules",
-      "2 Salesforce Flows (Screen + Record-Triggered)"
-    ],
-    "featured": false,
-    "sortOrder": 40,
-    "status": "draft"
   },
   {
     "slug": "industrak-salesforce",

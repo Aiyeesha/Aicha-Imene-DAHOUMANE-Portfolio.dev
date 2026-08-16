@@ -13,6 +13,7 @@
 // avec le contenu Supabase (journey, goals) et mieux adapter l'intro au track.
 
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getAboutPageCached } from "@/lib/data/about.cached";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -90,6 +91,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
+  const t = await getTranslations({ locale: safeLocale, namespace: "about" });
 
   const siteUrl = getSiteUrl();
   const about = await getAboutPageCached(safeLocale);
@@ -98,21 +100,15 @@ export default async function AboutPage({ params }: PageProps) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-10">
         {/* Breadcrumb retour accueil */}
-        <nav aria-label="Fil d'Ariane" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+        <nav aria-label={t("breadcrumbAria")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
           <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded">
-            {safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home"}
+            {t("breadcrumbHome")}
           </Link>
           <span aria-hidden="true">›</span>
-          <span>{safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About"}</span>
+          <span>{t("breadcrumbCurrent")}</span>
         </nav>
-        <h1 className="text-3xl font-semibold">
-          {safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About"}
-        </h1>
-        <p className="mt-4 opacity-80">
-          {safeLocale === "fr"
-            ? "Contenu indisponible pour le moment."
-            : "Content not available yet."}
-        </p>
+        <h1 className="text-3xl font-semibold">{t("title")}</h1>
+        <p className="mt-4 opacity-80">{t("contentUnavailable")}</p>
       </div>
     );
   }
@@ -127,8 +123,8 @@ export default async function AboutPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home", item: `${siteUrl}/${safeLocale}` },
-      { "@type": "ListItem", position: 2, name: safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About", item: `${siteUrl}/${safeLocale}/about` },
+      { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: `${siteUrl}/${safeLocale}` },
+      { "@type": "ListItem", position: 2, name: t("breadcrumbCurrent"), item: `${siteUrl}/${safeLocale}/about` },
     ],
   };
 
@@ -138,12 +134,12 @@ export default async function AboutPage({ params }: PageProps) {
 
       {/* Breadcrumb — navigation retour vers l'accueil
           Permet à l'utilisateur de comprendre qu'il est sur une page dédiée (hors landing). */}
-      <nav aria-label={safeLocale === "fr" ? "Fil d'Ariane" : safeLocale === "es" ? "Ruta de navegación" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+      <nav aria-label={t("breadcrumbAria")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
-          {safeLocale === "fr" ? "Accueil" : safeLocale === "es" ? "Inicio" : "Home"}
+          {t("breadcrumbHome")}
         </Link>
         <span aria-hidden="true">›</span>
-        <span className="text-muted">{safeLocale === "fr" ? "À propos" : safeLocale === "es" ? "Sobre mí" : "About"}</span>
+        <span className="text-muted">{t("breadcrumbCurrent")}</span>
       </nav>
 
       <header>
@@ -169,9 +165,7 @@ export default async function AboutPage({ params }: PageProps) {
           Adapté au track actif (Salesforce → cyan / IT Ops → violet).
           p4 exclu volontairement (objectif 2026 → déjà dans la section goals ci-dessous). */}
       <section className="mt-10">
-        <SectionTitle>
-          {safeLocale === "fr" ? "Positionnement" : safeLocale === "es" ? "Posicionamiento" : "Positioning"}
-        </SectionTitle>
+        <SectionTitle>{t("positioningTitle")}</SectionTitle>
         <div className="mt-4">
         <Suspense fallback={
           <div className="rounded-2xl border p-6 space-y-3">
@@ -187,14 +181,8 @@ export default async function AboutPage({ params }: PageProps) {
 
       {/* ── TECH STACK GRID ──────────────────────────────────────────────────── */}
       <section className="mt-10">
-        <h2 className="text-xl font-semibold">
-          {safeLocale === "fr" ? "Stack technique" : safeLocale === "es" ? "Stack técnico" : "Tech stack"}
-        </h2>
-        <p className="mt-2 text-sm text-muted">
-          {safeLocale === "fr"
-            ? "Survolez chaque badge pour voir le niveau de maîtrise et le contexte d'utilisation."
-            : "Hover each badge to see proficiency level and usage context."}
-        </p>
+        <h2 className="text-xl font-semibold">{t("techStackTitle")}</h2>
+        <p className="mt-2 text-sm text-muted">{t("techStackSubtitle")}</p>
         <TechStackGrid />
       </section>
 
@@ -202,14 +190,8 @@ export default async function AboutPage({ params }: PageProps) {
           Complément visuel à la section "Mon parcours" Supabase ci-dessous.
           Affiche les années, types et organisations clairement. */}
       <section className="mt-10 rounded-2xl border border-black/10 dark:border-white/10 p-6">
-        <SectionTitle>
-          {safeLocale === "fr" ? "Parcours en un coup d'œil" : safeLocale === "es" ? "Trayectoria de un vistazo" : "Career at a glance"}
-        </SectionTitle>
-        <p className="mt-2 text-sm text-muted">
-          {safeLocale === "fr"
-            ? "Formation → Stage → Alternance → CDI — une montée en compétences continue."
-            : "Training → Internship → Work-study → Full-time — continuous upskilling."}
-        </p>
+        <SectionTitle>{t("careerGlanceTitle")}</SectionTitle>
+        <p className="mt-2 text-sm text-muted">{t("careerGlanceSubtitle")}</p>
         <CareerTimeline locale={safeLocale} />
       </section>
 
@@ -219,11 +201,11 @@ export default async function AboutPage({ params }: PageProps) {
             Ligne verticale + numéro de phase pour rythmer la lecture. */}
         {journey?.title || (journey?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
-            <SectionTitle>{journey?.title ?? (safeLocale === "fr" ? "Parcours" : safeLocale === "es" ? "Trayectoria" : "Journey")}</SectionTitle>
+            <SectionTitle>{journey?.title ?? t("journeyTitle")}</SectionTitle>
             {Array.isArray(journey?.paragraphs) ? (
               <VisualTimeline
                 steps={journey!.paragraphs!}
-                ariaLabel={journey?.title ?? (safeLocale === "fr" ? "Parcours" : safeLocale === "es" ? "Trayectoria" : "Journey")}
+                ariaLabel={journey?.title ?? t("journeyTitle")}
               />
             ) : null}
           </section>
@@ -232,9 +214,7 @@ export default async function AboutPage({ params }: PageProps) {
         {/* VALEURS / VALUES */}
         {values?.title || (values?.items?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
-            <SectionTitle>
-              {values?.title ?? (safeLocale === "fr" ? "Valeurs" : safeLocale === "es" ? "Valores" : "Values")}
-            </SectionTitle>
+            <SectionTitle>{values?.title ?? t("valuesTitle")}</SectionTitle>
 
             {Array.isArray(values?.items) ? (
               <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -254,9 +234,7 @@ export default async function AboutPage({ params }: PageProps) {
         {/* EN DEHORS DU TRAVAIL / PASSIONS */}
         {passions?.title || (passions?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
-            <SectionTitle>
-              {passions?.title ?? (safeLocale === "fr" ? "En dehors du travail" : safeLocale === "es" ? "Fuera del trabajo" : "Outside of work")}
-            </SectionTitle>
+            <SectionTitle>{passions?.title ?? t("passionsTitle")}</SectionTitle>
             {Array.isArray(passions?.paragraphs) ? (
               <div className="mt-4 space-y-3">
                 {passions!.paragraphs!.map((p, i) => (
@@ -277,7 +255,7 @@ export default async function AboutPage({ params }: PageProps) {
           href={`/${safeLocale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
         >
-          ← {safeLocale === "fr" ? "Retour à l'accueil" : safeLocale === "es" ? "Volver al inicio" : "Back to home"}
+          ← {t("backHome")}
         </Link>
       </div>
     </div>
