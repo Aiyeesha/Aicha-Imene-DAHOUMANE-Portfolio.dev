@@ -61,7 +61,8 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 | `NEXT_PUBLIC_LINKEDIN_URL` | No | LinkedIn profile URL |
 | `NEXT_PUBLIC_CALENDLY_URL` | No | Calendly booking URL |
 | `NEXT_PUBLIC_CV_PDF_URL` | No | CV PDF URL (fallback: `/cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf`) |
-| `FORMSPREE_ENDPOINT` | No | Formspree contact form endpoint |
+| `FORMHOOK_ENDPOINT` | No | Formhook contact form endpoint |
+| `FORMHOOK_AUTH_TOKEN` | No | Formhook X-Auth-Token for server-to-server requests |
 | `ADMIN_USERNAME` | No | Username for `/admin` Basic Auth |
 | `ADMIN_PASSWORD` | No | Password for `/admin` Basic Auth — server-only |
 | `CRON_SECRET` | No | Bearer token for `/api/cron/ping` |
