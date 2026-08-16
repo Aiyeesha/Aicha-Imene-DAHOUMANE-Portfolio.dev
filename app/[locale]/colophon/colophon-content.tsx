@@ -63,9 +63,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
     {
       title: "Backend",
       items: [
-        { name: "Supabase",      role: isFr ? "PostgreSQL hébergé — projets, certifications, contact, about. RLS activé sur toutes les tables." : isEs ? "PostgreSQL alojado — proyectos, certificaciones, contacto, about. RLS activado en todas las tablas." : "Hosted PostgreSQL — projects, certifications, contact, about. RLS enabled on all tables.", link: "https://supabase.com" },
+        { name: "Supabase",      role: isFr ? "PostgreSQL hébergé — projets, contact, témoignages. RLS activé sur toutes les tables." : isEs ? "PostgreSQL alojado — proyectos, contacto, testimonios. RLS activado en todas las tablas." : "Hosted PostgreSQL — projects, contact, testimonials. RLS enabled on all tables.", link: "https://supabase.com" },
         { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health)" : isEs ? "Caché stale-while-revalidate + rate-limiting en los endpoints de escritura y sensibles (contacto, testimonios, invalidación de caché, admin, informes CSP, health)" : "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health)", link: "https://upstash.com" },
-        { name: "Formspree",     role: isFr ? "Acheminement email de secours pour le formulaire de contact" : isEs ? "Envío de correo de respaldo para el formulario de contacto" : "Email routing fallback for the contact form", link: "https://formspree.io" },
+        { name: "Formhook",      role: isFr ? "Acheminement email de secours pour le formulaire de contact — hébergé dans l'UE" : isEs ? "Envío de correo de respaldo para el formulario de contacto — alojado en la UE" : "Email routing fallback for the contact form — EU-hosted", link: "https://formhook.app" },
       ],
     },
     {
@@ -118,7 +118,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
 
   const cachePoints = isFr
     ? [
-        "**Upstash Redis** stocke les réponses des requêtes Supabase (projets, certifications, about) avec un TTL de 5 minutes.",
+        "**Upstash Redis** stocke les réponses des requêtes Supabase (projets) avec un TTL de 5 minutes.",
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
@@ -126,14 +126,14 @@ export default function ColophonContent({ locale }: { locale: string }) {
       ]
     : isEs
     ? [
-        "**Upstash Redis** almacena las respuestas de las consultas a Supabase (proyectos, certificaciones, about) con un TTL de 5 minutos.",
+        "**Upstash Redis** almacena las respuestas de las consultas a Supabase (proyectos) con un TTL de 5 minutos.",
         "**stale-while-revalidate**: si el dato está en caché, se devuelve de inmediato mientras se dispara una revalidación asíncrona en segundo plano.",
         "**Invalidación manual**: el endpoint `POST /api/cache/invalidate` (protegido por secreto) permite purgar la caché tras una actualización de datos.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en caché CDN, revalidado cada 24h.",
         "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado. Se planea una caché vía reverse-proxy en homelab (Q4 2026), que podrá cachear el HTML en su propia capa sin comprometer el nonce.",
       ]
     : [
-        "**Upstash Redis** stores Supabase query responses (projects, certifications, about) with a 5-minute TTL.",
+        "**Upstash Redis** stores Supabase query responses (projects) with a 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",

@@ -37,10 +37,10 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 | Styling | Tailwind CSS + next-themes (dark mode) |
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR) |
-| Backend | Supabase (PostgreSQL) — projects, about, certifications, contact, goals, uptime |
+| Backend | Supabase (PostgreSQL) — projects, contact, testimonials, uptime |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
-| Forms | API Route + Formspree (fallback) + honeypot + rate-limit |
+| Forms | API Route + Formhook (fallback) + honeypot + rate-limit |
 | Analytics | Vercel Analytics + Speed Insights (production only) |
 | Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → Supabase `uptime_pings` |
 | Deployment | Vercel (Hobby) |
@@ -57,8 +57,8 @@ Browser
   │     │                    → Upstash Redis (cache, rate-limit)
   │     ├─ Client Components → Framer Motion, next-intl, track toggle
   │     └─ API Routes
-  │           ├─ /api/contact          → Formspree + Supabase messages
-  │           ├─ /api/health           → ping Supabase + Redis + Formspree
+  │           ├─ /api/contact          → Formhook + Supabase messages
+  │           ├─ /api/health           → ping Supabase + Redis + Formhook
   │           ├─ /api/cron/ping        → Vercel Cron (daily 08:00 UTC) → uptime_pings
   │           ├─ /api/errors           → client JS error reports (GlobalErrorHandler)
   │           └─ /api/testimonial-submit → testimonial_submissions
@@ -94,7 +94,7 @@ Browser
 - **Certifications page** — 3 sections: Completed, Active (Trailhead animated counters), In preparation
 - **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
 - **Contact form** — rate-limited, honeypot, topic selector, Calendly modal in hero + contact section
-- **Status page** — real health checks (Supabase, Redis, Formspree), uptime % over 30 days, latency sparklines (7 days), ISR 60s
+- **Status page** — real health checks (Supabase, Redis, Formhook), uptime % over 30 days, latency sparklines (7 days), ISR 60s
 - **Admin dashboard** — `/admin` (HTTP Basic Auth) — project/cert/testimonial/message stats and recent contact messages
 - **Command palette** — `⌘K` / `Ctrl+K` — navigate sections, switch track/theme/language, download CV, open LinkedIn
 - **Animations** — Framer Motion: scroll parallax, directional reveals, stagger, AnimatedCounter, AnimatePresence on track switch
@@ -148,7 +148,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key (server-only, never expose) |
 | `UPSTASH_REDIS_REST_URL` | ✅ | Upstash Redis REST endpoint |
 | `UPSTASH_REDIS_REST_TOKEN` | ✅ | Upstash Redis REST token (server-only) |
-| `FORMSPREE_ENDPOINT` | Recommended | Formspree form endpoint URL |
+| `FORMHOOK_ENDPOINT` | Recommended | Formhook form endpoint URL |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Recommended | Displayed contact email |
 | `NEXT_PUBLIC_LINKEDIN_URL` | Recommended | LinkedIn profile URL |
 | `NEXT_PUBLIC_CALENDLY_URL` | Optional | Calendly booking link |
@@ -164,7 +164,6 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
 | `BREVO_API_KEY` | Optional | Brevo (ex-Sendinblue) API key for newsletter subscriptions |
 | `BREVO_LIST_ID` | Optional | Brevo contact list ID |
-| `NEXT_PUBLIC_FORMSPREE_ID` | Optional | Formspree form ID (used by `/api/health` to check contact form availability) |
 
 ---
 
@@ -194,11 +193,11 @@ portfolio/
 │   │   └── layout.tsx          # Locale layout (Navbar, Footer, ScrollToTop)
 │   ├── admin/                  # Admin dashboard (HTTP Basic Auth, Supabase service_role)
 │   ├── api/                    # API routes
-│   │   ├── contact/            # Contact form → Supabase + Formspree
+│   │   ├── contact/            # Contact form → Supabase + Formhook
 │   │   ├── cache/invalidate/   # Manual Redis cache invalidation
 │   │   ├── cron/ping/          # Vercel Cron (daily 08:00 UTC) → uptime_pings
 │   │   ├── errors/             # Client JS error reports (GlobalErrorHandler → sendBeacon)
-│   │   ├── health/             # Ping Supabase + Redis + Formspree
+│   │   ├── health/             # Ping Supabase + Redis + Formhook
 │   │   ├── blog/latest/        # Latest posts API
 │   │   ├── testimonial-submit/ # Token-gated testimonial submission
 │   │   ├── newsletter/         # Newsletter opt-in
