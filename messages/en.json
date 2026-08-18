@@ -308,9 +308,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce Developer & IT Consultant | Remote · Europe",
-    "description": "Salesforce Developer & IT Consultant (Marseille, remote) — Apex, LWC, CI/CD. 55 technical articles, concrete projects. Available immediately. Missions Europe & worldwide.",
+    "description": "Salesforce Developer & IT Consultant (Marseille, remote) — Apex, LWC, CI/CD. 55 technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Remote · Europe",
-    "descriptionItops": "Systems & IT Ops Engineer (Marseille, remote) — Infrastructure, security, automation, CI/CD. 55 technical articles, concrete projects. Available immediately. Missions Europe & worldwide."
+    "descriptionItops": "Systems & IT Ops Engineer (Marseille, remote) — Infrastructure, security, automation, CI/CD. 55 technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -377,7 +377,7 @@
     "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant · Salesforce & Infrastructure Engineer",
     "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant · Salesforce & Infrastructure Engineer",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Open to permanent, fixed-term, freelance & contract roles",
+    "availabilityValue": "Role starting December 1, 2026 · Interviews now · Open to permanent, fixed-term, freelance & contract roles",
     "goalLabel": "Goal",
     "goalValue": "Deepen Salesforce expertise, complete 2026 certifications, and find the right environment to grow — permanent, fixed-term, freelance, or contract.",
     "focusLabel": "Focus",
@@ -443,8 +443,8 @@
     "subtitle": "Everything you need to know before reaching out.",
     "items": [
       {
-        "q": "Are you available immediately?",
-        "a": "Yes, I'm available immediately. I'm currently working as a Salesforce Developer at LD Digitales, and I'm open to permanent, fixed-term, freelance, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
+        "q": "What's your availability?",
+        "a": "I'm available for interviews right away, with a possible start date from December 1, 2026. I'm currently working as a Salesforce Developer at LD Digitales, and I'm open to permanent, fixed-term, freelance, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
       },
       {
         "q": "Do you have a Salesforce certification?",
@@ -479,10 +479,10 @@
     "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
   },
   "availModal": {
-    "badge": "Available — Permanent · Fixed-term · Freelance · Contract",
+    "badge": "Interviews now — Role from Dec 2026",
     "title": "My availability",
     "delay": "Availability",
-    "delayValue": "Available immediately",
+    "delayValue": "Interviews now · Role starting December 1, 2026",
     "contracts": "Next step",
     "contractValues": "Permanent · Fixed-term · Freelance · Contract — France & worldwide",
     "workMode": "Work modes",

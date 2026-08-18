@@ -308,9 +308,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Développeuse Salesforce & Consultante IT | Remote Europe",
-    "description": "Développeuse Salesforce & Consultante IT (Marseille) — Apex, LWC, CI/CD, intégrations. Projets concrets, 55 articles techniques. Disponible immédiatement. Missions France & international.",
+    "description": "Développeuse Salesforce & Consultante IT (Marseille) — Apex, LWC, CI/CD, intégrations. Projets concrets, 55 articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops | Remote Europe",
-    "descriptionItops": "Ingénieure Systèmes & IT Ops (Marseille) — Infrastructure, sécurité, automatisation, CI/CD. Projets concrets, 55 articles techniques. Disponible immédiatement. Missions France & international."
+    "descriptionItops": "Ingénieure Systèmes & IT Ops (Marseille) — Infrastructure, sécurité, automatisation, CI/CD. Projets concrets, 55 articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -369,7 +369,7 @@
     "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "rolesValueItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Ouverte aux postes CDI, CDD, freelance & missions",
+    "availabilityValue": "Poste à partir du 1er décembre 2026 · Entretiens dès maintenant · Ouverte aux CDI, CDD, freelance & missions",
     "goalLabel": "Objectif",
     "goalValue": "Approfondir mon expertise Salesforce, préparer les certifications 2026 et trouver le bon contexte pour progresser — en CDI, CDD, freelance ou mission.",
     "focusLabel": "Focus",
@@ -443,8 +443,8 @@
     "subtitle": "Tout ce que vous devez savoir avant de me contacter.",
     "items": [
       {
-        "q": "Êtes-vous disponible immédiatement ?",
-        "a": "Oui, je suis disponible immédiatement. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD, freelance et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
+        "q": "Quelle est votre disponibilité ?",
+        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible à partir du 1er décembre 2026. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD, freelance et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
@@ -479,10 +479,10 @@
     "lastAudit": "Dernière vérification : 28 juin 2026 — Outils : axe-core (CI automatisé), vérification manuelle Navigation clavier."
   },
   "availModal": {
-    "badge": "Disponible — CDI · CDD · Freelance · Mission",
+    "badge": "Entretiens dès maintenant — Poste dès déc. 2026",
     "title": "Mes disponibilités",
     "delay": "Disponibilité",
-    "delayValue": "Disponible immédiatement",
+    "delayValue": "Entretiens dès maintenant · Poste à partir du 1er décembre 2026",
     "contracts": "Prochaine étape",
     "contractValues": "CDI · CDD · Freelance · Mission — France & international",
     "workMode": "Modes de travail",

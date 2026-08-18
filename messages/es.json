@@ -308,9 +308,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce & Consultora IT | Remoto · Europa",
-    "description": "Desarrolladora Salesforce & Consultora IT (Marsella, remoto) — Apex, LWC, CI/CD. 55 artículos técnicos, proyectos concretos. Disponible de inmediato. Proyectos en Europa y a nivel mundial.",
+    "description": "Desarrolladora Salesforce & Consultora IT (Marsella, remoto) — Apex, LWC, CI/CD. 55 artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Remoto · Europa",
-    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Marsella, remoto) — Infraestructura, seguridad, automatización, CI/CD. 55 artículos técnicos, proyectos concretos. Disponible de inmediato. Proyectos en Europa y a nivel mundial."
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Marsella, remoto) — Infraestructura, seguridad, automatización, CI/CD. 55 artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -377,7 +377,7 @@
     "rolesValueSalesforce": "Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "rolesValueItops": "Administradora de sistemas y redes · DevOps · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "availabilityLabel": "Disponibilidad",
-    "availabilityValue": "Abierta a puestos indefinidos, temporales, freelance y por proyecto",
+    "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Abierta a puestos indefinidos, temporales, freelance y por proyecto",
     "goalLabel": "Objetivo",
     "goalValue": "Profundizar mi experiencia en Salesforce, completar las certificaciones 2026 y encontrar el entorno adecuado para crecer — indefinido, temporal, freelance o por proyecto.",
     "focusLabel": "Enfoque",
@@ -443,8 +443,8 @@
     "subtitle": "Todo lo que necesitas saber antes de contactarme.",
     "items": [
       {
-        "q": "¿Estás disponible de inmediato?",
-        "a": "Sí, estoy disponible de inmediato. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales, freelance y por proyecto — en Francia y a nivel internacional. No dudes en escribirme para hablar de tus necesidades."
+        "q": "¿Cuál es tu disponibilidad?",
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación posible a partir del 1 de diciembre de 2026. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales, freelance y por proyecto — en Francia y a nivel internacional. No dudes en escribirme para hablar de tus necesidades."
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
@@ -479,10 +479,10 @@
     "lastAudit": "Última verificación: 28 de junio de 2026 — Herramientas: axe-core (CI automatizado), pruebas manuales de navegación por teclado."
   },
   "availModal": {
-    "badge": "Disponible — Indefinido · Temporal · Freelance · Por proyecto",
+    "badge": "Entrevistas ya — Incorporación dic. 2026",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
-    "delayValue": "Disponible de inmediato",
+    "delayValue": "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026",
     "contracts": "Siguiente paso",
     "contractValues": "Indefinido · Temporal · Freelance · Por proyecto — Francia y a nivel mundial",
     "workMode": "Modalidades de trabajo",
