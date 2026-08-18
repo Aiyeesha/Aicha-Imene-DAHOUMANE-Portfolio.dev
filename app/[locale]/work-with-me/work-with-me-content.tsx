@@ -56,7 +56,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
-    availSince:     isFr ? "Disponible immédiatement" : isEs ? "Disponible de inmediato" : "Available immediately",
+    availSince:     isFr ? "Entretiens dès maintenant · Poste à partir du 1er décembre 2026" : isEs ? "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026" : "Interviews now · Role starting December 1, 2026",
     availContracts: isFr
       ? "CDI · CDD · Freelance · Mission"
       : isEs
