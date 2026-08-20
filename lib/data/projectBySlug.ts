@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { withRetry } from "@/lib/supabase/withRetry";
+import { withRetry, isPlaceholderSupabaseUrl } from "@/lib/supabase/withRetry";
 import { GITHUB_REPOS } from "@/content/github-repos";
 
 type ProjectAsset = {
@@ -58,6 +58,10 @@ export async function getPublishedProjectBySlugWithAssets(
   locale: string,
   slug: string
 ): Promise<ProjectWithAssets | null> {
+  // Voir lib/data/projects.ts — même court-circuit pour éviter tout appel réseau
+  // voué à l'échec contre le placeholder Supabase de CI.
+  if (isPlaceholderSupabaseUrl) return null;
+
   const supabase = createServerSupabaseClient();
 
   // Fetch every published row for this slug (all locales) so we can
