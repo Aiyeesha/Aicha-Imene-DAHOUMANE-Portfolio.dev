@@ -1,9 +1,15 @@
 // lib/data/projects.ts
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { withRetry } from "@/lib/supabase/withRetry";
+import { withRetry, isPlaceholderSupabaseUrl } from "@/lib/supabase/withRetry";
 import { GITHUB_REPOS } from "@/content/github-repos";
 
 export async function getPublishedProjectsWithAssets(locale: string) {
+  // Contre le placeholder, l'appel échouera de toute façon (voir withRetry.ts) —
+  // autant ne jamais l'émettre plutôt que payer même un timeout raccourci sur
+  // CHAQUE page rendue. C'est cet appel-ci, répété par page sous charge E2E
+  // concurrente, qui faisait dépasser les timeouts d'assertion stricts en CI.
+  if (isPlaceholderSupabaseUrl) return [];
+
   const supabase = createServerSupabaseClient();
 
   const { data, error } = await withRetry(() =>
@@ -51,6 +57,10 @@ export async function getPublishedProjectsWithAssets(locale: string) {
 // laisser aucun candidat pour l'un des deux tracks selon le sort_order — ~12
 // projets featured au total (6 par track), le coût de tout récupérer est négligeable.
 export async function getFeaturedProjectsForNav(locale: string) {
+  // Appelé depuis le layout sur CHAQUE page — voir le même raisonnement dans
+  // getPublishedProjectsWithAssets ci-dessus.
+  if (isPlaceholderSupabaseUrl) return [] as { slug: string; title: string; track: string | null }[];
+
   try {
     const supabase = createServerSupabaseClient();
     const { data, error } = await withRetry(() =>
@@ -80,6 +90,14 @@ export async function getFeaturedProjectsForNav(locale: string) {
 // requêtes head:true, et un raté ici ne fait que retomber sur 0 — pas critique
 // au point de justifier des tentatives supplémentaires.
 export async function getSecurityClusterCount(locale: string) {
+  // Cet appel n'est pas enveloppé par withRetry (voir commentaire plus haut sur
+  // ce choix) et n'a donc AUCUN plafond de timeout propre — contre le placeholder,
+  // il dépend entièrement du délai réseau brut du client Supabase, qui peut largement
+  // dépasser les quelques centaines de ms des autres appels de ce module. Appelé
+  // depuis le layout sur chaque page, c'était le contributeur le plus probable aux
+  // dépassements de timeout d'assertion en CI. Court-circuiter avant tout appel réseau.
+  if (isPlaceholderSupabaseUrl) return 0;
+
   try {
     const supabase = createServerSupabaseClient();
     const { count, error } = await supabase
