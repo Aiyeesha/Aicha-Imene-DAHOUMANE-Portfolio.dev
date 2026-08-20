@@ -17,7 +17,7 @@ const ATTEMPT_TIMEOUT_MS = 5000;
 // qu'on sait déjà cassé n'apporte rien et ne fait qu'accumuler du backoff sur
 // chaque appel Supabase de chaque page testée (c'est ce qui faisait dépasser
 // les timeouts Playwright, indépendamment de la version de @supabase/supabase-js).
-const isPlaceholderSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL === "https://placeholder.supabase.co";
+export const isPlaceholderSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL === "https://placeholder.supabase.co";
 // Contre le placeholder, on sait déjà que l'appel échouera — pas besoin d'attendre
 // jusqu'à ATTEMPT_TIMEOUT_MS pour un vrai aller-retour réseau qui n'aboutira jamais.
 // Cet appel se produit sur CHAQUE page rendue (ex. getFeaturedProjectsForNav dans le
