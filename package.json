@@ -32,7 +32,7 @@
     "@next/bundle-analyzer": "^16.2.12",
     "@next/mdx": "^16.2.12",
     "@radix-ui/react-dialog": "^1.1.23",
-    "@supabase/supabase-js": "^2.111.0",
+    "@supabase/supabase-js": "^2.112.3",
     "@types/mdx": "^2.0.14",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
