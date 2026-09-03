@@ -12594,7 +12594,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Apex backend optimization (FASHA)",
-        "heroSubtitle": "Optimization of FASHA's Apex backend: refactoring, removal of DML in loops and batch improvements.",
+        "heroSubtitle": "Taking over a production Apex backend at FASHA: two real bugs diagnosed down to root cause (a trigger that breaks at 100 orders, a calculation that silently fails on bulk import), a full refactor into a bulk-safe handler pattern, the weekly batch moved to async, >85% coverage.",
         "sections": [
           {
             "body": "FASHA, a multinational clothing distributor (350 employees, operating in Europe, the US, and APAC), used Salesforce to manage accounts, contacts, and orders. The app was slowing down and accumulating bugs. Mission assigned via the SFQUAL consultancy: diagnose, fix, and reorganize an existing Apex backend — not build from scratch, but take over production code with real users affected.",
@@ -12710,7 +12710,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Optimisation du backend Apex (FASHA)",
-        "heroSubtitle": "Optimisation du backend Apex de FASHA : refactoring, suppression des DML en boucle et amélioration des batchs.",
+        "heroSubtitle": "Reprise d'un backend Apex en production chez FASHA : deux bugs réels diagnostiqués jusqu'à leur cause racine (trigger qui casse à 100 commandes, calcul silencieusement faux à l'import en masse), refactoring complet en pattern handler bulk-safe, batch hebdomadaire passé en asynchrone, couverture > 85 %.",
         "sections": [
           {
             "body": "FASHA, distributeur de vêtements multinational (350 collaborateurs, présent en Europe, aux États-Unis et en zone APEC), utilisait Salesforce pour gérer comptes, contacts et commandes. L'application ralentissait et accumulait les bugs. Mission confiée via le cabinet SFQUAL : diagnostiquer, corriger et réorganiser un backend Apex existant — pas construire depuis une page blanche, mais reprendre du code en production avec de vrais utilisateurs impactés.",
@@ -12826,7 +12826,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Optimización de un backend Apex (FASHA)",
-        "heroSubtitle": "Optimización de backend Apex (FASHA)",
+        "heroSubtitle": "Hacerse cargo de un backend Apex en producción en FASHA: dos errores reales diagnosticados hasta su causa raíz (un trigger que se rompe con 100 pedidos, un cálculo que falla en silencio en la importación masiva), refactorización completa a un patrón handler bulk-safe, el batch semanal pasado a asíncrono, cobertura >85%.",
         "sections": [
           {
             "body": "FASHA, distribuidora multinacional de ropa (350 empleados, presente en Europa, Estados Unidos y la zona APAC), usaba Salesforce para gestionar cuentas, contactos y pedidos. La aplicación se ralentizaba y acumulaba errores. Misión encargada a través de la consultora SFQUAL: diagnosticar, corregir y reorganizar un backend Apex existente — no construir desde cero, sino hacerse cargo de código en producción con usuarios reales afectados.",

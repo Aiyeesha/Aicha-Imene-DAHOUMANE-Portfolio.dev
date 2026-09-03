@@ -1,0 +1,85 @@
+---
+title: "Apex backend optimization (FASHA)"
+heroSubtitle: "Taking over a production Apex backend at FASHA: two real bugs diagnosed down to root cause (a trigger that breaks at 100 orders, a calculation that silently fails on bulk import), a full refactor into a bulk-safe handler pattern, the weekly batch moved to async, >85% coverage."
+---
+
+## Context
+
+FASHA, a multinational clothing distributor (350 employees, Europe / US / APAC), managed accounts, contacts and orders on Salesforce. The app was **slowing down and accumulating bugs**.
+
+Mission assigned via the SFQUAL consultancy: **diagnose, fix and reorganize an existing Apex backend**. Not greenfield — production code, with real sales reps affected on every deployment.
+
+## The two bugs — and their root cause
+
+This is the core of the project: not just fixing, but **understanding why**.
+
+### Bug 1 — the trigger breaks past 100 orders
+
+The `UpdateAccountCA` trigger threw an error whenever a sales rep updated an order on an account that had **100 orders or more**.
+
+100 is not a coincidence: it's the **Salesforce governor limit of 100 SOQL queries per transaction**. The trigger was firing a query *per record* instead of one bulk query — it worked while an account stayed small, then crossed the limit all at once. Non-bulk-safe by nature.
+
+### Bug 2 — the calculation is silently wrong on bulk import
+
+The `NetAmount__c` field (= `TotalAmount − ShipmentCost`) recalculated fine when a rep added a line **from the UI**. But during a Data Loader import, **only the first order in the batch was updated**.
+
+Root cause: the logic implicitly processed **a single record** (a `Trigger.new[0]` pattern), not a collection. From the UI, `Trigger.new` holds 1 row — the bug is invisible. Data Loader sends batches of 200 — the bug passes silently, with no error.
+
+### And the rest
+
+- The **weekly revenue recalculation batch** (after product price updates) ran for several hours synchronously — an architecture problem, not a tuning one.
+- Disorganized code: no naming conventions, overly long classes, business logic in the triggers.
+- Tests existed but were **unreliable**: they didn't actually validate results.
+
+## The refactor
+
+| Before | After |
+|---|---|
+| Logic in `OrderTrigger` | `OrderTriggerHandler` + `TriggerHelper` — one trigger per object, zero logic inside |
+| `NetAmount` over a single record | Collection-based recalc — identical via the UI or a 200-row import |
+| Synchronous revenue update, blocks the rep's save | `AccountService` via **`@future`** — the user transaction no longer waits |
+| Synchronous revenue batch, several hours | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (Sunday 10pm) |
+| Unreliable tests | `TestDataFactory` + `@testSetup`, **>85%** coverage, nominal / edge / error cases per class |
+
+On top of the fixes: `MyTeamOrdersController` — a new controller displaying orders for a whole team (same `UserRoleId`), a feature requested by the sponsor.
+
+## Bulk-safe by construction
+
+The key point: the refactor doesn't fix two bugs, it makes **this class of bug impossible**.
+
+- **0 SOQL or DML inside a loop** — everything via `Set` / `Map` and aggregates. Bug 1 can't recur, whatever the order count.
+- **Collection-based processing throughout** — bug 2 can't recur; the UI and bulk paths are the same path.
+- **Async where the work is heavy** — `@future` to avoid blocking the user, `Batchable` + `Schedulable` for scheduled bulk.
+- **Tests that validate results**, including a dedicated regression for each of the two original bugs (200+ row import, account with 100+ orders).
+
+## Architecture decisions (ADR)
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| **`@future`** for the one-off revenue update | Synchronous processing | Don't make the rep wait on their save; the recalc doesn't need to be immediate |
+| **`Batchable` + `Schedulable`** for the global recalc | Keep the synchronous batch, tune it | A multi-hour job is an *execution-model* problem, not a query-performance one |
+| **Handler pattern** | Fix the logic in place in the trigger | Make the code testable and bulk-safe *by construction*, not patch by patch |
+| **Full weekly recalculation** | Incremental recalc on changed accounts only | Enough at FASHA's volume; incremental would be the next step at much larger scale |
+
+## Assumed limitations
+
+- **>85% coverage, not 100%** — well above the Salesforce threshold (75%), but a few rare error branches remain uncovered.
+- **`@future` has its own limits** (50 calls / transaction, no chaining) — no impact at current volume, but a move to Queueable would be worth considering if load grows.
+- **Brute-force global recalculation** — crude but reliable; incremental logic would become necessary well beyond current volume.
+- **Refactor scoped to the reported area**, not a full audit of the whole org.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| Real bugs fixed (root cause documented) | 2 (non-bulk-safe trigger · wrong calc on import) |
+| SOQL / DML in loops, after the refactor | 0 |
+| Test coverage | >85% (start: unreliable tests) |
+| Weekly batch | multi-hour synchronous → scheduled async |
+| RNCP diploma evaluation | 2/2 competencies validated — distinction, complete and well-justified fixes |
+
+## What this project demonstrates
+
+The daily skill of a mid/senior Salesforce developer: **taking over a legacy Apex backend and making it production-grade**. A diagnosis that goes to root cause (knowing *why* 100, not just "it crashes"), understanding trigger context vs bulk import, a multi-hour job moved to async, and a refactor that **stops the bug class from coming back**. It's the most direct answer to "she looks like a fresh grad".
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): existing code, bugs and constraints imposed, deliverable defended before a jury. It is expanded here with the root-cause-diagnosis / governor-limits / execution-model / regression reading expected in a professional context — beyond the strict scope of the exercise.
