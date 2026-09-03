@@ -435,14 +435,14 @@
     "cookiesTitle": "Cookies",
     "cookiesBody": "No se instalan cookies de marketing ni de seguimiento. La preferencia de idioma se guarda en la URL (por ejemplo, /en/, /fr/) y no en una cookie. Vercel puede instalar cookies técnicas con fines de infraestructura (CDN, protección contra DDoS).",
     "formTitle": "Datos del formulario de contacto",
-    "formBody": "Al enviar el formulario de contacto se recopilan los siguientes datos: nombre, email, tema, mensaje, dirección IP y User-Agent. Estos datos se utilizan únicamente para procesar y responder a tu solicitud. Si Formhook está activado como respaldo, el contenido del mensaje se envía a Formhook (servicio externo de entrega de emails alojado en la Unión Europea).",
-    "retention": "Conservación: los mensajes de contacto se conservan durante un máximo de 90 días y luego se eliminan. Puedes solicitar su eliminación anticipada contactándonos.",
+    "formBody": "Al enviar el formulario de contacto, los datos que introduces — nombre, email, tema, mensaje — se envían por correo electrónico a través de Formhook (servicio de entrega de emails alojado en la Unión Europea) para tramitar tu solicitud. El sitio no conserva ninguna copia de estos datos en sus servidores. Tu dirección IP se utiliza únicamente de forma transitoria para limitar los envíos abusivos (anti-spam) y no se conserva junto con tu mensaje.",
+    "retention": "Conservación: el sitio no almacena los mensajes de contacto. Una vez enviado por correo electrónico, tu mensaje se conserva en la bandeja de entrada según las prácticas habituales de correo; puedes solicitar su eliminación en cualquier momento contactándonos.",
     "rightsTitle": "Tus derechos",
     "rightsBody": "De conformidad con la normativa de protección de datos aplicable (RGPD), tienes derecho a acceder, rectificar, solicitar la eliminación y obtener la portabilidad de tus datos personales.",
     "contact": "Para ejercer tus derechos: {email}",
     "processorsTitle": "Encargados del tratamiento",
-    "processorsBody": "Los datos recopilados a través de este sitio son tratados por los siguientes subencargados: Supabase (almacenamiento de mensajes de contacto y datos de disponibilidad — alojado en Estados Unidos, conforme al RGPD mediante Cláusulas Contractuales Tipo), Vercel (alojamiento y CDN — Estados Unidos), Formhook (entrega de emails de contacto — Unión Europea, si está activado). Estos proveedores actúan como encargados del tratamiento en el sentido del artículo 28 del RGPD.",
-    "lastUpdated": "28 de junio de 2026",
+    "processorsBody": "Los datos recopilados a través de este sitio son tratados por los siguientes subencargados: Formhook (entrega de emails del formulario de contacto — Unión Europea), Vercel (alojamiento y CDN — Estados Unidos), Supabase (testimonios enviados mediante el formulario dedicado e historial de estado/incidencias — Estados Unidos, conforme al RGPD mediante Cláusulas Contractuales Tipo), Upstash (limitación anti-spam, contador por IP — datos efímeros). Estos proveedores actúan como encargados del tratamiento en el sentido del artículo 28 del RGPD.",
+    "lastUpdated": "3 de septiembre de 2026",
     "controllerTitle": "Responsable del tratamiento",
     "controllerBody": "La responsable del tratamiento de los datos personales recopilados a través de este sitio es Aïcha Imène DAHOUMANE, profesional autónoma. Contacto: {email}",
     "breachTitle": "Notificación de brechas de datos",
@@ -459,7 +459,7 @@
     "liabilityTitle": "Responsabilidad",
     "liabilityBody": "La información de este sitio web se proporciona con fines informativos y no constituye un compromiso por parte de la editora. La editora se esfuerza por garantizar la exactitud de la información publicada, pero no puede garantizar su exhaustividad ni la ausencia de errores. Los enlaces a sitios web de terceros se proporcionan únicamente como referencia; la editora no tiene control sobre su contenido.",
     "dataTitle": "Datos personales",
-    "dataBody": "Los datos recopilados a través del formulario de contacto (nombre, email, mensaje) se utilizan únicamente para responder a tu solicitud y no se comparten con terceros, salvo en el caso de un servicio de entrega de emails. De conformidad con la normativa de protección de datos aplicable, tienes derecho a acceder, corregir y eliminar tus datos. Contacto: {email}."
+    "dataBody": "Los datos recopilados a través del formulario de contacto (nombre, email, mensaje) se envían por correo electrónico a través de un servicio de entrega de emails para responder a tu solicitud; no se conservan en los servidores del sitio ni se comparten con otros terceros. De conformidad con la normativa de protección de datos aplicable, tienes derecho a acceder, corregir y eliminar tus datos. Contacto: {email}."
   },
   "faq": {
     "title": "Preguntas frecuentes",
