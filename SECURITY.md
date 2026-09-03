@@ -103,12 +103,11 @@ IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controll
 
 ### Contact Form
 
-- Rate-limited via Upstash Redis (5 req / 10 min / IP)
+- Rate-limited via Upstash Redis (5 req / 10 min / IP) — Redis holds only a per-IP counter, never message content
 - **Honeypot field** (`company`) filters automated bots — silent 200 response on detection
-- Origin validation (production only): rejects requests not matching `NEXT_PUBLIC_SITE_URL`
+- Origin validation (production only): the `Origin` header must match either the configured site origin (`NEXT_PUBLIC_SITE_URL` / `SITE_URL`) **or** be same-origin with the host actually serving the route (`x-forwarded-host`), so real submissions from any of the deployment's hostnames pass; Origin-less or cross-site requests are rejected. See `isAllowedOrigin()` in `lib/contactValidation.ts`.
 - Input validation server-side: name (2–80 chars), email (regex + 254 char cap), message (10–2000 chars), topic enum, max 3 URLs
-- Dual submission: Supabase (primary) + Formhook (fallback) — failure of one does not block the other
-- Stores IP and User-Agent for audit purposes (server-side only, never exposed to client)
+- **No server-side persistence**: the submission is forwarded to Formhook (email delivery, EU-hosted) and nothing is stored at rest — no database write, no IP or User-Agent kept with the message. On success only the topic and locale are logged (no PII).
 
 ---
 
@@ -123,7 +122,7 @@ Row Level Security (RLS) is **enabled on all tables**. Policies by table:
 | `about_pages` | ✅ (all) | ❌ | Public content |
 | `certifications` | ✅ (all) | ❌ | Public content |
 | `testimonials` | `is_published = true` only | ❌ | Unpublished testimonials not visible |
-| `messages` | ❌ | ✅ | Contact submissions: write-only for `anon` |
+| `messages` | ❌ | ❌ | **No longer used** — the contact form forwards to Formhook with no DB write; the table is retained only for historical rows |
 | `testimonial_submissions` | ❌ | ✅ | Pending admin review, `approved = false` by default |
 | `uptime_pings` | ❌ | ❌ | Server-side only (service_role) — anon SELECT policy removed |
 | `goals_2026` | ✅ (all) | ❌ | Public content (intentional — used for public roadmap display) |
@@ -199,7 +198,7 @@ All secrets below should be rotated **immediately** if compromised, and periodic
 
 ### Signs of compromise to watch for
 
-- Unexpected entries in Supabase `messages` or `testimonial_submissions` tables
+- Unexpected entries in the Supabase `testimonial_submissions` table
 - Unusual spike in Vercel function invocations (> 100k/month on Hobby plan)
 - CSP violations reported to `/api/csp-report` from unexpected `document-uri`
 - `/api/health` returning degraded status for Redis (possible token invalidation)

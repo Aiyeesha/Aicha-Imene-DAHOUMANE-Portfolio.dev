@@ -435,14 +435,14 @@
     "cookiesTitle": "Cookies",
     "cookiesBody": "Aucun cookie marketing ni de suivi n’est déposé. La préférence de langue est reflétée dans l’URL (ex. /en/, /fr/) et non dans un cookie. Vercel peut déposer des cookies techniques à des fins d’infrastructure (CDN, protection DDoS).",
     "formTitle": "Données du formulaire de contact",
-    "formBody": "Lorsque vous envoyez le formulaire de contact, les données suivantes sont collectées : nom, email, sujet, message, adresse IP et User-Agent. Ces données sont utilisées uniquement pour traiter et répondre à votre demande. Si Formhook est activé en solution de secours, le contenu du message est transmis à Formhook (service tiers d'acheminement d'emails hébergé dans l'Union européenne).",
-    "retention": "Conservation : les messages de contact sont conservés au maximum 90 jours, puis supprimés. Vous pouvez demander une suppression anticipée en nous contactant.",
+    "formBody": "Lorsque vous envoyez le formulaire de contact, les données que vous saisissez — nom, email, sujet, message — sont transmises par email via Formhook (service d'acheminement d'emails hébergé dans l'Union européenne) afin de traiter votre demande. Le site n'en conserve aucune copie sur ses serveurs. Votre adresse IP est utilisée uniquement de façon transitoire pour limiter les envois abusifs (anti-spam) et n'est pas conservée avec votre message.",
+    "retention": "Conservation : le site ne stocke pas les messages de contact. Une fois transmis par email, votre message est conservé dans la boîte de réception selon les pratiques habituelles de messagerie ; vous pouvez en demander la suppression à tout moment en nous contactant.",
     "rightsTitle": "Vos droits",
     "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données personnelles.",
     "contact": "Pour exercer vos droits : {email}",
     "processorsTitle": "Sous-traitants",
-    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Supabase (stockage des messages de contact et données de disponibilité — hébergé aux États-Unis, conformité RGPD via Standard Contractual Clauses), Vercel (hébergement et CDN — États-Unis), Formhook (acheminement des emails de contact — Union européenne, si activé). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD.",
-    "lastUpdated": "28 juin 2026",
+    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Formhook (acheminement des emails du formulaire de contact — Union européenne), Vercel (hébergement et CDN — États-Unis), Supabase (témoignages soumis via le formulaire dédié et historique de statut/incidents — États-Unis, conformité RGPD via Clauses Contractuelles Types), Upstash (limitation de débit anti-spam, compteur par adresse IP — données éphémères). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD.",
+    "lastUpdated": "3 septembre 2026",
     "controllerTitle": "Responsable du traitement",
     "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, personne physique exerçant une activité professionnelle indépendante. Contact : {email}",
     "breachTitle": "Violation de données",
@@ -459,7 +459,7 @@
     "liabilityTitle": "Responsabilité",
     "liabilityBody": "Les informations présentes sur ce site sont fournies à titre indicatif et ne sauraient engager la responsabilité de l'éditeur. L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées, mais ne peut garantir leur exhaustivité ni leur absence d'erreurs. Les liens hypertextes vers des sites tiers sont fournis à titre informatif ; l'éditeur n'exerce aucun contrôle sur leur contenu.",
     "dataTitle": "Données personnelles",
-    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont utilisées uniquement pour répondre à votre demande et ne sont pas transmises à des tiers, sauf recours à un service d'acheminement d'emails. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
+    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont transmises par email via un service d'acheminement d'emails pour répondre à votre demande ; elles ne sont pas conservées sur les serveurs du site et ne sont pas transmises à d'autres tiers. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
   },
   "faq": {
     "title": "Questions fréquentes",
