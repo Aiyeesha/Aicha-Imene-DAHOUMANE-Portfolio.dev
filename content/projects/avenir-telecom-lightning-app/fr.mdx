@@ -1,0 +1,94 @@
+---
+title: "Livraison d'application Lightning & backlog Agile (Avenir Télécom)"
+heroSubtitle: "Stratégie d'implémentation d'une app Salesforce Lightning terrain pour une équipe de 3 développeurs : backlog produit de 20 user stories chiffrées, cahier de tests + référentiel Apex, puis boucle pilote 3 mois → backlog d'évolutions Kanban."
+---
+
+## Le contexte
+
+À la suite d'un audit interne, les équipes commerciales de la zone Sud d'Avenir Télécom avaient besoin d'une application Salesforce Lightning mieux alignée sur leur travail quotidien (leads, comptes, opportunités, devis).
+
+La mission n'était pas de coder l'application, mais de **définir et outiller sa livraison** : stratégie d'implémentation pour une petite équipe de 3 développeurs Salesforce, backlog produit chiffré, cahier de tests, référentiel de bonnes pratiques — puis, après **3 mois de pilote terrain**, consolider les retours en un backlog d'évolutions priorisé.
+
+L'équipe cible : Romain (senior — Apex & intégrations API), Guillaume (confirmé — automatisations & workflows), Hélène (junior — UI/UX, tests, documentation).
+
+## Le backlog produit (Scrum)
+
+20 user stories rédigées, chiffrées et priorisées, avec critères d'acceptation et prérequis. Les plus structurantes :
+
+| User story | Ce qu'elle impose | Charge · dev |
+|---|---|---|
+| **US1** — Gestion des leads | Création auto (formulaire web), affectation par règles (secteur, potentiel) + notification immédiate, conversion sans perte de données | 4 j · Romain |
+| **US2 / US11** — Vérification SIREN | Appel Webservice **en temps réel à la création** du compte ; blocage + message d'erreur explicite si incohérence | 4+2 j · Romain |
+| **US4 / US9** — Devis DeviQo | Intégration temps réel avec l'API DeviQo, affichage des devis en **< 2 s, sans stockage local**, rafraîchissement auto | 4+2 j · Guillaume |
+| **US14 / US15** — PDF + email | Génération d'un PDF de synthèse (fusion Opportunité/Compte/Contact), envoi auto au contact principal, archivage de l'envoi | 2+2 j · Hélène |
+| **US13** — Purge RGPD | Job planifié supprimant les comptes/contacts inactifs > 3 ans, **avec journal d'audit** | 3 j · Guillaume |
+| **US18 / US20** — Durcissement Dev Org | Configuration profils/droits + tests Apex `run as user` validant que chaque profil n'accède qu'aux données autorisées | 2+1 j · Romain/Guillaume |
+| **US19** — Datafactory | Automatisation de l'import et de la synchronisation continue depuis des sources externes | 2 j · Guillaume |
+
+Le chiffrage n'est pas décoratif : chaque story est estimée **et affectée au bon niveau de séniorité** — les intégrations API et la sécurité vont au senior, les automatisations au confirmé, l'UI et les tests au junior. C'est ce qui rend le plan de sprints tenable plutôt qu'optimiste.
+
+## Le cahier de tests & le référentiel Apex
+
+Le cahier de tests (20 classes : `TestLeadsCRUD`, `TestComptesImport`, `TestOpportunites`, `TestRunAsUser`, `TestSuppressionRGPD`…) s'accompagne d'un **référentiel de bonnes pratiques Apex** — un standard d'équipe, pas une checklist :
+
+- **Bulkification systématique** : aucun SOQL ni DML dans une boucle, collections partout (`List` / `Set` / `Map`).
+- **Un trigger par objet**, logique déléguée à des handlers — pattern *One Trigger Framework* + *Service Layer*.
+- **Configuration externalisée** en Custom Settings / Custom Metadata plutôt qu'en dur.
+- **Asynchrone adapté au cas** : Batch Apex (gros volumes), Queueable (séquencement), Future (appels externes), Scheduled (périodique).
+- **Sécurité** : `with sharing` systématique, vérifications CRUD/FLS dans les méthodes d'accès aux données.
+- **Couverture minimale exigée : ≥ 75 %.**
+
+## La sécurité, dès le backlog
+
+La sécurité n'est pas un lot en fin de projet — elle est **dans les user stories** :
+
+- **US13** — la purge RGPD est une story à part entière, avec journal d'audit, pas un nettoyage manuel improvisé.
+- **US18 / US20** — les tests Apex `run as user` **valident réellement l'isolation des profils** : chaque profil est mis à l'épreuve pour prouver qu'il ne voit que ses données. C'est un test, pas une supposition.
+- `with sharing` et contrôles CRUD/FLS inscrits dans le référentiel, donc appliqués par construction.
+
+## Du pilote au backlog d'évolutions
+
+Après 3 mois de déploiement auprès des équipes terrain de la zone Sud, les retours ont été consolidés en un **backlog Kanban priorisé**, avec limites WIP et documentation Notion reliant dynamiquement backlog produit ↔ cahier de tests ↔ backlog d'évolutions :
+
+- **3 évolutions** — E1 interfaçage bidirectionnel avec l'outil de gestion des requêtes CaseIn · E2 backup quotidien automatique vers un SFTP dédié · E3 durcissement de la config Dev Org.
+- **3 corrections** — C1 synchro des comptes via Webservice SIREN · C2 format de nommage standardisé des opportunités · C3 notification immédiate au commercial à l'affectation d'un lead.
+- **3 bugs de production tracés** — B001 conversion lead → opportunité défaillante (priorité haute) · B002 données de comptes importés incorrectes · B003 notifications d'affectation non envoyées (corrigé).
+
+La boucle est fermée : un bug remonté du terrain (B003) est relié à la correction C3, elle-même reliée à la story US1. Un relecteur retrouve le fil.
+
+## Décisions & limites assumées
+
+| Décision | Alternative écartée | Pourquoi |
+|---|---|---|
+| **Chiffrage par niveau de séniorité** | Estimation « à la story » sans affectation | Un plan de sprints n'est réaliste que si la charge est portée par le bon profil |
+| **Référentiel Apex documenté** en amont | Bonnes pratiques « connues de tous » | Un standard écrit se relit et se fait respecter ; un standard implicite dérive |
+| **Devis DeviQo sans stockage local** | Cache local des devis | Un devis affiché doit être le devis courant — pas une copie potentiellement périmée |
+| **Pilote 3 mois avant industrialisation** | Généralisation directe post-dev | Les bugs B001–B003 ne se voient qu'en usage réel ; le pilote est le filet |
+
+Limites assumées :
+
+- **Le backlog produit est une spécification chiffrée, pas un livrable exécuté de bout en bout** — la valeur est dans la qualité du cadrage et du plan de tests, validés par un pilote réel, pas dans un déploiement à l'échelle de tout Avenir Télécom.
+- **B002 (données de comptes importés incorrectes) est tracé mais non résolu** dans le périmètre : identifié, priorisé, laissé au sprint suivant — signalé plutôt que masqué.
+
+## Résultats
+
+| Indicateur | Valeur |
+|---|---|
+| User stories chiffrées & priorisées | 20 |
+| Classes de test (couverture exigée ≥ 75 %) | 20 |
+| Durée du pilote terrain (zone Sud) | 3 mois |
+| Évaluation du titre RNCP | 4/4 compétences validées |
+
+## Livrables
+
+- [Stratégie d'implémentation & backlog produit (PDF)](/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf)
+- [Backlog initial (XLSX)](/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx)
+- [Cahier de tests (XLSX)](/docs/projects/avenir-telecom-lightning-app/test-workbook.xlsx)
+- [Backlog d'évolutions Kanban (PDF)](/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf)
+- [Rapport d'audit (PDF)](/docs/projects/avenir-telecom-lightning-app/audit-report.pdf)
+
+## Ce que ce projet démontre
+
+Pas de la profondeur de code, mais de la **discipline de livraison** : savoir cadrer un périmètre, le chiffrer et l'affecter au bon niveau, écrire un plan de tests qui devient un standard d'équipe, et **fermer la boucle pilote → évolutions avec une traçabilité complète**. C'est la dimension qui manque le plus souvent à un portfolio junior — et elle se voit ici, pièces à l'appui.
+
+> Projet fil rouge du titre RNCP niveau 6 « Développeur Concepteur Logiciel » (OpenClassrooms) : contexte, équipe et contraintes imposés, livrable soutenu devant un jury. Il est approfondi ici avec la lecture stratégie d'équipe / test / sécurité-par-conception / boucle de feedback attendue en contexte professionnel — au-delà du périmètre strict de l'exercice.

@@ -10026,7 +10026,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Entrega de app Lightning y backlog (Avenir Télécom)",
-        "heroSubtitle": "Entrega de una aplicación Lightning, estrategia de pruebas y mejoras continuas (Avenir Télécom)",
+        "heroSubtitle": "Estrategia de implementación de una app Salesforce Lightning de campo entregada por un equipo de 3 personas: backlog de producto de 20 user stories estimadas, cuaderno de pruebas + catálogo Apex, y luego una vuelta de piloto de 3 meses → backlog Kanban de evoluciones.",
         "sections": [
           {
             "body": "Tras una auditoría interna, los equipos comerciales de la zona Sur de Avenir Télécom necesitaban una aplicación Salesforce Lightning mejor alineada con su uso diario (leads, cuentas, oportunidades, presupuestos). El encargo cubría la definición de la estrategia de implementación para un pequeño equipo de 3 desarrolladores Salesforce — Romain (senior, Apex e integraciones API), Guillaume (intermedio, workflows y automatizaciones) y Hélène (júnior, UI/UX, pruebas y documentación) — y, tras 3 meses de piloto en campo, la consolidación de los comentarios en un backlog de evoluciones.",
