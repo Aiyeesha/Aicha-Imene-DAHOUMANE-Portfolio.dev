@@ -182,6 +182,15 @@ export default async function LocaleLayout({
                     >
                       {t("footer.workWithMe")}
                     </Link>
+                    {/* Page « Profil hybride » — trois cas où la combinaison
+                        Salesforce + infra + sécurité est nécessaire. Point d'entrée
+                        neutre (hors toggle), voir audit P2. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/hybride`}
+                    >
+                      {t("footer.hybrid")}
+                    </Link>
                     {/* Formulaire de qualification étendu (secteur/délai/budget) — jusqu'ici
                         orphelin de toute navigation, voir audit 2026-08-12. */}
                     <Link
