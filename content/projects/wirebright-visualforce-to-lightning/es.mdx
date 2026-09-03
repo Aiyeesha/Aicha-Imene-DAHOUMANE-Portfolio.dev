@@ -1,0 +1,102 @@
+---
+title: "Migración de Visualforce a Lightning (WireBright)"
+heroSubtitle: "Encuadre completo de una migración de Salesforce Classic → Lightning: inventario de componentes, una estimación descompuesta (17 días), una matriz de riesgos por componente, un diagnóstico apoyado en herramientas, y luego un prototipo de los dos componentes más críticos (LWC + Aura Quick Action)."
+---
+
+## Contexto
+
+EG Manufacture, especializada en tapicería, gestionaba sus leads y cuentas en **Salesforce Classic**. Dos piezas bloqueaban el paso a Lightning Experience:
+
+- una **página Visualforce** de búsqueda de oportunidades en la ficha de cuenta;
+- un **botón JavaScript** de actualización de estado en el lead.
+
+La consultora WireBright Consulting lideró la migración. La misión no era «reprogramar la app», sino **encuadrar la migración de forma defendible**: especificaciones técnicas y funcionales, opciones de conversión con coste, una matriz de riesgos — y luego entregar un primer prototipo de los dos componentes críticos.
+
+## Inventario y estimación
+
+Una estimación de migración creíble no es un importe cerrado — está **descompuesta**:
+
+| Concepto | Detalle | Estimación |
+|---|---|---|
+| Página Visualforce → LWC | Búsqueda + visualización de oportunidades vinculadas | 8 d |
+| Botón JS → Aura Quick Action | Actualización de estado del lead | 2 d |
+| Controladores Apex existentes | Actualización para compatibilidad con LWC / Aura | 2 d |
+| Pruebas y validación | Sandbox, escenarios de no regresión | 3 d |
+| Despliegue y QA | UAT, puesta en producción | 2 d |
+| **Total de desarrollo** | | **17 d** |
+| Formación de usuarios | ~7–8 h, incluyendo formación avanzada para administradores | fuera de desarrollo |
+
+## Elegir la tecnología objetivo, componente por componente
+
+Aquí es donde reside el criterio de arquitectura:
+
+- **Página Visualforce → Lightning Web Component.** Un LWC data-bound (`@wire`) es el reemplazo adecuado de una página de búsqueda: reactivo, cacheado, alineado con el Lightning Design System.
+- **Botón JavaScript → componente Aura como Quick Action.** El botón JS no funciona en Lightning. El reemplazo pasa por una **Quick Action**, y en la época del proyecto esa acción la lleva un **componente Aura** (`force:lightningQuickAction`), no un LWC. Elegir Aura aquí no es una opción por defecto — es la restricción de la plataforma para este caso de uso concreto.
+- **Controladores Apex** actualizados para servir a ambos componentes nuevos sin romper el contrato de datos.
+
+## Prototipos entregados
+
+**`AccountOpportunitiesSearch` (LWC)** — campo de búsqueda dinámico + `lightning-datatable`, conectado vía `@wire` a `AccountOpportunitiesController.getOpportunities()`:
+
+```apex
+@AuraEnabled(cacheable=true)
+public static List<Opportunity> getOpportunities(Id accountId, String keyword) {
+    // filtrado SOQL por palabra clave sobre las oportunidades de la cuenta
+}
+```
+
+**`UpdateLeadStatus` (Aura Quick Action)** — `force:lightningQuickAction` + `force:hasRecordId`, llama a `LeadStatusController.updateStatus()`, con **notificación toast** (`notificationsLibrary`) en caso de error y **actualización automática de la vista**.
+
+**Capturas comparativas Classic vs Lightning** en 3 pantallas (inicio, ficha de cuenta, ficha de lead), documentando mejoras de UX concretas: widgets de KPI, acciones rápidas sin recargar la página, ruta de estado visual para los leads.
+
+## Gestión de riesgos
+
+| Riesgo | Probabilidad / impacto | Mitigación |
+|---|---|---|
+| Incompatibilidad de los controladores Apex | Medio | Pruebas exhaustivas en sandbox + revisiones de código continuas |
+| Baja adopción por parte de los usuarios | Probabilidad alta | Sesiones de formación (~7–8 h, incl. admin avanzado) + documentación de soporte |
+| Rendimiento de los LWC | Impacto bajo | Optimización del código, `cacheable=true` |
+
+**Diagnóstico apoyado en herramientas** con el *Lightning Experience Configuration Converter*: 1 botón JavaScript sin convertir, 18 acciones/botones aún sin desplegar, **0 páginas Visualforce que requirieran acción inmediata**. El converter no es un adorno — convierte «ya lo veremos en la migración» en una lista finita.
+
+## Plan de despliegue y KPI
+
+- **KPI post-migración**: adopción de Lightning **> 90 %**, tiempo de respuesta de los componentes monitorizado.
+- **Hoja de ruta** más allá de los 2 componentes: informes Lightning, automatización con Flow, nuevos LWC — la migración es un punto de partida, no un final.
+- **Formación**: ~7–8 h, con un módulo de admin avanzado para que el equipo sea autónomo en lo que sigue.
+
+## Decisiones y limitaciones asumidas
+
+| Decisión | Alternativa descartada | Por qué |
+|---|---|---|
+| **Aura para la Quick Action** | LWC | Restricción de plataforma en la época: la Quick Action «botón» la lleva Aura |
+| **`cacheable=true`** en la consulta de oportunidades | Consulta no cacheable | Búsqueda de solo lectura y repetida — el cache del cliente reduce las idas y vueltas |
+| **Estimación descompuesta** | Presupuesto cerrado | Un presupuesto de migración se discute línea por línea; un importe cerrado no se puede defender |
+| **Prototipo de los 2 componentes críticos** | Migración completa en una sola pasada | Demostrar la viabilidad y afinar la estimación antes de comprometer los 17 días |
+
+Limitaciones asumidas:
+
+- **2 componentes prototipados, no toda la app** — el valor está en la calidad del encuadre y la fiabilidad de la estimación, validados por un prototipo funcional, no en una migración de extremo a extremo.
+- **Estimaciones no contrastadas con datos reales**: 17 días es una estimación fundamentada, no un tiempo medido.
+- **Las capturas documentan las mejoras *esperadas***, no mejoras medidas tras la adopción.
+
+## Resultados
+
+| Indicador | Valor |
+|---|---|
+| Componentes prototipados | 2 (LWC `AccountOpportunitiesSearch` + Aura `UpdateLeadStatus`) |
+| Estimación descompuesta del proyecto | 17 días de desarrollo |
+| Adopción de Lightning objetivo (KPI de seguimiento) | > 90 % |
+| Evaluación del título RNCP | 2/2 competencias validadas |
+
+## Entregables
+
+- [Especificaciones técnicas y funcionales (PDF)](/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf)
+- [Ventajas de Lightning — comparativa (PDF)](/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf)
+- [Capturas antes/después (ZIP)](/docs/projects/wirebright-visualforce-to-lightning/screenshots.zip)
+
+## Lo que demuestra este proyecto
+
+La **disciplina de migración de legacy**: una estimación descompuesta que resiste la discusión, una matriz de riesgos con mitigaciones, la **elección de tecnología objetivo adecuada por componente** (y saber por qué Aura en lugar de LWC aquí), un diagnóstico apoyado en herramientas y un plan de despliegue con KPI. Es exactamente lo que un cliente paga a una consultora — encuadrar una migración de forma creíble antes de comprometer un presupuesto.
+
+> Proyecto integrador del título RNCP nivel 6 "Développeur Concepteur Logiciel" (OpenClassrooms): contexto, componentes y restricciones impuestos, entregable defendido ante un jurado. Se amplía aquí con la lectura de estimación / riesgos / elección de tecnología / despliegue esperada en un contexto profesional — más allá del alcance estricto del ejercicio.

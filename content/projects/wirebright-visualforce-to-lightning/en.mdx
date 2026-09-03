@@ -1,0 +1,102 @@
+---
+title: "Visualforce to Lightning migration (WireBright)"
+heroSubtitle: "Full scoping of a Salesforce Classic → Lightning migration: component inventory, a decomposed estimate (17 days), a per-component risk matrix, a tooled diagnostic, then a prototype of the two most critical components (LWC + Aura Quick Action)."
+---
+
+## Context
+
+EG Manufacture, a tapestry manufacturer, managed its leads and accounts on **Salesforce Classic**. Two pieces blocked the move to Lightning Experience:
+
+- a **Visualforce page** for opportunity search on the account record;
+- a **JavaScript button** for lead status updates.
+
+WireBright Consulting led the migration. The mission wasn't "re-code the app" but **to scope the migration defensibly**: technical and functional specifications, costed conversion options, a risk matrix — then deliver a first prototype of the two critical components.
+
+## Inventory & estimate
+
+A credible migration estimate isn't a lump sum — it's **decomposed**:
+
+| Item | Detail | Estimate |
+|---|---|---|
+| Visualforce page → LWC | Search + display of linked opportunities | 8 d |
+| JS button → Aura Quick Action | Lead status update | 2 d |
+| Existing Apex controllers | Upgrade for LWC / Aura compatibility | 2 d |
+| Testing & validation | Sandbox, regression scenarios | 3 d |
+| Deployment & QA | UAT, go-live | 2 d |
+| **Dev total** | | **17 d** |
+| User training | ~7–8 h, including advanced admin training | outside dev |
+
+## Choosing the target tech, component by component
+
+This is where the architecture judgment sits:
+
+- **Visualforce page → Lightning Web Component.** A data-bound LWC (`@wire`) is the right replacement for a search page: reactive, cached, aligned with the Lightning Design System.
+- **JavaScript button → Aura component as a Quick Action.** The JS button doesn't work in Lightning. Replacement goes through a **Quick Action**, and at the time of the project that action is carried by an **Aura component** (`force:lightningQuickAction`), not an LWC. Choosing Aura here isn't a default — it's the platform constraint for this specific use case.
+- **Apex controllers** upgraded to serve both new components without breaking the data contract.
+
+## Delivered prototypes
+
+**`AccountOpportunitiesSearch` (LWC)** — dynamic search field + `lightning-datatable`, wired via `@wire` to `AccountOpportunitiesController.getOpportunities()`:
+
+```apex
+@AuraEnabled(cacheable=true)
+public static List<Opportunity> getOpportunities(Id accountId, String keyword) {
+    // SOQL keyword filtering over the account's opportunities
+}
+```
+
+**`UpdateLeadStatus` (Aura Quick Action)** — `force:lightningQuickAction` + `force:hasRecordId`, calls `LeadStatusController.updateStatus()`, with a **toast notification** (`notificationsLibrary`) on error and **automatic view refresh**.
+
+**Side-by-side Classic vs Lightning screenshots** across 3 screens (home, account record, lead record), documenting concrete UX gains: KPI widgets, no-reload quick actions, visual status path for leads.
+
+## Risk management
+
+| Risk | Probability / impact | Mitigation |
+|---|---|---|
+| Apex controller incompatibility | Medium | Thorough sandbox testing + ongoing code reviews |
+| Low user adoption | High probability | Training sessions (~7–8 h, incl. advanced admin) + support documentation |
+| LWC performance | Low impact | Code optimization, `cacheable=true` |
+
+**Tooled diagnostic** via the *Lightning Experience Configuration Converter*: 1 unconverted JavaScript button, 18 actions/buttons not yet deployed, **0 Visualforce pages requiring immediate action**. The converter isn't a gimmick — it turns "we'll see at migration time" into a finite list.
+
+## Rollout plan & KPIs
+
+- **Post-migration KPIs**: Lightning adoption **> 90%**, component response time tracked.
+- **Roadmap** beyond the 2 components: Lightning reports, Flow automation, new LWCs — the migration is a starting point, not an end.
+- **Training**: ~7–8 h, with an advanced-admin track to make the team self-sufficient for what follows.
+
+## Decisions & assumed limitations
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| **Aura for the Quick Action** | LWC | Platform constraint at the time: the "button" Quick Action is carried by Aura |
+| **`cacheable=true`** on the opportunity query | Non-cacheable query | Read-only, repeated search — client caching cuts round-trips |
+| **Decomposed estimate** | Lump-sum quote | A migration quote is discussed line by line; a lump sum can't be defended |
+| **Prototype of the 2 critical components** | Full migration in one pass | Prove feasibility and firm up the estimate before committing the 17 days |
+
+Assumed limitations:
+
+- **2 components prototyped, not the whole app** — the value is in the quality of the scoping and the reliability of the estimate, validated by a working prototype, not in an end-to-end migration.
+- **Estimates not checked against actuals**: 17 days is a substantiated estimate, not a measured time.
+- **Screenshots document *expected* gains**, not measured post-adoption gains.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| Components prototyped | 2 (LWC `AccountOpportunitiesSearch` + Aura `UpdateLeadStatus`) |
+| Decomposed project estimate | 17 dev days |
+| Target Lightning adoption (tracking KPI) | > 90% |
+| RNCP diploma evaluation | 2/2 competencies validated |
+
+## Deliverables
+
+- [Technical & functional specifications (PDF)](/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf)
+- [Lightning advantages — comparison (PDF)](/docs/projects/wirebright-visualforce-to-lightning/lightning-advantages.pdf)
+- [Before/after screenshots (ZIP)](/docs/projects/wirebright-visualforce-to-lightning/screenshots.zip)
+
+## What this project demonstrates
+
+**Legacy migration discipline**: a decomposed estimate that stands up to discussion, a risk matrix with mitigations, the **right target-tech choice per component** (and knowing why Aura over LWC here), a tooled diagnostic, and a rollout plan with KPIs. It's exactly what a client pays a consultancy for — scoping a migration credibly before committing a budget to it.
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): imposed context, components and constraints, deliverable defended before a jury. It is expanded here with the estimation / risk / tech-choice / rollout reading expected in a professional context — beyond the strict scope of the exercise.
