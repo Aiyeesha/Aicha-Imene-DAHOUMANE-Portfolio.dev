@@ -1,0 +1,120 @@
+---
+title: "Salesforce deployment with Heroku (Legarant-AXG)"
+heroSubtitle: "Integrate AXG into Legarant's Salesforce CRM and deliver the integration layer for a mobile app — Apex REST API, Heroku Connect sync, traceable go-live."
+---
+
+## Business context
+
+LEGARANT is a French life insurance company founded in 1980 in Nantes, managing over 1.2 million individuals on Salesforce. To accelerate its expansion into Germany, it acquired AXG — a local player already running 50,000+ customers on a proprietary in-house CRM.
+
+The structuring decision was made before the project began: **Salesforce stays the single system of record.** No two-CRM coexistence, no federation. AXG data therefore had to flow into Salesforce one-way (Germany → France), the integration APIs had to be documented and testable by a third party, and field insurance agents needed a mobile app that reads and writes against the same foundation.
+
+Three business requirements framed the design, ahead of any technical consideration:
+
+- **No duplicate customers.** An AXG contact already present on the Legarant side must never be recreated — on a life insurance book, a duplicate means an orphan file and a compliance risk.
+- **No physical deletion.** The insurance sector mandates long data retention. A functional "DELETE" must translate to deactivation, never a SQL `DELETE`.
+- **A traceable intra-EU flow.** German contact data enters an org run for France: the flow must stay documented and access must be restricted by application role, not by a workaround.
+
+## Imposed constraints and what they dictated
+
+| Constraint | Origin | Design consequence |
+|---|---|---|
+| Salesforce = single system of record | Legarant decision | Identity logic (uniqueness, dedup) must live **inside** Salesforce, not in the sync layer |
+| One-way AXG → Salesforce sync | Project scope | No conflict resolution to write — but the direction must be guaranteed by architecture, not convention |
+| Regulatory data retention | Insurance sector | `DELETE` = setting `IsActive` to `false`; dedicated endpoint, never a row deletion |
+| APIs testable by an external evaluator | RNCP diploma framework | Complete Postman collection, runnable end-to-end with no credential re-entry |
+| Constrained cloud budget | Azure / Heroku comparison | Heroku Connect chosen: native Salesforce sync, no home-grown ETL to code and operate |
+| Mobile app reading/writing to Salesforce | Field agent need | Bidirectional Heroku ↔ Salesforce connector + one Postgres database per environment |
+
+## Architecture
+
+Two data paths coexist, deliberately kept separate.
+
+**Path 1 — AXG → Salesforce migration (one-way).**
+
+```
+AXG data (Germany)
+   │  HTTPS + OAuth token
+   ▼
+Custom Apex REST controller (@RestResource)
+   │  prior email check · upsert on External ID
+   ▼
+Salesforce France org
+   ├─ Apex trigger: automatic External ID population on create
+   └─ Matching Rule + Duplicate Rule (email, first name, last name) in Alert mode
+```
+
+**Path 2 — mobile app ↔ Salesforce (bidirectional).**
+
+```
+Agent mobile app
+   ▼
+Node.js / Express API (SOCMOB) on Heroku
+   ▼
+Heroku Postgres  ◄──►  Heroku Connect  ◄──►  Salesforce org
+                (per-object mapping: RW on Account/Contact/Contract,
+                 RO on Order/OrderItem/Product2/Pricebook2/PricebookEntry)
+```
+
+Each environment (staging, production) has **its own Postgres database, its own Connected Apps and its own set of config vars.** The two Heroku environments are linked by a promotion pipeline: code is promoted from staging to production, never hand-deployed to prod. Staging is bound to the Salesforce sandbox, production to the production org — no crossover possible.
+
+The Apex layer is deployed via **Salesforce DX** (versioned metadata, no manual Change Set).
+
+## Architecture decisions (ADR)
+
+| Decision | Alternatives rejected | Why this choice |
+|---|---|---|
+| **Heroku Connect** for the sync | Home-grown ETL; Azure Data Factory | Azure didn't fit the budget; a home-grown ETL is one more layer to code, test and operate for a need Heroku Connect covers natively |
+| **External ID + Apex trigger** for uniqueness | Dedup on the Heroku Connect / Postgres side | The source of truth for identity stays in Salesforce — the setup survives a future replacement of the sync layer |
+| **OAuth flow per environment**: Client Credentials in prod, Username-Password confined to the sandbox | A single Username-Password flow everywhere (faster to wire) | Production relies on **no stored password**; only `client_id`/`client_secret` as config vars |
+| **Duplicate Rule in Alert mode**, not a hard block | Hard block on create | The contact may legitimately already exist on the AXG side: flag it, let the business user decide |
+| **`DELETE` = deactivation** (`IsActive = false`) | Physical record deletion | Insurance-sector retention rule — a regulatory constraint, not a technical preference |
+| **REST Composite API** for batch writes | Unit calls in a loop | Up to 25 sub-requests / 200 objects per call: lower API limit consumption and transactional consistency (rollback if a sub-request fails) |
+
+## Security by design
+
+Security wasn't bolted on at the end — it's in the architecture decisions above. Concretely:
+
+- **No secrets in code.** OAuth credentials are Heroku config vars, never committed.
+- **A dedicated integration user**, carrying an explicit Permission Set (`INTG_API_Policies_CRUD`) that lists RW/RO rights object by object. No API access goes through a generic profile.
+- **Apex REST endpoints over HTTPS only**, reachable only with a valid Salesforce token and the right Permission Set — no anonymous access.
+- **Client Credentials Flow in production** (server-to-server): no user credentials on the Heroku side. The Username-Password Flow exists only for manual Postman testing on the sandbox and is never exposed in prod.
+- **API limits monitored continuously** via the `Sforce-Limit-Info` header read on every HTTP response — saturation is seen coming, not discovered via a 403.
+- **Documented data flow**: AXG contacts (Germany) → France org, intra-EU flow, access scoped by permission sets.
+
+## Deployment and operations
+
+The deliverable is not just code: it's a **deployment document** listing the delivered components, the manual actions, and the install order. A real ops handover doesn't happen by reading a Git diff.
+
+- **Validation gate**: the full Postman collection (GET / POST / PATCH / DELETE + auth + dedup + batch upsert) must pass 100% on the sandbox before any promotion. That's the go/no-go.
+- **Promotion**: staging → production via the Heroku pipeline. Never a manual prod deploy.
+- **Rollback**: on the Heroku side, revert to the previous release via the pipeline; on the Salesforce side, SFDX redeploy of the prior version's metadata package. Salesforce metadata has no native undo — the procedure is written, not improvised.
+- **Observability**: Papertrail centralizes application logs from **both** environments in real time. A sync incident is read in a single stream, not by digging through two separate dynos.
+
+## Assumed limitations
+
+An honest project names what it doesn't do:
+
+- **No conflict resolution.** Acceptable here: the sync is one-way, there's no concurrent write to arbitrate. Not a gap — a consequence of scope.
+- **No documented retry/backoff** on Heroku Connect calls. At real scale, a queue or retry mechanism would be needed — out of scope for the demonstrator, but identified.
+- **Heroku Connect on Demo Edition**: enough to prove the setup, not sized for real production volume.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| API endpoints delivered | 4 (GET, POST, PATCH, DELETE) |
+| Postman test suite | 17 tests, 100% passed |
+| Run time / average response | 5.7 s total · 232 ms average |
+| Heroku ↔ Salesforce sync | Bidirectional, operational |
+| RNCP diploma evaluation | 2/2 competencies validated — distinction, architecture judged clean and well documented |
+
+## Proof of the skill crossover
+
+This is what sets the project apart from a classic Salesforce deliverable. I built **the Apex REST layer AND the Heroku application that consumes it**: Express + PostgreSQL API, two isolated environments on a Heroku pipeline, Heroku Connect configured object by object, right down to the deployment runbook.
+
+A Salesforce-only profile would have stopped at the Apex layer and handed the Heroku infrastructure to someone else — with the classic risk of decisions made without knowing the constraints on the other side. An infrastructure-only profile could have deployed the Heroku app, but not designed the External ID Apex trigger or the Matching Rule that stop duplicates at the source. Delivering both together removed the usual back-and-forth between the Salesforce team and the DevOps team: the staging environment existed **before** the first line of Apex was written.
+
+**Next step already scoped**: migrate the sandbox/PoC flow to OAuth 2.0 JWT Bearer Flow (certificate instead of password) to align every environment on a server-to-server flow. That's the exact starting point of a deeper crossover project — real-time Heroku ↔ Salesforce sync via Platform Events.
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): imposed context, dataset and constraints, deliverable defended before a jury. It is expanded here with the architecture, security and operations layer expected in a professional context — beyond the strict scope of the exercise.

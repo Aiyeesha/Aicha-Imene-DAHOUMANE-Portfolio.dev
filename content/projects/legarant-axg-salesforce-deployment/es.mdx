@@ -1,0 +1,120 @@
+---
+title: "Despliegue de Salesforce con Heroku (Legarant-AXG)"
+heroSubtitle: "Integrar AXG en el CRM Salesforce de Legarant y entregar la capa de integración de una aplicación móvil — API REST Apex, sincronización con Heroku Connect, puesta en producción trazable."
+---
+
+## Contexto de negocio
+
+LEGARANT es una compañía de seguros de vida francesa fundada en 1980 en Nantes, que gestiona más de 1,2 millones de particulares en Salesforce. Para acelerar su implantación en Alemania, adquirió AXG — un actor local que ya gestionaba más de 50.000 clientes en un CRM interno propietario.
+
+La decisión estructurante se tomó antes de empezar el proyecto: **Salesforce sigue siendo el único sistema de referencia.** Sin convivencia de dos CRM, sin federación. Los datos de AXG debían fluir hacia Salesforce en un solo sentido (Alemania → Francia), las APIs de integración debían estar documentadas y ser verificables por un tercero, y los agentes de seguros de campo necesitaban una aplicación móvil que lee y escribe sobre la misma base.
+
+Tres requisitos de negocio enmarcaron el diseño, por delante de cualquier consideración técnica:
+
+- **Ningún cliente duplicado.** Un contacto de AXG ya presente del lado de Legarant no debe recrearse nunca — en una cartera de seguros de vida, un duplicado significa un expediente huérfano y un riesgo de incumplimiento.
+- **Sin eliminación física.** El sector de seguros exige una conservación prolongada de los datos. Un "DELETE" funcional debe traducirse en una desactivación, nunca en un `DELETE` SQL.
+- **Un flujo intra-UE trazable.** Los datos de contacto alemanes entran en un org gestionado para Francia: el flujo debe permanecer documentado y el acceso restringido por rol de aplicación, no por un atajo.
+
+## Restricciones impuestas y lo que dictaron
+
+| Restricción | Origen | Consecuencia de diseño |
+|---|---|---|
+| Salesforce = único sistema de referencia | Decisión de Legarant | La lógica de identidad (unicidad, desduplicación) debe vivir **dentro** de Salesforce, no en la capa de sincronización |
+| Sincronización unidireccional AXG → Salesforce | Alcance del proyecto | Sin resolución de conflictos que programar — pero el sentido debe garantizarlo la arquitectura, no una convención |
+| Conservación reglamentaria de datos | Sector de seguros | `DELETE` = poner `IsActive` en `false`; endpoint dedicado, nunca una eliminación de fila |
+| APIs verificables por un evaluador externo | Marco del título RNCP | Colección Postman completa, ejecutable de extremo a extremo sin reintroducir credenciales |
+| Presupuesto cloud limitado | Comparativa Azure / Heroku | Se elige Heroku Connect: sincronización nativa con Salesforce, sin ETL propio que programar y operar |
+| App móvil que lee/escribe en Salesforce | Necesidad de los agentes de campo | Conector bidireccional Heroku ↔ Salesforce + una base Postgres por entorno |
+
+## Arquitectura
+
+Coexisten dos rutas de datos, mantenidas deliberadamente separadas.
+
+**Ruta 1 — migración AXG → Salesforce (unidireccional).**
+
+```
+Datos de AXG (Alemania)
+   │  HTTPS + token OAuth
+   ▼
+Controlador Apex REST personalizado (@RestResource)
+   │  verificación previa de email · upsert sobre External ID
+   ▼
+Org Salesforce de Francia
+   ├─ Trigger Apex: relleno automático del External ID al crear
+   └─ Matching Rule + Duplicate Rule (email, nombre, apellido) en modo Alerta
+```
+
+**Ruta 2 — app móvil ↔ Salesforce (bidireccional).**
+
+```
+App móvil de agentes
+   ▼
+API Node.js / Express (SOCMOB) en Heroku
+   ▼
+Heroku Postgres  ◄──►  Heroku Connect  ◄──►  Org Salesforce
+                (mapeo por objeto: RW en Account/Contact/Contract,
+                 RO en Order/OrderItem/Product2/Pricebook2/PricebookEntry)
+```
+
+Cada entorno (staging, producción) tiene **su propia base Postgres, sus propias Connected Apps y su propio conjunto de variables de configuración.** Los dos entornos de Heroku están unidos por un pipeline de promoción: el código se promueve de staging a producción, nunca se despliega a mano en producción. Staging está vinculado a la sandbox de Salesforce, producción al org de producción — sin cruce posible.
+
+La capa Apex se despliega mediante **Salesforce DX** (metadatos versionados, sin Change Set manual).
+
+## Decisiones de arquitectura (ADR)
+
+| Decisión | Alternativas descartadas | Por qué esta elección |
+|---|---|---|
+| **Heroku Connect** para la sincronización | ETL propio; Azure Data Factory | Azure no entraba en el presupuesto; un ETL propio es una capa más que programar, probar y operar para una necesidad que Heroku Connect cubre de forma nativa |
+| **External ID + Trigger Apex** para la unicidad | Desduplicación del lado de Heroku Connect / Postgres | La fuente de verdad de la identidad permanece en Salesforce — el montaje sobrevive a un futuro reemplazo de la capa de sincronización |
+| **Flujo OAuth por entorno**: Client Credentials en producción, Username-Password confinado a la sandbox | Un único flujo Username-Password en todas partes (más rápido de conectar) | La producción no depende de **ninguna contraseña almacenada**; solo `client_id`/`client_secret` como variables de configuración |
+| **Duplicate Rule en modo Alerta**, no bloqueo estricto | Bloqueo duro al crear | El contacto puede existir legítimamente ya del lado de AXG: se señala, decide el usuario de negocio |
+| **`DELETE` = desactivación** (`IsActive = false`) | Eliminación física del registro | Regla de conservación del sector de seguros — una restricción reglamentaria, no una preferencia técnica |
+| **API REST Composite** para escrituras por lotes | Llamadas unitarias en bucle | Hasta 25 subsolicitudes / 200 objetos por llamada: menor consumo de límites de API y coherencia transaccional (rollback si falla una subsolicitud) |
+
+## Seguridad por diseño
+
+La seguridad no se añadió al final — está en las decisiones de arquitectura anteriores. En concreto:
+
+- **Ningún secreto en el código.** Las credenciales OAuth son variables de configuración de Heroku, nunca commiteadas.
+- **Un usuario de integración dedicado**, con un Permission Set explícito (`INTG_API_Policies_CRUD`) que enumera los derechos RW/RO objeto por objeto. Ningún acceso a la API pasa por un perfil genérico.
+- **Endpoints Apex REST solo por HTTPS**, accesibles únicamente con un token Salesforce válido y el Permission Set adecuado — sin acceso anónimo.
+- **Client Credentials Flow en producción** (servidor-a-servidor): sin credenciales de usuario del lado de Heroku. El Username-Password Flow existe solo para pruebas manuales con Postman en la sandbox y nunca se expone en producción.
+- **Límites de API monitorizados de forma continua** mediante la cabecera `Sforce-Limit-Info` leída en cada respuesta HTTP — la saturación se ve venir, no se descubre con un 403.
+- **Flujo de datos documentado**: contactos de AXG (Alemania) → org de Francia, flujo intra-UE, acceso acotado por permission sets.
+
+## Despliegue y operación
+
+El entregable no es solo código: es un **documento de despliegue** que enumera los componentes entregados, las acciones manuales y el orden de instalación. Una entrega real a operaciones no se hace leyendo un diff de Git.
+
+- **Puerta de validación**: la colección Postman completa (GET / POST / PATCH / DELETE + auth + desduplicación + upsert por lotes) debe pasar al 100 % en la sandbox antes de cualquier promoción. Ese es el go/no-go.
+- **Promoción**: staging → producción mediante el pipeline de Heroku. Nunca un despliegue manual en producción.
+- **Rollback**: del lado de Heroku, volver a la release anterior mediante el pipeline; del lado de Salesforce, redespliegue con SFDX del paquete de metadatos de la versión anterior. Los metadatos de Salesforce no tienen deshacer nativo — el procedimiento está escrito, no improvisado.
+- **Observabilidad**: Papertrail centraliza los logs de aplicación de **ambos** entornos en tiempo real. Un incidente de sincronización se lee en un único flujo, no rebuscando en dos dynos separados.
+
+## Limitaciones asumidas
+
+Un proyecto honesto nombra lo que no hace:
+
+- **Sin resolución de conflictos.** Aceptable aquí: la sincronización es unidireccional, no hay escritura concurrente que arbitrar. No es una carencia — es una consecuencia del alcance.
+- **Sin retry/backoff documentado** en las llamadas de Heroku Connect. A escala real, haría falta una cola o un mecanismo de reintento — fuera del alcance del demostrador, pero identificado.
+- **Heroku Connect en Demo Edition**: suficiente para demostrar el montaje, no dimensionado para un volumen de producción real.
+
+## Resultados
+
+| Indicador | Valor |
+|---|---|
+| Endpoints de API entregados | 4 (GET, POST, PATCH, DELETE) |
+| Suite de pruebas Postman | 17 pruebas, 100 % superadas |
+| Tiempo de ejecución / respuesta media | 5,7 s en total · 232 ms de media |
+| Sincronización Heroku ↔ Salesforce | Bidireccional, operativa |
+| Evaluación del título RNCP | 2/2 competencias validadas — con distinción, arquitectura considerada limpia y bien documentada |
+
+## La prueba del cruce de competencias
+
+Es lo que distingue este proyecto de un entregable Salesforce clásico. Construí **la capa Apex REST Y la aplicación Heroku que la consume**: API Express + PostgreSQL, dos entornos aislados en un pipeline de Heroku, Heroku Connect configurado objeto por objeto, hasta el runbook de despliegue.
+
+Un perfil solo de Salesforce se habría detenido en la capa Apex y habría delegado la infraestructura de Heroku a otra persona — con el riesgo clásico de decisiones tomadas sin conocer las restricciones del otro lado. Un perfil solo de infraestructura habría podido desplegar la app de Heroku, pero no diseñar el Trigger Apex de External ID ni la Matching Rule que frenan los duplicados en el origen. Entregar ambos juntos eliminó el habitual ida y vuelta entre el equipo de Salesforce y el equipo de DevOps: el entorno de staging existía **antes** de que se escribiera la primera línea de Apex.
+
+**Próximo paso ya definido**: migrar el flujo de sandbox/PoC a OAuth 2.0 JWT Bearer Flow (certificado en lugar de contraseña) para alinear todos los entornos en un flujo servidor-a-servidor. Ese es el punto de partida exacto de un proyecto de cruce más profundo — sincronización en tiempo real Heroku ↔ Salesforce vía Platform Events.
+
+> Proyecto integrador del título RNCP nivel 6 "Développeur Concepteur Logiciel" (OpenClassrooms): contexto, conjunto de datos y restricciones impuestos, entregable defendido ante un jurado. Se amplía aquí con la capa de arquitectura, seguridad y operación esperada en un contexto profesional — más allá del alcance estricto del ejercicio.
