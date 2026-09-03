@@ -151,6 +151,16 @@ html.dark .card:hover {
   @apply border-teal-300 bg-teal-50 text-teal-800;
   @apply dark:border-teal-400/30 dark:bg-teal-500/15 dark:text-teal-200;
 }
+/* Badge "projet fil rouge — Titre RNCP 6" — projet du cursus certifiant
+   (OpenClassrooms, RNCP niveau 6), périmètre et jeu de données imposés,
+   livrable soutenu devant un jury. Approfondi ici avec la couche
+   architecture / sécurité / exploitation attendue en contexte professionnel.
+   Ardoise (slate) volontairement sobre : un livrable diplômant évalué, pas
+   un exercice — distinct du ton "training" (bleu ciel) réservé aux labs. */
+.badge-capstone {
+  @apply border-slate-300 bg-slate-50 text-slate-700;
+  @apply dark:border-slate-400/30 dark:bg-slate-500/15 dark:text-slate-200;
+}
 
 html.dark .chip {
   @apply border-white/10 bg-white/5 text-white/80;
