@@ -10200,7 +10200,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Salesforce application update (Digit Learning)",
-        "heroSubtitle": "Audit and update of the Digit Learning Salesforce application to meet sales team requirements.",
+        "heroSubtitle": "Quality audit of a 2-year-old Salesforce org, then modernization: a junction object to lift the \"one student = one training\" limit, automated enrollment and mentor assignment, 3 management reports, data migration — with a quantified impact analysis.",
         "sections": [
           {
             "body": "Digit Learning, an online professional training school, had been using Salesforce for about 2 years with dedicated business objects (Student, Mentor, Training). Project manager Jeanne Pierron requested an internal quality audit followed by a modernization plan. The audit's central finding: the data model only allowed a student to be linked to a single training at a time — a blocking limitation for both sales and pedagogical tracking, flagged by both sales reps and management.",
@@ -10333,7 +10333,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Mise à jour de l'application Salesforce (Digit Learning)",
-        "heroSubtitle": "Audit et mise à jour de l'application Salesforce Digit Learning pour répondre aux besoins des commerciaux.",
+        "heroSubtitle": "Audit qualité d'une org Salesforce de 2 ans puis modernisation : objet de jonction pour lever la limite « un étudiant = une formation », automatisation de l'inscription et de l'affectation des mentors, 3 rapports de pilotage, migration des données — avec analyse d'impact chiffrée.",
         "sections": [
           {
             "body": "Digit Learning, école en ligne de formation professionnelle, utilisait Salesforce depuis environ 2 ans avec des objets métier dédiés (Étudiant, Mentor, Formation). Jeanne Pierron, cheffe de projet, a commandé un audit qualité interne suivi d'un plan de modernisation. Le constat central de l'audit : le modèle de données ne permettait à un étudiant d'être associé qu'à une seule formation à la fois — une limitation bloquante pour le suivi commercial et pédagogique, remontée aussi bien par les commerciaux que par la direction.",
@@ -10466,7 +10466,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Actualización de la aplicación Salesforce (Digit Learning)",
-        "heroSubtitle": "Auditoría y modernización de una org Salesforce para una escuela en línea: rediseño del modelo de datos, automatizaciones (Flows) y reporting.",
+        "heroSubtitle": "Auditoría de calidad de una org Salesforce de 2 años y luego modernización: un objeto de unión para eliminar el límite «un estudiante = una formación», automatización de la inscripción y la asignación de mentores, 3 informes de seguimiento, migración de datos — con un análisis de impacto cuantificado.",
         "sections": [
           {
             "body": "Digit Learning, escuela en línea de formación profesional, llevaba unos 2 años usando Salesforce con objetos de negocio dedicados (Estudiante, Mentor, Formación). Jeanne Pierron, jefa de proyecto, encargó una auditoría de calidad interna seguida de un plan de modernización. El hallazgo central de la auditoría: el modelo de datos solo permitía vincular a un estudiante con una única formación a la vez — una limitación bloqueante tanto para el seguimiento comercial como pedagógico, señalada tanto por los comerciales como por la dirección.",
