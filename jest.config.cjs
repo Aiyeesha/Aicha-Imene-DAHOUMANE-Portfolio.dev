@@ -6,11 +6,14 @@ module.exports = {
     "^@/(.*)$": "<rootDir>/$1"
   },
   // Exclure : build Next.js, node_modules, et les tests E2E Playwright
-  // (les specs e2e/ utilisent @playwright/test, incompatible avec Jest)
+  // (les specs e2e/ utilisent @playwright/test, incompatible avec Jest).
+  // .claude/ : worktrees git éphémères créés par les agents — contiennent une
+  // copie du repo (dont e2e/), que Jest tenterait sinon de charger. Absent en CI.
   testPathIgnorePatterns: [
     "<rootDir>/.next/",
     "<rootDir>/node_modules/",
-    "<rootDir>/e2e/"
+    "<rootDir>/e2e/",
+    "<rootDir>/.claude/"
   ],
   transform: {
     "^.+\\.(t|j)sx?$": ["ts-jest", { tsconfig: "<rootDir>/tsconfig.json" }]
