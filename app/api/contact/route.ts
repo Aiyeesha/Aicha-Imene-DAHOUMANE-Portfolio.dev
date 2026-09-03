@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { contactRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
-import { validate, getClientIp } from "@/lib/contactValidation";
+import { validate, getClientIp, isAllowedOrigin } from "@/lib/contactValidation";
 
 type Payload = {
   name: string;
@@ -25,11 +25,6 @@ const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
 // present — Origin-based allow-listing only covers browser <form> submissions.
 const FORMHOOK_AUTH_TOKEN = process.env.FORMHOOK_AUTH_TOKEN || "";
 
-// Basic origin guard (helps reduce cross-site spam).
-// If NEXT_PUBLIC_SITE_URL is set in production, we only accept requests from that origin.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "";
-const ALLOWED_ORIGIN = SITE_URL ? new URL(SITE_URL).origin : "";
-
 /**
  * Contact API (Stage 7)
  * ---------------------
@@ -40,16 +35,14 @@ const ALLOWED_ORIGIN = SITE_URL ? new URL(SITE_URL).origin : "";
  *   messages are received by email via Formhook, nothing is stored at rest.
  */
 export async function POST(req: Request) {
-  // Origin guard strict : en production, exiger que l'en-tête Origin soit présent
-  // et corresponde à l'origine du site. Les navigateurs envoient toujours Origin
-  // sur les requêtes POST cross-site ; les bots automatisés l'omettent souvent.
-  // Rejeter aussi les requêtes sans Origin pour bloquer curl/scripts directs.
+  // Origin guard : en production, exiger un en-tête Origin qui corresponde soit à
+  // l'origine configurée du site, soit à l'hôte qui sert réellement cette route
+  // (voir isAllowedOrigin). Les navigateurs envoient toujours Origin sur les
+  // POST cross-site ; les bots/scripts directs l'omettent souvent. Preview Vercel
+  // exempté (URLs éphémères).
   const isPreview = process.env.VERCEL_ENV === "preview";
-  if (!isPreview && process.env.NODE_ENV === "production" && ALLOWED_ORIGIN) {
-    const origin = req.headers.get("origin") || "";
-    if (!origin || origin !== ALLOWED_ORIGIN) {
-      return NextResponse.json({ ok: false, error: "forbidden_origin" }, { status: 403 });
-    }
+  if (!isPreview && process.env.NODE_ENV === "production" && !isAllowedOrigin(req)) {
+    return NextResponse.json({ ok: false, error: "forbidden_origin" }, { status: 403 });
   }
 
   // Parse body early so the honeypot can fire before the rate limiter.
