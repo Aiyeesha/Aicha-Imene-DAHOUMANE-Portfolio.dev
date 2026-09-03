@@ -67,7 +67,7 @@ export const testimonials: Testimonial[] = [
     id: "t5",
     name: "[Prénom Nom]",
     role: "[Rôle : ex. Développeur Salesforce / Développeur Full-Stack]",
-    company: "[Entreprise ou “En freelance”]",
+    company: "[Entreprise ou contexte]",
     context: "Collaboration Flows & Apex • pipeline CI/CD",
     quote:
       "J’ai eu l’occasion de travailler avec Aïcha sur un projet Salesforce impliquant des Flows complexes et une couche Apex. Ce que j’ai apprécié, c’est sa capacité à poser les bonnes questions avant de coder — elle prend le temps de comprendre les règles métier, ce qui évite beaucoup de va-et-vient ensuite. Elle a notamment pris en charge la mise en place du pipeline CI/CD avec Salesforce CLI et GitHub Actions, et a documenté le tout de façon très claire. Je me souviens avoir utilisé sa documentation pour reproduire le setup de mon côté — c’était directement actionnable. C’est quelqu’un de rigoureux, avec qui la collaboration à distance est fluide. Elle communique régulièrement sur l’avancement et remonte les blocages rapidement.",
