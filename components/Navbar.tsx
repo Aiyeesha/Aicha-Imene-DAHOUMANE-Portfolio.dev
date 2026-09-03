@@ -38,7 +38,7 @@ function CommandPaletteTrigger() {
 }
 
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
-const PAGE_IDS = ["about","certifications","resources"] as const;
+const PAGE_IDS = ["about","hybrid","certifications","resources"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
@@ -46,6 +46,12 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 
 // IDs visibles dans le desktop nav — défini au niveau module pour être accessible
 // depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
+// "hybrid" (page /hybride) est volontairement ABSENT de cette liste : l'ajouter
+// recréait un débordement du nav scrollable à 1280px (+111px) et à 1920px
+// (+137px) — pile les deux largeurs que l'audit du header avait ramenées à zéro.
+// Sur desktop, la page /hybride est atteignable via la pastille du hero, le lien
+// dans l'encart About et le footer (audit P2). Elle reste dans le menu mobile,
+// qui n'a pas de contrainte de débordement (audit P5).
 const DESKTOP_IDS_STATIC = new Set(["about", "skills", "experience", "certifications", "resources", "services", "testimonials", "projects", "blog", "contact"]);
 
 type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
@@ -94,11 +100,13 @@ export default function Navbar({
       ? "projects"
       : pathname.startsWith(`/${locale}/about`)
         ? "about"
-        : pathname.startsWith(`/${locale}/certifications`)
-          ? "certifications"
-          : pathname.startsWith(`/${locale}/resources`)
-            ? "resources"
-            : null;
+        : pathname.startsWith(`/${locale}/hybride`)
+          ? "hybrid"
+          : pathname.startsWith(`/${locale}/certifications`)
+            ? "certifications"
+            : pathname.startsWith(`/${locale}/resources`)
+              ? "resources"
+              : null;
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
@@ -369,7 +377,7 @@ useEffect(() => {
 
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "certifications", "resources", "blog", "projects"]);
+  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "blog", "projects"]);
 
   // Pour le menu mobile — suit le scroll-spy complet
   const linkClass = (id: string) =>
@@ -405,6 +413,7 @@ useEffect(() => {
 
   const hrefFor = (id: NavId): string => {
     if (id === "about") return `/${locale}/about`;
+    if (id === "hybrid") return `/${locale}/hybride`;
     if (id === "certifications") return `/${locale}/certifications`;
     if (id === "resources") return `/${locale}/resources`;
     if (isHome) return `#${id}`;
@@ -415,6 +424,7 @@ useEffect(() => {
 
   const sections: { id: NavId; label: string }[] = [
     { id: "about", label: t("nav.about") },
+    { id: "hybrid", label: t("nav.hybrid") },
     { id: "skills", label: t("nav.skills") },
     { id: "experience", label: t("nav.experience") },
     { id: "certifications", label: t("nav.certifications") },

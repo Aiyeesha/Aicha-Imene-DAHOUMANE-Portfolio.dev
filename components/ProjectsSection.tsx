@@ -116,16 +116,38 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     [includeFeatured]
   );
 
-  // Sur la page /projects complète (includeFeatured=true), afficher tous les projets par défaut,
-  // sauf si l'URL porte ?tab=… (deep-link depuis la home ou la nav — ex. /projects?tab=security) :
-  // le paramètre n'a de sens que sur cette page, "bridge"/"security" n'existant pas sur la home.
-  // Sur la home, respecter le track global (personnalisation cookie).
+  // Onglet initial : un deep-link `?tab=…` gagne toujours (ex. /projects?tab=security
+  // depuis la home ou la nav). Sinon, la page /projects s'aligne sur le track global
+  // (cookie) au lieu d'ouvrir « Tous » — c'était l'incohérence relevée à l'audit :
+  // le toggle du header ne pilotait ni cette page ni ses onglets. « Tous » reste à
+  // un clic. Sur la home, même logique (track global).
   const tabParam = includeFeatured ? searchParams.get("tab") : null;
   const initialTab: ActiveTab =
     tabParam === "security" || tabParam === "bridge" || tabParam === "salesforce" || tabParam === "itops"
       ? tabParam
-      : includeFeatured ? "all" : (track as ActiveTab);
+      : (track as ActiveTab);
   const [activeTab, setActiveTab] = useState<ActiveTab>(initialTab);
+
+  // Sync onglet ↔ track global : quand le visiteur bascule le toggle du header
+  // (contexte `track`) alors qu'il est sur /projects, l'onglet suit — mais
+  // uniquement s'il est sur un onglet de parcours (salesforce/itops/all). Un
+  // choix délibéré « Croisés » ou « Sécurité » n'est pas écrasé. Ne s'applique
+  // que sur la page complète (includeFeatured) ; la home a déjà son propre
+  // `handleTrackChange`. Suspendu quand un `?tab=` pilote l'onglet initial.
+  // Pattern « ajuster un état quand une prop change » (React docs) plutôt qu'un
+  // useEffect : réconciliation pendant le rendu via un state précédent.
+  const trackSyncSuspended = Boolean(tabParam);
+  const [prevTrack, setPrevTrack] = useState(track);
+  if (track !== prevTrack) {
+    setPrevTrack(track);
+    if (includeFeatured && !trackSyncSuspended) {
+      setActiveTab((current) =>
+        current === "bridge" || current === "security" ? current : (track as ActiveTab)
+      );
+      setActive("All");
+      setQ("");
+    }
+  }
 
   // ── Catégories disponibles pour l'onglet actif ───────────────────
   const categories = useMemo(() => {
