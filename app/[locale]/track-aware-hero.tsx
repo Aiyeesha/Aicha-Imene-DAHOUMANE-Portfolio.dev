@@ -185,12 +185,21 @@ export default function TrackAwareHero() {
             entretiens malgré un CDI sans période d'essai — la contre-preuve
             (diplôme RNCP6, Trailhead actif, certification en préparation datée)
             doit être visible dans les 30 premières secondes, pas après un clic. */}
-        <div className="mb-4">
+        <div className="mb-4 flex flex-wrap gap-2">
           <Link
             href={`/${locale}/certifications`}
             className="inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-muted hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring"
           >
             🎓 {t("hero.credentialsSummary")}
+          </Link>
+          {/* Profil hybride — point d'entrée neutre vers la page qui prouve la
+              combinaison Salesforce + infra + sécurité (audit P2). Visible quel
+              que soit le track actif : c'est justement le sujet. */}
+          <Link
+            href={`/${locale}/hybride`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 dark:border-cyan-400/20 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 px-3 py-1 text-xs text-muted hover:from-cyan-500/20 hover:to-violet-500/20 transition-colors soft-ring"
+          >
+            🔗 {t("nav.hybrid")} →
           </Link>
         </div>
 

@@ -5,8 +5,8 @@
 // pour que Google indexe correctement les trois versions linguistiques.
 //
 // Pages statiques : accueil, about, certifications, blog, tags, resources, uses,
-//                   work-with-me, colophon, changelog, legal, privacy, accessibility
-// Pages dynamiques : articles de blog (MDX) + pages projets (Supabase)
+//                   hybride, work-with-me, colophon, changelog, legal, privacy, accessibility
+// Pages dynamiques : articles de blog (MDX) + pages projets (fichiers de contenu)
 //
 // NEXT_PUBLIC_SITE_LASTMOD (optionnel) — permet de figer la date si nécessaire.
 // Si absent, la date du jour est utilisée (acceptable pour un portfolio).
@@ -89,7 +89,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // ── Galerie projets ──────────────────────────────────────────────────────
     ...biEntry(base, "/projects", { priority: 0.8, changeFrequency: "monthly" }),
 
-    // ── Travailler avec moi ──────────────────────────────────────────────────
+    // ── Positionnement & mise en relation ────────────────────────────────────
+    ...biEntry(base, "/hybride", { priority: 0.8, changeFrequency: "monthly" }),
     ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
     ...biEntry(base, "/contact", { priority: 0.8, changeFrequency: "monthly" }),
 
