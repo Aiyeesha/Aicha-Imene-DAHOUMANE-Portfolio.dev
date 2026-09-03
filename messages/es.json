@@ -37,7 +37,7 @@
     "proof1": "Seguridad ante todo",
     "proof2": "Escalable por diseño",
     "proof3": "Documentado y mantenible",
-    "availability": "Indefinido · Temporal · Freelance · Por proyecto",
+    "availability": "Indefinido · Temporal · Por proyecto",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Empieza aquí:",
     "switchToSalesforce": "Ver perfil Salesforce →",
@@ -162,7 +162,7 @@
     "acceptPolicyAria": "Acepto la política de privacidad",
     "acceptPolicyPrefix": "He leído y acepto la",
     "acceptPolicyLink": "política de privacidad",
-    "availability": "Indefinido · Temporal · Freelance · Por proyecto",
+    "availability": "Indefinido · Temporal · Por proyecto",
     "intake": {
       "title": "Contexto de la misión (opcional)",
       "subtitle": "Me ayuda a responder con el contexto adecuado desde el primer mensaje — nada de esto es vinculante.",
@@ -362,7 +362,7 @@
     "p1_salesforce": "Desarrolladora y consultora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
     "p2_salesforce": "Trabajo con Apex, Flows, modelos de datos, seguridad (permission sets, sharing) y pipelines de CI/CD (Salesforce CLI, GitHub Actions) para llevar el código a producción de forma limpia.",
     "p3_salesforce": "Mi base en sistemas y DevOps me permite abordar Salesforce con mentalidad de operaciones: observabilidad, gestión de riesgos, documentación y automatización, para que las soluciones se mantengan sólidas con el tiempo.",
-    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, con 2 años de experiencia Salesforce en producción — y en paralelo, el desarrollo de dos productos SaaS Salesforce (OrgDocs y SFRelease). El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — la certificación Salesforce Administrator está en preparación activa.",
+    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, con 2 años de experiencia Salesforce en producción. El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — la certificación Salesforce Administrator está en preparación activa.",
     "p1_itops": "IT Ops & DevOps: ayudo a los equipos a diseñar, mantener y proteger infraestructuras resilientes, con procesos operativos pragmáticos (runbooks, monitorización, remediación).",
     "p2_itops": "Implemento estándares operativos: monitorización y alertas accionables, reducción del ruido, procedimientos de escalado, documentación y automatización (scripts, jobs, playbooks).",
     "p3_itops": "Presto especial atención a la seguridad y la continuidad: copias de seguridad, hardening, gestión de accesos y prácticas de gestión del cambio para reducir incidentes.",
@@ -377,9 +377,9 @@
     "rolesValueSalesforce": "Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "rolesValueItops": "Administradora de sistemas y redes · DevOps · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "availabilityLabel": "Disponibilidad",
-    "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Abierta a puestos indefinidos, temporales, freelance y por proyecto",
+    "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Abierta a puestos indefinidos, temporales y por proyecto",
     "goalLabel": "Objetivo",
-    "goalValue": "Profundizar mi experiencia en Salesforce, completar las certificaciones 2026 y encontrar el entorno adecuado para crecer — indefinido, temporal, freelance o por proyecto.",
+    "goalValue": "Profundizar mi experiencia en Salesforce, completar las certificaciones 2026 y encontrar el entorno adecuado para crecer — indefinido, temporal o por proyecto.",
     "focusLabel": "Enfoque",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Calidad · Seguridad",
     "focusValueItOps": "Monitorización · Runbooks · Automatización · Seguridad",
@@ -444,7 +444,7 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación posible a partir del 1 de diciembre de 2026. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales, freelance y por proyecto — en Francia y a nivel internacional. No dudes en escribirme para hablar de tus necesidades."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación posible a partir del 1 de diciembre de 2026. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales y por proyecto — en Francia y a nivel internacional. No dudes en escribirme para hablar de tus necesidades."
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
@@ -484,7 +484,7 @@
     "delay": "Disponibilidad",
     "delayValue": "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026",
     "contracts": "Siguiente paso",
-    "contractValues": "Indefinido · Temporal · Freelance · Por proyecto — Francia y a nivel mundial",
+    "contractValues": "Indefinido · Temporal · Por proyecto — Francia y a nivel mundial",
     "workMode": "Modalidades de trabajo",
     "workModeValues": "100 % remoto · Híbrido · Presencial",
     "mobility": "Movilidad",

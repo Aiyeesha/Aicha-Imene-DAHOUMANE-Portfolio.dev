@@ -37,7 +37,7 @@
     "proof1": "Security-first",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
-    "availability": "Permanent · Fixed-term · Freelance · Contract",
+    "availability": "Permanent · Fixed-term · Contract",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Start here:",
     "switchToSalesforce": "View Salesforce profile →",
@@ -162,7 +162,7 @@
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
-    "availability": "Permanent · Fixed-term · Freelance · Contract",
+    "availability": "Permanent · Fixed-term · Contract",
     "intake": {
       "title": "Mission context (optional)",
       "subtitle": "Helps me reply with the right context on the first message — none of this is binding.",
@@ -362,7 +362,7 @@
     "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
-    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, with 2 years of production Salesforce experience — alongside building two Salesforce SaaS products (OrgDocs and SFRelease). The Legarant-AXG project (Heroku Connect, environment management, traceable production releases) remains the clearest proof of that Salesforce/infra crossover: not an application layer sitting on infrastructure someone else manages, but the same person on both sides. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title, Salesforce specialization (OpenClassrooms, 2025), and an active Trailhead profile (Expeditioner rank, 94 badges) — the Salesforce Administrator certification is in active preparation.",
+    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, with 2 years of production Salesforce experience. The Legarant-AXG project (Heroku Connect, environment management, traceable production releases) remains the clearest proof of that Salesforce/infra crossover: not an application layer sitting on infrastructure someone else manages, but the same person on both sides. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title, Salesforce specialization (OpenClassrooms, 2025), and an active Trailhead profile (Expeditioner rank, 94 badges) — the Salesforce Administrator certification is in active preparation.",
     "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
@@ -377,9 +377,9 @@
     "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant · Salesforce & Infrastructure Engineer",
     "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant · Salesforce & Infrastructure Engineer",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Role starting December 1, 2026 · Interviews now · Open to permanent, fixed-term, freelance & contract roles",
+    "availabilityValue": "Role starting December 1, 2026 · Interviews now · Open to permanent, fixed-term & contract roles",
     "goalLabel": "Goal",
-    "goalValue": "Deepen Salesforce expertise, complete 2026 certifications, and find the right environment to grow — permanent, fixed-term, freelance, or contract.",
+    "goalValue": "Deepen Salesforce expertise, complete 2026 certifications, and find the right environment to grow — permanent, fixed-term, or contract.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Quality · Security",
     "focusValueItOps": "Monitoring · Runbooks · Automation · Security",
@@ -444,7 +444,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a possible start date from December 1, 2026. I'm currently working as a Salesforce Developer at LD Digitales, and I'm open to permanent, fixed-term, freelance, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
+        "a": "I'm available for interviews right away, with a possible start date from December 1, 2026. I'm currently working as a Salesforce Developer at LD Digitales, and I'm open to permanent, fixed-term, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
       },
       {
         "q": "Do you have a Salesforce certification?",
@@ -484,7 +484,7 @@
     "delay": "Availability",
     "delayValue": "Interviews now · Role starting December 1, 2026",
     "contracts": "Next step",
-    "contractValues": "Permanent · Fixed-term · Freelance · Contract — France & worldwide",
+    "contractValues": "Permanent · Fixed-term · Contract — France & worldwide",
     "workMode": "Work modes",
     "workModeValues": "100 % Remote · Hybrid · On-site",
     "mobility": "Mobility",

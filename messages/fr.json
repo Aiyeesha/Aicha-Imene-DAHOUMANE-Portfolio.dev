@@ -37,7 +37,7 @@
     "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
-    "availability": "CDI · CDD · Freelance · Mission",
+    "availability": "CDI · CDD · Mission",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
@@ -162,7 +162,7 @@
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",
-    "availability": "CDI · CDD · Freelance · Mission",
+    "availability": "CDI · CDD · Mission",
     "intake": {
       "title": "Contexte de la mission (facultatif)",
       "subtitle": "M'aide à répondre avec le bon contexte dès le premier message — rien n'est engageant.",
@@ -369,9 +369,9 @@
     "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "rolesValueItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Poste à partir du 1er décembre 2026 · Entretiens dès maintenant · Ouverte aux CDI, CDD, freelance & missions",
+    "availabilityValue": "Poste à partir du 1er décembre 2026 · Entretiens dès maintenant · Ouverte aux CDI, CDD & missions",
     "goalLabel": "Objectif",
-    "goalValue": "Approfondir mon expertise Salesforce, préparer les certifications 2026 et trouver le bon contexte pour progresser — en CDI, CDD, freelance ou mission.",
+    "goalValue": "Approfondir mon expertise Salesforce, préparer les certifications 2026 et trouver le bon contexte pour progresser — en CDI, CDD ou mission.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
@@ -379,7 +379,7 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production — et en parallèle, le développement de deux SaaS Salesforce (OrgDocs et SFRelease). Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — la certification éditeur Salesforce Administrator est en préparation active.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — la certification éditeur Salesforce Administrator est en préparation active.",
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
@@ -444,7 +444,7 @@
     "items": [
       {
         "q": "Quelle est votre disponibilité ?",
-        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible à partir du 1er décembre 2026. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD, freelance et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
+        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible à partir du 1er décembre 2026. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
@@ -484,7 +484,7 @@
     "delay": "Disponibilité",
     "delayValue": "Entretiens dès maintenant · Poste à partir du 1er décembre 2026",
     "contracts": "Prochaine étape",
-    "contractValues": "CDI · CDD · Freelance · Mission — France & international",
+    "contractValues": "CDI · CDD · Mission — France & international",
     "workMode": "Modes de travail",
     "workModeValues": "100 % Remote · Hybride · Sur site",
     "mobility": "Mobilité",

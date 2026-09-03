@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Contacto — Aïcha Imène DAHOUMANE"
     : "Contact — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Contactez-moi pour une mission freelance Salesforce ou IT Ops, une opportunité CDI/CDD, ou toute question professionnelle. Réponse sous 48h."
+    ? "Contactez-moi pour une mission Salesforce ou IT Ops, une opportunité CDI/CDD, ou toute question professionnelle. Réponse sous 48h."
     : isEs
-    ? "Contáctame para una misión freelance de Salesforce o IT Ops, una oportunidad de contrato indefinido/temporal, o cualquier consulta profesional. Respondo en 48h."
-    : "Get in touch for a Salesforce or IT Ops freelance mission, a permanent/fixed-term opportunity, or any professional inquiry. I reply within 48h.";
+    ? "Contáctame para una misión de Salesforce o IT Ops, una oportunidad de contrato indefinido/temporal, o cualquier consulta profesional. Respondo en 48h."
+    : "Get in touch for a Salesforce or IT Ops mission, a permanent/fixed-term opportunity, or any professional inquiry. I reply within 48h.";
   return {
     title,
     description,
