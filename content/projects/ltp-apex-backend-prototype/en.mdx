@@ -1,0 +1,105 @@
+---
+title: "Delivery tracking CRM design (LTP)"
+heroSubtitle: "Complete architecture of a multi-carrier Salesforce delivery-tracking backend for a bridal couture house: UML data model, zone-based security model, 2.1M-account import strategy, real-time + batch integration — designed before the first line of code."
+---
+
+## Business context
+
+Le Temps des Papillons (LTP) is a French bridal couture house. Its delivery tracking ran through **3 carriers with disparate interfaces**, generating roughly **194 support calls a day** — just to check a status.
+
+For a bridal house, that status is not a routine question. A couture gown is tied to a wedding date that can't move: "we'll check and call you back" isn't an acceptable answer, and every one of those daily calls was a client anxious about a non-negotiable deadline. That urgency — multiplied across 2.1 million accounts and 3 carriers with no shared status format — is what made a **unified view a business requirement**, not a convenience.
+
+The mission: design the **complete technical architecture of the Salesforce application before any development** — UML data model, security matrix, import strategy, and carrier integration plan. Functional target: a **70% cut in inbound calls** through automation, and a 360° customer view.
+
+## Constraints and data volume
+
+| Constraint | Figure / nature | Design consequence |
+|---|---|---|
+| Target data volume | 2,123,000 accounts · 3,239,870 contacts · 234,000 opportunities | Bulk import to sequence, no manual handling possible |
+| 3 carriers, heterogeneous interfaces | 2 real-time REST APIs · 1 CSV/SFTP feed | Two distinct integration channels, imposed by the carriers — not a choice |
+| Initial import with no loss or duplicates | Parent-child dependency order across 10 objects | Sequenced load plan + a uniqueness key (External Id) |
+| Support target | −70% inbound calls | Status automation must be reliable, not "best effort" |
+
+## Architecture — two channels
+
+The two-channel split is **dictated by the carriers**, not a design preference: LTP France and Transport Luxe Europe expose a REST API; Rapid International Transport only offers a CSV drop over SFTP.
+
+```
+─ Real-time channel (LTP France, Transport Luxe Europe) ────────────
+  Carrier webhook
+     ▼  @RestResource /delivery-webhook  (DeliveryWebhook class)
+  Platform Event DeliveryEvent__e        (decouples receipt from processing)
+     ▼
+  record-triggered Flow → updates Livraison__c
+  On-demand refresh: RefreshStatusQueueable
+     · Limits.getCallouts() + auto re-enqueue when callouts are exhausted
+     · DeliveryService / TransporterCalloutService (@future(callout=true))
+  Display: deliveryTracker LWC + DeliveryController (isAccessible() before reads)
+
+─ Batch channel (Rapid International Transport) ────────────────────
+  SFTP drop every 2h
+     ▼  Talend job: tSftpInput → tMap → tSalesforceOutputBulkExec
+  Bulk API v2 · upsert on Tracking_Number__c (External Id) · 500,000 rows/h
+     ▼
+  Logged to CSV_Import_Log__c
+```
+
+Authentication via **Named Credentials (OAuth2)** on both sides, mandatory Remote Site Settings, callouts tested with `HttpCalloutMock`.
+
+## Zone-based security model
+
+Three geographic zones (France / Europe / International), but **a single "Support Agent" profile**. Isolation is not handled by multiplying profiles:
+
+- **Role hierarchy** (Manager → France / Europe / International) + **sharing rules on `Zone__c`** for zone-based data access.
+- **OWD**: `Private` on `Livraison__c`, `Public Read Only` on `Account` / `Contact` / `Opportunity` / `Transporter_Config__c`.
+- **Targeted Field-Level Security**: `Zone__c` read-only for support (the zone filter is locked, not bypassable); `CSV_Imported__c` read-only on both sides (written only by Apex); financial fields (`AnnualRevenue`, `ExpectedRevenue`) masked from support.
+- **Validation Rule** blocking any "Delivered" status without a `Tracking_Number__c` — tracking integrity is guaranteed at the source.
+- **Point Permission Sets** (`ReportingAccess`, `ImportControl`, `API_Access_Extension`) to extend access without creating a profile.
+
+## Import strategy
+
+- **Load order** respecting dependencies: `Product2` → `Pricebook2` → `PricebookEntry` → `Account` → `Contact` → `AccountContactRelation` → `Opportunity` → `OpportunityLineItem` → `Livraison__c` → `Transporter_Config__c`.
+- **Differentiated tools**: Data Loader CLI for the initial import (50k-row batches); Talend + Bulk API v2 for carrier flows (500,000 rows/h, 10,000 records/request).
+- **Defined test scenarios**: 500k-line CSV import on the Talend sandbox (< 15 min), simulated API timeout via `HttpCalloutMock`, duplicate Tracking Numbers auto-merged via External Id.
+- **Target coverage**: ≥ 90% on integration Apex classes, 100% on error handlers.
+- **Governance**: an "Import Monitor" dashboard (imports/day, rejection rate) + Flow/Apex email alerts on critical failure.
+
+## Architecture decisions (ADR)
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| **Two integration channels** (real-time REST + batch SFTP) | A single channel for all 3 carriers | Rapid International Transport exposes no REST API — a carrier constraint, not a preference |
+| **Platform Event** between the webhook and processing | Synchronous processing in the REST endpoint | Decouples receipt (fast, always 200) from processing (Flow, updates); absorbs spikes |
+| **Isolation by roles + sharing rules**, a single profile | One profile per zone | One profile to maintain; sharing is enough as long as zones only differ in data **visibility** |
+| **Upsert on External Id** (`Tracking_Number__c`) | Insert + after-the-fact dedup | Idempotency: replaying the same file creates no duplicate |
+| **Prototype and specification**, no go-live | Develop straight away | The expected deliverable was a justified architecture — coding before the security model was settled would have been premature |
+
+## Assumed limitations
+
+- **No reconciliation between the two channels.** If a batch import lands after a real-time webhook already updated the same delivery, the batch write can overwrite a fresher status. Acceptable at a 2h SFTP cadence for this carrier's volume — but it's **the first gap to close** before increasing batch frequency.
+- **The single profile** relies entirely on the role hierarchy and sharing. Any future zone needing a genuinely different permission set (not just different visibility) would require restructuring the role hierarchy.
+- **Architecture validated on its design merits, never load-tested** against the target 2.1M accounts. This is a specification and a prototype — not a system proven at production scale.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| Target production data volume | 2.1M accounts |
+| Carriers integrated | 3 (2 real-time REST APIs + 1 batch CSV/Talend) |
+| Custom objects designed (UML model) | 5 |
+| RNCP diploma evaluation | 4/4 competencies validated |
+
+## Deliverables
+
+- [Technical specifications (PDF)](/docs/projects/ltp-apex-backend-prototype/specifications.pdf)
+- [UML data model diagram (PDF)](/docs/projects/ltp-apex-backend-prototype/uml-data-model.pdf)
+- [Access rights & sharing (PDF)](/docs/projects/ltp-apex-backend-prototype/access-rights.pdf)
+- [Import strategy (PDF)](/docs/projects/ltp-apex-backend-prototype/import-strategy.pdf)
+
+## What this project demonstrates
+
+**Architecture work, not development**: designing the data model, security and integration *before* writing code, and being able to defend every choice. A security model that **scales through the role hierarchy, not through profile proliferation**. And clear honesty about the line between what is *designed* and what is *proven* — a credible architect names that line rather than hiding it.
+
+The context itself is representative of the **luxury sector**: traceability where a missed date is not an inconvenience but a client incident, and where tracking can't be "roughly right".
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): imposed context, dataset and constraints, deliverable defended before a jury. It is expanded here with the architecture / security / governance reading expected in a professional context — beyond the strict scope of the exercise.
