@@ -1,0 +1,94 @@
+---
+title: "Entrega de app Lightning y backlog (Avenir Télécom)"
+heroSubtitle: "Estrategia de implementación de una app Salesforce Lightning de campo entregada por un equipo de 3 personas: backlog de producto de 20 user stories estimadas, cuaderno de pruebas + catálogo Apex, y luego una vuelta de piloto de 3 meses → backlog Kanban de evoluciones."
+---
+
+## Contexto
+
+Tras una auditoría interna, los equipos comerciales de la zona Sur de Avenir Télécom necesitaban una aplicación Salesforce Lightning mejor alineada con su trabajo diario (leads, cuentas, oportunidades, presupuestos).
+
+La misión no era programar la aplicación, sino **definir y dotar de herramientas su entrega**: una estrategia de implementación para un pequeño equipo de 3 desarrolladores Salesforce, un backlog de producto estimado, un cuaderno de pruebas, un catálogo de buenas prácticas — y, tras un **piloto de 3 meses en campo**, consolidar los comentarios en un backlog de evoluciones priorizado.
+
+El equipo: Romain (senior — Apex e integraciones API), Guillaume (intermedio — automatizaciones y workflows), Hélène (júnior — UI/UX, pruebas, documentación).
+
+## El backlog de producto (Scrum)
+
+20 user stories redactadas, estimadas y priorizadas, con criterios de aceptación y prerrequisitos. Las más estructurantes:
+
+| User story | Lo que impone | Esfuerzo · dev |
+|---|---|---|
+| **US1** — Gestión de leads | Creación automática (formulario web), asignación por reglas (sector, potencial) + notificación inmediata, conversión sin pérdida de datos | 4 d · Romain |
+| **US2 / US11** — Verificación del SIREN | Llamada Webservice **en tiempo real al crear la cuenta**; bloqueo + mensaje de error explícito si hay inconsistencia | 4+2 d · Romain |
+| **US4 / US9** — Presupuestos DeviQo | Integración en tiempo real con la API de DeviQo, presupuestos mostrados en **< 2 s, sin almacenamiento local**, actualización automática | 4+2 d · Guillaume |
+| **US14 / US15** — PDF + email | Generación de un PDF de síntesis (combinando Oportunidad/Cuenta/Contacto), email automático al contacto principal, envío archivado | 2+2 d · Hélène |
+| **US13** — Purga RGPD | Job planificado que elimina cuentas/contactos inactivos > 3 años, **con registro de auditoría** | 3 d · Guillaume |
+| **US18 / US20** — Refuerzo de la Dev Org | Configuración de perfiles/derechos + pruebas Apex `run as user` que validan que cada perfil solo accede a los datos autorizados | 2+1 d · Romain/Guillaume |
+| **US19** — Datafactory | Automatización de la importación y sincronización continua desde fuentes externas | 2 d · Guillaume |
+
+La estimación no es decorativa: cada story se estima **y se asigna al nivel de seniority adecuado** — las integraciones API y la seguridad van al senior, las automatizaciones al intermedio, la UI y las pruebas al júnior. Eso es lo que hace que el plan de sprints sea sostenible en lugar de optimista.
+
+## El cuaderno de pruebas y el catálogo Apex
+
+El cuaderno de pruebas (20 clases: `TestLeadsCRUD`, `TestComptesImport`, `TestOpportunites`, `TestRunAsUser`, `TestSuppressionRGPD`…) va acompañado de un **catálogo de buenas prácticas Apex** — un estándar de equipo, no una checklist:
+
+- **Bulkificación sistemática**: ningún SOQL ni DML dentro de un bucle, colecciones en todas partes (`List` / `Set` / `Map`).
+- **Un trigger por objeto**, lógica delegada a handlers — patrón *One Trigger Framework* + *Service Layer*.
+- **Configuración externalizada** a Custom Settings / Custom Metadata en lugar de hardcodeada.
+- **Asíncrono adaptado al caso**: Batch Apex (grandes volúmenes), Queueable (encadenado), Future (llamadas externas), Scheduled (periódico).
+- **Seguridad**: `with sharing` sistemático, verificaciones CRUD/FLS en los métodos de acceso a datos.
+- **Cobertura mínima exigida: ≥ 75 %.**
+
+## La seguridad, desde el backlog
+
+La seguridad no es una fase al final del proyecto — está **en las user stories**:
+
+- **US13** — la purga RGPD es una story en sí misma, con registro de auditoría, no una limpieza manual improvisada.
+- **US18 / US20** — las pruebas Apex `run as user` **validan realmente el aislamiento de los perfiles**: cada perfil se pone a prueba para demostrar que solo ve sus propios datos. Es un test, no una suposición.
+- `with sharing` y verificaciones CRUD/FLS escritos en el catálogo, así que aplicados por construcción.
+
+## Del piloto al backlog de evoluciones
+
+Tras 3 meses de despliegue en los equipos de campo de la zona Sur, los comentarios se consolidaron en un **backlog Kanban priorizado**, con límites WIP y documentación en Notion que enlaza dinámicamente backlog de producto ↔ cuaderno de pruebas ↔ backlog de evoluciones:
+
+- **3 evoluciones** — E1 interfaz bidireccional con la herramienta de gestión de solicitudes CaseIn · E2 backup diario automático a un SFTP dedicado · E3 refuerzo de la configuración de la Dev Org.
+- **3 correcciones** — C1 sincronización de cuentas vía Webservice de SIREN · C2 formato de nomenclatura estandarizado para las oportunidades · C3 notificación inmediata al comercial al asignar un lead.
+- **3 bugs de producción registrados** — B001 conversión lead → oportunidad fallida (prioridad alta) · B002 datos de cuentas importadas incorrectos · B003 notificaciones de asignación no enviadas (corregido).
+
+La vuelta está cerrada: un bug reportado desde el campo (B003) se enlaza con la corrección C3, que a su vez se enlaza con la story US1. Un revisor puede seguir el hilo.
+
+## Decisiones y limitaciones asumidas
+
+| Decisión | Alternativa descartada | Por qué |
+|---|---|---|
+| **Estimación por nivel de seniority** | Estimación «por story» sin asignación | Un plan de sprints solo es realista si el esfuerzo lo lleva el perfil adecuado |
+| **Catálogo Apex documentado** de antemano | Buenas prácticas «que todos conocen» | Un estándar escrito se revisa y se hace cumplir; uno implícito se desvía |
+| **Presupuestos DeviQo sin almacenamiento local** | Caché local de presupuestos | Un presupuesto mostrado debe ser el presupuesto actual — no una copia potencialmente obsoleta |
+| **Piloto de 3 meses antes del despliegue** | Generalización directa tras el desarrollo | Los bugs B001–B003 solo aparecen en uso real; el piloto es la red de seguridad |
+
+Limitaciones asumidas:
+
+- **El backlog de producto es una especificación estimada, no un entregable ejecutado de extremo a extremo** — el valor está en la calidad del enfoque y del plan de pruebas, validados por un piloto real, no en un despliegue en todo Avenir Télécom.
+- **B002 (datos de cuentas importadas incorrectos) está registrado pero no resuelto** dentro del alcance: identificado, priorizado, dejado para el siguiente sprint — señalado en lugar de ocultado.
+
+## Resultados
+
+| Indicador | Valor |
+|---|---|
+| User stories estimadas y priorizadas | 20 |
+| Clases de test (cobertura exigida ≥ 75 %) | 20 |
+| Duración del piloto en campo (zona Sur) | 3 meses |
+| Evaluación del título RNCP | 4/4 competencias validadas |
+
+## Entregables
+
+- [Estrategia de implementación y backlog de producto (PDF)](/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf)
+- [Backlog inicial (XLSX)](/docs/projects/avenir-telecom-lightning-app/backlog-initial.xlsx)
+- [Cuaderno de pruebas (XLSX)](/docs/projects/avenir-telecom-lightning-app/test-workbook.xlsx)
+- [Backlog de evoluciones Kanban (PDF)](/docs/projects/avenir-telecom-lightning-app/backlog-evolutions-kanban.pdf)
+- [Informe de auditoría (PDF)](/docs/projects/avenir-telecom-lightning-app/audit-report.pdf)
+
+## Lo que demuestra este proyecto
+
+No profundidad de código, sino **disciplina de entrega**: saber enfocar un alcance, estimarlo y asignarlo al nivel adecuado, escribir un plan de pruebas que se convierte en un estándar de equipo, y **cerrar la vuelta piloto → evoluciones con trazabilidad completa**. Es la dimensión que más a menudo falta en un portfolio júnior — y aquí se ve, con los artefactos que lo respaldan.
+
+> Proyecto integrador del título RNCP nivel 6 "Développeur Concepteur Logiciel" (OpenClassrooms): contexto, equipo y restricciones impuestos, entregable defendido ante un jurado. Se amplía aquí con la lectura de estrategia de equipo / pruebas / seguridad por diseño / vuelta de feedback esperada en un contexto profesional — más allá del alcance estricto del ejercicio.
