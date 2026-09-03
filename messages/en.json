@@ -338,7 +338,28 @@
     "maturityBody": "This portfolio is itself run like a production product, not just presented as one: /status exposes the real state of its services (database, cache, contact form) with live-measured latency and uptime — not a static page. /changelog documents every incident actually handled, including a client data leak that was found and fixed, and several security alerts (CVEs) remediated with the technical reasoning behind the fix, not a blind patch.",
     "maturityBodySalesforce": "The same discipline carries over to my Salesforce delivery work: a CI/CD pipeline with automated Apex validations and traceable sandbox-to-production deployments (see the Salesforce ⇄ Infra bridge project above). This portfolio is that discipline applied at scale: /status exposes the real health of its services live, and /changelog documents every incident actually handled — including a client data leak that was found and fixed — with the technical reasoning behind the fix, not a blind patch.",
     "maturityStatusCta": "See live status",
-    "maturityChangelogCta": "See the changelog"
+    "maturityChangelogCta": "See the changelog",
+    "sectorsTitle": "Sectors I've already delivered in",
+    "sectorsBody": "The case studies below aren't abstract exercises: each is anchored in a sector with its own compliance, traceability and error-tolerance constraints.",
+    "sectors": [
+      {
+        "label": "Luxury & Fashion",
+        "note": "Bridal couture house (LTP) and multinational clothing distributor (FASHA) — traceability where a missed date is a client incident, not an inconvenience."
+      },
+      {
+        "label": "Insurance & Finance",
+        "note": "Insurer M&A (Legarant-AXG) — reconciling two customer books where a duplicate is an orphan file and a compliance risk."
+      },
+      {
+        "label": "Telecom",
+        "note": "Lightning app for sales teams (Avenir Telecom) — Quick Actions, Aura, sharing model."
+      },
+      {
+        "label": "Training & EdTech",
+        "note": "Learner-tracking data model rework (Digit Learning) — objects, automation, bulk imports."
+      }
+    ],
+    "sectorsCta": "See the case studies"
   },
   "footer": {
     "builtWith": "Built with Next.js",

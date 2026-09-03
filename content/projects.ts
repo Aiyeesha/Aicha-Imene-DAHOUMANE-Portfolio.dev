@@ -1561,7 +1561,8 @@ export const projects: Project[] = [
     "track": "salesforce",
     "categories": [
       "Salesforce",
-      "Performance"
+      "Performance",
+      "Luxury & Fashion"
     ],
     "tags": [
       "Apex",
