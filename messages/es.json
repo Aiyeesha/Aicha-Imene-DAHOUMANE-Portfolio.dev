@@ -309,9 +309,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce & Consultora IT | Remoto · Europa",
-    "description": "Desarrolladora Salesforce & Consultora IT (Marsella, remoto) — Apex, LWC, CI/CD. 50+ artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial.",
+    "description": "Desarrolladora Salesforce & Consultora IT (Île-de-France, remoto) — Apex, LWC, CI/CD. 50+ artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Remoto · Europa",
-    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Marsella, remoto) — Infraestructura, seguridad, automatización, CI/CD. 50+ artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial."
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France, remoto) — Infraestructura, seguridad, automatización, CI/CD. 50+ artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -392,7 +392,7 @@
     "p4_itops": "Desarrolladora Salesforce a tiempo completo en LD Digitales — mis habilidades de IT Ops y DevOps, forjadas en entornos de producción reales, siguen plenamente disponibles para proyectos específicos. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) es la prueba más directa de que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
-    "basedInValue": "Marsella / Provenza-Alpes-Costa Azul — 100 % remoto · Híbrido · Presencial — Movilidad y traslado posibles (Francia e internacional)",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — prioridad operativa París / Île-de-France · Híbrido · Presencial · Remoto — Movilidad y traslado posibles",
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1+), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
@@ -451,7 +451,7 @@
   "legal": {
     "title": "Aviso legal",
     "editorTitle": "Editora",
-    "editorBody": "Este sitio web está publicado por Aïcha Imène Dahoumane, desarrolladora y consultora Salesforce, como portafolio personal. Directora de publicación: Aïcha Imène Dahoumane. Dirección: Marsella, Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
+    "editorBody": "Este sitio web está publicado por Aïcha Imène Dahoumane, desarrolladora y consultora Salesforce, como portafolio personal. Directora de publicación: Aïcha Imène Dahoumane. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
     "hostingTitle": "Alojamiento",
     "hostingBody": "El alojamiento es proporcionado por Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, Estados Unidos. Sitio web: vercel.com.",
     "ipTitle": "Propiedad intelectual",
@@ -475,7 +475,7 @@
       },
       {
         "q": "¿Trabajas en remoto?",
-        "a": "Sí — en remoto total, híbrido o presencial, según tus necesidades. Estoy ubicada en Marsella / Provenza-Alpes-Costa Azul y abierta a trasladarme dentro de Francia o al extranjero, incluyendo cualquier entorno de habla inglesa. Las videollamadas, la comunicación asíncrona y los traspasos documentados forman parte de mi forma habitual de trabajar."
+        "a": "Sí — en remoto total, híbrido o presencial, según tus necesidades. Estoy ubicada en Val-d'Oise (95), Île-de-France, con prioridad operativa en París / Île-de-France, y abierta a trasladarme dentro de Francia o al extranjero, incluyendo cualquier entorno de habla inglesa. Las videollamadas, la comunicación asíncrona y los traspasos documentados forman parte de mi forma habitual de trabajar."
       },
       {
         "q": "¿Cuáles son tus plazos habituales?",
@@ -518,7 +518,7 @@
     "rolesValuesSalesforce": "Administradora Salesforce · Desarrolladora Salesforce · Consultora Salesforce · Ingeniera Salesforce & Infraestructura",
     "rolesValuesItops": "Administradora de sistemas y redes · DevOps · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "location": "Ubicación",
-    "locationValues": "Marsella / Provenza-Alpes-Costa Azul · Abierta a traslado — Francia e internacional (BE, LU, DE, IT, ES, UK, IE, MT + países de habla inglesa)",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad operativa París / Île-de-France · Abierta a traslado — Francia e internacional (BE, LU, DE, IT, ES, UK, IE, MT + países de habla inglesa)",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
