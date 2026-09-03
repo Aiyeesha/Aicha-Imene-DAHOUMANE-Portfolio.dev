@@ -1,0 +1,85 @@
+---
+title: "Optimisation du backend Apex (FASHA)"
+heroSubtitle: "Reprise d'un backend Apex en production chez FASHA : deux bugs réels diagnostiqués jusqu'à leur cause racine (trigger qui casse à 100 commandes, calcul silencieusement faux à l'import en masse), refactoring complet en pattern handler bulk-safe, batch hebdomadaire passé en asynchrone, couverture > 85 %."
+---
+
+## Le contexte
+
+FASHA, distributeur de vêtements multinational (350 collaborateurs, Europe / États-Unis / APAC), gérait comptes, contacts et commandes sur Salesforce. L'application **ralentissait et accumulait les bugs**.
+
+Mission confiée via le cabinet SFQUAL : **diagnostiquer, corriger et réorganiser un backend Apex existant**. Pas une page blanche — du code en production, avec de vrais commerciaux impactés à chaque déploiement.
+
+## Les deux bugs — et leur cause racine
+
+C'est le cœur du projet : ne pas seulement corriger, mais **comprendre pourquoi**.
+
+### Bug 1 — le trigger casse à partir de 100 commandes
+
+Le trigger `UpdateAccountCA` levait une erreur dès qu'un commercial modifiait une commande sur un compte ayant **100 commandes ou plus**.
+
+Le chiffre 100 n'est pas un hasard : c'est la **limite de gouvernance Salesforce de 100 requêtes SOQL par transaction**. Le trigger émettait une requête *par enregistrement* au lieu d'une requête groupée — il fonctionnait tant qu'un compte restait petit, puis franchissait la limite d'un coup. Non bulk-safe par nature.
+
+### Bug 2 — le calcul est silencieusement faux à l'import en masse
+
+Le champ `NetAmount__c` (= `TotalAmount − ShipmentCost`) se recalculait bien quand un commercial ajoutait une ligne **depuis l'interface**. Mais lors d'un import Data Loader, **seule la première commande du lot était mise à jour**.
+
+Cause racine : la logique traitait implicitement **un seul enregistrement** (pattern `Trigger.new[0]`), pas une collection. Depuis l'UI, `Trigger.new` contient 1 ligne — le bug est invisible. Data Loader envoie des lots de 200 — le bug passe silencieusement, sans erreur.
+
+### Et le reste
+
+- Le **batch hebdomadaire de recalcul du CA** (après mise à jour des prix produits) tournait plusieurs heures en synchrone — un problème d'architecture, pas de réglage.
+- Code désorganisé : pas de convention de nommage, classes trop longues, logique métier dans les triggers.
+- Tests présents mais **peu fiables** : ils ne validaient pas réellement les résultats.
+
+## Le refactoring
+
+| Avant | Après |
+|---|---|
+| Logique dans `OrderTrigger` | `OrderTriggerHandler` + `TriggerHelper` — un trigger par objet, zéro logique dedans |
+| `NetAmount` sur un seul enregistrement | Recalcul par **collections** — identique via l'UI ou un import de 200 |
+| MAJ du CA synchrone, bloque la sauvegarde du commercial | `AccountService` en **`@future`** — la transaction utilisateur n'attend plus |
+| Batch CA synchrone, plusieurs heures | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (dimanche 22 h) |
+| Tests non fiables | `TestDataFactory` + `@testSetup`, couverture **> 85 %**, cas nominal / limite / erreur par classe |
+
+En plus des corrections : `MyTeamOrdersController` — un nouveau contrôleur affichant les commandes de toute une équipe (même `UserRoleId`), fonctionnalité demandée par le commanditaire.
+
+## Bulk-safe par construction
+
+Le point important : le refactoring ne corrige pas deux bugs, il rend **cette classe de bugs impossible**.
+
+- **0 SOQL ni DML dans une boucle** — tout en `Set` / `Map` et agrégats. Le bug 1 ne peut plus se reproduire, quel que soit le nombre de commandes.
+- **Traitement par collection systématique** — le bug 2 ne peut plus se reproduire, l'UI et le bulk empruntent le même chemin.
+- **Asynchrone là où le travail est lourd** — `@future` pour ne pas bloquer l'utilisateur, `Batchable` + `Schedulable` pour la masse planifiée.
+- **Tests qui valident les résultats**, dont une régression dédiée pour chacun des deux bugs d'origine (import de 200+ lignes, compte à 100+ commandes).
+
+## Décisions d'architecture (ADR)
+
+| Décision | Alternative écartée | Pourquoi |
+|---|---|---|
+| **`@future`** pour la MAJ ponctuelle du CA | Traitement synchrone | Ne pas faire attendre le commercial sur sa sauvegarde ; le recalcul n'a pas besoin d'être immédiat |
+| **`Batchable` + `Schedulable`** pour le recalcul global | Garder le batch synchrone, l'optimiser | Un traitement de plusieurs heures est un problème de *modèle d'exécution*, pas de performance de requête |
+| **Handler pattern** | Corriger la logique en place dans le trigger | Rendre le code testable et bulk-safe *par construction*, pas rustine par rustine |
+| **Recalcul hebdomadaire complet** | Recalcul incrémental sur les seuls comptes modifiés | Suffisant au volume de FASHA ; l'incrémental serait la prochaine étape à plus grande échelle |
+
+## Limites assumées
+
+- **Couverture > 85 %, pas 100 %** — le seuil Salesforce (75 %) est largement dépassé, mais quelques branches d'erreur rares restent non couvertes.
+- **`@future` a ses propres limites** (50 appels / transaction, pas de chaînage) — sans impact au volume actuel, mais un passage à Queueable serait à envisager si la charge augmente.
+- **Recalcul global en force brute** — brut mais fiable ; une logique incrémentale deviendrait nécessaire bien au-delà du volume actuel.
+- **Refactoring cadré sur la zone signalée**, pas un audit complet de toute l'org.
+
+## Résultats
+
+| Indicateur | Valeur |
+|---|---|
+| Bugs réels corrigés (cause racine documentée) | 2 (trigger non bulk-safe · calcul faux à l'import) |
+| SOQL / DML dans des boucles, après refactoring | 0 |
+| Couverture de tests | > 85 % (départ : tests non fiables) |
+| Batch hebdomadaire | plusieurs heures synchrone → asynchrone planifié |
+| Évaluation du titre RNCP | 2/2 compétences validées — mention Félicitations, corrections complètes et bien justifiées |
+
+## Ce que ce projet démontre
+
+La compétence quotidienne d'un développeur Salesforce confirmé : **reprendre un backend Apex legacy et le rendre production-grade**. Un diagnostic qui remonte à la cause racine (savoir *pourquoi* 100, pas juste « ça plante »), la compréhension du contexte trigger vs import en masse, un traitement de plusieurs heures passé en asynchrone, et un refactoring qui **empêche la classe de bugs de revenir**. C'est la réponse la plus directe à « elle a l'air d'une sortie d'école ».
+
+> Projet fil rouge du titre RNCP niveau 6 « Développeur Concepteur Logiciel » (OpenClassrooms) : code existant, bugs et contraintes imposés, livrable soutenu devant un jury. Il est approfondi ici avec la lecture diagnostic de cause racine / limites de gouvernance / modèle d'exécution / non-régression attendue en contexte professionnel — au-delà du périmètre strict de l'exercice.
