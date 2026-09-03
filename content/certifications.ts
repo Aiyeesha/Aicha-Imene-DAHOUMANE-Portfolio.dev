@@ -27,7 +27,7 @@ export const certifications: Certification[] = [
     issuer: 'GRETA du Val d\'Oise',
     badgeUrl: '/certifications/systems-networks-badge.png',
     earnedDate: 'Oct 2022 – Jun 2023',
-    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Practical internship at MIDRANGE GROUP: Windows Autopilot deployment (200+ workstations), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, PfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
+    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Practical internship at MIDRANGE GROUP: Windows Autopilot deployment (264 workstations), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, PfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
     skills: ['Windows Server 2022', 'Active Directory', 'DNS', 'DHCP', 'WDS', 'GPO', 'PXE Deployment', 'VMware Workstation 17', 'PfSense', 'Squid Proxy', 'Acronis Cyber Protect', 'Datto RMM', 'Windows Autopilot', 'Sysprep', 'Blancco Secure Erase', 'Splashtop', 'Autotask', 'Webroot']
   },
   {
