@@ -84,7 +84,7 @@
 | # | Slug suggéré | Titre | Tags |
 |---|-------------|-------|------|
 | 11 | `salesforce-trailhead-path-developer` | My Salesforce Developer certification path (timeline + tips) | Salesforce, Career |
-| 12 | `freelance-salesforce-consultant-setup` | Setting up as a freelance Salesforce consultant in France | Salesforce, Career, Freelance |
+| 12 | `salesforce-infra-hybrid-profile` | Building a hybrid Salesforce + infrastructure profile (why and how) | Salesforce, Career, DevOps |
 | 13 | `git-workflow-salesforce-projects` | Git Workflow for Salesforce Projects (branching strategy) | Salesforce, Git, DevOps |
 
 ---
@@ -118,7 +118,7 @@ tags: ["Tag principal", "Tag secondaire"]
 **IT Ops** : `IT Ops`, `Linux`, `Windows`, `Docker`, `Bash`, `PowerShell`,
 `Network`, `Security`, `Monitoring`, `ITSM`, `RMM`, `Backup`, `GitHub Actions`
 
-**Transversal** : `Career`, `Freelance`, `Git`, `Next.js`, `i18n`
+**Transversal** : `Career`, `Git`, `Next.js`, `i18n`
 
 > **Règle** : le premier tag doit toujours être `Salesforce` ou `IT Ops`
 > pour que la détection de catégorie (`detectTrack()`) fonctionne correctement.

@@ -89,7 +89,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // ── Galerie projets ──────────────────────────────────────────────────────
     ...biEntry(base, "/projects", { priority: 0.8, changeFrequency: "monthly" }),
 
-    // ── Freelance ─────────────────────────────────────────────────────────────
+    // ── Travailler avec moi ──────────────────────────────────────────────────
     ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
     ...biEntry(base, "/contact", { priority: 0.8, changeFrequency: "monthly" }),
 

@@ -126,7 +126,7 @@ function buildJsonLd(locale: string) {
         name: personName,
         url: siteUrl,
         jobTitle: headline,
-        description: "Freelance Salesforce Developer and IT Consultant available for remote missions across Belgium, UK, Ireland, Luxembourg, Germany, Malta, Italy, Spain, Tunisia, Algeria and English-speaking markets worldwide.",
+        description: "Salesforce Developer and IT Consultant available for remote missions across Belgium, UK, Ireland, Luxembourg, Germany, Malta, Italy, Spain, Tunisia, Algeria and English-speaking markets worldwide.",
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
