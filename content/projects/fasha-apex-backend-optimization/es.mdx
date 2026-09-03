@@ -1,0 +1,85 @@
+---
+title: "Optimización de un backend Apex (FASHA)"
+heroSubtitle: "Hacerse cargo de un backend Apex en producción en FASHA: dos errores reales diagnosticados hasta su causa raíz (un trigger que se rompe con 100 pedidos, un cálculo que falla en silencio en la importación masiva), refactorización completa a un patrón handler bulk-safe, el batch semanal pasado a asíncrono, cobertura >85%."
+---
+
+## Contexto
+
+FASHA, distribuidora multinacional de ropa (350 empleados, Europa / EE. UU. / APAC), gestionaba cuentas, contactos y pedidos en Salesforce. La aplicación **se ralentizaba y acumulaba errores**.
+
+Misión encargada a través de la consultora SFQUAL: **diagnosticar, corregir y reorganizar un backend Apex existente**. No un proyecto desde cero — código en producción, con comerciales reales afectados en cada despliegue.
+
+## Los dos errores — y su causa raíz
+
+Es el núcleo del proyecto: no solo corregir, sino **entender por qué**.
+
+### Error 1 — el trigger se rompe a partir de 100 pedidos
+
+El trigger `UpdateAccountCA` lanzaba un error cada vez que un comercial actualizaba un pedido en una cuenta que tenía **100 pedidos o más**.
+
+El número 100 no es una casualidad: es el **límite de gobernanza de Salesforce de 100 consultas SOQL por transacción**. El trigger lanzaba una consulta *por registro* en lugar de una consulta agrupada — funcionaba mientras la cuenta seguía siendo pequeña, y luego cruzaba el límite de golpe. No bulk-safe por naturaleza.
+
+### Error 2 — el cálculo es silenciosamente incorrecto en la importación masiva
+
+El campo `NetAmount__c` (= `TotalAmount − ShipmentCost`) se recalculaba bien cuando un comercial añadía una línea **desde la interfaz**. Pero en una importación con Data Loader, **solo se actualizaba el primer pedido del lote**.
+
+Causa raíz: la lógica procesaba implícitamente **un solo registro** (un patrón `Trigger.new[0]`), no una colección. Desde la UI, `Trigger.new` contiene 1 fila — el error es invisible. Data Loader envía lotes de 200 — el error pasa en silencio, sin error.
+
+### Y lo demás
+
+- El **batch semanal de recálculo de la facturación** (tras la actualización de precios de productos) tardaba varias horas de forma síncrona — un problema de arquitectura, no de ajuste.
+- Código desorganizado: sin convenciones de nomenclatura, clases demasiado largas, lógica de negocio en los triggers.
+- Existían tests pero eran **poco fiables**: no validaban realmente los resultados.
+
+## La refactorización
+
+| Antes | Después |
+|---|---|
+| Lógica en `OrderTrigger` | `OrderTriggerHandler` + `TriggerHelper` — un trigger por objeto, cero lógica dentro |
+| `NetAmount` sobre un solo registro | Recálculo por **colecciones** — idéntico vía la UI o una importación de 200 |
+| Actualización de facturación síncrona, bloquea el guardado del comercial | `AccountService` vía **`@future`** — la transacción del usuario ya no espera |
+| Batch de facturación síncrono, varias horas | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (domingo 22h) |
+| Tests poco fiables | `TestDataFactory` + `@testSetup`, cobertura **>85%**, casos nominal / límite / error por clase |
+
+Además de las correcciones: `MyTeamOrdersController` — un nuevo controlador que muestra los pedidos de todo un equipo (mismo `UserRoleId`), una funcionalidad solicitada por el cliente.
+
+## Bulk-safe por construcción
+
+El punto importante: la refactorización no corrige dos errores, hace que **esta clase de errores sea imposible**.
+
+- **0 SOQL ni DML dentro de un bucle** — todo mediante `Set` / `Map` y agregados. El error 1 no puede repetirse, sea cual sea el número de pedidos.
+- **Procesamiento por colección sistemático** — el error 2 no puede repetirse; la UI y el bulk siguen el mismo camino.
+- **Asíncrono donde el trabajo es pesado** — `@future` para no bloquear al usuario, `Batchable` + `Schedulable` para el bulk programado.
+- **Tests que validan los resultados**, incluyendo una regresión dedicada para cada uno de los dos errores originales (importación de 200+ filas, cuenta con 100+ pedidos).
+
+## Decisiones de arquitectura (ADR)
+
+| Decisión | Alternativa descartada | Por qué |
+|---|---|---|
+| **`@future`** para la actualización puntual de la facturación | Procesamiento síncrono | No hacer esperar al comercial en su guardado; el recálculo no necesita ser inmediato |
+| **`Batchable` + `Schedulable`** para el recálculo global | Mantener el batch síncrono y optimizarlo | Un proceso de varias horas es un problema de *modelo de ejecución*, no de rendimiento de consulta |
+| **Patrón Handler** | Corregir la lógica en el propio trigger | Hacer el código testeable y bulk-safe *por construcción*, no parche a parche |
+| **Recálculo semanal completo** | Recálculo incremental solo en las cuentas modificadas | Suficiente al volumen de FASHA; el incremental sería el siguiente paso a mucha mayor escala |
+
+## Limitaciones asumidas
+
+- **Cobertura >85%, no 100%** — muy por encima del umbral de Salesforce (75%), pero algunas ramas de error poco frecuentes siguen sin cubrir.
+- **`@future` tiene sus propios límites** (50 llamadas / transacción, sin encadenamiento) — sin impacto al volumen actual, pero un cambio a Queueable merecería considerarse si la carga crece.
+- **Recálculo global por fuerza bruta** — tosco pero fiable; una lógica incremental sería necesaria mucho más allá del volumen actual.
+- **Refactorización acotada a la zona señalada**, no una auditoría completa de toda la org.
+
+## Resultados
+
+| Indicador | Valor |
+|---|---|
+| Errores reales corregidos (causa raíz documentada) | 2 (trigger no bulk-safe · cálculo incorrecto en importación) |
+| SOQL / DML en bucles, tras la refactorización | 0 |
+| Cobertura de tests | >85% (inicio: tests poco fiables) |
+| Batch semanal | varias horas síncrono → asíncrono programado |
+| Evaluación del título RNCP | 2/2 competencias validadas — con distinción, correcciones completas y bien justificadas |
+
+## Lo que demuestra este proyecto
+
+La competencia diaria de un desarrollador Salesforce intermedio/senior: **hacerse cargo de un backend Apex heredado y llevarlo a nivel de producción**. Un diagnóstico que llega a la causa raíz (saber *por qué* 100, no solo «se cae»), la comprensión del contexto trigger vs importación masiva, un proceso de varias horas pasado a asíncrono, y una refactorización que **impide que la clase de errores vuelva**. Es la respuesta más directa a «parece recién salida de la escuela».
+
+> Proyecto integrador del título RNCP nivel 6 "Développeur Concepteur Logiciel" (OpenClassrooms): código existente, errores y restricciones impuestos, entregable defendido ante un jurado. Se amplía aquí con la lectura de diagnóstico de causa raíz / límites de gobernanza / modelo de ejecución / no regresión esperada en un contexto profesional — más allá del alcance estricto del ejercicio.
