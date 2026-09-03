@@ -1,0 +1,94 @@
+---
+title: "Mise à jour de l'application Salesforce (Digit Learning)"
+heroSubtitle: "Audit qualité d'une org Salesforce de 2 ans puis modernisation : objet de jonction pour lever la limite « un étudiant = une formation », automatisation de l'inscription et de l'affectation des mentors, 3 rapports de pilotage, migration des données — avec analyse d'impact chiffrée."
+---
+
+## Le contexte
+
+Digit Learning, école en ligne de formation professionnelle, utilisait Salesforce depuis environ 2 ans avec des objets métier dédiés (Étudiant, Mentor, Formation). La cheffe de projet, Jeanne Pierron, a commandé un **audit qualité interne** suivi d'un plan de modernisation.
+
+Ce n'est pas un projet « à partir de zéro » : c'est le cas le plus fréquent en vraie vie sur une équipe Salesforce — **améliorer une org existante sans la casser**. L'audit, le bon correctif structurel, la migration des données et la mesure du gain sont ici le cœur du travail.
+
+## L'audit qualité
+
+Méthode : entretiens avec les utilisateurs clés — commerciaux **et** direction, pour croiser les points de vue plutôt que de partir d'une seule voix.
+
+| Constat | Remonté par | Impact |
+|---|---|---|
+| **Le modèle de données ne lie un étudiant qu'à une seule formation** | Commerciaux + direction | Constat central : suivi commercial et pédagogique impossible pour les multi-inscriptions |
+| Inscription + affectation des mentors > 30 min/étudiant, sans automatisation | Commerciaux | Temps commercial consommé par de la saisie |
+| Aucun suivi structuré des anciens clients | Direction | Pas de levier de fidélisation ni de mesure de satisfaction |
+| Rapports et métriques insuffisants | Commerciaux + direction | Décisions prises sans visibilité fiable |
+
+## La correction structurelle : l'objet de jonction
+
+Le correctif n'est pas un contournement — c'est le **bon modèle**. Un nouvel objet **Formation Achetée** en **master-detail vers Étudiant et vers Formation** transforme la relation en un vrai many-to-many :
+
+- porte ses propres attributs : dates de début/fin, type, prix ;
+- lève définitivement la limite « une formation par étudiant » et permet les multi-inscriptions ;
+- ouvre les **roll-up summaries** (places disponibles / effectif maximum sur Formation) — la capacité restante devient une donnée calculée, pas un champ à tenir à la main.
+
+Les objets existants sont enrichis en conséquence : Étudiant (historique de formations, statut *client actif* / *ancien client*), Mentor (disponibilité), Formation (places disponibles, effectif maximum).
+
+## L'automatisation
+
+- **Inscription + affectation des mentors automatisées** — recommandation directe de l'audit, implémentée pour rendre aux commerciaux le temps que la saisie leur prenait.
+- **Suivi structuré des anciens clients** + processus de **révision périodique de la pertinence des formations** : le catalogue ne dérive plus faute d'être relu.
+
+## Les 3 rapports livrés
+
+| Rapport | Pour qui | Décision qu'il outille |
+|---|---|---|
+| Formations avec places disponibles | Commerciaux | Quelle session proposer, en temps réel |
+| Étudiants par statut et par mentor | Commerciaux | Suivi de portefeuille |
+| Taux de transformation prospect → client actif | Direction | Pilotage de la performance commerciale |
+
+## Déploiement & migration
+
+- **Déploiement** de l'application via Workbench (package zip, *Migration > Deploy*).
+- **Migration des données existantes** (étudiants, mentors, formations) via Data Loader, dans l'ordre de dépendance — c'est la partie risquée de toute évolution d'org : reprendre l'existant sans perte ni doublon.
+
+## Impact mesuré
+
+| Processus | Avant | Après | Mesure |
+|---|---|---|---|
+| Affectation mentor + inscription | > 30 min / étudiant | 5 min / étudiant | Chronométrage par étudiant, avant/après |
+| Suivi des anciens clients | > 15 min / contact | 10 min / contact | Chronométrage par contact |
+| Gestion & révision du catalogue | > 30 min / révision | 15 min / révision | Chronométrage par révision |
+
+L'analyse d'impact est **qualitative et quantitative** : le gain de temps est chiffré par processus, pas globalement — c'est ce qui la rend défendable.
+
+## Décisions & limites assumées
+
+| Décision | Alternative écartée | Pourquoi |
+|---|---|---|
+| **Objet de jonction master-detail** | Champs de lookup multiples sur Étudiant | Un many-to-many propre, avec attributs par inscription et roll-up summaries ; les lookups multiples auraient plafonné et cassé la capacité calculée |
+| **Roll-up summary** pour les places disponibles | Compteur maintenu par automatisation | Une valeur calculée par la plateforme ne se désynchronise pas |
+| **Migration Data Loader dans l'ordre de dépendance** | Import objet par objet sans séquencement | Les relations master-detail imposent que le parent existe avant l'enfant |
+
+Limites assumées :
+
+- **Le master-detail entraîne la suppression en cascade** : supprimer un Étudiant supprime ses Formations Achetées. Acceptable ici (une inscription sans étudiant n'a pas de sens), mais c'est une contrainte à connaître, pas un effet de bord découvert plus tard.
+- **Gains mesurés sur des jeux de données de Dev Org**, pas sur le volume de production complet de Digit Learning — l'ordre de grandeur est solide, le chiffre exact resterait à confirmer à l'échelle.
+- **Gain de temps par processus, pas débit global** de l'équipe : la mesure porte sur une tâche isolée, pas sur le throughput commercial complet.
+
+## Résultats
+
+| Indicateur | Valeur |
+|---|---|
+| Limitation structurelle levée | « 1 étudiant = 1 formation » → multi-inscriptions |
+| Rapports de pilotage livrés | 3 |
+| Gain sur le processus le plus lourd | 30 min → 5 min par étudiant |
+| Évaluation du titre RNCP | 5/5 compétences validées |
+
+## Livrables
+
+- [Rapport d'audit qualité (DOCX)](/docs/projects/digit-learning-salesforce-update/audit-report.docx)
+- [Analyse qualitative et quantitative (DOCX)](/docs/projects/digit-learning-salesforce-update/analysis-report.docx)
+- [Notes des entretiens (PDF)](/docs/projects/digit-learning-salesforce-update/interview-notes.pdf)
+
+## Ce que ce projet démontre
+
+La compétence la plus utilisée en vrai sur une équipe Salesforce : **moderniser une org existante sans la casser**. Un audit qui s'appuie sur des entretiens croisés, un correctif qui choisit le **bon modèle de données** plutôt qu'un raccourci, une migration séquencée de l'existant, et une **analyse d'impact chiffrée par processus** qui prouve le gain plutôt que de l'affirmer.
+
+> Projet fil rouge du titre RNCP niveau 6 « Développeur Concepteur Logiciel » (OpenClassrooms) : contexte, org et contraintes imposés, livrable soutenu devant un jury. Il est approfondi ici avec la lecture audit / choix de modèle / migration / mesure d'impact attendue en contexte professionnel — au-delà du périmètre strict de l'exercice.

@@ -1,0 +1,94 @@
+---
+title: "Salesforce application update (Digit Learning)"
+heroSubtitle: "Quality audit of a 2-year-old Salesforce org, then modernization: a junction object to lift the \"one student = one training\" limit, automated enrollment and mentor assignment, 3 management reports, data migration — with a quantified impact analysis."
+---
+
+## Context
+
+Digit Learning, an online professional training school, had been using Salesforce for about 2 years with dedicated business objects (Student, Mentor, Training). Project manager Jeanne Pierron commissioned an **internal quality audit** followed by a modernization plan.
+
+This isn't a greenfield project: it's the most common real-life case on a Salesforce team — **improving an existing org without breaking it**. The audit, the right structural fix, the data migration, and measuring the gain are the heart of the work here.
+
+## The quality audit
+
+Method: interviews with key users — sales reps **and** management, to cross-check perspectives rather than starting from a single voice.
+
+| Finding | Flagged by | Impact |
+|---|---|---|
+| **The data model only links a student to a single training** | Sales + management | Central finding: sales and pedagogical tracking impossible for multiple enrollments |
+| Enrollment + mentor assignment > 30 min/student, no automation | Sales reps | Sales time consumed by data entry |
+| No structured former-client tracking | Management | No loyalty lever, no way to measure satisfaction |
+| Insufficient reports and metrics | Sales + management | Decisions made without reliable visibility |
+
+## The structural fix: the junction object
+
+The fix isn't a workaround — it's the **right model**. A new **Purchased Training** object in **master-detail to Student and to Training** turns the relationship into a proper many-to-many:
+
+- carries its own attributes: start/end dates, type, price;
+- permanently lifts the "one training per student" limit and enables multiple enrollments;
+- unlocks **roll-up summaries** (available seats / maximum headcount on Training) — remaining capacity becomes a computed value, not a hand-maintained field.
+
+Existing objects are enriched accordingly: Student (training history, *active-client* / *former-client* status), Mentor (availability), Training (available seats, maximum headcount).
+
+## Automation
+
+- **Enrollment + mentor assignment automated** — a direct audit recommendation, implemented to give sales reps back the time data entry was costing them.
+- **Structured former-client tracking** + a process for **periodic review of training relevance**: the catalog no longer drifts for lack of being reviewed.
+
+## The 3 reports delivered
+
+| Report | For whom | Decision it supports |
+|---|---|---|
+| Trainings with available seats | Sales reps | Which session to offer, in real time |
+| Students by status and mentor | Sales reps | Portfolio tracking |
+| Prospect → active client conversion rate | Management | Commercial performance tracking |
+
+## Deployment & migration
+
+- **Deployment** of the app via Workbench (zip package, *Migration > Deploy*).
+- **Migration of existing data** (students, mentors, trainings) via Data Loader, in dependency order — the risky part of any org change: carrying over the existing data with no loss or duplicates.
+
+## Measured impact
+
+| Process | Before | After | Measurement |
+|---|---|---|---|
+| Mentor assignment + enrollment | > 30 min / student | 5 min / student | Per-student timing, before/after |
+| Former-client tracking | > 15 min / contact | 10 min / contact | Per-contact timing |
+| Catalog management & review | > 30 min / review | 15 min / review | Per-review timing |
+
+The impact analysis is **qualitative and quantitative**: time saved is quantified per process, not in aggregate — which is what makes it defensible.
+
+## Decisions & assumed limitations
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| **Master-detail junction object** | Multiple lookup fields on Student | A clean many-to-many, with per-enrollment attributes and roll-up summaries; multiple lookups would have hit a ceiling and broken computed capacity |
+| **Roll-up summary** for available seats | A counter maintained by automation | A platform-computed value doesn't drift out of sync |
+| **Data Loader migration in dependency order** | Object-by-object import with no sequencing | Master-detail relationships require the parent to exist before the child |
+
+Assumed limitations:
+
+- **Master-detail cascades deletes**: deleting a Student deletes their Purchased Trainings. Acceptable here (an enrollment with no student is meaningless), but it's a constraint to know up front, not a side effect discovered later.
+- **Gains measured on Dev Org datasets**, not on Digit Learning's full production volume — the order of magnitude is solid, the exact figure would need confirming at scale.
+- **Time saved per process, not team-wide throughput**: the measurement covers an isolated task, not the full commercial pipeline.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| Structural limitation lifted | "1 student = 1 training" → multiple enrollments |
+| Management reports delivered | 3 |
+| Gain on the heaviest process | 30 min → 5 min per student |
+| RNCP diploma evaluation | 5/5 competencies validated |
+
+## Deliverables
+
+- [Quality audit report (DOCX)](/docs/projects/digit-learning-salesforce-update/audit-report.docx)
+- [Qualitative and quantitative analysis (DOCX)](/docs/projects/digit-learning-salesforce-update/analysis-report.docx)
+- [Interview notes (PDF)](/docs/projects/digit-learning-salesforce-update/interview-notes.pdf)
+
+## What this project demonstrates
+
+The most-used skill on a real Salesforce team: **modernizing an existing org without breaking it**. An audit built on cross-checked interviews, a fix that chooses the **right data model** over a shortcut, a sequenced migration of existing data, and a **per-process quantified impact analysis** that proves the gain rather than asserting it.
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): imposed context, org and constraints, deliverable defended before a jury. It is expanded here with the audit / model-choice / migration / impact-measurement reading expected in a professional context — beyond the strict scope of the exercise.
