@@ -1,0 +1,85 @@
+---
+title: "Apex backend development (iDEM Connect)"
+heroSubtitle: "A full Apex backend for iDEM Connect's sales force: trigger + handlers, monthly batch, scheduler — 3 business rules, end-to-end CRUD/FLS security, 23 tests, 90% org-wide coverage."
+---
+
+## Business context
+
+iDEM Connect is an international internet service provider (€1.8B revenue, 3,950 employees). The goal: equip the sales force on Salesforce around the **Account / Contract / Order** triad, with three precise business rules and a strict test coverage requirement stated up front in the spec.
+
+The mission wasn't just to "make it work": it was to design the architecture (trigger, handlers, batch, scheduler), implement it cleanly, and deliver **usable technical documentation** — one fact sheet per class and a traceability matrix linking every requirement to its tests.
+
+## The three business rules
+
+| # | Rule | Technical trigger |
+|---|---|---|
+| **RG-01** | Forbid activating an order with no order line | `Draft → Activated` transition intercepted on `OrderTrigger.before update`; aggregate `COUNT(OrderItem)` per `Order`; blocking `addError()` if the count is zero |
+| **RG-02** | Keep `Account.Active__c` in sync with order existence | `true` on order insert (`after insert`); `false` **only** when the account's last remaining order is deleted (`after delete`) |
+| **RG-03** | Automatically re-engage dormant accounts | Every 1st Monday of the month at 9am (`CRON 0 0 9 ? * MON#1`): a batch creates a J+5 "Call" task for every account with no order **and** no existing "Call" task |
+
+## Architecture
+
+**One trigger per object, zero logic in the trigger.** `OrderTrigger` only orchestrates the handler calls — it holds no business rule, which makes it bulk-safe by construction and testable handler by handler.
+
+```
+OrderTrigger  (orchestration only)
+  ├─ before update → OrderValidationHandler   (RG-01 — read-only, addError)
+  ├─ after  insert → OrderInsertionHandler    (RG-02 — Account.Active__c = true)
+  └─ after  delete → OrderDeletionHandler     (RG-02 — Account.Active__c = false if last)
+
+AccountReminderScheduler  (monthly CRON)  →  AccountReminderBatch  (RG-03)
+  start()   : SOQL anti-join — accounts with no order
+  execute() : GROUP BY WhatId dedup aggregate, "Call" task creation
+  finish()  : run log
+
+AppConfig         — every business constant (statuses, labels, J+5 delay)
+TestDataFactory   — test data factory (generateX() no DML / createX() with DML)
+```
+
+## Architecture decisions (ADR)
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| **Handler pattern**, logic outside the trigger | Logic directly in `OrderTrigger` | Bulk-safe by construction, each rule tested in isolation, explicit execution order |
+| **`AppConfig` class** for configuration | Custom Metadata Type / Permission Set | At this scale (a single org), simpler to audit; would migrate to a Custom Metadata Type on a multi-environment project — a deliberate choice, not an oversight |
+| **`Database.insert/update(..., allOrNone = false)`** | `allOrNone = true` (full rollback) | One bad row must not cancel the re-engagement of 200 other accounts; partial failures are logged in detail |
+| **Dedup driven by a flag** (`DEDUPE_USING_AUTO_FLAG`) | Hard-coded behavior | The business can choose "any Call task blocks the reminder" or "only auto-created ones" without touching the batch |
+| **Fallback to the running user** in the scheduler | Fail if the account owner is inactive | A deactivated owner must not break a scheduled monthly reminder |
+
+## Security by design
+
+Security isn't a final pass — it's applied query by query, with the right tool for each case:
+
+- **`WITH SECURITY_ENFORCED`** on the batch's anti-join: a simple, eligible query — FLS checking is delegated to the platform.
+- **Explicit CRUD/FLS checks** on the dedup aggregate: a `GROUP BY` is **not** eligible for `WITH SECURITY_ENFORCED`, so `Schema.sObjectType.Task.isAccessible()` and access to the `WhatId` / `Subject` / `Auto_Created__c` fields are checked by hand before running it. Knowing that platform limitation is the difference between "I put `WITH SECURITY_ENFORCED` everywhere" and security that actually holds.
+- **`Security.stripInaccessible(CREATABLE)`** before every task insert, **`(UPDATABLE)`** before every account update: fields the running user can't access are silently stripped instead of throwing.
+- **Strict bulkification**: no SOQL or DML inside a loop, everything via `Set` / `Map` and aggregates. Validated by a test processing **250 accounts in a single transaction** — here bulkification is a robustness property as much as a performance one.
+
+## Tests, traceability & deployment
+
+- **23 unit tests** covering the nominal case, edge cases, error cases and the 250-account bulk, all built via `TestDataFactory` (decoupled data reused across the 6 test classes).
+- **90% org-wide coverage**, `OrderTrigger` / `AppConfig` / `AccountReminderScheduler` at 100%; the densest class (`AccountReminderBatch` — dedup + owner fallback + resilient insert) at 86%, a figure documented per class rather than smoothed over.
+- **Requirements-to-tests traceability matrix**: every business rule points to the test methods that cover it — a reviewer finds in one line which test validates RG-02.
+- **Deployment** via Salesforce DX (`sfdx force:source:deploy`), versioned metadata.
+
+## Assumed limitations
+
+- **RG-01 only covers the `Draft → Activated` transition.** An order moving straight from `Cancelled` to `Activated` would bypass the check. Documented rather than fixed out of scope, with the fix path identified (broadening the transition condition in `OrderValidationHandler`).
+- **Configuration in an Apex class**, not Custom Metadata: see the ADR — acceptable for a single org, to evolve before a multi-environment deployment.
+- **No retry mechanism** for tasks not created due to a partial failure: they're logged, not automatically re-attempted.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| Business rules implemented | 3 / 3 |
+| Unit tests | 23, 100% pass rate |
+| Org-wide coverage | 90% (3 classes at 100%) |
+| Load test | 250 accounts processed in one transaction |
+| RNCP diploma evaluation | 3/3 competencies validated — distinction, architecture judged clean and well documented |
+
+## What this project demonstrates
+
+Not "the code compiles": a Salesforce backend where **the security model is enforced end to end**, where a partial failure doesn't bring down a bulk job, and where every business rule is isolated, tested and traced. It's the kind of backend an architect reviews without having to rewrite it — the exact difference between a beginner's deliverable and a production one.
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): imposed context, dataset and constraints, deliverable defended before a jury. It is expanded here with the security, robustness and traceability layer expected in a professional context — beyond the strict scope of the exercise.

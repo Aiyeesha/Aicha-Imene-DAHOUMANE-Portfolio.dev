@@ -11412,7 +11412,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Desarrollo backend Apex (iDEM Connect)",
-        "heroSubtitle": "Entrega de un backend Apex (iDEM Connect)",
+        "heroSubtitle": "Un backend Apex completo para el equipo de ventas de iDEM Connect: trigger + handlers, batch mensual, scheduler — 3 reglas de negocio, seguridad CRUD/FLS de extremo a extremo, 23 tests, 90% de cobertura a nivel de org.",
         "sections": [
           {
             "body": "iDEM Connect es un proveedor de acceso a Internet internacional (1.800 M€ de facturación, 3.950 empleados). Necesidad: un backend Apex completo para dotar de herramientas al equipo de ventas en Salesforce — gestión de cuentas, contratos y pedidos, con tres reglas de negocio precisas por implementar y un requisito estricto de cobertura de tests. Misión: diseñar la arquitectura (trigger, handlers, batch, scheduler), implementarla y entregar documentación técnica completa (fichas por clase, matriz de trazabilidad requisitos → tests).",
