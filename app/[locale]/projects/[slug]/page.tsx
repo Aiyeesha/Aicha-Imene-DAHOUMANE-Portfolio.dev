@@ -2,13 +2,13 @@ import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectByS
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import Image from "next/image";
-import SafeImage from "@/components/SafeImage";
 import ProjectClientLogo from "@/components/ProjectClientLogo";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { getBadgeClass, tBadge } from "@/i18n/projectTaxonomy";
+import { resolveProjectMdxLocale } from "@/lib/data/projectMdx";
 
 // ISR : revalide les pages projet toutes les 5 minutes
 export const revalidate = 300;
@@ -37,56 +37,6 @@ const LOCALE_NAMES: Record<string, Record<string, string>> = {
   fr: { en: "anglaise", es: "espagnole", fr: "française" },
   es: { en: "inglés", fr: "francés", es: "español" },
 };
-
-type ProjectAsset = {
-  id: string;
-  title: string;
-  description?: string | null;
-  external_url?: string | null;
-  storage_bucket?: string | null;
-  storage_path?: string | null;
-  mime_type?: string | null;
-  type?: string | null;
-};
-
-function getPublicStorageUrl(bucket?: string | null, path?: string | null) {
-  if (!path) return null;
-  // Si storage_path est déjà une URL complète, la retourner directement
-  if (/^https?:\/\//i.test(path)) return path;
-  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!base || !bucket) return null;
-  // Encoder chaque segment du chemin pour gérer les espaces et caractères spéciaux
-  const encodedPath = path.split("/").map(encodeURIComponent).join("/");
-  return `${base}/storage/v1/object/public/${bucket}/${encodedPath}`;
-}
-
-function looksLikeImage(asset: ProjectAsset) {
-  // Deliverables are never displayed as images, regardless of file extension.
-  // A .png data-model or .svg diagram in the deliverables bucket belongs in the
-  // download sidebar, not the image grid.
-  if (asset.type === "deliverable") return false;
-  if (asset.type === "image") return true;
-  if (asset.mime_type?.startsWith("image/")) return true;
-  const p = asset.storage_path ?? "";
-  return /\.(png|jpe?g|webp|gif|svg)$/i.test(p);
-}
-
-const PRIVATE_BUCKETS = new Set(["deliverables"]);
-
-function getAssetHref(asset: ProjectAsset) {
-  if (asset.external_url) return safeHref(asset.external_url);
-  if (asset.storage_bucket && asset.storage_path) {
-    if (PRIVATE_BUCKETS.has(asset.storage_bucket)) {
-      const params = new URLSearchParams({
-        bucket: asset.storage_bucket,
-        path: asset.storage_path,
-      });
-      return `/api/storage/redirect?${params.toString()}`;
-    }
-    return getPublicStorageUrl(asset.storage_bucket, asset.storage_path);
-  }
-  return null;
-}
 
 // ── Section accent colours ────────────────────────────────────────────────────
 const sectionAccent: Record<string, string> = {
@@ -348,50 +298,25 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     ...((project.tags ?? []).length > 0 && { keywords: (project.tags as string[]).join(", ") }),
   };
 
-  const assets      = (project.project_assets ?? []) as ProjectAsset[];
   const badge       = project.badge ?? null;
   const tags        = (project.tags ?? []) as string[];
   const techStack   = project.tech_stack ?? [];
   const sections    = (project.sections ?? []) as ProjectSection[];
-  const hasStaticResources = sections.some((s) => s.type === "resources");
   const heroSubtitle = project.hero_subtitle ?? project.summary ?? null;
   const gallery     = project.gallery ?? [];
 
-  // Construire un ensemble des URLs déjà représentées dans gallery pour éviter
-  // qu'un même fichier apparaisse à la fois dans la galerie ET dans la grille d'images.
-  const galleryUrlSet = new Set<string>(
-    gallery.flatMap((g) => {
-      const urls: string[] = [g.src];
-      // Ajouter aussi la version avec chemin encodé pour matcher les assets relatifs
-      try {
-        const u = new URL(g.src);
-        // Extraire uniquement le nom de fichier encodé et non-encodé
-        urls.push(decodeURIComponent(u.pathname));
-        urls.push(u.pathname);
-      } catch {
-        // pas une URL absolue valide, ignorer
-      }
-      return urls;
-    })
-  );
-
-  function assetAlreadyInGallery(asset: ProjectAsset): boolean {
-    const href = getAssetHref(asset);
-    if (href && galleryUrlSet.has(href)) return true;
-    // Comparer le storage_path (relatif) avec les URL de gallery
-    if (asset.storage_path && !/^https?:\/\//i.test(asset.storage_path)) {
-      return gallery.some((g) => {
-        try {
-          const pathname = new URL(g.src).pathname;
-          return decodeURIComponent(pathname).endsWith(asset.storage_path!);
-        } catch { return false; }
-      });
+  // Deep case studies are authored as MDX (content/projects/<slug>/<locale>.mdx).
+  // When present, the MDX body replaces the structured `sections[]` render below.
+  const mdxLocale = resolveProjectMdxLocale(slug, locale);
+  let MdxBody: React.ComponentType | null = null;
+  if (mdxLocale) {
+    try {
+      const mod = await import(`@/content/projects/${slug}/${mdxLocale}.mdx`);
+      MdxBody = (mod.default ?? null) as React.ComponentType | null;
+    } catch {
+      MdxBody = null;
     }
-    return false;
   }
-
-  const imageAssets = assets.filter(looksLikeImage).filter((a) => !assetAlreadyInGallery(a));
-  const fileAssets  = assets.filter((a) => !looksLikeImage(a));
 
   const badgeClass = getBadgeClass(badge?.tone);
 
@@ -492,32 +417,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           {/* ── LEFT: SECTIONS (2/3) ─────────────────────────────────────── */}
           <div className="lg:col-span-2 space-y-5">
 
-            {sections.map((section, idx) => renderSection(section, idx))}
-
-            {/* Supabase storage images */}
-            {imageAssets.length > 0 && (
-              <div className={`grid gap-4 ${imageAssets.length > 1 ? "sm:grid-cols-2" : ""}`}>
-                {imageAssets.map((a) => {
-                  const href = getAssetHref(a);
-                  if (!href) return null;
-                  return (
-                    <div key={a.id} className="card overflow-hidden">
-                      <div className="relative w-full aspect-video">
-                        <SafeImage
-                          src={href}
-                          alt={a.title ?? ""}
-                          sizes="(max-width: 640px) 100vw, 50vw"
-                          className="object-contain"
-                          loading="lazy"
-                        />
-                      </div>
-                      {a.title && (
-                        <p className="px-4 py-2 text-xs text-muted-2">{a.title}</p>
-                      )}
-                    </div>
-                  );
-                })}
+            {MdxBody ? (
+              <div className="mdx space-y-5 text-slate-700 dark:text-white/80">
+                <MdxBody />
               </div>
+            ) : (
+              sections.map((section, idx) => renderSection(section, idx))
             )}
 
             {/* Gallery viewer — remaining screenshots */}
@@ -614,41 +519,6 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                       {isFr ? "Voir le projet" : isEs ? "Ver el proyecto" : "Live demo"}
                     </a>
                   )}
-                </div>
-              )}
-
-              {/* Deliverables */}
-              {fileAssets.length > 0 && !hasStaticResources && (
-                <div className="card p-5 space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
-                    {isFr ? "Livrables" : isEs ? "Entregables" : "Deliverables"}
-                  </p>
-                  <ul className="space-y-3">
-                    {fileAssets.map((a) => {
-                      const href = getAssetHref(a);
-                      return (
-                        <li key={a.id} className="flex items-start gap-3">
-                          <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 text-sm" aria-hidden>↓</span>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-strong truncate leading-tight">{a.title}</p>
-                            {a.description && (
-                              <p className="mt-0.5 text-xs text-muted-2 leading-snug">{a.description}</p>
-                            )}
-                            {href && (
-                              <a
-                                href={href}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="mt-1 inline-block text-xs text-cyan-600 dark:text-cyan-300 underline underline-offset-4 hover:opacity-70 transition-opacity"
-                              >
-                                {isFr ? "Ouvrir" : isEs ? "Abrir" : "Open file"}
-                              </a>
-                            )}
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
                 </div>
               )}
 

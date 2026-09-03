@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#070B1A"/>
+      <stop offset="100%" style="stop-color:#0d1b2e"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#0284c7"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff07" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Glow accents -->
+  <ellipse cx="300" cy="200" rx="350" ry="220" fill="#06b6d4" opacity="0.04"/>
+  <ellipse cx="950" cy="430" rx="300" ry="200" fill="#0284c7" opacity="0.05"/>
+
+  <!-- Dashboard window mockup -->
+  <rect x="120" y="220" width="960" height="310" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Window chrome -->
+  <rect x="120" y="220" width="960" height="36" rx="12" fill="#1e293b"/>
+  <rect x="120" y="244" width="960" height="12" fill="#1e293b"/>
+  <circle cx="148" cy="238" r="6" fill="#ef4444" opacity="0.7"/>
+  <circle cx="168" cy="238" r="6" fill="#f59e0b" opacity="0.7"/>
+  <circle cx="188" cy="238" r="6" fill="#22c55e" opacity="0.7"/>
+  <rect x="240" y="229" width="200" height="18" rx="4" fill="#0f172a" opacity="0.6"/>
+  <text x="340" y="242" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#475569" text-anchor="middle">localhost:3000/admin</text>
+
+  <!-- Sidebar -->
+  <rect x="120" y="256" width="180" height="274" fill="#0a1628" opacity="0.8"/>
+  <rect x="136" y="276" width="148" height="28" rx="6" fill="#06b6d4" opacity="0.15"/>
+  <rect x="148" y="283" width="10" height="10" rx="2" fill="#06b6d4" opacity="0.7"/>
+  <text x="168" y="293" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#06b6d4">Dashboard</text>
+  <rect x="148" y="320" width="8" height="8" rx="1" fill="#475569"/>
+  <text x="168" y="329" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Projects</text>
+  <rect x="148" y="348" width="8" height="8" rx="1" fill="#475569"/>
+  <text x="168" y="357" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Messages</text>
+  <rect x="148" y="376" width="8" height="8" rx="1" fill="#475569"/>
+  <text x="168" y="385" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Testimonials</text>
+  <rect x="148" y="404" width="8" height="8" rx="1" fill="#475569"/>
+  <text x="168" y="413" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Settings</text>
+
+  <!-- Main content area -->
+  <!-- Stats row -->
+  <rect x="322" y="268" width="170" height="70" rx="8" fill="#0d1b2e" stroke="#1e293b" stroke-width="1"/>
+  <text x="342" y="292" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Total Projects</text>
+  <text x="342" y="322" font-family="'Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#06b6d4" filter="url(#glow)">24</text>
+
+  <rect x="506" y="268" width="170" height="70" rx="8" fill="#0d1b2e" stroke="#1e293b" stroke-width="1"/>
+  <text x="526" y="292" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Messages</text>
+  <text x="526" y="322" font-family="'Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#22d3ee" filter="url(#glow)">12</text>
+
+  <rect x="690" y="268" width="170" height="70" rx="8" fill="#0d1b2e" stroke="#1e293b" stroke-width="1"/>
+  <text x="710" y="292" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Uptime</text>
+  <text x="710" y="322" font-family="'Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#10b981" filter="url(#glow)">99%</text>
+
+  <rect x="874" y="268" width="186" height="70" rx="8" fill="#0d1b2e" stroke="#1e293b" stroke-width="1"/>
+  <text x="894" y="292" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#475569">Certifications</text>
+  <text x="894" y="322" font-family="'Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#a78bfa" filter="url(#glow)">8</text>
+
+  <!-- Table mock -->
+  <rect x="322" y="356" width="738" height="24" rx="4" fill="#1e293b" opacity="0.5"/>
+  <text x="336" y="373" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#475569">Title</text>
+  <text x="530" y="373" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#475569">Track</text>
+  <text x="660" y="373" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#475569">Status</text>
+  <text x="800" y="373" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#475569">Actions</text>
+
+  <rect x="322" y="388" width="738" height="28" rx="4" fill="#0a1628" opacity="0.4"/>
+  <text x="336" y="407" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#94a3b8">Salesforce CI/CD Pipeline</text>
+  <rect x="522" y="393" width="64" height="16" rx="8" fill="#06b6d440"/>
+  <text x="554" y="405" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#06b6d4" text-anchor="middle">Salesforce</text>
+  <rect x="648" y="393" width="60" height="16" rx="8" fill="#10b98140"/>
+  <text x="678" y="405" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#10b981" text-anchor="middle">Published</text>
+
+  <rect x="322" y="422" width="738" height="28" rx="4" fill="#0d1b2e" opacity="0.3"/>
+  <text x="336" y="441" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#64748b">Network Scanner</text>
+  <rect x="522" y="427" width="54" height="16" rx="8" fill="#10b98120"/>
+  <text x="549" y="439" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#10b981" text-anchor="middle">IT Ops</text>
+
+  <rect x="322" y="452" width="738" height="28" rx="4" fill="#0a1628" opacity="0.4"/>
+  <text x="336" y="471" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#64748b">Apex Batch Optimization</text>
+  <rect x="522" y="457" width="64" height="16" rx="8" fill="#06b6d420"/>
+  <text x="554" y="469" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#06b6d4" text-anchor="middle">Salesforce</text>
+
+  <!-- Title -->
+  <text x="600" y="110" font-family="'Segoe UI',Arial,sans-serif" font-size="42" font-weight="700" fill="#f1f5f9" text-anchor="middle">Next.js Admin Dashboard</text>
+  <text x="600" y="158" font-family="'Segoe UI',Arial,sans-serif" font-size="20" fill="#06b6d4" text-anchor="middle">Next.js 16 · Supabase · React 19 · TypeScript</text>
+
+  <!-- Bottom -->
+  <line x1="100" y1="562" x2="1100" y2="562" stroke="#1e293b" stroke-width="1"/>
+  <text x="100" y="590" font-family="'Segoe UI',Arial,sans-serif" font-size="14" fill="#475569">Next.js · Supabase · Portfolio Admin</text>
+  <text x="1100" y="590" font-family="'Segoe UI',Arial,sans-serif" font-size="14" fill="#334155" text-anchor="end">Aïcha Imène DAHOUMANE</text>
+</svg>
