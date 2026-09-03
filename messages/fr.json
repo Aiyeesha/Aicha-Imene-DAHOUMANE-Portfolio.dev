@@ -338,7 +338,28 @@
     "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (base de données, cache, formulaire de contact) avec latence et disponibilité mesurées en direct — pas une page statique. Le /changelog documente chaque incident réellement traité, dont une fuite de données client détectée et corrigée et plusieurs alertes de sécurité (CVE) remédiées avec la justification technique du choix retenu, pas un correctif appliqué à l'aveugle.",
     "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose en direct la santé réelle de ses services, et le /changelog documente chaque incident traité — dont une fuite de données client détectée et corrigée — avec la justification technique retenue, pas un correctif appliqué à l'aveugle.",
     "maturityStatusCta": "Voir le statut en direct",
-    "maturityChangelogCta": "Voir le changelog"
+    "maturityChangelogCta": "Voir le changelog",
+    "sectorsTitle": "Secteurs où j'ai déjà livré",
+    "sectorsBody": "Les études de cas ci-dessous ne sont pas des exercices hors-sol : chacune est ancrée dans un secteur avec ses propres contraintes de conformité, de traçabilité et de tolérance à l'erreur.",
+    "sectors": [
+      {
+        "label": "Luxe & Mode",
+        "note": "Maison de couture nuptiale (LTP) et distributeur textile multinational (FASHA) — traçabilité où une date manquée est un incident client, pas une gêne."
+      },
+      {
+        "label": "Assurance & Finance",
+        "note": "Fusion-acquisition d'assureurs (Legarant-AXG) — réconcilier deux portefeuilles clients où un doublon est un dossier orphelin et un risque de non-conformité."
+      },
+      {
+        "label": "Télécom",
+        "note": "Application Lightning pour les équipes commerciales (Avenir Telecom) — Quick Actions, Aura, modèle de partage."
+      },
+      {
+        "label": "Formation & EdTech",
+        "note": "Refonte d'un modèle de données de suivi apprenants (Digit Learning) — objets, automatisations, imports de masse."
+      }
+    ],
+    "sectorsCta": "Voir les études de cas"
   },
   "footer": {
     "builtWith": "Propulsé par Next.js",
