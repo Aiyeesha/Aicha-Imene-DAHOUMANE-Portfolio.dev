@@ -4,7 +4,7 @@
 // garde-fou anti-spam/qualité des données (cf. audit : cibler les modules
 // critiques plutôt qu'un chiffre global).
 
-import { validate, getClientIp } from "@/lib/contactValidation";
+import { validate, getClientIp, isAllowedOrigin } from "@/lib/contactValidation";
 
 const VALID = {
   name: "Jane Doe",
@@ -83,5 +83,75 @@ describe("getClientIp()", () => {
   it("falls back to 'unknown' when neither header is present", () => {
     const req = reqWithHeaders({});
     expect(getClientIp(req)).toBe("unknown");
+  });
+});
+
+describe("isAllowedOrigin() — contact form origin guard", () => {
+  function reqWithHeaders(headers: Record<string, string>) {
+    return { headers: new Headers(headers) };
+  }
+
+  const OLD_ENV = process.env;
+  beforeEach(() => {
+    process.env = { ...OLD_ENV };
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.SITE_URL;
+  });
+  afterAll(() => {
+    process.env = OLD_ENV;
+  });
+
+  it("rejects a request with no Origin header (curl / server-side script)", () => {
+    expect(isAllowedOrigin(reqWithHeaders({ host: "example.com" }))).toBe(false);
+  });
+
+  it("rejects a malformed Origin header", () => {
+    expect(isAllowedOrigin(reqWithHeaders({ origin: "not-a-url", host: "example.com" }))).toBe(false);
+  });
+
+  it("accepts an Origin that matches the configured NEXT_PUBLIC_SITE_URL", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://portfolio.example.com";
+    expect(
+      isAllowedOrigin(reqWithHeaders({ origin: "https://portfolio.example.com", host: "whatever" }))
+    ).toBe(true);
+  });
+
+  it("accepts a same-origin request on a non-pinned host (x-forwarded-host, Vercel alias)", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://pinned.example.com";
+    expect(
+      isAllowedOrigin(
+        reqWithHeaders({
+          origin: "https://alias-git-main.vercel.app",
+          "x-forwarded-host": "alias-git-main.vercel.app",
+          host: "internal-lambda-host",
+        })
+      )
+    ).toBe(true);
+  });
+
+  it("accepts a same-origin request via the host header when x-forwarded-host is absent", () => {
+    expect(
+      isAllowedOrigin(reqWithHeaders({ origin: "http://localhost:3000", host: "localhost:3000" }))
+    ).toBe(true);
+  });
+
+  it("rejects a cross-site Origin even when the serving host is known", () => {
+    expect(
+      isAllowedOrigin(
+        reqWithHeaders({
+          origin: "https://evil.example",
+          "x-forwarded-host": "portfolio.example.com",
+          host: "portfolio.example.com",
+        })
+      )
+    ).toBe(false);
+  });
+
+  it("is case-insensitive on the host comparison", () => {
+    expect(
+      isAllowedOrigin(
+        reqWithHeaders({ origin: "https://Portfolio.Example.COM", "x-forwarded-host": "portfolio.example.com" })
+      )
+    ).toBe(true);
   });
 });
