@@ -338,7 +338,28 @@
     "maturityBodySalesforce": "La misma disciplina se aplica a mis entregas Salesforce: un pipeline CI/CD con validaciones Apex automatizadas y despliegues trazables de sandbox a producción (ver el proyecto puente Salesforce ⇄ Infra más arriba). Este portfolio es esa disciplina aplicada a escala: /status muestra en directo el estado real de sus servicios, y el /changelog documenta cada incidente realmente gestionado — incluida una fuga de datos de cliente detectada y corregida — con la justificación técnica de la solución elegida, no un parche aplicado a ciegas.",
     "maturityStatusCta": "Ver el estado en directo",
     "maturityChangelogCta": "Ver el changelog",
-    "discuss": "Consultar sobre este servicio"
+    "discuss": "Consultar sobre este servicio",
+    "sectorsTitle": "Sectores en los que ya he entregado",
+    "sectorsBody": "Los estudios de caso siguientes no son ejercicios abstractos: cada uno está anclado en un sector con sus propias exigencias de cumplimiento, trazabilidad y tolerancia al error.",
+    "sectors": [
+      {
+        "label": "Lujo y moda",
+        "note": "Casa de alta costura nupcial (LTP) y distribuidor textil multinacional (FASHA) — trazabilidad donde una fecha incumplida es un incidente de cliente, no una molestia."
+      },
+      {
+        "label": "Seguros y finanzas",
+        "note": "Fusión y adquisición de aseguradoras (Legarant-AXG) — reconciliar dos carteras de clientes donde un duplicado es un expediente huérfano y un riesgo de incumplimiento."
+      },
+      {
+        "label": "Telecomunicaciones",
+        "note": "App Lightning para equipos comerciales (Avenir Telecom) — Quick Actions, Aura, modelo de compartición."
+      },
+      {
+        "label": "Formación y EdTech",
+        "note": "Rediseño del modelo de datos de seguimiento de alumnos (Digit Learning) — objetos, automatización, importaciones masivas."
+      }
+    ],
+    "sectorsCta": "Ver los estudios de caso"
   },
   "footer": {
     "builtWith": "Creado con Next.js",

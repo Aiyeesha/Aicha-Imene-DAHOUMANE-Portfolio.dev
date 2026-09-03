@@ -113,6 +113,12 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const cards = getServices(dataLocale, effectiveTrack);
   const icons = effectiveTrack === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
+  // Bande « Secteurs » — track-neutre (les contraintes métier ne changent pas
+  // selon le parcours), pilotée par l'i18n. Rend le focus Luxe & Mode visible
+  // sur la page la plus scannée par un recruteur, au lieu de le laisser enfoui
+  // dans une catégorie de /projects (audit P4).
+  const sectors = t.raw("services.sectors") as { label: string; note: string }[];
+
   /**
    * handleDiscuss — bouton "Discuter de ce service"
    *
@@ -207,6 +213,38 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       ))}
     </div>
 
+    {/* SECTEURS — ancre chaque étude de cas dans un secteur avec ses propres
+        contraintes de conformité/traçabilité. Volontairement track-neutre et
+        rendu inconditionnellement (contenu i18n statique, pas de dépendance au
+        toggle → aucun risque d'hydration mismatch). Luxe & Mode en tête : c'est
+        le lot P4 (LTP couture nuptiale + FASHA distribution textile). */}
+    <Reveal delayMs={110 + cards.length * 60}>
+      <div className="mt-4 rounded-2xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] p-6 md:p-7">
+        <h3 className="font-semibold text-slate-900 dark:text-white">{t("services.sectorsTitle")}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-muted dark:text-slate-400">{t("services.sectorsBody")}</p>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {sectors.map((s) => (
+            <li
+              key={s.label}
+              className="rounded-xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/[0.03] p-4"
+            >
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">{s.label}</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted dark:text-slate-400">{s.note}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-4">
+          <Link
+            href={`/${locale}/projects`}
+            className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+          >
+            {t("services.sectorsCta")}
+            <span aria-hidden="true"> →</span>
+          </Link>
+        </div>
+      </div>
+    </Reveal>
+
     {/* MATURITÉ D'EXPLOITATION — /status et /changelog présentés comme preuve
         DevSecOps (observabilité réelle, remédiation CVE documentée), pas comme
         de simples liens de pied de page. Affiché sur les deux tracks depuis
@@ -220,7 +258,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
         l'exemple sur le pipeline CI/CD Salesforce plutôt que de dupliquer le
         texte IT Ops tel quel. */}
     {mounted && (
-      <Reveal delayMs={110 + cards.length * 60}>
+      <Reveal delayMs={110 + (cards.length + 1) * 60}>
         <div className={`mt-4 rounded-2xl border p-6 md:p-7 ${
           effectiveTrack === "salesforce"
             ? "border-cyan-500/20 bg-cyan-500/[0.04] dark:bg-cyan-400/[0.06]"
