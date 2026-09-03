@@ -44,13 +44,13 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       };
 
   const labels = {
-    kicker:         isFr ? "Remote · Mobilité & Relocalisation" : isEs ? "Remoto · Movilidad y Relocalización" : "Remote · Open to Relocation",
+    kicker:         isFr ? "Paris / Île-de-France · Mobilité & relocalisation" : isEs ? "París / Île-de-France · Movilidad y traslado" : "Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntas" : "Work with me",
     subtitle:       isFr
-      ? "Je suis disponible pour des missions Salesforce et IT Ops — 100 % Remote, hybride ou sur site, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
+      ? "Je suis disponible pour des missions Salesforce et IT Ops depuis le Val-d'Oise (95), avec une priorité opérationnelle Paris / Île-de-France — hybride, sur site ou remote — et une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
       : isEs
-      ? "Estoy disponible para proyectos de Salesforce e IT Ops — 100 % remoto, híbrido o presencial, totalmente abierta a la movilidad y a la relocalización, en Francia, Europa o en un contexto de habla inglesa."
-      : "I'm available for Salesforce and IT Ops missions — 100 % Remote, hybrid or on-site, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
+      ? "Estoy disponible para proyectos de Salesforce e IT Ops desde Val-d'Oise (95), con prioridad operativa París / Île-de-France — híbrido, presencial o remoto — y totalmente abierta a la movilidad y al traslado, en Francia, Europa o en un contexto de habla inglesa."
+      : "I'm available for Salesforce and IT Ops missions from Val-d'Oise (95), with an operational focus on Paris / Île-de-France — hybrid, on-site or remote — and fully open to mobility and relocation in France, Europe, or any English-speaking context.",
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
@@ -63,10 +63,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? "Contrato indefinido · Temporal · Proyecto"
       : "Permanent · Fixed-term · Contract",
     availMode:      isFr
-      ? "100 % Remote · Hybride · Sur site · Marseille / Provence-Alpes-Côte d'Azur · Mobilité & relocalisation — France, Europe, pays anglophones"
+      ? "Val-d'Oise (95), Île-de-France · Priorité opérationnelle Paris / Île-de-France · Hybride · Sur site · Remote · Mobilité & relocalisation — France, Europe, pays anglophones"
       : isEs
-      ? "100 % remoto · Híbrido · Presencial · Marsella / Provenza-Alpes-Costa Azul · Movilidad y relocalización — Francia, Europa, países de habla inglesa"
-      : "100 % Remote · Hybrid · On-site · Marseille / Provence-Alpes-Côte d'Azur · Mobility & relocation — France, Europe, English-speaking countries",
+      ? "Val-d'Oise (95), Île-de-France · Prioridad operativa París / Île-de-France · Híbrido · Presencial · Remoto · Movilidad y traslado — Francia, Europa, países de habla inglesa"
+      : "Val-d'Oise (95), Île-de-France · Operational focus Paris / Île-de-France · Hybrid · On-site · Remote · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Domaines" : isEs ? "Ámbitos" : "Domains",
@@ -79,10 +79,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       : ["Short", "Long", "Ongoing", "Ad-hoc"],
     modeLabel:      isFr ? "Mode" : isEs ? "Modalidad" : "Mode",
     modes:          isFr
-      ? ["100 % Remote", "Hybride · Sur site", "Mobilité & relocalisation envisageables"]
+      ? ["Hybride · Sur site · Remote", "Priorité Paris / Île-de-France", "Mobilité & relocalisation envisageable"]
       : isEs
-      ? ["100 % remoto", "Híbrido · Presencial", "Abierta a movilidad y relocalización"]
-      : ["100% Remote", "Hybrid · On-site", "Open to mobility & relocation"],
+      ? ["Híbrido · Presencial · Remoto", "Prioridad París / Île-de-France", "Abierta a movilidad y traslado"]
+      : ["Hybrid · On-site · Remote", "Focus Paris / Île-de-France", "Open to mobility & relocation"],
 
     processTitle:   isFr ? "Mon process" : isEs ? "Mi proceso" : "My process",
     steps: isFr
@@ -108,18 +108,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? [
           { q: "Sous quel type de contrat intervenez-vous ?",       a: "Je travaille en CDI, CDD ou mission selon le contexte — en France et à l'international. Décrivez votre besoin et on verra ensemble ce qui convient le mieux." },
           { q: "Êtes-vous disponible pour des missions courtes ?",  a: "Oui, y compris pour des audits, des formations ou des interventions ponctuelles. Décrivez le besoin et je reviens sous 24 h." },
-          { q: "Quelle est votre zone géographique ?",              a: "Je travaille 100 % à distance depuis Marseille / Provence-Alpes-Côte d'Azur, et je suis ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
+          { q: "Quelle est votre zone géographique ?",              a: "Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité opérationnelle sur Paris et l'Île-de-France — hybride, sur site ou remote selon les besoins. Je suis ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
         ]
       : isEs
       ? [
           { q: "¿Bajo qué tipo de contrato trabajas?",           a: "Trabajo con contrato indefinido, temporal o por proyecto según el contexto — en Francia y a nivel internacional. Cuéntame tu necesidad y vemos juntas qué encaja mejor." },
           { q: "¿Estás disponible para proyectos cortos?",       a: "Sí, incluyendo auditorías, formaciones o intervenciones puntuales. Describe la necesidad y te respondo en 24 h." },
-          { q: "¿Cuál es tu zona geográfica?",                   a: "Trabajo 100 % en remoto desde Marsella / Provenza-Alpes-Costa Azul, y estoy abierta a la movilidad y a la relocalización — en Francia y a nivel internacional: Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Reino Unido, Irlanda, Malta) y cualquier contexto de habla inglesa." },
+          { q: "¿Cuál es tu zona geográfica?",                   a: "Estoy ubicada en Val-d'Oise (95), en Île-de-France, con prioridad operativa en París y la región de Île-de-France — híbrido, presencial o remoto según la necesidad. Estoy abierta a la movilidad y al traslado — en Francia y a nivel internacional: Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Reino Unido, Irlanda, Malta) y cualquier contexto de habla inglesa." },
         ]
       : [
           { q: "What contract type works best?",             a: "I work on permanent, fixed-term, or contract engagements — in France and internationally. Tell me about your context and we'll find what fits." },
           { q: "Do you take short missions?",                a: "Yes, including audits, training, or ad-hoc work. Describe the need and I'll get back to you within 24 h." },
-          { q: "Where are you based?",                       a: "I work 100% remotely from Marseille / Provence-Alpes-Côte d'Azur, and I'm open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
+          { q: "Where are you based?",                       a: "I'm based in Val-d'Oise (95), Île-de-France, with an operational focus on Paris and the Île-de-France region — hybrid, on-site or remote depending on the need. I'm open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
         ],
 
     ctaTitle:    isFr ? "Une mission en tête ?" : isEs ? "¿Tienes un proyecto en mente?" : "Got a mission in mind?",
@@ -150,10 +150,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     name: siteName,
     url: `${siteUrl}/${locale}/work-with-me`,
     description: isFr
-      ? "Missions Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
+      ? "Missions Salesforce et IT Ops — priorité opérationnelle Paris / Île-de-France (hybride, sur site ou remote), ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
       : isEs
-      ? "Proyectos de Salesforce e IT Ops — 100 % remoto, abierta a la movilidad y a la relocalización en Francia, Europa y países de habla inglesa en todo el mundo."
-      : "Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
+      ? "Proyectos de Salesforce e IT Ops — prioridad operativa París / Île-de-France (híbrido, presencial o remoto), abierta a la movilidad y al traslado en Francia, Europa y países de habla inglesa en todo el mundo."
+      : "Salesforce and IT Ops missions — operational focus Paris / Île-de-France (hybrid, on-site or remote), open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
     serviceType: ["Salesforce Development", "Salesforce Administration", "IT Operations", "DevOps / CI·CD", "Web Development"],
     provider: { "@type": "Person", name: ownerName, url: siteUrl },
     areaServed: [

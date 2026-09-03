@@ -309,9 +309,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce Developer & IT Consultant | Remote · Europe",
-    "description": "Salesforce Developer & IT Consultant (Marseille, remote) — Apex, LWC, CI/CD. 50+ technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide.",
+    "description": "Salesforce Developer & IT Consultant (Île-de-France, remote) — Apex, LWC, CI/CD. 50+ technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Remote · Europe",
-    "descriptionItops": "Systems & IT Ops Engineer (Marseille, remote) — Infrastructure, security, automation, CI/CD. 50+ technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide."
+    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France, remote) — Infrastructure, security, automation, CI/CD. 50+ technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -392,7 +392,7 @@
     "p4_itops": "Full-time Salesforce Developer at LD Digitales — IT Ops & DevOps skills, built through real production environments, remain fully available for targeted projects. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) is the clearest proof that this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
-    "basedInValue": "Marseille / Provence-Alpes-Côte d'Azur — 100 % Remote · Hybrid · On-site — Mobility & relocation considered (France & international)",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — operational focus Paris / Île-de-France · Hybrid · On-site · Remote — Mobility & relocation considered",
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
@@ -451,7 +451,7 @@
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. Address: Marseille, France. SIRET: not applicable (personal portfolio). Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & consultant, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
@@ -475,7 +475,7 @@
       },
       {
         "q": "Do you work remotely?",
-        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in Marseille / Provence-Alpes-Côte d'Azur and open to relocation in France and internationally, including any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
+        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in Val-d'Oise (95), Île-de-France, with an operational focus on Paris / Île-de-France, and open to relocation in France and internationally, including any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
       },
       {
         "q": "What are your typical timelines?",
@@ -518,7 +518,7 @@
     "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant · Salesforce & Infrastructure Engineer",
     "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant · Salesforce & Infrastructure Engineer",
     "location": "Location",
-    "locationValues": "Marseille / Provence-Alpes-Côte d'Azur · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Operational focus Paris / Île-de-France · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
     "cta": "Get in touch →"
   },
   "hybrid": {
