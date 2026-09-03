@@ -30,7 +30,7 @@ export type ProjectAsset = {
 
 export type ProjectBadge = {
   label: string;
-  tone: "client" | "personal" | "training" | "simulation" | "anonymized";
+  tone: "client" | "personal" | "training" | "capstone" | "simulation" | "anonymized";
 };
 
 export type ProjectWithAssets = {

@@ -346,6 +346,7 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "Personal — Coming Soon": "Personal — Coming Soon",
   "TRAINING LAB": "TRAINING LAB",
   "TRAINING PROJECT": "Case study",
+  "CAPSTONE RNCP 6": "RNCP 6 capstone project",
   "SIMULATION PROJECT": "Professional simulation",
   "ANONYMIZED ENGAGEMENT": "Anonymized engagement"
 },
@@ -357,6 +358,7 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "Personal — Coming Soon": "Personnel — Bientôt",
   "TRAINING LAB": "Lab de formation",
   "TRAINING PROJECT": "Étude de cas",
+  "CAPSTONE RNCP 6": "Projet fil rouge — Titre RNCP 6",
   "SIMULATION PROJECT": "Simulation professionnelle",
   "ANONYMIZED ENGAGEMENT": "Mission anonymisée"
 },
@@ -368,6 +370,7 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "Personal — Coming Soon": "Personal — Próximamente",
   "TRAINING LAB": "Laboratorio de formación",
   "TRAINING PROJECT": "Caso de estudio",
+  "CAPSTONE RNCP 6": "Proyecto integrador — Título RNCP 6",
   "SIMULATION PROJECT": "Simulación profesional",
   "ANONYMIZED ENGAGEMENT": "Encargo anonimizado"
 },
@@ -419,6 +422,7 @@ const BADGE_TONE_CLASSES: Record<string, string> = {
   client: "badge badge-client",
   personal: "badge badge-personal",
   training: "badge badge-training",
+  capstone: "badge badge-capstone",
   simulation: "badge badge-simulation",
   anonymized: "badge badge-anonymized",
 };

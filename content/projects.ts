@@ -1329,8 +1329,8 @@ export const projects: Project[] = [
       "Testing"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "pdfUrl": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Avenir-TELECOM",
@@ -1370,8 +1370,8 @@ export const projects: Project[] = [
       "Quality"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "techStack": [
       "Salesforce",
@@ -1410,8 +1410,8 @@ export const projects: Project[] = [
       "Fleet"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "pdfUrl": "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
     "techStack": [
@@ -1447,8 +1447,8 @@ export const projects: Project[] = [
       "Testing"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "pdfUrl": "/docs/projects/idemconnect-apex-backend/documentation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/iDEM-Connect",
@@ -1487,8 +1487,8 @@ export const projects: Project[] = [
       "Apex"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "pdfUrl": "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
     "repoUrl": "https://github.com/Aiyeesha/WireBrite-Consulting-Migration-Backup-Visualforce-jsbProject-",
@@ -1506,7 +1506,7 @@ export const projects: Project[] = [
       "UpdateLeadStatus Aura Quick Action prototype, replacing a JavaScript button incompatible with Lightning",
       "Detailed cost estimate (17 dev days) and per-component risk matrix with mitigation strategies"
     ],
-    "featured": true,
+    "featured": false,
     "sortOrder": 2,
     "status": "published"
   },
@@ -1529,8 +1529,8 @@ export const projects: Project[] = [
       "Integration"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "pdfUrl": "/docs/projects/ltp-apex-backend-prototype/specifications.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Optimisez-un-backend-Apex",
@@ -1569,8 +1569,8 @@ export const projects: Project[] = [
       "Batch"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "repoUrl": "https://github.com/Aiyeesha/FASHA",
     "techStack": [
@@ -1588,7 +1588,7 @@ export const projects: Project[] = [
       "Full refactor into a handler pattern (AccountService, OrderTriggerHandler, TriggerHelper) + async processing (@future, Batch, Scheduler)",
       ">85% test coverage with TestDataFactory, up from unreliable tests at the start"
     ],
-    "featured": true,
+    "featured": false,
     "sortOrder": 4,
     "status": "published"
   },
@@ -1608,8 +1608,8 @@ export const projects: Project[] = [
       "Postman"
     ],
     "badge": {
-      "tone": "training",
-      "label": "TRAINING PROJECT"
+      "tone": "capstone",
+      "label": "CAPSTONE RNCP 6"
     },
     "repoUrl": "https://github.com/Aiyeesha/legarant-axg-crm-sync",
     "techStack": [
@@ -1738,7 +1738,7 @@ export const projects: Project[] = [
       "Consolidated 8 near-duplicate profiles into 5 Permission Set Groups",
       "Full Visualforce/JS Buttons/Process Builder migration to LWC/Flow, bulk-tested on 200+ records"
     ],
-    "featured": false,
+    "featured": true,
     "sortOrder": 100,
     "status": "published",
     "isSecurity": true
