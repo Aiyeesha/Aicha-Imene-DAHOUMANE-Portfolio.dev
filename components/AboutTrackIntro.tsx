@@ -13,11 +13,13 @@
 //   - Salesforce → cyan
 //   - IT Ops     → violet
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { useTrack } from "@/app/[locale]/providers";
 
 export default function AboutTrackIntro() {
   const t = useTranslations();
+  const locale = useLocale();
   const { track } = useTrack();
   const isSalesforce = track === "salesforce";
 
@@ -59,6 +61,18 @@ export default function AboutTrackIntro() {
 
       {/* p4 — preuve concrète et statut actuel */}
       <p className="text-sm leading-relaxed text-muted">{p4}</p>
+
+      {/* Lien vers la page « Profil hybride » — le fil hybride du positionnement
+          ne s'arrête plus au badge de track : trois cas concrets où la
+          combinaison Salesforce + infra + sécurité est nécessaire (audit P2). */}
+      <p className="pt-1 text-sm">
+        <Link
+          href={`/${locale}/hybride`}
+          className="font-medium bg-gradient-to-r from-cyan-700 to-violet-700 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent hover:underline soft-ring rounded"
+        >
+          {t("nav.hybrid")} →
+        </Link>
+      </p>
     </div>
   );
 }

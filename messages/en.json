@@ -14,7 +14,8 @@
     "tagline": "Salesforce · IT Ops",
     "home": "Home",
     "seeAllProjects": "See all projects",
-    "securityClusterLink": "Security cluster ({count})"
+    "securityClusterLink": "Security cluster ({count})",
+    "hybrid": "Hybrid profile"
   },
   "hero": {
     "title": "Salesforce Developer & IT Consultant",
@@ -350,7 +351,8 @@
     "workWithMe": "Work with me",
     "uses": "Uses & Setup",
     "colophon": "Colophon",
-    "qualifyMission": "Start an engagement"
+    "qualifyMission": "Start an engagement",
+    "hybrid": "Hybrid profile"
   },
   "profile": {
     "kicker": "Profile",
@@ -497,5 +499,78 @@
     "location": "Location",
     "locationValues": "Marseille / Provence-Alpes-Côte d'Azur · Open to relocation — France & international (BE, LU, DE, IT, ES, UK, IE, MT + English-speaking)",
     "cta": "Get in touch →"
+  },
+  "hybrid": {
+    "metaTitle": "Hybrid Salesforce + Infrastructure profile — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Three concrete cases where solving the problem requires the combination of Salesforce + infrastructure + security — not their juxtaposition. Heroku↔Salesforce data migration, DevOps discipline applied to Apex releases, integration attack surface modelled with STRIDE.",
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "Hybrid profile",
+    "h1": "Where Salesforce, infrastructure and security are one head, not two",
+    "lead": "I'm not a Salesforce developer who knows Docker, nor a sysadmin who knows Salesforce. I solve cross-cutting problems that a single specialist — on either side — would handle more slowly, less well, or not at all: both layers' decisions are made at the same time, by the same person, before the usual back-and-forth between teams even starts.",
+    "scenariosTitle": "Three cases where the combination changes the outcome",
+    "scenarios": [
+      {
+        "title": "Heroku ↔ Salesforce data migration, with a field mobile app",
+        "problem": "An insurer acquires a competitor: the acquired CRM's data has to flow into Salesforce (one-way), and field agents need a mobile app that reads and writes against the same org.",
+        "soloTitle": "A single specialist",
+        "solo": "A Salesforce profile stops at the Apex REST layer and hands off the Heroku infrastructure — integration decisions are made without knowing the constraints on the other side. An infrastructure profile deploys the Heroku app, but designs neither the External ID Apex trigger nor the Matching Rule that stop duplicates at the source.",
+        "mineTitle": "What I deliver",
+        "mine": "Both: the Apex REST endpoints, the Node.js/PostgreSQL app that consumes them, Heroku Connect configured object by object, two isolated environments linked by a pipeline, right down to the deployment runbook. The staging environment existed before the first line of Apex was written — not after.",
+        "proofs": [
+          {
+            "label": "Case study — Legarant-AXG deployment",
+            "href": "/projects/legarant-axg-salesforce-deployment"
+          }
+        ],
+        "sectorLabel": "Where it matters",
+        "sector": "Insurance and finance: reconciling two customer books where a duplicate isn't an inconvenience but an orphan file and a compliance risk."
+      },
+      {
+        "title": "DevOps discipline applied to Salesforce releases",
+        "problem": "Shipping Salesforce changes repeatedly without breaking production, with auditable traceability on every go-live.",
+        "soloTitle": "A single specialist",
+        "solo": "A Salesforce profile can code the feature, but deploys via manual Change Set, with no documented rollback procedure. A DevOps profile can build a pipeline, but doesn't know the pitfalls of deploying Salesforce metadata — no native undo, dependency order between components.",
+        "mineTitle": "What I deliver",
+        "mine": "Real DevOps discipline — branch protection, automated validation, a documented SFDX rollback procedure — applied to how Salesforce releases are delivered, not just how they're coded.",
+        "proofs": [
+          {
+            "label": "Case study — Salesforce CI/CD pipeline",
+            "href": "/projects/cicd-pipeline-setup"
+          }
+        ],
+        "sectorLabel": "Where it matters",
+        "sector": "Any regulated sector — healthcare, energy, finance: every production change must be traceable and reversible, not just functional."
+      },
+      {
+        "title": "An integration's attack surface, modelled with STRIDE",
+        "problem": "A Salesforce integration exposes REST endpoints: who calls them, with which token, what happens if the flow is replayed or hijacked?",
+        "soloTitle": "A single specialist",
+        "solo": "A Salesforce developer documents the endpoint and the Permission Sets. A pentester audits the API — but doesn't know which Permission Set, which CRUD/FLS check or which Sharing Rule actually closes the gap on the Salesforce side.",
+        "mineTitle": "What I deliver",
+        "mine": "I model the attack surface with STRIDE and design the control on the Salesforce side — a dedicated integration user, an explicit Permission Set, CRUD/FLS checks, WITH SECURITY_ENFORCED — in the same sprint. The loop is closed before go-live, not three tickets later.",
+        "proofs": [
+          {
+            "label": "Case study — iDEM Connect Apex backend",
+            "href": "/projects/idemconnect-apex-backend"
+          },
+          {
+            "label": "Project — risque360 (STRIDE modelling)",
+            "href": "/projects/risque360"
+          }
+        ],
+        "sectorLabel": "Where it matters",
+        "sector": "Healthcare and luxury: integrations that move patient data or product provenance — where a flaw isn't a technical incident but a breach of trust."
+      }
+    ],
+    "eliminatesTitle": "What the combination removes",
+    "eliminates": [
+      "The back-and-forth between the Salesforce team and the infra/DevOps team on every integration decision.",
+      "Decisions made on one side without knowing the constraints of the other — a trigger designed without knowing how the infra calls it, a pipeline designed without knowing Salesforce's deployment limits.",
+      "The gap between \"the API is audited\" and \"the control is in place\": both happen in the same sprint."
+    ],
+    "ctaTitle": "A cross-cutting need in mind?",
+    "ctaText": "If the problem touches both Salesforce and infrastructure — integration, migration, traceable go-live, API security — that's exactly where this profile saves time.",
+    "ctaContact": "Discuss your need",
+    "ctaCv": "Download the hybrid CV (PDF)"
   }
 }
