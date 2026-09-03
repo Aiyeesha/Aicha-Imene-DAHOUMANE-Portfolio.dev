@@ -130,7 +130,8 @@ function buildJsonLd(locale: string) {
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
-          addressLocality: "Marseille"
+          addressRegion: "Île-de-France",
+          addressLocality: "Val-d'Oise"
         },
         // knowsAbout : compétences clés pour le rich snippet Knowledge Graph
         knowsAbout: [

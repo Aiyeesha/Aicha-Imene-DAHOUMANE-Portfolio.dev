@@ -309,9 +309,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Développeuse Salesforce & Consultante IT | Remote Europe",
-    "description": "Développeuse Salesforce & Consultante IT (Marseille) — Apex, LWC, CI/CD, intégrations. Projets concrets, 50+ articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international.",
+    "description": "Développeuse Salesforce & Consultante IT (Île-de-France) — Apex, LWC, CI/CD, intégrations. Projets concrets, 50+ articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops | Remote Europe",
-    "descriptionItops": "Ingénieure Systèmes & IT Ops (Marseille) — Infrastructure, sécurité, automatisation, CI/CD. Projets concrets, 50+ articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international."
+    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD. Projets concrets, 50+ articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -384,7 +384,7 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Marseille / Provence-Alpes-Côte d'Azur — 100 % Remote · Hybride · Sur site — Mobilité & relocalisation envisageables (France & international)",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité opérationnelle Paris / Île-de-France · Hybride · Sur site · Remote — Mobilité & relocalisation envisageable",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
@@ -451,7 +451,7 @@
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Marseille, France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
@@ -475,7 +475,7 @@
       },
       {
         "q": "Travaillez-vous à distance ?",
-        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée à Marseille / Provence-Alpes-Côte d'Azur et ouverte à la relocalisation en France et à l'international y compris tout autre contexte anglophone. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
+        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité opérationnelle Paris / Île-de-France, et ouverte à la relocalisation en France et à l'international y compris tout autre contexte anglophone. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
       },
       {
         "q": "Quels sont vos délais habituels ?",
@@ -518,7 +518,7 @@
     "rolesValuesSalesforce": "Administratrice Salesforce · Développeuse Salesforce · Consultante Salesforce · Ingénieure Salesforce & Infrastructure",
     "rolesValuesItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "location": "Localisation",
-    "locationValues": "Marseille / Provence-Alpes-Côte d'Azur · Mobilité France & international (BE, LU, DE, IT, ES, UK, IE, MT + pays anglophones)",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité opérationnelle Paris / Île-de-France · Mobilité France & international (BE, LU, DE, IT, ES, UK, IE, MT + pays anglophones)",
     "cta": "Prendre contact →"
   },
   "hybrid": {
