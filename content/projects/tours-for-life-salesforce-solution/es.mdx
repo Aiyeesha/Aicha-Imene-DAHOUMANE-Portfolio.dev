@@ -1,0 +1,90 @@
+---
+title: "Diseño de solución Salesforce (Tours For Life)"
+heroSubtitle: "Diseño de una solución Sales Cloud de extremo a extremo para una agencia de viajes: conversión Prospecto → Viajero mediante Person Accounts, separación catálogo / reserva (Viaje vs Viaje Comprado), gestión de flota, 2 Flows sin código, seguridad por zona Norte/Sur — con una retrospectiva de arquitectura asumida."
+---
+
+## Contexto
+
+Tours for Life, una agencia de viajes en crecimiento, quería digitalizar su gestión comercial de principio a fin. El presidente, Philippe Bouvet, necesitaba un CRM Salesforce que cubriera el ciclo completo: captación de prospectos, conversión en viajeros, gestión de los viajes y seguimiento del rendimiento comercial por zona (Norte / Sur).
+
+Durante el encuadre surgió una necesidad: gestionar la flota de autobuses directamente en Salesforce, ya que un mismo autobús puede asignarse a varios viajes. Es el tipo de añadido tardío que pone a prueba la solidez de un modelo de datos.
+
+## El modelo de datos
+
+| Objeto | Rol | Decisión de diseño |
+|---|---|---|
+| **Prospecto** | Lead estándar, pestaña renombrada | Teléfono obligatorio al capturar — un prospecto sin número no es explotable |
+| **Viajero** | `Account` con Person Accounts activado | Record Type dedicado «Account to Viajero»: permite **convertir un prospecto en un particular sin cuenta de empresa** — el caso normal en B2C |
+| **Viaje** | Objeto nuevo — el catálogo | Destino, salida/llegada, precio, estado, plazas disponibles |
+| **Viaje Comprado** | Objeto nuevo **distinto de Viaje** — la reserva | Vincula Viajero + Viaje, maletas, plazas compradas, número de autobús |
+| **Flota de autobuses** | Objeto nuevo | `lookup` hacia Viaje — un autobús, varios viajes |
+
+La decisión central de modelado: **separar el catálogo (`Viaje`) de la transacción (`Viaje Comprado`)**. Fusionar ambos habría duplicado los datos del viaje en cada reserva y habría hecho imposible un simple «¿cuántas plazas quedan?». Dos objetos, una relación, y la capacidad vuelve a ser un valor derivado.
+
+## La automatización sin código
+
+Dos **Record-Triggered Flows**, sin Apex:
+
+- **Flow nº1** — email de confirmación enviado automáticamente al prospecto cuando su estado pasa de «información recabada» a «interesado/a».
+- **Flow nº2** — decremento automático del campo «Plazas disponibles» del Viaje cada vez que se crea o modifica un Viaje Comprado asociado.
+
+La elección del sin código es deliberada: dos reglas simples disparadas por registro, sin procesamiento masivo ni asíncrono. **Flow es la herramienta adecuada aquí** — Apex sería sobreingeniería. Saber dónde se detiene el sin código importa tanto como saber programar.
+
+## El modelo de seguridad por zona
+
+- **2 perfiles**: Director Comercial (acceso completo), Comercial (crear/modificar prospectos, convertirlos, consultar viajeros y viajes comprados).
+- **3 roles jerárquicos**: Dirección Comercial → Comercial Norte / Comercial Sur — la dirección ve ambas carteras.
+- **OWD diferenciado por objeto**: `Private` en Prospecto / Viaje, `Public Read-Only` en Flota de autobuses, `Controlled by Parent` en Viaje Comprado.
+- **Sharing Rules por rol (Norte / Sur)** en Prospecto y Viaje: las carteras quedan separadas, con visibilidad de solo lectura sobre los viajeros de la otra zona.
+
+## La retrospectiva de arquitectura
+
+Con perspectiva, la opción de **un perfil por nivel** (Director / Comercial) no es la más escalable. Un único perfil «Comercial» + un **Permission Set** que otorgue los permisos de dirección sería más mantenible: los Permission Sets se acumulan y se auditan, mientras que un perfil adicional es un punto más de divergencia que mantener sincronizado en cada evolución.
+
+Nombrarlo no es restar valor al entregable — es mostrar que una decisión se **revisa**. Un júnior entrega y pasa a lo siguiente; la diferencia está en volver sobre la decisión.
+
+## Informes
+
+| Informe | Para quién | Qué impulsa |
+|---|---|---|
+| Viajes disponibles (Estado = Abierto) | Comerciales | Qué oferta presentar, con totales de precio / plazas |
+| Prospectos a viajeros | Comerciales + dirección | Tasa y fecha de conversión, por comercial y rol |
+| Viajes comprados por comercial | Dirección | Rendimiento agrupado por rol (Norte / Sur / Dirección) |
+
+Informes fijados en la página de inicio de Salesforce para el uso diario.
+
+## Decisiones y limitaciones asumidas
+
+| Decisión | Alternativa descartada | Por qué |
+|---|---|---|
+| **Person Accounts** para los Viajeros | Un Contact bajo un Account genérico | Los viajeros son particulares; Person Accounts es el modelo B2C de Salesforce |
+| **Viaje / Viaje Comprado separados** | Un único objeto Viaje que lleve la reserva | Catálogo ≠ transacción: separa el dato estable del dato por reserva |
+| **Flota de autobuses como `lookup`** hacia Viaje | Master-detail | Un autobús sobrevive a la eliminación de un viaje; no se quiere eliminación en cascada |
+| **Automatización 100 % Flow** | Trigger Apex | Dos reglas simples record-triggered — el sin código encaja, Apex sería injustificado |
+
+Limitaciones asumidas:
+
+- **Person Accounts es un ajuste de org irreversible.** Activado aquí con conocimiento de causa, pero es una decisión que compromete a toda la org — a validar con el cliente antes, no después.
+- **`lookup` en la Flota de autobuses**: sin roll-up summary automático de capacidad del lado del Viaje (a diferencia del campo «plazas disponibles» del catálogo, gestionado por Flow). Un control de sobrerreserva a nivel de autobús aún habría que añadirlo.
+- **Solución demostrada en sandbox**, no probada con el volumen real de una agencia en crecimiento.
+
+## Resultados
+
+| Indicador | Valor |
+|---|---|
+| Objetos de negocio diseñados | 4 (Viajero Person Account, Viaje, Viaje Comprado, Flota de autobuses) |
+| Roles jerárquicos | 3 (Dirección + Comercial Norte / Sur) |
+| Automatizaciones Flow (sin Apex) | 2 |
+| Evaluación del título RNCP | 4/4 competencias validadas |
+
+## Entregables
+
+- [Especificaciones detalladas (PDF)](/docs/projects/tours-for-life-salesforce-solution/specifications.pdf)
+- [Presentación de la solución (PPTX)](/docs/projects/tours-for-life-salesforce-solution/presentation.pptx)
+- [Modelo de datos (PNG)](/docs/projects/tours-for-life-salesforce-solution/data-model.png)
+
+## Lo que demuestra este proyecto
+
+Los **fundamentos de Sales Cloud hechos con propiedad**: Person Accounts para B2C, un modelo de datos que separa catálogo y transacción, una automatización sin código asumida donde basta, un modelo de seguridad por rol y zona. Y una **retrospectiva de arquitectura explícita** — la prueba de que una decisión se cuestiona, no se olvida una vez entregado el trabajo.
+
+> Proyecto integrador del título RNCP nivel 6 "Développeur Concepteur Logiciel" (OpenClassrooms): contexto, necesidades y restricciones impuestos, entregable defendido ante un jurado. Se amplía aquí con la lectura de modelado / elección de herramienta / seguridad / retrospectiva esperada en un contexto profesional — más allá del alcance estricto del ejercicio.
