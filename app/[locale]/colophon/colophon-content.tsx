@@ -95,7 +95,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Track toggle** côté client (cookie `track`) : un seul composant hero, compétences et services adaptés selon le profil Salesforce ou IT Ops.",
         "**Pages dédiées** pour About, Certifications et Blog — accessibles via la navbar, non dupliquées dans la landing.",
         "**Server Components par défaut** : seuls les composants interactifs (hero, toggle de thème, formulaire) sont marqués `use client`.",
-        "**Données Supabase** récupérées côté serveur avec cache Redis (stale-while-revalidate) — pas de requêtes client directes.",
+        "**Lectures Supabase** (témoignages, incidents / statut) récupérées côté serveur avec cache Redis (stale-while-revalidate) — pas de requêtes client directes. Les fiches projets sont versionnées dans `content/` et servies statiquement.",
         "**Blog MDX** : articles écrits en `.mdx` dans `content/blog/posts/{locale}/` — rendu statique au build, pas de base de données requise.",
       ]
     : isEs
@@ -104,7 +104,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Selector de track** en el cliente (cookie `track`): un único componente hero, con habilidades y servicios adaptados al perfil Salesforce o IT Ops.",
         "**Páginas dedicadas** para About, Certificaciones y Blog — accesibles desde la navbar, sin duplicarse en la landing.",
         "**Server Components por defecto**: solo los componentes interactivos (hero, selector de tema, formulario) están marcados como `use client`.",
-        "**Datos de Supabase** obtenidos en el servidor con caché Redis (stale-while-revalidate) — sin consultas directas desde el cliente.",
+        "**Lecturas de Supabase** (testimonios, incidencias / estado) obtenidas en el servidor con caché Redis (stale-while-revalidate) — sin consultas directas desde el cliente. Las fichas de proyecto están versionadas en `content/` y se sirven de forma estática.",
         "**Blog en MDX**: artículos escritos en `.mdx` dentro de `content/blog/posts/{locale}/` — renderizado estático en el build, sin necesidad de base de datos.",
       ]
     : [
@@ -112,13 +112,13 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Client-side track toggle** (cookie `track`): a single hero component, skills and services adapt to Salesforce or IT Ops profile.",
         "**Dedicated pages** for About, Certifications, and Blog — accessible via the navbar, not duplicated in the landing.",
         "**Server Components by default**: only interactive components (hero, theme toggle, contact form) are marked `use client`.",
-        "**Supabase data** fetched server-side with Redis cache (stale-while-revalidate) — no direct client queries.",
+        "**Supabase reads** (testimonials, incidents / status) fetched server-side with a Redis cache (stale-while-revalidate) — no direct client queries. Project entries are version-controlled in `content/` and served statically.",
         "**MDX Blog**: articles written as `.mdx` files in `content/blog/posts/{locale}/` — statically rendered at build time, no database required.",
       ];
 
   const cachePoints = isFr
     ? [
-        "**Upstash Redis** stocke les réponses des requêtes Supabase (projets) avec un TTL de 5 minutes.",
+        "**Upstash Redis** stocke les réponses des lectures Supabase restantes (liste des témoignages, incidents / statut) avec un TTL de 5 minutes.",
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
@@ -126,14 +126,14 @@ export default function ColophonContent({ locale }: { locale: string }) {
       ]
     : isEs
     ? [
-        "**Upstash Redis** almacena las respuestas de las consultas a Supabase (proyectos) con un TTL de 5 minutos.",
+        "**Upstash Redis** almacena las respuestas de las lecturas restantes a Supabase (lista de testimonios, incidencias / estado) con un TTL de 5 minutos.",
         "**stale-while-revalidate**: si el dato está en caché, se devuelve de inmediato mientras se dispara una revalidación asíncrona en segundo plano.",
         "**Invalidación manual**: el endpoint `POST /api/cache/invalidate` (protegido por secreto) permite purgar la caché tras una actualización de datos.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en caché CDN, revalidado cada 24h.",
         "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado. Se planea una caché vía reverse-proxy en homelab (Q4 2026), que podrá cachear el HTML en su propia capa sin comprometer el nonce.",
       ]
     : [
-        "**Upstash Redis** stores Supabase query responses (projects) with a 5-minute TTL.",
+        "**Upstash Redis** stores the remaining Supabase read responses (testimonials list, incidents / status) with a 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",
