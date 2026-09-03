@@ -1,0 +1,85 @@
+---
+title: "Développement backend Apex (iDEM Connect)"
+heroSubtitle: "Backend Apex complet pour la force de vente d'iDEM Connect : trigger + handlers, batch mensuel, scheduler — 3 règles métier, sécurité CRUD/FLS de bout en bout, 23 tests, 90 % de couverture org-wide."
+---
+
+## Le contexte métier
+
+iDEM Connect est un fournisseur d'accès à Internet international (1,8 Md€ de chiffre d'affaires, 3 950 salariés). L'objectif : outiller la force de vente sur Salesforce autour du triptyque **Compte / Contrat / Commande**, avec trois règles métier précises et une exigence de couverture de tests stricte imposée dès le cahier des charges.
+
+La mission ne se limitait pas à « faire marcher » : il fallait concevoir l'architecture (trigger, handlers, batch, scheduler), l'implémenter proprement, et livrer une **documentation technique exploitable** — une fiche par classe et une matrice de traçabilité qui relie chaque exigence à ses tests.
+
+## Les trois règles métier
+
+| # | Règle | Déclencheur technique |
+|---|---|---|
+| **RG-01** | Interdire l'activation d'une commande sans ligne de commande | Transition `Draft → Activated` interceptée sur `OrderTrigger.before update` ; comptage agrégé `COUNT(OrderItem)` par `Order` ; `addError()` bloquant si zéro ligne |
+| **RG-02** | Garder `Account.Active__c` synchronisé avec l'existence de commandes | `true` à l'insertion d'une commande (`after insert`) ; `false` **uniquement** quand la dernière commande du compte est supprimée (`after delete`) |
+| **RG-03** | Relancer automatiquement les comptes dormants | Chaque 1er lundi du mois à 9 h (`CRON 0 0 9 ? * MON#1`) : un batch crée une tâche « Call » à J+5 pour chaque compte sans commande **et** sans tâche « Call » déjà existante |
+
+## Architecture
+
+**Un trigger par objet, zéro logique dans le trigger.** `OrderTrigger` n'orchestre que l'appel des handlers — il ne contient aucune règle métier, ce qui le rend bulk-safe par construction et testable handler par handler.
+
+```
+OrderTrigger  (orchestration seule)
+  ├─ before update → OrderValidationHandler   (RG-01 — lecture seule, addError)
+  ├─ after  insert → OrderInsertionHandler    (RG-02 — Account.Active__c = true)
+  └─ after  delete → OrderDeletionHandler     (RG-02 — Account.Active__c = false si dernière)
+
+AccountReminderScheduler  (CRON mensuel)  →  AccountReminderBatch  (RG-03)
+  start()   : anti-join SOQL — comptes sans commande
+  execute() : dé-duplication par agrégat GROUP BY WhatId, création des Task « Call »
+  finish()  : journal d'exécution
+
+AppConfig         — toutes les constantes métier (statuts, libellés, délai J+5)
+TestDataFactory   — usine de données de test (generateX() sans DML / createX() avec DML)
+```
+
+## Décisions d'architecture (ADR)
+
+| Décision | Alternative écartée | Pourquoi |
+|---|---|---|
+| **Handler pattern**, logique hors trigger | Logique directement dans `OrderTrigger` | Bulk-safe par construction, chaque règle testée isolément, ordre d'exécution explicite |
+| **Classe `AppConfig`** pour la configuration | Custom Metadata Type / Permission Set | À cette échelle (une seule org), plus simple à auditer ; migrerait vers un Custom Metadata Type sur un projet multi-environnements — choix assumé, pas oubli |
+| **`Database.insert/update(..., allOrNone = false)`** | `allOrNone = true` (rollback total) | Une seule ligne en erreur ne doit pas annuler la relance de 200 autres comptes ; les échecs partiels sont journalisés en détail |
+| **Dé-duplication pilotée par un flag** (`DEDUPE_USING_AUTO_FLAG`) | Comportement figé en dur | Le métier peut choisir « toute tâche Call bloque la relance » ou « seulement les tâches auto-créées » sans retoucher le batch |
+| **Repli sur l'utilisateur courant** dans le scheduler | Échec si le propriétaire du compte est inactif | Un propriétaire désactivé ne doit pas faire échouer une relance mensuelle planifiée |
+
+## Sécurité par conception
+
+La sécurité n'est pas une passe finale — elle est appliquée requête par requête, avec le bon outil selon le cas :
+
+- **`WITH SECURITY_ENFORCED`** sur l'anti-join du batch : requête simple, éligible, la vérification FLS est déléguée à la plateforme.
+- **Vérifications CRUD/FLS explicites** sur l'agrégat de dé-duplication : un `GROUP BY` **n'est pas** éligible à `WITH SECURITY_ENFORCED`, donc `Schema.sObjectType.Task.isAccessible()` et l'accès aux champs `WhatId` / `Subject` / `Auto_Created__c` sont contrôlés à la main avant exécution. Connaître cette limite de la plateforme, c'est la différence entre « j'ai mis `WITH SECURITY_ENFORCED` partout » et une sécurité réellement effective.
+- **`Security.stripInaccessible(CREATABLE)`** avant chaque insertion de tâche, **`(UPDATABLE)`** avant chaque mise à jour de compte : les champs non accessibles à l'utilisateur courant sont retirés silencieusement plutôt que de faire lever une exception.
+- **Bulkification stricte** : aucun SOQL ni DML dans une boucle, tout en `Set` / `Map` et agrégats. Validé par un test qui traite **250 comptes en une seule transaction** — la bulkification est ici une propriété de robustesse autant que de performance.
+
+## Tests, traçabilité & déploiement
+
+- **23 tests unitaires** couvrant le cas nominal, les cas limites, les cas d'erreur et le bulk 250 comptes, tous construits via `TestDataFactory` (données découplées, réutilisées par les 6 classes de test).
+- **90 % de couverture org-wide**, `OrderTrigger` / `AppConfig` / `AccountReminderScheduler` à 100 % ; la classe la plus dense (`AccountReminderBatch` — dé-duplication + repli propriétaire + insertion résiliente) à 86 %, chiffre documenté par classe et non lissé.
+- **Matrice de traçabilité exigences → tests** : chaque règle métier pointe vers les méthodes de test qui la couvrent — un relecteur retrouve en une ligne quel test valide RG-02.
+- **Déploiement** via Salesforce DX (`sfdx force:source:deploy`), métadonnées versionnées.
+
+## Limites assumées
+
+- **RG-01 ne couvre que la transition `Draft → Activated`.** Une commande passant directement de `Cancelled` à `Activated` échapperait au contrôle. Limite documentée plutôt que corrigée hors périmètre, avec le chemin de correction identifié (élargir la condition de transition dans `OrderValidationHandler`).
+- **Configuration en classe Apex**, pas en Custom Metadata : voir l'ADR — acceptable pour une org unique, à faire évoluer avant un déploiement multi-environnements.
+- **Pas de mécanisme de reprise** sur les tâches non créées à cause d'un échec partiel : elles sont journalisées, pas re-tentées automatiquement.
+
+## Résultats
+
+| Indicateur | Valeur |
+|---|---|
+| Règles métier implémentées | 3 / 3 |
+| Tests unitaires | 23, 100 % de réussite |
+| Couverture org-wide | 90 % (3 classes à 100 %) |
+| Test de charge | 250 comptes traités en une transaction |
+| Évaluation du titre RNCP | 3/3 compétences validées — mention Félicitations, architecture jugée propre et bien documentée |
+
+## Ce que ce projet démontre
+
+Pas « le code compile » : un backend Salesforce où **le modèle de sécurité est appliqué de bout en bout**, où un échec partiel ne fait pas tomber un traitement de masse, et où chaque règle métier est isolée, testée et tracée. C'est le genre de backend qu'un architecte relit sans avoir à le réécrire — la différence exacte entre un livrable de débutant et un livrable de production.
+
+> Projet fil rouge du titre RNCP niveau 6 « Développeur Concepteur Logiciel » (OpenClassrooms) : contexte, jeu de données et contraintes imposés, livrable soutenu devant un jury. Il est approfondi ici avec la couche sécurité, robustesse et traçabilité attendue en contexte professionnel — au-delà du périmètre strict de l'exercice.
