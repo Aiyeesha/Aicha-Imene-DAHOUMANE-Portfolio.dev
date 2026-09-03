@@ -1,0 +1,105 @@
+---
+title: "Conception CRM de suivi de livraison (LTP)"
+heroSubtitle: "Architecture complète d'un backend Salesforce de suivi de livraison multi-transporteurs pour une maison de couture nuptiale : modèle de données UML, modèle de sécurité par zone, stratégie d'import 2,1 M de comptes, intégration temps réel + batch — conçue avant la première ligne de code."
+---
+
+## Le contexte métier
+
+Le Temps des Papillons (LTP) est une maison française de couture et de robes de mariée. Son suivi de livraison passait par **3 transporteurs aux interfaces disparates**, ce qui générait environ **194 appels par jour** au support — juste pour connaître un statut.
+
+Pour une maison de couture nuptiale, ce statut n'est pas une question anodine. Une robe sur-mesure est liée à une date de mariage qui ne peut pas bouger : « on vérifie et on vous rappelle » n'est pas une réponse acceptable, et chacun de ces appels quotidiens venait d'une cliente anxieuse pour une échéance non négociable. C'est cette urgence — multipliée par 2,1 millions de comptes et 3 transporteurs sans format de statut commun — qui a fait d'une **vue unifiée une exigence métier**, pas un confort.
+
+La mission : concevoir l'**architecture technique complète de l'application Salesforce avant tout développement** — modèle de données UML, matrice de sécurité, stratégie d'import et plan d'intégration transporteurs. Cible fonctionnelle : **−70 % d'appels entrants** par l'automatisation, et une vision 360° de la cliente.
+
+## Contraintes et volumétrie
+
+| Contrainte | Chiffre / nature | Conséquence de conception |
+|---|---|---|
+| Volumétrie cible | 2 123 000 comptes · 3 239 870 contacts · 234 000 opportunités | Import massif à séquencer, pas de manipulation manuelle possible |
+| 3 transporteurs, interfaces hétérogènes | 2 API REST temps réel · 1 flux CSV/SFTP | Deux canaux d'intégration distincts, imposés par les transporteurs — pas un choix |
+| Import initial sans perte ni doublon | Ordre de dépendance parent-enfant sur 10 objets | Plan de charge séquencé + clé d'unicité (External Id) |
+| Objectif support | −70 % d'appels entrants | L'automatisation du statut doit être fiable, pas « best effort » |
+
+## Architecture — deux canaux
+
+Le choix des deux canaux est **dicté par les transporteurs**, pas par une préférence de conception : LTP France et Transport Luxe Europe exposent une API REST ; Rapid International Transport ne propose qu'un dépôt CSV sur SFTP.
+
+```
+─ Canal temps réel (LTP France, Transport Luxe Europe) ─────────────
+  Webhook transporteur
+     ▼  @RestResource /delivery-webhook  (classe DeliveryWebhook)
+  Platform Event DeliveryEvent__e        (découple la réception du traitement)
+     ▼
+  Flow record-triggered → mise à jour Livraison__c
+  Rafraîchissement à la demande : RefreshStatusQueueable
+     · Limits.getCallouts() + ré-enfilement auto si callouts épuisés
+     · DeliveryService / TransporterCalloutService (@future(callout=true))
+  Affichage : LWC deliveryTracker + DeliveryController (isAccessible() avant lecture)
+
+─ Canal batch (Rapid International Transport) ──────────────────────
+  Dépôt SFTP toutes les 2 h
+     ▼  Job Talend : tSftpInput → tMap → tSalesforceOutputBulkExec
+  Bulk API v2 · upsert sur Tracking_Number__c (External Id) · 500 000 lignes/h
+     ▼
+  Journalisation dans CSV_Import_Log__c
+```
+
+Authentification par **Named Credentials (OAuth2)** des deux côtés, Remote Site Settings obligatoires, callouts testés via `HttpCalloutMock`.
+
+## Modèle de sécurité par zone
+
+Trois zones géographiques (France / Europe / International), mais **un seul profil « Support Agent »**. L'isolation ne passe pas par la multiplication des profils :
+
+- **Hiérarchie de rôles** (Responsable → France / Europe / International) + **règles de partage sur `Zone__c`** pour l'accès aux données par zone.
+- **OWD** : `Private` sur `Livraison__c`, `Public Read Only` sur `Account` / `Contact` / `Opportunity` / `Transporter_Config__c`.
+- **Field-Level Security ciblée** : `Zone__c` en lecture seule pour le support (le filtre de zone est verrouillé, pas contournable) ; `CSV_Imported__c` en lecture seule des deux côtés (écrit uniquement par Apex) ; champs financiers (`AnnualRevenue`, `ExpectedRevenue`) masqués pour le support.
+- **Validation Rule** bloquant tout statut « Livré » sans `Tracking_Number__c` renseigné — l'intégrité du suivi est garantie à la source.
+- **Permission Sets ponctuels** (`ReportingAccess`, `ImportControl`, `API_Access_Extension`) pour étendre l'accès sans créer de profil.
+
+## Stratégie d'import
+
+- **Ordre de charge** respectant les dépendances : `Product2` → `Pricebook2` → `PricebookEntry` → `Account` → `Contact` → `AccountContactRelation` → `Opportunity` → `OpportunityLineItem` → `Livraison__c` → `Transporter_Config__c`.
+- **Outils différenciés** : Data Loader CLI pour l'import initial (lots de 50 k) ; Talend + Bulk API v2 pour les flux transporteur (500 000 lignes/h, 10 000 enregistrements/requête).
+- **Scénarios de test définis** : import CSV de 500 k lignes en sandbox Talend (< 15 min), timeout API simulé via `HttpCalloutMock`, doublons de Tracking Number fusionnés automatiquement via l'External Id.
+- **Couverture cible** : ≥ 90 % sur les classes Apex d'intégration, 100 % sur les handlers d'erreur.
+- **Gouvernance** : dashboard « Import Monitor » (imports/jour, taux de rejet) + alertes email Flow/Apex en cas d'échec critique.
+
+## Décisions d'architecture (ADR)
+
+| Décision | Alternative écartée | Pourquoi |
+|---|---|---|
+| **Deux canaux d'intégration** (REST temps réel + batch SFTP) | Un seul canal pour les 3 transporteurs | Rapid International Transport n'expose aucune API REST — contrainte transporteur, pas préférence |
+| **Platform Event** entre le webhook et le traitement | Traitement synchrone dans le endpoint REST | Découple la réception (rapide, toujours 200) du traitement (Flow, mises à jour) ; absorbe les pics |
+| **Isolation par rôles + règles de partage**, un seul profil | Un profil par zone | Un seul profil à maintenir ; le partage suffit tant que les zones ne diffèrent que par la **visibilité** des données |
+| **Upsert sur External Id** (`Tracking_Number__c`) | Insert + dédoublonnage a posteriori | Idempotence : un même fichier rejoué ne crée pas de doublon |
+| **Prototype et spécification**, pas de mise en prod | Développer directement | Le livrable attendu était l'architecture justifiée — coder avant d'avoir tranché le modèle de sécurité aurait été prématuré |
+
+## Limites assumées
+
+- **Aucune réconciliation entre les deux canaux.** Si un import batch arrive après qu'un webhook temps réel a déjà mis à jour la même livraison, l'écriture batch peut écraser un statut plus récent. Acceptable à une cadence SFTP de 2 h pour le volume de ce transporteur — mais c'est **la première limite à traiter** avant d'augmenter la fréquence du batch.
+- **Le profil unique** repose entièrement sur la hiérarchie de rôles et le partage. Toute future zone nécessitant un vrai jeu de permissions différent (pas juste une visibilité différente) demanderait de restructurer la hiérarchie de rôles.
+- **Architecture validée sur ses mérites de conception, jamais testée en charge** sur les 2,1 M de comptes cibles. C'est une spécification et un prototype — pas un système éprouvé à l'échelle de production.
+
+## Résultats
+
+| Indicateur | Valeur |
+|---|---|
+| Volumétrie de production visée | 2,1 M de comptes |
+| Transporteurs intégrés | 3 (2 API REST temps réel + 1 batch CSV/Talend) |
+| Objets custom conçus (modèle UML) | 5 |
+| Évaluation du titre RNCP | 4/4 compétences validées |
+
+## Livrables
+
+- [Spécifications techniques (PDF)](/docs/projects/ltp-apex-backend-prototype/specifications.pdf)
+- [Diagramme UML du modèle de données (PDF)](/docs/projects/ltp-apex-backend-prototype/uml-data-model.pdf)
+- [Droits d'accès & partage (PDF)](/docs/projects/ltp-apex-backend-prototype/access-rights.pdf)
+- [Stratégie d'import (PDF)](/docs/projects/ltp-apex-backend-prototype/import-strategy.pdf)
+
+## Ce que ce projet démontre
+
+Un travail d'**architecture, pas de développement** : concevoir le modèle de données, la sécurité et l'intégration *avant* d'écrire le code, et savoir défendre chaque choix. Un modèle de sécurité qui **passe à l'échelle par la hiérarchie de rôles, pas par la prolifération de profils**. Et une honnêteté nette sur la frontière entre ce qui est *conçu* et ce qui est *éprouvé* — un architecte crédible nomme cette frontière plutôt que de la masquer.
+
+Le contexte, lui, est représentatif du **secteur luxe** : une traçabilité où une date manquée n'est pas une gêne mais un incident client, et où le suivi ne peut pas être « à peu près ».
+
+> Projet fil rouge du titre RNCP niveau 6 « Développeur Concepteur Logiciel » (OpenClassrooms) : contexte, jeu de données et contraintes imposés, livrable soutenu devant un jury. Il est approfondi ici avec la lecture architecture / sécurité / gouvernance attendue en contexte professionnel — au-delà du périmètre strict de l'exercice.
