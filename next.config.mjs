@@ -24,6 +24,7 @@ import createMDX from "@next/mdx";
 import createNextIntlPlugin from "next-intl/plugin";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkFrontmatter from "remark-frontmatter";
+import remarkGfm from "remark-gfm";
 
 // Bundle analyzer — activé uniquement si ANALYZE=true (jamais en production)
 // Usage : ANALYZE=true npm run build
@@ -232,7 +233,10 @@ const nextConfig = {
 //   - keepBackground: false → les couleurs de fond sont gérées par globals.css
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkFrontmatter],
+    // remark-gfm : tables, listes de tâches, autolinks, ~~barré~~ (utilisé par
+    // les études de cas projets sous content/projects/ et par les articles de
+    // blog qui contiennent déjà des tableaux Markdown).
+    remarkPlugins: [remarkFrontmatter, remarkGfm],
     rehypePlugins: [
       [
         rehypePrettyCode,

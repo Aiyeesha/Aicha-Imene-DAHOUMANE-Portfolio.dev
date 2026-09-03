@@ -50,6 +50,7 @@
     "react-dom": "^19.2.7",
     "rehype-pretty-code": "^0.14.5",
     "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
     "zod": "^4.4.3"
   },
   "overrides": {
