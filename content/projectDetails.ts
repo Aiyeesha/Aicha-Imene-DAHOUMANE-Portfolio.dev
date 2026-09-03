@@ -1,7 +1,11 @@
-// AUTO-GENERATED — do not hand-edit.
-// Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
-// Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-16T15:41:26.642Z
+// SOURCE OF TRUTH — hand-edit this file.
+// Per-slug, per-locale project content: title / heroSubtitle / sections + gallery.
+// Card metadata lives in content/projects.ts. Deep case studies (which replace
+// `sections` for a given slug) live in content/projects/<slug>/<locale>.mdx.
+// Gallery `src` values are repo-local paths under public/projects/<slug>/.
+// Read path: lib/data/projectsSource.ts.
+//
+// (Left Supabase in the de-Supabase refactor — this is now the only source.)
 
 import type { GalleryImage } from "@/components/ImageGallery";
 
@@ -33,11 +37,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/hardware-upgrade-hp-laptop/cover.webp"
+        "src": "/projects/hardware-upgrade-hp-laptop/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/hardware-upgrade-hp-laptop/screenshot-1.webp"
+        "src": "/projects/hardware-upgrade-hp-laptop/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -320,11 +324,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/hemebiotech-java-debug/cover.webp"
+        "src": "/projects/hemebiotech-java-debug/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/hemebiotech-java-debug/screenshot-1.webp"
+        "src": "/projects/hemebiotech-java-debug/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -615,59 +619,59 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/cover.webp"
+        "src": "/projects/homelab-cowrie-honeypot/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-1.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-2.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-3.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-4.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-5.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-6.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-7.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-8.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-9.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-10.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-11.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-12.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-cowrie-honeypot/screenshot-13.webp"
+        "src": "/projects/homelab-cowrie-honeypot/screenshot-13.webp"
       }
     ],
     "locales": {
@@ -939,39 +943,39 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/cover.webp"
+        "src": "/projects/homelab-network-sniffing/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-1.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-2.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-3.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-4.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-5.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-6.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-7.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-network-sniffing/screenshot-8.webp"
+        "src": "/projects/homelab-network-sniffing/screenshot-8.webp"
       }
     ],
     "locales": {
@@ -1252,27 +1256,27 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-password-cracking-lab/cover.webp"
+        "src": "/projects/homelab-password-cracking-lab/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-password-cracking-lab/screenshot-1.webp"
+        "src": "/projects/homelab-password-cracking-lab/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-password-cracking-lab/screenshot-2.webp"
+        "src": "/projects/homelab-password-cracking-lab/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-password-cracking-lab/screenshot-3.webp"
+        "src": "/projects/homelab-password-cracking-lab/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-password-cracking-lab/screenshot-4.webp"
+        "src": "/projects/homelab-password-cracking-lab/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/homelab-password-cracking-lab/screenshot-5.webp"
+        "src": "/projects/homelab-password-cracking-lab/screenshot-5.webp"
       }
     ],
     "locales": {
@@ -1559,39 +1563,39 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/cover.webp"
+        "src": "/projects/it-ops-disk-backup/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-1.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-2.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-3.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-4.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-5.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-6.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-7.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-disk-backup/screenshot-8.webp"
+        "src": "/projects/it-ops-disk-backup/screenshot-8.webp"
       }
     ],
     "locales": {
@@ -1883,27 +1887,27 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-roaming-profiles/cover.webp"
+        "src": "/projects/it-ops-roaming-profiles/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-roaming-profiles/screenshot-1.webp"
+        "src": "/projects/it-ops-roaming-profiles/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-roaming-profiles/screenshot-2.webp"
+        "src": "/projects/it-ops-roaming-profiles/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-roaming-profiles/screenshot-3.webp"
+        "src": "/projects/it-ops-roaming-profiles/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-roaming-profiles/screenshot-4.webp"
+        "src": "/projects/it-ops-roaming-profiles/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-roaming-profiles/screenshot-5.webp"
+        "src": "/projects/it-ops-roaming-profiles/screenshot-5.webp"
       }
     ],
     "locales": {
@@ -2207,83 +2211,83 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/cover.webp"
+        "src": "/projects/it-ops-virtualization-lab/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-1.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-2.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-3.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-4.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-5.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-6.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-7.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-8.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-9.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-10.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-11.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-12.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-13.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-14.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-15.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-16.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-16.webp"
       },
       {
         "alt": "Screenshot 17",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-17.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-17.webp"
       },
       {
         "alt": "Screenshot 18",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-18.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-18.webp"
       },
       {
         "alt": "Screenshot 19",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-virtualization-lab/screenshot-19.webp"
+        "src": "/projects/it-ops-virtualization-lab/screenshot-19.webp"
       }
     ],
     "locales": {
@@ -2614,23 +2618,23 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-workstation-setup/cover.webp"
+        "src": "/projects/it-ops-workstation-setup/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-workstation-setup/screenshot-1.webp"
+        "src": "/projects/it-ops-workstation-setup/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-workstation-setup/screenshot-2.webp"
+        "src": "/projects/it-ops-workstation-setup/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-workstation-setup/screenshot-3.webp"
+        "src": "/projects/it-ops-workstation-setup/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-workstation-setup/screenshot-4.webp"
+        "src": "/projects/it-ops-workstation-setup/screenshot-4.webp"
       }
     ],
     "locales": {
@@ -2937,75 +2941,75 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/cover.webp"
+        "src": "/projects/parkit-java-testing/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-1.webp"
+        "src": "/projects/parkit-java-testing/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-2.webp"
+        "src": "/projects/parkit-java-testing/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-3.webp"
+        "src": "/projects/parkit-java-testing/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-4.webp"
+        "src": "/projects/parkit-java-testing/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-5.webp"
+        "src": "/projects/parkit-java-testing/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-6.webp"
+        "src": "/projects/parkit-java-testing/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-7.webp"
+        "src": "/projects/parkit-java-testing/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-8.webp"
+        "src": "/projects/parkit-java-testing/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-9.webp"
+        "src": "/projects/parkit-java-testing/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-10.webp"
+        "src": "/projects/parkit-java-testing/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-11.webp"
+        "src": "/projects/parkit-java-testing/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-12.webp"
+        "src": "/projects/parkit-java-testing/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-13.webp"
+        "src": "/projects/parkit-java-testing/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-14.webp"
+        "src": "/projects/parkit-java-testing/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-15.webp"
+        "src": "/projects/parkit-java-testing/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-16.webp"
+        "src": "/projects/parkit-java-testing/screenshot-16.webp"
       },
       {
         "alt": "Screenshot 17",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/parkit-java-testing/screenshot-17.webp"
+        "src": "/projects/parkit-java-testing/screenshot-17.webp"
       }
     ],
     "locales": {
@@ -3317,79 +3321,79 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/cover.webp"
+        "src": "/projects/pochlib-ui/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-1.webp"
+        "src": "/projects/pochlib-ui/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-2.webp"
+        "src": "/projects/pochlib-ui/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-3.webp"
+        "src": "/projects/pochlib-ui/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-4.webp"
+        "src": "/projects/pochlib-ui/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-5.webp"
+        "src": "/projects/pochlib-ui/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-6.webp"
+        "src": "/projects/pochlib-ui/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-7.webp"
+        "src": "/projects/pochlib-ui/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-8.webp"
+        "src": "/projects/pochlib-ui/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-9.webp"
+        "src": "/projects/pochlib-ui/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-10.webp"
+        "src": "/projects/pochlib-ui/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-11.webp"
+        "src": "/projects/pochlib-ui/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-12.webp"
+        "src": "/projects/pochlib-ui/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-13.webp"
+        "src": "/projects/pochlib-ui/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-14.webp"
+        "src": "/projects/pochlib-ui/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-15.webp"
+        "src": "/projects/pochlib-ui/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-16.webp"
+        "src": "/projects/pochlib-ui/screenshot-16.webp"
       },
       {
         "alt": "Screenshot 17",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-17.webp"
+        "src": "/projects/pochlib-ui/screenshot-17.webp"
       },
       {
         "alt": "Screenshot 18",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/pochlib-ui/screenshot-18.webp"
+        "src": "/projects/pochlib-ui/screenshot-18.webp"
       }
     ],
     "locales": {
@@ -3703,11 +3707,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/python-network-scanner/cover.svg"
+        "src": "/projects/python-network-scanner/cover.svg"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/python-network-scanner/screenshot-1.svg"
+        "src": "/projects/python-network-scanner/screenshot-1.svg"
       }
     ],
     "locales": {
@@ -3986,11 +3990,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/python-password-checker/cover.svg"
+        "src": "/projects/python-password-checker/cover.svg"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/python-password-checker/screenshot-1.svg"
+        "src": "/projects/python-password-checker/screenshot-1.svg"
       }
     ],
     "locales": {
@@ -4243,11 +4247,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Risk heat map and add-risk form",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/risk-assessment-matrix/screenshot-1.png"
+        "src": "/projects/risk-assessment-matrix/screenshot-1.png"
       },
       {
         "alt": "Risk register table with scored entries",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/risk-assessment-matrix/screenshot-2.png"
+        "src": "/projects/risk-assessment-matrix/screenshot-2.png"
       }
     ],
     "locales": {
@@ -4561,7 +4565,7 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/security-monitoring-dashboard/cover.webp"
+        "src": "/projects/security-monitoring-dashboard/cover.webp"
       }
     ],
     "locales": {
@@ -4883,27 +4887,27 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "RMM Supervision — vue principale",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-rmm-supervision/2023-05-16%2016_44_15-.webp"
+        "src": "/projects/it-ops-rmm-supervision/2023-05-16%2016_44_15-.webp"
       },
       {
         "alt": "RMM Supervision — vue 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-rmm-supervision/2023-05-16%2016_52_39-.webp"
+        "src": "/projects/it-ops-rmm-supervision/2023-05-16%2016_52_39-.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-rmm-supervision/screenshot-2.webp"
+        "src": "/projects/it-ops-rmm-supervision/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-rmm-supervision/screenshot-3.webp"
+        "src": "/projects/it-ops-rmm-supervision/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-rmm-supervision/screenshot-4.webp"
+        "src": "/projects/it-ops-rmm-supervision/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-rmm-supervision/screenshot-5.webp"
+        "src": "/projects/it-ops-rmm-supervision/screenshot-5.webp"
       }
     ],
     "locales": {
@@ -5187,67 +5191,67 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/cover.webp"
+        "src": "/projects/workstation-mass-deployment/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-1.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-2.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-3.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-4.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-5.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-6.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-7.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-9.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-10.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-12.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-13.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-14.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-15.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-16.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-16.webp"
       },
       {
         "alt": "Screenshot 17",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/workstation-mass-deployment/screenshot-17.webp"
+        "src": "/projects/workstation-mass-deployment/screenshot-17.webp"
       }
     ],
     "locales": {
@@ -5609,23 +5613,23 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Incident Management — vue principale",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-incident-management/2023-05-16%2016_44_15-.webp"
+        "src": "/projects/it-ops-incident-management/2023-05-16%2016_44_15-.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-incident-management/screenshot-1.webp"
+        "src": "/projects/it-ops-incident-management/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-incident-management/screenshot-2.webp"
+        "src": "/projects/it-ops-incident-management/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-incident-management/screenshot-4.webp"
+        "src": "/projects/it-ops-incident-management/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-incident-management/screenshot-5.webp"
+        "src": "/projects/it-ops-incident-management/screenshot-5.webp"
       }
     ],
     "locales": {
@@ -5963,27 +5967,27 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Acronis Backup — vue 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-acronis-backup/2023-05-16%2015_54_50-.webp"
+        "src": "/projects/it-ops-acronis-backup/2023-05-16%2015_54_50-.webp"
       },
       {
         "alt": "Acronis Backup — SRV-MGT vue 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-acronis-backup/2023-05-16%2016_02_50-SRV-MGT.webp"
+        "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_02_50-SRV-MGT.webp"
       },
       {
         "alt": "Acronis Backup — SRV-MGT vue 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-acronis-backup/2023-05-16%2016_03_47-SRV-MGT.webp"
+        "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_03_47-SRV-MGT.webp"
       },
       {
         "alt": "Acronis Backup — SRV-MGT vue 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-acronis-backup/2023-05-16%2016_04_30-SRV-MGT.webp"
+        "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_04_30-SRV-MGT.webp"
       },
       {
         "alt": "Acronis Backup — SRV-MGT vue 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-acronis-backup/2023-05-16%2016_04_51-SRV-MGT.webp"
+        "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_04_51-SRV-MGT.webp"
       },
       {
         "alt": "Acronis Backup — SRV-MGT vue 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-acronis-backup/2023-05-16%2016_05_10-SRV-MGT.webp"
+        "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_05_10-SRV-MGT.webp"
       }
     ],
     "locales": {
@@ -6336,43 +6340,43 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/cover.webp"
+        "src": "/projects/it-ops-network-security/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-1.webp"
+        "src": "/projects/it-ops-network-security/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-2.webp"
+        "src": "/projects/it-ops-network-security/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-3.webp"
+        "src": "/projects/it-ops-network-security/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-4.webp"
+        "src": "/projects/it-ops-network-security/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-5.webp"
+        "src": "/projects/it-ops-network-security/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-6.webp"
+        "src": "/projects/it-ops-network-security/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-7.webp"
+        "src": "/projects/it-ops-network-security/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-8.webp"
+        "src": "/projects/it-ops-network-security/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-network-security/screenshot-9.webp"
+        "src": "/projects/it-ops-network-security/screenshot-9.webp"
       }
     ],
     "locales": {
@@ -6698,7 +6702,7 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/nextjs-admin-dashboard/cover.svg"
+        "src": "/projects/nextjs-admin-dashboard/cover.svg"
       }
     ],
     "locales": {
@@ -7044,11 +7048,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-wifi-config/cover.webp"
+        "src": "/projects/it-ops-wifi-config/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-wifi-config/screenshot-1.webp"
+        "src": "/projects/it-ops-wifi-config/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -7370,7 +7374,7 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-hardware-procurement/cover.webp"
+        "src": "/projects/it-ops-hardware-procurement/cover.webp"
       }
     ],
     "locales": {
@@ -7665,11 +7669,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-email-config/cover.webp"
+        "src": "/projects/it-ops-email-config/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/it-ops-email-config/screenshot-1.webp"
+        "src": "/projects/it-ops-email-config/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -8411,11 +8415,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/incident-response-tracker/cover.webp"
+        "src": "/projects/incident-response-tracker/cover.webp"
       },
       {
         "alt": "Incident detail with audit timeline",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/incident-response-tracker/screenshot-1.webp"
+        "src": "/projects/incident-response-tracker/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -8558,11 +8562,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/cve-watchlist/cover.webp"
+        "src": "/projects/cve-watchlist/cover.webp"
       },
       {
         "alt": "Filtered to Critical priority",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/cve-watchlist/screenshot-1.webp"
+        "src": "/projects/cve-watchlist/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -8705,11 +8709,11 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/log-anomaly-detector/cover.webp"
+        "src": "/projects/log-anomaly-detector/cover.webp"
       },
       {
         "alt": "An anomaly marked resolved",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/log-anomaly-detector/screenshot-1.webp"
+        "src": "/projects/log-anomaly-detector/screenshot-1.webp"
       }
     ],
     "locales": {
@@ -9726,19 +9730,19 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/avenir-telecom-lightning-app/cover.webp"
+        "src": "/projects/avenir-telecom-lightning-app/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/avenir-telecom-lightning-app/screenshot-1.webp"
+        "src": "/projects/avenir-telecom-lightning-app/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/avenir-telecom-lightning-app/screenshot-2.webp"
+        "src": "/projects/avenir-telecom-lightning-app/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/avenir-telecom-lightning-app/screenshot-3.webp"
+        "src": "/projects/avenir-telecom-lightning-app/screenshot-3.webp"
       }
     ],
     "locales": {
@@ -10166,31 +10170,31 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/cover.webp"
+        "src": "/projects/digit-learning-salesforce-update/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-1.webp"
+        "src": "/projects/digit-learning-salesforce-update/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-2.webp"
+        "src": "/projects/digit-learning-salesforce-update/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-3.webp"
+        "src": "/projects/digit-learning-salesforce-update/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-4.webp"
+        "src": "/projects/digit-learning-salesforce-update/screenshot-4.webp"
       },
       {
         "alt": "Data model — Mentor, Étudiants, Formations, Formations achetées",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-data-model.png"
+        "src": "/projects/digit-learning-salesforce-update/screenshot-data-model.png"
       },
       {
         "alt": "Dashboard — prospect-to-client conversion reports",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/digit-learning-salesforce-update/screenshot-dashboard.png"
+        "src": "/projects/digit-learning-salesforce-update/screenshot-dashboard.png"
       }
     ],
     "locales": {
@@ -10600,67 +10604,67 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/cover.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-1.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-2.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-3.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-4.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-5.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-6.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-7.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-8.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-9.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-10.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-11.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-12.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-13.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-14.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/tours-for-life-salesforce-solution/screenshot-15.webp"
+        "src": "/projects/tours-for-life-salesforce-solution/screenshot-15.webp"
       }
     ],
     "locales": {
@@ -11088,71 +11092,71 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/cover.webp"
+        "src": "/projects/idemconnect-apex-backend/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-1.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-2.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-3.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-4.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-5.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-6.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-7.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-8.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-9.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-10.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-11.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-12.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-13.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-14.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-15.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/idemconnect-apex-backend/screenshot-16.webp"
+        "src": "/projects/idemconnect-apex-backend/screenshot-16.webp"
       }
     ],
     "locales": {
@@ -11538,75 +11542,75 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/cover.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-1.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-2.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-3.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-4.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-5.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-6.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-7.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-8.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-9.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-10.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-11.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-12.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-13.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-14.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-15.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-16.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-16.webp"
       },
       {
         "alt": "Screenshot 17",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/wirebright-visualforce-to-lightning/screenshot-17.webp"
+        "src": "/projects/wirebright-visualforce-to-lightning/screenshot-17.webp"
       }
     ],
     "locales": {
@@ -12004,35 +12008,35 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "LTP Apex Backend - Vue 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-10.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-10.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-11.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-11.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-12.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-12.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-13.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-13.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-14.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-14.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-15.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-15.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-16.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-16.webp"
       },
       {
         "alt": "LTP Apex Backend - Vue 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/ltp-apex-backend-prototype/screenshot-17.webp"
+        "src": "/projects/ltp-apex-backend-prototype/screenshot-17.webp"
       }
     ],
     "locales": {
@@ -12520,71 +12524,71 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/cover.webp"
+        "src": "/projects/fasha-apex-backend-optimization/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-1.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-2.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-3.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-4.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-5.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-6.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-7.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-8.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-9.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-9.webp"
       },
       {
         "alt": "Screenshot 10",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-10.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-10.webp"
       },
       {
         "alt": "Screenshot 11",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-11.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-11.webp"
       },
       {
         "alt": "Screenshot 12",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-12.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-12.webp"
       },
       {
         "alt": "Screenshot 13",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-13.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-13.webp"
       },
       {
         "alt": "Screenshot 14",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-14.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-14.webp"
       },
       {
         "alt": "Screenshot 15",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-15.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-15.webp"
       },
       {
         "alt": "Screenshot 16",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/fasha-apex-backend-optimization/screenshot-16.webp"
+        "src": "/projects/fasha-apex-backend-optimization/screenshot-16.webp"
       }
     ],
     "locales": {
@@ -12943,43 +12947,43 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/cover.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/cover.webp"
       },
       {
         "alt": "Screenshot 1",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-1.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-1.webp"
       },
       {
         "alt": "Screenshot 2",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-2.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-2.webp"
       },
       {
         "alt": "Screenshot 3",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-3.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-3.webp"
       },
       {
         "alt": "Screenshot 4",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-4.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-4.webp"
       },
       {
         "alt": "Screenshot 5",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-5.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-5.webp"
       },
       {
         "alt": "Screenshot 6",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-6.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-6.webp"
       },
       {
         "alt": "Screenshot 7",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-7.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-7.webp"
       },
       {
         "alt": "Screenshot 8",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-8.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-8.webp"
       },
       {
         "alt": "Screenshot 9",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/legarant-axg-salesforce-deployment/screenshot-9.webp"
+        "src": "/projects/legarant-axg-salesforce-deployment/screenshot-9.webp"
       }
     ],
     "locales": {
@@ -13437,7 +13441,7 @@ export const projectDetails: ProjectDetails[] = [
     "gallery": [
       {
         "alt": "Cover",
-        "src": "https://sxcwkbuvtxxdfpfdaukk.supabase.co/storage/v1/object/public/projects/cicd-pipeline-setup/cover.svg"
+        "src": "/projects/cicd-pipeline-setup/cover.svg"
       }
     ],
     "locales": {

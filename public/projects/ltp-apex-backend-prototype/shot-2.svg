@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b122b"/>
+      <stop offset="1" stop-color="#07101f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <rect x="90" y="90" width="1420" height="720" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+  <circle cx="150" cy="150" r="10" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="185" cy="150" r="10" fill="rgba(255,255,255,0.20)"/>
+  <circle cx="220" cy="150" r="10" fill="rgba(255,255,255,0.15)"/>
+  <text x="140" y="260" fill="rgba(34,211,238,0.9)" font-family="Inter,Arial,sans-serif" font-size="52" font-weight="700">API contract</text>
+  <text x="140" y="330" fill="rgba(255,255,255,0.65)" font-family="Inter,Arial,sans-serif" font-size="26">Inputs, outputs, error handling</text>
+  <text x="140" y="760" fill="rgba(255,255,255,0.35)" font-family="Inter,Arial,sans-serif" font-size="18">Replace this SVG with your real screenshots in /public/projects/&lt;slug&gt;/</text>
+</svg>

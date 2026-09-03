@@ -16,8 +16,9 @@ import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
 import ProjectClientLogo from "./ProjectClientLogo";
 
-// CDN Supabase Storage — les images sont uploadées dans le bucket "projects"
-const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
+// Project images are committed to the repo under /public/projects/<slug>/
+// and served by Vercel's CDN (see lib/data/projectsSource.ts).
+const STORAGE_CDN = "/projects";
 
 // Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
 // Nécessaire car les gallery JSON en base peuvent référencer d'anciens noms de fichiers

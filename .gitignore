@@ -13,13 +13,15 @@ test-results/
 playwright-report/
 coverage/
 
-# Local source images + optimized output for `npm run images:optimize` /
-# `npm run images:upload` (scripts/optimize-images.mjs, scripts/upload-to-supabase-storage.mjs).
-# Already uploaded to Supabase Storage (bucket "projects") — not served locally,
-# so they don't belong in the repo/build. Drop raw images here locally when
-# adding new project screenshots, then run the two scripts above.
-/public/projects/
+# Project images are committed to the repo under /public/projects/<slug>/ and
+# served by Vercel's CDN (de-Supabase refactor — see lib/data/projectsSource.ts).
+# Re-sync from the old Supabase bucket with scripts/sync-project-assets.mjs.
+# The *-optimized/ dir is a local build artifact of scripts/optimize-images.mjs.
 /public/projects-optimized/
+
+# Salesforce CLI local state (sf/sfdx MCP tooling)
+.sf/
+.sfdx/
 
 claude
 claude.md
