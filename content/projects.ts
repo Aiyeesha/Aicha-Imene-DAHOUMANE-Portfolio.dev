@@ -73,6 +73,8 @@ export const projects: Project[] = [
     "excerpt": "Bugfix and refactor of a Java symptom analytics app: correct counts, alphabetic output, and a maintainable OOP architecture.",
     "track": "itops",
     "categories": [
+      "Java",
+      "Quality",
       "Development"
     ],
     "tags": [
@@ -386,6 +388,8 @@ export const projects: Project[] = [
     "excerpt": "TDD-driven feature delivery (30-min free parking + 5% recurring discount), bugfixes and a full unit + integration test suite with JaCoCo/Surefire evidence.",
     "track": "itops",
     "categories": [
+      "Java",
+      "Testing",
       "Development"
     ],
     "tags": [
@@ -425,6 +429,8 @@ export const projects: Project[] = [
     "excerpt": "Single-page, mobile-first UI built from functional specs and wireframes: book search/add, list display/removal, DOM updates and Fetch-based API integration.",
     "track": "itops",
     "categories": [
+      "Front-end",
+      "UI/UX",
       "Development"
     ],
     "tags": [
@@ -466,6 +472,8 @@ export const projects: Project[] = [
     "excerpt": "Real-time local network scanner: FastAPI backend with WebSocket streaming, concurrent port scanning, service & risk detection, and a React/Vite frontend.",
     "track": "itops",
     "categories": [
+      "Network",
+      "Security",
       "Development"
     ],
     "tags": [
@@ -500,6 +508,7 @@ export const projects: Project[] = [
     "excerpt": "CLI tool scoring password strength via entropy calculation, regex pattern detection, dictionary matching, and a HaveIBeenPwned API check using k-anonymity.",
     "track": "itops",
     "categories": [
+      "Security",
       "Development"
     ],
     "tags": [
@@ -677,7 +686,7 @@ export const projects: Project[] = [
   {
     "slug": "workstation-mass-deployment",
     "title": "Mass Workstation Deployment — 264 Dell Devices",
-    "excerpt": "End-to-end workstation provisioning at MIDRANGE GROUP: Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment for a 200+ laptop fleet.",
+    "excerpt": "End-to-end provisioning of a 264-device fleet at MIDRANGE GROUP (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -839,6 +848,8 @@ export const projects: Project[] = [
     "excerpt": "Secure admin dashboard protected by HTTP Basic Auth, powered by a Supabase service_role client. Visualize projects, contact messages, certifications and testimonials — no extra dependencies.",
     "track": "itops",
     "categories": [
+      "Web",
+      "Front-end",
       "Development"
     ],
     "tags": [
@@ -1030,6 +1041,7 @@ export const projects: Project[] = [
     "excerpt": "Python CLI tool that runs modular vulnerability assessments (network, system, web) and generates self-contained HTML reports with CVSS v3.1 base scores, risk-prioritized findings, and JSON export for SIEM/ticketing integration.",
     "track": "itops",
     "categories": [
+      "Vulnerability Management",
       "Security"
     ],
     "tags": [],
@@ -1219,6 +1231,7 @@ export const projects: Project[] = [
     "excerpt": "A set of structured playbooks designed for SOC teams and IT admins covering the 6 most common cybersecurity incidents. Each playbook follows the full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned.",
     "track": "itops",
     "categories": [
+      "Incident Response",
       "Security"
     ],
     "tags": [],
@@ -1641,7 +1654,9 @@ export const projects: Project[] = [
     "excerpt": "Design and implementation of a complete Salesforce CI/CD pipeline: Git branching strategy, automated Apex validations and continuous deployments via GitHub Actions across sandbox and production.",
     "track": "salesforce",
     "categories": [
-      "DevOps"
+      "DevOps",
+      "Automation",
+      "Delivery"
     ],
     "tags": [
       "CI/CD",
