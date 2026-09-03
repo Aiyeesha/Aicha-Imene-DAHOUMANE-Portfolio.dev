@@ -44,13 +44,13 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       };
 
   const labels = {
-    kicker:         isFr ? "Freelance · Remote · Mobilité & Relocalisation" : isEs ? "Freelance · Remoto · Movilidad y Relocalización" : "Freelance · Remote · Open to Relocation",
+    kicker:         isFr ? "Remote · Mobilité & Relocalisation" : isEs ? "Remoto · Movilidad y Relocalización" : "Remote · Open to Relocation",
     h1:             isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntas" : "Work with me",
     subtitle:       isFr
-      ? "Je suis disponible pour des missions freelance en Salesforce et IT Ops — 100 % Remote, hybride ou sur site, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
+      ? "Je suis disponible pour des missions Salesforce et IT Ops — 100 % Remote, hybride ou sur site, avec une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
       : isEs
-      ? "Estoy disponible para proyectos freelance en Salesforce e IT Ops — 100 % remoto, híbrido o presencial, totalmente abierta a la movilidad y a la relocalización, en Francia, Europa o en un contexto de habla inglesa."
-      : "I'm available for freelance Salesforce and IT Ops missions — 100 % Remote, hybrid or on-site, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
+      ? "Estoy disponible para proyectos de Salesforce e IT Ops — 100 % remoto, híbrido o presencial, totalmente abierta a la movilidad y a la relocalización, en Francia, Europa o en un contexto de habla inglesa."
+      : "I'm available for Salesforce and IT Ops missions — 100 % Remote, hybrid or on-site, fully open to mobility and relocation in France, Europe, or any English-speaking context.",
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
@@ -58,10 +58,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
     availSince:     isFr ? "Entretiens dès maintenant · Poste à partir du 1er décembre 2026" : isEs ? "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026" : "Interviews now · Role starting December 1, 2026",
     availContracts: isFr
-      ? "CDI · CDD · Freelance · Mission"
+      ? "CDI · CDD · Mission"
       : isEs
-      ? "Contrato indefinido · Temporal · Freelance · Proyecto"
-      : "Permanent · Fixed-term · Freelance · Contract",
+      ? "Contrato indefinido · Temporal · Proyecto"
+      : "Permanent · Fixed-term · Contract",
     availMode:      isFr
       ? "100 % Remote · Hybride · Sur site · Marseille / Provence-Alpes-Côte d'Azur · Mobilité & relocalisation — France, Europe, pays anglophones"
       : isEs
@@ -106,18 +106,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     faqTitle: isFr ? "Questions fréquentes" : isEs ? "Preguntas frecuentes" : "FAQ",
     faqs: isFr
       ? [
-          { q: "Sous quel type de contrat intervenez-vous ?",       a: "Je travaille en CDI, CDD, freelance ou mission selon le contexte — en France et à l'international. Décrivez votre besoin et on verra ensemble ce qui convient le mieux." },
+          { q: "Sous quel type de contrat intervenez-vous ?",       a: "Je travaille en CDI, CDD ou mission selon le contexte — en France et à l'international. Décrivez votre besoin et on verra ensemble ce qui convient le mieux." },
           { q: "Êtes-vous disponible pour des missions courtes ?",  a: "Oui, y compris pour des audits, des formations ou des interventions ponctuelles. Décrivez le besoin et je reviens sous 24 h." },
           { q: "Quelle est votre zone géographique ?",              a: "Je travaille 100 % à distance depuis Marseille / Provence-Alpes-Côte d'Azur, et je suis ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
         ]
       : isEs
       ? [
-          { q: "¿Bajo qué tipo de contrato trabajas?",           a: "Trabajo con contrato indefinido, temporal, freelance o por proyecto según el contexto — en Francia y a nivel internacional. Cuéntame tu necesidad y vemos juntas qué encaja mejor." },
+          { q: "¿Bajo qué tipo de contrato trabajas?",           a: "Trabajo con contrato indefinido, temporal o por proyecto según el contexto — en Francia y a nivel internacional. Cuéntame tu necesidad y vemos juntas qué encaja mejor." },
           { q: "¿Estás disponible para proyectos cortos?",       a: "Sí, incluyendo auditorías, formaciones o intervenciones puntuales. Describe la necesidad y te respondo en 24 h." },
           { q: "¿Cuál es tu zona geográfica?",                   a: "Trabajo 100 % en remoto desde Marsella / Provenza-Alpes-Costa Azul, y estoy abierta a la movilidad y a la relocalización — en Francia y a nivel internacional: Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Reino Unido, Irlanda, Malta) y cualquier contexto de habla inglesa." },
         ]
       : [
-          { q: "What contract type works best?",             a: "I work on permanent, fixed-term, freelance, or contract engagements — in France and internationally. Tell me about your context and we'll find what fits." },
+          { q: "What contract type works best?",             a: "I work on permanent, fixed-term, or contract engagements — in France and internationally. Tell me about your context and we'll find what fits." },
           { q: "Do you take short missions?",                a: "Yes, including audits, training, or ad-hoc work. Describe the need and I'll get back to you within 24 h." },
           { q: "Where are you based?",                       a: "I work 100% remotely from Marseille / Provence-Alpes-Côte d'Azur, and I'm open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
         ],
@@ -150,10 +150,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     name: siteName,
     url: `${siteUrl}/${locale}/work-with-me`,
     description: isFr
-      ? "Missions freelance Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
+      ? "Missions Salesforce et IT Ops — 100 % remote, ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
       : isEs
-      ? "Proyectos freelance de Salesforce e IT Ops — 100 % remoto, abierta a la movilidad y a la relocalización en Francia, Europa y países de habla inglesa en todo el mundo."
-      : "Freelance Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
+      ? "Proyectos de Salesforce e IT Ops — 100 % remoto, abierta a la movilidad y a la relocalización en Francia, Europa y países de habla inglesa en todo el mundo."
+      : "Salesforce and IT Ops missions — 100% remote, open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
     serviceType: ["Salesforce Development", "Salesforce Administration", "IT Operations", "DevOps / CI·CD", "Web Development"],
     provider: { "@type": "Person", name: ownerName, url: siteUrl },
     areaServed: [
