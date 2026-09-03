@@ -3,8 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 
-// CDN Supabase Storage — images optimisées dans le bucket "projects"
-const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
+// Project images are committed to the repo under /public/projects/<slug>/
+// and served by Vercel's CDN (see lib/data/projectsSource.ts).
+const STORAGE_CDN = "/projects";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getBadgeClass, tBadge, tTag } from "@/i18n/projectTaxonomy";
