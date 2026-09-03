@@ -176,6 +176,16 @@ export default async function LocaleLayout({
                   {/* Link (Next.js) pour la navigation SPA — évite le rechargement de page
                       complet que <a href> provoque sur les routes locales. */}
                   <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-4">
+                    {/* Certifications — page primaire (diplôme RNCP 6, Trailhead,
+                        certif éditeur en préparation) : c'est la contre-preuve de
+                        l'objection « pas de certif » et elle n'était reliée qu'au
+                        header, jamais au footer. Voir audit P5. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/certifications`}
+                    >
+                      {t("nav.certifications")}
+                    </Link>
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/work-with-me`}
