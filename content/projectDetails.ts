@@ -10670,7 +10670,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Salesforce solution design (Tours For Life)",
-        "heroSubtitle": "Implementation of a complete Salesforce solution for Tours For Life, a growing travel agency.",
+        "heroSubtitle": "End-to-end Sales Cloud solution design for a travel agency: Prospect → Traveler conversion via Person Accounts, catalog / booking separation (Trip vs Purchased Trip), fleet management, 2 no-code Flows, North/South zone security — with an owned architecture retrospective.",
         "sections": [
           {
             "body": "Tours for Life, a fast-growing travel agency, wanted to digitize its commercial management end-to-end. President Philippe Bouvet needed a Salesforce CRM covering the full cycle: prospect acquisition, conversion to travelers, trip management, and sales performance tracking by zone (North/South). An additional need surfaced during scoping: managing the bus fleet directly in Salesforce, since a single bus can be assigned to several trips.",
@@ -10809,7 +10809,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Conception de solution Salesforce (Tours For Life)",
-        "heroSubtitle": "Implémentation d'une solution Salesforce complète pour Tours For Life, agence de voyages en croissance.",
+        "heroSubtitle": "Conception d'une solution Sales Cloud de bout en bout pour une agence de voyages : conversion Prospect → Voyageur en Person Account, séparation catalogue / réservation (Voyage vs Voyage Acheté), gestion de flotte, 2 Flows no-code, sécurité par zone Nord/Sud — avec une rétrospective d'architecture assumée.",
         "sections": [
           {
             "body": "Tours for Life, agence de voyages en pleine croissance, souhaitait digitaliser sa gestion commerciale de bout en bout. Philippe Bouvet, le président, avait besoin d'un CRM Salesforce couvrant le cycle complet : acquisition de prospects, conversion en voyageurs, gestion des voyages, et suivi des performances commerciales par zone (Nord/Sud). Un besoin complémentaire est apparu en cours de cadrage : gérer la flotte de bus directement dans Salesforce, un même bus pouvant être affecté à plusieurs voyages.",
@@ -10948,7 +10948,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Diseño de solución Salesforce (Tours For Life)",
-        "heroSubtitle": "Diseño de una solución Salesforce (Tours For Life)",
+        "heroSubtitle": "Diseño de una solución Sales Cloud de extremo a extremo para una agencia de viajes: conversión Prospecto → Viajero mediante Person Accounts, separación catálogo / reserva (Viaje vs Viaje Comprado), gestión de flota, 2 Flows sin código, seguridad por zona Norte/Sur — con una retrospectiva de arquitectura asumida.",
         "sections": [
           {
             "body": "Tours for Life, una agencia de viajes en pleno crecimiento, quería digitalizar su gestión comercial de principio a fin. Philippe Bouvet, el presidente, necesitaba un CRM Salesforce que cubriera el ciclo completo: captación de prospectos, conversión en viajeros, gestión de los viajes y seguimiento del rendimiento comercial por zona (Norte/Sur). Durante el encuadre surgió una necesidad adicional: gestionar la flota de autobuses directamente en Salesforce, ya que un mismo autobús puede asignarse a varios viajes.",
