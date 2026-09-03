@@ -13,6 +13,7 @@ describe("getBadgeClass", () => {
     ["client", "badge badge-client"],
     ["personal", "badge badge-personal"],
     ["training", "badge badge-training"],
+    ["capstone", "badge badge-capstone"],
     ["simulation", "badge badge-simulation"],
     ["anonymized", "badge badge-anonymized"],
   ])("mappe la tone %s vers %s", (tone, expected) => {
