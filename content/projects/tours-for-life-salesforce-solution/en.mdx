@@ -1,0 +1,90 @@
+---
+title: "Salesforce solution design (Tours For Life)"
+heroSubtitle: "End-to-end Sales Cloud solution design for a travel agency: Prospect → Traveler conversion via Person Accounts, catalog / booking separation (Trip vs Purchased Trip), fleet management, 2 no-code Flows, North/South zone security — with an owned architecture retrospective."
+---
+
+## Context
+
+Tours for Life, a growing travel agency, wanted to digitize its commercial management end to end. President Philippe Bouvet needed a Salesforce CRM covering the full cycle: prospect acquisition, conversion to travelers, trip management, and sales performance tracking by zone (North / South).
+
+One need surfaced **during scoping**: managing the bus fleet directly in Salesforce, since a single bus can be assigned to several trips. It's the kind of late addition that tests how solid a data model is.
+
+## The data model
+
+| Object | Role | Design choice |
+|---|---|---|
+| **Prospect** | Standard Lead, tab renamed | Phone required on entry — a prospect with no number isn't workable |
+| **Traveler** | `Account` with Person Accounts enabled | Dedicated Record Type "Account to Traveler": lets you **convert a prospect into an individual with no business account** — the normal B2C case |
+| **Trip** | New object — the catalog | Destination, departure/arrival, price, status, available seats |
+| **Purchased Trip** | New object **distinct from Trip** — the booking | Links Traveler + Trip, luggage, seats purchased, bus number |
+| **Bus Fleet** | New object | `lookup` to Trip — one bus, several trips |
+
+The central modeling decision: **separating the catalog (`Trip`) from the transaction (`Purchased Trip`)**. Merging the two would have duplicated trip data on every booking and made a simple "how many seats are left?" impossible. Two objects, one relationship, and capacity becomes a derived value again.
+
+## The no-code automation
+
+Two **Record-Triggered Flows**, no Apex:
+
+- **Flow #1** — confirmation email automatically sent to the prospect when their status changes from "information gathered" to "interested".
+- **Flow #2** — automatic decrement of the "Available Seats" field on the Trip whenever a related Purchased Trip is created or updated.
+
+The no-code choice is deliberate: two simple record-triggered rules, no bulk or async processing. **Flow is the right tool here** — Apex would be over-engineering. Knowing where no-code stops matters as much as knowing how to code.
+
+## The zone-based security model
+
+- **2 profiles**: Sales Director (full access), Sales Rep (create/edit prospects, convert them, view travelers and purchased trips).
+- **3 hierarchical roles**: Sales Management → North Sales Rep / South Sales Rep — management sees both territories.
+- **Per-object OWD**: `Private` on Prospect / Trip, `Public Read-Only` on Bus Fleet, `Controlled by Parent` on Purchased Trip.
+- **Sharing Rules by role (North / South)** on Prospect and Trip: territories are kept separate, with read-only visibility on the other zone's travelers.
+
+## The architecture retrospective
+
+With hindsight, the **one profile per level** choice (Director / Sales Rep) isn't the most scalable. A single "Sales Rep" profile + a **Permission Set** granting director-level rights would be more maintainable: Permission Sets stack and can be audited, whereas an extra profile is one more divergence point to keep in sync on every change.
+
+Naming this isn't downplaying the deliverable — it's showing that a decision gets **revisited**. A junior ships and moves on; the difference is going back to the choice.
+
+## Reports
+
+| Report | For whom | What it drives |
+|---|---|---|
+| Available Trips (Status = Open) | Sales reps | Which offer to pitch, with price / seat totals |
+| Prospects to Travelers | Sales + management | Conversion rate and date, by rep and role |
+| Trips Purchased per Sales Rep | Management | Performance grouped by role (North / South / Management) |
+
+Reports pinned to the Salesforce home page for daily use.
+
+## Decisions & assumed limitations
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| **Person Accounts** for Travelers | A Contact under a generic Account | Travelers are individuals; Person Accounts is Salesforce's B2C model |
+| **Separate Trip / Purchased Trip** | A single Trip object carrying the booking | Catalog ≠ transaction: separates stable data from per-booking data |
+| **Bus Fleet as a `lookup`** to Trip | Master-detail | A bus outlives the deletion of a trip; no cascade delete wanted |
+| **100% Flow automation** | Apex trigger | Two simple record-triggered rules — no-code fits, Apex would be unjustified |
+
+Assumed limitations:
+
+- **Person Accounts is an irreversible org setting.** Enabled here knowingly, but it's a decision that commits the whole org — to validate with the client before, not after.
+- **`lookup` on Bus Fleet**: no automatic capacity roll-up summary on the Trip side (unlike the catalog's "available seats" field, driven by Flow). An overbooking check at the bus level would still need adding.
+- **Solution demonstrated on sandbox**, not proven at a growing agency's real volume.
+
+## Results
+
+| Metric | Value |
+|---|---|
+| Business objects designed | 4 (Traveler Person Account, Trip, Purchased Trip, Bus Fleet) |
+| Hierarchical roles | 3 (Management + North / South Sales Rep) |
+| Flow automations (no Apex) | 2 |
+| RNCP diploma evaluation | 4/4 competencies validated |
+
+## Deliverables
+
+- [Detailed specifications (PDF)](/docs/projects/tours-for-life-salesforce-solution/specifications.pdf)
+- [Solution presentation (PPTX)](/docs/projects/tours-for-life-salesforce-solution/presentation.pptx)
+- [Data model (PNG)](/docs/projects/tours-for-life-salesforce-solution/data-model.png)
+
+## What this project demonstrates
+
+**Sales Cloud fundamentals done properly**: Person Accounts for B2C, a data model that separates catalog and transaction, owned no-code automation where it's enough, a role- and zone-based security model. And an **explicit architecture retrospective** — proof that a choice gets questioned, not forgotten once the deliverable is handed in.
+
+> Fil-rouge project from the RNCP Level 6 "Développeur Concepteur Logiciel" diploma (OpenClassrooms): imposed context, requirements and constraints, deliverable defended before a jury. It is expanded here with the modeling / tool-choice / security / retrospective reading expected in a professional context — beyond the strict scope of the exercise.
