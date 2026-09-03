@@ -15,7 +15,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const STORAGE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects`;
+const STORAGE_CDN = "/projects";
 
 // "md" — fiche détail (à côté du H1) : un seul par page, au-dessus de la ligne
 //        de flottaison → chargement eager sûr, pas de coût réseau superflu.

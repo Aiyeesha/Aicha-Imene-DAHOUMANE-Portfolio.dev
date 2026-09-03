@@ -1,11 +1,12 @@
-// AUTO-GENERATED — do not hand-edit.
-// Exported from Supabase (public.projects) by scripts/export-projects-from-supabase.ts.
-// Re-run that script after any content change in Supabase to keep this file current.
-// Last export: 2026-08-16T15:41:26.637Z
+// SOURCE OF TRUTH — hand-edit this file.
+// Per-slug project card metadata (track, categories, tags, badge, flags,
+// featured, sort_order, status, repo/live URLs, EN title/excerpt).
+// Per-locale title/heroSubtitle/sections + gallery live in content/projectDetails.ts.
+// Deep case studies live in content/projects/<slug>/<locale>.mdx.
+// Images: public/projects/<slug>/. Read path: lib/data/projectsSource.ts.
 //
-// Kept in sync so this file remains a safe fallback if the Supabase dependency
-// is ever dropped, and so scripts/seed.ts (which reads this file) never
-// re-publishes stale content over what's actually live.
+// (Was previously exported from Supabase; the project data left Supabase in the
+//  de-Supabase refactor — these files are now the only source.)
 
 export type Project = {
   slug: string;
