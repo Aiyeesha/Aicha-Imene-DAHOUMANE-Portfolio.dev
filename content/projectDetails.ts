@@ -11616,7 +11616,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Visualforce to Lightning migration (WireBright)",
-        "heroSubtitle": "Migration of EG Manufacture's Visualforce application to Lightning Web Components at WireBright Consulting.",
+        "heroSubtitle": "Full scoping of a Salesforce Classic → Lightning migration: component inventory, a decomposed estimate (17 days), a per-component risk matrix, a tooled diagnostic, then a prototype of the two most critical components (LWC + Aura Quick Action).",
         "sections": [
           {
             "body": "EG Manufacture, a tapestry manufacturer, ran Salesforce Classic to manage its leads and accounts — a Visualforce opportunity-search page and a JavaScript status-update button, both incompatible with Lightning Experience. WireBright Consulting led the migration. Mission: produce complete technical and functional specifications (component inventory, costed conversion options, risk management) then deliver a first prototype of the two most critical components in Lightning.",
@@ -11745,7 +11745,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Migration Visualforce vers Lightning (WireBright Consulting)",
-        "heroSubtitle": "Migration de l'application Visualforce d'EG Manufacture vers Lightning Web Components chez WireBright Consulting.",
+        "heroSubtitle": "Cadrage complet d'une migration Salesforce Classic → Lightning : inventaire des composants, chiffrage décomposé (17 jours), matrice de risques par composant, diagnostic outillé, puis prototype des deux composants les plus critiques (LWC + Aura Quick Action).",
         "sections": [
           {
             "body": "EG Manufacture, spécialisée dans la tapisserie, utilisait Salesforce Classic pour gérer ses leads et ses comptes clients — une page Visualforce de recherche d'opportunités et un bouton JavaScript de mise à jour de statut, tous deux incompatibles avec Lightning Experience. Le cabinet WireBright Consulting pilotait la migration. Mission : produire les spécifications techniques et fonctionnelles complètes (inventaire des composants, options de conversion chiffrées, gestion des risques) puis livrer un premier prototype des deux composants les plus critiques en Lightning.",
@@ -11874,7 +11874,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Migración de Visualforce a Lightning (WireBright)",
-        "heroSubtitle": "Migración de Visualforce a Lightning (WireBright)",
+        "heroSubtitle": "Encuadre completo de una migración de Salesforce Classic → Lightning: inventario de componentes, una estimación descompuesta (17 días), una matriz de riesgos por componente, un diagnóstico apoyado en herramientas, y luego un prototipo de los dos componentes más críticos (LWC + Aura Quick Action).",
         "sections": [
           {
             "body": "EG Manufacture, especializada en tapicería, utilizaba Salesforce Classic para gestionar sus leads y cuentas — una página Visualforce de búsqueda de oportunidades y un botón JavaScript de actualización de estado, ambos incompatibles con Lightning Experience. La consultora WireBright Consulting lideró la migración. Misión: producir las especificaciones técnicas y funcionales completas (inventario de componentes, opciones de conversión con coste estimado, gestión de riesgos) y entregar después un primer prototipo de los dos componentes más críticos en Lightning.",
