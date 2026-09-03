@@ -1,0 +1,94 @@
+---
+title: "Actualización de la aplicación Salesforce (Digit Learning)"
+heroSubtitle: "Auditoría de calidad de una org Salesforce de 2 años y luego modernización: un objeto de unión para eliminar el límite «un estudiante = una formación», automatización de la inscripción y la asignación de mentores, 3 informes de seguimiento, migración de datos — con un análisis de impacto cuantificado."
+---
+
+## Contexto
+
+Digit Learning, escuela en línea de formación profesional, llevaba unos 2 años usando Salesforce con objetos de negocio dedicados (Estudiante, Mentor, Formación). La jefa de proyecto, Jeanne Pierron, encargó una **auditoría de calidad interna** seguida de un plan de modernización.
+
+No es un proyecto «desde cero»: es el caso más habitual en la vida real de un equipo Salesforce — **mejorar una org existente sin romperla**. La auditoría, el correctivo estructural adecuado, la migración de datos y la medición de la ganancia son aquí el núcleo del trabajo.
+
+## La auditoría de calidad
+
+Método: entrevistas con los usuarios clave — comerciales **y** dirección, para cruzar puntos de vista en lugar de partir de una sola voz.
+
+| Hallazgo | Señalado por | Impacto |
+|---|---|---|
+| **El modelo de datos solo vincula a un estudiante con una única formación** | Comerciales + dirección | Hallazgo central: seguimiento comercial y pedagógico imposible para varias inscripciones |
+| Inscripción + asignación de mentores > 30 min/estudiante, sin automatización | Comerciales | Tiempo comercial consumido en captura de datos |
+| Ningún seguimiento estructurado de antiguos clientes | Dirección | Sin palanca de fidelización ni forma de medir la satisfacción |
+| Informes y métricas insuficientes | Comerciales + dirección | Decisiones tomadas sin visibilidad fiable |
+
+## El correctivo estructural: el objeto de unión
+
+El correctivo no es un apaño — es el **modelo adecuado**. Un nuevo objeto **Formación Comprada** en **master-detail hacia Estudiante y hacia Formación** convierte la relación en un verdadero many-to-many:
+
+- lleva sus propios atributos: fechas de inicio/fin, tipo, precio;
+- elimina definitivamente el límite de «una formación por estudiante» y permite varias inscripciones;
+- habilita los **roll-up summaries** (plazas disponibles / aforo máximo en Formación) — la capacidad restante pasa a ser un valor calculado, no un campo que mantener a mano.
+
+Los objetos existentes se enriquecen en consecuencia: Estudiante (historial de formaciones, estado *cliente activo* / *antiguo cliente*), Mentor (disponibilidad), Formación (plazas disponibles, aforo máximo).
+
+## La automatización
+
+- **Inscripción + asignación de mentores automatizadas** — recomendación directa de la auditoría, implementada para devolver a los comerciales el tiempo que les costaba la captura de datos.
+- **Seguimiento estructurado de antiguos clientes** + un proceso de **revisión periódica de la pertinencia de las formaciones**: el catálogo deja de desviarse por falta de revisión.
+
+## Los 3 informes entregados
+
+| Informe | Para quién | Decisión que respalda |
+|---|---|---|
+| Formaciones con plazas disponibles | Comerciales | Qué sesión ofrecer, en tiempo real |
+| Estudiantes por estado y por mentor | Comerciales | Seguimiento de cartera |
+| Tasa de conversión prospecto → cliente activo | Dirección | Seguimiento del rendimiento comercial |
+
+## Despliegue y migración
+
+- **Despliegue** de la aplicación vía Workbench (paquete zip, *Migration > Deploy*).
+- **Migración de los datos existentes** (estudiantes, mentores, formaciones) vía Data Loader, en orden de dependencia — la parte arriesgada de cualquier evolución de org: recuperar lo existente sin pérdidas ni duplicados.
+
+## Impacto medido
+
+| Proceso | Antes | Después | Medición |
+|---|---|---|---|
+| Asignación de mentor + inscripción | > 30 min / estudiante | 5 min / estudiante | Cronometraje por estudiante, antes/después |
+| Seguimiento de antiguos clientes | > 15 min / contacto | 10 min / contacto | Cronometraje por contacto |
+| Gestión y revisión del catálogo | > 30 min / revisión | 15 min / revisión | Cronometraje por revisión |
+
+El análisis de impacto es **cualitativo y cuantitativo**: el tiempo ahorrado se cuantifica por proceso, no en agregado — que es lo que lo hace defendible.
+
+## Decisiones y limitaciones asumidas
+
+| Decisión | Alternativa descartada | Por qué |
+|---|---|---|
+| **Objeto de unión master-detail** | Varios campos de lookup en Estudiante | Un many-to-many limpio, con atributos por inscripción y roll-up summaries; los lookups múltiples habrían topado con un límite y roto la capacidad calculada |
+| **Roll-up summary** para las plazas disponibles | Un contador mantenido por automatización | Un valor calculado por la plataforma no se desincroniza |
+| **Migración con Data Loader en orden de dependencia** | Importación objeto por objeto sin secuenciar | Las relaciones master-detail exigen que el padre exista antes que el hijo |
+
+Limitaciones asumidas:
+
+- **El master-detail provoca la eliminación en cascada**: eliminar un Estudiante elimina sus Formaciones Compradas. Aceptable aquí (una inscripción sin estudiante no tiene sentido), pero es una restricción que hay que conocer de antemano, no un efecto secundario descubierto más tarde.
+- **Ganancias medidas sobre conjuntos de datos de Dev Org**, no sobre el volumen de producción completo de Digit Learning — el orden de magnitud es sólido, la cifra exacta habría que confirmarla a escala.
+- **Tiempo ahorrado por proceso, no rendimiento global** del equipo: la medición cubre una tarea aislada, no todo el pipeline comercial.
+
+## Resultados
+
+| Indicador | Valor |
+|---|---|
+| Limitación estructural eliminada | «1 estudiante = 1 formación» → varias inscripciones |
+| Informes de seguimiento entregados | 3 |
+| Ganancia en el proceso más pesado | 30 min → 5 min por estudiante |
+| Evaluación del título RNCP | 5/5 competencias validadas |
+
+## Entregables
+
+- [Informe de auditoría de calidad (DOCX)](/docs/projects/digit-learning-salesforce-update/audit-report.docx)
+- [Análisis cualitativo y cuantitativo (DOCX)](/docs/projects/digit-learning-salesforce-update/analysis-report.docx)
+- [Notas de las entrevistas (PDF)](/docs/projects/digit-learning-salesforce-update/interview-notes.pdf)
+
+## Lo que demuestra este proyecto
+
+La competencia más usada en la vida real de un equipo Salesforce: **modernizar una org existente sin romperla**. Una auditoría basada en entrevistas cruzadas, un correctivo que elige el **modelo de datos adecuado** en lugar de un atajo, una migración secuenciada de los datos existentes, y un **análisis de impacto cuantificado por proceso** que demuestra la ganancia en lugar de afirmarla.
+
+> Proyecto integrador del título RNCP nivel 6 "Développeur Concepteur Logiciel" (OpenClassrooms): contexto, org y restricciones impuestos, entregable defendido ante un jurado. Se amplía aquí con la lectura de auditoría / elección de modelo / migración / medición de impacto esperada en un contexto profesional — más allá del alcance estricto del ejercicio.
