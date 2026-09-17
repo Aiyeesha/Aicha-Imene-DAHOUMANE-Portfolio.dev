@@ -4927,7 +4927,7 @@ export const projectDetails: ProjectDetails[] = [
               "Antivirus coverage gaps only became visible by cross-referencing the Default Dashboard's aggregate counts against the software inventory of individual devices — no single view surfaced both at once.",
               "A Quick Job has to be scoped to the exact device group that needs the fix; pushing MalwareBytes fleet-wide when only a handful of machines were missing it would have wasted bandwidth and cluttered the job history for the whole team.",
               "Splashtop sessions depend on the end user being present to grant access in real time, so remote troubleshooting has to work around whoever is actually at the keyboard, not around an ideal maintenance window.",
-              "As an intern in the Exploitation team, I operated inside guardrails: I could execute defined tasks (dashboard checks, Quick Jobs, remote sessions) under Théo's supervision, but I did not have authority to change monitoring policies myself."
+              "Datto RMM policies and Quick Job templates are owned at the Exploitation team level, shared across the MSP's full client base — every fix had to work within that existing framework rather than introducing a one-off exception for a single device or site."
             ],
             "title": "Technical challenges"
           },
@@ -5031,14 +5031,14 @@ export const projectDetails: ProjectDetails[] = [
               "Scope every Quick Job to the smallest device group that solves the problem; a fleet-wide push when only a few machines need it adds noise without adding value.",
               "Explain what you're about to do before taking remote control via Splashtop — a short heads-up to the user avoids confusion mid-session and builds trust.",
               "Log every intervention, even a routine Quick Job — in an MSP, the audit trail in the job history matters as much as the fix itself.",
-              "Escalate ambiguous cases early instead of guessing; a junior role on the Exploitation team is to triage fast and hand off what's unclear, not to improvise a fix."
+              "Escalate ambiguous cases early instead of guessing — triaging fast and handing a complex case to the right specialist beats improvising a fix under uncertainty."
             ],
             "title": "Best Practices"
           },
           {
             "type": "bullets",
             "items": [
-              "This was an internship-scoped role: I worked inside the monitoring policies and Quick Job templates the Exploitation team had already set up — I did not design or modify the underlying RMM policies myself.",
+              "Monitoring policies and Quick Job templates were owned at the Exploitation team level, not by any single operator — day-to-day execution (dashboard checks, Quick Jobs, remote sessions) was mine, while policy design belonged to the team lead, the same division of responsibility used across the MSP's client base.",
               "Antivirus coverage gaps were closed reactively, once flagged on the dashboard, rather than through a proactive compliance policy that would auto-remediate — that policy-level fix was outside the internship's scope.",
               "Splashtop support assumes the device is online and a user is present to grant access; offline machines or unattended desks had to wait for the next Quick Job window instead of an immediate session.",
               "RMM-only interventions were tracked through Datto RMM's own job history rather than logged as separate Autotask tickets — that ticketing trail applied to the Support Technique-side incidents, not to routine Exploitation tasks."
@@ -5083,7 +5083,7 @@ export const projectDetails: ProjectDetails[] = [
               "Les écarts de couverture antivirus n'apparaissaient qu'en croisant les compteurs agrégés du Default Dashboard avec l'inventaire logiciel de chaque poste — aucune vue unique ne réunissait les deux.",
               "Un Quick Job doit être ciblé précisément sur le groupe d'appareils concerné : déployer MalwareBytes sur l'ensemble du parc alors que seule une poignée de postes en avait besoin aurait gaspillé de la bande passante et pollué l'historique des tâches pour toute l'équipe.",
               "Les sessions Splashtop dépendent de la présence de l'utilisateur pour autoriser l'accès en temps réel : le dépannage à distance doit s'adapter à qui est réellement devant le poste, pas à une fenêtre de maintenance idéale.",
-              "En tant que stagiaire au sein de l'équipe Exploitation, j'évoluais dans un cadre défini : j'exécutais des tâches précises (contrôles du tableau de bord, Quick Jobs, sessions à distance) sous la supervision de Théo, sans autorité pour modifier moi-même les politiques de supervision."
+              "Les politiques Datto RMM et les modèles de Quick Job sont détenus au niveau de l'équipe Exploitation, partagés sur l'ensemble du portefeuille clients du MSP — chaque correction devait s'inscrire dans ce cadre existant plutôt que d'introduire une exception ponctuelle pour un seul appareil ou site."
             ],
             "title": "Défis techniques"
           },
@@ -5187,14 +5187,14 @@ export const projectDetails: ProjectDetails[] = [
               "Cibler chaque Quick Job sur le plus petit groupe d'appareils qui résout le problème ; un déploiement à l'échelle du parc quand seuls quelques postes sont concernés ajoute du bruit sans valeur ajoutée.",
               "Expliquer ce qu'on s'apprête à faire avant de prendre la main via Splashtop — un court message à l'utilisateur évite la confusion en cours de session et instaure la confiance.",
               "Journaliser chaque intervention, même un Quick Job de routine — dans un MSP, la traçabilité dans l'historique des tâches compte autant que la correction elle-même.",
-              "Escalader tôt les cas ambigus plutôt que de deviner ; le rôle d'un stagiaire au sein de l'Exploitation est de trier vite et de transmettre ce qui n'est pas clair, pas d'improviser une correction."
+              "Escalader tôt les cas ambigus plutôt que de deviner — trier vite et transmettre un cas complexe au bon spécialiste vaut toujours mieux qu'improviser une correction dans l'incertitude."
             ],
             "title": "Bonnes pratiques"
           },
           {
             "type": "bullets",
             "items": [
-              "Ce rôle était cadré par le stage : j'intervenais dans les politiques de supervision et les modèles de Quick Job déjà mis en place par l'équipe Exploitation — je ne concevais ni ne modifiais moi-même les politiques RMM sous-jacentes.",
+              "Les politiques de supervision et les modèles de Quick Job étaient détenus au niveau de l'équipe Exploitation, pas par un opérateur isolé — l'exécution quotidienne (contrôles du tableau de bord, Quick Jobs, sessions à distance) m'incombait, tandis que la conception des politiques relevait du responsable d'équipe, la même répartition des responsabilités appliquée sur l'ensemble du portefeuille clients du MSP.",
               "Les écarts de couverture antivirus étaient corrigés de façon réactive, une fois signalés sur le tableau de bord, plutôt que via une politique de conformité proactive avec remédiation automatique — cette correction au niveau politique sortait du périmètre du stage.",
               "Le support via Splashtop suppose que le poste est en ligne et qu'un utilisateur est présent pour autoriser l'accès ; les postes hors ligne ou inoccupés devaient attendre la prochaine fenêtre de Quick Job plutôt qu'une session immédiate.",
               "Les interventions purement RMM étaient tracées dans l'historique des tâches de Datto RMM plutôt que consignées comme tickets Autotask séparés — cette traçabilité par ticket s'appliquait aux incidents côté Support Technique, pas aux tâches courantes d'Exploitation."
@@ -5239,7 +5239,7 @@ export const projectDetails: ProjectDetails[] = [
               "Las brechas de cobertura antivirus solo se hacían visibles cruzando los recuentos agregados del Default Dashboard con el inventario de software de cada equipo — ninguna vista única mostraba ambos a la vez.",
               "Un Quick Job debe acotarse exactamente al grupo de equipos que lo necesita; desplegar MalwareBytes en todo el parque cuando solo unos pocos equipos carecían de él habría desperdiciado ancho de banda y saturado el historial de tareas de todo el equipo.",
               "Las sesiones de Splashtop dependen de que el usuario esté presente para autorizar el acceso en tiempo real, así que la resolución remota debe adaptarse a quién está realmente frente al equipo, no a una ventana de mantenimiento ideal.",
-              "Como becaria en el equipo de Explotación, trabajaba dentro de unos límites definidos: ejecutaba tareas concretas (revisiones del panel, Quick Jobs, sesiones remotas) bajo la supervisión de Théo, sin autoridad para modificar yo misma las políticas de supervisión."
+              "Las políticas de Datto RMM y las plantillas de Quick Job pertenecen al equipo de Explotación, compartidas en toda la cartera de clientes del MSP — cada corrección debía encajar en ese marco existente en lugar de introducir una excepción puntual para un solo equipo o sitio."
             ],
             "title": "Retos técnicos"
           },
@@ -5343,14 +5343,14 @@ export const projectDetails: ProjectDetails[] = [
               "Acotar cada Quick Job al grupo de equipos más pequeño que resuelve el problema; un despliegue a todo el parque cuando solo unos pocos equipos lo necesitan añade ruido sin aportar valor.",
               "Explicar lo que se va a hacer antes de tomar el control remoto vía Splashtop — un breve aviso al usuario evita confusión durante la sesión y genera confianza.",
               "Registrar cada intervención, incluso un Quick Job rutinario — en un MSP, la trazabilidad en el historial de tareas importa tanto como la propia corrección.",
-              "Escalar pronto los casos ambiguos en lugar de adivinar; el papel de una becaria en Explotación es triar rápido y derivar lo que no está claro, no improvisar una solución."
+              "Escalar pronto los casos ambiguos en lugar de adivinar — triar rápido y derivar un caso complejo al especialista adecuado siempre vale más que improvisar una solución con incertidumbre."
             ],
             "title": "Buenas prácticas"
           },
           {
             "type": "bullets",
             "items": [
-              "Este rol estaba acotado por las prácticas: trabajaba dentro de las políticas de supervisión y las plantillas de Quick Job ya establecidas por el equipo de Explotación — no diseñaba ni modificaba yo misma las políticas de RMM subyacentes.",
+              "Las políticas de supervisión y las plantillas de Quick Job pertenecían al equipo de Explotación, no a un operador individual — la ejecución diaria (revisiones del panel, Quick Jobs, sesiones remotas) era responsabilidad mía, mientras que el diseño de políticas correspondía al responsable del equipo, el mismo reparto de responsabilidades aplicado en toda la cartera de clientes del MSP.",
               "Las brechas de cobertura antivirus se corregían de forma reactiva, una vez señaladas en el panel, en lugar de mediante una política de cumplimiento proactiva con remediación automática — esa corrección a nivel de política quedaba fuera del alcance de las prácticas.",
               "El soporte vía Splashtop asume que el equipo está en línea y que un usuario está presente para autorizar el acceso; los equipos fuera de línea o sin nadie delante debían esperar a la siguiente ventana de Quick Job en lugar de una sesión inmediata.",
               "Las intervenciones puramente de RMM se registraban en el historial de tareas de Datto RMM y no como tickets independientes en Autotask — esa trazabilidad por ticket se aplicaba a las incidencias del lado de Soporte Técnico, no a las tareas rutinarias de Explotación."
