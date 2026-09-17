@@ -647,7 +647,7 @@ export const projects: Project[] = [
   {
     "slug": "it-ops-rmm-supervision",
     "title": "Infrastructure Monitoring with Datto RMM",
-    "excerpt": "Daily fleet supervision at MIDRANGE GROUP: 550+ devices monitored in Datto RMM, antivirus coverage gaps closed via Quick Jobs, and client support delivered remotely via Splashtop.",
+    "excerpt": "At MIDRANGE GROUP, I supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -673,11 +673,11 @@ export const projects: Project[] = [
       "ITSM"
     ],
     "highlights": [
-      "Monitored 550+ devices (desktops, laptops, servers) across multiple client sites via Datto RMM dashboard",
-      "Checked patch status, antivirus coverage, and software inventory for managed endpoints",
-      "Deployed software components (MalwareBytes) remotely via Quick Jobs without on-site intervention",
-      "Used Splashtop remote access to assist end users and troubleshoot issues on client machines",
-      "Worked within the Exploitation team of a real MSP alongside a senior SysAdmin"
+      "I monitored 550+ devices (desktops, laptops, servers) across multiple client sites via the Datto RMM dashboard",
+      "I checked patch status, antivirus coverage, and software inventory for managed endpoints",
+      "I deployed software components (MalwareBytes) remotely via Quick Jobs without on-site intervention",
+      "I used Splashtop remote access to assist end users and troubleshoot issues on client machines",
+      "I worked within the Exploitation team of a real MSP alongside a senior SysAdmin"
     ],
     "featured": true,
     "sortOrder": 10,
@@ -686,7 +686,7 @@ export const projects: Project[] = [
   {
     "slug": "workstation-mass-deployment",
     "title": "Mass Workstation Deployment — 264 Dell Devices",
-    "excerpt": "End-to-end provisioning of a 264-device fleet at MIDRANGE GROUP (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
+    "excerpt": "At MIDRANGE GROUP, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -715,11 +715,11 @@ export const projects: Project[] = [
       "PowerShell"
     ],
     "highlights": [
-      "64 Dell Optiplex — Blancco NIST 800-88 erasure + Sysprep golden image",
-      "200 Dell Latitude — zero-touch Autopilot via Dell ImageAssist",
-      "Hands-on IT time per Latitude post-setup: < 5 minutes",
-      "Blancco compliance certificates generated for every wiped device",
-      "Intune: deployment profiles, BitLocker, Defender, update rings"
+      "I wiped 64 Dell Optiplex units with Blancco (NIST 800-88 erasure) and imaged them from a Sysprep golden image",
+      "I deployed 200 Dell Latitude laptops zero-touch via Windows Autopilot and Dell ImageAssist",
+      "I kept hands-on IT time per Latitude post-setup under 5 minutes",
+      "I generated a Blancco compliance certificate for every wiped device",
+      "I configured Intune deployment profiles, BitLocker, Defender, and update rings"
     ],
     "featured": true,
     "sortOrder": 20,
@@ -728,7 +728,7 @@ export const projects: Project[] = [
   {
     "slug": "it-ops-incident-management",
     "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
-    "excerpt": "Tier-1/2 support at MIDRANGE GROUP MSP: ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — 316 open tickets managed across the client portfolio.",
+    "excerpt": "At MIDRANGE GROUP MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -754,11 +754,11 @@ export const projects: Project[] = [
       "Ticketing"
     ],
     "highlights": [
-      "Ticket triage via Autotask (phone / email / Datto RMM agent)",
-      "Remote diagnosis via Datto RMM — no on-site intervention needed",
-      "Webroot false positive resolved by URL suppression from management console",
-      "Client access restored without reinstalling or reconfiguring Webroot",
-      "Resolution documented in Autotask time entry for billing and audit trail"
+      "I triaged incoming tickets in Autotask (phone / email / Datto RMM agent)",
+      "I diagnosed issues remotely via Datto RMM — no on-site intervention needed",
+      "I resolved a Webroot false positive by URL suppression from the management console",
+      "I restored client access without reinstalling or reconfiguring Webroot",
+      "I documented every resolution in an Autotask time entry for billing and audit trail"
     ],
     "featured": true,
     "sortOrder": 30,
@@ -767,7 +767,7 @@ export const projects: Project[] = [
   {
     "slug": "it-ops-acronis-backup",
     "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-    "excerpt": "Daily backup monitoring at MIDRANGE GROUP: 105 protected endpoints across NAS and Acronis Cloud, 85 active alerts triaged, root causes identified (NAS full, plan corruption, network issues) and continuity restored.",
+    "excerpt": "At MIDRANGE GROUP, I monitored backups daily across 105 protected endpoints (NAS and Acronis Cloud), triaged 85 active alerts, identified root causes (NAS full, plan corruption, network issues) and restored continuity.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -791,11 +791,11 @@ export const projects: Project[] = [
       "Cloud Storage"
     ],
     "highlights": [
-      "Monitored 105 protected devices across 5 backup plans (VMs, SQL, Exchange) in Acronis Cyber Backup",
-      "Diagnosed 85 alerts (33 errors, 52 warnings) and identified root causes: full disks, offline servers, corrupted plans, network failures",
-      "Recreated corrupted backup plans with corrected naming conventions to restore continuity",
-      "Managed two NAS destinations (10.5 Tio each) and a cloud location (250 Gio) via Acronis",
-      "Used Datto RMM / Splashtop to remotely access client servers during investigations"
+      "I monitored 105 protected devices across 5 backup plans (VMs, SQL, Exchange) in Acronis Cyber Backup",
+      "I diagnosed 85 alerts (33 errors, 52 warnings) and identified root causes: full disks, offline servers, corrupted plans, network failures",
+      "I recreated corrupted backup plans with corrected naming conventions to restore continuity",
+      "I managed two NAS destinations (10.5 Tio each) and a cloud location (250 Gio) via Acronis",
+      "I used Datto RMM / Splashtop to remotely access client servers during investigations"
     ],
     "featured": true,
     "sortOrder": 40,
