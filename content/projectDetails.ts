@@ -4921,6 +4921,17 @@ export const projectDetails: ProjectDetails[] = [
             ]
           },
           {
+            "type": "bullets",
+            "items": [
+              "Distinguishing a genuine problem from background noise across 550+ endpoints spread over multiple client sites requires a consistent daily triage method, not just a glance at the dashboard.",
+              "Antivirus coverage gaps only became visible by cross-referencing the Default Dashboard's aggregate counts against the software inventory of individual devices — no single view surfaced both at once.",
+              "A Quick Job has to be scoped to the exact device group that needs the fix; pushing MalwareBytes fleet-wide when only a handful of machines were missing it would have wasted bandwidth and cluttered the job history for the whole team.",
+              "Splashtop sessions depend on the end user being present to grant access in real time, so remote troubleshooting has to work around whoever is actually at the keyboard, not around an ideal maintenance window.",
+              "As an intern in the Exploitation team, I operated inside guardrails: I could execute defined tasks (dashboard checks, Quick Jobs, remote sessions) under Théo's supervision, but I did not have authority to change monitoring policies myself."
+            ],
+            "title": "Technical challenges"
+          },
+          {
             "type": "text",
             "title": "Platform: Datto RMM",
             "paragraphs": [
@@ -4954,11 +4965,26 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Platform Details"
           },
           {
-            "type": "text",
-            "title": "Tasks Performed",
-            "paragraphs": [
-              "On the Datto RMM platform, I carried out the following operational tasks: reviewed the Default Dashboard to assess the overall health of the managed fleet (offline device count by type, antivirus coverage across all sites); navigated device profiles to inspect hardware specs, OS version, patch status, and software inventory for individual endpoints; used the Quick Job feature to remotely deploy the MalwareBytes endpoint agent on targeted machines without requiring physical access or user interaction; and connected to client machines via Splashtop for remote troubleshooting and user support sessions."
-            ]
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Step 1 — Morning fleet review",
+                "description": "Each day started with the Default Dashboard: offline device count by type, antivirus coverage across all client sites, and any new alerts raised overnight by the Datto RMM agents."
+              },
+              {
+                "title": "Step 2 — Device-level triage",
+                "description": "For any site or device flagged during the morning review, I opened the individual device profile to check hardware specs, OS version, patch status, and software inventory before deciding on an action."
+              },
+              {
+                "title": "Step 3 — Remote remediation via Quick Job",
+                "description": "When a device was missing MalwareBytes or another required agent, I launched a Quick Job scoped to that device (or a small group) to deploy it remotely — no physical access, no user interruption."
+              },
+              {
+                "title": "Step 4 — End-user support via Splashtop",
+                "description": "For issues that needed hands-on troubleshooting, I connected to the affected machine via Splashtop with the user's consent, working side by side with Théo on the more complex incidents."
+              }
+            ],
+            "title": "How I worked — day to day"
           },
           {
             "type": "text",
@@ -4997,6 +5023,45 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Outcomes"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Cross-check the dashboard's aggregate numbers against individual device profiles before declaring a fleet healthy — summary counts hide per-device patch or software drift.",
+              "Scope every Quick Job to the smallest device group that solves the problem; a fleet-wide push when only a few machines need it adds noise without adding value.",
+              "Explain what you're about to do before taking remote control via Splashtop — a short heads-up to the user avoids confusion mid-session and builds trust.",
+              "Log every intervention, even a routine Quick Job — in an MSP, the audit trail in the job history matters as much as the fix itself.",
+              "Escalate ambiguous cases early instead of guessing; a junior role on the Exploitation team is to triage fast and hand off what's unclear, not to improvise a fix."
+            ],
+            "title": "Best Practices"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "This was an internship-scoped role: I worked inside the monitoring policies and Quick Job templates the Exploitation team had already set up — I did not design or modify the underlying RMM policies myself.",
+              "Antivirus coverage gaps were closed reactively, once flagged on the dashboard, rather than through a proactive compliance policy that would auto-remediate — that policy-level fix was outside the internship's scope.",
+              "Splashtop support assumes the device is online and a user is present to grant access; offline machines or unattended desks had to wait for the next Quick Job window instead of an immediate session.",
+              "RMM-only interventions were tracked through Datto RMM's own job history rather than logged as separate Autotask tickets — that ticketing trail applied to the Support Technique-side incidents, not to routine Exploitation tasks."
+            ],
+            "title": "Known Limitations & Decisions"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.datto.com/products/rmm",
+                "label": "Datto RMM — Remote Monitoring & Management"
+              },
+              {
+                "href": "https://www.splashtop.com/",
+                "label": "Splashtop — Remote access"
+              },
+              {
+                "href": "https://www.malwarebytes.com/business",
+                "label": "Malwarebytes for Business"
+              }
+            ],
+            "title": "Tools & references"
           }
         ]
       },
@@ -5010,6 +5075,17 @@ export const projectDetails: ProjectDetails[] = [
             "paragraphs": [
               "Chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux). Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
             ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Distinguer un problème réel du bruit de fond sur 550+ postes répartis sur plusieurs sites clients exige une méthode de triage quotidienne cohérente, pas juste un coup d'œil au tableau de bord.",
+              "Les écarts de couverture antivirus n'apparaissaient qu'en croisant les compteurs agrégés du Default Dashboard avec l'inventaire logiciel de chaque poste — aucune vue unique ne réunissait les deux.",
+              "Un Quick Job doit être ciblé précisément sur le groupe d'appareils concerné : déployer MalwareBytes sur l'ensemble du parc alors que seule une poignée de postes en avait besoin aurait gaspillé de la bande passante et pollué l'historique des tâches pour toute l'équipe.",
+              "Les sessions Splashtop dépendent de la présence de l'utilisateur pour autoriser l'accès en temps réel : le dépannage à distance doit s'adapter à qui est réellement devant le poste, pas à une fenêtre de maintenance idéale.",
+              "En tant que stagiaire au sein de l'équipe Exploitation, j'évoluais dans un cadre défini : j'exécutais des tâches précises (contrôles du tableau de bord, Quick Jobs, sessions à distance) sous la supervision de Théo, sans autorité pour modifier moi-même les politiques de supervision."
+            ],
+            "title": "Défis techniques"
           },
           {
             "type": "text",
@@ -5045,11 +5121,26 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Détails de la plateforme"
           },
           {
-            "type": "text",
-            "title": "Tâches effectuées",
-            "paragraphs": [
-              "Sur la plateforme Datto RMM, je réalisais les opérations suivantes : consultation du tableau de bord Default Dashboard pour évaluer l'état global du parc (comptage des équipements hors ligne par type, couverture antivirus sur l'ensemble des sites) ; navigation dans les profils d'équipements pour inspecter les caractéristiques matérielles, la version OS, le statut des correctifs et l'inventaire logiciel ; utilisation de la fonctionnalité Quick Job pour déployer à distance l'agent MalwareBytes sur les postes ciblés, sans accès physique ni intervention utilisateur ; connexion aux postes clients via Splashtop pour des sessions de dépannage et de support à distance."
-            ]
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Étape 1 — Revue matinale du parc",
+                "description": "Chaque journée commençait par le Default Dashboard : nombre d'appareils hors ligne par type, couverture antivirus sur l'ensemble des sites clients, et nouvelles alertes levées pendant la nuit par les agents Datto RMM."
+              },
+              {
+                "title": "Étape 2 — Triage au niveau du poste",
+                "description": "Pour tout site ou appareil signalé lors de la revue matinale, j'ouvrais la fiche de l'appareil pour vérifier les caractéristiques matérielles, la version de l'OS, le statut des correctifs et l'inventaire logiciel avant de décider d'une action."
+              },
+              {
+                "title": "Étape 3 — Remédiation à distance via Quick Job",
+                "description": "Quand un poste n'avait pas MalwareBytes ou un autre agent requis, je lançais un Quick Job ciblé sur cet appareil (ou un petit groupe) pour le déployer à distance — sans accès physique, sans interruption pour l'utilisateur."
+              },
+              {
+                "title": "Étape 4 — Support utilisateur via Splashtop",
+                "description": "Pour les incidents nécessitant une intervention manuelle, je me connectais au poste concerné via Splashtop avec l'accord de l'utilisateur, en binôme avec Théo sur les cas les plus complexes."
+              }
+            ],
+            "title": "Mon quotidien — étape par étape"
           },
           {
             "type": "text",
@@ -5088,6 +5179,45 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Résultats"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Toujours croiser les compteurs agrégés du tableau de bord avec les fiches individuelles avant de déclarer un parc « sain » — les totaux masquent les écarts de correctifs ou de logiciels poste par poste.",
+              "Cibler chaque Quick Job sur le plus petit groupe d'appareils qui résout le problème ; un déploiement à l'échelle du parc quand seuls quelques postes sont concernés ajoute du bruit sans valeur ajoutée.",
+              "Expliquer ce qu'on s'apprête à faire avant de prendre la main via Splashtop — un court message à l'utilisateur évite la confusion en cours de session et instaure la confiance.",
+              "Journaliser chaque intervention, même un Quick Job de routine — dans un MSP, la traçabilité dans l'historique des tâches compte autant que la correction elle-même.",
+              "Escalader tôt les cas ambigus plutôt que de deviner ; le rôle d'un stagiaire au sein de l'Exploitation est de trier vite et de transmettre ce qui n'est pas clair, pas d'improviser une correction."
+            ],
+            "title": "Bonnes pratiques"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Ce rôle était cadré par le stage : j'intervenais dans les politiques de supervision et les modèles de Quick Job déjà mis en place par l'équipe Exploitation — je ne concevais ni ne modifiais moi-même les politiques RMM sous-jacentes.",
+              "Les écarts de couverture antivirus étaient corrigés de façon réactive, une fois signalés sur le tableau de bord, plutôt que via une politique de conformité proactive avec remédiation automatique — cette correction au niveau politique sortait du périmètre du stage.",
+              "Le support via Splashtop suppose que le poste est en ligne et qu'un utilisateur est présent pour autoriser l'accès ; les postes hors ligne ou inoccupés devaient attendre la prochaine fenêtre de Quick Job plutôt qu'une session immédiate.",
+              "Les interventions purement RMM étaient tracées dans l'historique des tâches de Datto RMM plutôt que consignées comme tickets Autotask séparés — cette traçabilité par ticket s'appliquait aux incidents côté Support Technique, pas aux tâches courantes d'Exploitation."
+            ],
+            "title": "Limites connues & décisions"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.datto.com/fr/products/rmm",
+                "label": "Datto RMM — Supervision et gestion à distance"
+              },
+              {
+                "href": "https://www.splashtop.com/fr",
+                "label": "Splashtop — Accès à distance"
+              },
+              {
+                "href": "https://www.malwarebytes.com/business",
+                "label": "Malwarebytes for Business"
+              }
+            ],
+            "title": "Outils & références"
           }
         ]
       },
@@ -5101,6 +5231,17 @@ export const projectDetails: ProjectDetails[] = [
             "paragraphs": [
               "En MIDRANGE GROUP, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto a Théo KACEL (Administrador de Sistemas y Redes). El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
             ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Distinguir un problema real del ruido de fondo en más de 550 equipos repartidos en varios sitios de clientes exige un método de triaje diario coherente, no solo un vistazo al panel.",
+              "Las brechas de cobertura antivirus solo se hacían visibles cruzando los recuentos agregados del Default Dashboard con el inventario de software de cada equipo — ninguna vista única mostraba ambos a la vez.",
+              "Un Quick Job debe acotarse exactamente al grupo de equipos que lo necesita; desplegar MalwareBytes en todo el parque cuando solo unos pocos equipos carecían de él habría desperdiciado ancho de banda y saturado el historial de tareas de todo el equipo.",
+              "Las sesiones de Splashtop dependen de que el usuario esté presente para autorizar el acceso en tiempo real, así que la resolución remota debe adaptarse a quién está realmente frente al equipo, no a una ventana de mantenimiento ideal.",
+              "Como becaria en el equipo de Explotación, trabajaba dentro de unos límites definidos: ejecutaba tareas concretas (revisiones del panel, Quick Jobs, sesiones remotas) bajo la supervisión de Théo, sin autoridad para modificar yo misma las políticas de supervisión."
+            ],
+            "title": "Retos técnicos"
           },
           {
             "type": "text",
@@ -5136,11 +5277,26 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Detalles de la plataforma"
           },
           {
-            "type": "text",
-            "title": "Tareas realizadas",
-            "paragraphs": [
-              "En la plataforma Datto RMM, realizaba las siguientes tareas operativas: revisión del Default Dashboard para evaluar el estado general del parque gestionado (recuento de equipos fuera de línea por tipo, cobertura antivirus en todos los sitios); navegación por los perfiles de equipos para inspeccionar las especificaciones de hardware, la versión del SO, el estado de los parches y el inventario de software de cada equipo; uso de la función Quick Job para desplegar de forma remota el agente MalwareBytes en los equipos seleccionados sin necesidad de acceso físico ni intervención del usuario; y conexión a los equipos de los clientes vía Splashtop para sesiones de resolución de incidencias y soporte remoto."
-            ]
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Paso 1 — Revisión matinal del parque",
+                "description": "Cada jornada comenzaba con el Default Dashboard: número de equipos fuera de línea por tipo, cobertura antivirus en todos los sitios de clientes y nuevas alertas generadas durante la noche por los agentes de Datto RMM."
+              },
+              {
+                "title": "Paso 2 — Triaje a nivel de equipo",
+                "description": "Para cualquier sitio o equipo señalado en la revisión matinal, abría la ficha del dispositivo para comprobar las características de hardware, la versión del sistema operativo, el estado de los parches y el inventario de software antes de decidir una acción."
+              },
+              {
+                "title": "Paso 3 — Corrección remota vía Quick Job",
+                "description": "Cuando a un equipo le faltaba MalwareBytes u otro agente requerido, lanzaba un Quick Job dirigido a ese dispositivo (o a un pequeño grupo) para desplegarlo de forma remota, sin acceso físico ni interrupción para el usuario."
+              },
+              {
+                "title": "Paso 4 — Soporte al usuario vía Splashtop",
+                "description": "Para las incidencias que requerían intervención manual, me conectaba al equipo afectado vía Splashtop con el consentimiento del usuario, trabajando junto a Théo en los casos más complejos."
+              }
+            ],
+            "title": "Mi día a día — paso a paso"
           },
           {
             "type": "text",
@@ -5179,6 +5335,45 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Resultados"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Cruzar siempre los recuentos agregados del panel con las fichas individuales antes de declarar un parque «sano» — los totales ocultan desviaciones de parches o software equipo por equipo.",
+              "Acotar cada Quick Job al grupo de equipos más pequeño que resuelve el problema; un despliegue a todo el parque cuando solo unos pocos equipos lo necesitan añade ruido sin aportar valor.",
+              "Explicar lo que se va a hacer antes de tomar el control remoto vía Splashtop — un breve aviso al usuario evita confusión durante la sesión y genera confianza.",
+              "Registrar cada intervención, incluso un Quick Job rutinario — en un MSP, la trazabilidad en el historial de tareas importa tanto como la propia corrección.",
+              "Escalar pronto los casos ambiguos en lugar de adivinar; el papel de una becaria en Explotación es triar rápido y derivar lo que no está claro, no improvisar una solución."
+            ],
+            "title": "Buenas prácticas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Este rol estaba acotado por las prácticas: trabajaba dentro de las políticas de supervisión y las plantillas de Quick Job ya establecidas por el equipo de Explotación — no diseñaba ni modificaba yo misma las políticas de RMM subyacentes.",
+              "Las brechas de cobertura antivirus se corregían de forma reactiva, una vez señaladas en el panel, en lugar de mediante una política de cumplimiento proactiva con remediación automática — esa corrección a nivel de política quedaba fuera del alcance de las prácticas.",
+              "El soporte vía Splashtop asume que el equipo está en línea y que un usuario está presente para autorizar el acceso; los equipos fuera de línea o sin nadie delante debían esperar a la siguiente ventana de Quick Job en lugar de una sesión inmediata.",
+              "Las intervenciones puramente de RMM se registraban en el historial de tareas de Datto RMM y no como tickets independientes en Autotask — esa trazabilidad por ticket se aplicaba a las incidencias del lado de Soporte Técnico, no a las tareas rutinarias de Explotación."
+            ],
+            "title": "Límites conocidos y decisiones"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.datto.com/products/rmm",
+                "label": "Datto RMM — Supervisión y gestión remota"
+              },
+              {
+                "href": "https://www.splashtop.com/es",
+                "label": "Splashtop — Acceso remoto"
+              },
+              {
+                "href": "https://www.malwarebytes.com/business",
+                "label": "Malwarebytes for Business"
+              }
+            ],
+            "title": "Herramientas y referencias"
           }
         ]
       }
@@ -5646,6 +5841,17 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
+              "Tickets arrive through three different channels (phone, email, Datto RMM alerts) with three different levels of detail, so the first job on every ticket is filling the gaps before any real diagnosis starts.",
+              "A support ticket has to be routed correctly on first read — user-facing issues go to Support Technique, infrastructure issues go to Exploitation — and a misrouted ticket costs time on both sides.",
+              "Reproducing the exact symptom remotely, before touching any configuration, is the only way to avoid changing the wrong setting on a live client machine.",
+              "A security tool flagging a legitimate site as malicious (Webroot false positive) looks identical to a genuine block from the user's side — telling the two apart requires checking the domain's actual reputation, not just trusting the alert.",
+              "Every fix has to be documented in Autotask well enough to double as both a billing record and a future troubleshooting reference — writing a vague ticket note creates work for the next technician."
+            ],
+            "title": "Technical challenges"
+          },
+          {
+            "type": "bullets",
+            "items": [
               "Phone: client calls the support line directly. The technician creates a ticket in Autotask manually and begins triage immediately.",
               "Email: client sends a message to the support address. Autotask ingests it automatically and creates a ticket, which is then assigned to the correct queue.",
               "Datto RMM agent: the agent installed on managed endpoints monitors the device in real time and can raise alerts automatically (CPU spike, disk full, security event). These generate tickets in Autotask without any client action."
@@ -5721,6 +5927,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Best Practices"
           },
           {
+            "type": "bullets",
+            "items": [
+              "This case covers a single, representative ticket end to end rather than the full volume of tickets I handled — the workflow described (intake → remote access → diagnosis → fix → documentation) is the one applied to every ticket, at different depths depending on complexity.",
+              "URL suppression in the Webroot console fixes the immediate symptom for the reported domain; it does not retrain Webroot's underlying reputation scoring, so a similar false positive can recur on a different URL — that's a vendor-side limitation, not something fixable from the console.",
+              "Remote resolution via Datto RMM assumes the client machine is reachable and the user available to grant access; a ticket where either condition fails would need an on-site visit, which falls outside the Support Technique workflow described here.",
+              "Routing between Support Technique and Exploitation was based on the description at intake, which is a judgment call — a ticket that looks user-facing at first (like this one) can still turn out to have an infrastructure root cause, and vice versa."
+            ],
+            "title": "Known Limitations & Decisions"
+          },
+          {
             "type": "resources",
             "items": [
               {
@@ -5751,6 +5967,17 @@ export const projectDetails: ProjectDetails[] = [
               "Chez MIDRANGE GROUP, au sein de l'équipe Support Technique aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux), je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
               "Une fois un ticket ouvert dans Autotask, il est routé soit vers l'équipe Support Technique (incidents utilisateurs), soit vers l'équipe Exploitation (infrastructure et supervision). Voici le traitement d'un ticket client en production, de la prise en charge à la résolution."
             ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Les tickets arrivent par trois canaux différents (téléphone, e-mail, alertes Datto RMM) avec trois niveaux de détail différents ; le premier travail sur chaque ticket est donc de combler les manques avant tout diagnostic réel.",
+              "Un ticket doit être routé correctement dès la première lecture — les incidents utilisateurs vers le Support Technique, les incidents infrastructure vers l'Exploitation — et un mauvais routage coûte du temps des deux côtés.",
+              "Reproduire le symptôme exact à distance, avant de toucher à une configuration, est le seul moyen d'éviter de modifier le mauvais réglage sur un poste client en production.",
+              "Un outil de sécurité qui signale un site légitime comme malveillant (faux positif Webroot) ressemble en tout point à un blocage réel côté utilisateur — les distinguer nécessite de vérifier la réputation réelle du domaine, pas seulement de faire confiance à l'alerte.",
+              "Chaque correction doit être documentée dans Autotask de façon suffisamment claire pour servir à la fois de pièce de facturation et de référence de dépannage future — une note de ticket vague crée du travail pour le prochain technicien."
+            ],
+            "title": "Défis techniques"
           },
           {
             "type": "bullets",
@@ -5830,6 +6057,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Bonnes pratiques"
           },
           {
+            "type": "bullets",
+            "items": [
+              "Ce cas couvre un ticket représentatif de bout en bout plutôt que le volume complet des tickets traités — le déroulé décrit (prise en charge → accès distant → diagnostic → correction → documentation) est celui appliqué à chaque ticket, à des degrés de profondeur variables selon la complexité.",
+              "L'exclusion d'URL dans la console Webroot corrige le symptôme immédiat pour le domaine signalé ; elle ne réentraîne pas le score de réputation sous-jacent de Webroot, donc un faux positif similaire peut réapparaître sur une autre URL — c'est une limite côté éditeur, pas quelque chose de corrigeable depuis la console.",
+              "La résolution à distance via Datto RMM suppose que le poste client est joignable et que l'utilisateur est disponible pour autoriser l'accès ; un ticket où l'une de ces conditions ne serait pas remplie nécessiterait un déplacement sur site, ce qui sort du périmètre du workflow Support Technique décrit ici.",
+              "Le routage entre Support Technique et Exploitation reposait sur la description à la prise en charge, ce qui reste une appréciation ; un ticket qui paraît utilisateur au premier abord (comme celui-ci) peut malgré tout avoir une cause racine infrastructure, et inversement."
+            ],
+            "title": "Limites connues & décisions"
+          },
+          {
             "type": "resources",
             "items": [
               {
@@ -5860,6 +6097,17 @@ export const projectDetails: ProjectDetails[] = [
               "En MIDRANGE GROUP, dentro del equipo de Soporte Técnico junto a Théo KACEL (Administrador de Sistemas y Redes), atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
               "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). A continuación, el tratamiento de un ticket real de cliente, de la recepción a la resolución."
             ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Los tickets llegan por tres canales distintos (teléfono, correo electrónico, alertas de Datto RMM) con tres niveles de detalle diferentes, así que la primera tarea en cada ticket es completar la información antes de empezar el diagnóstico real.",
+              "Un ticket debe enrutarse correctamente desde la primera lectura — las incidencias de usuario van a Soporte Técnico, las de infraestructura a Explotación — y un enrutamiento incorrecto cuesta tiempo a ambos lados.",
+              "Reproducir el síntoma exacto en remoto, antes de tocar cualquier configuración, es la única forma de evitar cambiar el ajuste equivocado en un equipo de cliente en producción.",
+              "Una herramienta de seguridad que marca un sitio legítimo como malicioso (falso positivo de Webroot) resulta indistinguible de un bloqueo real desde el punto de vista del usuario — diferenciarlos exige comprobar la reputación real del dominio, no solo confiar en la alerta.",
+              "Cada corrección debe documentarse en Autotask con claridad suficiente para servir tanto de justificante de facturación como de referencia de resolución futura — una nota de ticket vaga genera trabajo para el siguiente técnico."
+            ],
+            "title": "Retos técnicos"
           },
           {
             "type": "bullets",
@@ -5939,6 +6187,16 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Buenas prácticas"
           },
           {
+            "type": "bullets",
+            "items": [
+              "Este caso cubre un ticket representativo de principio a fin, no el volumen completo de tickets que atendía — el flujo descrito (recepción → acceso remoto → diagnóstico → corrección → documentación) es el que se aplicaba a cada ticket, con distinta profundidad según la complejidad.",
+              "La exclusión de URL en la consola de Webroot corrige el síntoma inmediato para el dominio señalado; no reentrena la puntuación de reputación subyacente de Webroot, por lo que un falso positivo similar puede repetirse en otra URL — es una limitación del propio fabricante, no algo corregible desde la consola.",
+              "La resolución remota vía Datto RMM asume que el equipo del cliente es alcanzable y que el usuario está disponible para autorizar el acceso; un ticket en el que alguna de estas condiciones no se cumpla requeriría una visita in situ, fuera del alcance del flujo de Soporte Técnico descrito aquí.",
+              "El enrutamiento entre Soporte Técnico y Explotación se basaba en la descripción inicial, lo cual sigue siendo una valoración; un ticket que a primera vista parece de usuario (como este) puede tener igualmente una causa raíz de infraestructura, y viceversa."
+            ],
+            "title": "Límites conocidos y decisiones"
+          },
+          {
             "type": "resources",
             "items": [
               {
@@ -6001,6 +6259,17 @@ export const projectDetails: ProjectDetails[] = [
             ]
           },
           {
+            "type": "bullets",
+            "items": [
+              "85 active alerts across 105 protected devices meant triage had to be systematic — treating every alert as equally urgent would have buried the handful that actually risked data loss.",
+              "The same symptom (a red 'failure' status) could come from four unrelated root causes — a full NAS, an offline server, a corrupted backup plan, or a network fault — so the fix had to match the actual cause, not just the alert label.",
+              "Recreating a corrupted backup plan meant preserving the exact same policy (schedule, retention, destination) under a new name, without silently changing retention windows or destinations the client was relying on.",
+              "Two on-premises NAS destinations were both approaching their 10.5 Tio capacity ceiling at the same time, so freeing space on one without checking the other would only have delayed the same failure.",
+              "Diagnosing a failure often required remote access to the client's own servers (via Datto RMM / Splashtop) rather than relying on the Acronis console alone, since some root causes (an unplugged server, a saturated network link) are only visible from the machine itself."
+            ],
+            "title": "Technical challenges"
+          },
+          {
             "type": "metrics",
             "items": [
               {
@@ -6053,6 +6322,28 @@ export const projectDetails: ProjectDetails[] = [
             ]
           },
           {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Step 1 — Daily dashboard review",
+                "description": "Every morning, I opened the Acronis dashboard to note the number of active alerts and the split between errors and warnings."
+              },
+              {
+                "title": "Step 2 — Root-cause check per alert",
+                "description": "For each alert, I inspected the affected device or backup plan to determine which of the four common failure patterns applied: NAS full, server offline, corrupted plan, or network issue."
+              },
+              {
+                "title": "Step 3 — Fix applied at the source",
+                "description": "Depending on the case: freed NAS capacity by purging obsolete full backups, confirmed server availability, or recreated a corrupted plan under a new name with the same policy."
+              },
+              {
+                "title": "Step 4 — Continuity verified",
+                "description": "I waited for or triggered the next scheduled run on the affected plan to confirm the alert had actually cleared before closing it out."
+              }
+            ],
+            "title": "How I triaged an alert — step by step"
+          },
+          {
             "type": "metrics",
             "items": [
               {
@@ -6100,6 +6391,45 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Outcomes"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Always confirm which of the recurring failure patterns (NAS full, server offline, corrupted plan, network issue) applies before acting — the same red status can hide four different fixes, and guessing wrong wastes a backup cycle.",
+              "When a plan is corrupted, recreate it under an incremented name with the identical policy rather than starting from a blank configuration — this avoids silently changing retention or destinations the client is relying on.",
+              "Check both NAS destinations' remaining capacity together, not just the one that raised the alert — if both are near their ceiling, freeing space on one only delays the same failure on the other.",
+              "Use remote access (Datto RMM / Splashtop) to check the physical/network state of a server before assuming the backup software itself is at fault — an unplugged cable produces the same red status as a corrupted plan.",
+              "Clear a warning only after confirming the next scheduled run actually completes clean — a status that looks fixed on paper can still fail again if the underlying cause (like a saturated link) wasn't fully resolved."
+            ],
+            "title": "Best Practices"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "This mandate was reactive by design: I triaged and fixed alerts already raised on the dashboard rather than redesigning the backup architecture (retention policy, NAS sizing) itself — that scoping decision belonged to the Exploitation team lead.",
+              "Freeing NAS capacity by purging old full backups reduces the retention window for that period; it was the fastest fix for an active failure, with the trade-off accepted by the team rather than left undocumented.",
+              "A backup plan showing 'CBT disabled' (Changed Block Tracking) still completed successfully — I treated it as a warning to monitor rather than an active failure, since forcing a full VMware re-scan mid-cycle would have cost more backup time than it saved.",
+              "Root-cause categories (NAS full, server offline, corrupted plan, network issue) covered every alert seen during this engagement, but they are not an exhaustive list for Acronis Cyber Backup in general — a different client environment could surface failure modes outside these four."
+            ],
+            "title": "Known Limitations & Decisions"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.acronis.com/en-us/products/cyber-backup/",
+                "label": "Acronis Cyber Backup"
+              },
+              {
+                "href": "https://www.acronis.com/en-us/products/cloud/cyber-protect/",
+                "label": "Acronis Cyber Protect Cloud"
+              },
+              {
+                "href": "https://www.datto.com/products/rmm",
+                "label": "Datto RMM — Remote Monitoring & Management"
+              }
+            ],
+            "title": "Tools & references"
           }
         ]
       },
@@ -6113,6 +6443,17 @@ export const projectDetails: ProjectDetails[] = [
             "paragraphs": [
               "Chez MIDRANGE GROUP (ESN/MSP), au sein de l'équipe Exploitation aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux), j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
             ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "85 alertes actives sur 105 postes protégés imposaient un triage systématique — traiter chaque alerte avec la même urgence aurait noyé les quelques cas qui présentaient un réel risque de perte de données.",
+              "Le même symptôme (un statut rouge « échec ») pouvait provenir de quatre causes racines distinctes — NAS saturé, serveur hors ligne, plan de sauvegarde corrompu ou panne réseau — la correction devait donc coller à la cause réelle, pas seulement au libellé de l'alerte.",
+              "Recréer un plan de sauvegarde corrompu impliquait de préserver exactement la même politique (planification, rétention, destination) sous un nouveau nom, sans modifier silencieusement les fenêtres de rétention ou les destinations dont dépendait le client.",
+              "Les deux destinations NAS on-premise approchaient simultanément leur plafond de capacité de 10,5 Tio ; libérer de l'espace sur l'une sans vérifier l'autre n'aurait fait que retarder le même échec.",
+              "Diagnostiquer un échec nécessitait souvent un accès distant aux serveurs du client (via Datto RMM / Splashtop) plutôt que de s'appuyer uniquement sur la console Acronis, certaines causes racines (serveur débranché, lien réseau saturé) n'étant visibles que depuis la machine elle-même."
+            ],
+            "title": "Défis techniques"
           },
           {
             "type": "metrics",
@@ -6167,6 +6508,28 @@ export const projectDetails: ProjectDetails[] = [
             ]
           },
           {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Étape 1 — Revue quotidienne du tableau de bord",
+                "description": "Chaque matin, j'ouvrais le tableau de bord Acronis pour relever le nombre d'alertes actives et la répartition erreurs/avertissements."
+              },
+              {
+                "title": "Étape 2 — Recherche de la cause racine par alerte",
+                "description": "Pour chaque alerte, j'inspectais l'appareil ou le plan de sauvegarde concerné pour déterminer lequel des quatre schémas d'échec courants s'appliquait (NAS saturé, serveur hors ligne, plan corrompu, problème réseau)."
+              },
+              {
+                "title": "Étape 3 — Correction à la source",
+                "description": "Selon le cas : libération d'espace NAS par purge de sauvegardes complètes obsolètes, vérification de la disponibilité du serveur, ou recréation d'un plan corrompu sous un nouveau nom avec la même politique."
+              },
+              {
+                "title": "Étape 4 — Vérification de la continuité",
+                "description": "J'attendais ou déclenchais la prochaine exécution planifiée du plan concerné pour confirmer que l'alerte était bien résolue avant de la clôturer."
+              }
+            ],
+            "title": "Mon triage d'une alerte — étape par étape"
+          },
+          {
             "type": "metrics",
             "items": [
               {
@@ -6214,6 +6577,45 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Résultats"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Toujours confirmer lequel des schémas d'échec récurrents (NAS saturé, serveur hors ligne, plan corrompu, problème réseau) s'applique avant d'agir — le même statut rouge peut cacher quatre corrections différentes, et se tromper fait perdre un cycle de sauvegarde complet.",
+              "Quand un plan est corrompu, le recréer sous un nom incrémenté avec la politique identique plutôt que de repartir d'une configuration vierge — cela évite de modifier silencieusement la rétention ou les destinations dont dépend le client.",
+              "Vérifier la capacité restante des deux destinations NAS ensemble, pas seulement celle ayant déclenché l'alerte — si les deux approchent leur plafond, libérer de l'espace sur l'une ne fait que retarder le même échec sur l'autre.",
+              "Utiliser l'accès distant (Datto RMM / Splashtop) pour vérifier l'état physique/réseau d'un serveur avant de soupçonner le logiciel de sauvegarde lui-même — un câble débranché produit le même statut rouge qu'un plan corrompu.",
+              "Ne clôturer un avertissement qu'après avoir confirmé que la prochaine exécution planifiée s'est bien déroulée sans accroc — un statut qui semble corrigé sur le papier peut réapparaître si la cause sous-jacente (comme un lien saturé) n'a pas été pleinement résolue."
+            ],
+            "title": "Bonnes pratiques"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Cette mission était réactive par construction : je triais et corrigeais les alertes déjà levées sur le tableau de bord plutôt que de reconcevoir l'architecture de sauvegarde elle-même (politique de rétention, dimensionnement NAS) — ce choix de périmètre revenait au responsable de l'équipe Exploitation.",
+              "Libérer de l'espace NAS en purgeant d'anciennes sauvegardes complètes réduit la fenêtre de rétention sur cette période ; c'était la correction la plus rapide face à un échec actif, un compromis assumé par l'équipe plutôt que laissé non documenté.",
+              "Un plan de sauvegarde affichant « CBT désactivé » (Changed Block Tracking) se terminait tout de même avec succès — je l'ai traité comme un avertissement à surveiller plutôt qu'un échec actif, car forcer un nouveau scan complet VMware en cours de cycle aurait coûté plus de temps de sauvegarde qu'il n'en aurait fait gagner.",
+              "Les catégories de cause racine (NAS saturé, serveur hors ligne, plan corrompu, problème réseau) couvraient toutes les alertes observées durant cette mission, mais elles ne constituent pas une liste exhaustive pour Acronis Cyber Backup en général — un environnement client différent pourrait révéler d'autres modes de défaillance."
+            ],
+            "title": "Limites connues & décisions"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.acronis.com/fr-fr/products/cyber-backup/",
+                "label": "Acronis Cyber Backup"
+              },
+              {
+                "href": "https://www.acronis.com/fr-fr/products/cloud/cyber-protect/",
+                "label": "Acronis Cyber Protect Cloud"
+              },
+              {
+                "href": "https://www.datto.com/fr/products/rmm",
+                "label": "Datto RMM — Supervision et gestion à distance"
+              }
+            ],
+            "title": "Outils & références"
           }
         ]
       },
@@ -6227,6 +6629,17 @@ export const projectDetails: ProjectDetails[] = [
             "paragraphs": [
               "En MIDRANGE GROUP (ESN/MSP francesa), dentro del equipo de Operaciones junto a Théo KACEL (Administrador de Sistemas y Redes), me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
             ]
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "85 alertas activas en 105 equipos protegidos exigían un triaje sistemático — tratar cada alerta con la misma urgencia habría ocultado los pocos casos con riesgo real de pérdida de datos.",
+              "El mismo síntoma (un estado rojo de «fallo») podía deberse a cuatro causas raíz distintas — NAS saturado, servidor fuera de línea, plan de backup corrupto o fallo de red — así que la corrección debía ajustarse a la causa real, no solo a la etiqueta de la alerta.",
+              "Recrear un plan de backup corrupto implicaba conservar exactamente la misma política (programación, retención, destino) bajo un nuevo nombre, sin modificar silenciosamente las ventanas de retención o los destinos de los que dependía el cliente.",
+              "Los dos destinos NAS on-premise se acercaban a la vez a su límite de capacidad de 10,5 Tio; liberar espacio en uno sin comprobar el otro solo habría retrasado el mismo fallo.",
+              "Diagnosticar un fallo requería a menudo acceso remoto a los propios servidores del cliente (vía Datto RMM / Splashtop) en lugar de depender solo de la consola de Acronis, ya que algunas causas raíz (un servidor desconectado, un enlace de red saturado) solo son visibles desde la propia máquina."
+            ],
+            "title": "Retos técnicos"
           },
           {
             "type": "metrics",
@@ -6281,6 +6694,28 @@ export const projectDetails: ProjectDetails[] = [
             ]
           },
           {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Paso 1 — Revisión diaria del panel",
+                "description": "Cada mañana abría el panel de Acronis para comprobar el número de alertas activas y el reparto entre errores y advertencias."
+              },
+              {
+                "title": "Paso 2 — Búsqueda de la causa raíz por alerta",
+                "description": "Para cada alerta, inspeccionaba el equipo o el plan de backup afectado para determinar cuál de los cuatro patrones de fallo habituales aplicaba (NAS saturado, servidor fuera de línea, plan corrupto, problema de red)."
+              },
+              {
+                "title": "Paso 3 — Corrección en el origen",
+                "description": "Según el caso: liberación de espacio en el NAS purgando copias completas obsoletas, verificación de la disponibilidad del servidor, o recreación de un plan corrupto con un nuevo nombre y la misma política."
+              },
+              {
+                "title": "Paso 4 — Verificación de la continuidad",
+                "description": "Esperaba o lanzaba la siguiente ejecución programada del plan afectado para confirmar que la alerta quedaba realmente resuelta antes de cerrarla."
+              }
+            ],
+            "title": "Cómo triaba una alerta — paso a paso"
+          },
+          {
             "type": "metrics",
             "items": [
               {
@@ -6328,6 +6763,45 @@ export const projectDetails: ProjectDetails[] = [
               }
             ],
             "title": "Resultados"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Confirmar siempre cuál de los patrones de fallo recurrentes (NAS saturado, servidor fuera de línea, plan corrupto, problema de red) aplica antes de actuar — el mismo estado rojo puede ocultar cuatro correcciones distintas, y equivocarse hace perder un ciclo completo de backup.",
+              "Cuando un plan está corrupto, recrearlo con un nombre incrementado y la misma política en lugar de partir de una configuración en blanco — esto evita cambiar silenciosamente la retención o los destinos de los que depende el cliente.",
+              "Comprobar la capacidad restante de ambos destinos NAS a la vez, no solo el que generó la alerta — si los dos se acercan a su límite, liberar espacio en uno solo retrasa el mismo fallo en el otro.",
+              "Usar el acceso remoto (Datto RMM / Splashtop) para comprobar el estado físico/de red de un servidor antes de suponer que el software de backup es el culpable — un cable desconectado produce el mismo estado rojo que un plan corrupto.",
+              "Cerrar una advertencia solo tras confirmar que la siguiente ejecución programada se completa sin problemas — un estado que parece resuelto sobre el papel puede repetirse si la causa subyacente (como un enlace saturado) no se resolvió del todo."
+            ],
+            "title": "Buenas prácticas"
+          },
+          {
+            "type": "bullets",
+            "items": [
+              "Esta misión era reactiva por diseño: triaba y corregía las alertas ya generadas en el panel en lugar de rediseñar la arquitectura de backup en sí (política de retención, dimensionamiento del NAS) — esa decisión de alcance correspondía al responsable del equipo de Explotación.",
+              "Liberar capacidad del NAS purgando copias completas antiguas reduce la ventana de retención de ese periodo; era la corrección más rápida ante un fallo activo, una decisión asumida por el equipo y no dejada sin documentar.",
+              "Un plan de backup que mostraba «CBT desactivado» (Changed Block Tracking) igualmente se completaba con éxito — lo traté como una advertencia a vigilar y no como un fallo activo, ya que forzar un nuevo escaneo completo de VMware a mitad de ciclo habría costado más tiempo de backup del que habría ahorrado.",
+              "Las categorías de causa raíz (NAS saturado, servidor fuera de línea, plan corrupto, problema de red) cubrieron todas las alertas observadas durante esta misión, pero no son una lista exhaustiva para Acronis Cyber Backup en general — un entorno de cliente distinto podría revelar otros modos de fallo."
+            ],
+            "title": "Límites conocidos y decisiones"
+          },
+          {
+            "type": "resources",
+            "items": [
+              {
+                "href": "https://www.acronis.com/es-es/products/cyber-backup/",
+                "label": "Acronis Cyber Backup"
+              },
+              {
+                "href": "https://www.acronis.com/es-es/products/cloud/cyber-protect/",
+                "label": "Acronis Cyber Protect Cloud"
+              },
+              {
+                "href": "https://www.datto.com/products/rmm",
+                "label": "Datto RMM — Supervisión y gestión remota"
+              }
+            ],
+            "title": "Herramientas y referencias"
           }
         ]
       }
