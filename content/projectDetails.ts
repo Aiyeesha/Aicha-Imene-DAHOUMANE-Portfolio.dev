@@ -335,7 +335,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Debugging and fixing a Java application for medical needs prediction at Hemebiotech.",
         "sections": [
           {
-            "body": "Heme Biotech (\"Remedies for those we love\"), a pharmaceutical company specializing in blood disorders, had assigned Alex, a chemistry researcher, to build a small Java trend-analysis tool: read a symptom file and output each symptom's count, alphabetically sorted. Alex got stuck with a counter that always returned 0. Caroline, CTO and co-founder, handed the rest to an incoming dev intern: diagnose the bug, refactor to Java OOP standards, and document everything in Javadoc for team handover.",
+            "body": "Heme Biotech (\"Remedies for those we love\"), a pharmaceutical company specializing in blood disorders, had assigned Alex, a chemistry researcher, to build a small Java trend-analysis tool: read a symptom file and output each symptom's count, alphabetically sorted. Alex got stuck with a counter that always returned 0. Caroline, CTO and co-founder, brought me in to diagnose the bug, refactor the code to Java OOP standards, and document everything in Javadoc for team handover.",
             "type": "text",
             "title": "Context"
           },
@@ -353,14 +353,14 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Bug fixed via TreeMap.merge() aggregation: a single data structure handles both exact counting and native alphabetical ordering — no separate sort step needed",
-              "Reading delegated to ReadSymptomDataFromFile, implementing the ISymptomReader interface (getSymptoms())",
-              "Writing encapsulated in WriteSymptomDataToFile, implementing ISymptomWriter",
-              "AnalyticsCounter refocused on 2 responsibilities: countSymptoms() (TreeMap aggregation) and writeSymptoms() (output file generation)",
-              "Entry point isolated into a dedicated Main class orchestrating read → count → write",
-              "camelCase naming applied throughout the entire codebase",
-              "Full Javadoc on all public methods",
-              "result.out file generated with alphabetically sorted symptoms and exact counts"
+              "I fixed the bug with a TreeMap.merge() aggregation: a single data structure handles both exact counting and native alphabetical ordering — no separate sort step needed",
+              "I delegated reading to ReadSymptomDataFromFile, implementing the ISymptomReader interface (getSymptoms())",
+              "I encapsulated writing in WriteSymptomDataToFile, implementing ISymptomWriter",
+              "I refocused AnalyticsCounter on 2 responsibilities: countSymptoms() (TreeMap aggregation) and writeSymptoms() (output file generation)",
+              "I isolated the entry point into a dedicated Main class orchestrating read → count → write",
+              "I applied camelCase naming throughout the entire codebase",
+              "I wrote full Javadoc on all public methods",
+              "I generated a result.out file with alphabetically sorted symptoms and exact counts"
             ],
             "title": "Solution & Deliverables"
           },
@@ -381,23 +381,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Analysis & diagnosis",
-                "description": "Code review, bug identification (TreeMap logic), mapping of OOP violations"
+                "description": "I reviewed the code, identified the bug (TreeMap logic), and mapped out the OOP violations"
               },
               {
                 "label": "Bug fix",
-                "description": "Replaced broken counter logic with TreeMap for correct counting and natural ordering"
+                "description": "I replaced the broken counter logic with a TreeMap for correct counting and natural ordering"
               },
               {
                 "label": "OOP refactor",
-                "description": "Interfaces created, classes separated, camelCase naming applied throughout"
+                "description": "I created interfaces, separated classes, and applied camelCase naming throughout"
               },
               {
                 "label": "Documentation",
-                "description": "Full Javadoc written for all public methods"
+                "description": "I wrote full Javadoc for all public methods"
               },
               {
                 "label": "Validation & delivery",
-                "description": "Manual testing, result.out generation, defense validated with 2/2 skills"
+                "description": "I ran manual tests, generated result.out, and passed my defense with 2/2 skills validated"
               }
             ],
             "title": "Project Timeline"
@@ -431,7 +431,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Débogage et correction d'une application Java de prédiction des besoins médicaux chez Hemebiotech.",
         "sections": [
           {
-            "body": "Heme Biotech (\"Des remèdes pour ceux qu'on aime\"), entreprise pharmaceutique spécialisée dans les troubles sanguins, avait confié à Alex, chercheur en chimie, le développement d'un petit outil Java d'analyse de tendances : lire un fichier de symptômes et produire le décompte de chacun, trié alphabétiquement. Alex s'est retrouvé bloqué avec un compteur qui retournait toujours 0. Caroline, directrice technique et cofondatrice, a confié la suite à un stagiaire dev : diagnostiquer le bug, refactoriser vers des standards Java OOP, et documenter le tout en Javadoc pour la reprise en équipe.",
+            "body": "Heme Biotech (\"Des remèdes pour ceux qu'on aime\"), entreprise pharmaceutique spécialisée dans les troubles sanguins, avait confié à Alex, chercheur en chimie, le développement d'un petit outil Java d'analyse de tendances : lire un fichier de symptômes et produire le décompte de chacun, trié alphabétiquement. Alex s'est retrouvé bloqué avec un compteur qui retournait toujours 0. Caroline, directrice technique et cofondatrice, m'a confié la suite : diagnostiquer le bug, refactoriser vers des standards Java OOP, et documenter le tout en Javadoc pour la reprise en équipe.",
             "type": "text",
             "title": "Contexte"
           },
@@ -449,14 +449,14 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Bug résolu par agrégation via TreeMap.merge() : une seule structure de données gère à la fois le comptage exact et l'ordre alphabétique natif — plus besoin d'étape de tri séparée",
-              "Lecture déléguée à ReadSymptomDataFromFile, qui implémente l'interface ISymptomReader (getSymptoms())",
-              "Écriture encapsulée dans WriteSymptomDataToFile, qui implémente ISymptomWriter",
-              "AnalyticsCounter recentrée sur 2 responsabilités : countSymptoms() (agrégation TreeMap) et writeSymptoms() (génération du fichier de sortie)",
-              "Point d'entrée isolé dans une classe Main dédiée qui orchestre lecture → comptage → écriture",
-              "Nommage camelCase appliqué sur l'ensemble du code",
-              "Javadoc complète sur toutes les méthodes publiques",
-              "Fichier result.out généré avec les symptômes triés alphabétiquement et leur décompte exact"
+              "J'ai résolu le bug par agrégation via TreeMap.merge() : une seule structure de données gère à la fois le comptage exact et l'ordre alphabétique natif — plus besoin d'étape de tri séparée",
+              "J'ai délégué la lecture à ReadSymptomDataFromFile, qui implémente l'interface ISymptomReader (getSymptoms())",
+              "J'ai encapsulé l'écriture dans WriteSymptomDataToFile, qui implémente ISymptomWriter",
+              "J'ai recentré AnalyticsCounter sur 2 responsabilités : countSymptoms() (agrégation TreeMap) et writeSymptoms() (génération du fichier de sortie)",
+              "J'ai isolé le point d'entrée dans une classe Main dédiée qui orchestre lecture → comptage → écriture",
+              "J'ai appliqué le nommage camelCase sur l'ensemble du code",
+              "J'ai rédigé une Javadoc complète sur toutes les méthodes publiques",
+              "J'ai généré un fichier result.out avec les symptômes triés alphabétiquement et leur décompte exact"
             ],
             "title": "Solution & Livrables"
           },
@@ -477,23 +477,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Analyse & diagnostic",
-                "description": "Lecture du code existant, identification du bug TreeMap et cartographie des violations OOP"
+                "description": "J'ai relu le code existant, identifié le bug TreeMap et cartographié les violations OOP"
               },
               {
                 "label": "Correction du bug",
-                "description": "Remplacement de la logique de comptage défaillante par une TreeMap pour un tri et un comptage corrects"
+                "description": "J'ai remplacé la logique de comptage défaillante par une TreeMap pour un tri et un comptage corrects"
               },
               {
                 "label": "Refactorisation OOP",
-                "description": "Création des interfaces, classes séparées, nommage camelCase sur l'ensemble du code"
+                "description": "J'ai créé les interfaces, séparé les classes, et appliqué le nommage camelCase sur l'ensemble du code"
               },
               {
                 "label": "Documentation",
-                "description": "Rédaction de la Javadoc complète sur toutes les méthodes publiques"
+                "description": "J'ai rédigé la Javadoc complète sur toutes les méthodes publiques"
               },
               {
                 "label": "Validation & livraison",
-                "description": "Tests manuels, génération du fichier result.out, soutenance validée avec 2/2 compétences"
+                "description": "J'ai effectué les tests manuels, généré le fichier result.out, et validé ma soutenance avec 2/2 compétences"
               }
             ],
             "title": "Étapes du projet"
@@ -531,7 +531,7 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Contexto",
             "paragraphs": [
               "Heme Biotech necesitaba un programa de análisis sencillo: leer un archivo de síntomas y generar el número de ocurrencias por síntoma.",
-              "La lectura del archivo era correcta, pero el conteo era incorrecto: el contador siempre devolvía 0, sin importar el número real de apariciones (ej. 3 apariciones de \"dolor de cabeza\" → 0 en la salida). Alex, investigador de química, se quedó bloqueado en este punto; Caroline, directora técnica y cofundadora, encargó el resto a un becario de desarrollo."
+              "La lectura del archivo era correcta, pero el conteo era incorrecto: el contador siempre devolvía 0, sin importar el número real de apariciones (ej. 3 apariciones de \"dolor de cabeza\" → 0 en la salida). Alex, investigador de química, se quedó bloqueado en este punto; Caroline, directora técnica y cofundadora, me encargó el resto: diagnosticar el error, refactorizar el código a POO y documentarlo todo para el traspaso al equipo."
             ]
           },
           {
@@ -549,23 +549,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Reproducir y aislar el error",
-                "description": "Ejecución local, comparación de la salida con el comportamiento esperado, y localización del punto de cálculo de las ocurrencias."
+                "description": "Ejecuté el programa en local, comparé la salida con el comportamiento esperado y localicé el punto de cálculo de las ocurrencias."
               },
               {
                 "title": "Corrección del conteo + casos límite",
-                "description": "Implementación de un conteo robusto (agregación vía Map) y validación del incremento en síntomas repetidos."
+                "description": "Implementé un conteo robusto (agregación vía Map) y validé el incremento en síntomas repetidos."
               },
               {
                 "title": "Refactorización mediante interfaces",
-                "description": "Creación de la interfaz de escritura (ISymptomWriter) y división en etapas: leer → contar → ordenar → escribir."
+                "description": "Creé la interfaz de escritura (ISymptomWriter) y dividí el proceso en etapas: leer → contar → ordenar → escribir."
               },
               {
                 "title": "Orden alfabético determinista",
-                "description": "Uso de una estructura ordenada (TreeMap) para garantizar el orden alfabético sin lógica de ordenación adicional."
+                "description": "Usé una estructura ordenada (TreeMap) para garantizar el orden alfabético sin lógica de ordenación adicional."
               },
               {
                 "title": "Refuerzo de la calidad",
-                "description": "Limpieza del código (naming camelCase, eliminación de comentarios innecesarios), añadido de Javadoc, indentación y validaciones repetidas."
+                "description": "Limpié el código (naming camelCase, eliminación de comentarios innecesarios), añadí Javadoc, indentación y validaciones repetidas."
               }
             ],
             "title": "Enfoque"
@@ -700,19 +700,19 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Honeypot setup",
-                "description": "Installed Cowrie on the target, redirected port 22 to the honeypot via iptables and moved the real SSH service to port 2200, with persistent rules via iptables-persistent."
+                "description": "I installed Cowrie on the target, redirected port 22 to the honeypot via iptables, and moved the real SSH service to port 2200, with persistent rules via iptables-persistent."
               },
               {
                 "title": "Major incident: lost access to the attacker machine",
-                "description": "Locked out of the Kali Linux password with no usable recovery snapshot. Decided to fully reinstall the VM from the official image rather than attempt an uncertain recovery."
+                "description": "I got locked out of the Kali Linux password with no usable recovery snapshot. I decided to fully reinstall the VM from the official image rather than attempt an uncertain recovery."
               },
               {
                 "title": "Brute-force attack",
-                "description": "Launched Hydra against the honeypot. First attempt failed (default parallelism too high for Cowrie's Twisted-based SSH implementation), fixed by lowering the number of parallel tasks."
+                "description": "I launched Hydra against the honeypot. My first attempt failed (default parallelism too high for Cowrie's Twisted-based SSH implementation); I fixed it by lowering the number of parallel tasks."
               },
               {
                 "title": "Forensic log analysis",
-                "description": "Extracted JSON events with jq: commands typed by the simulated attacker, file download attempts, full session reconstruction."
+                "description": "I extracted JSON events with jq: commands typed by the simulated attacker, file download attempts, full session reconstruction."
               }
             ],
             "title": "Project timeline"
@@ -743,8 +743,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Incident management",
             "paragraphs": [
-              "The most instructive part of this project was unplanned: a configuration mistake locked access to the attacker machine, with no usable snapshot to roll back to.",
-              "Rather than losing time on an uncertain recovery (failed GRUB single-user attempt), the VM was fully reinstalled from the official Kali image, network configuration and tooling restored, and the planned attack resumed. This incident is documented in detail in the project log, with a full timeline and remediation commands."
+              "The most instructive part of this project was unplanned: a configuration mistake on my part locked me out of the attacker machine, with no usable snapshot to roll back to.",
+              "Rather than lose time on an uncertain recovery (a failed GRUB single-user attempt), I fully reinstalled the VM from the official Kali image, restored the network configuration and tooling, and resumed the planned attack. I documented this incident in detail in the project log, with a full timeline and remediation commands."
             ]
           },
           {
@@ -787,19 +787,19 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Mise en place du honeypot",
-                "description": "Installation de Cowrie sur la cible, redirection iptables du port 22 vers le honeypot et du vrai service SSH vers le port 2200, persistance des règles via iptables-persistent."
+                "description": "J'ai installé Cowrie sur la cible, redirigé le port 22 vers le honeypot via iptables et déplacé le vrai service SSH vers le port 2200, avec persistance des règles via iptables-persistent."
               },
               {
                 "title": "Incident majeur : perte d'accès à la machine attaquante",
-                "description": "Verrouillage du mot de passe de Kali Linux sans snapshot de secours exploitable. Décision de réinstaller entièrement la VM à partir de l'image officielle plutôt que de tenter une récupération incertaine."
+                "description": "Je me suis retrouvée bloquée hors du mot de passe de Kali Linux, sans snapshot de secours exploitable. J'ai décidé de réinstaller entièrement la VM à partir de l'image officielle plutôt que de tenter une récupération incertaine."
               },
               {
                 "title": "Attaque par force brute",
-                "description": "Lancement d'Hydra contre le honeypot. Première tentative en échec (parallélisme par défaut trop élevé pour l'implémentation Twisted de Cowrie), corrigée en réduisant le nombre de tâches parallèles."
+                "description": "J'ai lancé Hydra contre le honeypot. Ma première tentative a échoué (parallélisme par défaut trop élevé pour l'implémentation Twisted de Cowrie) ; je l'ai corrigée en réduisant le nombre de tâches parallèles."
               },
               {
                 "title": "Analyse forensique des logs",
-                "description": "Extraction des événements JSON avec jq : commandes tapées par l'attaquant simulé, tentatives de téléchargement de fichiers, reconstitution de la session complète."
+                "description": "J'ai extrait les événements JSON avec jq : commandes tapées par l'attaquant simulé, tentatives de téléchargement de fichiers, reconstitution complète de la session."
               }
             ],
             "title": "Déroulé du projet"
@@ -830,8 +830,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Gestion d'incident",
             "paragraphs": [
-              "Le point le plus formateur du projet n'était pas prévu au départ : une erreur de manipulation a verrouillé l'accès à la machine attaquante, sans snapshot exploitable pour revenir en arrière.",
-              "Plutôt que de perdre du temps sur une récupération incertaine (mode recovery GRUB infructueux), le choix a été de réinstaller entièrement la VM depuis l'image officielle Kali, de restaurer la configuration réseau et les outils nécessaires, puis de reprendre l'attaque planifiée. Cet incident est documenté en détail dans le journal du projet, avec la chronologie complète et les commandes de remédiation."
+              "Le point le plus formateur du projet n'était pas prévu au départ : une erreur de manipulation de ma part a verrouillé mon accès à la machine attaquante, sans snapshot exploitable pour revenir en arrière.",
+              "Plutôt que de perdre du temps sur une récupération incertaine (tentative infructueuse en mode recovery GRUB), j'ai réinstallé entièrement la VM depuis l'image officielle Kali, restauré la configuration réseau et les outils nécessaires, puis repris l'attaque planifiée. J'ai documenté cet incident en détail dans le journal du projet, avec la chronologie complète et les commandes de remédiation."
             ]
           },
           {
@@ -874,19 +874,19 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Puesta en marcha del honeypot",
-                "description": "Instalación de Cowrie en el objetivo, redirección del puerto 22 al honeypot mediante iptables y traslado del servicio SSH real al puerto 2200, con reglas persistentes vía iptables-persistent."
+                "description": "Instalé Cowrie en el objetivo, redirigí el puerto 22 al honeypot mediante iptables y trasladé el servicio SSH real al puerto 2200, con reglas persistentes vía iptables-persistent."
               },
               {
                 "title": "Incidente mayor: pérdida de acceso a la máquina atacante",
-                "description": "Bloqueo de la contraseña de Kali Linux sin snapshot de recuperación utilizable. Se decidió reinstalar por completo la VM desde la imagen oficial en lugar de intentar una recuperación incierta."
+                "description": "Me quedé bloqueada fuera de la contraseña de Kali Linux, sin ningún snapshot de recuperación utilizable. Decidí reinstalar por completo la VM desde la imagen oficial en lugar de intentar una recuperación incierta."
               },
               {
                 "title": "Ataque de fuerza bruta",
-                "description": "Lanzamiento de Hydra contra el honeypot. El primer intento falló (paralelismo por defecto demasiado alto para la implementación SSH basada en Twisted de Cowrie), corregido reduciendo el número de tareas paralelas."
+                "description": "Lancé Hydra contra el honeypot. Mi primer intento falló (paralelismo por defecto demasiado alto para la implementación SSH basada en Twisted de Cowrie); lo corregí reduciendo el número de tareas paralelas."
               },
               {
                 "title": "Análisis forense de logs",
-                "description": "Extracción de eventos JSON con jq: comandos escritos por el atacante simulado, intentos de descarga de archivos, reconstrucción completa de la sesión."
+                "description": "Extraje los eventos JSON con jq: comandos escritos por el atacante simulado, intentos de descarga de archivos, reconstrucción completa de la sesión."
               }
             ],
             "title": "Cronología del proyecto"
@@ -917,8 +917,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Gestión del incidente",
             "paragraphs": [
-              "La parte más formativa del proyecto no estaba planeada: un error de manipulación bloqueó el acceso a la máquina atacante, sin ningún snapshot utilizable para revertir.",
-              "En lugar de perder tiempo en una recuperación incierta (intento fallido de modo recovery de GRUB), se optó por reinstalar completamente la VM desde la imagen oficial de Kali, restaurar la configuración de red y las herramientas necesarias, y retomar el ataque planificado. Este incidente está documentado en detalle en el diario del proyecto, con la cronología completa y los comandos de remediación."
+              "La parte más formativa del proyecto no estaba planeada: un error de manipulación por mi parte bloqueó mi acceso a la máquina atacante, sin ningún snapshot utilizable para revertir.",
+              "En lugar de perder tiempo en una recuperación incierta (un intento fallido en modo recovery de GRUB), reinstalé por completo la VM desde la imagen oficial de Kali, restauré la configuración de red y las herramientas necesarias, y retomé el ataque planificado. Documenté este incidente en detalle en el diario del proyecto, con la cronología completa y los comandos de remediación."
             ]
           },
           {
@@ -1004,23 +1004,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Baseline capture with tcpdump",
-                "description": "Captured ARP and ICMP traffic between the two lab machines, saved to .pcap, replayed from the command line."
+                "description": "I captured ARP and ICMP traffic between the two lab machines, saved it to .pcap, and replayed it from the command line."
               },
               {
                 "title": "Visual analysis with Wireshark",
-                "description": "Opened the capture, explored packet anatomy layer by layer (Ethernet → IP → TCP/ICMP), applied display filters."
+                "description": "I opened the capture and explored the packet anatomy layer by layer (Ethernet → IP → TCP/ICMP), applying display filters."
               },
               {
                 "title": "Plaintext HTTP interception",
-                "description": "Started a test HTTP server, captured targeted traffic, read the full request and response via Follow HTTP Stream."
+                "description": "I started a test HTTP server, captured the targeted traffic, and read the full request and response via Follow HTTP Stream."
               },
               {
                 "title": "FTP credential interception",
-                "description": "Deployed a test vsftpd server, connected with a dedicated account, and read the login/password directly in cleartext in the Wireshark packet list."
+                "description": "I deployed a test vsftpd server, connected with a dedicated account, and read the login/password directly in cleartext in the Wireshark packet list."
               },
               {
                 "title": "Custom Python sniffer (Scapy)",
-                "description": "Wrote a script capturing and analyzing ARP/TCP/UDP traffic live, successfully tested on real traffic (ARP resolution, active SSH session)."
+                "description": "I wrote a script capturing and analyzing ARP/TCP/UDP traffic live, and successfully tested it on real traffic (ARP resolution, active SSH session)."
               }
             ],
             "title": "Project walkthrough"
@@ -1094,23 +1094,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Capture de référence avec tcpdump",
-                "description": "Capture du trafic ARP et ICMP entre les deux machines du lab, écriture au format .pcap, relecture en ligne de commande."
+                "description": "J'ai capturé le trafic ARP et ICMP entre les deux machines du lab, enregistré au format .pcap, puis relu en ligne de commande."
               },
               {
                 "title": "Analyse visuelle avec Wireshark",
-                "description": "Ouverture de la capture, exploration de l'anatomie de paquet couche par couche (Ethernet → IP → TCP/ICMP), filtrage d'affichage."
+                "description": "J'ai ouvert la capture et exploré l'anatomie de paquet couche par couche (Ethernet → IP → TCP/ICMP), en appliquant des filtres d'affichage."
               },
               {
                 "title": "Interception HTTP en clair",
-                "description": "Démarrage d'un serveur HTTP de test, capture ciblée du trafic, lecture complète de la requête et de la réponse via Follow HTTP Stream."
+                "description": "J'ai démarré un serveur HTTP de test, capturé le trafic ciblé, puis lu la requête et la réponse complètes via Follow HTTP Stream."
               },
               {
                 "title": "Interception d'identifiants FTP",
-                "description": "Déploiement d'un serveur vsftpd de test, connexion avec un compte dédié, et lecture directe du login/mot de passe en clair dans la liste des paquets Wireshark."
+                "description": "J'ai déployé un serveur vsftpd de test, connecté avec un compte dédié, et lu directement le login/mot de passe en clair dans la liste des paquets Wireshark."
               },
               {
                 "title": "Développement d'un sniffeur Python (Scapy)",
-                "description": "Écriture d'un script capturant et analysant le trafic ARP/TCP/UDP en direct, testé avec succès sur trafic réel (résolution ARP, session SSH active)."
+                "description": "J'ai écrit un script capturant et analysant le trafic ARP/TCP/UDP en direct, testé avec succès sur du trafic réel (résolution ARP, session SSH active)."
               }
             ],
             "title": "Déroulé du projet"
@@ -1184,23 +1184,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Captura de referencia con tcpdump",
-                "description": "Captura del tráfico ARP e ICMP entre las dos máquinas del laboratorio, guardado en formato .pcap, relectura desde la línea de comandos."
+                "description": "Capturé el tráfico ARP e ICMP entre las dos máquinas del laboratorio, lo guardé en formato .pcap y lo repasé desde la línea de comandos."
               },
               {
                 "title": "Análisis visual con Wireshark",
-                "description": "Apertura de la captura, exploración de la anatomía del paquete capa por capa (Ethernet → IP → TCP/ICMP), aplicación de filtros de visualización."
+                "description": "Abrí la captura y exploré la anatomía del paquete capa por capa (Ethernet → IP → TCP/ICMP), aplicando filtros de visualización."
               },
               {
                 "title": "Interceptación de HTTP en claro",
-                "description": "Inicio de un servidor HTTP de prueba, captura dirigida del tráfico, lectura completa de la solicitud y la respuesta mediante Follow HTTP Stream."
+                "description": "Inicié un servidor HTTP de prueba, capturé el tráfico dirigido y leí la solicitud y la respuesta completas mediante Follow HTTP Stream."
               },
               {
                 "title": "Interceptación de credenciales FTP",
-                "description": "Despliegue de un servidor vsftpd de prueba, conexión con una cuenta dedicada, y lectura directa del usuario/contraseña en texto plano en la lista de paquetes de Wireshark."
+                "description": "Desplegué un servidor vsftpd de prueba, me conecté con una cuenta dedicada y leí directamente el usuario/contraseña en texto plano en la lista de paquetes de Wireshark."
               },
               {
                 "title": "Sniffer personalizado en Python (Scapy)",
-                "description": "Escritura de un script que captura y analiza tráfico ARP/TCP/UDP en vivo, probado con éxito en tráfico real (resolución ARP, sesión SSH activa)."
+                "description": "Escribí un script que captura y analiza tráfico ARP/TCP/UDP en vivo, y lo probé con éxito en tráfico real (resolución ARP, sesión SSH activa)."
               }
             ],
             "title": "Desarrollo del proyecto"
@@ -1305,23 +1305,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Generating test hashes",
-                "description": "Unsalted MD5 / SHA1 / SHA256, then salted SHA-512 via mkpasswd, personally verifying the avalanche effect and the role of the salt."
+                "description": "I generated unsalted MD5 / SHA1 / SHA256 hashes, then a salted SHA-512 one via mkpasswd, personally verifying the avalanche effect and the role of the salt."
               },
               {
                 "title": "Cracking with John the Ripper",
-                "description": "Dictionary attack (rockyou.txt, 14.3 million entries) against test MD5 hashes."
+                "description": "I ran a dictionary attack (rockyou.txt, 14.3 million entries) against test MD5 hashes."
               },
               {
                 "title": "Cracking with Hashcat",
-                "description": "MD5 vs bcrypt benchmark, then dictionary, rule-based (best64) and mask/brute-force attacks with keyspace calculations."
+                "description": "I ran an MD5 vs bcrypt benchmark, then dictionary, rule-based (best64) and mask/brute-force attacks with keyspace calculations."
               },
               {
                 "title": "GPU-less environment troubleshooting",
-                "description": "Resolved a chain of OpenCL failures on a VM with no dedicated GPU: missing software driver, misplaced environment variable, insufficient RAM."
+                "description": "I resolved a chain of OpenCL failures on a VM with no dedicated GPU: a missing software driver, a misplaced environment variable, and insufficient RAM."
               },
               {
                 "title": "Multi-user case study",
-                "description": "Three accounts of increasing strength (dictionary word, complexified word, five-word passphrase) run against the same combined attack."
+                "description": "I ran three accounts of increasing strength (a dictionary word, a complexified word, a five-word passphrase) against the same combined attack."
               }
             ],
             "title": "Methodology"
@@ -1352,9 +1352,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Technical troubleshooting",
             "paragraphs": [
-              "Hashcat requires a working OpenCL backend even for CPU-only use, absent by default on this GPU-less VM. Resolving it took several steps: the expected package (pocl-opencl-icd) did not exist in Kali's repositories, so the mesa-opencl-icd alternative (llvmpipe software rendering) was installed instead.",
-              "The OpenCL platform then remained invisible to Hashcat (0 devices exposed) until explicitly enabled via the RUSTICL_ENABLE environment variable. A first attempt at making this persistent failed because it was placed in ~/.bashrc, while Kali's default shell is Zsh, which does not read that file.",
-              "Once the device was detected, the benchmark still failed with a memory allocation error, resolved by raising the VM's allocated RAM from ~2 GB to 8 GB in VMware settings."
+              "Hashcat requires a working OpenCL backend even for CPU-only use, which was absent by default on this GPU-less VM. Resolving it took me several steps: the expected package (pocl-opencl-icd) did not exist in Kali's repositories, so I installed the mesa-opencl-icd alternative (llvmpipe software rendering) instead.",
+              "The OpenCL platform then stayed invisible to Hashcat (0 devices exposed) until I explicitly enabled it via the RUSTICL_ENABLE environment variable. My first attempt at making this persistent failed because I'd placed it in ~/.bashrc, while Kali's default shell is Zsh, which doesn't read that file.",
+              "Once I got the device detected, the benchmark still failed with a memory allocation error, which I resolved by raising the VM's allocated RAM from ~2 GB to 8 GB in VMware settings."
             ]
           },
           {
@@ -1397,23 +1397,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Génération de hashs de test",
-                "description": "MD5 / SHA1 / SHA256 non salés, puis SHA-512 salé via mkpasswd, avec vérification personnelle de l'effet avalanche et du rôle du sel."
+                "description": "J'ai généré des hashs MD5 / SHA1 / SHA256 non salés, puis un SHA-512 salé via mkpasswd, en vérifiant personnellement l'effet avalanche et le rôle du sel."
               },
               {
                 "title": "Cassage avec John the Ripper",
-                "description": "Attaque par dictionnaire (rockyou.txt, 14,3 millions d'entrées) sur des hashs MD5 de test."
+                "description": "J'ai lancé une attaque par dictionnaire (rockyou.txt, 14,3 millions d'entrées) sur des hashs MD5 de test."
               },
               {
                 "title": "Cassage avec Hashcat",
-                "description": "Benchmark MD5 vs bcrypt, puis attaque par dictionnaire, par règles de mutation (best64) et par masque / force brute avec calcul de l'espace de recherche."
+                "description": "J'ai exécuté un benchmark MD5 vs bcrypt, puis des attaques par dictionnaire, par règles de mutation (best64) et par masque / force brute avec calcul de l'espace de recherche."
               },
               {
                 "title": "Dépannage environnement sans GPU",
-                "description": "Résolution d'une chaîne de pannes OpenCL sur une VM sans carte graphique dédiée : pilote logiciel manquant, variable d'environnement mal placée, RAM insuffisante."
+                "description": "J'ai résolu une chaîne de pannes OpenCL sur une VM sans carte graphique dédiée : pilote logiciel manquant, variable d'environnement mal placée, RAM insuffisante."
               },
               {
                 "title": "Cas pratique multi-utilisateurs",
-                "description": "Trois comptes de robustesse croissante (mot du dictionnaire, mot complexifié, passphrase de cinq mots) soumis à la même attaque combinée."
+                "description": "J'ai soumis trois comptes de robustesse croissante (mot du dictionnaire, mot complexifié, passphrase de cinq mots) à la même attaque combinée."
               }
             ],
             "title": "Méthodologie"
@@ -1444,9 +1444,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Dépannage technique",
             "paragraphs": [
-              "Hashcat nécessite un backend OpenCL fonctionnel même pour un usage CPU pur, absent par défaut sur cette VM sans GPU. La résolution a demandé plusieurs étapes successives : le paquet attendu (pocl-opencl-icd) n'existant pas dans les dépôts Kali, installation de l'alternative mesa-opencl-icd (rendu logiciel llvmpipe).",
-              "La plateforme OpenCL restait ensuite invisible pour Hashcat (0 device exposé) jusqu'à l'activation explicite via la variable d'environnement RUSTICL_ENABLE. Une première tentative de persistance a échoué car placée dans ~/.bashrc, alors que le shell par défaut de Kali est Zsh, qui ne lit pas ce fichier.",
-              "Une fois le device détecté, le benchmark échouait encore avec une erreur d'allocation mémoire, résolue en portant la RAM allouée à la VM de ~2 Go à 8 Go dans les paramètres VMware."
+              "Hashcat nécessite un backend OpenCL fonctionnel même pour un usage CPU pur, absent par défaut sur cette VM sans GPU. La résolution m'a demandé plusieurs étapes successives : le paquet attendu (pocl-opencl-icd) n'existant pas dans les dépôts Kali, j'ai installé l'alternative mesa-opencl-icd (rendu logiciel llvmpipe).",
+              "La plateforme OpenCL restait ensuite invisible pour Hashcat (0 device exposé) jusqu'à ce que je l'active explicitement via la variable d'environnement RUSTICL_ENABLE. Ma première tentative de persistance a échoué car je l'avais placée dans ~/.bashrc, alors que le shell par défaut de Kali est Zsh, qui ne lit pas ce fichier.",
+              "Une fois le device détecté, le benchmark échouait encore avec une erreur d'allocation mémoire, que j'ai résolue en portant la RAM allouée à la VM de ~2 Go à 8 Go dans les paramètres VMware."
             ]
           },
           {
@@ -1489,23 +1489,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Generación de hashes de prueba",
-                "description": "MD5 / SHA1 / SHA256 sin salar, luego SHA-512 salado vía mkpasswd, verificando personalmente el efecto avalancha y el papel de la sal."
+                "description": "Generé hashes MD5 / SHA1 / SHA256 sin salar, luego uno SHA-512 salado vía mkpasswd, verificando personalmente el efecto avalancha y el papel de la sal."
               },
               {
                 "title": "Cracking con John the Ripper",
-                "description": "Ataque por diccionario (rockyou.txt, 14,3 millones de entradas) sobre hashes MD5 de prueba."
+                "description": "Ejecuté un ataque por diccionario (rockyou.txt, 14,3 millones de entradas) sobre hashes MD5 de prueba."
               },
               {
                 "title": "Cracking con Hashcat",
-                "description": "Benchmark MD5 vs bcrypt, luego ataques por diccionario, por reglas de mutación (best64) y por máscara/fuerza bruta con cálculo del espacio de búsqueda."
+                "description": "Ejecuté un benchmark MD5 vs bcrypt, y luego ataques por diccionario, por reglas de mutación (best64) y por máscara/fuerza bruta con cálculo del espacio de búsqueda."
               },
               {
                 "title": "Resolución de un entorno sin GPU",
-                "description": "Resolución de una cadena de fallos OpenCL en una VM sin tarjeta gráfica dedicada: controlador de software ausente, variable de entorno mal ubicada, RAM insuficiente."
+                "description": "Resolví una cadena de fallos OpenCL en una VM sin tarjeta gráfica dedicada: controlador de software ausente, variable de entorno mal ubicada, RAM insuficiente."
               },
               {
                 "title": "Caso práctico multiusuario",
-                "description": "Tres cuentas de robustez creciente (palabra de diccionario, palabra complejizada, passphrase de cinco palabras) sometidas al mismo ataque combinado."
+                "description": "Sometí tres cuentas de robustez creciente (palabra de diccionario, palabra complejizada, passphrase de cinco palabras) al mismo ataque combinado."
               }
             ],
             "title": "Metodología"
@@ -1536,9 +1536,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Resolución técnica",
             "paragraphs": [
-              "Hashcat necesita un backend OpenCL funcional incluso para uso exclusivo de CPU, ausente por defecto en esta VM sin GPU. La resolución requirió varios pasos: el paquete esperado (pocl-opencl-icd) no existía en los repositorios de Kali, por lo que se instaló la alternativa mesa-opencl-icd (renderizado por software llvmpipe).",
-              "La plataforma OpenCL seguía siendo invisible para Hashcat (0 dispositivos expuestos) hasta activarla explícitamente mediante la variable de entorno RUSTICL_ENABLE. Un primer intento de hacerla persistente falló por colocarse en ~/.bashrc, mientras que el shell por defecto de Kali es Zsh, que no lee ese archivo.",
-              "Una vez detectado el dispositivo, el benchmark seguía fallando con un error de asignación de memoria, resuelto aumentando la RAM asignada a la VM de ~2 GB a 8 GB en la configuración de VMware."
+              "Hashcat necesita un backend OpenCL funcional incluso para uso exclusivo de CPU, ausente por defecto en esta VM sin GPU. Resolverlo me llevó varios pasos: el paquete esperado (pocl-opencl-icd) no existía en los repositorios de Kali, así que instalé la alternativa mesa-opencl-icd (renderizado por software llvmpipe).",
+              "La plataforma OpenCL seguía siendo invisible para Hashcat (0 dispositivos expuestos) hasta que la activé explícitamente mediante la variable de entorno RUSTICL_ENABLE. Mi primer intento de hacerla persistente falló porque la había colocado en ~/.bashrc, mientras que el shell por defecto de Kali es Zsh, que no lee ese archivo.",
+              "Una vez detectado el dispositivo, el benchmark seguía fallando con un error de asignación de memoria, que resolví aumentando la RAM asignada a la VM de ~2 GB a 8 GB en la configuración de VMware."
             ]
           },
           {
@@ -1602,7 +1602,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Windows Server 2012 Backup · VirtualBox",
         "sections": [
           {
-            "body": "Training exercise at Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) under trainer Miguel MI-POUDOU. The task covered two VMs in VirtualBox: a Windows 10 client VM (partition resize + disk backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup role installation + scheduled daily backup).",
+            "body": "As part of a training exercise at Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) under trainer Miguel MI-POUDOU, I worked on two VMs in VirtualBox: a Windows 10 client VM (partition resize + disk backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup role installation + scheduled daily backup).",
             "type": "text",
             "title": "Context"
           },
@@ -1620,11 +1620,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "E: partition resized from 50.04 GB to 47.71 GB via AOMEI Partition Assistant — zero data loss",
-              "Full disk image backup created with AOMEI Backupper Standard — completed successfully",
-              "Windows Server Backup role installed and enabled on Windows Server 2012",
-              "Scheduled backup configured: full recovery + system state, VSS full, daily at 14:00",
-              "22.67 GB transferred to the dedicated 60 GB virtual disk on first run"
+              "I resized the E: partition from 50.04 GB to 47.71 GB via AOMEI Partition Assistant — zero data loss",
+              "I created a full disk image backup with AOMEI Backupper Standard — completed successfully",
+              "I installed and enabled the Windows Server Backup role on Windows Server 2012",
+              "I configured a scheduled backup: full recovery + system state, VSS full, daily at 14:00",
+              "The first run transferred 22.67 GB to the dedicated 60 GB virtual disk"
             ],
             "title": "Solution & Deliverables"
           },
@@ -1645,19 +1645,19 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Partition resize — AOMEI Partition Assistant",
-                "description": "Right-clicked E: → Resize/Move. Reduced from 50.04 GB to 47.71 GB (NTFS, 4 KB cluster, Disk 3). Clicked Apply to commit the pending operation."
+                "description": "I right-clicked E: → Resize/Move, reduced it from 50.04 GB to 47.71 GB (NTFS, 4 KB cluster, Disk 3), and clicked Apply to commit the pending operation."
               },
               {
                 "label": "Disk backup — AOMEI Backupper",
-                "description": "Backup → Disk Backup. Named the task, selected source disks, chose destination path and started. Operation completed successfully."
+                "description": "I went to Backup → Disk Backup, named the task, selected the source disks, chose the destination path, and started it. The operation completed successfully."
               },
               {
                 "label": "Install Windows Server Backup role",
-                "description": "Server Manager → Manage → Add Roles and Features. Checked Windows Server Backup in the Features list. Enabled auto-restart and clicked Install."
+                "description": "I opened Server Manager → Manage → Add Roles and Features, checked Windows Server Backup in the Features list, enabled auto-restart, and clicked Install."
               },
               {
                 "label": "Configure scheduled backup",
-                "description": "Added a dedicated 60 GB virtual disk as destination. Configured: full recovery + system state, VSS full backup, daily at 14:00. First run transferred 22.67 GB to SRV2 2022_03_21 13:18 DISK_01."
+                "description": "I added a dedicated 60 GB virtual disk as destination and configured full recovery + system state, VSS full backup, daily at 14:00. The first run transferred 22.67 GB to SRV2 2022_03_21 13:18 DISK_01."
               }
             ],
             "title": "Procedure"
@@ -1695,7 +1695,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Sauvegarde Windows Server 2012 · VirtualBox",
         "sections": [
           {
-            "body": "Exercice de formation au Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) sous la direction de Miguel MI-POUDOU. La mission couvrait deux VM VirtualBox : une VM cliente Windows 10 (redimensionnement de partition + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée quotidienne).",
+            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) sous la direction de Miguel MI-POUDOU, j'ai travaillé sur deux VM VirtualBox : une VM cliente Windows 10 (redimensionnement de partition + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée quotidienne).",
             "type": "text",
             "title": "Contexte"
           },
@@ -1713,11 +1713,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Partition E: réduite de 50,04 Go à 47,71 Go via AOMEI Partition Assistant — aucune perte de données",
-              "Image disque complète créée avec AOMEI Backupper Standard — opération réussie",
-              "Rôle Sauvegarde Windows Server installé et activé sur Windows Server 2012",
-              "Sauvegarde planifiée configurée : récupération complète + état du système, VSS complète, quotidienne à 14h00",
-              "22,67 Go transférés vers le disque virtuel dédié de 60 Go au premier lancement"
+              "J'ai réduit la partition E: de 50,04 Go à 47,71 Go via AOMEI Partition Assistant — aucune perte de données",
+              "J'ai créé une image disque complète avec AOMEI Backupper Standard — opération réussie",
+              "J'ai installé et activé le rôle Sauvegarde Windows Server sur Windows Server 2012",
+              "J'ai configuré une sauvegarde planifiée : récupération complète + état du système, VSS complète, quotidienne à 14h00",
+              "22,67 Go ont été transférés vers le disque virtuel dédié de 60 Go au premier lancement"
             ],
             "title": "Solution & Livrables"
           },
@@ -1738,19 +1738,19 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Redimensionnement — AOMEI Partition Assistant",
-                "description": "Clic droit sur E: → Redimensionner/Déplacer. Réduction de 50,04 Go à 47,71 Go (NTFS, cluster 4 Ko, Disque 3). Clic Appliquer pour valider l'opération en attente."
+                "description": "J'ai fait un clic droit sur E: → Redimensionner/Déplacer, réduit la partition de 50,04 Go à 47,71 Go (NTFS, cluster 4 Ko, Disque 3), puis cliqué sur Appliquer pour valider l'opération en attente."
               },
               {
                 "label": "Sauvegarde disque — AOMEI Backupper",
-                "description": "Sauvegarder → Sauvegarde de disque. Nommage de la tâche, sélection des disques source, choix de la destination. Opération terminée avec succès."
+                "description": "Je suis allée dans Sauvegarder → Sauvegarde de disque, j'ai nommé la tâche, sélectionné les disques source, choisi la destination, puis lancé l'opération. Elle s'est terminée avec succès."
               },
               {
                 "label": "Installation du rôle Sauvegarde Windows Server",
-                "description": "Gestionnaire de serveur → Gérer → Ajouter des rôles et fonctionnalités. Coche de Sauvegarde Windows Server dans les fonctionnalités. Activation redémarrage automatique, puis Installer."
+                "description": "J'ai ouvert le Gestionnaire de serveur → Gérer → Ajouter des rôles et fonctionnalités, coché Sauvegarde Windows Server dans les fonctionnalités, activé le redémarrage automatique, puis cliqué sur Installer."
               },
               {
                 "label": "Configuration de la sauvegarde planifiée",
-                "description": "Ajout d'un disque virtuel dédié de 60 Go. Sauvegarde configurée : récupération complète + état système, VSS complète, quotidienne à 14h00. Exécution : 22,67 Go transférés vers SRV2 2022_03_21 13:18 DISK_01."
+                "description": "J'ai ajouté un disque virtuel dédié de 60 Go comme destination et configuré la sauvegarde : récupération complète + état système, VSS complète, quotidienne à 14h00. Le premier lancement a transféré 22,67 Go vers SRV2 2022_03_21 13:18 DISK_01."
               }
             ],
             "title": "Procédure"
@@ -1791,7 +1791,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Ejercicio de formación en el Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) bajo la dirección de Miguel MI-POUDOU. La misión abarcaba dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
+              "Como parte de un ejercicio de formación en el Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) bajo la dirección de Miguel MI-POUDOU, trabajé en dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
             ]
           },
           {
@@ -1808,11 +1808,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Partición E: reducida de 50,04 GB a 47,71 GB mediante AOMEI Partition Assistant — sin pérdida de datos",
-              "Imagen de disco completa creada con AOMEI Backupper Standard — operación completada con éxito",
-              "Rol Copia de seguridad de Windows Server instalado y activado en Windows Server 2012",
-              "Copia de seguridad programada configurada: recuperación completa + estado del sistema, VSS completa, diaria a las 14:00",
-              "22,67 GB transferidos al disco virtual dedicado de 60 GB en la primera ejecución"
+              "Reduje la partición E: de 50,04 GB a 47,71 GB mediante AOMEI Partition Assistant — sin pérdida de datos",
+              "Creé una imagen de disco completa con AOMEI Backupper Standard — operación completada con éxito",
+              "Instalé y activé el rol Copia de seguridad de Windows Server en Windows Server 2012",
+              "Configuré una copia de seguridad programada: recuperación completa + estado del sistema, VSS completa, diaria a las 14:00",
+              "La primera ejecución transfirió 22,67 GB al disco virtual dedicado de 60 GB"
             ],
             "title": "Solución y entregables"
           },
@@ -1833,19 +1833,19 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Redimensionamiento — AOMEI Partition Assistant",
-                "description": "Clic derecho en E: → Redimensionar/Mover. Reducción de 50,04 GB a 47,71 GB (NTFS, clúster de 4 KB, Disco 3). Clic en Aplicar para confirmar la operación pendiente."
+                "description": "Hice clic derecho en E: → Redimensionar/Mover, reduje la partición de 50,04 GB a 47,71 GB (NTFS, clúster de 4 KB, Disco 3), y hice clic en Aplicar para confirmar la operación pendiente."
               },
               {
                 "label": "Copia de seguridad de disco — AOMEI Backupper",
-                "description": "Copia de seguridad → Copia de seguridad de disco. Nombrado de la tarea, selección de los discos origen, elección del destino. Operación finalizada con éxito."
+                "description": "Fui a Copia de seguridad → Copia de seguridad de disco, nombré la tarea, seleccioné los discos origen, elegí el destino y la inicié. La operación finalizó con éxito."
               },
               {
                 "label": "Instalación del rol Copia de seguridad de Windows Server",
-                "description": "Administrador del servidor → Administrar → Agregar roles y características. Marcado de Copia de seguridad de Windows Server en las características. Reinicio automático activado, luego Instalar."
+                "description": "Abrí el Administrador del servidor → Administrar → Agregar roles y características, marqué Copia de seguridad de Windows Server en las características, activé el reinicio automático y hice clic en Instalar."
               },
               {
                 "label": "Configuración de la copia programada",
-                "description": "Adición de un disco virtual dedicado de 60 GB. Copia configurada: recuperación completa + estado del sistema, VSS completa, diaria a las 14:00. Ejecución: 22,67 GB transferidos a SRV2 2022_03_21 13:18 DISK_01."
+                "description": "Añadí un disco virtual dedicado de 60 GB como destino y configuré la copia: recuperación completa + estado del sistema, VSS completa, diaria a las 14:00. La primera ejecución transfirió 22,67 GB a SRV2 2022_03_21 13:18 DISK_01."
               }
             ],
             "title": "Procedimiento"
@@ -1914,7 +1914,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows Server 2016 · AD DS · Roaming Profiles · ebtai.fr domain",
         "sections": [
           {
-            "body": "Training exercise at Greta du Val d'Oise under trainer Marc HAZAN. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM — both running in VirtualBox. Goal: allow users to retrieve their full work environment (desktop, documents, settings) on any domain-joined machine they log into.",
+            "body": "As part of a training exercise at Greta du Val d'Oise under trainer Marc HAZAN, I configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM — both running in VirtualBox. Goal: allow users to retrieve their full work environment (desktop, documents, settings) on any domain-joined machine they log into.",
             "type": "text",
             "title": "Context"
           },
@@ -1932,11 +1932,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Profil itinérant folder created on C: and shared via Advanced Sharing",
-              "Share permissions: EBTAI\\Utilisateurs — Modify + Read (Everyone removed)",
-              "NTFS permissions verified to allow profile ownership by users",
-              "AD profile path configured: \\\\DC1\\Profil itinérants\\%username%",
-              "Subfolder technicien.tai.V6 auto-created on first Windows 10 login — sync confirmed"
+              "I created the Profil itinérant folder on C: and shared it via Advanced Sharing",
+              "I set share permissions to EBTAI\\Utilisateurs — Modify + Read (removed Everyone)",
+              "I verified NTFS permissions to allow profile ownership by users",
+              "I configured the AD profile path: \\\\DC1\\Profil itinérants\\%username%",
+              "I confirmed the technicien.tai.V6 subfolder auto-created on first Windows 10 login — sync confirmed"
             ],
             "title": "Solution & Deliverables"
           },
@@ -1957,23 +1957,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Create shared folder",
-                "description": "Profil itinérant folder created on C:. Properties → Sharing → Advanced Sharing → enabled with share name Profil itinérant."
+                "description": "I created the Profil itinérant folder on C:, then went to Properties → Sharing → Advanced Sharing and enabled it under the share name Profil itinérant."
               },
               {
                 "label": "Configure share permissions",
-                "description": "Permissions → removed Everyone → added EBTAI\\Utilisateurs with Modify + Read. Clicked Apply."
+                "description": "I removed Everyone from Permissions and added EBTAI\\Utilisateurs with Modify + Read, then clicked Apply."
               },
               {
                 "label": "Configure NTFS permissions",
-                "description": "Folder security verified to ensure Full Control for profile ownership. Network path: \\\\serveur\\Profil itinérant."
+                "description": "I verified the folder's security settings to ensure Full Control for profile ownership. Network path: \\\\serveur\\Profil itinérant."
               },
               {
                 "label": "Set AD profile path",
-                "description": "AD Users and Computers (ebtai.fr) → right-clicked technicien → Properties → Profile tab. Set path: \\\\DC1\\Profil itinérants\\%username%. Applied."
+                "description": "In AD Users and Computers (ebtai.fr), I right-clicked technicien → Properties → Profile tab and set the path to \\\\DC1\\Profil itinérants\\%username%, then applied it."
               },
               {
                 "label": "Verify from client VM",
-                "description": "Logged into Windows 10 as EBTAI\\technicien. Subfolder technicien.tai.V6 appeared in the share (15/06/2022) — roaming profile linked and synchronized."
+                "description": "I logged into Windows 10 as EBTAI\\technicien. The subfolder technicien.tai.V6 appeared in the share (15/06/2022) — the roaming profile was linked and synchronized."
               }
             ],
             "title": "Procedure"
@@ -2011,7 +2011,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows Server 2016 · AD DS · Profils itinérants · domaine ebtai.fr",
         "sections": [
           {
-            "body": "Exercice de formation au Greta du Val d'Oise sous la supervision de Marc HAZAN. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification de la synchronisation depuis une VM cliente Windows 10 — les deux sous VirtualBox. L objectif : permettre aux utilisateurs de retrouver leur environnement de travail (bureau, documents, paramètres) quelle que soit la machine du domaine sur laquelle ils se connectent.",
+            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise sous la supervision de Marc HAZAN, j'ai configuré des profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérifié la synchronisation depuis une VM cliente Windows 10 — les deux sous VirtualBox. L'objectif : permettre aux utilisateurs de retrouver leur environnement de travail (bureau, documents, paramètres) quelle que soit la machine du domaine sur laquelle ils se connectent.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2029,11 +2029,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Dossier Profil itinérant créé sur C: et partagé via Partage avancé",
-              "Permissions de partage : EBTAI\\Utilisateurs — Modifier + Lire (Everyone supprimé)",
-              "Permissions NTFS vérifiées pour l'appropriation des profils utilisateurs",
-              "Chemin de profil AD configuré : \\\\DC1\\Profil itinérants\\%username%",
-              "Sous-dossier technicien.tai.V6 créé automatiquement à la première connexion Windows 10"
+              "J'ai créé le dossier Profil itinérant sur C: et l'ai partagé via Partage avancé",
+              "J'ai configuré les permissions de partage : EBTAI\\Utilisateurs — Modifier + Lire (Everyone supprimé)",
+              "J'ai vérifié les permissions NTFS pour permettre l'appropriation des profils par les utilisateurs",
+              "J'ai configuré le chemin de profil AD : \\\\DC1\\Profil itinérants\\%username%",
+              "J'ai confirmé la création automatique du sous-dossier technicien.tai.V6 à la première connexion Windows 10 — synchronisation vérifiée"
             ],
             "title": "Solution & Livrables"
           },
@@ -2054,23 +2054,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Création du dossier partagé",
-                "description": "Dossier Profil itinérant créé sur C:. Propriétés → Partage → Partage avancé → activation du partage avec le nom Profil itinérant."
+                "description": "J'ai créé le dossier Profil itinérant sur C:, puis suis allée dans Propriétés → Partage → Partage avancé pour l'activer sous le nom Profil itinérant."
               },
               {
                 "label": "Configuration des permissions de partage",
-                "description": "Autorisations → suppression de Everyone → ajout de EBTAI\\Utilisateurs avec Modifier + Lire. Clic Appliquer."
+                "description": "J'ai supprimé Everyone des Autorisations et ajouté EBTAI\\Utilisateurs avec Modifier + Lire, puis cliqué sur Appliquer."
               },
               {
                 "label": "Configuration des permissions NTFS",
-                "description": "Sécurité du dossier vérifiée pour garantir le Contrôle total nécessaire à l'appropriation des profils. Chemin réseau : \\\\serveur\\Profil itinérant."
+                "description": "J'ai vérifié la sécurité du dossier pour garantir le Contrôle total nécessaire à l'appropriation des profils. Chemin réseau : \\\\serveur\\Profil itinérant."
               },
               {
                 "label": "Paramétrage du chemin AD",
-                "description": "Utilisateurs et ordinateurs AD (ebtai.fr) → clic droit sur technicien → Propriétés → onglet Profil. Chemin : \\\\DC1\\Profil itinérants\\%username%. Appliquer."
+                "description": "Dans Utilisateurs et ordinateurs AD (ebtai.fr), j'ai fait un clic droit sur technicien → Propriétés → onglet Profil, puis défini le chemin \\\\DC1\\Profil itinérants\\%username% avant d'appliquer."
               },
               {
                 "label": "Vérification depuis la VM cliente",
-                "description": "Connexion Windows 10 avec EBTAI\\technicien. Sous-dossier technicien.tai.V6 apparu dans le partage (15/06/2022) — profil itinérant lié et synchronisé."
+                "description": "Je me suis connectée à Windows 10 avec EBTAI\\technicien. Le sous-dossier technicien.tai.V6 est apparu dans le partage (15/06/2022) — le profil itinérant était lié et synchronisé."
               }
             ],
             "title": "Procédure"
@@ -2111,7 +2111,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Ejercicio de formación en el Greta du Val d'Oise bajo la supervisión de Marc HAZAN. Configuración de perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verificación de la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
+              "Como parte de un ejercicio de formación en el Greta du Val d'Oise bajo la supervisión de Marc HAZAN, configuré perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verifiqué la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
             ]
           },
           {
@@ -2128,11 +2128,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Carpeta Perfil itinerante creada en C: y compartida mediante Uso compartido avanzado",
-              "Permisos de recurso compartido: EBTAI\\\\Utilisateurs — Modificar + Leer (Todos eliminado)",
-              "Permisos NTFS verificados para la apropiación de los perfiles de usuario",
-              "Ruta de perfil AD configurada: \\\\DC1\\Profil itinérants\\%username%",
-              "Subcarpeta technicien.tai.V6 creada automáticamente en el primer inicio de sesión de Windows 10"
+              "Creé la carpeta Perfil itinerante en C: y la compartí mediante Uso compartido avanzado",
+              "Configuré los permisos de recurso compartido: EBTAI\\\\Utilisateurs — Modificar + Leer (Todos eliminado)",
+              "Verifiqué los permisos NTFS para permitir la apropiación de los perfiles por los usuarios",
+              "Configuré la ruta de perfil AD: \\\\DC1\\Profil itinérants\\%username%",
+              "Confirmé la creación automática de la subcarpeta technicien.tai.V6 en el primer inicio de sesión de Windows 10 — sincronización verificada"
             ],
             "title": "Solución y entregables"
           },
@@ -2153,23 +2153,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Creación de la carpeta compartida",
-                "description": "Carpeta Perfil itinerante creada en C:. Propiedades → Compartir → Uso compartido avanzado → activación del recurso compartido con el nombre Perfil itinerante."
+                "description": "Creé la carpeta Perfil itinerante en C: y fui a Propiedades → Compartir → Uso compartido avanzado para activarla con el nombre Perfil itinerante."
               },
               {
                 "label": "Configuración de los permisos de recurso compartido",
-                "description": "Permisos → eliminación de Todos → adición de EBTAI\\\\Utilisateurs con Modificar + Leer. Clic en Aplicar."
+                "description": "Eliminé Todos de los Permisos y añadí EBTAI\\\\Utilisateurs con Modificar + Leer, luego hice clic en Aplicar."
               },
               {
                 "label": "Configuración de los permisos NTFS",
-                "description": "Seguridad de la carpeta verificada para garantizar el Control total necesario para la apropiación de los perfiles. Ruta de red: \\\\servidor\\Perfil itinerante."
+                "description": "Verifiqué la seguridad de la carpeta para garantizar el Control total necesario para la apropiación de los perfiles. Ruta de red: \\\\servidor\\Perfil itinerante."
               },
               {
                 "label": "Configuración de la ruta AD",
-                "description": "Usuarios y equipos de AD (ebtai.fr) → clic derecho en técnico → Propiedades → pestaña Perfil. Ruta: \\\\DC1\\Profil itinérants\\%username%. Aplicar."
+                "description": "En Usuarios y equipos de AD (ebtai.fr), hice clic derecho en técnico → Propiedades → pestaña Perfil, configuré la ruta \\\\DC1\\Profil itinérants\\%username% y la apliqué."
               },
               {
                 "label": "Verificación desde la VM cliente",
-                "description": "Inicio de sesión Windows 10 con EBTAI\\\\technicien. Subcarpeta technicien.tai.V6 aparecida en el recurso compartido (15/06/2022) — perfil itinerante vinculado y sincronizado."
+                "description": "Inicié sesión en Windows 10 como EBTAI\\\\technicien. La subcarpeta technicien.tai.V6 apareció en el recurso compartido (15/06/2022) — el perfil itinerante quedó vinculado y sincronizado."
               }
             ],
             "title": "Procedimiento"
@@ -2641,7 +2641,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows 10 Pro · Ninite · Office 2016 · BIOS · Driver setup",
         "sections": [
           {
-            "body": "Training exercise at Greta du Val d'Oise under trainer Miguel MI-POUDOU. A client brought in an extremely slow HP laptop with no data to recover. Mission: full workstation rebuild — clean OS reinstall, driver validation, batch software deployment, and final configuration before client handover.",
+            "body": "As part of a training exercise at Greta du Val d'Oise under trainer Miguel MI-POUDOU, a client brought me an extremely slow HP laptop with no data to recover. My mission: full workstation rebuild — clean OS reinstall, driver validation, batch software deployment, and final configuration before client handover.",
             "type": "text",
             "title": "Context"
           },
@@ -2659,12 +2659,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "USB boot configured via BIOS, Windows 10 Pro 64-bit installed with trainer-provided OEM key",
-              "OOBE completed: region France, user account created, Cortana, Microsoft Hello, geolocation",
-              "All drivers validated in Device Manager — network, audio, GPU",
-              "7+ applications deployed in one unattended pass via Ninite.com — no toolbars, no clicks",
-              "Office 2016 Professional Plus installed and activated simultaneously",
-              "Desktop shortcuts, wallpaper, and Windows Backup configured — workstation validated by trainer"
+              "I configured USB boot via BIOS and installed Windows 10 Pro 64-bit with the trainer-provided OEM key",
+              "I completed the OOBE: region France, user account creation, Cortana, Microsoft Hello, geolocation",
+              "I validated all drivers in Device Manager — network, audio, GPU",
+              "I deployed 7+ applications in one unattended pass via Ninite.com — no toolbars, no clicks",
+              "I installed and activated Office 2016 Professional Plus at the same time",
+              "I configured desktop shortcuts, wallpaper, and Windows Backup — workstation validated by the trainer"
             ],
             "title": "Solution & Deliverables"
           },
@@ -2685,23 +2685,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "BIOS & USB boot",
-                "description": "Entered BIOS (F2/DEL), changed boot order to place USB key (Windows 10 Pro ISO) first. Saved with F10 and rebooted."
+                "description": "I entered the BIOS (F2/DEL), changed the boot order to place the USB key (Windows 10 Pro ISO) first, saved with F10, and rebooted."
               },
               {
                 "label": "Windows 10 Pro installation",
-                "description": "French, Custom installation, Windows 10 Pro 64-bit with OEM key. License accepted, user account created, OOBE completed (region France, Cortana, Microsoft Hello)."
+                "description": "I ran a French, Custom installation of Windows 10 Pro 64-bit with the OEM key, accepted the license, created the user account, and completed the OOBE (region France, Cortana, Microsoft Hello)."
               },
               {
                 "label": "Driver verification",
-                "description": "Device Manager opened — audio, network (Ethernet + Wi-Fi) and GPU drivers validated. Network connected, antivirus installed."
+                "description": "I opened Device Manager and validated the audio, network (Ethernet + Wi-Fi), and GPU drivers, connected the network, and installed the antivirus."
               },
               {
                 "label": "Batch deployment via Ninite",
-                "description": "Ninite.com used to install Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15 and MalwareBytes in one unattended run. Office 2016 Pro Plus installed simultaneously."
+                "description": "I used Ninite.com to install Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15, and MalwareBytes in one unattended run, installing Office 2016 Pro Plus at the same time."
               },
               {
                 "label": "Finalization",
-                "description": "Desktop shortcuts configured, wallpaper applied, Windows Backup enabled. Workstation handed over to client after trainer validation."
+                "description": "I configured the desktop shortcuts, applied the wallpaper, and enabled Windows Backup. I handed the workstation over to the client after the trainer's validation."
               }
             ],
             "title": "Procedure"
@@ -2739,7 +2739,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows 10 Pro · Ninite · Office 2016 · BIOS · Installation pilotes",
         "sections": [
           {
-            "body": "Exercice de formation au Greta du Val d'Oise sous la direction de Miguel MI-POUDOU. Un client a apporté un portable HP extrêmement lent, sans données à récupérer. La mission : remise à neuf complète du poste — réinstallation propre de l'OS, validation des pilotes, déploiement automatisé des logiciels métier et configuration finale avant remise au client.",
+            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise sous la direction de Miguel MI-POUDOU, un client m'a apporté un portable HP extrêmement lent, sans données à récupérer. Ma mission : remise à neuf complète du poste — réinstallation propre de l'OS, validation des pilotes, déploiement automatisé des logiciels métier et configuration finale avant remise au client.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2757,12 +2757,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Démarrage USB configuré via BIOS, Windows 10 Pro 64 bits installé avec clé OEM du formateur",
-              "OOBE finalisé : région France, création du compte utilisateur, Cortana, Microsoft Hello, géolocalisation",
-              "Tous les pilotes validés dans le Gestionnaire de périphériques — réseau, audio, GPU",
-              "7+ applications déployées en une passe via Ninite.com sans interaction utilisateur ni toolbars",
-              "Office 2016 Professionnel Plus installé et activé simultanément",
-              "Raccourcis bureau, fond d'écran et sauvegarde Windows configurés — poste validé par le formateur"
+              "J'ai configuré le démarrage USB via le BIOS et installé Windows 10 Pro 64 bits avec la clé OEM fournie par le formateur",
+              "J'ai finalisé l'OOBE : région France, création du compte utilisateur, Cortana, Microsoft Hello, géolocalisation",
+              "J'ai validé tous les pilotes dans le Gestionnaire de périphériques — réseau, audio, GPU",
+              "J'ai déployé 7+ applications en une passe via Ninite.com, sans interaction utilisateur ni toolbars",
+              "J'ai installé et activé Office 2016 Professionnel Plus en parallèle",
+              "J'ai configuré les raccourcis bureau, le fond d'écran et la sauvegarde Windows — poste validé par le formateur"
             ],
             "title": "Solution & Livrables"
           },
@@ -2783,23 +2783,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "BIOS & démarrage USB",
-                "description": "Entrée dans le BIOS (F2/DEL), ordre de démarrage modifié pour placer la clé USB ISO Windows 10 Pro en premier. Sauvegarde F10 et redémarrage."
+                "description": "Je suis entrée dans le BIOS (F2/DEL), j'ai modifié l'ordre de démarrage pour placer la clé USB ISO Windows 10 Pro en premier, sauvegardé avec F10, puis redémarré."
               },
               {
                 "label": "Installation Windows 10 Pro",
-                "description": "Français, Installation personnalisée, Windows 10 Pro 64 bits avec clé OEM. Licence acceptée, compte utilisateur créé, OOBE finalisé (région France, Cortana, Microsoft Hello)."
+                "description": "J'ai lancé une installation personnalisée en français de Windows 10 Pro 64 bits avec la clé OEM, accepté la licence, créé le compte utilisateur et finalisé l'OOBE (région France, Cortana, Microsoft Hello)."
               },
               {
                 "label": "Validation des pilotes",
-                "description": "Gestionnaire de périphériques ouvert — pilotes audio, réseau (Ethernet + Wi-Fi) et GPU vérifiés. Connexion réseau établie, antivirus installé."
+                "description": "J'ai ouvert le Gestionnaire de périphériques et validé les pilotes audio, réseau (Ethernet + Wi-Fi) et GPU, établi la connexion réseau et installé l'antivirus."
               },
               {
                 "label": "Déploiement batch via Ninite",
-                "description": "Ninite.com utilisé pour installer Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15 et MalwareBytes en un passage. Office 2016 Pro Plus installé simultanément."
+                "description": "J'ai utilisé Ninite.com pour installer Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15 et MalwareBytes en un seul passage, tout en installant Office 2016 Pro Plus en parallèle."
               },
               {
                 "label": "Finalisation",
-                "description": "Raccourcis bureau configurés, fond d'écran appliqué, sauvegarde Windows activée. Poste remis au client après validation formateur."
+                "description": "J'ai configuré les raccourcis bureau, appliqué le fond d'écran et activé la sauvegarde Windows. J'ai remis le poste au client après validation du formateur."
               }
             ],
             "title": "Procédure"
@@ -2840,7 +2840,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Ejercicio de formación en el Greta du Val d'Oise bajo la dirección de Miguel MI-POUDOU. Un cliente trajo un portátil HP extremadamente lento, sin datos que recuperar. La misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
+              "Como parte de un ejercicio de formación en el Greta du Val d'Oise bajo la dirección de Miguel MI-POUDOU, un cliente me trajo un portátil HP extremadamente lento, sin datos que recuperar. Mi misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
             ]
           },
           {
@@ -2857,12 +2857,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Arranque USB configurado vía BIOS, Windows 10 Pro de 64 bits instalado con clave OEM del formador",
-              "OOBE finalizado: región Francia, creación de la cuenta de usuario, Cortana, Microsoft Hello, geolocalización",
-              "Todos los controladores validados en el Administrador de dispositivos — red, audio, GPU",
-              "7+ aplicaciones desplegadas en una sola pasada vía Ninite.com sin interacción del usuario ni barras de herramientas",
-              "Office 2016 Professional Plus instalado y activado simultáneamente",
-              "Accesos directos de escritorio, fondo de pantalla y copia de seguridad de Windows configurados — equipo validado por el formador"
+              "Configuré el arranque USB vía BIOS e instalé Windows 10 Pro de 64 bits con la clave OEM proporcionada por el formador",
+              "Finalicé el OOBE: región Francia, creación de la cuenta de usuario, Cortana, Microsoft Hello, geolocalización",
+              "Validé todos los controladores en el Administrador de dispositivos — red, audio, GPU",
+              "Desplegué 7+ aplicaciones en una sola pasada vía Ninite.com, sin interacción del usuario ni barras de herramientas",
+              "Instalé y activé Office 2016 Professional Plus al mismo tiempo",
+              "Configuré los accesos directos de escritorio, el fondo de pantalla y la copia de seguridad de Windows — equipo validado por el formador"
             ],
             "title": "Solución y entregables"
           },
@@ -2883,23 +2883,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "BIOS y arranque USB",
-                "description": "Entrada en la BIOS (F2/DEL), orden de arranque modificado para colocar la llave USB con la ISO de Windows 10 Pro en primer lugar. Guardado F10 y reinicio."
+                "description": "Entré en la BIOS (F2/DEL), cambié el orden de arranque para colocar la llave USB con la ISO de Windows 10 Pro en primer lugar, guardé con F10 y reinicié."
               },
               {
                 "label": "Instalación de Windows 10 Pro",
-                "description": "Francés, Instalación personalizada, Windows 10 Pro de 64 bits con clave OEM. Licencia aceptada, cuenta de usuario creada, OOBE finalizado (región Francia, Cortana, Microsoft Hello)."
+                "description": "Realicé una instalación personalizada en francés de Windows 10 Pro de 64 bits con la clave OEM, acepté la licencia, creé la cuenta de usuario y finalicé el OOBE (región Francia, Cortana, Microsoft Hello)."
               },
               {
                 "label": "Validación de controladores",
-                "description": "Administrador de dispositivos abierto — controladores de audio, red (Ethernet + Wi-Fi) y GPU verificados. Conexión de red establecida, antivirus instalado."
+                "description": "Abrí el Administrador de dispositivos y validé los controladores de audio, red (Ethernet + Wi-Fi) y GPU, establecí la conexión de red e instalé el antivirus."
               },
               {
                 "label": "Despliegue por lotes vía Ninite",
-                "description": "Ninite.com utilizado para instalar Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15 y MalwareBytes en una sola pasada. Office 2016 Pro Plus instalado simultáneamente."
+                "description": "Usé Ninite.com para instalar Chrome, Firefox, 7-Zip, Zoom, Skype, LibreOffice, TeamViewer 15 y MalwareBytes en una sola pasada, instalando Office 2016 Pro Plus al mismo tiempo."
               },
               {
                 "label": "Finalización",
-                "description": "Accesos directos de escritorio configurados, fondo de pantalla aplicado, copia de seguridad de Windows activada. Equipo entregado al cliente tras la validación del formador."
+                "description": "Configuré los accesos directos de escritorio, apliqué el fondo de pantalla y activé la copia de seguridad de Windows. Entregué el equipo al cliente tras la validación del formador."
               }
             ],
             "title": "Procedimiento"
@@ -3034,12 +3034,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Duration bug fix: replaced broken calculation logic for stays exceeding 24h",
-              "TDD Feature 1: tests written first → price = 0 for parking stays under 30 minutes",
-              "TDD Feature 2: tests written first → 5% discount applied after license plate lookup",
-              "ParkingService unit tests with Mockito — coverage above 90%",
-              "ParkingDataBaseIT integration tests on real database — global coverage above 70%",
-              "JaCoCo and Surefire reports generated and validated by jury"
+              "I fixed the duration bug: replaced the broken calculation logic for stays exceeding 24h",
+              "TDD Feature 1: I wrote the tests first → price = 0 for parking stays under 30 minutes",
+              "TDD Feature 2: I wrote the tests first → 5% discount applied after license plate lookup",
+              "I wrote ParkingService unit tests with Mockito — coverage above 90%",
+              "I wrote ParkingDataBaseIT integration tests on the real database — global coverage above 70%",
+              "I generated the JaCoCo and Surefire reports, validated by the jury"
             ],
             "title": "Solution & Deliverables"
           },
@@ -3061,27 +3061,27 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Code analysis",
-                "description": "Review of existing project, identification of duration bug and missing features"
+                "description": "I reviewed the existing project and identified the duration bug and the missing features"
               },
               {
                 "label": "Bug fix",
-                "description": "Fixed negative duration calculation for parking stays over 24 hours"
+                "description": "I fixed the negative duration calculation for parking stays over 24 hours"
               },
               {
                 "label": "TDD Feature 1",
-                "description": "Tests written first → implemented free 30-minute stay rule"
+                "description": "I wrote the tests first, then implemented the free 30-minute stay rule"
               },
               {
                 "label": "TDD Feature 2",
-                "description": "Tests written first → implemented 5% recurring user discount with plate lookup"
+                "description": "I wrote the tests first, then implemented the 5% recurring-user discount with plate lookup"
               },
               {
                 "label": "Unit tests",
-                "description": "Mockito mocks on ParkingService — coverage above 90%"
+                "description": "I added Mockito mocks on ParkingService — coverage above 90%"
               },
               {
                 "label": "Integration tests",
-                "description": "ParkingDataBaseIT on real database — global coverage above 70%, defense validated 4/4"
+                "description": "I wrote ParkingDataBaseIT tests on the real database — global coverage above 70%, defense validated 4/4"
               }
             ],
             "title": "Project Timeline"
@@ -3133,12 +3133,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Correction du bug de durée : remplacement de la logique de calcul pour les séjours > 24h",
-              "TDD Feature 1 : tests écrits en premier → prix à 0 pour stationnement < 30 min",
-              "TDD Feature 2 : tests écrits en premier → réduction 5% après vérification de la plaque d'immatriculation",
-              "Tests unitaires ParkingService avec Mockito — couverture > 90%",
-              "Tests d'intégration ParkingDataBaseIT sur base de données réelle — couverture globale > 70%",
-              "Rapports JaCoCo et Surefire générés et validés par le jury"
+              "J'ai corrigé le bug de durée : remplacement de la logique de calcul pour les séjours > 24h",
+              "TDD Feature 1 : j'ai écrit les tests en premier → prix à 0 pour stationnement < 30 min",
+              "TDD Feature 2 : j'ai écrit les tests en premier → réduction 5% après vérification de la plaque d'immatriculation",
+              "J'ai écrit les tests unitaires ParkingService avec Mockito — couverture > 90%",
+              "J'ai écrit les tests d'intégration ParkingDataBaseIT sur base de données réelle — couverture globale > 70%",
+              "J'ai généré les rapports JaCoCo et Surefire, validés par le jury"
             ],
             "title": "Solution & Livrables"
           },
@@ -3160,27 +3160,27 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Analyse du code",
-                "description": "Lecture du projet existant, identification du bug de durée et des fonctionnalités manquantes"
+                "description": "J'ai relu le projet existant et identifié le bug de durée ainsi que les fonctionnalités manquantes"
               },
               {
                 "label": "Bug fix",
-                "description": "Correction du calcul de durée négatif pour les stationnements supérieurs à 24h"
+                "description": "J'ai corrigé le calcul de durée négatif pour les stationnements supérieurs à 24h"
               },
               {
                 "label": "TDD Feature 1",
-                "description": "Écriture des tests d'abord → implémentation de la gratuité des 30 premières minutes"
+                "description": "J'ai écrit les tests d'abord, puis implémenté la gratuité des 30 premières minutes"
               },
               {
                 "label": "TDD Feature 2",
-                "description": "Écriture des tests d'abord → implémentation de la remise 5% pour les utilisateurs récurrents"
+                "description": "J'ai écrit les tests d'abord, puis implémenté la remise de 5% pour les utilisateurs récurrents"
               },
               {
                 "label": "Tests unitaires",
-                "description": "Mockito mocks sur ParkingService — couverture > 90%"
+                "description": "J'ai ajouté des mocks Mockito sur ParkingService — couverture > 90%"
               },
               {
                 "label": "Tests d'intégration",
-                "description": "ParkingDataBaseIT sur base réelle — couverture globale > 70%, soutenance validée 4/4"
+                "description": "J'ai écrit les tests ParkingDataBaseIT sur base réelle — couverture globale > 70%, soutenance validée 4/4"
               }
             ],
             "title": "Étapes du projet"
@@ -3237,27 +3237,27 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "title": "Línea base y reproducción",
-                "description": "Configuración del versionado, ejecución de mvn test / mvn verify, y análisis de las pruebas fallidas para aislar las causas."
+                "description": "Configuré el versionado, ejecuté mvn test / mvn verify, y analicé las pruebas fallidas para aislar las causas."
               },
               {
                 "title": "Corrección: duración negativa (>24h)",
-                "description": "Corrección del cálculo de duración mediante timestamps en milisegundos (Date.getTime()), con conversión coherente a minutos."
+                "description": "Corregí el cálculo de duración mediante timestamps en milisegundos (Date.getTime()), con una conversión coherente a minutos."
               },
               {
                 "title": "TDD: 30 minutos gratuitos",
-                "description": "Escritura de pruebas unitarias (coche + moto) para estancias < 30 minutos, y adaptación de FareCalculatorService para devolver una tarifa de 0 en ese caso."
+                "description": "Escribí pruebas unitarias (coche + moto) para estancias < 30 minutos, y adapté FareCalculatorService para devolver una tarifa de 0 en ese caso."
               },
               {
                 "title": "TDD: descuento 5% usuario recurrente",
-                "description": "Añadido de un flujo calculateFare(Ticket, boolean), implementación del conteo en TicketDAO (getNbTicket), y aplicación del descuento cuando el usuario no está en su primer uso."
+                "description": "Añadí un flujo calculateFare(Ticket, boolean), implementé el conteo en TicketDAO (getNbTicket), y apliqué el descuento cuando el usuario no estaba en su primer uso."
               },
               {
                 "title": "Refuerzo de pruebas unitarias (Mockito)",
-                "description": "Ampliación de las pruebas unitarias de ParkingService mediante mocks (TicketDAO, ParkingSpotDAO, InputReader), y adición de pruebas específicas para cubrir los caminos exitosos y de error."
+                "description": "Amplié las pruebas unitarias de ParkingService mediante mocks (TicketDAO, ParkingSpotDAO, InputReader), y añadí pruebas específicas para cubrir los caminos exitosos y de error."
               },
               {
                 "title": "Pruebas de integración + informes",
-                "description": "Finalización de los TODO en ParkingDatabaseIT, adición de una prueba de integración para el descuento (usuario recurrente), y generación de los informes Surefire + JaCoCo mediante mvn verify."
+                "description": "Terminé los TODO en ParkingDatabaseIT, añadí una prueba de integración para el descuento (usuario recurrente), y generé los informes Surefire + JaCoCo mediante mvn verify."
               }
             ],
             "title": "Flujo de implementación"
@@ -3400,7 +3400,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Development of the Poch'Lib SPA frontend interface, a book management library in HTML/CSS/JS.",
         "sections": [
           {
-            "body": "Great'App, a 20-person Nice-based startup, tasked its CTO Marie with delivering Poch'Lib — a book management SPA commissioned by bookshop 'La plume enchantée'. Mission: build the entire frontend from scratch, matching UX designer Charlotte's wireframes exactly, with flawless responsive rendering across 3 formats (mobile, tablet, desktop), using no JavaScript framework.",
+            "body": "Great'App, a 20-person Nice-based startup, had its CTO Marie bring me in to deliver Poch'Lib — a book management SPA commissioned by bookshop 'La plume enchantée'. My mission: build the entire frontend from scratch, matching UX designer Charlotte's wireframes exactly, with flawless responsive rendering across 3 formats (mobile, tablet, desktop), using no JavaScript framework.",
             "type": "text",
             "title": "Context"
           },
@@ -3419,14 +3419,14 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Book search via the Google Books API (Fetch) and add to a personal list (\"Poch'List\")",
-              "List persisted across views via sessionStorage — no loss on navigation, cleared when the tab closes",
-              "Dynamic book removal with real-time DOM updates (solid/empty Font Awesome bookmark icons reflecting state)",
-              "Code organized into 3 ES6 modules (application.js, search.js, util.js) with import/export — zero framework dependency",
-              "Mobile-first responsive with media queries for 3 breakpoints",
-              "Semantic HTML5 aligned with Charlotte's UX wireframes",
-              "Structured SASS (variables, mixins, nesting) — DRY approach validated by jury",
-              "Installation README delivered to end client"
+              "I built book search via the Google Books API (Fetch) with add-to-list into a personal list (\"Poch'List\")",
+              "I persisted the list across views via sessionStorage — no loss on navigation, cleared when the tab closes",
+              "I implemented dynamic book removal with real-time DOM updates (solid/empty Font Awesome bookmark icons reflecting state)",
+              "I organized the code into 3 ES6 modules (application.js, search.js, util.js) with import/export — zero framework dependency",
+              "I built a mobile-first responsive layout with media queries for 3 breakpoints",
+              "I wrote semantic HTML5 aligned with Charlotte's UX wireframes",
+              "I structured the SASS (variables, mixins, nesting) — DRY approach validated by the jury",
+              "I delivered an installation README to the end client"
             ],
             "title": "Solution & Deliverables"
           },
@@ -3449,23 +3449,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Wireframe analysis",
-                "description": "Review of Charlotte's mockups, breakdown into HTML/CSS components"
+                "description": "I reviewed Charlotte's mockups and broke them down into HTML/CSS components"
               },
               {
                 "label": "HTML/SASS integration",
-                "description": "Semantic structure, mobile-first styles, SASS variables and mixins setup"
+                "description": "I built the semantic structure, mobile-first styles, and set up SASS variables and mixins"
               },
               {
                 "label": "JavaScript logic",
-                "description": "Fetch API integration, book add/remove, dynamic DOM updates"
+                "description": "I integrated the Fetch API, implemented book add/remove, and wired up dynamic DOM updates"
               },
               {
                 "label": "Responsive refinement",
-                "description": "Media query adjustments for all 3 formats: mobile, tablet and desktop"
+                "description": "I adjusted the media queries for all 3 formats: mobile, tablet and desktop"
               },
               {
                 "label": "Documentation & delivery",
-                "description": "Installation README written, defense validated with 4/4 skills"
+                "description": "I wrote the installation README and passed my defense with 4/4 skills validated"
               }
             ],
             "title": "Project Timeline"
@@ -3495,7 +3495,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Développement de l'interface frontend SPA de Poch'Lib, une librairie de gestion de livres en HTML/CSS/JS.",
         "sections": [
           {
-            "body": "Great'App, startup niçoise de 20 personnes, a chargé sa CTO Marie de livrer Poch'Lib — une SPA de gestion de livres commandée par la librairie « La plume enchantée ». Mission : construire l'intégralité du frontend de zéro, en respectant les wireframes de l'UX designer Charlotte, avec un rendu responsive sur 3 formats (mobile, tablette, bureau), sans aucun framework JavaScript.",
+            "body": "Great'App, startup niçoise de 20 personnes, m'a fait intervenir via sa CTO Marie pour livrer Poch'Lib — une SPA de gestion de livres commandée par la librairie « La plume enchantée ». Ma mission : construire l'intégralité du frontend de zéro, en respectant les wireframes de l'UX designer Charlotte, avec un rendu responsive sur 3 formats (mobile, tablette, bureau), sans aucun framework JavaScript.",
             "type": "text",
             "title": "Contexte"
           },
@@ -3514,14 +3514,14 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Recherche de livres via la Google Books API (Fetch) et ajout à une liste personnelle (« Poch'List »)",
-              "Persistance de la liste entre les pages via sessionStorage — pas de perte au changement de vue, réinitialisée à la fermeture de l'onglet",
-              "Suppression dynamique des livres avec mise à jour du DOM en temps réel (icônes Font Awesome pleine/vide selon l'état du signet)",
-              "Code organisé en 3 modules ES6 (application.js, search.js, util.js) avec import/export — zéro dépendance framework",
-              "Responsive mobile-first avec media queries pour 3 breakpoints",
-              "HTML5 sémantique aligné sur les wireframes UX de Charlotte",
-              "SASS structuré (variables, mixins, nesting) — approche DRY validée par le jury",
-              "README d'installation livré au client final"
+              "J'ai développé la recherche de livres via la Google Books API (Fetch) avec ajout à une liste personnelle (« Poch'List »)",
+              "J'ai assuré la persistance de la liste entre les pages via sessionStorage — pas de perte au changement de vue, réinitialisée à la fermeture de l'onglet",
+              "J'ai implémenté la suppression dynamique des livres avec mise à jour du DOM en temps réel (icônes Font Awesome pleine/vide selon l'état du signet)",
+              "J'ai organisé le code en 3 modules ES6 (application.js, search.js, util.js) avec import/export — zéro dépendance framework",
+              "J'ai construit un responsive mobile-first avec media queries pour 3 breakpoints",
+              "J'ai écrit un HTML5 sémantique aligné sur les wireframes UX de Charlotte",
+              "J'ai structuré le SASS (variables, mixins, nesting) — approche DRY validée par le jury",
+              "J'ai livré un README d'installation au client final"
             ],
             "title": "Solution & Livrables"
           },
@@ -3544,23 +3544,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Analyse des wireframes",
-                "description": "Lecture des maquettes de Charlotte, découpage en composants HTML/CSS"
+                "description": "J'ai étudié les maquettes de Charlotte et les ai découpées en composants HTML/CSS"
               },
               {
                 "label": "Intégration HTML/SASS",
-                "description": "Structure sémantique, styles mobile-first, mise en place des variables et mixins SASS"
+                "description": "J'ai construit la structure sémantique, les styles mobile-first, et mis en place les variables et mixins SASS"
               },
               {
                 "label": "Logique JavaScript",
-                "description": "Fetch API, ajout et suppression de livres, mise à jour dynamique du DOM"
+                "description": "J'ai intégré la Fetch API, implémenté l'ajout et la suppression de livres, et mis à jour le DOM dynamiquement"
               },
               {
                 "label": "Responsive",
-                "description": "Ajustements des media queries pour les 3 formats : mobile, tablette et bureau"
+                "description": "J'ai ajusté les media queries pour les 3 formats : mobile, tablette et bureau"
               },
               {
                 "label": "Documentation & livraison",
-                "description": "Rédaction du README d'installation, soutenance validée avec 4/4 compétences"
+                "description": "J'ai rédigé le README d'installation et validé ma soutenance avec 4/4 compétences"
               }
             ],
             "title": "Étapes du projet"
@@ -3635,23 +3635,23 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "Análisis de wireframes",
-                "description": "Revisión de las maquetas de Charlotte, descomposición en componentes HTML/CSS"
+                "description": "Revisé las maquetas de Charlotte y las descompuse en componentes HTML/CSS"
               },
               {
                 "label": "Integración HTML/SASS",
-                "description": "Estructura semántica, estilos mobile-first, configuración de variables y mixins SASS"
+                "description": "Construí la estructura semántica, los estilos mobile-first, y configuré las variables y mixins de SASS"
               },
               {
                 "label": "Lógica JavaScript",
-                "description": "Integración de la Fetch API, añadir/eliminar libros, actualizaciones dinámicas del DOM"
+                "description": "Integré la Fetch API, implementé añadir/eliminar libros, y actualicé el DOM dinámicamente"
               },
               {
                 "label": "Ajuste responsive",
-                "description": "Ajustes de media queries para los 3 formatos: móvil, tablet y escritorio"
+                "description": "Ajusté las media queries para los 3 formatos: móvil, tablet y escritorio"
               },
               {
                 "label": "Documentación y entrega",
-                "description": "README de instalación redactado, defensa validada con 4/4 competencias"
+                "description": "Redacté el README de instalación y validé mi defensa con 4/4 competencias"
               }
             ],
             "title": "Cronograma del proyecto"
@@ -3718,19 +3718,19 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Real-time network scanner — FastAPI backend + WebSocket + React/Vite UI",
         "sections": [
           {
-            "body": "Personal network security project: a full-stack local network scanner capable of identifying live hosts and open ports on a LAN segment, streaming results in real time via WebSocket, and classifying each service by risk level. Built in two layers: a Python FastAPI backend with concurrent threads, and a React/Vite frontend displaying results live.",
+            "body": "I built this personal network security project: a full-stack local network scanner capable of identifying live hosts and open ports on a LAN segment, streaming results in real time via WebSocket, and classifying each service by risk level. I built it in two layers: a Python FastAPI backend with concurrent threads, and a React/Vite frontend displaying results live.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Host discovery: local subnet resolution and ping sweep to list all live hosts",
-              "Concurrent port scanning via ThreadPoolExecutor — all top ports probed in parallel per host",
-              "45-service detection table (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
-              "Risk classification (high / medium / low) per port via RISK_MAP (Telnet, RDP, exposed DBs...)",
-              "Real-time WebSocket streaming — results pushed to frontend as each host completes",
-              "React/Vite frontend: live host cards, risk-colour-coded port badges, scan progress indicator"
+              "I built host discovery: local subnet resolution and a ping sweep to list all live hosts",
+              "I implemented concurrent port scanning via ThreadPoolExecutor — all top ports probed in parallel per host",
+              "I built a 45-service detection table (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
+              "I implemented risk classification (high / medium / low) per port via RISK_MAP (Telnet, RDP, exposed DBs...)",
+              "I wired up real-time WebSocket streaming — results pushed to the frontend as each host completes",
+              "I built the React/Vite frontend: live host cards, risk-colour-coded port badges, scan progress indicator"
             ],
             "title": "Features Built"
           },
@@ -3810,19 +3810,19 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Scanner réseau temps réel — backend FastAPI + WebSocket + interface React/Vite",
         "sections": [
           {
-            "body": "Projet personnel de sécurité réseau : un scanner de réseau local full-stack capable d'identifier les hôtes actifs et les ports ouverts sur un segment LAN, de diffuser les résultats en temps réel via WebSocket, et de classifier chaque service par niveau de risque. Conçu en deux couches : un backend Python FastAPI avec threads concurrents, et un frontend React/Vite affichant les résultats en direct.",
+            "body": "J'ai construit ce projet personnel de sécurité réseau : un scanner de réseau local full-stack capable d'identifier les hôtes actifs et les ports ouverts sur un segment LAN, de diffuser les résultats en temps réel via WebSocket, et de classifier chaque service par niveau de risque. Je l'ai conçu en deux couches : un backend Python FastAPI avec threads concurrents, et un frontend React/Vite affichant les résultats en direct.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Découverte d'hôtes : résolution du sous-réseau local et ping de chaque IP pour lister les hôtes actifs",
-              "Scan de ports concurrent via ThreadPoolExecutor — tous les top ports scannés en parallèle par hôte",
-              "Table de détection de 45 services connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
-              "Classification des risques (élevé / moyen / faible) par port via RISK_MAP (Telnet, RDP, BDD exposées...)",
-              "Streaming WebSocket en temps réel — résultats envoyés au frontend dès que chaque hôte termine",
-              "Frontend React/Vite : cartes d'hôtes en live, badges de ports colorés par risque, indicateur de progression"
+              "J'ai développé la découverte d'hôtes : résolution du sous-réseau local et ping de chaque IP pour lister les hôtes actifs",
+              "J'ai implémenté le scan de ports concurrent via ThreadPoolExecutor — tous les top ports scannés en parallèle par hôte",
+              "J'ai construit une table de détection de 45 services connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
+              "J'ai implémenté la classification des risques (élevé / moyen / faible) par port via RISK_MAP (Telnet, RDP, BDD exposées...)",
+              "J'ai mis en place le streaming WebSocket en temps réel — résultats envoyés au frontend dès que chaque hôte termine",
+              "J'ai développé le frontend React/Vite : cartes d'hôtes en live, badges de ports colorés par risque, indicateur de progression"
             ],
             "title": "Fonctionnalités développées"
           },
@@ -3905,19 +3905,19 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Un escáner de red local full-stack realizado como proyecto personal de seguridad. El objetivo era producir una herramienta capaz de identificar los hosts activos y los puertos abiertos en un segmento LAN, transmitir los resultados en tiempo real y clasificar cada servicio por nivel de riesgo.",
-              "El proyecto se compone de dos capas: un backend Python FastAPI que realiza el escaneo real con hilos concurrentes, y un frontend React/Vite que se conecta vía WebSocket y muestra los resultados en directo."
+              "Construí este escáner de red local full-stack como proyecto personal de seguridad. Mi objetivo era producir una herramienta capaz de identificar los hosts activos y los puertos abiertos en un segmento LAN, transmitir los resultados en tiempo real y clasificar cada servicio por nivel de riesgo.",
+              "Lo diseñé en dos capas: un backend Python FastAPI que realiza el escaneo real con hilos concurrentes, y un frontend React/Vite que se conecta vía WebSocket y muestra los resultados en directo."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Backend FastAPI con un endpoint WebSocket que transmite los resultados a medida que se obtienen — sin polling ni recarga de página.",
-              "Escáner de puertos concurrente mediante ThreadPoolExecutor: recorre todos los puertos principales de una subred en paralelo, y luego agrega los resultados por host.",
-              "Tabla de detección de servicios que cubre 45 puertos conocidos (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
-              "Clasificación de riesgo (alto / medio / bajo) por puerto abierto basada en un RISK_MAP curado (Telnet, RDP, listener de Metasploit, bases de datos expuestas…).",
-              "API REST con CORS habilitado en paralelo al endpoint WebSocket para facilitar la integración.",
-              "Frontend React/Vite con tarjetas de host actualizadas en tiempo real, badges de puertos coloreados por riesgo e indicador de progreso del escaneo."
+              "Construí un backend FastAPI con un endpoint WebSocket que transmite los resultados a medida que se obtienen — sin polling ni recarga de página.",
+              "Implementé un escáner de puertos concurrente mediante ThreadPoolExecutor: recorre todos los puertos principales de una subred en paralelo, y luego agrega los resultados por host.",
+              "Construí una tabla de detección de servicios que cubre 45 puertos conocidos (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
+              "Implementé una clasificación de riesgo (alto / medio / bajo) por puerto abierto basada en un RISK_MAP curado (Telnet, RDP, listener de Metasploit, bases de datos expuestas…).",
+              "Añadí una API REST con CORS habilitado en paralelo al endpoint WebSocket para facilitar la integración.",
+              "Construí un frontend React/Vite con tarjetas de host actualizadas en tiempo real, badges de puertos coloreados por riesgo e indicador de progreso del escaneo."
             ],
             "title": "Lo que construí"
           },
@@ -4001,19 +4001,19 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Password strength analyzer — entropy, regex, HaveIBeenPwned (Python CLI)",
         "sections": [
           {
-            "body": "Personal security-focused CLI tool: rigorously evaluates password strength without ever transmitting the password in plain text. Built to explore Python's regex engine, entropy mathematics, and privacy-preserving API design (HaveIBeenPwned k-anonymity). Runs interactively in the terminal and produces a full structured report in one pass.",
+            "body": "I built this personal security-focused CLI tool: it rigorously evaluates password strength without ever transmitting the password in plain text. I built it to explore Python's regex engine, entropy mathematics, and privacy-preserving API design (HaveIBeenPwned k-anonymity). It runs interactively in the terminal and produces a full structured report in one pass.",
             "type": "text",
             "title": "Context"
           },
           {
             "type": "bullets",
             "items": [
-              "Entropy calculation: log₂(pool^length) character-pool-aware — composite 0–100 score",
-              "6 compiled regex rules: repeated chars, numeric/alphabetic sequences, keyboard walks (qwerty/azerty), embedded years",
-              "Dictionary matching against 30+ common passwords and base words",
-              "Crack-time estimation at 3 attack speeds (10k/s, 1M/s, 1B/s)",
-              "HaveIBeenPwned integration via k-anonymity: only the first 5 SHA-1 chars sent to the API — the password never leaves the machine",
-              "ANSI-colored terminal output with progress bar, per-criterion checklist and improvement suggestions"
+              "I implemented entropy calculation: log₂(pool^length) character-pool-aware — composite 0–100 score",
+              "I compiled 6 regex rules: repeated chars, numeric/alphabetic sequences, keyboard walks (qwerty/azerty), embedded years",
+              "I added dictionary matching against 30+ common passwords and base words",
+              "I built crack-time estimation at 3 attack speeds (10k/s, 1M/s, 1B/s)",
+              "I integrated HaveIBeenPwned via k-anonymity: only the first 5 SHA-1 chars sent to the API — the password never leaves the machine",
+              "I built ANSI-colored terminal output with a progress bar, per-criterion checklist, and improvement suggestions"
             ],
             "title": "Features Built"
           },
@@ -4093,19 +4093,19 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Analyseur de force de mot de passe — entropie, regex, HaveIBeenPwned (CLI Python)",
         "sections": [
           {
-            "body": "Outil CLI personnel centré sur la sécurité : évalue rigoureusement la force d'un mot de passe sans jamais le transmettre en clair. Conçu pour explorer le moteur regex de Python, le calcul d'entropie et la conception d'API respectueuses de la vie privée (k-anonymat HaveIBeenPwned). L outil fonctionne en mode interactif dans le terminal et produit un rapport structuré complet en une seule passe.",
+            "body": "J'ai construit cet outil CLI personnel centré sur la sécurité : il évalue rigoureusement la force d'un mot de passe sans jamais le transmettre en clair. Je l'ai conçu pour explorer le moteur regex de Python, le calcul d'entropie et la conception d'API respectueuses de la vie privée (k-anonymat HaveIBeenPwned). L'outil fonctionne en mode interactif dans le terminal et produit un rapport structuré complet en une seule passe.",
             "type": "text",
             "title": "Contexte"
           },
           {
             "type": "bullets",
             "items": [
-              "Calcul d'entropie : log₂(pool^longueur) adapté au pool de caractères — score composite 0-100",
-              "6 règles regex compilées : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées",
-              "Correspondance dictionnaire : 30+ mots de passe courants et mots de base",
-              "Estimation du temps de crack à 3 vitesses d'attaque (10k/s, 1M/s, 1 milliard/s)",
-              "Intégration HaveIBeenPwned par k-anonymat : seuls les 5 premiers caractères du hash SHA-1 envoyés — le mot de passe ne quitte jamais la machine",
-              "Sortie terminal ANSI colorée avec barre de progression, checklist par critère et suggestions d'amélioration"
+              "J'ai implémenté le calcul d'entropie : log₂(pool^longueur) adapté au pool de caractères — score composite 0-100",
+              "J'ai compilé 6 règles regex : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées",
+              "J'ai ajouté une correspondance dictionnaire : 30+ mots de passe courants et mots de base",
+              "J'ai construit l'estimation du temps de crack à 3 vitesses d'attaque (10k/s, 1M/s, 1 milliard/s)",
+              "J'ai intégré HaveIBeenPwned par k-anonymat : seuls les 5 premiers caractères du hash SHA-1 envoyés — le mot de passe ne quitte jamais la machine",
+              "J'ai construit une sortie terminal ANSI colorée avec barre de progression, checklist par critère et suggestions d'amélioration"
             ],
             "title": "Fonctionnalités développées"
           },
@@ -4188,19 +4188,19 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Una herramienta de línea de comandos que evalúa rigurosamente la fortaleza de una contraseña sin transmitirla nunca en texto plano. Proyecto personal centrado en la seguridad para explorar el motor de regex de Python, el cálculo de entropía y el diseño de APIs respetuosas con la privacidad.",
+              "Construí esta herramienta de línea de comandos que evalúa rigurosamente la fortaleza de una contraseña sin transmitirla nunca en texto plano. Es un proyecto personal centrado en la seguridad, pensado para explorar el motor de regex de Python, el cálculo de entropía y el diseño de APIs respetuosas con la privacidad.",
               "La herramienta funciona en modo interactivo en la terminal, enmascara la entrada y produce un informe estructurado completo en una sola pasada."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Cálculo de entropía basado en el tamaño del conjunto de caracteres y la longitud de la contraseña (bits), con una puntuación compuesta de 0 a 100.",
-              "Detección de patrones mediante regex: caracteres repetidos, secuencias numéricas/alfabéticas, patrones de teclado (qwerty/azerty), años incluidos, largas series numéricas.",
-              "Comparación con un diccionario de 30+ contraseñas comunes.",
-              "Estimación del tiempo de crackeo a tres velocidades de ataque (10k/s, 1M/s, 1.000M/s) mediante la fórmula del espacio de búsqueda.",
-              "Integración con HaveIBeenPwned mediante k-anonimato: solo se envían a la API los 5 primeros caracteres del hash SHA-1 — la contraseña nunca sale de la máquina.",
-              "Salida de terminal coloreada con ANSI, barra de progreso, checklist por criterio y sugerencias de mejora accionables."
+              "Implementé un cálculo de entropía basado en el tamaño del conjunto de caracteres y la longitud de la contraseña (bits), con una puntuación compuesta de 0 a 100.",
+              "Construí una detección de patrones mediante regex: caracteres repetidos, secuencias numéricas/alfabéticas, patrones de teclado (qwerty/azerty), años incluidos, largas series numéricas.",
+              "Añadí una comparación con un diccionario de 30+ contraseñas comunes.",
+              "Implementé una estimación del tiempo de crackeo a tres velocidades de ataque (10k/s, 1M/s, 1.000M/s) mediante la fórmula del espacio de búsqueda.",
+              "Integré HaveIBeenPwned mediante k-anonimato: solo envío a la API los 5 primeros caracteres del hash SHA-1 — la contraseña nunca sale de la máquina.",
+              "Construí una salida de terminal coloreada con ANSI, barra de progreso, checklist por criterio y sugerencias de mejora accionables."
             ],
             "title": "Lo que construí"
           },
@@ -4261,7 +4261,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "matrice-risques rebuilds and extends risk-assessment-matrix, an open-source risk assessment project. Goal: an interactive risk register with a live Likelihood × Impact heat map (5×5), paired with a Python CLI for automation (bulk import, HTML report generation) — while fixing several blocking limitations of the original along the way."
+              "I rebuilt and extended matrice-risques from risk-assessment-matrix, an open-source risk assessment project. My goal: an interactive risk register with a live Likelihood × Impact heat map (5×5), paired with a Python CLI for automation (bulk import, HTML report generation) — while fixing several blocking limitations of the original along the way."
             ]
           },
           {
@@ -4281,12 +4281,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "No persistence, the register was lost on page reload → Persistence via localStorage, full register serialization/deserialization",
-              "README documented a flat CLI (--input, --risk) but the code required undocumented subcommands (report, eval) → CLI rewritten to match exactly what's documented",
-              "The register class's update() method was never called by the UI → Full \"Edit\" button, pre-filled form, in-place save",
-              "Likelihood/impact labels hardcoded in JS despite already existing in JSON → JS now loads categories_risques.json dynamically (single source of truth)",
-              "No automated tests → 6 pytest tests covering scoring, level boundaries, sorting, and example-data validation",
-              "Windows CLI output mis-encoded (cp1252) → sys.stdout.reconfigure(encoding=\"utf-8\") — correct accented characters in console"
+              "No persistence, the register was lost on page reload → I added persistence via localStorage, with full register serialization/deserialization",
+              "The README documented a flat CLI (--input, --risk) but the code required undocumented subcommands (report, eval) → I rewrote the CLI to match exactly what's documented",
+              "The register class's update() method was never called by the UI → I built a full \"Edit\" button, a pre-filled form, and in-place save",
+              "Likelihood/impact labels were hardcoded in JS despite already existing in JSON → I made the JS load categories_risques.json dynamically (single source of truth)",
+              "No automated tests → I wrote 6 pytest tests covering scoring, level boundaries, sorting, and example-data validation",
+              "Windows CLI output was mis-encoded (cp1252) → I fixed it with sys.stdout.reconfigure(encoding=\"utf-8\") — correct accented characters in console"
             ],
             "title": "What was fixed vs. the original"
           },
@@ -4362,7 +4362,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "matrice-risques reconstruit et enrichit risk-assessment-matrix, un projet open source d'évaluation des risques. Objectif : un registre de risques interactif avec matrice de chaleur Probabilité × Impact (5×5) en direct, assorti d'une CLI Python pour l'automatisation (import en masse, génération de rapport HTML) — et corriger au passage plusieurs limites bloquantes de l'original."
+              "J'ai reconstruit et enrichi matrice-risques à partir de risk-assessment-matrix, un projet open source d'évaluation des risques. Mon objectif : un registre de risques interactif avec matrice de chaleur Probabilité × Impact (5×5) en direct, assorti d'une CLI Python pour l'automatisation (import en masse, génération de rapport HTML) — et corriger au passage plusieurs limites bloquantes de l'original."
             ]
           },
           {
@@ -4382,12 +4382,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Aucune persistance, le registre était perdu au rechargement de la page → Persistance via localStorage, sérialisation/désérialisation du registre complet",
-              "Le README documentait une CLI à plat (--input, --risk) mais le code exigeait des sous-commandes non documentées (report, eval) → CLI réécrite pour correspondre exactement à ce qui est documenté",
-              "La méthode update() de la classe de registre n'était jamais appelée par l'interface → Bouton « Modifier » complet, formulaire pré-rempli, sauvegarde en place",
-              "Libellés probabilité/impact codés en dur en JS alors qu'ils existaient déjà en JSON → Le JS charge désormais dynamiquement categories_risques.json (source unique)",
-              "Aucun test automatisé → 6 tests pytest sur le scoring, les bornes de niveaux, le tri et la validation des données d'exemple",
-              "Sortie CLI Windows mal encodée (cp1252) → sys.stdout.reconfigure(encoding=\"utf-8\") — accents corrects en console"
+              "Aucune persistance, le registre était perdu au rechargement de la page → j'ai ajouté la persistance via localStorage, avec sérialisation/désérialisation complète du registre",
+              "Le README documentait une CLI à plat (--input, --risk) mais le code exigeait des sous-commandes non documentées (report, eval) → j'ai réécrit la CLI pour correspondre exactement à ce qui est documenté",
+              "La méthode update() de la classe de registre n'était jamais appelée par l'interface → j'ai construit un bouton « Modifier » complet, un formulaire pré-rempli et une sauvegarde en place",
+              "Les libellés probabilité/impact étaient codés en dur en JS alors qu'ils existaient déjà en JSON → j'ai fait en sorte que le JS charge dynamiquement categories_risques.json (source unique)",
+              "Aucun test automatisé → j'ai écrit 6 tests pytest sur le scoring, les bornes de niveaux, le tri et la validation des données d'exemple",
+              "La sortie CLI Windows était mal encodée (cp1252) → j'ai corrigé cela avec sys.stdout.reconfigure(encoding=\"utf-8\") — accents corrects en console"
             ],
             "title": "Ce qui a été corrigé par rapport à l'original"
           },
@@ -4463,7 +4463,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "matrice-risques reconstruye y amplía risk-assessment-matrix, un proyecto open source de evaluación de riesgos. Objetivo: un registro de riesgos interactivo con un mapa de calor Probabilidad × Impacto (5×5) en vivo, junto con una CLI de Python para automatización (importación masiva, generación de informes HTML) — corrigiendo de paso varias limitaciones bloqueantes del original."
+              "Reconstruí y amplié matrice-risques a partir de risk-assessment-matrix, un proyecto open source de evaluación de riesgos. Mi objetivo: un registro de riesgos interactivo con un mapa de calor Probabilidad × Impacto (5×5) en vivo, junto con una CLI de Python para automatización (importación masiva, generación de informes HTML) — corrigiendo de paso varias limitaciones bloqueantes del original."
             ]
           },
           {
@@ -4483,12 +4483,12 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Sin persistencia, el registro se perdía al recargar la página → Persistencia mediante localStorage, serialización/deserialización completa del registro",
-              "El README documentaba una CLI plana (--input, --risk) pero el código exigía subcomandos no documentados (report, eval) → CLI reescrita para coincidir exactamente con lo documentado",
-              "El método update() de la clase de registro nunca era llamado por la interfaz → Botón «Modificar» completo, formulario precargado, guardado en línea",
-              "Etiquetas de probabilidad/impacto codificadas en JS aunque ya existían en JSON → El JS carga dinámicamente categories_risques.json (fuente única)",
-              "Sin tests automatizados → 6 tests pytest sobre la puntuación, los límites de nivel, el ordenamiento y la validación de datos de ejemplo",
-              "Salida de la CLI de Windows mal codificada (cp1252) → sys.stdout.reconfigure(encoding=\"utf-8\") — acentos correctos en consola"
+              "Sin persistencia, el registro se perdía al recargar la página → añadí persistencia mediante localStorage, con serialización/deserialización completa del registro",
+              "El README documentaba una CLI plana (--input, --risk) pero el código exigía subcomandos no documentados (report, eval) → reescribí la CLI para que coincidiera exactamente con lo documentado",
+              "El método update() de la clase de registro nunca era llamado por la interfaz → construí un botón «Modificar» completo, un formulario precargado y guardado en línea",
+              "Las etiquetas de probabilidad/impacto estaban codificadas en JS aunque ya existían en JSON → hice que el JS cargara dinámicamente categories_risques.json (fuente única)",
+              "Sin tests automatizados → escribí 6 tests pytest sobre la puntuación, los límites de nivel, el ordenamiento y la validación de datos de ejemplo",
+              "La salida de la CLI de Windows estaba mal codificada (cp1252) → lo corregí con sys.stdout.reconfigure(encoding=\"utf-8\") — acentos correctos en consola"
             ],
             "title": "Qué se corrigió respecto al original"
           },
@@ -4575,17 +4575,17 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "Built as the first project in a 4-project security portfolio, exploring what a unified SOC triage view could look like: severity-ranked events, live updates, and the KPIs a team lead actually watches."
+              "I built this as the first project in a 4-project security portfolio, exploring what a unified SOC triage view could look like: severity-ranked events, live updates, and the KPIs a team lead actually watches."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "FastAPI backend with a WebSocket hub broadcasting new events to every connected client",
-              "SQLite persistence via SQLAlchemy, replacing an initial in-memory prototype",
-              "API-key-protected ingestion endpoint — reading stays open, writing requires trust",
-              "React/TypeScript frontend with a custom useLiveEvents hook managing fetch + WebSocket state",
-              "Pytest suite covering the events and metrics endpoints"
+              "I built a FastAPI backend with a WebSocket hub broadcasting new events to every connected client",
+              "I added SQLite persistence via SQLAlchemy, replacing an initial in-memory prototype",
+              "I protected the ingestion endpoint with an API key — reading stays open, writing requires trust",
+              "I built a React/TypeScript frontend with a custom useLiveEvents hook managing fetch + WebSocket state",
+              "I wrote a Pytest suite covering the events and metrics endpoints"
             ],
             "title": "What I built"
           },
@@ -4620,17 +4620,17 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Construit comme premier projet d'un portfolio sécurité de 4 projets, explorant à quoi pourrait ressembler une vue de triage SOC unifiée : événements classés par sévérité, mises à jour en direct, et les indicateurs qu'un responsable d'équipe surveille réellement."
+              "Je l'ai construit comme premier projet d'un portfolio sécurité de 4 projets, en explorant à quoi pourrait ressembler une vue de triage SOC unifiée : événements classés par sévérité, mises à jour en direct, et les indicateurs qu'un responsable d'équipe surveille réellement."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Backend FastAPI avec un hub WebSocket diffusant les nouveaux événements à tous les clients connectés",
-              "Persistance SQLite via SQLAlchemy, remplaçant un prototype initial en mémoire",
-              "Endpoint d'ingestion protégé par clé API — la lecture reste ouverte, l'écriture demande une clé",
-              "Frontend React/TypeScript avec un hook useLiveEvents personnalisé gérant le fetch + l'état WebSocket",
-              "Suite Pytest couvrant les endpoints events et metrics"
+              "J'ai construit un backend FastAPI avec un hub WebSocket diffusant les nouveaux événements à tous les clients connectés",
+              "J'ai ajouté une persistance SQLite via SQLAlchemy, en remplacement d'un prototype initial en mémoire",
+              "J'ai protégé l'endpoint d'ingestion par une clé API — la lecture reste ouverte, l'écriture demande une clé",
+              "J'ai construit un frontend React/TypeScript avec un hook useLiveEvents personnalisé gérant le fetch et l'état WebSocket",
+              "J'ai écrit une suite Pytest couvrant les endpoints events et metrics"
             ],
             "title": "Ce que j'ai construit"
           },
@@ -4665,17 +4665,17 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Construido como primer proyecto de un portafolio de seguridad de 4 proyectos, explorando cómo podría ser una vista de triaje SOC unificada: eventos clasificados por severidad, actualizaciones en vivo, y los indicadores que un responsable de equipo realmente vigila."
+              "Lo construí como primer proyecto de un portafolio de seguridad de 4 proyectos, explorando cómo podría ser una vista de triaje SOC unificada: eventos clasificados por severidad, actualizaciones en vivo, y los indicadores que un responsable de equipo realmente vigila."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Backend FastAPI con un hub WebSocket que transmite los nuevos eventos a todos los clientes conectados",
-              "Persistencia SQLite vía SQLAlchemy, sustituyendo un prototipo inicial en memoria",
-              "Endpoint de ingesta protegido por clave API — la lectura permanece abierta, la escritura requiere confianza",
-              "Frontend React/TypeScript con un hook useLiveEvents personalizado que gestiona el fetch + el estado WebSocket",
-              "Suite Pytest que cubre los endpoints de eventos y métricas"
+              "Construí un backend FastAPI con un hub WebSocket que transmite los nuevos eventos a todos los clientes conectados",
+              "Añadí persistencia SQLite vía SQLAlchemy, sustituyendo un prototipo inicial en memoria",
+              "Protegí el endpoint de ingesta con una clave API — la lectura permanece abierta, la escritura requiere confianza",
+              "Construí un frontend React/TypeScript con un hook useLiveEvents personalizado que gestiona el fetch y el estado WebSocket",
+              "Escribí una suite Pytest que cubre los endpoints de eventos y métricas"
             ],
             "title": "Lo que construí"
           },
@@ -4712,7 +4712,7 @@ export const projectDetails: ProjectDetails[] = [
         "title": "Second Brain 2.0 — Claude Code + Notion",
         "sections": [
           {
-            "body": "LLMs lose all context between sessions: every conversation starts from scratch. Meanwhile, hundreds of Notion notes sit unused because the AI never reads them. The idea: build a persistent memory architecture where Claude Code reads structured Markdown files at the start of each session, and automatically enriches them at the end.",
+            "body": "LLMs lose all context between sessions: every conversation starts from scratch. Meanwhile, hundreds of my Notion notes sit unused because the AI never reads them. My idea: build a persistent memory architecture where Claude Code reads structured Markdown files at the start of each session, and automatically enriches them at the end.",
             "type": "text",
             "title": "Context"
           },
@@ -4729,11 +4729,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Structured Markdown memory files (YAML frontmatter) in the .claude/projects/ folder",
-              "Automatic loading at startup via CLAUDE.md and memory index",
-              "Post-session enrichment: new decisions, projects, technical context added",
-              "Notion MCP integration for bidirectional sync with the knowledge base",
-              "Segmented memory: user profile, active projects, tech stack, preferences"
+              "I built structured Markdown memory files (YAML frontmatter) in the .claude/projects/ folder",
+              "I set up automatic loading at startup via CLAUDE.md and a memory index",
+              "I implemented post-session enrichment: new decisions, projects, and technical context added automatically",
+              "I integrated the Notion MCP server for bidirectional sync with my knowledge base",
+              "I segmented memory into user profile, active projects, tech stack, and preferences"
             ],
             "title": "Solution & Deliverables"
           },
@@ -4753,7 +4753,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "V1 — File memories",
-                "description": "User profile and project index as local Markdown files, active"
+                "description": "I built the user profile and project index as local Markdown files, now active"
               },
               {
                 "label": "V2 — Auto enrichment",
@@ -4761,7 +4761,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "V3 — Notion sync",
-                "description": "MCP Notion connection for bidirectional read/write"
+                "description": "I connected an MCP Notion integration for bidirectional read/write"
               },
               {
                 "label": "V4 — Multi-agent",
@@ -4797,7 +4797,7 @@ export const projectDetails: ProjectDetails[] = [
         "title": "Second Brain 2.0 — Claude Code + Notion",
         "sections": [
           {
-            "body": "Les LLMs perdent tout contexte entre les sessions : chaque conversation repart de zéro. Parallèlement, des centaines de notes Notion restent inexploitées car jamais lues par l'IA. L'idée : créer une architecture de mémoire persistante où Claude Code lit des fichiers Markdown structurés au démarrage de chaque session, et les enrichit automatiquement à la fin.",
+            "body": "Les LLMs perdent tout contexte entre les sessions : chaque conversation repart de zéro. Parallèlement, des centaines de mes notes Notion restent inexploitées car jamais lues par l'IA. Mon idée : créer une architecture de mémoire persistante où Claude Code lit des fichiers Markdown structurés au démarrage de chaque session, et les enrichit automatiquement à la fin.",
             "type": "text",
             "title": "Contexte"
           },
@@ -4814,11 +4814,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Fichiers mémoire Markdown structurés (YAML frontmatter) dans le dossier .claude/projects/",
-              "Lecture automatique au démarrage via CLAUDE.md et memory index",
-              "Enrichissement post-session : nouvelles décisions, projets, contexte technique ajoutés",
-              "Intégration Notion MCP pour sync bidirectionnelle avec la base de connaissance",
-              "Mémoire segmentée : profil utilisateur, projets actifs, stack technique, préférences"
+              "J'ai créé des fichiers mémoire Markdown structurés (YAML frontmatter) dans le dossier .claude/projects/",
+              "J'ai mis en place le chargement automatique au démarrage via CLAUDE.md et un memory index",
+              "J'ai implémenté l'enrichissement post-session : nouvelles décisions, projets et contexte technique ajoutés automatiquement",
+              "J'ai intégré le serveur Notion MCP pour une synchronisation bidirectionnelle avec ma base de connaissance",
+              "J'ai segmenté la mémoire en profil utilisateur, projets actifs, stack technique et préférences"
             ],
             "title": "Solution & Livrables"
           },
@@ -4838,7 +4838,7 @@ export const projectDetails: ProjectDetails[] = [
             "steps": [
               {
                 "label": "V1 — Mémoires fichiers",
-                "description": "Profil utilisateur et index projets en fichiers Markdown locaux, actifs"
+                "description": "J'ai mis en place le profil utilisateur et l'index projets en fichiers Markdown locaux, actifs"
               },
               {
                 "label": "V2 — Enrichissement auto",
@@ -4846,7 +4846,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "V3 — Sync Notion",
-                "description": "Connexion MCP Notion pour lecture/écriture bidirectionnelle"
+                "description": "J'ai connecté une intégration MCP Notion pour la lecture/écriture bidirectionnelle"
               },
               {
                 "label": "V4 — Multi-agent",
@@ -8437,7 +8437,7 @@ export const projectDetails: ProjectDetails[] = [
         "title": "Cyber Curriculum — 70 SOC Projects",
         "sections": [
           {
-            "body": "Theoretical cybersecurity training is no longer enough: recruiters and SOCs look for analysts who can demonstrate documented practical experience. This curriculum aims to build a portfolio of 70 hands-on projects covering all SOC Tier 1 to 3 competencies, from network monitoring to advanced threat hunting.",
+            "body": "Theoretical cybersecurity training is no longer enough: recruiters and SOCs look for analysts who can demonstrate documented practical experience. I'm building this curriculum to create a portfolio of 70 hands-on projects covering all SOC Tier 1 to 3 competencies, from network monitoring to advanced threat hunting.",
             "type": "text",
             "title": "Context"
           },
@@ -8454,11 +8454,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "70 documented projects covering: SIEM (Splunk, Elastic, Wazuh), network (Wireshark, Zeek), forensics (Autopsy, Volatility), threat hunting and red team basics",
-              "Detailed writeup for each project: context, methodology, tools, results",
-              "Personal virtual lab: attack VMs (Kali) and defensive (Ubuntu SOC) on VMware",
-              "Python automation scripts: log parsers, SIEM alerts, IOC extractors",
-              "Progressive publication on GitHub and portfolio website"
+              "I'm documenting 70 projects covering: SIEM (Splunk, Elastic, Wazuh), network (Wireshark, Zeek), forensics (Autopsy, Volatility), threat hunting and red team basics",
+              "I'm writing a detailed writeup for each project: context, methodology, tools, results",
+              "I built a personal virtual lab: attack VMs (Kali) and defensive (Ubuntu SOC) on VMware",
+              "I'm writing Python automation scripts: log parsers, SIEM alerts, IOC extractors",
+              "I'm publishing progressively on GitHub and my portfolio website"
             ],
             "title": "Solution & Deliverables"
           },
@@ -8527,7 +8527,7 @@ export const projectDetails: ProjectDetails[] = [
         "title": "Curriculum Cyber — 70 Projets SOC",
         "sections": [
           {
-            "body": "Les formations cybersécurité théoriques ne suffisent plus : les recruteurs et les SOC cherchent des analystes capables de démontrer une expérience pratique documentée. Ce curriculum vise à construire un portfolio de 70 projets hands-on couvrant l'ensemble des compétences SOC Tier 1 à 3, du monitoring réseau au threat hunting avancé.",
+            "body": "Les formations cybersécurité théoriques ne suffisent plus : les recruteurs et les SOC cherchent des analystes capables de démontrer une expérience pratique documentée. Je construis ce curriculum pour bâtir un portfolio de 70 projets hands-on couvrant l'ensemble des compétences SOC Tier 1 à 3, du monitoring réseau au threat hunting avancé.",
             "type": "text",
             "title": "Contexte"
           },
@@ -8544,11 +8544,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "70 projets documentés couvrant : SIEM (Splunk, Elastic, Wazuh), réseau (Wireshark, Zeek), forensics (Autopsy, Volatility), threat hunting et bases red team",
-              "Writeups détaillés pour chaque projet : contexte, méthodologie, outils, résultats",
-              "Lab virtuel personnel : VMs attaquantes (Kali) et défensives (Ubuntu SOC) sur VMware",
-              "Scripts Python d'automatisation : parsers de logs, alertes SIEM, IOC extractors",
-              "Publication progressive sur GitHub et portfolio web"
+              "Je documente 70 projets couvrant : SIEM (Splunk, Elastic, Wazuh), réseau (Wireshark, Zeek), forensics (Autopsy, Volatility), threat hunting et bases red team",
+              "Je rédige un writeup détaillé pour chaque projet : contexte, méthodologie, outils, résultats",
+              "J'ai construit un lab virtuel personnel : VMs attaquantes (Kali) et défensives (Ubuntu SOC) sur VMware",
+              "J'écris des scripts Python d'automatisation : parsers de logs, alertes SIEM, IOC extractors",
+              "Je publie progressivement sur GitHub et mon portfolio web"
             ],
             "title": "Solution & Livrables"
           },
@@ -8908,11 +8908,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "A pure state_machine module defining every legal transition and per-severity SLA target, with zero I/O",
-              "FastAPI endpoints that reject illegal transitions with a 409 and the list of allowed next states",
-              "A timestamped audit timeline — every status change, comment, and assignment recorded",
-              "React master-detail dashboard with inline status transition buttons",
-              "15 Pytest tests, including pure unit tests of the state machine independent of the database"
+              "I built a pure state_machine module defining every legal transition and per-severity SLA target, with zero I/O",
+              "I added FastAPI endpoints that reject illegal transitions with a 409 and the list of allowed next states",
+              "I implemented a timestamped audit timeline — every status change, comment, and assignment recorded",
+              "I built a React master-detail dashboard with inline status transition buttons",
+              "I wrote 15 Pytest tests, including pure unit tests of the state machine independent of the database"
             ],
             "title": "What I built"
           },
@@ -8952,11 +8952,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Un module state_machine pur définissant chaque transition légale et la cible SLA par sévérité, sans aucun I/O",
-              "Des endpoints FastAPI qui rejettent les transitions illégales avec un 409 et la liste des états suivants autorisés",
-              "Une chronologie d'audit horodatée — chaque changement de statut, commentaire et assignation enregistré",
-              "Tableau de bord React maître-détail avec boutons de transition de statut intégrés",
-              "15 tests Pytest, dont des tests unitaires purs de la machine à états indépendants de la base de données"
+              "J'ai construit un module state_machine pur définissant chaque transition légale et la cible SLA par sévérité, sans aucun I/O",
+              "J'ai ajouté des endpoints FastAPI qui rejettent les transitions illégales avec un 409 et la liste des états suivants autorisés",
+              "J'ai implémenté une chronologie d'audit horodatée — chaque changement de statut, commentaire et assignation enregistré",
+              "J'ai construit un tableau de bord React maître-détail avec boutons de transition de statut intégrés",
+              "J'ai écrit 15 tests Pytest, dont des tests unitaires purs de la machine à états indépendants de la base de données"
             ],
             "title": "Ce que j'ai construit"
           },
@@ -8996,11 +8996,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Un módulo state_machine puro que define cada transición legal y el objetivo SLA por severidad, sin ningún I/O",
-              "Endpoints FastAPI que rechazan las transiciones ilegales con un 409 y la lista de estados siguientes permitidos",
-              "Una cronología de auditoría con marca de tiempo — cada cambio de estado, comentario y asignación registrado",
-              "Dashboard React maestro-detalle con botones de transición de estado integrados",
-              "15 pruebas Pytest, incluyendo pruebas unitarias puras de la máquina de estados independientes de la base de datos"
+              "Construí un módulo state_machine puro que define cada transición legal y el objetivo SLA por severidad, sin ningún I/O",
+              "Añadí endpoints FastAPI que rechazan las transiciones ilegales con un 409 y la lista de estados siguientes permitidos",
+              "Implementé una cronología de auditoría con marca de tiempo — cada cambio de estado, comentario y asignación registrado",
+              "Construí un dashboard React maestro-detalle con botones de transición de estado integrados",
+              "Escribí 15 pruebas Pytest, incluyendo pruebas unitarias puras de la máquina de estados independientes de la base de datos"
             ],
             "title": "Lo que construí"
           },
@@ -9055,11 +9055,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "httpx-based NVD API v2.0 client with response parsing for CVSS v3.1/v2 metrics",
-              "Pure scoring engine (scoring.py) combining CVSS base score, CISA KEV exploitation flag, attack vector, and recency into a 0-100 priority score",
-              "SQLAlchemy upsert logic so re-syncing updates existing CVEs instead of duplicating them",
-              "React dashboard with severity-band filters and a manual Sync from NVD action",
-              "13 Pytest tests, with the NVD client mocked so the suite never depends on live network"
+              "I built an httpx-based NVD API v2.0 client with response parsing for CVSS v3.1/v2 metrics",
+              "I wrote a pure scoring engine (scoring.py) combining CVSS base score, CISA KEV exploitation flag, attack vector, and recency into a 0-100 priority score",
+              "I implemented SQLAlchemy upsert logic so re-syncing updates existing CVEs instead of duplicating them",
+              "I built a React dashboard with severity-band filters and a manual Sync from NVD action",
+              "I wrote 13 Pytest tests, with the NVD client mocked so the suite never depends on live network"
             ],
             "title": "What I built"
           },
@@ -9099,11 +9099,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Client API NVD v2.0 basé sur httpx avec parsing des métriques CVSS v3.1/v2",
-              "Moteur de score pur (scoring.py) combinant score de base CVSS, drapeau d'exploitation CISA KEV, vecteur d'attaque et fraîcheur en un score de priorité 0-100",
-              "Logique d'upsert SQLAlchemy pour que la resynchronisation mette à jour les CVE existantes au lieu de les dupliquer",
-              "Tableau de bord React avec filtres par bande de sévérité et une action manuelle Sync from NVD",
-              "13 tests Pytest, avec le client NVD simulé pour que la suite ne dépende jamais du réseau réel"
+              "J'ai construit un client API NVD v2.0 basé sur httpx avec parsing des métriques CVSS v3.1/v2",
+              "J'ai écrit un moteur de score pur (scoring.py) combinant score de base CVSS, drapeau d'exploitation CISA KEV, vecteur d'attaque et fraîcheur en un score de priorité 0-100",
+              "J'ai implémenté une logique d'upsert SQLAlchemy pour que la resynchronisation mette à jour les CVE existantes au lieu de les dupliquer",
+              "J'ai construit un tableau de bord React avec filtres par bande de sévérité et une action manuelle Sync from NVD",
+              "J'ai écrit 13 tests Pytest, avec le client NVD simulé pour que la suite ne dépende jamais du réseau réel"
             ],
             "title": "Ce que j'ai construit"
           },
@@ -9143,11 +9143,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Cliente de la API NVD v2.0 basado en httpx con análisis de las métricas CVSS v3.1/v2",
-              "Motor de puntuación puro (scoring.py) que combina la puntuación base CVSS, el indicador de explotación CISA KEV, el vector de ataque y la actualidad en una puntuación de prioridad 0-100",
-              "Lógica de upsert en SQLAlchemy para que la resincronización actualice las CVE existentes en lugar de duplicarlas",
-              "Dashboard React con filtros por banda de severidad y una acción manual Sync from NVD",
-              "13 pruebas Pytest, con el cliente NVD simulado para que la suite nunca dependa de la red real"
+              "Construí un cliente de la API NVD v2.0 basado en httpx con análisis de las métricas CVSS v3.1/v2",
+              "Escribí un motor de puntuación puro (scoring.py) que combina la puntuación base CVSS, el indicador de explotación CISA KEV, el vector de ataque y la actualidad en una puntuación de prioridad 0-100",
+              "Implementé una lógica de upsert en SQLAlchemy para que la resincronización actualice las CVE existentes en lugar de duplicarlas",
+              "Construí un dashboard React con filtros por banda de severidad y una acción manual Sync from NVD",
+              "Escribí 13 pruebas Pytest, con el cliente NVD simulado para que la suite nunca dependa de la red real"
             ],
             "title": "Lo que construí"
           },
@@ -9202,11 +9202,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Four independent detection rules (detection.py) as pure functions: brute force, impossible travel, credential stuffing, off-hours access",
-              "A windowing + dedup layer so a sustained attack does not spam duplicate anomalies",
-              "A deterministic demo scenario, anchored to a fixed time-of-day so tests never depend on real wall-clock time",
-              "A Simulate attack traffic button replaying that scenario live from the dashboard",
-              "20 Pytest tests — all 4 rules unit-tested with plain event dicts, zero database or clock dependency"
+              "I wrote four independent detection rules (detection.py) as pure functions: brute force, impossible travel, credential stuffing, off-hours access",
+              "I built a windowing + dedup layer so a sustained attack does not spam duplicate anomalies",
+              "I designed a deterministic demo scenario, anchored to a fixed time-of-day so tests never depend on real wall-clock time",
+              "I added a Simulate attack traffic button replaying that scenario live from the dashboard",
+              "I wrote 20 Pytest tests — all 4 rules unit-tested with plain event dicts, zero database or clock dependency"
             ],
             "title": "What I built"
           },
@@ -9246,11 +9246,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Quatre règles de détection indépendantes (detection.py) sous forme de fonctions pures : force brute, voyage impossible, credential stuffing, accès hors-horaires",
-              "Une couche de fenêtrage + déduplication pour qu'une attaque soutenue ne spamme pas d'anomalies en double",
-              "Un scénario de démo déterministe, ancré à une heure fixe pour que les tests ne dépendent jamais de l'heure réelle",
-              "Un bouton Simulate attack traffic rejouant ce scénario en direct depuis le tableau de bord",
-              "20 tests Pytest — les 4 règles testées unitairement avec de simples dictionnaires d'événements, sans base de données ni dépendance à l'horloge"
+              "J'ai écrit quatre règles de détection indépendantes (detection.py) sous forme de fonctions pures : force brute, voyage impossible, credential stuffing, accès hors-horaires",
+              "J'ai construit une couche de fenêtrage + déduplication pour qu'une attaque soutenue ne spamme pas d'anomalies en double",
+              "J'ai conçu un scénario de démo déterministe, ancré à une heure fixe pour que les tests ne dépendent jamais de l'heure réelle",
+              "J'ai ajouté un bouton Simulate attack traffic rejouant ce scénario en direct depuis le tableau de bord",
+              "J'ai écrit 20 tests Pytest — les 4 règles testées unitairement avec de simples dictionnaires d'événements, sans base de données ni dépendance à l'horloge"
             ],
             "title": "Ce que j'ai construit"
           },
@@ -9290,11 +9290,11 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Cuatro reglas de detección independientes (detection.py) como funciones puras: fuerza bruta, viaje imposible, credential stuffing, acceso fuera de horario",
-              "Una capa de ventaneo + deduplicación para que un ataque sostenido no sature de anomalías duplicadas",
-              "Un escenario de demostración determinista, anclado a una hora fija para que las pruebas nunca dependan del reloj real",
-              "Un botón Simulate attack traffic que reproduce ese escenario en vivo desde el dashboard",
-              "20 pruebas Pytest — las 4 reglas probadas unitariamente con simples diccionarios de eventos, sin base de datos ni dependencia del reloj"
+              "Escribí cuatro reglas de detección independientes (detection.py) como funciones puras: fuerza bruta, viaje imposible, credential stuffing, acceso fuera de horario",
+              "Construí una capa de ventaneo + deduplicación para que un ataque sostenido no sature de anomalías duplicadas",
+              "Diseñé un escenario de demostración determinista, anclado a una hora fija para que las pruebas nunca dependan del reloj real",
+              "Añadí un botón Simulate attack traffic que reproduce ese escenario en vivo desde el dashboard",
+              "Escribí 20 pruebas Pytest — las 4 reglas probadas unitariamente con simples diccionarios de eventos, sin base de datos ni dependencia del reloj"
             ],
             "title": "Lo que construí"
           },
@@ -9331,7 +9331,7 @@ export const projectDetails: ProjectDetails[] = [
         "title": "Cosmonote Clone — AI Meeting Transcription",
         "sections": [
           {
-            "body": "Cosmonote is an AI-powered meeting transcription and summarization SaaS. This project aims to replicate its core features to deeply understand the architecture of an AI audio product: audio processing pipeline, speech-to-text transcription, LLM summarization and smooth user experience.",
+            "body": "Cosmonote is an AI-powered meeting transcription and summarization SaaS. I'm building this project to replicate its core features and deeply understand the architecture of an AI audio product: audio processing pipeline, speech-to-text transcription, LLM summarization and smooth user experience.",
             "type": "text",
             "title": "Context"
           },
@@ -9416,7 +9416,7 @@ export const projectDetails: ProjectDetails[] = [
         "title": "Clone Cosmonote — Transcription IA de Réunions",
         "sections": [
           {
-            "body": "Cosmonote est une application SaaS de transcription et résumé de réunions propulsée par IA. Ce projet vise à reproduire ses fonctionnalités principales pour comprendre en profondeur l'architecture d'un produit IA audio : pipeline audio, transcription speech-to-text, summarisation LLM et UX fluide.",
+            "body": "Cosmonote est une application SaaS de transcription et résumé de réunions propulsée par IA. Je construis ce projet pour reproduire ses fonctionnalités principales et comprendre en profondeur l'architecture d'un produit IA audio : pipeline audio, transcription speech-to-text, summarisation LLM et UX fluide.",
             "type": "text",
             "title": "Contexte"
           },
@@ -9511,7 +9511,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "This playbook builds on and extends incident-response-playbook, an open-source repository of incident response procedures. Goal: a set of structured procedures for the 6 most common cybersecurity threats, designed for SOC teams and IT admins at SMBs and mid-market companies alike — beyond theory, with documents a team can actually use."
+              "I built this playbook on top of incident-response-playbook, an open-source repository of incident response procedures. My goal: a set of structured procedures for the 6 most common cybersecurity threats, designed for SOC teams and IT admins at SMBs and mid-market companies alike — beyond theory, with documents a team can actually use."
             ]
           },
           {
@@ -9582,7 +9582,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Ce playbook reprend et enrichit incident-response-playbook, un dépôt open source de procédures de réponse aux incidents. Objectif : un ensemble de procédures structurées pour les 6 menaces de cybersécurité les plus courantes, conçu pour des équipes SOC et administrateurs IT en PME comme en ETI — au-delà de la théorie, avec des documents directement utilisables par une équipe."
+              "J'ai construit ce playbook à partir de incident-response-playbook, un dépôt open source de procédures de réponse aux incidents. Mon objectif : un ensemble de procédures structurées pour les 6 menaces de cybersécurité les plus courantes, conçu pour des équipes SOC et administrateurs IT en PME comme en ETI — au-delà de la théorie, avec des documents directement utilisables par une équipe."
             ]
           },
           {
@@ -9653,7 +9653,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Este playbook retoma y amplía incident-response-playbook, un repositorio open source de procedimientos de respuesta a incidentes. Objetivo: un conjunto de procedimientos estructurados para las 6 amenazas de ciberseguridad más comunes, diseñado para equipos SOC y administradores IT tanto en pymes como en empresas medianas — más allá de la teoría, con documentos que un equipo puede usar directamente."
+              "Construí este playbook a partir de incident-response-playbook, un repositorio open source de procedimientos de respuesta a incidentes. Mi objetivo: un conjunto de procedimientos estructurados para las 6 amenazas de ciberseguridad más comunes, diseñado para equipos SOC y administradores IT tanto en pymes como en empresas medianas — más allá de la teoría, con documentos que un equipo puede usar directamente."
             ]
           },
           {
@@ -9729,7 +9729,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "risque360 extends matrice-risques (itself a French rebuild of the open-source risk-assessment-matrix project): a classic risk register poorly captures threats specific to an application's architecture, risks carried by vendors/third parties, and how a history of incidents should shift a probability declared \"in the abstract\". risque360 brings these three angles together in a single register, with a data-driven probability recalibration mechanism — the most differentiating part of the project."
+              "I built risque360 to extend matrice-risques (itself a French rebuild of the open-source risk-assessment-matrix project): a classic risk register poorly captures threats specific to an application's architecture, risks carried by vendors/third parties, and how a history of incidents should shift a probability declared \"in the abstract\". I brought these three angles together in a single register, with a data-driven probability recalibration mechanism — the most differentiating part of the project."
             ]
           },
           {
@@ -9794,7 +9794,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Bug found and fixed during development",
             "paragraphs": [
-              "Automatic correlation-key generation (from a vendor name or a STRIDE component) didn't strip punctuation — for example \"PayGateway Inc.\" generated the vendor key fournisseur-paygateway-inc. with a trailing period, which would have silently broken the link to incidents logged under that same key. Fixed with a shared slugifier() function that strips diacritics and punctuation before generating the key, verified with a direct isolated-module test (cache-busting import) to rule out any ES module caching effect during debugging."
+              "Automatic correlation-key generation (from a vendor name or a STRIDE component) didn't strip punctuation — for example \"PayGateway Inc.\" generated the vendor key fournisseur-paygateway-inc. with a trailing period, which would have silently broken the link to incidents logged under that same key. I fixed it with a shared slugifier() function that strips diacritics and punctuation before generating the key, and verified the fix with a direct isolated-module test (cache-busting import) to rule out any ES module caching effect during debugging."
             ]
           },
           {
@@ -9828,7 +9828,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "risque360 étend matrice-risques (elle-même une reconstruction française du projet open source risk-assessment-matrix) : un registre de risques classique capture mal les menaces propres à une architecture applicative, les risques portés par les fournisseurs/tiers, et la façon dont un historique d'incidents devrait faire évoluer une probabilité déclarée « à froid ». risque360 réunit ces trois angles dans un registre unique, avec un mécanisme de recalibration de probabilité piloté par les données — la partie la plus différenciante du projet."
+              "J'ai construit risque360 pour étendre matrice-risques (elle-même une reconstruction française du projet open source risk-assessment-matrix) : un registre de risques classique capture mal les menaces propres à une architecture applicative, les risques portés par les fournisseurs/tiers, et la façon dont un historique d'incidents devrait faire évoluer une probabilité déclarée « à froid ». J'ai réuni ces trois angles dans un registre unique, avec un mécanisme de recalibration de probabilité piloté par les données — la partie la plus différenciante du projet."
             ]
           },
           {
@@ -9893,7 +9893,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Bug détecté et corrigé pendant le développement",
             "paragraphs": [
-              "La génération automatique de clé de corrélation (à partir du nom d'un fournisseur ou d'un composant STRIDE) ne retirait pas la ponctuation — par exemple « PayGateway Inc. » générait la clé fournisseur-paygateway-inc. avec un point final, ce qui aurait cassé silencieusement le lien avec les incidents journalisés partageant cette clé. Corrigé par une fonction slugifier() partagée qui retire diacritiques et ponctuation avant de générer la clé, vérifiée par un test direct du module en isolation (import avec cache-busting) pour écarter tout effet de cache de module ES pendant le débogage."
+              "La génération automatique de clé de corrélation (à partir du nom d'un fournisseur ou d'un composant STRIDE) ne retirait pas la ponctuation — par exemple « PayGateway Inc. » générait la clé fournisseur-paygateway-inc. avec un point final, ce qui aurait cassé silencieusement le lien avec les incidents journalisés partageant cette clé. Je l'ai corrigé avec une fonction slugifier() partagée qui retire diacritiques et ponctuation avant de générer la clé, et j'ai vérifié le correctif par un test direct du module en isolation (import avec cache-busting) pour écarter tout effet de cache de module ES pendant le débogage."
             ]
           },
           {
@@ -9927,7 +9927,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "risque360 amplía matrice-risques (a su vez una reconstrucción francesa del proyecto open source risk-assessment-matrix): un registro de riesgos clásico capta mal las amenazas propias de una arquitectura de aplicación, los riesgos que aportan los proveedores/terceros, y cómo un historial de incidentes debería modificar una probabilidad declarada «en frío». risque360 reúne estos tres ángulos en un único registro, con un mecanismo de recalibración de probabilidad impulsado por datos — la parte más diferenciadora del proyecto."
+              "Construí risque360 para ampliar matrice-risques (a su vez una reconstrucción francesa del proyecto open source risk-assessment-matrix): un registro de riesgos clásico capta mal las amenazas propias de una arquitectura de aplicación, los riesgos que aportan los proveedores/terceros, y cómo un historial de incidentes debería modificar una probabilidad declarada «en frío». Reuní estos tres ángulos en un único registro, con un mecanismo de recalibración de probabilidad impulsado por datos — la parte más diferenciadora del proyecto."
             ]
           },
           {
@@ -9992,7 +9992,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Error detectado y corregido durante el desarrollo",
             "paragraphs": [
-              "La generación automática de la clave de correlación (a partir del nombre de un proveedor o un componente STRIDE) no eliminaba la puntuación — por ejemplo, «PayGateway Inc.» generaba la clave fournisseur-paygateway-inc. con un punto final, lo que habría roto silenciosamente el enlace con los incidentes registrados bajo esa misma clave. Corregido con una función slugifier() compartida que elimina diacríticos y puntuación antes de generar la clave, verificada con una prueba directa del módulo en aislamiento (importación con cache-busting) para descartar cualquier efecto de caché de módulos ES durante la depuración."
+              "La generación automática de la clave de correlación (a partir del nombre de un proveedor o un componente STRIDE) no eliminaba la puntuación — por ejemplo, «PayGateway Inc.» generaba la clave fournisseur-paygateway-inc. con un punto final, lo que habría roto silenciosamente el enlace con los incidentes registrados bajo esa misma clave. Lo corregí con una función slugifier() compartida que elimina diacríticos y puntuación antes de generar la clave, y verifiqué la corrección con una prueba directa del módulo en aislamiento (importación con cache-busting) para descartar cualquier efecto de caché de módulos ES durante la depuración."
             ]
           },
           {
