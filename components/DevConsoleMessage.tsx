@@ -30,7 +30,8 @@ export default function DevConsoleMessage() {
       process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact via the form on the site"
     );
     console.log(
-      "%c💼 GitHub: https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
+      // Dépôt privé : pas de lien direct (il menait à une 404).
+      "%c💼 Source code: private repository — access on request via the contact form",
       "font-size:13px; color:#94a3b8;"
     );
   }, []);
