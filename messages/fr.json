@@ -4,7 +4,7 @@
     "certifications": "Certifications",
     "skills": "Compétences",
     "experience": "Expérience",
-    "services": "Services",
+    "services": "Expertises",
     "projects": "Projets",
     "contact": "Contact",
     "testimonials": "Témoignages",
@@ -38,7 +38,7 @@
     "proof1": "Sécurité d'abord",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
-    "availability": "CDI · CDD · Mission",
+    "availability": "CDI · CDD · Intérim · Portage salarial",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
@@ -50,7 +50,7 @@
     "downloadCvItops": "CV IT Ops (PDF)",
     "downloadCvSalesforce": "CV Salesforce (PDF)",
     "downloadCvHybrid": "CV Hybride Salesforce/Infra (PDF)",
-    "workWithMe": "Travailler avec moi",
+    "workWithMe": "Me recruter",
     "message": "Message",
     "call15": "Appel 30 min",
     "downloadProfile": "Télécharger mon profil (PDF)",
@@ -89,8 +89,8 @@
     "experience_subtitle": "Déplie les éléments pour voir le détail (style accordéon).",
     "roles_title": "Rôles",
     "certifications_title": "Certifications",
-    "services_title": "Services",
-    "services_subtitle": "Des services sur mesure selon vos besoins (Salesforce ou IT Ops).",
+    "services_title": "Ce que j'apporte à une équipe",
+    "services_subtitle": "Mes domaines d'intervention au quotidien, selon le profil affiché (Salesforce ou IT Ops).",
     "projects_title": "Projets",
     "projects_subtitle": "Implémentations Salesforce, automatisation IT Ops et projets web — filtrés par parcours.",
     "contact_title": "Contact",
@@ -100,7 +100,7 @@
     "profile_title": "Profil",
     "profile_subtitle": "Des systèmes & réseaux au développement Salesforce",
     "bridge_title": "Où mes deux mondes se rencontrent",
-    "bridge_body": "Sur le déploiement Légarant-AXG, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps. Le même réflexe se retrouve sous une autre forme sur le pipeline CI/CD ci-dessous : une discipline DevOps — protection des branches, validation automatisée, procédure de rollback documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
+    "bridge_body": "Sur le déploiement Légarant-AXG, mon projet fil rouge du titre RNCP 6, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps. Le même réflexe se retrouve sous une autre forme sur le pipeline CI/CD ci-dessous : une discipline DevOps — protection des branches, validation automatisée, procédure de rollback documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
     "bridge_cta": "Voir l'étude de cas Légarant-AXG",
     "bridge_cta2": "Voir l'étude de cas du pipeline CI/CD",
     "security_title": "Le cluster Sécurité — {count} projets, une seule discipline",
@@ -113,7 +113,7 @@
     "messageLabel": "Message",
     "namePlaceholder": "Votre nom complet",
     "emailPlaceholder": "vous@domaine.com",
-    "messagePlaceholder": "Décrivez votre besoin, le contexte et vos objectifs…",
+    "messagePlaceholder": "Présentez le poste, l'équipe et le contexte…",
     "send": "Envoyer",
     "sending": "Envoi…",
     "success": "Message envoyé.",
@@ -150,62 +150,45 @@
     "homeLinkedIn": "LinkedIn",
     "homeEmail": "Email",
     "homeFormTitle": "Envoyer un message",
-    "homeFormSubtitle": "Je réponds généralement sous 24–48h.",
+    "homeFormSubtitle": "Je réponds sous 48 h.",
     "topicLabel": "Sujet",
     "topicPlaceholder": "Choisir un sujet",
-    "topicGeneral": "Général",
-    "topicSalesforce": "Projet Salesforce",
-    "topicItOps": "IT Ops / DevOps",
-    "topicAvailability": "Mission / disponibilité",
+    "topicGeneral": "Opportunité / question générale",
+    "topicSalesforce": "Poste Salesforce",
+    "topicItOps": "Poste IT Ops / DevOps / Infrastructure",
+    "topicAvailability": "Disponibilité / entretien",
     "topicOther": "Autre",
     "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
     "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment.",
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",
-    "availability": "CDI · CDD · Mission",
+    "availability": "CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "intake": {
-      "title": "Contexte de la mission (facultatif)",
-      "subtitle": "M'aide à répondre avec le bon contexte dès le premier message — rien n'est engageant.",
-      "sectorLabel": "Secteur",
-      "sectorPlaceholder": "Sélectionner un secteur",
-      "sector": {
-        "automotive": "Automobile",
-        "industry": "Industrie",
-        "logistics": "Logistique",
-        "supplyChain": "Supply chain",
-        "maintenance": "Maintenance",
-        "quality": "Qualité",
-        "energy": "Énergie",
-        "cybersecurity": "Cybersécurité",
-        "supervision": "Supervision",
-        "automation": "Automatisation",
-        "fieldService": "Service terrain",
-        "operationalData": "Data opérationnelle",
-        "traceability": "Traçabilité",
-        "healthcare": "Santé",
-        "luxury": "Luxe / Mode",
-        "other": "Autre"
+      "title": "Le poste (facultatif)",
+      "subtitle": "Ces informations m'aident à vous répondre précisément dès le premier message.",
+      "roleLabel": "Intitulé du poste",
+      "rolePlaceholder": "Ex. : Développeuse Salesforce, Ingénieure systèmes…",
+      "contractLabel": "Type de contrat",
+      "contractPlaceholder": "Sélectionner un type de contrat",
+      "contract": {
+        "permanent": "CDI",
+        "fixedTerm": "CDD",
+        "temp": "Intérim",
+        "portage": "Portage salarial",
+        "other": "Autre / à préciser"
       },
-      "timelineLabel": "Délai",
-      "timelinePlaceholder": "Sélectionner un délai",
-      "timeline": {
-        "asap": "Dès que possible",
-        "thisMonth": "Dans le mois",
-        "oneToThree": "1 à 3 mois",
-        "threeToSix": "3 à 6 mois",
-        "tbd": "Non défini"
+      "workplaceLabel": "Lieu et mode de travail",
+      "workplacePlaceholder": "Ex. : Paris, hybride 2 j/semaine",
+      "startLabel": "Prise de poste souhaitée",
+      "startPlaceholder": "Sélectionner une date",
+      "start": {
+        "dec2026": "À partir du 1er décembre 2026",
+        "q1_2027": "Premier trimestre 2027",
+        "later": "Plus tard",
+        "tbd": "À définir"
       },
-      "budgetLabel": "Enveloppe budgétaire",
-      "budgetPlaceholder": "Sélectionner une fourchette (facultatif)",
-      "budget": {
-        "under5k": "Moins de 5k€",
-        "from5to15k": "5k€ – 15k€",
-        "from15to40k": "15k€ – 40k€",
-        "over40k": "40k€ et plus",
-        "tbd": "À discuter"
-      },
-      "messagePrefixHeading": "Contexte de la mission"
+      "messagePrefixHeading": "Le poste"
     }
   },
   "blog": {
@@ -309,9 +292,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Développeuse Salesforce & Consultante IT | Remote Europe",
-    "description": "Développeuse Salesforce & Consultante IT (Île-de-France) — Apex, LWC, CI/CD, intégrations. Projets concrets, 50+ articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international.",
+    "description": "Développeuse Salesforce & Consultante IT (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Poste dès déc. 2026, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops | Remote Europe",
-    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD. Projets concrets, 50+ articles techniques. Poste dès déc. 2026 — entretiens dès maintenant. Missions France & international."
+    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD, Salesforce. Poste dès déc. 2026, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -333,14 +316,14 @@
     "periodItops": "Stage chez Midrange Group — février à mai 2023"
   },
   "services": {
-    "discuss": "Discuter de ce service",
+    "discuss": "En parler pour un poste",
     "maturityTitle": "Maturité d'exploitation",
-    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (base de données, cache, formulaire de contact) avec latence et disponibilité mesurées en direct — pas une page statique. Le /changelog documente chaque incident réellement traité, dont une fuite de données client détectée et corrigée et plusieurs alertes de sécurité (CVE) remédiées avec la justification technique du choix retenu, pas un correctif appliqué à l'aveugle.",
-    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose en direct la santé réelle de ses services, et le /changelog documente chaque incident traité — dont une fuite de données client détectée et corrigée — avec la justification technique retenue, pas un correctif appliqué à l'aveugle.",
+    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (base de données, cache, formulaire de contact) avec latence et disponibilité mesurées en direct — pas une page statique. Le colophon détaille comment il est construit et sécurisé : CSP à nonce, en-têtes de sécurité, limites de débit, audits Lighthouse et axe en intégration continue, dépendances surveillées.",
+    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose en direct la santé réelle de ses services, et le colophon détaille ses choix de sécurité et son intégration continue.",
     "maturityStatusCta": "Voir le statut en direct",
-    "maturityChangelogCta": "Voir le changelog",
-    "sectorsTitle": "Secteurs où j'ai déjà livré",
-    "sectorsBody": "Les études de cas ci-dessous ne sont pas des exercices hors-sol : chacune est ancrée dans un secteur avec ses propres contraintes de conformité, de traçabilité et de tolérance à l'erreur.",
+    "maturityChangelogCta": "Voir comment ce site est construit",
+    "sectorsTitle": "Secteurs abordés dans mes études de cas",
+    "sectorsBody": "Mes projets de formation (titre RNCP 6, OpenClassrooms) reposent sur des scénarios d'entreprise fictifs mais réalistes : chacun m'a obligée à tenir compte des contraintes de son secteur en matière de conformité, de traçabilité et de tolérance à l'erreur.",
     "sectors": [
       {
         "label": "Luxe & Mode",
@@ -368,18 +351,17 @@
     "legal": "Mentions légales",
     "accessibility": "Accessibilité",
     "status": "Statut",
-    "changelog": "Changelog",
-    "workWithMe": "Travaillons ensemble",
+    "workWithMe": "Me recruter",
     "uses": "Setup & Outils",
     "colophon": "Colophon",
-    "qualifyMission": "Qualifier une mission",
+    "qualifyMission": "Formulaire recruteur",
     "hybrid": "Profil hybride"
   },
   "profile": {
     "kicker": "Profil",
     "title": "Des systèmes & réseaux au développement Salesforce",
     "p1": "Développeuse Salesforce avec 2 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
-    "p2": "J'ai commencé ma carrière côté infrastructure — stage chez MIDRANGE GROUP (fév – mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 200 workstations Dell via Windows Autopilot, administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
+    "p2": "J'ai commencé ma carrière côté infrastructure — stage chez MIDRANGE GROUP (fév – mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 264 postes Dell (dont 200 via Windows Autopilot), administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
     "p3": "D'oct. 2023 à oct. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction de 30% de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
@@ -392,9 +374,9 @@
     "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "rolesValueItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Poste à partir du 1er décembre 2026 · Entretiens dès maintenant · Ouverte aux CDI, CDD & missions",
+    "availabilityValue": "Poste à partir du 1er décembre 2026 · Entretiens dès maintenant · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "goalLabel": "Objectif",
-    "goalValue": "Approfondir mon expertise Salesforce, préparer les certifications 2026 et trouver le bon contexte pour progresser — en CDI, CDD ou mission.",
+    "goalValue": "Approfondir mon expertise Salesforce, préparer mes certifications et rejoindre une équipe où Salesforce, infrastructure et sécurité se croisent.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
@@ -406,7 +388,7 @@
     "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
     "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
     "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
-    "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, forgées en contexte de production réel, restent pleinement mobilisables pour des missions ciblées. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) est la preuve la plus directe que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
+    "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, acquises en stage chez MIDRANGE GROUP puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
   },
   "mdx": {
     "copy": "Copier",
@@ -433,18 +415,18 @@
     "analyticsTitle": "Analytics & Performance",
     "analyticsBody": "Ce site utilise Vercel Analytics et Vercel Speed Insights en production pour mesurer les Core Web Vitals et les performances réelles. Aucune donnée personnelle n’est collectée — les métriques sont agrégées et anonymes. Ces services sont désactivés en développement.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "Aucun cookie marketing ni de suivi n’est déposé. La préférence de langue est reflétée dans l’URL (ex. /en/, /fr/) et non dans un cookie. Vercel peut déposer des cookies techniques à des fins d’infrastructure (CDN, protection DDoS).",
+    "cookiesBody": "Aucun cookie marketing ni de suivi n'est déposé. La préférence de langue est reflétée dans l'URL (ex. /en/, /fr/) et non dans un cookie. Un cookie fonctionnel « track » (durée : 1 an) et une entrée équivalente dans le stockage local du navigateur mémorisent uniquement le profil affiché (Salesforce ou IT Ops) ; ils ne contiennent aucune donnée personnelle. Vercel peut déposer des cookies techniques à des fins d'infrastructure (CDN, protection DDoS). Le module de prise de rendez-vous Calendly n'est chargé que si vous l'ouvrez ; Calendly applique alors sa propre politique de cookies.",
     "formTitle": "Données du formulaire de contact",
     "formBody": "Lorsque vous envoyez le formulaire de contact, les données que vous saisissez — nom, email, sujet, message — sont transmises par email via Formhook (service d'acheminement d'emails hébergé dans l'Union européenne) afin de traiter votre demande. Le site n'en conserve aucune copie sur ses serveurs. Votre adresse IP est utilisée uniquement de façon transitoire pour limiter les envois abusifs (anti-spam) et n'est pas conservée avec votre message.",
-    "retention": "Conservation : le site ne stocke pas les messages de contact. Une fois transmis par email, votre message est conservé dans la boîte de réception selon les pratiques habituelles de messagerie ; vous pouvez en demander la suppression à tout moment en nous contactant.",
+    "retention": "Conservation : le site ne stocke pas les messages de contact. Une fois transmis par email, votre message est conservé dans la boîte de réception selon les pratiques habituelles de messagerie ; vous pouvez en demander la suppression à tout moment en me contactant.",
     "rightsTitle": "Vos droits",
     "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données personnelles.",
     "contact": "Pour exercer vos droits : {email}",
     "processorsTitle": "Sous-traitants",
     "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Formhook (acheminement des emails du formulaire de contact — Union européenne), Vercel (hébergement et CDN — États-Unis), Supabase (témoignages soumis via le formulaire dédié et historique de statut/incidents — États-Unis, conformité RGPD via Clauses Contractuelles Types), Upstash (limitation de débit anti-spam, compteur par adresse IP — données éphémères). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD.",
-    "lastUpdated": "3 septembre 2026",
+    "lastUpdated": "25 septembre 2026",
     "controllerTitle": "Responsable du traitement",
-    "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, personne physique exerçant une activité professionnelle indépendante. Contact : {email}",
+    "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, à titre personnel (portfolio professionnel, sans activité commerciale). Contact : {email}",
     "breachTitle": "Violation de données",
     "breachBody": "En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous serez notifié(e) dans les meilleurs délais. Conformément à l'article 33 du RGPD, la Commission Nationale de l'Informatique et des Libertés (CNIL) sera notifiée dans un délai de 72 heures. Pour toute réclamation, vous pouvez également saisir directement la CNIL : www.cnil.fr"
   },
@@ -463,31 +445,31 @@
   },
   "faq": {
     "title": "Questions fréquentes",
-    "subtitle": "Tout ce que vous devez savoir avant de me contacter.",
+    "subtitle": "Les réponses aux questions que les recruteurs me posent le plus souvent.",
     "items": [
       {
         "q": "Quelle est votre disponibilité ?",
-        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible à partir du 1er décembre 2026. Je travaille actuellement comme développeuse Salesforce chez LD Digitales, et je suis ouverte aux postes CDI, CDD et missions — en France et à l'international. Contactez-moi pour discuter de votre besoin."
+        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible à partir du 1er décembre 2026. Je suis actuellement développeuse Salesforce en CDI chez LD Digitales."
+      },
+      {
+        "q": "Quels types de contrat recherchez-vous ?",
+        "a": "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce, l'infrastructure et la sécurité se croisent."
+      },
+      {
+        "q": "Quels postes visez-vous ?",
+        "a": "Développeuse, administratrice ou consultante Salesforce, ingénieure Salesforce & infrastructure, et plus largement des postes systèmes & réseaux ou DevOps où mon double profil est un atout."
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
-        "a": "Le marché me pose souvent cette question, et trois entretiens récents m'ont appris ce qu'elle cachait vraiment : ce qui manquait n'était pas une ligne de plus sur un CV, mais une preuve visible que je conçois et j'exploite les deux couches — voir l'étude de cas Légarant-AXG, où le trigger Apex et le déploiement Heroku sont livrés par la même personne. Côté certification éditeur : Salesforce Administrator, App Builder et Platform Developer I en préparation active. Déjà acquis et vérifiables : titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points)."
+        "a": "Pas encore : les certifications Salesforce Administrator, App Builder et Platform Developer I sont en préparation. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Légarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
-        "q": "Travaillez-vous à distance ?",
-        "a": "Oui — full remote, hybride ou sur site selon les besoins. Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité opérationnelle Paris / Île-de-France, et ouverte à la relocalisation en France et à l'international y compris tout autre contexte anglophone. Visioconférences, communication asynchrone et comptes-rendus documentés font partie de mon fonctionnement habituel."
+        "q": "Où êtes-vous basée ? Télétravail ?",
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité pour Paris et l'Île-de-France : hybride, sur site ou télétravail selon le poste. Je suis ouverte à la mobilité et à la relocalisation, en France comme à l'international, y compris dans un contexte anglophone."
       },
       {
-        "q": "Quels sont vos délais habituels ?",
-        "a": "Cela dépend du périmètre. Un audit Salesforce ou une fonctionnalité ciblée (Flow, classe Apex) prend généralement 1 à 5 jours. Une mise en œuvre complète avec tests et documentation s'étale plutôt sur 2 à 8 semaines. Je vous donne une estimation précise après un premier appel de cadrage — sans engagement."
-      },
-      {
-        "q": "Comment se déroule une mission type ?",
-        "a": "En général : un court appel de découverte (30 min) pour comprendre votre contexte → une proposition écrite avec périmètre, livrables et calendrier → livraison avec documentation claire → une session de passation pour que votre équipe puisse tout maintenir en autonomie. Vous êtes propriétaire de tout le code et des configurations que je produis."
-      },
-      {
-        "q": "Proposez-vous un suivi après la livraison ?",
-        "a": "Oui. J'inclus une courte période de support après chaque livraison pour les ajustements et les questions. Pour une maintenance continue ou l'évolution des fonctionnalités, nous pouvons envisager un arrangement en régie."
+        "q": "Comment se passe la suite après une prise de contact ?",
+        "a": "Je réponds sous 48 h. Je suis ensuite disponible pour un échange téléphonique ou en visio, des entretiens techniques (exercices Apex, SOQL, Flow, ou mises en situation systèmes et réseaux) et je peux fournir mes diplômes et références."
       }
     ]
   },
@@ -506,15 +488,15 @@
     "title": "Mes disponibilités",
     "delay": "Disponibilité",
     "delayValue": "Entretiens dès maintenant · Poste à partir du 1er décembre 2026",
-    "contracts": "Prochaine étape",
-    "contractValues": "CDI · CDD · Mission — France & international",
+    "contracts": "Contrats",
+    "contractValues": "CDI · CDD · Intérim · Portage salarial",
     "workMode": "Modes de travail",
-    "workModeValues": "100 % Remote · Hybride · Sur site",
+    "workModeValues": "Hybride · Sur site · Télétravail",
     "mobility": "Mobilité",
     "mobilityValues": "Mobilité & relocalisation envisageables (France & international)",
-    "sector": "Secteurs",
-    "sectorValues": "Salesforce · IT Ops / DevOps",
-    "roles": "Domaines d'intervention",
+    "sector": "Secteurs d'activité",
+    "sectorValues": "Tous secteurs",
+    "roles": "Postes visés",
     "rolesValuesSalesforce": "Administratrice Salesforce · Développeuse Salesforce · Consultante Salesforce · Ingénieure Salesforce & Infrastructure",
     "rolesValuesItops": "Administratrice systèmes & réseaux · DevOps · Consultante IT · Ingénieure Salesforce & Infrastructure",
     "location": "Localisation",
@@ -527,7 +509,7 @@
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Profil hybride",
     "h1": "Là où Salesforce, l'infrastructure et la sécurité ne font qu'une seule tête",
-    "lead": "Je ne suis pas une développeuse Salesforce qui connaît Docker, ni une administratrice système qui connaît Salesforce. Je résous des problématiques transverses qu'un spécialiste seul — d'un côté ou de l'autre — traiterait plus lentement, moins bien, ou pas du tout : les décisions des deux couches sont prises en même temps, par la même personne, avant que l'aller-retour habituel entre équipes ne commence.",
+    "lead": "Je ne suis pas une développeuse Salesforce qui connaît les serveurs, ni une administratrice système qui connaît Salesforce. Je résous des problématiques transverses qu'un spécialiste seul — d'un côté ou de l'autre — traiterait plus lentement, moins bien, ou pas du tout : les décisions des deux couches sont prises en même temps, par la même personne, avant que l'aller-retour habituel entre équipes ne commence. Les preuves citées ci-dessous sont des projets de formation et des projets personnels ; chaque page indique sa nature et sa période.",
     "scenariosTitle": "Trois cas où la combinaison change le résultat",
     "scenarios": [
       {
@@ -539,7 +521,7 @@
         "mine": "Les deux : les endpoints Apex REST, l'application Node.js/PostgreSQL qui les consomme, Heroku Connect configuré objet par objet, deux environnements isolés reliés par une pipeline, jusqu'au runbook de déploiement. L'environnement de staging existait avant que la première ligne d'Apex ne soit écrite — pas après.",
         "proofs": [
           {
-            "label": "Étude de cas — Déploiement Légarant-AXG",
+            "label": "Projet fil rouge RNCP 6 — Déploiement Légarant-AXG",
             "href": "/projects/legarant-axg-salesforce-deployment"
           }
         ],
@@ -555,7 +537,7 @@
         "mine": "Une discipline DevOps réelle — protection des branches, validation automatisée, procédure de rollback SFDX documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
         "proofs": [
           {
-            "label": "Étude de cas — Pipeline CI/CD Salesforce",
+            "label": "Projet personnel — Pipeline CI/CD Salesforce",
             "href": "/projects/cicd-pipeline-setup"
           }
         ],
@@ -571,11 +553,11 @@
         "mine": "Je modélise la surface d'attaque en STRIDE et je conçois le contrôle côté Salesforce — utilisateur d'intégration dédié, Permission Set explicite, vérifications CRUD/FLS, WITH SECURITY_ENFORCED — dans le même sprint. La boucle est fermée avant la mise en production, pas trois tickets plus tard.",
         "proofs": [
           {
-            "label": "Étude de cas — Backend Apex iDEM Connect",
+            "label": "Projet de formation RNCP 6 — Backend Apex iDEM Connect",
             "href": "/projects/idemconnect-apex-backend"
           },
           {
-            "label": "Projet — risque360 (modélisation STRIDE)",
+            "label": "Projet personnel — risque360 (modélisation STRIDE)",
             "href": "/projects/risque360"
           }
         ],
@@ -589,9 +571,23 @@
       "Les décisions prises d'un côté sans connaître les contraintes de l'autre — un trigger conçu sans savoir comment l'infra le sollicite, un pipeline conçu sans connaître les limites de déploiement Salesforce.",
       "Le délai entre « l'API est auditée » et « le contrôle est en place » : les deux se font dans le même sprint."
     ],
-    "ctaTitle": "Un besoin transverse en tête ?",
-    "ctaText": "Si le problème touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en prod tracée, sécurité d'API — c'est exactement le terrain où mon profil fait gagner du temps.",
-    "ctaContact": "Discuter de votre besoin",
+    "ctaTitle": "Un poste transverse à pourvoir ?",
+    "ctaText": "Si le poste touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en production tracée, sécurité d'API — c'est exactement le terrain où mon profil fait gagner du temps à une équipe.",
+    "ctaContact": "Présenter un poste",
     "ctaCv": "Télécharger le CV hybride (PDF)"
+  },
+  "recruiter": {
+    "title": "Vous recrutez pour quel poste ?",
+    "subtitle": "Choisissez le profil qui correspond à votre besoin : le site et le CV s'adaptent.",
+    "recommended": "Mon profil de référence",
+    "hybridTitle": "Profil hybride Salesforce + infrastructure",
+    "hybridBody": "Un poste où Salesforce, l'infrastructure et la sécurité se croisent : intégrations, mises en production tracées, sécurité d'API. C'est là que mon parcours fait la différence.",
+    "hybridCta": "Voir le profil hybride",
+    "salesforceTitle": "Poste Salesforce",
+    "salesforceBody": "Développeuse, administratrice ou consultante Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
+    "itopsTitle": "Poste systèmes, réseaux & DevOps",
+    "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et sécurité.",
+    "showProfile": "Afficher ce profil",
+    "cv": "CV (PDF)"
   }
 }

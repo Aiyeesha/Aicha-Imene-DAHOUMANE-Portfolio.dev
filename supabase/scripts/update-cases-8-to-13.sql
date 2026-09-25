@@ -12,7 +12,7 @@
 UPDATE projects SET
   hero_subtitle = 'AOMEI Partition Assistant · AOMEI Backupper · Windows Server 2012 Backup · VirtualBox',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise (Lycée Louis Jouvet, Taverny) under trainer Miguel MI-POUDOU. The task covered two VMs in VirtualBox: a Windows 10 client VM (disk partitioning + backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup feature + scheduled backup)."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise (Lycée Louis Jouvet, Taverny) under trainer [formateur]. The task covered two VMs in VirtualBox: a Windows 10 client VM (disk partitioning + backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup feature + scheduled backup)."]},
     {"type":"timeline","title":"Procedure","steps":[
       {"title":"Partition resize — AOMEI Partition Assistant","description":"Opened AOMEI Partition Assistant. Right-clicked partition E: and chose Resize/Move. Dragged the slider to reduce E: from 50.04 GB to 47.71 GB (NTFS, 4 KB cluster, Disk 3). Clicked Apply to commit the pending operation."},
       {"title":"Disk backup — AOMEI Backupper","description":"Opened AOMEI Backupper Standard → Backup → Disk Backup. Named the task, selected the source disks, chose a destination path, and started the backup. Operation completed successfully."},
@@ -31,7 +31,7 @@ WHERE slug = 'it-ops-disk-backup' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'AOMEI Partition Assistant · AOMEI Backupper · Sauvegarde Windows Server 2012 · VirtualBox',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise (Lycée Louis Jouvet, Taverny) sous la direction de Miguel MI-POUDOU. L''exercice couvrait deux VM VirtualBox : une VM cliente Windows 10 (partitionnement + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée)."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise (Lycée Louis Jouvet, Taverny) sous la direction de [formateur]. L''exercice couvrait deux VM VirtualBox : une VM cliente Windows 10 (partitionnement + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée)."]},
     {"type":"timeline","title":"Procédure","steps":[
       {"title":"Redimensionnement — AOMEI Partition Assistant","description":"Ouverture d''AOMEI Partition Assistant. Clic droit sur la partition E: → Redimensionner/Déplacer. Glissement du curseur pour réduire E: de 50,04 Go à 47,71 Go (NTFS, cluster 4 Ko, Disque 3). Clic sur Appliquer pour valider."},
       {"title":"Sauvegarde disque — AOMEI Backupper","description":"Ouverture d''AOMEI Backupper → Sauvegarder → Sauvegarde de disque. Nommage de la tâche, sélection des disques source, choix de la destination et démarrage. Opération terminée avec succès."},
@@ -54,7 +54,7 @@ WHERE slug = 'it-ops-disk-backup' AND locale = 'fr';
 UPDATE projects SET
   hero_subtitle = 'Windows 10 Pro · Ninite · Office 2016 · BIOS · Driver setup',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Miguel MI-POUDOU. A client brought in an extremely slow HP laptop with no data to recover. The task was a full workstation rebuild: OS reinstall, driver validation, batch software deployment, and finalization."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer [formateur]. A client brought in an extremely slow HP laptop with no data to recover. The task was a full workstation rebuild: OS reinstall, driver validation, batch software deployment, and finalization."]},
     {"type":"timeline","title":"Procedure","steps":[
       {"title":"BIOS & USB boot","description":"Entered BIOS (F2/DEL), changed boot order to place the USB key (Windows 10 Pro ISO) first. Saved with F10 and rebooted."},
       {"title":"Windows 10 Pro installation","description":"Selected French language, Install, then Custom. Chose Windows 10 Pro 64-bit with an activation key provided by the trainer. Accepted the license, created the user account, and completed the OOBE (region France, Cortana, Microsoft Hello, geolocation)."},
@@ -74,7 +74,7 @@ WHERE slug = 'it-ops-workstation-setup' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'Windows 10 Pro · Ninite · Office 2016 · BIOS · Installation pilotes',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la direction de Miguel MI-POUDOU. Un client a apporté un portable HP extrêmement lent, sans données à récupérer. La mission : remise à neuf complète — réinstallation de l''OS, validation des pilotes, déploiement en masse de logiciels et configuration finale."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la direction de [formateur]. Un client a apporté un portable HP extrêmement lent, sans données à récupérer. La mission : remise à neuf complète — réinstallation de l''OS, validation des pilotes, déploiement en masse de logiciels et configuration finale."]},
     {"type":"timeline","title":"Procédure","steps":[
       {"title":"BIOS & démarrage USB","description":"Entrée dans le BIOS (F2/DEL), modification de l''ordre de démarrage pour placer la clé USB (ISO Windows 10 Pro) en premier. Sauvegarde F10 et redémarrage."},
       {"title":"Installation de Windows 10 Pro","description":"Sélection de la langue (Français), Installation, puis installation personnalisée. Windows 10 Pro 64 bits avec clé d''activation fournie par le formateur. Acceptation de la licence, création du compte utilisateur, finalisation de l''OOBE (région France, Cortana, Microsoft Hello, géolocalisation)."},
@@ -98,7 +98,7 @@ WHERE slug = 'it-ops-workstation-setup' AND locale = 'fr';
 UPDATE projects SET
   hero_subtitle = 'TP-Link Wi-Fi access point · Router mode · DHCP · WPA2',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Marc HAZAN. The task was to configure a TP-Link Wi-Fi access point in router mode and verify internet connectivity from a wireless client."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer [formateur]. The task was to configure a TP-Link Wi-Fi access point in router mode and verify internet connectivity from a wireless client."]},
     {"type":"timeline","title":"Configuration steps","steps":[
       {"title":"Physical setup","description":"Powered on the access point and connected it to the network via Ethernet cable."},
       {"title":"Admin interface login","description":"Typed the device default IP in the browser and logged in with factory credentials."},
@@ -118,7 +118,7 @@ WHERE slug = 'it-ops-wifi-config' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'Point d''accès Wi-Fi TP-Link · Mode routeur · DHCP · WPA2',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de Marc HAZAN. La mission : configurer un point d''accès Wi-Fi TP-Link en mode routeur et vérifier la connectivité Internet depuis un client sans fil."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de [formateur]. La mission : configurer un point d''accès Wi-Fi TP-Link en mode routeur et vérifier la connectivité Internet depuis un client sans fil."]},
     {"type":"timeline","title":"Étapes de configuration","steps":[
       {"title":"Mise en place physique","description":"Alimentation du point d''accès et connexion au réseau par câble Ethernet."},
       {"title":"Connexion à l''interface d''administration","description":"Saisie de l''adresse IP par défaut dans le navigateur et identification avec les identifiants constructeur."},
@@ -142,7 +142,7 @@ WHERE slug = 'it-ops-wifi-config' AND locale = 'fr';
 UPDATE projects SET
   hero_subtitle = 'Windows Server 2016 · AD DS · Roaming Profiles · ebtai.fr domain',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Marc HAZAN. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM, both in VirtualBox."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer [formateur]. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM, both in VirtualBox."]},
     {"type":"timeline","title":"Procedure","steps":[
       {"title":"Create shared folder on server","description":"Created directory ''Profil itinérant'' on C:. Properties → Sharing → Advanced Sharing. Enabled share with name ''Profil itinérant''."},
       {"title":"Configure share permissions","description":"Clicked Permissions. Removed ''Everyone''. Added EBTAI\\Utilisateurs (AD Users group) with Modify + Read. Clicked Apply."},
@@ -162,7 +162,7 @@ WHERE slug = 'it-ops-roaming-profiles' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'Windows Server 2016 · AD DS · Profils itinérants · domaine ebtai.fr',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de Marc HAZAN. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification depuis une VM cliente Windows 10, les deux sous VirtualBox."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de [formateur]. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification depuis une VM cliente Windows 10, les deux sous VirtualBox."]},
     {"type":"timeline","title":"Procédure","steps":[
       {"title":"Création du dossier partagé sur le serveur","description":"Création du répertoire ''Profil itinérant'' sur C:. Propriétés → Partage → Partage avancé. Activation du partage avec le nom ''Profil itinérant''."},
       {"title":"Configuration des autorisations de partage","description":"Clic sur Autorisations. Suppression de ''Tout le monde''. Ajout de EBTAI\\Utilisateurs avec Modifier + Lire. Clic sur Appliquer."},

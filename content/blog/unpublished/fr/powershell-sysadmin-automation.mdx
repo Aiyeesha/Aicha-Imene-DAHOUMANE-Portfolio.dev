@@ -37,7 +37,7 @@ Import-Csv "C:\utilisateurs.csv" | ForEach-Object {
         Department            = $_.Departement
         Title                 = $_.Titre
         Path                  = $ou
-        AccountPassword       = (ConvertTo-SecureString "Bienvenue2026!" -AsPlainText -Force)
+        AccountPassword       = (Read-Host -AsSecureString "Password")
         ChangePasswordAtLogon = $true
         Enabled               = $true
     }

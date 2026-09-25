@@ -1,0 +1,38 @@
+---
+title: "Cuatro meses de prácticas en un MSP: lo que me enseñaron la supervisión, las copias de seguridad y el soporte"
+excerpt: "Retrospectiva fechada de mis prácticas en MIDRANGE GROUP (febrero–mayo de 2023): supervisión con Datto RMM, tickets en Autotask, alertas de copias de seguridad Acronis y despliegue de 264 equipos Dell — y los hábitos que conservo."
+date: "2026-09-25"
+tags: ["IT Ops", "Retrospectiva", "Supervisión", "Copias de seguridad", "Soporte"]
+projects: ["it-ops-rmm-supervision", "it-ops-incident-management", "it-ops-acronis-backup", "workstation-mass-deployment"]
+---
+
+De febrero a mayo de 2023 realicé las prácticas de fin de mi formación TSSR (técnica superior de sistemas y redes) en MIDRANGE GROUP, una empresa de servicios informáticos que gestiona el parque de sus clientes (MSP). Trabajé en el equipo de Explotación, supervisada por un administrador de sistemas y redes. Este artículo sustituye a los cuatro runbooks que había publicado por separado: reúne lo que hice realmente y, sobre todo, lo que aprendí. No se reproduce ningún dato de los clientes.
+
+## Lo que hice
+
+- **Supervisión** — seguimiento diario de más de 550 equipos en Datto RMM: estado de los parches, cobertura antivirus, inventario de software. Cuando un equipo dejaba de estar protegido, desplegaba el agente Malwarebytes en remoto mediante un Quick Job, sin desplazamiento.
+- **Soporte** — gestión de tickets en Autotask, recibidos por tres canales (teléfono, correo, agente RMM), con asistencia remota mediante Splashtop y registro del tiempo dedicado para la facturación.
+- **Copias de seguridad** — control diario de las copias Acronis de un cliente: 105 equipos protegidos, 5 planes de copia, 85 alertas que clasificar (33 errores, 52 avisos).
+- **Despliegue** — puesta en servicio de 264 equipos Dell: 64 Optiplex borrados con Blancco y vueltos a instalar a partir de una imagen, 200 Latitude desplegados con Windows Autopilot e Intune.
+
+## Lo que aprendí
+
+### 1. Una alerta no es un diagnóstico
+
+En las copias de seguridad, el mismo estado en rojo podía ocultar cuatro causas distintas: destino NAS lleno, servidor desconectado, plan dañado, corte de red. Cada una requiere una corrección diferente. Adquirí el hábito de identificar la causa antes de actuar, en lugar de relanzar la tarea esperando que funcione.
+
+### 2. Verificar antes de autorizar
+
+Un ticket trataba de un sitio web bloqueado por el antivirus Webroot. La solución rápida era añadir el dominio a las excepciones; el enfoque correcto era comprobar primero la reputación real del dominio y solo después crear la excepción desde la consola, sin desinstalar ni reconfigurar el antivirus. Es un reflejo de seguridad que aplico ahora a cualquier solicitud de excepción.
+
+### 3. Lo que no está documentado no existe
+
+En un MSP, cada intervención queda registrada en el ticket: lo que se constató, lo que se hizo, el tiempo dedicado. No es burocracia: es lo que permite a un compañero retomar un caso y al cliente entender lo que paga. Desde entonces documento mi trabajo de la misma manera, también en mis proyectos Salesforce.
+
+### 4. Estandarizar para escalar
+
+Configurar 264 equipos a mano no es viable. El trabajo útil se hace antes: una imagen de referencia, perfiles de Autopilot e Intune, cifrado BitLocker y reglas de actualización definidos una sola vez y aplicados a todo el parque. El tiempo de intervención por equipo se vuelve marginal y todos quedan configurados igual.
+
+## ¿Y en Salesforce?
+
+Estos cuatro hábitos son exactamente los que aplico hoy en el desarrollo Salesforce: encontrar la causa raíz de un error antes de corregirlo, comprobar los permisos antes de abrir un acceso, documentar cada entrega y automatizar los despliegues. Eso es lo que une mis dos trayectorias.

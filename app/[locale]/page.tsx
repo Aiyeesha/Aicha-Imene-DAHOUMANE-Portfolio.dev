@@ -11,6 +11,7 @@ import Accordion from "@/components/Accordion";
 import SkeletonCard from "@/components/SkeletonCard";
 // Above-the-fold — chargés immédiatement
 import TrackAwareSkills from "@/components/TrackAwareSkills";
+import RecruiterPaths from "@/components/RecruiterPaths";
 // Below-the-fold — lazy-loadés pour réduire le JS initial
 //
 // TrackAwareServices : importé via TrackAwareServicesLoader plutôt qu'un
@@ -110,6 +111,11 @@ export default async function Home({ params }: Props) {
           <div className="h-px w-full bg-black/10 dark:bg-white/10" />
         </div>
       </section>
+
+      {/* VOUS RECRUTEZ POUR QUEL POSTE ? — point d'entrée recruteur (audit de
+          contenu 2026-09-25, lot 2) : oriente vers le profil hybride ou bascule
+          le track Salesforce / IT Ops, avec le CV correspondant. */}
+      <RecruiterPaths />
 
       {/* COMPÉTENCES — section-stripe (fond alterné) */}
       <section id="skills" className="section-stripe py-14">

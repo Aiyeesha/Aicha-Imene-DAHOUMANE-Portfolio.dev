@@ -40,6 +40,91 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app";
 
 /** @type {import('next').NextConfig} */
+// Articles de blog dépubliés (audit de contenu 2026-09-25, lot 4).
+const MSP_REX_SLUG = "msp-internship-lessons";
+const UNPUBLISHED_RUNBOOKS = [
+  "acronis-backup-recovery-ops",
+  "autotask-ticketing-workflow",
+  "datto-rmm-supervision-runbooks",
+  "malwarebytes-alert-triage-mitre",
+];
+const UNPUBLISHED_POSTS = [
+  "apex-batch-jobs-scheduling",
+  "docker-compose-production-setup",
+  "framer-motion-animations",
+  "git-workflow-salesforce-projects",
+  "github-actions-reusable-workflows",
+  "hyper-v-virtualization-setup",
+  "incident-response-runbook-template",
+  "linux-server-hardening-checklist",
+  "lwc-reusable-components",
+  "monitoring-alerting-stack",
+  "network-segmentation-vlan",
+  "nextjs-admin-dashboard-supabase",
+  "nextjs-caching-strategies",
+  "nextjs-deployment-vercel",
+  "nextjs-image-optimization",
+  "nextjs-seo-best-practices",
+  "nextjs-supabase-auth",
+  "nextjs-testing-playwright",
+  "powershell-active-directory-automation",
+  "powershell-sysadmin-automation",
+  "react-server-components-patterns",
+  "salesforce-data-migration-checklist",
+  "salesforce-lwc-performance",
+  "salesforce-lwc-testing",
+  "salesforce-org-health-check",
+  "salesforce-platform-events",
+  "salesforce-reports-dashboards",
+  "salesforce-security-model",
+  "salesforce-trailhead-path-developer",
+  "siem-log-analysis-basics",
+  "ssl-tls-certificate-management",
+  "supabase-rls-policies",
+  "tailwind-design-system",
+  "typescript-best-practices-2026",
+  "veeam-backup-replication",
+  "visualforce-to-lwc-migration",
+  "windows-server-active-directory-setup",
+];
+const UNPUBLISHED_BLOG_REDIRECTS = [
+  ...UNPUBLISHED_RUNBOOKS.map((slug) => ({
+    source: `/:locale(en|fr|es)/blog/${slug}`,
+    destination: `/:locale/blog/${MSP_REX_SLUG}`,
+    permanent: false,
+  })),
+  ...UNPUBLISHED_POSTS.map((slug) => ({
+    source: `/:locale(en|fr|es)/blog/${slug}`,
+    destination: "/:locale/blog",
+    permanent: false,
+  })),
+];
+
+// Projets retirés de la galerie (audit de contenu 2026-09-25, lot 4) : passés
+// en status "draft" dans content/projects.ts. Un doublon redirige vers le
+// projet qui le contient ; les autres vers la galerie.
+const UNPUBLISHED_PROJECTS = [
+  ["it-ops-email-config", null],
+  ["it-ops-wifi-config", null],
+  ["it-ops-hardware-procurement", null],
+  ["hardware-upgrade-hp-laptop", null],
+  ["it-ops-disk-backup", null],
+  ["it-ops-workstation-setup", "workstation-mass-deployment"],
+  ["it-ops-roaming-profiles", "it-ops-virtualization-lab"],
+  ["incident-response-playbook", "incident-response-tracker"],
+  ["hemebiotech-java-debug", null],
+  ["pochlib-ui", null],
+  ["parkit-java-testing", null],
+  ["python-password-checker", "homelab-password-cracking-lab"],
+  ["risk-assessment-matrix", "risque360"],
+  ["nextjs-admin-dashboard", null],
+];
+const UNPUBLISHED_PROJECT_REDIRECTS = UNPUBLISHED_PROJECTS.map(([slug, target]) => ({
+  source: `/:locale(en|fr|es)/projects/${slug}`,
+  destination: target ? `/:locale/projects/${target}` : "/:locale/projects",
+  permanent: false,
+}));
+
 const nextConfig = {
   // Supprime le header X-Powered-By: Next.js — évite le fingerprinting du framework
   poweredByHeader: false,
@@ -71,6 +156,13 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Blog élagué à l'audit de contenu du 2026-09-25 (lot 4) : 41 articles
+      // déplacés dans content/blog/unpublished/. Les 4 runbooks du stage
+      // MIDRANGE GROUP pointent vers le retour d'expérience qui les remplace ;
+      // les autres vers l'index du blog. Redirections temporaires (307) pour
+      // pouvoir republier un article sans cache de redirection permanente.
+      ...UNPUBLISHED_BLOG_REDIRECTS,
+      ...UNPUBLISHED_PROJECT_REDIRECTS,
       // Ancien slug blog iDEM Connect — URL incorrecte référencée dans l'audit (2026-06-29)
       {
         source: "/:locale(en|fr|es)/projects/apex-backend-idem-connect",
@@ -88,11 +180,32 @@ const nextConfig = {
         destination: "/fr/legal",
         permanent: true,
       },
-      // Slug blog incorrectement référencé (audit 2026-06-27) — le fichier MDX est visualforce-to-lwc-migration
+      // Ancien slug blog migration-visualforce-to-lwc : l'article cible a été
+      // dépublié à l'audit de contenu du 2026-09-25 (lot 4) → index du blog.
       {
         source: "/:locale(en|fr|es)/blog/migration-visualforce-to-lwc",
-        destination: "/:locale/blog/visualforce-to-lwc-migration",
-        permanent: true,
+        destination: "/:locale/blog",
+        permanent: false,
+      },
+      // Articles dépubliés (audit de contenu 2026-09-25) — contenu trop court et
+      // non relu ; redirection temporaire pour ne pas casser les liens existants.
+      {
+        source: "/:locale(en|fr|es)/blog/next-intl-app-router",
+        destination: "/:locale/blog",
+        permanent: false,
+      },
+      {
+        source: "/:locale(en|fr|es)/blog/salesforce-cicd-github-actions",
+        destination: "/:locale/projects/cicd-pipeline-setup",
+        permanent: false,
+      },
+      // Changelog public retiré (audit de contenu 2026-09-25) : l'historique
+      // détaillé reste dans CHANGELOG.md du dépôt ; la preuve DevSecOps lisible
+      // pour un visiteur est le colophon.
+      {
+        source: "/:locale(en|fr|es)/changelog",
+        destination: "/:locale/colophon",
+        permanent: false,
       },
       // /rss.xml retournait 404 — le feed est servi sous /feed.xml
       {
