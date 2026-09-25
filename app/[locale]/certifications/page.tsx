@@ -229,10 +229,10 @@ export default async function CertificationsPage({ params }: PageProps) {
       earnedDate: isFr ? "Oct. 2022 – Juin 2023" : isEs ? "Oct. 2022 – Jun. 2023" : "Oct 2022 – Jun 2023",
       level: isFr ? "Titre RNCP niveau 5 (Bac+2)" : isEs ? "Título RNCP nivel 5 (equivalente a Bac+2)" : "RNCP Level 5 (Bac+2)",
       description: isFr
-        ? "Administration systèmes & réseaux. Stage chez Midrange Group : déploiement de 200+ postes via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
+        ? "Administration systèmes & réseaux. Stage chez Midrange Group : déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
         : isEs
-        ? "Administración de sistemas y redes. Prácticas en Midrange Group: despliegue de más de 200 equipos vía Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
-        : "Systems & network administration. Internship at Midrange Group: deployment of 200+ workstations via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM.",
+        ? "Administración de sistemas y redes. Prácticas en Midrange Group: despliegue de 264 equipos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
+        : "Systems & network administration. Internship at Midrange Group: deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM.",
       skills: ["Windows Server 2022", "Active Directory", "DNS / DHCP / WDS", "GPO", "PXE", "VMware Workstation 17", "PfSense", "Squid Proxy", "Acronis Cyber Protect", "Datto RMM", "Windows Autopilot"],
       credentialUrl: undefined,
       diplomaUrl: "/certifications/tssr-greta-diploma.pdf",

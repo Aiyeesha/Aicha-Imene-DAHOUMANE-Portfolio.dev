@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Contacto — Aïcha Imène DAHOUMANE"
     : "Contact — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Contactez-moi pour une mission Salesforce ou IT Ops, une opportunité CDI/CDD, ou toute question professionnelle. Réponse sous 48h."
+    ? "Recruteurs : présentez-moi votre poste Salesforce, IT Ops ou hybride (CDI, CDD, intérim ou portage, tous secteurs). Réponse sous 48 h."
     : isEs
-    ? "Contáctame para una misión de Salesforce o IT Ops, una oportunidad de contrato indefinido/temporal, o cualquier consulta profesional. Respondo en 48h."
-    : "Get in touch for a Salesforce or IT Ops mission, a permanent/fixed-term opportunity, or any professional inquiry. I reply within 48h.";
+    ? "Reclutadores: preséntame tu puesto Salesforce, IT Ops o híbrido (indefinido, temporal, ETT o portage, todos los sectores). Respondo en 48 h."
+    : "Recruiters: tell me about your Salesforce, IT Ops or hybrid role (permanent, fixed-term, temp or umbrella, any industry). I reply within 48 hours.";
   return {
     title,
     description,
@@ -83,12 +83,12 @@ export default async function ContactPage({ params }: PageProps) {
 
   const L = {
     breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    title: isFr ? "Qualifier une mission" : isEs ? "Calificar una misión" : "Start an engagement",
+    title: isFr ? "Me proposer un poste" : isEs ? "Proponerme un puesto" : "Tell me about your role",
     subtitle: isFr
-      ? "Un message rapide suffit toujours, mais ce formulaire structuré (secteur, délai, budget indicatif) m'aide à préparer une première réponse déjà cadrée sur votre contexte. Réponse sous 48h."
+      ? "Un message rapide suffit toujours. Si vous le souhaitez, précisez l'intitulé du poste, le type de contrat, le lieu et la date de prise de poste : je pourrai vous répondre précisément dès le premier échange. Réponse sous 48 h."
       : isEs
-      ? "Un mensaje rápido siempre es suficiente, pero este formulario estructurado (sector, plazo, presupuesto indicativo) me ayuda a preparar una primera respuesta ya adaptada a tu contexto. Respondo en 48h."
-      : "A quick message always works, but this structured form (sector, timeline, indicative budget) helps me prepare a first reply that's already grounded in your context. I reply within 48h.",
+      ? "Un mensaje rápido siempre es suficiente. Si lo deseas, indica el nombre del puesto, el tipo de contrato, el lugar y la fecha de incorporación: así podré responderte con precisión desde el primer intercambio. Respondo en 48 h."
+      : "A quick message always works. If you like, add the job title, contract type, location and start date so I can give you a precise answer from the very first exchange. I reply within 48 hours.",
   };
 
   return (
@@ -103,7 +103,7 @@ export default async function ContactPage({ params }: PageProps) {
         site, pensé pour du texte en colonne unique — mais ContactForm en mode
         `extended` rend une grille large `lg:grid-cols-[1fr_420px]` (formulaire +
         sidebar "Liens rapides"). À 672px, la colonne 1fr retombait à ~200-250px :
-        les <select> Secteur/Délai/Budget tronquaient leur propre placeholder
+        les <select> du formulaire étendu tronquaient leur propre placeholder
         (repéré par l'utilisatrice sur le site de prod, audit 2026-08-13).
         max-w-4xl (896px) laisse ~430px à la colonne formulaire une fois les
         420px fixes de la sidebar et le gap soustraits — le texte d'en-tête

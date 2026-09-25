@@ -3,6 +3,7 @@ title: "Active Directory y GPO: administración y buenas prácticas de seguridad
 excerpt: "Guía práctica para estructurar la jerarquía de OU de tu AD, diseñar GPOs mantenibles y seguras, y evitar los errores de administración más frecuentes."
 date: "2025-07-07"
 tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Security"]
+projects: ["it-ops-virtualization-lab"]
 ---
 
 Un Active Directory mal diseñado o una maraña de GPOs contradictorias es una de las deudas técnicas más dolorosas que puede heredar un equipo de IT. Aquí tienes cómo diseñarlo bien desde el principio, o cómo limpiar lo que ya existe.
@@ -224,6 +225,7 @@ System:
 
 ```powershell
 # Crear un nuevo usuario en la OU correcta
+# Contraseña introducida por teclado: nunca escrita en claro en un script
 New-ADUser `
     -Name "Dupont, Jean" `
     -GivenName "Jean" `
@@ -231,7 +233,7 @@ New-ADUser `
     -SamAccountName "j.dupont" `
     -UserPrincipalName "j.dupont@domain.local" `
     -Path "OU=Employees,OU=_Users,DC=domain,DC=local" `
-    -AccountPassword (ConvertTo-SecureString "Temp!2026" -AsPlainText -Force) `
+    -AccountPassword (Read-Host -AsSecureString "Contraseña inicial") `
     -ChangePasswordAtLogon $true `
     -Enabled $true
 

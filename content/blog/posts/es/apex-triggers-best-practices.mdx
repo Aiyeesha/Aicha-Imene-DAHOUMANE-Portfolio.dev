@@ -4,6 +4,7 @@ excerpt: "Guía práctica para construir triggers de Apex robustos, eficientes y
 date: "2026-02-15"
 tags: ["Salesforce", "Apex", "Best Practices", "Development"]
 featured: false
+projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
 
 Los triggers de Apex están en el corazón de muchas automatizaciones de Salesforce. Mal diseñados, se convierten rápidamente en una fuente de errores, problemas de rendimiento y pesadillas de mantenimiento. Aquí tienes 10 buenas prácticas esenciales para desarrollar triggers profesionales.
@@ -132,31 +133,31 @@ private static void afterInsert(List<Account> newAccounts) {
 
 ## 5. Evitar la recursión infinita
 
-Usa una clase estática para controlar la ejecución:
+Un simple booleano estático («el trigger ya se ejecutó») es una trampa clásica: cuando Data Loader o una API insertan más de 200 registros, la plataforma divide la transacción en lotes de 200 y vuelve a llamar al trigger para cada lote. Con un booleano, **los lotes siguientes se ignoran en silencio**. Memoriza mejor los **Id ya procesados**:
 
 ```apex
 public class TriggerControl {
-    private static Set<String> executedTriggers = new Set<String>();
-    
-    public static Boolean isFirstTime(String triggerName) {
-        if (executedTriggers.contains(triggerName)) {
-            return false;
-        }
-        executedTriggers.add(triggerName);
-        return true;
-    }
-    
-    public static void reset(String triggerName) {
-        executedTriggers.remove(triggerName);
+    // Clave = nombre del trigger + Id: cada registro se procesa una sola vez por
+    // transacción, sea cual sea el número de lotes de 200.
+    private static Set<String> processed = new Set<String>();
+
+    public static Boolean markProcessed(String triggerName, Id recordId) {
+        return processed.add(triggerName + ':' + recordId); // false si ya estaba
     }
 }
 
-// En el handler:
-public static void handle() {
-    if (!TriggerControl.isFirstTime('AccountTrigger')) {
-        return; // Evita la recursión
+// En el handler (after update):
+public static void handleAfterUpdate(List<Account> newAccounts) {
+    List<Account> toProcess = new List<Account>();
+    for (Account acc : newAccounts) {
+        if (TriggerControl.markProcessed('AccountTrigger', acc.Id)) {
+            toProcess.add(acc); // primer paso para este registro
+        }
     }
-    // ... lógica del trigger
+    if (toProcess.isEmpty()) {
+        return; // todos ya procesados: se evita la recursión
+    }
+    // ... lógica del trigger solo sobre toProcess
 }
 ```
 

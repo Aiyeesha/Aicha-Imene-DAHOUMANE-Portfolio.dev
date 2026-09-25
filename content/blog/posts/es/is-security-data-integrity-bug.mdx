@@ -4,6 +4,7 @@ excerpt: "Cómo un script de reimportación podría haber borrado silenciosament
 date: "2026-08-12"
 tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
 featured: false
+projects: ["colophon"]
 ---
 
 Los datos de proyectos de este sitio viven en dos lugares: Supabase (la fuente de verdad en tiempo de ejecución) y dos archivos TypeScript generados, `content/projects.ts` y `content/projectDetails.ts`, conservados como respaldo local. Dos scripts mantienen la sincronización: `scripts/export-projects-from-supabase.ts` extrae Supabase → archivos, `scripts/seed.ts` empuja archivos → Supabase.

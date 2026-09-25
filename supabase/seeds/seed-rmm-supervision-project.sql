@@ -3,7 +3,7 @@
 -- Case study n°6 — IT Ops
 -- "Infrastructure Monitoring with Datto RMM"
 -- Internship at MIDRANGE GROUP — Exploitation team
--- Supervisor: Théo KACEL (Systems & Networks Administrator)
+-- Supervisor: [administrateur systèmes & réseaux] (Systems & Networks Administrator)
 -- -----------------------------------------------------------
 
 -- ── EN ───────────────────────────────────────────────────────────────────────
