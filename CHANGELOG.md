@@ -20,6 +20,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Lien « Voir le code source » reformulé** — Le dépôt GitHub du site est privé : le bouton du colophon et le message de la console développeur menaient les visiteurs sur une 404. La section « Open source » du colophon devient « Code source » : dépôt privé, présenté en entretien, accès en lecture sur demande (bouton vers `/contact`).
+
 - **Cartes projet traduites (FR/ES)** — Les puces des cartes de `/projects`, rédigées en anglais dans `content/projects.ts`, s'affichaient telles quelles sur les pages FR et ES (audit de contenu du 2026-09-25). Leurs traductions vivent dans `content/projectHighlights.ts` (107 puces × 2 langues pour les 26 projets publiés, repli sur l'anglais) et un test vérifie qu'elles suivent la version anglaise. Sous-titres FR/ES ajoutés à 4 projets qui retombaient sur le résumé anglais (Incident Response Tracker, CVE Watchlist, Log Anomaly Detector, risque360).
 
 - **Élagage du blog et des projets (audit de contenu du 2026-09-25, lot 4)** —
