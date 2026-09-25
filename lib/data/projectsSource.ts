@@ -12,6 +12,7 @@
 import { projects as CARD_PROJECTS, type Project } from "@/content/projects";
 import { projectDetails as DETAILS, type ProjectSection } from "@/content/projectDetails";
 import { GITHUB_REPOS } from "@/content/github-repos";
+import { resolveNature, type ResolvedNature } from "@/lib/projectNature";
 
 export type ProjectLocale = "en" | "fr" | "es";
 
@@ -59,6 +60,8 @@ export type ProjectWithAssets = {
   updated_at?: string | null;
   /** Always empty — retained so existing consumers keep type-checking. */
   project_assets: ProjectAsset[];
+  /** Nature (formation, stage, personnel, reconstitué), période et note, déjà localisées. */
+  nature?: ResolvedNature | null;
 };
 
 const normLocale = (l: string): ProjectLocale =>
@@ -110,6 +113,7 @@ function merge(card: Project, requested: ProjectLocale): ProjectWithAssets {
     is_security: Boolean(card.isSecurity),
     updated_at: card.updatedAt ?? null,
     project_assets: [],
+    nature: resolveNature(card.nature, requested, card.period),
   };
 }
 

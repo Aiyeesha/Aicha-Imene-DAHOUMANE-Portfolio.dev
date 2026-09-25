@@ -8,6 +8,8 @@
 // (Was previously exported from Supabase; the project data left Supabase in the
 //  de-Supabase refactor — these files are now the only source.)
 
+import type { ProjectNature, ProjectPeriod } from "@/lib/projectNature";
+
 export type Project = {
   slug: string;
   title: string | null;
@@ -27,11 +29,16 @@ export type Project = {
   status: string;
   isBridge?: boolean;
   isSecurity?: boolean;
+  /** Nature du projet (formation, stage, personnel, reconstitué) — voir lib/projectNature.ts. */
+  nature: ProjectNature;
+  /** Période propre au projet, si elle diffère de celle de sa nature et qu'elle est connue. */
+  period?: ProjectPeriod;
 };
 
 export const projects: Project[] = [
   {
     "slug": "hardware-upgrade-hp-laptop",
+    "nature": "personal",
     "title": "HP Laptop Hardware Upgrade — RAM & SSD",
     "excerpt": "Full hardware upgrade of an HP laptop: sourced compatible 32 GB DDR4 RAM and 2 TB Samsung SSD, Acronis drive clone for zero data loss, disassembly and post-upgrade validation.",
     "track": "itops",
@@ -69,6 +76,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "hemebiotech-java-debug",
+    "nature": "openclassrooms",
     "title": "Java debugging & refactor (Heme Biotech)",
     "excerpt": "Bugfix and refactor of a Java symptom analytics app: correct counts, alphabetic output, and a maintainable OOP architecture.",
     "track": "itops",
@@ -108,6 +116,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "homelab-cowrie-honeypot",
+    "nature": "personal",
     "title": "SSH/Telnet Honeypot with Cowrie",
     "excerpt": "Deployed a Cowrie honeypot on an isolated VMware lab to capture, log, and analyze an SSH brute-force attack — including a full rebuild of the attacker machine after a real incident.",
     "track": "itops",
@@ -151,6 +160,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "homelab-network-sniffing",
+    "nature": "personal",
     "title": "Network Sniffing: tcpdump, Wireshark & Scapy",
     "excerpt": "Captured and analyzed network traffic on an isolated lab to demonstrate why unencrypted protocols (HTTP, FTP) expose data in plaintext — including a custom Python sniffer built with Scapy.",
     "track": "itops",
@@ -191,6 +201,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "homelab-password-cracking-lab",
+    "nature": "personal",
     "title": "Password Cracking: Hashing, Salting & Stretching",
     "excerpt": "Hands-on study of password storage (hashing, salting, stretching) with John the Ripper and Hashcat, including a measured MD5 vs bcrypt benchmark and full troubleshooting of a GPU-less Hashcat environment.",
     "track": "itops",
@@ -231,6 +242,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-disk-backup",
+    "nature": "greta_tai",
     "title": "Disk Partitioning & Backup (AOMEI + Windows Server Backup)",
     "excerpt": "Backup strategy on VMs: partition resize with AOMEI Partition Assistant, full disk image with AOMEI Backupper Standard, and scheduled Windows Server Backup on a Windows Server 2012 VM.",
     "track": "itops",
@@ -268,6 +280,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-roaming-profiles",
+    "nature": "greta_tai",
     "title": "Configuring AD DS Roaming Profiles",
     "excerpt": "Roaming profile infrastructure on ebtai.fr domain: shared folder with Modify permissions for EBTAI\\Utilisateurs, AD profile path configured, and profile auto-creation validated on user login.",
     "track": "itops",
@@ -297,7 +310,7 @@ export const projects: Project[] = [
       "Configured NTFS Full Control permissions for profile folder ownership",
       "Set user profile path in AD Users & Computers: \\\\DC1\\Profil itinérants\\%username%",
       "Verified roaming profile creation: technicien.tai.V6 folder appeared in share after first client login",
-      "Domain: ebtai.fr — supervised by trainer Marc HAZAN"
+      "Domain: ebtai.fr — supervised training exercise"
     ],
     "featured": false,
     "sortOrder": 110,
@@ -305,6 +318,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-virtualization-lab",
+    "nature": "greta_tssr",
     "title": "Maintaining a Virtualized IT Environment",
     "excerpt": "Full virtual infrastructure on VMware Workstation Pro 17: 4 VMs (DCAD22, SRVWIN22, SRVSAMBADEBI, CL10) running AD DS, DNS, DHCP, WDS and Samba file sharing on a private 192.168.100.0/24 LAN.",
     "track": "itops",
@@ -347,6 +361,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-workstation-setup",
+    "nature": "greta_tai",
     "title": "Workstation Setup: Windows 10 Install & Software Deployment",
     "excerpt": "Full workstation provisioning: clean Windows 10 install with custom partition, French OOBE configuration, then automated multi-app deployment using Ninite + Office 2016 in parallel.",
     "track": "itops",
@@ -360,8 +375,8 @@ export const projects: Project[] = [
       "Deployment"
     ],
     "badge": {
-      "tone": "client",
-      "label": "FIELD PRACTICE"
+      "tone": "training",
+      "label": "TRAINING LAB"
     },
     "techStack": [
       "Windows 10",
@@ -384,6 +399,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "parkit-java-testing",
+    "nature": "openclassrooms",
     "title": "Java testing & TDD feature delivery (Parkit)",
     "excerpt": "TDD-driven feature delivery (30-min free parking + 5% recurring discount), bugfixes and a full unit + integration test suite with JaCoCo/Surefire evidence.",
     "track": "itops",
@@ -425,6 +441,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "pochlib-ui",
+    "nature": "openclassrooms",
     "title": "SPA front-end UI (Poch'Lib)",
     "excerpt": "Single-page, mobile-first UI built from functional specs and wireframes: book search/add, list display/removal, DOM updates and Fetch-based API integration.",
     "track": "itops",
@@ -468,6 +485,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "python-network-scanner",
+    "nature": "personal",
     "title": "Network Scanner (FastAPI + React)",
     "excerpt": "Real-time local network scanner: FastAPI backend with WebSocket streaming, concurrent port scanning, service & risk detection, and a React/Vite frontend.",
     "track": "itops",
@@ -504,6 +522,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "python-password-checker",
+    "nature": "personal",
     "title": "Password Strength Analyzer (Python CLI)",
     "excerpt": "CLI tool scoring password strength via entropy calculation, regex pattern detection, dictionary matching, and a HaveIBeenPwned API check using k-anonymity.",
     "track": "itops",
@@ -538,6 +557,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "risk-assessment-matrix",
+    "nature": "personal",
     "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
     "excerpt": "Ground-up rebuild of an earlier risk-matrix prototype: a vanilla-JS risk register with a live 5×5 Likelihood × Impact heat map, persisted client-side via localStorage, plus a tested Python CLI for bulk import and HTML report generation.",
     "track": "itops",
@@ -579,6 +599,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "security-monitoring-dashboard",
+    "nature": "personal",
     "title": "Security Monitoring Dashboard (FastAPI + React)",
     "excerpt": "Full-stack security monitoring dashboard built with FastAPI and React/TypeScript. Streams security events in real time via WebSocket, classifies alerts by severity, and tracks MTTR — now with SQLite persistence, API-key-protected ingestion, and a Pytest test suite.",
     "track": "itops",
@@ -624,6 +645,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "second-brain-claude-code",
+    "nature": "personal",
     "title": "Second Brain 2.0 — Claude Code + Notion",
     "excerpt": "Persistent memory system coupling Claude Code CLI and Notion: the AI automatically reads and enriches a personal knowledge base between sessions.",
     "track": "itops",
@@ -646,6 +668,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-rmm-supervision",
+    "nature": "internship",
     "title": "Infrastructure Monitoring with Datto RMM",
     "excerpt": "At MIDRANGE GROUP, I supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
     "track": "itops",
@@ -685,6 +708,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "workstation-mass-deployment",
+    "nature": "internship",
     "title": "Mass Workstation Deployment — 264 Dell Devices",
     "excerpt": "At MIDRANGE GROUP, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
     "track": "itops",
@@ -727,6 +751,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-incident-management",
+    "nature": "internship",
     "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
     "excerpt": "At MIDRANGE GROUP MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
     "track": "itops",
@@ -766,6 +791,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-acronis-backup",
+    "nature": "internship",
     "title": "Cloud Backup Supervision with Acronis Cyber Backup",
     "excerpt": "At MIDRANGE GROUP, I monitored backups daily across 105 protected endpoints (NAS and Acronis Cloud), triaged 85 active alerts, identified root causes (NAS full, plan corruption, network issues) and restored continuity.",
     "track": "itops",
@@ -803,6 +829,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-network-security",
+    "nature": "personal",
     "title": "Securing Internet Access with pfSense & Squid",
     "excerpt": "Network perimeter security lab: pfSense 2.6 VM as LAN gateway, firewall rules blocking server internet access, Squid + SquidGuard transparent proxy with URL filtering, LightSquid reporting and internal CA for HTTPS inspection.",
     "track": "itops",
@@ -844,6 +871,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "nextjs-admin-dashboard",
+    "nature": "personal",
     "title": "Admin Dashboard — Next.js 16 + Supabase",
     "excerpt": "Secure admin dashboard protected by HTTP Basic Auth, powered by a Supabase service_role client. Visualize projects, contact messages, certifications and testimonials — no extra dependencies.",
     "track": "itops",
@@ -885,6 +913,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "incident-management-dashboard",
+    "nature": "personal",
     "title": "Incident Management Dashboard — Next.js, Supabase & TypeScript",
     "excerpt": "Admin-only tool that turns a written incident-response playbook into an operational workflow: create an incident by type, get an auto-generated response checklist grouped by phase, track completion and status in real time.",
     "track": "itops",
@@ -927,6 +956,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-wifi-config",
+    "nature": "greta_tai",
     "title": "Wi-Fi Access Point Configuration (TP-Link)",
     "excerpt": "End-to-end TP-Link AP setup: WAN/LAN addressing, integrated DHCP server, SSID + WPA2-PSK security hardening — validated with a test device obtaining DHCP and reaching internet.",
     "track": "itops",
@@ -956,6 +986,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-hardware-procurement",
+    "nature": "greta_tai",
     "title": "Hardware Procurement: Drafting a Multi-PC Quote",
     "excerpt": "Full procurement workflow for a mid-range workstation: requirements analysis, B2B component research (LDLC Pro, Materiel.net), compatibility validation, and Excel quote under 1 000 € ex-VAT.",
     "track": "itops",
@@ -985,6 +1016,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "it-ops-email-config",
+    "nature": "greta_tai",
     "title": "Configuring Outlook 2016 Email Account",
     "excerpt": "Day-1 user onboarding scenario: Outlook 2016 account auto-configured via Exchange ActiveSync (tai7@outlook.fr), bidirectional test email validated — inbox ready in under 5 minutes.",
     "track": "itops",
@@ -1013,6 +1045,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "cyber-soc-curriculum",
+    "nature": "personal",
     "title": "Cyber Curriculum — 70 SOC Projects",
     "excerpt": "Practical cybersecurity training program: 70 hands-on projects covering SIEM, threat hunting, incident response, forensics and red team basics.",
     "track": "itops",
@@ -1037,6 +1070,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "vulnerability-assessment-report",
+    "nature": "personal",
     "title": "Vulnerability Assessment Tool (Python + CVSS)",
     "excerpt": "Python CLI tool that runs modular vulnerability assessments (network, system, web) and generates self-contained HTML reports with CVSS v3.1 base scores, risk-prioritized findings, and JSON export for SIEM/ticketing integration.",
     "track": "itops",
@@ -1072,6 +1106,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "incident-response-tracker",
+    "nature": "personal",
     "title": "Incident Response Tracker — SOC Ticketing Workflow",
     "excerpt": "Ticketing workflow for security incidents enforcing a strict lifecycle via a state machine, a per-severity SLA clock, and a timestamped audit trail of every status change, comment, and assignment.",
     "track": "itops",
@@ -1116,6 +1151,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "cve-watchlist",
+    "nature": "personal",
     "title": "CVE Watchlist — Real-Time NVD Vulnerability Triage",
     "excerpt": "Vulnerability triage dashboard syncing real CVE data from the public NVD API, ranked by a transparent priority-scoring engine that cross-references CVSS severity with CISA's Known Exploited Vulnerabilities (KEV) catalog.",
     "track": "itops",
@@ -1161,6 +1197,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "log-anomaly-detector",
+    "nature": "personal",
     "title": "Log Anomaly Detector — Rule-Based Auth Log Analysis",
     "excerpt": "Rule-based detection engine for authentication logs, surfacing brute-force attempts, impossible-travel logins, credential-stuffing bursts, and off-hours access — each rule a pure, unit-tested function with zero I/O.",
     "track": "itops",
@@ -1204,6 +1241,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "cosmonote-clone",
+    "nature": "personal",
     "title": "Cosmonote Clone — AI Meeting Transcription",
     "excerpt": "Functional clone of Cosmonote: automatic audio transcription via Whisper, AI meeting summaries, Supabase storage and Next.js interface.",
     "track": "itops",
@@ -1227,6 +1265,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "incident-response-playbook",
+    "nature": "personal",
     "title": "Incident Response Playbook (SOC)",
     "excerpt": "A set of structured playbooks designed for SOC teams and IT admins covering the 6 most common cybersecurity incidents. Each playbook follows the full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned.",
     "track": "itops",
@@ -1262,6 +1301,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "risque360",
+    "nature": "personal",
     "title": "risque360 — STRIDE Threat Modeling, Vendor Risk & Incident Recalibration",
     "excerpt": "Unified risk register combining three sources under one Likelihood × Impact scoring engine: STRIDE threat modeling per application component, vendor/third-party risk scored by a transparent heuristic, and an incident log that suggests a probability recalibration over a rolling 12-month window — never applied without an explicit click.",
     "track": "itops",
@@ -1304,6 +1344,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "bdr-prospection-tool",
+    "nature": "personal",
     "title": "BdR Prospection Tool — Salesforce Outreach",
     "excerpt": "Personal project: automatic Salesforce lead scoring, Outreach.io sequences and pipeline dashboards built entirely with native Salesforce stack.",
     "track": "salesforce",
@@ -1327,6 +1368,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "avenir-telecom-lightning-app",
+    "nature": "rncp",
     "title": "Lightning app delivery & backlog (Avenir Télécom)",
     "excerpt": "Scrum product backlog (20 user stories) and test plan for Avenir Télécom's field Lightning app, with real-time DeviQo integration and Dev Org hardening, then a Kanban evolutions backlog after an audit and a 3-month pilot.",
     "track": "salesforce",
@@ -1342,8 +1384,8 @@ export const projects: Project[] = [
       "Testing"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "pdfUrl": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Avenir-TELECOM",
@@ -1359,7 +1401,7 @@ export const projects: Project[] = [
     "highlights": [
       "20 costed and prioritized user stories (SIREN webservice validation, real-time DeviQo quotes <2s, auto PDF + email generation, GDPR purge)",
       "Test plan with 20 test classes and an Apex best-practices reference (bulkification, one trigger per object, ≥75% coverage)",
-      "Post-pilot Kanban backlog: 3 evolutions, 3 fixes and 3 production bugs tracked (E1-E3, C1-C3, B001-B003)"
+      "Post-pilot Kanban backlog: 3 evolutions, 3 fixes and 3 bugs from the simulated pilot (E1-E3, C1-C3, B001-B003)"
     ],
     "featured": false,
     "sortOrder": 10,
@@ -1367,6 +1409,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "digit-learning-salesforce-update",
+    "nature": "rncp",
     "title": "Salesforce application update (Digit Learning)",
     "excerpt": "Internal quality audit and Salesforce modernization for Digit Learning: a new Purchased Training junction object to lift the \"one student = one training\" limitation, automated enrollment and mentor assignment, and 3 new management reports.",
     "track": "salesforce",
@@ -1383,8 +1426,8 @@ export const projects: Project[] = [
       "Quality"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "techStack": [
       "Salesforce",
@@ -1406,6 +1449,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "tours-for-life-salesforce-solution",
+    "nature": "rncp",
     "title": "Salesforce solution design (Tours For Life)",
     "excerpt": "Salesforce Sales Cloud solution design for Tours for Life: Person Accounts for the Prospect → Traveler conversion, separate Trip / Purchased Trip / Bus Fleet objects, Flow automations (seat decrement, confirmation email) and a North/South role-based security model.",
     "track": "salesforce",
@@ -1423,8 +1467,8 @@ export const projects: Project[] = [
       "Fleet"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "pdfUrl": "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
     "techStack": [
@@ -1437,7 +1481,7 @@ export const projects: Project[] = [
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
       "4-object data model: Prospect (Lead), Traveler (Person Account), distinct Trip and Purchased Trip objects, Bus Fleet linked to multiple trips",
-      "2 production Flows: automatic available-seats decrement + confirmation email on prospect status change",
+      "2 record-triggered Flows: automatic available-seats decrement + confirmation email on prospect status change",
       "North/South role-based security with Sharing Rules, per-object OWD (Private / Public Read-Only / Controlled by Parent)"
     ],
     "featured": false,
@@ -1446,6 +1490,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "idemconnect-apex-backend",
+    "nature": "rncp",
     "title": "Apex backend development (iDEM Connect)",
     "excerpt": "Full Apex backend (trigger + handlers, batch, scheduler) for iDEM Connect: 3 business rules implemented, 23 tests at 100% pass rate, 90% org-wide coverage, structured technical documentation with a requirements-to-tests traceability matrix.",
     "track": "salesforce",
@@ -1460,8 +1505,8 @@ export const projects: Project[] = [
       "Testing"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "pdfUrl": "/docs/projects/idemconnect-apex-backend/documentation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/iDEM-Connect",
@@ -1487,6 +1532,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "wirebright-visualforce-to-lightning",
+    "nature": "rncp",
     "title": "Visualforce to Lightning migration (WireBright)",
     "excerpt": "Technical specifications and Classic-to-Lightning migration prototype for EG Manufacture: converting a Visualforce page into a Lightning Web Component and a JavaScript button into an Aura Quick Action, with detailed cost estimates and risk management.",
     "track": "salesforce",
@@ -1500,8 +1546,8 @@ export const projects: Project[] = [
       "Apex"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "pdfUrl": "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
     "repoUrl": "https://github.com/Aiyeesha/WireBrite-Consulting-Migration-Backup-Visualforce-jsbProject-",
@@ -1525,6 +1571,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "ltp-apex-backend-prototype",
+    "nature": "rncp",
     "title": "Delivery tracking CRM design (LTP)",
     "excerpt": "Complete design of a multi-carrier Salesforce delivery-tracking backend for Le Temps des Papillons: real-time architecture (Apex REST webhook + Queueable + LWC) for 2 carriers, Talend/Bulk API v2 batch flow for the 3rd, zone-based security model and import strategy for 2.1M accounts.",
     "track": "salesforce",
@@ -1542,8 +1589,8 @@ export const projects: Project[] = [
       "Integration"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "pdfUrl": "/docs/projects/ltp-apex-backend-prototype/specifications.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Optimisez-un-backend-Apex",
@@ -1569,6 +1616,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "fasha-apex-backend-optimization",
+    "nature": "rncp",
     "title": "Apex backend optimization (FASHA)",
     "excerpt": "Audited and fixed a buggy Apex backend for FASHA: a trigger that broke past 100 orders per account, an amount calculation that silently failed on bulk import, code with no reliable tests — full refactor into a bulk-safe handler pattern, >85% coverage.",
     "track": "salesforce",
@@ -1583,8 +1631,8 @@ export const projects: Project[] = [
       "Batch"
     ],
     "badge": {
-      "tone": "capstone",
-      "label": "CAPSTONE RNCP 6"
+      "tone": "training",
+      "label": "RNCP 6 TRAINING PROJECT"
     },
     "repoUrl": "https://github.com/Aiyeesha/FASHA",
     "techStack": [
@@ -1597,7 +1645,7 @@ export const projects: Project[] = [
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "Real bug diagnosed and fixed: the original trigger specifically failed once an account had more than 100 orders (not bulk-safe)",
+      "Bug diagnosed and fixed: the original trigger specifically failed once an account had more than 100 orders (not bulk-safe)",
       "Second bug: the NetAmount calculation worked from the UI but silently broke on bulk Data Loader imports",
       "Full refactor into a handler pattern (AccountService, OrderTriggerHandler, TriggerHelper) + async processing (@future, Batch, Scheduler)",
       ">85% test coverage with TestDataFactory, up from unreliable tests at the start"
@@ -1608,8 +1656,9 @@ export const projects: Project[] = [
   },
   {
     "slug": "legarant-axg-salesforce-deployment",
+    "nature": "rncp_capstone",
     "title": "Salesforce deployment with Heroku (Legarant‑AXG)",
-    "excerpt": "Deployment strategy and documentation: environments, release process, API tests, and production rollout with traceability.",
+    "excerpt": "Deployment strategy and documentation: environments, release process, API tests, and a traceable staging-to-production promotion procedure.",
     "track": "salesforce",
     "categories": [
       "Salesforce",
@@ -1650,6 +1699,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "cicd-pipeline-setup",
+    "nature": "personal",
     "title": "CI/CD Pipeline — Multi-environment Salesforce Deployment",
     "excerpt": "Design and implementation of a complete Salesforce CI/CD pipeline: Git branching strategy, automated Apex validations and continuous deployments via GitHub Actions across sandbox and production.",
     "track": "salesforce",
@@ -1689,6 +1739,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "industrak-salesforce",
+    "nature": "personal",
     "title": "IndusTrak — Salesforce FSL Portfolio",
     "excerpt": "Full Salesforce Field Service Lightning demo for the industrial sector: dispatching, SLAs, field intervention management.",
     "track": "salesforce",
@@ -1719,6 +1770,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "nova-manufacturing-classic-to-lightning",
+    "nature": "reconstructed",
     "title": "Salesforce Classic to Lightning Experience Migration (Nova Manufacturing)",
     "excerpt": "Full Classic to Lightning migration for an international industrial equipment manufacturer (~150 sales reps across 3 sites/hubs in Europe): rebuilt Visualforce pages and JS buttons as LWC/Flow, and systematically hardened legacy Apex security (with sharing, stripInaccessible, consolidating 14 profiles into 5 Permission Set Groups).",
     "track": "salesforce",

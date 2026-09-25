@@ -302,10 +302,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
           Uniquement sur la page /projects complète (ce composant n'est monté que là). */}
       <div className="mb-6 rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] px-4 py-3 text-sm text-muted">
         {locale === "fr"
-          ? `Ce déséquilibre (${trackCounts.itops} IT Ops vs ${trackCounts.salesforce} Salesforce) reflète une contrainte de confidentialité, pas un écart de compétence : mon travail Salesforce en poste relève du secret professionnel et ne peut pas être publié tel quel — les projets IT Ops, très majoritairement personnels, n'ont pas cette contrainte.`
+          ? `Pourquoi ${trackCounts.itops} projets IT Ops pour ${trackCounts.salesforce} projets Salesforce ? Mon travail Salesforce en poste est confidentiel et ne peut pas être publié : les projets Salesforce présentés ici sont des projets de formation et une étude de cas reconstituée. Les projets IT Ops, surtout personnels, n'ont pas cette contrainte. Chaque page indique la nature du projet et sa période.`
           : locale === "es"
-          ? `Este desequilibrio (${trackCounts.itops} IT Ops frente a ${trackCounts.salesforce} Salesforce) refleja una restricción de confidencialidad, no una diferencia de nivel: mi trabajo Salesforce en el puesto está sujeto a confidencialidad con el cliente y no puede publicarse tal cual — los proyectos IT Ops, mayoritariamente personales, no tienen esa restricción.`
-          : `This imbalance (${trackCounts.itops} IT Ops vs ${trackCounts.salesforce} Salesforce) reflects a confidentiality constraint, not a skill gap: my Salesforce work in post is bound by client confidentiality and can't be published as-is — the IT Ops projects, mostly personal, don't carry that constraint.`}
+          ? `¿Por qué ${trackCounts.itops} proyectos IT Ops frente a ${trackCounts.salesforce} proyectos Salesforce? Mi trabajo Salesforce en el puesto es confidencial y no puede publicarse: los proyectos Salesforce que se presentan aquí son proyectos de formación y un caso de estudio reconstruido. Los proyectos IT Ops, sobre todo personales, no tienen esa restricción. Cada página indica la naturaleza del proyecto y su periodo.`
+          : `Why ${trackCounts.itops} IT Ops projects for ${trackCounts.salesforce} Salesforce projects? My Salesforce work in my role is confidential and can't be published: the Salesforce projects shown here are training projects and one reconstructed case study. The IT Ops projects, mostly personal, don't carry that constraint. Each page states the project's type and period.`}
       </div>
 
       {/* ── Recherche full-text ─────────────────────────────────── */}
@@ -391,6 +391,11 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   <span className={getBadgeClass(p.badge.tone)}>{tBadge(p.badge.label, locale)}</span>
                 ) : null}
               </div>
+
+              {/* Période du projet (audit de contenu 2026-09-25) — affichée seulement si connue */}
+              {p.nature?.period && (
+                <p className="mt-1 text-xs text-muted-2">{p.nature.period}</p>
+              )}
 
               {/* Logo client — silencieux si absent, lazy (grille jusqu'à ~39 cartes) */}
               <div className="mt-1">

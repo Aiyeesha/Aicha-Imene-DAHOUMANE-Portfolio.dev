@@ -1,15 +1,15 @@
 ---
 title: "Livraison d'application Lightning & backlog Agile (Avenir Télécom)"
-heroSubtitle: "Stratégie d'implémentation d'une app Salesforce Lightning terrain pour une équipe de 3 développeurs : backlog produit de 20 user stories chiffrées, cahier de tests + référentiel Apex, puis boucle pilote 3 mois → backlog d'évolutions Kanban."
+heroSubtitle: "Stratégie d'implémentation d'une app Salesforce Lightning terrain pour une équipe de 3 développeurs : backlog produit de 20 user stories chiffrées, cahier de tests + référentiel Apex, puis boucle pilote de 3 mois (simulée par le scénario) → backlog d'évolutions Kanban."
 ---
 
 ## Le contexte
 
 À la suite d'un audit interne, les équipes commerciales de la zone Sud d'Avenir Télécom avaient besoin d'une application Salesforce Lightning mieux alignée sur leur travail quotidien (leads, comptes, opportunités, devis).
 
-La mission n'était pas de coder l'application, mais de **définir et outiller sa livraison** : stratégie d'implémentation pour une petite équipe de 3 développeurs Salesforce, backlog produit chiffré, cahier de tests, référentiel de bonnes pratiques — puis, après **3 mois de pilote terrain**, consolider les retours en un backlog d'évolutions priorisé.
+La mission n'était pas de coder l'application, mais de **définir et outiller sa livraison** : stratégie d'implémentation pour une petite équipe de 3 développeurs Salesforce, backlog produit chiffré, cahier de tests, référentiel de bonnes pratiques — puis, à partir des retours d'un **pilote de 3 mois simulé par le scénario**, consolider les retours en un backlog d'évolutions priorisé.
 
-L'équipe cible : Romain (senior — Apex & intégrations API), Guillaume (confirmé — automatisations & workflows), Hélène (junior — UI/UX, tests, documentation).
+L'équipe cible du scénario : un développeur senior (Apex & intégrations API), un développeur confirmé (automatisations & workflows) et une développeuse junior (UI/UX, tests, documentation).
 
 ## Le backlog produit (Scrum)
 
@@ -17,13 +17,13 @@ L'équipe cible : Romain (senior — Apex & intégrations API), Guillaume (confi
 
 | User story | Ce qu'elle impose | Charge · dev |
 |---|---|---|
-| **US1** — Gestion des leads | Création auto (formulaire web), affectation par règles (secteur, potentiel) + notification immédiate, conversion sans perte de données | 4 j · Romain |
-| **US2 / US11** — Vérification SIREN | Appel Webservice **en temps réel à la création** du compte ; blocage + message d'erreur explicite si incohérence | 4+2 j · Romain |
-| **US4 / US9** — Devis DeviQo | Intégration temps réel avec l'API DeviQo, affichage des devis en **< 2 s, sans stockage local**, rafraîchissement auto | 4+2 j · Guillaume |
-| **US14 / US15** — PDF + email | Génération d'un PDF de synthèse (fusion Opportunité/Compte/Contact), envoi auto au contact principal, archivage de l'envoi | 2+2 j · Hélène |
-| **US13** — Purge RGPD | Job planifié supprimant les comptes/contacts inactifs > 3 ans, **avec journal d'audit** | 3 j · Guillaume |
-| **US18 / US20** — Durcissement Dev Org | Configuration profils/droits + tests Apex `run as user` validant que chaque profil n'accède qu'aux données autorisées | 2+1 j · Romain/Guillaume |
-| **US19** — Datafactory | Automatisation de l'import et de la synchronisation continue depuis des sources externes | 2 j · Guillaume |
+| **US1** — Gestion des leads | Création auto (formulaire web), affectation par règles (secteur, potentiel) + notification immédiate, conversion sans perte de données | 4 j · Senior |
+| **US2 / US11** — Vérification SIREN | Appel Webservice **en temps réel à la création** du compte ; blocage + message d'erreur explicite si incohérence | 4+2 j · Senior |
+| **US4 / US9** — Devis DeviQo | Intégration temps réel avec l'API DeviQo, affichage des devis en **< 2 s, sans stockage local**, rafraîchissement auto | 4+2 j · Confirmé |
+| **US14 / US15** — PDF + email | Génération d'un PDF de synthèse (fusion Opportunité/Compte/Contact), envoi auto au contact principal, archivage de l'envoi | 2+2 j · Junior |
+| **US13** — Purge RGPD | Job planifié supprimant les comptes/contacts inactifs > 3 ans, **avec journal d'audit** | 3 j · Confirmé |
+| **US18 / US20** — Durcissement Dev Org | Configuration profils/droits + tests Apex `run as user` validant que chaque profil n'accède qu'aux données autorisées | 2+1 j · Senior/Confirmé |
+| **US19** — Datafactory | Automatisation de l'import et de la synchronisation continue depuis des sources externes | 2 j · Confirmé |
 
 Le chiffrage n'est pas décoratif : chaque story est estimée **et affectée au bon niveau de séniorité** — les intégrations API et la sécurité vont au senior, les automatisations au confirmé, l'UI et les tests au junior. C'est ce qui rend le plan de sprints tenable plutôt qu'optimiste.
 
@@ -48,13 +48,13 @@ La sécurité n'est pas un lot en fin de projet — elle est **dans les user sto
 
 ## Du pilote au backlog d'évolutions
 
-Après 3 mois de déploiement auprès des équipes terrain de la zone Sud, les retours ont été consolidés en un **backlog Kanban priorisé**, avec limites WIP et documentation Notion reliant dynamiquement backlog produit ↔ cahier de tests ↔ backlog d'évolutions :
+Le scénario simule ensuite 3 mois de pilote auprès des équipes terrain de la zone Sud : les retours fournis par le sujet ont été consolidés en un **backlog Kanban priorisé**, avec limites WIP et documentation Notion reliant dynamiquement backlog produit ↔ cahier de tests ↔ backlog d'évolutions :
 
 - **3 évolutions** — E1 interfaçage bidirectionnel avec l'outil de gestion des requêtes CaseIn · E2 backup quotidien automatique vers un SFTP dédié · E3 durcissement de la config Dev Org.
 - **3 corrections** — C1 synchro des comptes via Webservice SIREN · C2 format de nommage standardisé des opportunités · C3 notification immédiate au commercial à l'affectation d'un lead.
-- **3 bugs de production tracés** — B001 conversion lead → opportunité défaillante (priorité haute) · B002 données de comptes importés incorrectes · B003 notifications d'affectation non envoyées (corrigé).
+- **3 bugs remontés par le pilote simulé** — B001 conversion lead → opportunité défaillante (priorité haute) · B002 données de comptes importés incorrectes · B003 notifications d'affectation non envoyées (corrigé).
 
-La boucle est fermée : un bug remonté du terrain (B003) est relié à la correction C3, elle-même reliée à la story US1. Un relecteur retrouve le fil.
+La boucle est fermée : un bug remonté par le pilote (B003) est relié à la correction C3, elle-même reliée à la story US1. Un relecteur retrouve le fil.
 
 ## Décisions & limites assumées
 
@@ -67,7 +67,7 @@ La boucle est fermée : un bug remonté du terrain (B003) est relié à la corre
 
 Limites assumées :
 
-- **Le backlog produit est une spécification chiffrée, pas un livrable exécuté de bout en bout** — la valeur est dans la qualité du cadrage et du plan de tests, validés par un pilote réel, pas dans un déploiement à l'échelle de tout Avenir Télécom.
+- **Le backlog produit est une spécification chiffrée, pas un livrable exécuté de bout en bout** — la valeur est dans la qualité du cadrage et du plan de tests, confrontés aux retours d'un pilote simulé, pas dans un déploiement à l'échelle de tout Avenir Télécom.
 - **B002 (données de comptes importés incorrectes) est tracé mais non résolu** dans le périmètre : identifié, priorisé, laissé au sprint suivant — signalé plutôt que masqué.
 
 ## Résultats
@@ -76,7 +76,7 @@ Limites assumées :
 |---|---|
 | User stories chiffrées & priorisées | 20 |
 | Classes de test (couverture exigée ≥ 75 %) | 20 |
-| Durée du pilote terrain (zone Sud) | 3 mois |
+| Durée du pilote prévue par le scénario | 3 mois |
 | Évaluation du titre RNCP | 4/4 compétences validées |
 
 ## Livrables
