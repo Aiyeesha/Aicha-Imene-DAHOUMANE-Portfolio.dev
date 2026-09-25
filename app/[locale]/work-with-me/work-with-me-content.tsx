@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useTrack } from "@/app/[locale]/providers";
-import { getSiteUrl } from "@/lib/siteUrl";
-import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import CalendlyPopupButton from "@/components/CalendlyEmbed";
 
 const CALENDLY_URL = "https://calendly.com/ai-dahoumane/30min";
@@ -43,89 +41,101 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         ctaBtn:     "bg-violet-600 hover:bg-violet-700 text-white",
       };
 
+  // ── Contenu « Me recruter » ─────────────────────────────────────────────
+  // Réécrit à l'audit de contenu du 2026-09-25 : la page parlait à un client
+  // (appel découverte gratuit, devis sous 48 h, durée « récurrente », missions
+  // courtes et audits ponctuels) alors que la cible est un recrutement salarié
+  // (CDI, CDD, intérim, portage). L'URL /work-with-me est conservée pour ne
+  // casser aucun lien existant.
   const labels = {
-    kicker:         isFr ? "Paris / Île-de-France · Mobilité & relocalisation" : isEs ? "París / Île-de-France · Movilidad y traslado" : "Paris / Île-de-France · Open to relocation",
-    h1:             isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntas" : "Work with me",
+    kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
+    h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
     subtitle:       isFr
-      ? "Je suis disponible pour des missions Salesforce et IT Ops depuis le Val-d'Oise (95), avec une priorité opérationnelle Paris / Île-de-France — hybride, sur site ou remote — et une ouverture complète à la mobilité et à la relocalisation, en France, en Europe ou dans un contexte anglophone."
+      ? "Développeuse Salesforce en CDI chez LD Digitales, je recherche mon prochain poste à partir du 1er décembre 2026 : un rôle où Salesforce, l'infrastructure et la sécurité se croisent. Voici l'essentiel pour un recruteur, en une page."
       : isEs
-      ? "Estoy disponible para proyectos de Salesforce e IT Ops desde Val-d'Oise (95), con prioridad operativa París / Île-de-France — híbrido, presencial o remoto — y totalmente abierta a la movilidad y al traslado, en Francia, Europa o en un contexto de habla inglesa."
-      : "I'm available for Salesforce and IT Ops missions from Val-d'Oise (95), with an operational focus on Paris / Île-de-France — hybrid, on-site or remote — and fully open to mobility and relocation in France, Europe, or any English-speaking context.",
+      ? "Desarrolladora Salesforce con contrato indefinido en LD Digitales, busco mi próximo puesto a partir del 1 de diciembre de 2026: un rol donde Salesforce, infraestructura y seguridad se cruzan. Aquí tienes lo esencial para un reclutador, en una página."
+      : "A full-time Salesforce Developer at LD Digitales, I'm looking for my next role from December 1, 2026: one where Salesforce, infrastructure and security meet. Here is everything a recruiter needs, on one page.",
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
-    availSince:     isFr ? "Entretiens dès maintenant · Poste à partir du 1er décembre 2026" : isEs ? "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026" : "Interviews now · Role starting December 1, 2026",
+    availSince:     isFr ? "Entretiens dès maintenant · Prise de poste à partir du 1er décembre 2026" : isEs ? "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026" : "Interviews now · Start date from December 1, 2026",
     availContracts: isFr
-      ? "CDI · CDD · Mission"
+      ? "CDI · CDD · Intérim · Portage salarial — tous secteurs d'activité"
       : isEs
-      ? "Contrato indefinido · Temporal · Proyecto"
-      : "Permanent · Fixed-term · Contract",
+      ? "Indefinido · Temporal · ETT · Portage salarial — todos los sectores"
+      : "Permanent · Fixed-term · Temp · Umbrella (portage) — any industry",
     availMode:      isFr
-      ? "Val-d'Oise (95), Île-de-France · Priorité opérationnelle Paris / Île-de-France · Hybride · Sur site · Remote · Mobilité & relocalisation — France, Europe, pays anglophones"
+      ? "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France · Hybride · Sur site · Télétravail · Mobilité & relocalisation — France, Europe, pays anglophones"
       : isEs
-      ? "Val-d'Oise (95), Île-de-France · Prioridad operativa París / Île-de-France · Híbrido · Presencial · Remoto · Movilidad y traslado — Francia, Europa, países de habla inglesa"
-      : "Val-d'Oise (95), Île-de-France · Operational focus Paris / Île-de-France · Hybrid · On-site · Remote · Mobility & relocation — France, Europe, English-speaking countries",
+      ? "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France · Híbrido · Presencial · Remoto · Movilidad y traslado — Francia, Europa, países de habla inglesa"
+      : "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France · Hybrid · On-site · Remote · Mobility & relocation — France, Europe, English-speaking countries",
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
-    domainsLabel:   isFr ? "Domaines" : isEs ? "Ámbitos" : "Domains",
-    domains:        ["Salesforce Dev", "Administration Salesforce", "IT Ops", "DevOps / CI·CD", "Web · Next.js"],
-    durationLabel:  isFr ? "Durée" : isEs ? "Duración" : "Duration",
+    domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
+    domains:        isFr
+      ? ["Développeuse Salesforce", "Administratrice Salesforce", "Consultante Salesforce", "Ingénieure Salesforce & Infrastructure", "Systèmes & réseaux · DevOps"]
+      : isEs
+      ? ["Desarrolladora Salesforce", "Administradora Salesforce", "Consultora Salesforce", "Ingeniera Salesforce & Infraestructura", "Sistemas y redes · DevOps"]
+      : ["Salesforce Developer", "Salesforce Administrator", "Salesforce Consultant", "Salesforce & Infrastructure Engineer", "Systems & Network · DevOps"],
+    durationLabel:  isFr ? "Contrats" : isEs ? "Contratos" : "Contracts",
     durations:      isFr
-      ? ["Courte", "Longue", "Récurrente", "Au cas par cas"]
+      ? ["CDI", "CDD", "Intérim", "Portage salarial"]
       : isEs
-      ? ["Corta", "Larga", "Recurrente", "Puntual"]
-      : ["Short", "Long", "Ongoing", "Ad-hoc"],
-    modeLabel:      isFr ? "Mode" : isEs ? "Modalidad" : "Mode",
+      ? ["Indefinido", "Temporal", "ETT", "Portage salarial"]
+      : ["Permanent", "Fixed-term", "Temp (agency)", "Umbrella company (portage)"],
+    modeLabel:      isFr ? "Mode et secteurs" : isEs ? "Modalidad y sectores" : "Work mode and industries",
     modes:          isFr
-      ? ["Hybride · Sur site · Remote", "Priorité Paris / Île-de-France", "Mobilité & relocalisation envisageable"]
+      ? ["Hybride · Sur site · Télétravail", "Priorité Paris / Île-de-France", "Mobilité & relocalisation envisageable", "Tous secteurs d'activité"]
       : isEs
-      ? ["Híbrido · Presencial · Remoto", "Prioridad París / Île-de-France", "Abierta a movilidad y traslado"]
-      : ["Hybrid · On-site · Remote", "Focus Paris / Île-de-France", "Open to mobility & relocation"],
+      ? ["Híbrido · Presencial · Remoto", "Prioridad París / Île-de-France", "Abierta a movilidad y traslado", "Todos los sectores"]
+      : ["Hybrid · On-site · Remote", "Priority Paris / Île-de-France", "Open to mobility & relocation", "Any industry"],
 
-    processTitle:   isFr ? "Mon process" : isEs ? "Mi proceso" : "My process",
+    processTitle:   isFr ? "Comment se passe un recrutement avec moi" : isEs ? "Cómo es un proceso de selección conmigo" : "How hiring me works",
     steps: isFr
       ? [
-          { n: "01", title: "Appel découverte",    desc: "30 min, sans engagement. On discute du besoin, du périmètre et des contraintes.",  badge: "Gratuit" },
-          { n: "02", title: "Proposition & devis", desc: "Devis détaillé sous 48 h — périmètre, jalons, livrables et conditions.",           badge: "48 h" },
-          { n: "03", title: "Démarrage",           desc: "On fixe le planning et je démarre dès la première semaine disponible.",             badge: "Rapide" },
+          { n: "01", title: "Premier contact",      desc: "Par email, LinkedIn ou le formulaire recruteur. Je réponds sous 48 h, avec mon CV adapté au poste.",                        badge: "48 h" },
+          { n: "02", title: "Entretiens",           desc: "Échange RH, entretien technique (Apex, SOQL, Flow, ou mise en situation systèmes et réseaux), rencontre de l'équipe.",       badge: "Dès maintenant" },
+          { n: "03", title: "Prise de poste",       desc: "Arrivée à partir du 1er décembre 2026, diplômes et références fournis sur demande.",                                         badge: "1er déc. 2026" },
         ]
       : isEs
       ? [
-          { n: "01", title: "Llamada de descubrimiento", desc: "30 min, sin compromiso. Hablamos de tu necesidad, el alcance y las restricciones.", badge: "Gratis" },
-          { n: "02", title: "Propuesta y presupuesto",   desc: "Presupuesto detallado en 48 h — alcance, hitos, entregables y condiciones.",        badge: "48 h" },
-          { n: "03", title: "Puesta en marcha",          desc: "Fijamos el calendario y empiezo desde la primera semana disponible.",               badge: "Rápido" },
+          { n: "01", title: "Primer contacto",      desc: "Por email, LinkedIn o el formulario para reclutadores. Respondo en 48 h, con mi CV adaptado al puesto.",                     badge: "48 h" },
+          { n: "02", title: "Entrevistas",          desc: "Entrevista de RR. HH., entrevista técnica (Apex, SOQL, Flow o caso práctico de sistemas y redes), encuentro con el equipo.", badge: "Desde ya" },
+          { n: "03", title: "Incorporación",        desc: "Incorporación a partir del 1 de diciembre de 2026; diplomas y referencias disponibles bajo petición.",                        badge: "1 dic. 2026" },
         ]
       : [
-          { n: "01", title: "Discovery call",   desc: "30 min, no commitment. We discuss your needs, scope, and constraints.",           badge: "Free" },
-          { n: "02", title: "Proposal & quote", desc: "Detailed quote within 48 h — scope, milestones, deliverables, and terms.",        badge: "48 h" },
-          { n: "03", title: "Kick-off",         desc: "We set the schedule and I start in your first available week.",                   badge: "Fast" },
+          { n: "01", title: "First contact",        desc: "By email, LinkedIn or the recruiter form. I reply within 48 hours, with a résumé tailored to the role.",                    badge: "48 h" },
+          { n: "02", title: "Interviews",           desc: "HR screening, technical interview (Apex, SOQL, Flow, or a systems and network scenario), meeting the team.",                 badge: "Now" },
+          { n: "03", title: "Start",                desc: "Start date from December 1, 2026; diplomas and references available on request.",                                            badge: "Dec 1, 2026" },
         ],
 
     faqTitle: isFr ? "Questions fréquentes" : isEs ? "Preguntas frecuentes" : "FAQ",
     faqs: isFr
       ? [
-          { q: "Sous quel type de contrat intervenez-vous ?",       a: "Je travaille en CDI, CDD ou mission selon le contexte — en France et à l'international. Décrivez votre besoin et on verra ensemble ce qui convient le mieux." },
-          { q: "Êtes-vous disponible pour des missions courtes ?",  a: "Oui, y compris pour des audits, des formations ou des interventions ponctuelles. Décrivez le besoin et je reviens sous 24 h." },
-          { q: "Quelle est votre zone géographique ?",              a: "Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité opérationnelle sur Paris et l'Île-de-France — hybride, sur site ou remote selon les besoins. Je suis ouverte à la mobilité et à la relocalisation — en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
+          { q: "Quels types de contrat acceptez-vous ?",  a: "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est un poste où mon double profil Salesforce et infrastructure est utile." },
+          { q: "Quand pouvez-vous commencer ?",           a: "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste à partir du 1er décembre 2026." },
+          { q: "Quelle est votre zone géographique ?",    a: "Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité pour Paris et l'Île-de-France — hybride, sur site ou télétravail selon le poste. Je suis ouverte à la mobilité et à la relocalisation, en France comme à l'international : Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Royaume-Uni, Irlande, Malte) et tout contexte anglophone." },
         ]
       : isEs
       ? [
-          { q: "¿Bajo qué tipo de contrato trabajas?",           a: "Trabajo con contrato indefinido, temporal o por proyecto según el contexto — en Francia y a nivel internacional. Cuéntame tu necesidad y vemos juntas qué encaja mejor." },
-          { q: "¿Estás disponible para proyectos cortos?",       a: "Sí, incluyendo auditorías, formaciones o intervenciones puntuales. Describe la necesidad y te respondo en 24 h." },
-          { q: "¿Cuál es tu zona geográfica?",                   a: "Estoy ubicada en Val-d'Oise (95), en Île-de-France, con prioridad operativa en París y la región de Île-de-France — híbrido, presencial o remoto según la necesidad. Estoy abierta a la movilidad y al traslado — en Francia y a nivel internacional: Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Reino Unido, Irlanda, Malta) y cualquier contexto de habla inglesa." },
+          { q: "¿Qué tipos de contrato aceptas?",           a: "Indefinido, temporal, ETT o portage salarial, en todos los sectores. Lo que me importa es un puesto donde mi doble perfil Salesforce e infraestructura sea útil." },
+          { q: "¿Cuándo puedes empezar?",                   a: "Estoy disponible para entrevistas desde ya, con incorporación a partir del 1 de diciembre de 2026." },
+          { q: "¿Cuál es tu zona geográfica?",              a: "Estoy ubicada en Val-d'Oise (95), en Île-de-France, con prioridad para París y la región de Île-de-France — híbrido, presencial o remoto según el puesto. Estoy abierta a la movilidad y al traslado, en Francia y a nivel internacional: Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Reino Unido, Irlanda, Malta) y cualquier contexto de habla inglesa." },
         ]
       : [
-          { q: "What contract type works best?",             a: "I work on permanent, fixed-term, or contract engagements — in France and internationally. Tell me about your context and we'll find what fits." },
-          { q: "Do you take short missions?",                a: "Yes, including audits, training, or ad-hoc work. Describe the need and I'll get back to you within 24 h." },
-          { q: "Where are you based?",                       a: "I'm based in Val-d'Oise (95), Île-de-France, with an operational focus on Paris and the Île-de-France region — hybrid, on-site or remote depending on the need. I'm open to mobility and relocation — in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
+          { q: "Which contract types do you accept?",       a: "Permanent, fixed-term, temp (agency) or umbrella-company (portage) contracts, in any industry. What matters to me is a role where my dual Salesforce and infrastructure profile is useful." },
+          { q: "When can you start?",                       a: "I'm available for interviews right away, with a start date from December 1, 2026." },
+          { q: "Where are you based?",                      a: "I'm based in Val-d'Oise (95), Île-de-France, with a priority for Paris and the Île-de-France region — hybrid, on-site or remote depending on the role. I'm open to mobility and relocation, in France and internationally: Europe (Belgium, Luxembourg, Germany, Italy, Spain, UK, Ireland, Malta) and any English-speaking context." },
         ],
 
-    ctaTitle:    isFr ? "Une mission en tête ?" : isEs ? "¿Tienes un proyecto en mente?" : "Got a mission in mind?",
-    ctaSubtitle: isFr ? "Décrivez votre besoin en quelques lignes — je reviens sous 24 h." : isEs ? "Describe tu necesidad en pocas líneas — te respondo en 24 h." : "Describe your needs in a few lines — I'll get back to you within 24 h.",
-    ctaContact:  isFr ? "Envoyer un message" : isEs ? "Enviar un mensaje" : "Send a message",
-    ctaServices: isFr ? "Voir les services" : isEs ? "Ver los servicios" : "View services",
+    ctaTitle:    isFr ? "Un poste à pourvoir ?" : isEs ? "¿Tienes un puesto por cubrir?" : "Hiring for a role?",
+    ctaSubtitle: isFr ? "Présentez-moi le poste en quelques lignes — je réponds sous 48 h." : isEs ? "Preséntame el puesto en pocas líneas — respondo en 48 h." : "Tell me about the role in a few lines — I reply within 48 hours.",
+    ctaContact:  isFr ? "Présenter un poste" : isEs ? "Presentar un puesto" : "Tell me about the role",
+    ctaCall:     isFr ? "Planifier un échange" : isEs ? "Programar una llamada" : "Schedule a call",
+    ctaCv:       isFr ? "Télécharger le CV hybride" : isEs ? "Descargar el CV híbrido" : "Download the hybrid résumé",
+    ctaHybrid:   isFr ? "Voir le profil hybride" : isEs ? "Ver el perfil híbrido" : "See the hybrid profile",
     backHome:    isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
     breadHome:   isFr ? "Accueil" : isEs ? "Inicio" : "Home",
     breadLabel:  isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb",
@@ -141,36 +151,13 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
   const dotColor = AVAILABILITY.status === "open" ? "bg-emerald-500"
     : AVAILABILITY.status === "limited" ? "bg-amber-500" : "bg-red-500";
 
-  const siteUrl = getSiteUrl();
-  const ownerName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
-  const professionalServiceSchema = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: siteName,
-    url: `${siteUrl}/${locale}/work-with-me`,
-    description: isFr
-      ? "Missions Salesforce et IT Ops — priorité opérationnelle Paris / Île-de-France (hybride, sur site ou remote), ouverte à la mobilité et à la relocalisation en France, en Europe et dans les pays anglophones."
-      : isEs
-      ? "Proyectos de Salesforce e IT Ops — prioridad operativa París / Île-de-France (híbrido, presencial o remoto), abierta a la movilidad y al traslado en Francia, Europa y países de habla inglesa en todo el mundo."
-      : "Salesforce and IT Ops missions — operational focus Paris / Île-de-France (hybrid, on-site or remote), open to mobility and relocation in France, Europe, and English-speaking countries worldwide.",
-    serviceType: ["Salesforce Development", "Salesforce Administration", "IT Operations", "DevOps / CI·CD", "Web Development"],
-    provider: { "@type": "Person", name: ownerName, url: siteUrl },
-    areaServed: [
-      { "@type": "Country", name: "France" }, { "@type": "Country", name: "Algeria" },
-      { "@type": "Country", name: "Belgium" }, { "@type": "Country", name: "Switzerland" },
-      { "@type": "Country", name: "Luxembourg" }, { "@type": "Country", name: "Canada" },
-      { "@type": "Country", name: "United Kingdom" }, { "@type": "Country", name: "Ireland" },
-      { "@type": "Country", name: "Malta" }, "Worldwide",
-    ],
-    availableLanguage: ["French", "English"],
-    workLocation: { "@type": "VirtualLocation" },
-  };
+  // Le JSON-LD ProfessionalService (référencement de prestations) a été retiré
+  // à l'audit de contenu du 2026-09-25 : il présentait le profil comme une
+  // offre de services. Le fil d'Ariane JSON-LD reste émis par page.tsx.
+  const cvUrl = `/cv/Aicha-Imene-DAHOUMANE-CV-${isFr ? "fr" : isEs ? "es" : "en"}-hybrid.pdf`;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(professionalServiceSchema) }} />
-
       {/* Breadcrumb */}
       <nav aria-label={labels.breadLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">{labels.breadHome}</Link>
@@ -256,20 +243,19 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         <h2 id="section-cta" className="text-xl font-semibold text-slate-900 dark:text-white">{labels.ctaTitle}</h2>
         <p className="mt-2 text-sm text-muted">{labels.ctaSubtitle}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <CalendlyPopupButton
-            url={CALENDLY_URL}
-            label={isFr ? "Réserver un appel" : isEs ? "Reservar una llamada" : "Book a call"}
-            className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}
-          />
-          {/* Pointait vers /#contact (formulaire simple de la home) au lieu du
-              formulaire structuré /contact que cette page est censée amener —
-              repéré à l'audit 2026-08-13 : un visiteur qui lit ce pitch de bout
-              en bout retombait sur le formulaire le moins qualifiant des deux. */}
-          <Link href={`/${locale}/contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">
+          <Link href={`/${locale}/contact`} className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}>
             {labels.ctaContact}
           </Link>
-          <Link href={`/${locale}/#services`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">
-            {labels.ctaServices}
+          <CalendlyPopupButton
+            url={CALENDLY_URL}
+            label={labels.ctaCall}
+            className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors"
+          />
+          <a href={cvUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">
+            {labels.ctaCv}
+          </a>
+          <Link href={`/${locale}/hybride`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors">
+            {labels.ctaHybrid}
           </Link>
         </div>
       </section>

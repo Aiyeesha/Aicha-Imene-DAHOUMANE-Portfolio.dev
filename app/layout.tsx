@@ -38,7 +38,7 @@ const inter = Inter({
 // SEO :
 //   - metadataBase configurée depuis NEXT_PUBLIC_SITE_URL (nécessaire pour les balises OG relatives)
 //   - JSON-LD Schema.org injecté en <head> :
-//       WebSite + Person + ProfessionalService
+//       WebSite + Person
 //   - Validable sur : https://validator.schema.org/
 //
 // Analytics Vercel + Speed Insights uniquement en production.
@@ -81,7 +81,9 @@ export const metadata: Metadata = {
  * Contient :
  *   - WebSite : nom du site, URL, langue
  *   - Person  : identité professionnelle, titre, réseaux sociaux (sameAs)
- *   - ProfessionalService : nature des services proposés (Salesforce, IT Ops)
+ *   (Le nœud ProfessionalService a été retiré à l'audit de contenu du 2026-09-25 :
+ *    il présentait le profil comme une offre de prestations, alors que la cible
+ *    est un recrutement salarié.)
  *
  * Configurable via variables d'environnement (pas de secrets nécessaires).
  */
@@ -126,7 +128,7 @@ function buildJsonLd(locale: string) {
         name: personName,
         url: siteUrl,
         jobTitle: headline,
-        description: "Salesforce Developer and IT Consultant available for remote missions across Belgium, UK, Ireland, Luxembourg, Germany, Malta, Italy, Spain, Tunisia, Algeria and English-speaking markets worldwide.",
+        description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — hybrid, on-site or remote, open to relocation in Europe and English-speaking countries.",
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
@@ -143,34 +145,6 @@ function buildJsonLd(locale: string) {
         // Lien vers la page About pour plus de détails
         mainEntityOfPage: `${siteUrl}/${locale}/about`
       },
-
-      // ProfessionalService — nature des services proposés
-      {
-        "@type": "ProfessionalService",
-        "@id": `${siteUrl}/#service`,
-        name: personName,
-        url: siteUrl,
-        provider: { "@id": personId },
-        // Catégories de services
-        serviceType: ["Salesforce Development", "Salesforce Administration", "IT Operations", "DevOps"],
-        areaServed: [
-          { "@type": "Country", name: "France" },
-          { "@type": "Country", name: "Algeria" },
-          { "@type": "Country", name: "Tunisia" },
-          { "@type": "Country", name: "Belgium" },
-          { "@type": "Country", name: "Luxembourg" },
-          { "@type": "Country", name: "Switzerland" },
-          { "@type": "Country", name: "Germany" },
-          { "@type": "Country", name: "Italy" },
-          { "@type": "Country", name: "Spain" },
-          { "@type": "Country", name: "United Kingdom" },
-          { "@type": "Country", name: "Ireland" },
-          { "@type": "Country", name: "Malta" },
-          { "@type": "Country", name: "Canada" },
-          "Worldwide", // remote international — string Text valide Schema.org
-        ],
-        inLanguage: locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US"
-      }
     ]
   };
 }
