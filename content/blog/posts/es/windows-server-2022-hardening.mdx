@@ -3,6 +3,7 @@ title: "Hardening de seguridad de Windows Server 2022: una checklist práctica"
 excerpt: "Guía de hardening paso a paso para Windows Server 2022 — desde deshabilitar protocolos obsoletos hasta configurar políticas de auditoría, firewall local y gestión de accesos privilegiados."
 date: "2025-09-08"
 tags: ["IT Ops", "Windows Server", "Seguridad", "Hardening", "Runbook"]
+projects: ["it-ops-virtualization-lab"]
 ---
 
 Un Windows Server 2022 recién instalado no es un servidor seguro. La configuración por defecto prioriza la compatibilidad por encima de la seguridad. Esta guía recorre los pasos de hardening esenciales — aplicables a cualquier rol, desde controladores de dominio hasta servidores de archivos.
@@ -150,8 +151,9 @@ New-NetFirewallRule `
 Rename-LocalUser -Name "Administrator" -NewName "srv-admin"
 
 # Crear una cuenta de administrador separada para uso diario
+# Contraseña introducida por teclado: nunca escrita en claro en un script
 New-LocalUser -Name "sysadmin-ops" `
-    -Password (ConvertTo-SecureString "S3cur3P@ss2026!" -AsPlainText -Force) `
+    -Password (Read-Host -AsSecureString "Contraseña de la cuenta") `
     -FullName "Operations Admin" `
     -PasswordNeverExpires $false
 

@@ -3,6 +3,7 @@ title: "Governor Limits en Salesforce: entenderlos, monitorearlos y evitarlos"
 excerpt: "Una guía práctica sobre los governor limits de Salesforce — los más críticos, cómo monitorear tu consumo y patrones para mantenerte holgadamente dentro de los límites."
 date: "2025-11-03"
 tags: ["Salesforce", "Apex", "Rendimiento", "Governor Limits", "Buenas prácticas"]
+projects: ["fasha-apex-backend-optimization"]
 ---
 
 Los governor limits son las reglas que Salesforce impone para garantizar que ningún org monopolice los recursos compartidos de la plataforma. Entenderlos es esencial — alcanzarlos en producción provoca excepciones, automatizaciones rotas y usuarios descontentos.
@@ -74,9 +75,13 @@ public class LimitGuard {
     }
 }
 
+// System.LimitException no se puede instanciar ni capturar:
+// se lanza una excepción personalizada que el llamador puede gestionar.
+public class InsufficientCapacityException extends Exception {}
+
 // Uso
 if (!LimitGuard.hasSoqlCapacity(5)) {
-    throw new LimitException('Insufficient SOQL capacity to proceed.');
+    throw new InsufficientCapacityException('Capacidad SOQL insuficiente para continuar.');
 }
 ```
 
@@ -210,7 +215,7 @@ System.enqueueJob(new SyncQueueable(accountIds));
 
 1. **Revisa los debug logs** — identifica qué línea lanzó la excepción
 2. **Encuentra la causa raíz** — normalmente un trigger que llama a un método que hace SOQL/DML dentro de un loop
-3. **Comprueba la recursión** — ¿el trigger se está llamando a sí mismo? Usa una guarda de recursión estática
+3. **Comprueba la recursión** — ¿el trigger se está llamando a sí mismo? Usa una guarda de recursión basada en los Id ya procesados (un simple booleano ignora los lotes siguientes de 200 registros)
 4. **Refactoriza** — aplica patrones de bulkificación
 5. **Considera lo asíncrono** — mueve el procesamiento pesado a Batch o Queueable
 

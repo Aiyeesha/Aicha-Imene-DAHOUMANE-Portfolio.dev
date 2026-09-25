@@ -4,6 +4,7 @@ excerpt: "Practical guide to building robust, performant, and maintainable Apex 
 date: "2026-02-15"
 tags: ["Salesforce", "Apex", "Best Practices", "Development"]
 featured: false
+projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
 
 Apex triggers are at the heart of many Salesforce automations. Poorly designed, they quickly become a source of bugs, performance issues, and maintenance nightmares. Here are 10 essential best practices for developing professional triggers.
@@ -132,31 +133,31 @@ private static void afterInsert(List<Account> newAccounts) {
 
 ## 5. Prevent Infinite Recursion
 
-Use a static class to control execution:
+A simple static boolean ("the trigger already ran") is a classic trap: when Data Loader or an API inserts more than 200 records, the platform splits the transaction into chunks of 200 and calls the trigger again for each chunk. With a boolean, **the following chunks are silently skipped**. Track the **Ids already processed** instead:
 
 ```apex
 public class TriggerControl {
-    private static Set<String> executedTriggers = new Set<String>();
-    
-    public static Boolean isFirstTime(String triggerName) {
-        if (executedTriggers.contains(triggerName)) {
-            return false;
-        }
-        executedTriggers.add(triggerName);
-        return true;
-    }
-    
-    public static void reset(String triggerName) {
-        executedTriggers.remove(triggerName);
+    // Key = trigger name + Id: each record is processed once per transaction,
+    // however many 200-record chunks there are.
+    private static Set<String> processed = new Set<String>();
+
+    public static Boolean markProcessed(String triggerName, Id recordId) {
+        return processed.add(triggerName + ':' + recordId); // false if already present
     }
 }
 
-// In the handler:
-public static void handle() {
-    if (!TriggerControl.isFirstTime('AccountTrigger')) {
-        return; // Prevents recursion
+// In the handler (after update):
+public static void handleAfterUpdate(List<Account> newAccounts) {
+    List<Account> toProcess = new List<Account>();
+    for (Account acc : newAccounts) {
+        if (TriggerControl.markProcessed('AccountTrigger', acc.Id)) {
+            toProcess.add(acc); // first pass for this record
+        }
     }
-    // ... trigger logic
+    if (toProcess.isEmpty()) {
+        return; // all already processed: recursion avoided
+    }
+    // ... trigger logic on toProcess only
 }
 ```
 

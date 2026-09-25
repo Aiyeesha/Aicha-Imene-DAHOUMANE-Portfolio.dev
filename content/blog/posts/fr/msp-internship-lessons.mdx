@@ -1,0 +1,38 @@
+---
+title: "Quatre mois de stage en ESN/MSP : ce que la supervision, les sauvegardes et le support m'ont appris"
+excerpt: "Retour d'expérience daté de mon stage chez MIDRANGE GROUP (février–mai 2023) : supervision Datto RMM, tickets Autotask, alertes de sauvegarde Acronis et déploiement de 264 postes Dell — et les réflexes que j'en garde."
+date: "2026-09-25"
+tags: ["IT Ops", "Retour d'expérience", "Supervision", "Sauvegarde", "Support"]
+projects: ["it-ops-rmm-supervision", "it-ops-incident-management", "it-ops-acronis-backup", "workstation-mass-deployment"]
+---
+
+De février à mai 2023, j'ai effectué mon stage de fin de formation TSSR chez MIDRANGE GROUP, une ESN qui gère le parc informatique de ses clients (MSP). J'y ai travaillé au sein de l'équipe Exploitation, encadrée par un administrateur systèmes et réseaux. Cet article remplace les quatre runbooks que j'avais publiés séparément : il rassemble ce que j'ai réellement fait, et surtout ce que j'en retiens. Les données des clients ne sont pas reproduites ici.
+
+## Ce que j'ai fait
+
+- **Supervision** — suivi quotidien de plus de 550 appareils dans Datto RMM : état des correctifs, couverture antivirus, inventaire logiciel. Quand un poste n'était plus protégé, je déployais l'agent Malwarebytes à distance par Quick Job, sans intervention sur site.
+- **Support** — traitement de tickets dans Autotask, arrivés par trois canaux (téléphone, e-mail, agent RMM), avec prise en main à distance via Splashtop et saisie du temps passé pour la facturation.
+- **Sauvegardes** — contrôle quotidien des sauvegardes Acronis d'un client : 105 appareils protégés, 5 plans de sauvegarde, 85 alertes à trier (33 erreurs, 52 avertissements).
+- **Déploiement** — mise en service de 264 postes Dell : 64 Optiplex effacés avec Blancco puis réimagés, 200 Latitude déployés via Windows Autopilot et Intune.
+
+## Ce que j'en retiens
+
+### 1. Une alerte n'est pas un diagnostic
+
+Sur les sauvegardes, le même statut rouge pouvait cacher quatre causes différentes : destination NAS pleine, serveur hors ligne, plan corrompu, coupure réseau. Chacune appelle une correction différente. J'ai pris l'habitude de qualifier la cause avant d'agir, plutôt que de relancer la tâche en espérant qu'elle passe.
+
+### 2. Vérifier avant d'autoriser
+
+Un ticket portait sur un site bloqué par l'antivirus Webroot. La solution rapide consistait à ajouter le domaine en exception ; la bonne démarche consistait d'abord à vérifier la réputation réelle du domaine, puis seulement à créer l'exception depuis la console, sans désinstaller ni reconfigurer l'antivirus. C'est un réflexe de sécurité que j'applique désormais à toute demande d'exception.
+
+### 3. Ce qui n'est pas documenté n'existe pas
+
+Dans un MSP, chaque intervention est tracée dans le ticket : ce qui a été constaté, ce qui a été fait, le temps passé. Ce n'est pas de la bureaucratie : c'est ce qui permet à un collègue de reprendre un dossier, et au client de comprendre ce qu'il paie. Je documente depuis mes interventions de la même façon, y compris dans mes projets Salesforce.
+
+### 4. Standardiser pour passer à l'échelle
+
+Déployer 264 postes à la main n'est pas envisageable. Le travail utile se fait en amont : image de référence, profils Autopilot et Intune, chiffrement BitLocker et règles de mise à jour définis une fois, puis appliqués à tout le parc. Le temps d'intervention par poste devient alors marginal, et chaque poste est configuré de la même façon.
+
+## Et côté Salesforce ?
+
+Ces quatre réflexes sont exactement ceux que j'applique aujourd'hui en développement Salesforce : qualifier la cause racine d'un bug avant de le corriger, vérifier les droits avant d'ouvrir un accès, documenter chaque livraison et automatiser les déploiements. C'est ce qui relie mes deux parcours.

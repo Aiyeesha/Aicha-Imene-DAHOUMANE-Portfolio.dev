@@ -42,7 +42,7 @@ Install-ADDSForest `
   -DomainNetBIOSName "CORP" `
   -ForestMode "WinThreshold" `
   -DomainMode "WinThreshold" `
-  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+  -SafeModeAdministratorPassword (Read-Host -AsSecureString "Password") `
   -InstallDns `
   -Force
 
@@ -227,7 +227,7 @@ Add-Computer -DomainName "corp.example.com" -Restart
 # After restart, promote as additional DC
 Install-ADDSDomainController `
   -DomainName "corp.example.com" `
-  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+  -SafeModeAdministratorPassword (Read-Host -AsSecureString "Password") `
   -InstallDns `
   -Force
 ```
