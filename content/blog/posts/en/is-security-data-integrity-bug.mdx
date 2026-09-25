@@ -4,6 +4,7 @@ excerpt: "How a re-seed script could have silently wiped the flag behind this si
 date: "2026-08-12"
 tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
 featured: false
+projects: ["colophon"]
 ---
 
 This site's project data lives in two places: Supabase (the source of truth at runtime) and two generated TypeScript files, `content/projects.ts` and `content/projectDetails.ts`, kept as a local fallback. Two scripts keep them in sync: `scripts/export-projects-from-supabase.ts` pulls Supabase → files, `scripts/seed.ts` pushes files → Supabase.

@@ -1,0 +1,38 @@
+---
+title: "Four months as an intern at an MSP: what monitoring, backups and support taught me"
+excerpt: "A dated look back at my internship at MIDRANGE GROUP (February–May 2023): Datto RMM monitoring, Autotask tickets, Acronis backup alerts and a 264-device Dell rollout — and the habits I kept from it."
+date: "2026-09-25"
+tags: ["IT Ops", "Lessons learned", "Monitoring", "Backup", "Support"]
+projects: ["it-ops-rmm-supervision", "it-ops-incident-management", "it-ops-acronis-backup", "workstation-mass-deployment"]
+---
+
+From February to May 2023, I did the internship that concluded my TSSR (systems & network technician) course at MIDRANGE GROUP, an IT services company that manages its clients' IT (an MSP). I worked in the Operations team, supervised by a systems and network administrator. This article replaces the four runbooks I had published separately: it brings together what I actually did and, above all, what I took away from it. No client data is reproduced here.
+
+## What I did
+
+- **Monitoring** — daily follow-up of 550+ devices in Datto RMM: patch status, antivirus coverage, software inventory. When a machine was no longer protected, I deployed the Malwarebytes agent remotely through a Quick Job, with no on-site visit.
+- **Support** — handling tickets in Autotask, coming in through three channels (phone, email, RMM agent), with remote sessions through Splashtop and time entries for billing.
+- **Backups** — daily checks of one client's Acronis backups: 105 protected devices, 5 backup plans, 85 alerts to triage (33 errors, 52 warnings).
+- **Deployment** — provisioning 264 Dell machines: 64 Optiplex wiped with Blancco then re-imaged, 200 Latitude deployed through Windows Autopilot and Intune.
+
+## What I took away
+
+### 1. An alert is not a diagnosis
+
+On backups, the same red status could hide four different causes: a full NAS destination, an offline server, a corrupted plan, a network outage. Each one calls for a different fix. I got into the habit of qualifying the cause before acting, rather than re-running the job and hoping it would pass.
+
+### 2. Verify before allowing
+
+One ticket was about a website blocked by the Webroot antivirus. The quick fix was to whitelist the domain; the right approach was to check the domain's actual reputation first, and only then add the exception from the console, without uninstalling or reconfiguring the antivirus. It's a security habit I now apply to every exception request.
+
+### 3. If it isn't documented, it didn't happen
+
+At an MSP, every intervention is recorded in the ticket: what was observed, what was done, the time spent. It isn't red tape: it's what lets a colleague pick up a case, and lets the client understand what they're paying for. I've documented my work the same way ever since, including on my Salesforce projects.
+
+### 4. Standardize to scale
+
+Setting up 264 machines by hand isn't an option. The useful work happens upstream: a reference image, Autopilot and Intune profiles, BitLocker encryption and update rules defined once, then applied to the whole fleet. Hands-on time per machine becomes marginal, and every machine ends up configured the same way.
+
+## And on the Salesforce side?
+
+These four habits are exactly the ones I apply today in Salesforce development: find the root cause of a bug before fixing it, check permissions before opening access, document every release and automate deployments. That's what connects my two backgrounds.

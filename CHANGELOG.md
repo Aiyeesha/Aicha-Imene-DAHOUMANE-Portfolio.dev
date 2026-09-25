@@ -20,6 +20,15 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Élagage du blog et des projets (audit de contenu du 2026-09-25, lot 4)** —
+  - Blog ramené de 54 à 14 articles : 41 articles (front-end/Next.js, sujets hors profil, runbooks redondants, articles avec erreurs Salesforce) déplacés dans `content/blog/unpublished/`, avec redirections temporaires ; les 4 runbooks MIDRANGE GROUP sont remplacés par un retour d'expérience daté (`msp-internship-lessons`, FR/EN/ES).
+  - Chaque article publié porte un frontmatter `projects` affiché en « Mis en pratique dans » (lien vers l'étude de cas et sa nature).
+  - Corrections techniques : garde anti-récursion fondée sur les Id traités (un booléen statique ignorait les lots de 200 suivants) ; `throw new LimitException` remplacé par une exception personnalisée (System.LimitException ne peut être ni instanciée ni interceptée).
+  - Mots de passe en clair retirés de tous les scripts PowerShell (publiés et dépubliés) au profit de `Read-Host -AsSecureString`.
+  - Séries du blog resserrées (Développement Salesforce, DevOps Salesforce, Administration Windows Server).
+  - Galerie projets ramenée de 40 à 26 : 14 projets passés en `draft` (fiches faibles, doublons, exercices Java/front-end, playbook dérivé d'un dépôt tiers, tableau de bord Next.js), avec redirections vers le projet qui les contient ou vers la galerie.
+  - Formulation « 264 postes Dell » précisée : 64 Optiplex réimagés, 200 Latitude via Windows Autopilot.
+
 - **Honnêteté des projets (audit de contenu du 2026-09-25, lot 3)** —
   - Bandeau « nature du projet » en tête de chaque page projet (formation RNCP 6 / OpenClassrooms / Greta TAI ou TSSR, stage MIDRANGE GROUP, projet personnel, étude reconstituée) avec sa période quand elle est connue (`lib/projectNature.ts`, champ `nature` dans `content/projects.ts`) ; période aussi affichée sur les cartes et dans l'encadré « Informations ». Aucune date n'est inventée : les projets personnels et les 3 projets Java OpenClassrooms restent sans date en attendant qu'elle soit renseignée.
   - Badge « Projet fil rouge — Titre RNCP 6 » réservé à Légarant-AXG ; les 7 autres projets OpenClassrooms passent en « Projet de formation — Titre RNCP 6 ». « Pratique terrain » devient « Stage en entreprise » ; `it-ops-workstation-setup` (exercice Greta) passe en « Lab de formation ».
