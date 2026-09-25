@@ -98,7 +98,7 @@ WHERE slug = 'it-ops-workstation-setup' AND locale = 'fr';
 UPDATE projects SET
   hero_subtitle = 'TP-Link Wi-Fi access point · Router mode · DHCP · WPA2',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Marc HAZAN. The task was to configure a TP-Link Wi-Fi access point in router mode and verify internet connectivity from a wireless client."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer [formateur]. The task was to configure a TP-Link Wi-Fi access point in router mode and verify internet connectivity from a wireless client."]},
     {"type":"timeline","title":"Configuration steps","steps":[
       {"title":"Physical setup","description":"Powered on the access point and connected it to the network via Ethernet cable."},
       {"title":"Admin interface login","description":"Typed the device default IP in the browser and logged in with factory credentials."},
@@ -118,7 +118,7 @@ WHERE slug = 'it-ops-wifi-config' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'Point d''accès Wi-Fi TP-Link · Mode routeur · DHCP · WPA2',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de Marc HAZAN. La mission : configurer un point d''accès Wi-Fi TP-Link en mode routeur et vérifier la connectivité Internet depuis un client sans fil."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de [formateur]. La mission : configurer un point d''accès Wi-Fi TP-Link en mode routeur et vérifier la connectivité Internet depuis un client sans fil."]},
     {"type":"timeline","title":"Étapes de configuration","steps":[
       {"title":"Mise en place physique","description":"Alimentation du point d''accès et connexion au réseau par câble Ethernet."},
       {"title":"Connexion à l''interface d''administration","description":"Saisie de l''adresse IP par défaut dans le navigateur et identification avec les identifiants constructeur."},
@@ -142,7 +142,7 @@ WHERE slug = 'it-ops-wifi-config' AND locale = 'fr';
 UPDATE projects SET
   hero_subtitle = 'Windows Server 2016 · AD DS · Roaming Profiles · ebtai.fr domain',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Marc HAZAN. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM, both in VirtualBox."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer [formateur]. Configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM, both in VirtualBox."]},
     {"type":"timeline","title":"Procedure","steps":[
       {"title":"Create shared folder on server","description":"Created directory ''Profil itinérant'' on C:. Properties → Sharing → Advanced Sharing. Enabled share with name ''Profil itinérant''."},
       {"title":"Configure share permissions","description":"Clicked Permissions. Removed ''Everyone''. Added EBTAI\\Utilisateurs (AD Users group) with Modify + Read. Clicked Apply."},
@@ -162,7 +162,7 @@ WHERE slug = 'it-ops-roaming-profiles' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'Windows Server 2016 · AD DS · Profils itinérants · domaine ebtai.fr',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de Marc HAZAN. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification depuis une VM cliente Windows 10, les deux sous VirtualBox."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de [formateur]. Configuration de profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérification depuis une VM cliente Windows 10, les deux sous VirtualBox."]},
     {"type":"timeline","title":"Procédure","steps":[
       {"title":"Création du dossier partagé sur le serveur","description":"Création du répertoire ''Profil itinérant'' sur C:. Propriétés → Partage → Partage avancé. Activation du partage avec le nom ''Profil itinérant''."},
       {"title":"Configuration des autorisations de partage","description":"Clic sur Autorisations. Suppression de ''Tout le monde''. Ajout de EBTAI\\Utilisateurs avec Modifier + Lire. Clic sur Appliquer."},

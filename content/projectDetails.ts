@@ -335,7 +335,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Debugging and fixing a Java application for medical needs prediction at Hemebiotech.",
         "sections": [
           {
-            "body": "Heme Biotech (\"Remedies for those we love\"), a pharmaceutical company specializing in blood disorders, had assigned Alex, a chemistry researcher, to build a small Java trend-analysis tool: read a symptom file and output each symptom's count, alphabetically sorted. Alex got stuck with a counter that always returned 0. Caroline, CTO and co-founder, brought me in to diagnose the bug, refactor the code to Java OOP standards, and document everything in Javadoc for team handover.",
+            "body": "Heme Biotech (\"Remedies for those we love\"), a pharmaceutical company specializing in blood disorders, had assigned a chemistry researcher to build a small Java trend-analysis tool: read a symptom file and output each symptom's count, alphabetically sorted. The researcher got stuck with a counter that always returned 0. In the training scenario, the CTO then handed me the follow-up: diagnose the bug, refactor the code to Java OOP standards, and document everything in Javadoc for team handover.",
             "type": "text",
             "title": "Context"
           },
@@ -431,7 +431,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Débogage et correction d'une application Java de prédiction des besoins médicaux chez Hemebiotech.",
         "sections": [
           {
-            "body": "Heme Biotech (\"Des remèdes pour ceux qu'on aime\"), entreprise pharmaceutique spécialisée dans les troubles sanguins, avait confié à Alex, chercheur en chimie, le développement d'un petit outil Java d'analyse de tendances : lire un fichier de symptômes et produire le décompte de chacun, trié alphabétiquement. Alex s'est retrouvé bloqué avec un compteur qui retournait toujours 0. Caroline, directrice technique et cofondatrice, m'a confié la suite : diagnostiquer le bug, refactoriser vers des standards Java OOP, et documenter le tout en Javadoc pour la reprise en équipe.",
+            "body": "Heme Biotech (\"Des remèdes pour ceux qu'on aime\"), entreprise pharmaceutique spécialisée dans les troubles sanguins, avait confié à un chercheur en chimie le développement d'un petit outil Java d'analyse de tendances : lire un fichier de symptômes et produire le décompte de chacun, trié alphabétiquement. Le chercheur s'est retrouvé bloqué avec un compteur qui retournait toujours 0. Dans le scénario de formation, la directrice technique m'a confié la suite : diagnostiquer le bug, refactoriser vers des standards Java OOP, et documenter le tout en Javadoc pour la reprise en équipe.",
             "type": "text",
             "title": "Contexte"
           },
@@ -531,7 +531,7 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Contexto",
             "paragraphs": [
               "Heme Biotech necesitaba un programa de análisis sencillo: leer un archivo de síntomas y generar el número de ocurrencias por síntoma.",
-              "La lectura del archivo era correcta, pero el conteo era incorrecto: el contador siempre devolvía 0, sin importar el número real de apariciones (ej. 3 apariciones de \"dolor de cabeza\" → 0 en la salida). Alex, investigador de química, se quedó bloqueado en este punto; Caroline, directora técnica y cofundadora, me encargó el resto: diagnosticar el error, refactorizar el código a POO y documentarlo todo para el traspaso al equipo."
+              "La lectura del archivo era correcta, pero el conteo era incorrecto: el contador siempre devolvía 0, sin importar el número real de apariciones (ej. 3 apariciones de \"dolor de cabeza\" → 0 en la salida). El investigador se quedó bloqueado en este punto; en el escenario de formación, la directora técnica me encargó el resto: diagnosticar el error, refactorizar el código a POO y documentarlo todo para el traspaso al equipo."
             ]
           },
           {
@@ -1914,7 +1914,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows Server 2016 · AD DS · Roaming Profiles · ebtai.fr domain",
         "sections": [
           {
-            "body": "As part of a training exercise at Greta du Val d'Oise under trainer Marc HAZAN, I configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM — both running in VirtualBox. Goal: allow users to retrieve their full work environment (desktop, documents, settings) on any domain-joined machine they log into.",
+            "body": "As part of a training exercise at Greta du Val d'Oise, I configured roaming profiles on a Windows Server 2016 domain controller (ebtai.fr) and verified synchronization from a Windows 10 client VM — both running in VirtualBox. Goal: allow users to retrieve their full work environment (desktop, documents, settings) on any domain-joined machine they log into.",
             "type": "text",
             "title": "Context"
           },
@@ -2011,7 +2011,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows Server 2016 · AD DS · Profils itinérants · domaine ebtai.fr",
         "sections": [
           {
-            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise sous la supervision de Marc HAZAN, j'ai configuré des profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérifié la synchronisation depuis une VM cliente Windows 10 — les deux sous VirtualBox. L'objectif : permettre aux utilisateurs de retrouver leur environnement de travail (bureau, documents, paramètres) quelle que soit la machine du domaine sur laquelle ils se connectent.",
+            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise, j'ai configuré des profils itinérants sur un contrôleur de domaine Windows Server 2016 (ebtai.fr) et vérifié la synchronisation depuis une VM cliente Windows 10 — les deux sous VirtualBox. L'objectif : permettre aux utilisateurs de retrouver leur environnement de travail (bureau, documents, paramètres) quelle que soit la machine du domaine sur laquelle ils se connectent.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2111,7 +2111,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Como parte de un ejercicio de formación en el Greta du Val d'Oise bajo la supervisión de Marc HAZAN, configuré perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verifiqué la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
+              "Como parte de un ejercicio de formación en el Greta du Val d'Oise, configuré perfiles itinerantes en un controlador de dominio Windows Server 2016 (ebtai.fr) y verifiqué la sincronización desde una VM cliente Windows 10 — ambas bajo VirtualBox. El objetivo: permitir que los usuarios recuperen su entorno de trabajo (escritorio, documentos, configuración) sin importar en qué máquina del dominio inicien sesión."
             ]
           },
           {
@@ -3400,7 +3400,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Development of the Poch'Lib SPA frontend interface, a book management library in HTML/CSS/JS.",
         "sections": [
           {
-            "body": "Great'App, a 20-person Nice-based startup, had its CTO Marie bring me in to deliver Poch'Lib — a book management SPA commissioned by bookshop 'La plume enchantée'. My mission: build the entire frontend from scratch, matching UX designer Charlotte's wireframes exactly, with flawless responsive rendering across 3 formats (mobile, tablet, desktop), using no JavaScript framework.",
+            "body": "In the training scenario, Great'App, a 20-person Nice-based startup, brings me in to deliver Poch'Lib — a book management SPA commissioned by bookshop 'La plume enchantée'. My mission: build the entire frontend from scratch, matching UX designer Charlotte's wireframes exactly, with flawless responsive rendering across 3 formats (mobile, tablet, desktop), using no JavaScript framework.",
             "type": "text",
             "title": "Context"
           },
@@ -3495,7 +3495,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Développement de l'interface frontend SPA de Poch'Lib, une librairie de gestion de livres en HTML/CSS/JS.",
         "sections": [
           {
-            "body": "Great'App, startup niçoise de 20 personnes, m'a fait intervenir via sa CTO Marie pour livrer Poch'Lib — une SPA de gestion de livres commandée par la librairie « La plume enchantée ». Ma mission : construire l'intégralité du frontend de zéro, en respectant les wireframes de l'UX designer Charlotte, avec un rendu responsive sur 3 formats (mobile, tablette, bureau), sans aucun framework JavaScript.",
+            "body": "Dans le scénario de formation, Great'App, startup niçoise de 20 personnes, me fait intervenir pour livrer Poch'Lib — une SPA de gestion de livres commandée par la librairie « La plume enchantée ». Ma mission : construire l'intégralité du frontend de zéro, en respectant les wireframes de l'UX designer Charlotte, avec un rendu responsive sur 3 formats (mobile, tablette, bureau), sans aucun framework JavaScript.",
             "type": "text",
             "title": "Contexte"
           },
@@ -10228,7 +10228,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Entrega de app Lightning y backlog (Avenir Télécom)",
-        "heroSubtitle": "Estrategia de implementación de una app Salesforce Lightning de campo entregada por un equipo de 3 personas: backlog de producto de 20 user stories estimadas, cuaderno de pruebas + catálogo Apex, y luego una vuelta de piloto de 3 meses → backlog Kanban de evoluciones."
+        "heroSubtitle": "Estrategia de implementación de una app Salesforce Lightning de campo entregada por un equipo de 3 personas: backlog de producto de 20 user stories estimadas, cuaderno de pruebas + catálogo Apex, y luego una vuelta de piloto de 3 meses (simulado por el escenario) → backlog Kanban de evoluciones."
       }
     }
   },
@@ -10666,15 +10666,15 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Apex backend optimization (FASHA)",
-        "heroSubtitle": "Taking over a production Apex backend at FASHA: two real bugs diagnosed down to root cause (a trigger that breaks at 100 orders, a calculation that silently fails on bulk import), a full refactor into a bulk-safe handler pattern, the weekly batch moved to async, >85% coverage."
+        "heroSubtitle": "Taking over FASHA's Apex backend (training scenario): two bugs diagnosed down to root cause (a trigger that breaks at 100 orders, a calculation that silently fails on bulk import), a full refactor into a bulk-safe handler pattern, the weekly batch moved to async, >85% coverage."
       },
       "fr": {
         "title": "Optimisation du backend Apex (FASHA)",
-        "heroSubtitle": "Reprise d'un backend Apex en production chez FASHA : deux bugs réels diagnostiqués jusqu'à leur cause racine (trigger qui casse à 100 commandes, calcul silencieusement faux à l'import en masse), refactoring complet en pattern handler bulk-safe, batch hebdomadaire passé en asynchrone, couverture > 85 %."
+        "heroSubtitle": "Reprise du backend Apex de FASHA (scénario de formation) : deux bugs diagnostiqués jusqu'à leur cause racine (trigger qui casse à 100 commandes, calcul silencieusement faux à l'import en masse), refactoring complet en pattern handler bulk-safe, batch hebdomadaire passé en asynchrone, couverture > 85 %."
       },
       "es": {
         "title": "Optimización de un backend Apex (FASHA)",
-        "heroSubtitle": "Hacerse cargo de un backend Apex en producción en FASHA: dos errores reales diagnosticados hasta su causa raíz (un trigger que se rompe con 100 pedidos, un cálculo que falla en silencio en la importación masiva), refactorización completa a un patrón handler bulk-safe, el batch semanal pasado a asíncrono, cobertura >85%."
+        "heroSubtitle": "Hacerse cargo del backend Apex de FASHA (escenario de formación): dos errores diagnosticados hasta su causa raíz (un trigger que se rompe con 100 pedidos, un cálculo que falla en silencio en la importación masiva), refactorización completa a un patrón handler bulk-safe, el batch semanal pasado a asíncrono, cobertura >85%."
       }
     }
   },
@@ -10725,11 +10725,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Salesforce deployment with Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Salesforce deployment and integration for LEGARANT-AXG: REST API, Heroku synchronization and go-live."
+        "heroSubtitle": "Salesforce deployment and integration for LEGARANT-AXG: REST API, Heroku synchronization and a staging → production release procedure."
       },
       "fr": {
         "title": "Déploiement Salesforce avec Heroku (Légarant‑AXG)",
-        "heroSubtitle": "Déploiement et intégration Salesforce pour LEGARANT-AXG : API REST, synchronisation Heroku et mise en production."
+        "heroSubtitle": "Déploiement et intégration Salesforce pour LEGARANT-AXG : API REST, synchronisation Heroku et procédure de mise en production staging → production."
       },
       "es": {
         "title": "Despliegue de Salesforce con Heroku (Legarant‑AXG)",

@@ -41,7 +41,7 @@ const USES: UseCategory[] = [
       { name: "Salesforce Inspector Reloaded",       description: { en: "Browser extension for inspecting org metadata, running SOQL queries and viewing field-level data.", fr: "Extension navigateur pour inspecter les métadonnées, lancer des requêtes SOQL et explorer les données." }, url: "https://github.com/tprouvot/Salesforce-Inspector-reloaded", badge: "open-source" },
       { name: "Workbench",                           description: { en: "Web-based SOQL/SOSL query tool, REST Explorer and metadata deploy/retrieve.", fr: "Outil web pour SOQL/SOSL, REST Explorer et déploiement/récupération de métadonnées." }, url: "https://workbench.developerforce.com" },
       { name: "GitHub Actions",                      description: { en: "CI/CD for Salesforce deployments: validate on PRs, deploy on merge to main using Salesforce CLI.", fr: "CI/CD pour les déploiements Salesforce : validation sur les PR, déploiement sur merge via Salesforce CLI." }, url: "https://github.com/features/actions", badge: "free" },
-      { name: "Trailhead",                           description: { en: "Salesforce's learning platform. Expeditioner-level — 90+ badges, 57 000+ points, 15+ trails completed.", fr: "Plateforme d'apprentissage Salesforce. Niveau Expeditioner — 90+ badges, 57 000+ points, 15+ parcours." }, url: "https://trailhead.salesforce.com" },
+      { name: "Trailhead",                           description: { en: "Salesforce's learning platform. Expeditioner rank — 94 badges, 59,775 points, 14 trails completed.", fr: "Plateforme d'apprentissage Salesforce. Rang Expeditioner — 94 badges, 59 775 points, 14 parcours." }, url: "https://trailhead.salesforce.com" },
     ],
   },
   {

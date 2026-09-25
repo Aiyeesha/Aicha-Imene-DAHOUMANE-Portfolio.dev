@@ -1,13 +1,13 @@
 ---
 title: "Apex backend optimization (FASHA)"
-heroSubtitle: "Taking over a production Apex backend at FASHA: two real bugs diagnosed down to root cause (a trigger that breaks at 100 orders, a calculation that silently fails on bulk import), a full refactor into a bulk-safe handler pattern, the weekly batch moved to async, >85% coverage."
+heroSubtitle: "Taking over FASHA's Apex backend (training scenario): two bugs diagnosed down to root cause (a trigger that breaks at 100 orders, a calculation that silently fails on bulk import), a full refactor into a bulk-safe handler pattern, the weekly batch moved to async, >85% coverage."
 ---
 
 ## Context
 
 FASHA, a multinational clothing distributor (350 employees, Europe / US / APAC), managed accounts, contacts and orders on Salesforce. The app was **slowing down and accumulating bugs**.
 
-Mission assigned via the SFQUAL consultancy: **diagnose, fix and reorganize an existing Apex backend**. Not greenfield — production code, with real sales reps affected on every deployment.
+The project scenario: **diagnose, fix and reorganize an existing Apex backend**. Not greenfield — legacy code, described as in production in the scenario, where every defect hits the sales reps.
 
 ## The two bugs — and their root cause
 
@@ -27,7 +27,7 @@ Root cause: the logic implicitly processed **a single record** (a `Trigger.new[0
 
 ### And the rest
 
-- The **weekly revenue recalculation batch** (after product price updates) ran for several hours synchronously — an architecture problem, not a tuning one.
+- The **weekly revenue recalculation job** (after product price updates) ran for several hours synchronously — an architecture problem, not a tuning one.
 - Disorganized code: no naming conventions, overly long classes, business logic in the triggers.
 - Tests existed but were **unreliable**: they didn't actually validate results.
 
@@ -38,7 +38,7 @@ Root cause: the logic implicitly processed **a single record** (a `Trigger.new[0
 | Logic in `OrderTrigger` | `OrderTriggerHandler` + `TriggerHelper` — one trigger per object, zero logic inside |
 | `NetAmount` over a single record | Collection-based recalc — identical via the UI or a 200-row import |
 | Synchronous revenue update, blocks the rep's save | `AccountService` via **`@future`** — the user transaction no longer waits |
-| Synchronous revenue batch, several hours | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (Sunday 10pm) |
+| Synchronous revenue recalculation, several hours | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (Sunday 10pm) |
 | Unreliable tests | `TestDataFactory` + `@testSetup`, **>85%** coverage, nominal / edge / error cases per class |
 
 On top of the fixes: `MyTeamOrdersController` — a new controller displaying orders for a whole team (same `UserRoleId`), a feature requested by the sponsor.
@@ -57,7 +57,7 @@ The key point: the refactor doesn't fix two bugs, it makes **this class of bug i
 | Decision | Alternative rejected | Why |
 |---|---|---|
 | **`@future`** for the one-off revenue update | Synchronous processing | Don't make the rep wait on their save; the recalc doesn't need to be immediate |
-| **`Batchable` + `Schedulable`** for the global recalc | Keep the synchronous batch, tune it | A multi-hour job is an *execution-model* problem, not a query-performance one |
+| **`Batchable` + `Schedulable`** for the global recalc | Keep the synchronous job, tune it | A multi-hour job is an *execution-model* problem, not a query-performance one |
 | **Handler pattern** | Fix the logic in place in the trigger | Make the code testable and bulk-safe *by construction*, not patch by patch |
 | **Full weekly recalculation** | Incremental recalc on changed accounts only | Enough at FASHA's volume; incremental would be the next step at much larger scale |
 
@@ -72,10 +72,10 @@ The key point: the refactor doesn't fix two bugs, it makes **this class of bug i
 
 | Metric | Value |
 |---|---|
-| Real bugs fixed (root cause documented) | 2 (non-bulk-safe trigger · wrong calc on import) |
+| Bugs fixed (root cause documented) | 2 (non-bulk-safe trigger · wrong calc on import) |
 | SOQL / DML in loops, after the refactor | 0 |
 | Test coverage | >85% (start: unreliable tests) |
-| Weekly batch | multi-hour synchronous → scheduled async |
+| Weekly recalculation | multi-hour synchronous job → scheduled Batch Apex |
 | RNCP diploma evaluation | 2/2 competencies validated — distinction, complete and well-justified fixes |
 
 ## What this project demonstrates
