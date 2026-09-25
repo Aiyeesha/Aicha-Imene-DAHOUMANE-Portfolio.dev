@@ -4,6 +4,15 @@
 > l'expertise Salesforce et IT Ops, attirent du trafic organique qualifié,
 > et servent de portfolio vivant auprès des recruteurs et clients.
 
+> **Mise à jour du 2026-09-25 (audit de contenu, lot 4)** — Le blog publié
+> est ramené à **14 articles**, chacun relié à un projet du portfolio
+> (frontmatter `projects`, affiché en « Mis en pratique dans »). Les 41
+> autres articles sont conservés hors ligne dans `content/blog/unpublished/`
+> (redirections dans `next.config.mjs`) ; les tableaux de couverture
+> ci-dessous décrivent l'état antérieur et sont gardés pour l'historique.
+> Règles pour tout nouvel article : écrit à partir d'un vécu ou d'un projet
+> réel, relié à une étude de cas, aucun identifiant ni mot de passe en clair.
+
 ---
 
 ## Cadence et workflow

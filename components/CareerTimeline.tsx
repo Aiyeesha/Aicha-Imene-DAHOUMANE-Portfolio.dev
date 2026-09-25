@@ -104,9 +104,9 @@ const MILESTONES: Milestone[] = [
     },
     org: "Midrange Group",
     description: {
-      en: "Required internship as part of the TSSR program (GRETA du Val d'Oise). Deployment of 264 Dell workstations via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
-      fr: "Stage de fin de formation TSSR (GRETA du Val d'Oise). Déploiement de 264 postes Dell via Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
-      es: "Prácticas obligatorias del programa TSSR (GRETA du Val d'Oise). Despliegue de 264 puestos Dell vía Windows Autopilot, Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      en: "Required internship as part of the TSSR program (GRETA du Val d'Oise). Deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      fr: "Stage de fin de formation TSSR (GRETA du Val d'Oise). Déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      es: "Prácticas obligatorias del programa TSSR (GRETA du Val d'Oise). Despliegue de 264 puestos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
     },
     tags: ["Windows Server 2022", "Autopilot", "PfSense", "Acronis", "Datto RMM"],
     logos: [
