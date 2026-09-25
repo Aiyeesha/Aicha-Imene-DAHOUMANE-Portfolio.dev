@@ -1,330 +1,368 @@
+// content/services.ts
+// --------------------
+// Cartes de la section « Ce que j'apporte à une équipe » de l'accueil
+// (ex-section « Services »), une liste par locale et par track.
+//
+// Réécrites à l'audit de contenu du 2026-09-25 (lot 3, option a) : les cartes
+// étaient rédigées comme une offre de prestation adressée à un client
+// (« En 3 à 5 jours, je pose le diagnostic… », « pas les ressources en
+// interne ? Je prends en charge… », livrable, durée typique). Elles décrivent
+// désormais ce que j'apporte à une équipe qui me recrute, où je l'ai
+// réellement pratiqué (poste, stage, formation, projets personnels — sans
+// sur-déclaration) et où en trouver la preuve dans le portfolio.
+
 export type Locale = "en" | "fr" | "es";
 export type Track = "salesforce" | "itops";
 
 export type ServiceCard = {
+  /** Domaine de compétence, formulé du point de vue de l'équipe qui recrute. */
   title: string;
+  /** Ce que j'apporte, en une ou deux phrases. */
   pitch: string;
+  /** Détail technique court. */
   description: string;
   bullets: string[];
-  deliverable: string;
-  duration: string;
+  /** Où je l'ai pratiqué : poste, stage, formation ou projets personnels. */
+  experience: string;
+  /** Où le vérifier dans le portfolio (études de cas, pages du site). */
+  proof: string;
+};
+
+const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
+  fr: {
+    salesforce: [
+      {
+        title: "Développement Apex & LWC",
+        pitch: "J'écris du code Apex et des composants LWC pensés pour durer : bulk-safe, testés, respectueux des governor limits et du modèle de sécurité.",
+        description: "Triggers en pattern handler, classes de service, traitements asynchrones et tests unitaires avec une couverture documentée.",
+        bullets: [
+          "Triggers & classes de service bulk-safe",
+          "Batch Apex, Queueable, Schedulable",
+          "Lightning Web Components réutilisables",
+          "Tests unitaires & TestDataFactory"
+        ],
+        experience: "Développeuse Salesforce chez LD Digitales (alternance puis CDI, depuis oct. 2023).",
+        proof: "Études de cas iDEM Connect et FASHA (projets du titre RNCP 6)."
+      },
+      {
+        title: "Administration & automatisation",
+        pitch: "Je configure l'org et j'automatise les processus métier avec Flow, en gardant la main sur la sécurité : profils, permission sets, partage.",
+        description: "Modèle de données, automatisations déclaratives et contrôle des accès, du sandbox à la production.",
+        bullets: [
+          "Modèle de données & objets custom",
+          "Record-Triggered Flows & Screen Flows",
+          "Profils, permission sets & règles de partage",
+          "Rapports & tableaux de bord"
+        ],
+        experience: "LD Digitales (alternance puis CDI) ; profil Trailhead Expeditioner.",
+        proof: "Études de cas Digit Learning et Tours For Life."
+      },
+      {
+        title: "Intégrations & DevOps Salesforce",
+        pitch: "Je relie Salesforce aux autres systèmes et j'outille les mises en production : c'est là que mon parcours infrastructure devient un atout pour l'équipe.",
+        description: "API, synchronisation de données et pipeline de déploiement, avec la même personne côté Salesforce et côté infrastructure.",
+        bullets: [
+          "API REST Apex & Named Credentials",
+          "Synchronisation Heroku ↔ Salesforce",
+          "CI/CD avec Salesforce CLI & GitHub Actions",
+          "Procédures de déploiement et de retour arrière"
+        ],
+        experience: "LD Digitales ; projet de diplôme Légarant-AXG ; projet personnel de pipeline CI/CD.",
+        proof: "Études de cas Légarant-AXG et Pipeline CI/CD."
+      },
+      {
+        title: "Cadrage, documentation & accompagnement",
+        pitch: "Je découpe le besoin, je documente ce que je livre et j'accompagne les utilisateurs : l'équipe doit pouvoir maintenir le travail sans moi.",
+        description: "User stories chiffrées, spécifications, décisions d'architecture et guides utilisateurs.",
+        bullets: [
+          "Backlogs & user stories chiffrées",
+          "Spécifications techniques & ADR",
+          "Guides utilisateurs & support",
+          "Passation aux équipes"
+        ],
+        experience: "LD Digitales ; projets du titre RNCP 6, soutenus devant jury.",
+        proof: "Études de cas Avenir Télécom et LTP."
+      }
+    ],
+    itops: [
+      {
+        title: "Administration systèmes Windows",
+        pitch: "J'administre des environnements Windows Server et Active Directory : comptes, GPO, services réseau et parc de postes.",
+        description: "Services d'annuaire et réseau, déploiement de postes, virtualisation et filtrage.",
+        bullets: [
+          "AD DS, DNS, DHCP, GPO",
+          "Déploiement de postes (WDS, PXE, Autopilot)",
+          "Virtualisation (VMware, VirtualBox)",
+          "pfSense & proxy Squid"
+        ],
+        experience: "Stage chez MIDRANGE GROUP (févr.–mai 2023) ; titres TAI et TSSR (Greta du Val d'Oise).",
+        proof: "Études de cas déploiement de postes en masse et lab de virtualisation."
+      },
+      {
+        title: "Supervision, sauvegardes & support",
+        pitch: "Je surveille, je trie les alertes et je résous les incidents avec méthode, en documentant chaque intervention.",
+        description: "Supervision centralisée, contrôle des sauvegardes et traitement des tickets de support.",
+        bullets: [
+          "Supervision RMM (Datto RMM)",
+          "Sauvegardes Acronis Cyber Protect",
+          "Ticketing Autotask & prise en main à distance",
+          "Diagnostic & résolution d'incidents"
+        ],
+        experience: "Stage chez MIDRANGE GROUP (févr.–mai 2023).",
+        proof: "Études de cas supervision RMM, sauvegardes Acronis et gestion d'incidents."
+      },
+      {
+        title: "Automatisation & CI/CD",
+        pitch: "J'automatise ce qui se répète et je rends les livraisons traçables : scripts, pipelines et contrôles automatiques.",
+        description: "Scripts d'administration, intégration continue et gestion de versions.",
+        bullets: [
+          "PowerShell & scripts d'administration",
+          "GitHub Actions",
+          "Contrôles qualité et sécurité en CI",
+          "Git & gestion de versions"
+        ],
+        experience: "Projets personnels, dont ce portfolio (Lighthouse, axe et CodeQL en intégration continue).",
+        proof: "Étude de cas Pipeline CI/CD ; colophon de ce site."
+      },
+      {
+        title: "Sécurité défensive",
+        pitch: "J'aborde la sécurité côté défense : durcissement, triage des vulnérabilités et réponse aux incidents.",
+        description: "Réduction de la surface d'attaque, priorisation des correctifs et procédures d'incident.",
+        bullets: [
+          "Durcissement Windows & Linux",
+          "Triage de vulnérabilités (CVSS, KEV)",
+          "Playbooks de réponse aux incidents",
+          "Labs d'analyse réseau & honeypot"
+        ],
+        experience: "Labs et projets personnels.",
+        proof: "Études de cas CVE Watchlist, Incident Response Tracker et honeypot Cowrie."
+      }
+    ]
+  },
+
+  en: {
+    salesforce: [
+      {
+        title: "Apex & LWC development",
+        pitch: "I write Apex code and LWC components built to last: bulk-safe, tested, and respectful of governor limits and the security model.",
+        description: "Handler-pattern triggers, service classes, asynchronous processing and unit tests with documented coverage.",
+        bullets: [
+          "Bulk-safe triggers & service classes",
+          "Batch Apex, Queueable, Schedulable",
+          "Reusable Lightning Web Components",
+          "Unit tests & TestDataFactory"
+        ],
+        experience: "Salesforce Developer at LD Digitales (work-study, then permanent, since Oct 2023).",
+        proof: "iDEM Connect and FASHA case studies (RNCP Level 6 diploma projects)."
+      },
+      {
+        title: "Administration & automation",
+        pitch: "I configure the org and automate business processes with Flow, while keeping security under control: profiles, permission sets, sharing.",
+        description: "Data model, declarative automation and access control, from sandbox to production.",
+        bullets: [
+          "Data model & custom objects",
+          "Record-Triggered Flows & Screen Flows",
+          "Profiles, permission sets & sharing rules",
+          "Reports & dashboards"
+        ],
+        experience: "LD Digitales (work-study, then permanent); Trailhead Expeditioner profile.",
+        proof: "Digit Learning and Tours For Life case studies."
+      },
+      {
+        title: "Salesforce integrations & DevOps",
+        pitch: "I connect Salesforce to other systems and tool up releases: this is where my infrastructure background becomes an asset for the team.",
+        description: "APIs, data synchronization and a deployment pipeline, with the same person on the Salesforce side and the infrastructure side.",
+        bullets: [
+          "Apex REST APIs & Named Credentials",
+          "Heroku ↔ Salesforce synchronization",
+          "CI/CD with Salesforce CLI & GitHub Actions",
+          "Deployment and rollback procedures"
+        ],
+        experience: "LD Digitales; Légarant-AXG diploma project; personal CI/CD pipeline project.",
+        proof: "Légarant-AXG and CI/CD Pipeline case studies."
+      },
+      {
+        title: "Scoping, documentation & user support",
+        pitch: "I break down the need, document what I ship and support users: the team must be able to maintain the work without me.",
+        description: "Estimated user stories, specifications, architecture decisions and user guides.",
+        bullets: [
+          "Backlogs & estimated user stories",
+          "Technical specifications & ADRs",
+          "User guides & support",
+          "Handover to teams"
+        ],
+        experience: "LD Digitales; RNCP Level 6 diploma projects, defended before a jury.",
+        proof: "Avenir Télécom and LTP case studies."
+      }
+    ],
+    itops: [
+      {
+        title: "Windows systems administration",
+        pitch: "I administer Windows Server and Active Directory environments: accounts, GPOs, network services and workstation fleets.",
+        description: "Directory and network services, workstation deployment, virtualization and filtering.",
+        bullets: [
+          "AD DS, DNS, DHCP, GPO",
+          "Workstation deployment (WDS, PXE, Autopilot)",
+          "Virtualization (VMware, VirtualBox)",
+          "pfSense & Squid proxy"
+        ],
+        experience: "Internship at MIDRANGE GROUP (Feb–May 2023); TAI and TSSR diplomas (Greta du Val d'Oise).",
+        proof: "Mass workstation deployment and virtualization lab case studies."
+      },
+      {
+        title: "Monitoring, backups & support",
+        pitch: "I monitor, triage alerts and resolve incidents methodically, documenting every intervention.",
+        description: "Centralized monitoring, backup checks and support-ticket handling.",
+        bullets: [
+          "RMM monitoring (Datto RMM)",
+          "Acronis Cyber Protect backups",
+          "Autotask ticketing & remote support",
+          "Incident diagnosis & resolution"
+        ],
+        experience: "Internship at MIDRANGE GROUP (Feb–May 2023).",
+        proof: "RMM monitoring, Acronis backup and incident management case studies."
+      },
+      {
+        title: "Automation & CI/CD",
+        pitch: "I automate what repeats and make releases traceable: scripts, pipelines and automated checks.",
+        description: "Administration scripts, continuous integration and version control.",
+        bullets: [
+          "PowerShell & administration scripts",
+          "GitHub Actions",
+          "Quality and security checks in CI",
+          "Git & version control"
+        ],
+        experience: "Personal projects, including this portfolio (Lighthouse, axe and CodeQL in CI).",
+        proof: "CI/CD Pipeline case study; this site's colophon."
+      },
+      {
+        title: "Defensive security",
+        pitch: "I approach security from the defensive side: hardening, vulnerability triage and incident response.",
+        description: "Attack-surface reduction, patch prioritization and incident procedures.",
+        bullets: [
+          "Windows & Linux hardening",
+          "Vulnerability triage (CVSS, KEV)",
+          "Incident response playbooks",
+          "Network analysis & honeypot labs"
+        ],
+        experience: "Personal labs and projects.",
+        proof: "CVE Watchlist, Incident Response Tracker and Cowrie honeypot case studies."
+      }
+    ]
+  },
+
+  es: {
+    salesforce: [
+      {
+        title: "Desarrollo Apex y LWC",
+        pitch: "Escribo código Apex y componentes LWC pensados para durar: bulk-safe, probados y respetuosos con los governor limits y el modelo de seguridad.",
+        description: "Triggers con patrón handler, clases de servicio, procesos asíncronos y pruebas unitarias con cobertura documentada.",
+        bullets: [
+          "Triggers y clases de servicio bulk-safe",
+          "Batch Apex, Queueable, Schedulable",
+          "Lightning Web Components reutilizables",
+          "Pruebas unitarias y TestDataFactory"
+        ],
+        experience: "Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde oct. 2023).",
+        proof: "Casos de estudio iDEM Connect y FASHA (proyectos del título RNCP nivel 6)."
+      },
+      {
+        title: "Administración y automatización",
+        pitch: "Configuro la org y automatizo los procesos de negocio con Flow, manteniendo el control de la seguridad: perfiles, permission sets, compartición.",
+        description: "Modelo de datos, automatizaciones declarativas y control de accesos, del sandbox a producción.",
+        bullets: [
+          "Modelo de datos y objetos personalizados",
+          "Record-Triggered Flows y Screen Flows",
+          "Perfiles, permission sets y reglas de compartición",
+          "Informes y paneles"
+        ],
+        experience: "LD Digitales (formación dual y después contrato indefinido); perfil Trailhead Expeditioner.",
+        proof: "Casos de estudio Digit Learning y Tours For Life."
+      },
+      {
+        title: "Integraciones y DevOps Salesforce",
+        pitch: "Conecto Salesforce con otros sistemas y preparo las puestas en producción: ahí es donde mi trayectoria en infraestructura se convierte en una ventaja para el equipo.",
+        description: "APIs, sincronización de datos y pipeline de despliegue, con la misma persona en el lado Salesforce y en el lado infraestructura.",
+        bullets: [
+          "APIs REST Apex y Named Credentials",
+          "Sincronización Heroku ↔ Salesforce",
+          "CI/CD con Salesforce CLI y GitHub Actions",
+          "Procedimientos de despliegue y de vuelta atrás"
+        ],
+        experience: "LD Digitales; proyecto de titulación Légarant-AXG; proyecto personal de pipeline CI/CD.",
+        proof: "Casos de estudio Légarant-AXG y Pipeline CI/CD."
+      },
+      {
+        title: "Análisis, documentación y acompañamiento",
+        pitch: "Desgloso la necesidad, documento lo que entrego y acompaño a los usuarios: el equipo debe poder mantener el trabajo sin mí.",
+        description: "User stories estimadas, especificaciones, decisiones de arquitectura y guías de usuario.",
+        bullets: [
+          "Backlogs y user stories estimadas",
+          "Especificaciones técnicas y ADR",
+          "Guías de usuario y soporte",
+          "Traspaso a los equipos"
+        ],
+        experience: "LD Digitales; proyectos del título RNCP nivel 6, defendidos ante un tribunal.",
+        proof: "Casos de estudio Avenir Télécom y LTP."
+      }
+    ],
+    itops: [
+      {
+        title: "Administración de sistemas Windows",
+        pitch: "Administro entornos Windows Server y Active Directory: cuentas, GPO, servicios de red y parque de equipos.",
+        description: "Servicios de directorio y de red, despliegue de equipos, virtualización y filtrado.",
+        bullets: [
+          "AD DS, DNS, DHCP, GPO",
+          "Despliegue de equipos (WDS, PXE, Autopilot)",
+          "Virtualización (VMware, VirtualBox)",
+          "pfSense y proxy Squid"
+        ],
+        experience: "Prácticas en MIDRANGE GROUP (feb.–may. 2023); títulos TAI y TSSR (Greta du Val d'Oise).",
+        proof: "Casos de estudio de despliegue masivo de equipos y laboratorio de virtualización."
+      },
+      {
+        title: "Supervisión, copias de seguridad y soporte",
+        pitch: "Superviso, clasifico las alertas y resuelvo las incidencias con método, documentando cada intervención.",
+        description: "Supervisión centralizada, control de las copias de seguridad y gestión de tickets de soporte.",
+        bullets: [
+          "Supervisión RMM (Datto RMM)",
+          "Copias de seguridad Acronis Cyber Protect",
+          "Ticketing Autotask y asistencia remota",
+          "Diagnóstico y resolución de incidencias"
+        ],
+        experience: "Prácticas en MIDRANGE GROUP (feb.–may. 2023).",
+        proof: "Casos de estudio de supervisión RMM, copias de seguridad Acronis y gestión de incidencias."
+      },
+      {
+        title: "Automatización y CI/CD",
+        pitch: "Automatizo lo que se repite y hago trazables las entregas: scripts, pipelines y controles automáticos.",
+        description: "Scripts de administración, integración continua y control de versiones.",
+        bullets: [
+          "PowerShell y scripts de administración",
+          "GitHub Actions",
+          "Controles de calidad y seguridad en CI",
+          "Git y control de versiones"
+        ],
+        experience: "Proyectos personales, incluido este portfolio (Lighthouse, axe y CodeQL en integración continua).",
+        proof: "Caso de estudio Pipeline CI/CD; colofón de este sitio."
+      },
+      {
+        title: "Seguridad defensiva",
+        pitch: "Abordo la seguridad desde la defensa: bastionado, clasificación de vulnerabilidades y respuesta a incidentes.",
+        description: "Reducción de la superficie de ataque, priorización de parches y procedimientos de incidentes.",
+        bullets: [
+          "Bastionado Windows y Linux",
+          "Clasificación de vulnerabilidades (CVSS, KEV)",
+          "Playbooks de respuesta a incidentes",
+          "Laboratorios de análisis de red y honeypot"
+        ],
+        experience: "Laboratorios y proyectos personales.",
+        proof: "Casos de estudio CVE Watchlist, Incident Response Tracker y honeypot Cowrie."
+      }
+    ]
+  }
 };
 
 export function getServices(locale: Locale, track: Track): ServiceCard[] {
-  if (locale === "fr") {
-    if (track === "salesforce") {
-      return [
-        {
-          title: "Audit & conseil Salesforce",
-          pitch: "Votre org Salesforce s’est alourdie et vous ne savez plus ce qui freine vos équipes. En 3 à 5 jours, je pose le diagnostic et vous remets un plan d’action concret, priorisé et directement applicable.",
-          description:
-            "Analyser l’existant, identifier les opportunités d’optimisation, et fournir des recommandations actionnables.",
-          bullets: [
-            "Audit d’org & bilan de santé",
-            "Optimisation de processus & workflows",
-            "Revue sécurité & conformité"
-          ],
-          deliverable: "Rapport d’audit structuré + plan d’action priorisé",
-          duration: "3 à 5 jours"
-        },
-        {
-          title: "Développement & administration",
-          pitch: "Vous avez un besoin métier à automatiser ou une fonctionnalité à livrer dans Salesforce, mais pas les ressources en interne. Je prends en charge la conception, le code et le déploiement — du sandbox à la production.",
-          description:
-            "Concevoir le modèle de données, automatiser la logique métier et gérer les environnements du sandbox à la production.",
-          bullets: [
-            "Conception d’objets custom & modèles de données",
-            "Automatisation avec Flows & Apex",
-            "Configuration des environnements & de la sécurité"
-          ],
-          deliverable: "Code versionné (git) + documentation technique + recette de déploiement",
-          duration: "Selon périmètre — 1 semaine à 2 mois"
-        },
-        {
-          title: "Intégrations & APIs",
-          pitch: "Vos données sont éparpillées entre Salesforce et d'autres outils, générant des erreurs et de la saisie double. Je connecte vos systèmes et mets en place la supervision pour que tout circule sans friction.",
-          description:
-            "Connecter Salesforce à des systèmes externes et assurer la cohérence des données entre plateformes — avec, si besoin, la supervision infra de ces flux prise en charge par la même personne, sans relais externe.",
-          bullets: [
-            "Intégration via API REST / SOAP",
-            "Configuration ETL & synchronisation de données",
-            "Supervision & gestion des erreurs"
-          ],
-          deliverable: "Intégration opérationnelle + runbook de configuration + guide de supervision",
-          duration: "1 à 3 semaines"
-        },
-        {
-          title: "Formation & support",
-          pitch: "Vos utilisateurs ou admins peinent à tirer parti de Salesforce après le déploiement. Je conçois des formations pratiques et une documentation claire pour que votre équipe soit autonome rapidement.",
-          description:
-            "Accompagner les utilisateurs et admins avec des formations pratiques, de la documentation et du support post-déploiement.",
-          bullets: [
-            "Formations utilisateurs & administrateurs",
-            "Documentation & bonnes pratiques",
-            "Support post-déploiement"
-          ],
-          deliverable: "Support de formation + documentation utilisateur + FAQ",
-          duration: "1 à 3 jours par session"
-        }
-      ];
-    }
-
-    // IT Ops / DevOps
-    return [
-      {
-        title: "Audit & durcissement infra",
-        pitch: "Vous n’avez pas de visibilité claire sur l’état de votre infrastructure et ignorez quelles vulnérabilités y sommeillent. En quelques jours, je cartographie les risques et vous remets un plan de remédiation hiérarchisé.",
-        description:
-          "Évaluer et sécuriser l’infrastructure : supervision, hardening, sauvegardes et runbooks — y compris la sécurité des accès API côté Salesforce quand l’infra alimente directement l’org.",
-        bullets: [
-          "Évaluation d’infrastructure & bilan de santé",
-          "Durcissement & bonnes pratiques de sécurité",
-          "Mise en place de supervision & alerting",
-          "Planification de runbooks & de sauvegardes"
-        ],
-        deliverable: "Rapport d’évaluation + checklist de durcissement + plan de remédiation",
-        duration: "2 à 4 jours"
-      },
-      {
-        title: "Mise en place & administration",
-        pitch: "Vous devez déployer ou moderniser une infrastructure serveur/réseau sans avoir les ressources disponibles en interne. Je prends en charge l'installation, la configuration et la documentation de A à Z.",
-        description:
-          "Déployer et gérer serveurs, réseaux, virtualisation et environnements cloud sous Windows/Linux.",
-        bullets: [
-          "Installation de serveurs Windows & Linux",
-          "Active Directory & services réseau (DNS, DHCP)",
-          "Virtualisation & conteneurisation",
-          "Configuration pfSense & sécurité"
-        ],
-        deliverable: "Environnement opérationnel + documentation d’architecture + runbooks",
-        duration: "Selon périmètre — 3 jours à 4 semaines"
-      },
-      {
-        title: "Pipelines CI/CD & DevOps",
-        pitch: "Vos déploiements sont manuels, lents et sources d'erreurs — chaque mise en production est une source de stress. Je mets en place un pipeline automatisé qui rend vos livraisons rapides, reproductibles et traçables.",
-        description:
-          "Mettre en œuvre des pipelines automatisés avec de bonnes pratiques de livraison et de versioning.",
-        bullets: [
-          "Conception de pipelines CI/CD",
-          "Automatisation avec GitHub Actions",
-          "Dockerisation & provisionnement d’environnements",
-          "Collaboration & gestion de versions"
-        ],
-        deliverable: "Pipeline fonctionnel + documentation + guide de maintenance",
-        duration: "1 à 2 semaines"
-      },
-      {
-        title: "Support, formation & documentation",
-        pitch: "Vos équipes gèrent trop d’incidents récurrents faute de procédures claires et de documentation à jour. Je rédige les runbooks et forme vos équipes pour qu’elles maîtrisent l’exploitation sereinement.",
-        description:
-          "Fournir support utilisateur, documentation, et accompagnement sur l’exploitation et la gestion d’incidents.",
-        bullets: [
-          "Formation & transfert de connaissances",
-          "Runbooks & documentation",
-          "Réponse aux incidents & dépannage"
-        ],
-        deliverable: "Runbooks livrés + support de formation + documentation d’exploitation",
-        duration: "1 à 2 jours par session"
-      }
-    ];
-  }
-
-  if (locale === "es") {
-    if (track === "salesforce") {
-      return [
-        {
-          title: "Auditoría y asesoría Salesforce",
-          pitch: "Tu org de Salesforce se ha vuelto compleja y ya no sabes qué está frenando a tus equipos. En 3 a 5 días, hago el diagnóstico y te entrego un plan de acción concreto, priorizado y directamente aplicable.",
-          description:
-            "Analizar el estado actual, identificar oportunidades de optimización y ofrecer recomendaciones accionables.",
-          bullets: [
-            "Auditoría de la org y diagnóstico de salud",
-            "Optimización de procesos y flujos de trabajo",
-            "Revisión de seguridad y cumplimiento"
-          ],
-          deliverable: "Informe de auditoría estructurado + plan de acción priorizado",
-          duration: "3 a 5 días"
-        },
-        {
-          title: "Desarrollo y administración",
-          pitch: "Necesitas automatizar un proceso o implementar una funcionalidad en Salesforce, pero no cuentas con los recursos internos. Me encargo del diseño, el código y el despliegue — del sandbox a producción.",
-          description:
-            "Diseñar el modelo de datos, automatizar la lógica de negocio y gestionar los entornos del sandbox a producción.",
-          bullets: [
-            "Diseño de objetos personalizados y modelos de datos",
-            "Automatización con Flows y Apex",
-            "Configuración de entornos y seguridad"
-          ],
-          deliverable: "Código versionado (git) + documentación técnica + guía de despliegue",
-          duration: "Según alcance — de 1 semana a 2 meses"
-        },
-        {
-          title: "Integraciones y APIs",
-          pitch: "Tus datos están dispersos entre Salesforce y otras herramientas, generando errores y doble captura. Conecto tus sistemas y configuro la supervisión para que todo fluya sin fricción.",
-          description:
-            "Conectar Salesforce con sistemas externos y mantener la coherencia de los datos entre plataformas — incluyendo, si es necesario, la supervisión de infraestructura de esos flujos a cargo de la misma persona, sin intermediarios externos.",
-          bullets: [
-            "Integraciones vía API REST / SOAP",
-            "Configuración ETL y sincronización de datos",
-            "Supervisión y gestión de errores"
-          ],
-          deliverable: "Integración operativa + guía de configuración + manual de supervisión",
-          duration: "1 a 3 semanas"
-        },
-        {
-          title: "Formación y soporte",
-          pitch: "Tus usuarios o administradores no están aprovechando Salesforce al máximo tras la puesta en producción. Diseño formaciones prácticas y documentación clara para que tu equipo gane autonomía rápidamente.",
-          description:
-            "Acompañar a usuarios y administradores con formación práctica, documentación y soporte posterior al despliegue.",
-          bullets: [
-            "Formación de usuarios y administradores",
-            "Documentación y buenas prácticas",
-            "Soporte posterior al despliegue"
-          ],
-          deliverable: "Material de formación + documentación de usuario + FAQ",
-          duration: "1 a 3 días por sesión"
-        }
-      ];
-    }
-
-    // IT Ops / DevOps
-    return [
-      {
-        title: "Auditoría y hardening de infraestructura",
-        pitch: "No tienes una visión clara del estado de tu infraestructura y desconoces qué vulnerabilidades podrían estar presentes. En pocos días, mapeo los riesgos y te entrego un plan de remediación priorizado.",
-        description:
-          "Evaluar y proteger la infraestructura: supervisión, hardening, copias de seguridad y runbooks — incluyendo la seguridad de los accesos API de Salesforce cuando la infraestructura alimenta directamente la org.",
-        bullets: [
-          "Evaluación de infraestructura y diagnóstico de salud",
-          "Hardening y buenas prácticas de seguridad",
-          "Implementación de supervisión y alertas",
-          "Planificación de runbooks y copias de seguridad"
-        ],
-        deliverable: "Informe de evaluación + checklist de hardening + plan de remediación",
-        duration: "2 a 4 días"
-      },
-      {
-        title: "Implantación y administración",
-        pitch: "Necesitas desplegar o modernizar una infraestructura de servidores/red sin contar con los recursos internos disponibles. Me encargo de la instalación, configuración y documentación de principio a fin.",
-        description:
-          "Desplegar y gestionar servidores, redes, virtualización y entornos cloud en Windows/Linux.",
-        bullets: [
-          "Instalación de servidores Windows y Linux",
-          "Active Directory y servicios de red (DNS, DHCP)",
-          "Virtualización y contenedorización",
-          "Configuración de pfSense y seguridad"
-        ],
-        deliverable: "Entorno operativo + documentación de arquitectura + runbooks",
-        duration: "Según alcance — de 3 días a 4 semanas"
-      },
-      {
-        title: "Pipelines CI/CD y DevOps",
-        pitch: "Tus despliegues son manuales, lentos y propensos a errores — cada puesta en producción es una fuente de estrés. Implemento un pipeline automatizado que hace tus entregas rápidas, reproducibles y trazables.",
-        description:
-          "Implementar pipelines automatizados con buenas prácticas de entrega y control de versiones.",
-        bullets: [
-          "Diseño de pipelines CI/CD",
-          "Automatización con GitHub Actions",
-          "Dockerización y aprovisionamiento de entornos",
-          "Colaboración y control de versiones"
-        ],
-        deliverable: "Pipeline funcional + documentación + guía de mantenimiento",
-        duration: "1 a 2 semanas"
-      },
-      {
-        title: "Soporte, formación y documentación",
-        pitch: "Tus equipos gestionan demasiados incidentes recurrentes por falta de procedimientos claros y documentación actualizada. Redacto los runbooks y formo a tus equipos para que operen con confianza.",
-        description:
-          "Brindar soporte a usuarios, documentación y acompañamiento en la operación y gestión de incidentes.",
-        bullets: [
-          "Formación y transferencia de conocimiento",
-          "Runbooks y documentación",
-          "Respuesta a incidentes y resolución de problemas"
-        ],
-        deliverable: "Runbooks entregados + material de formación + documentación operativa",
-        duration: "1 a 2 días por sesión"
-      }
-    ];
-  }
-
-  // EN
-  if (track === "salesforce") {
-    return [
-      {
-        title: "Salesforce audit & advisory",
-        pitch: "Your Salesforce org has grown complex and you're not sure what's slowing your teams down. In 3 to 5 days, I diagnose the issues and hand you a prioritised, actionable plan.",
-        description:
-          "Review the org and processes, identify optimization opportunities, and deliver actionable recommendations.",
-        bullets: ["Org health check", "Process & workflow optimization", "Security & compliance review"],
-        deliverable: "Structured audit report + prioritised action plan",
-        duration: "3 to 5 days"
-      },
-      {
-        title: "Development & administration",
-        pitch: "You need to automate a process or build a feature in Salesforce but lack the internal capacity. I handle design, code, and deployment — from sandbox to production.",
-        description:
-          "Design data models, automate business logic, and manage environments from sandbox to production.",
-        bullets: ["Custom objects & data models", "Automation with Flows & Apex", "Environment & security configuration"],
-        deliverable: "Versioned code (git) + technical documentation + deployment runbook",
-        duration: "Scope-dependent — 1 week to 2 months"
-      },
-      {
-        title: "Integrations & APIs",
-        pitch: "Your data is scattered across Salesforce and other tools, causing errors and double entry. I connect your systems and set up monitoring so everything flows without friction.",
-        description:
-          "Connect Salesforce to external systems and keep data consistent across platforms — with the infra-side monitoring of those flows handled by the same person when needed, no external hand-off.",
-        bullets: ["REST / SOAP integrations", "ETL configuration & data sync", "Monitoring & error handling"],
-        deliverable: "Live integration + configuration runbook + monitoring guide",
-        duration: "1 to 3 weeks"
-      },
-      {
-        title: "Training & support",
-        pitch: "Your users or admins aren't getting the most out of Salesforce after go-live. I design hands-on training and clear documentation so your team becomes self-sufficient quickly.",
-        description:
-          "Enable users and admins with practical training, clear documentation and post-go-live support.",
-        bullets: ["User/admin training", "Documentation & best practices", "Post-deployment support"],
-        deliverable: "Training deck + user documentation + FAQ",
-        duration: "1 to 3 days per session"
-      }
-    ];
-  }
-
-  return [
-    {
-      title: "Infra audit & hardening",
-      pitch: "You lack clear visibility into your infrastructure's health and don't know what vulnerabilities are lurking. In a few days, I map the risks and hand you a prioritised remediation plan.",
-      description:
-        "Assess and secure your infrastructure: monitoring, hardening, backups and runbooks — including Salesforce-side API access security when the infra feeds directly into the org.",
-      bullets: ["Infrastructure health check", "Hardening & security best practices", "Monitoring & alerting", "Runbooks & backup planning"],
-      deliverable: "Assessment report + hardening checklist + remediation plan",
-      duration: "2 to 4 days"
-    },
-    {
-      title: "Setup & administration",
-      pitch: "You need to deploy or modernise a server/network infrastructure but lack the time or in-house skills. I handle installation, configuration, and documentation from start to finish.",
-      description:
-        "Deploy and manage servers, networks, virtualization and cloud environments on Windows/Linux.",
-      bullets: ["Windows & Linux server installation", "Active Directory & network services (DNS, DHCP)", "Virtualization & containerization", "pfSense configuration & security"],
-      deliverable: "Operational environment + architecture documentation + runbooks",
-      duration: "Scope-dependent — 3 days to 4 weeks"
-    },
-    {
-      title: "CI/CD & DevOps pipelines",
-      pitch: "Your deployments are manual, slow, and error-prone — every release is a moment of stress. I set up an automated pipeline that makes your deliveries fast, repeatable, and traceable.",
-      description:
-        "Implement automated pipelines with solid delivery and versioning practices.",
-      bullets: ["CI/CD pipeline design", "Automation with GitHub Actions", "Dockerization & environment provisioning", "Collaboration & version control"],
-      deliverable: "Working pipeline + documentation + maintenance guide",
-      duration: "1 to 2 weeks"
-    },
-    {
-      title: "Support, training & documentation",
-      pitch: "Your team spends too much time on recurring incidents due to unclear procedures and outdated documentation. I write runbooks and train your team so they handle operations with confidence.",
-      description:
-        "Provide user support, documentation and guidance for operations and incident handling.",
-      bullets: ["Training & knowledge transfer", "Runbooks & documentation", "Incident response & troubleshooting"],
-      deliverable: "Delivered runbooks + training materials + operations documentation",
-      duration: "1 to 2 days per session"
-    }
-  ];
+  return CARDS[locale][track];
 }

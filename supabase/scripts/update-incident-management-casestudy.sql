@@ -24,7 +24,7 @@ UPDATE projects SET
       "type": "text",
       "title": "Context",
       "paragraphs": [
-        "During an internship at MIDRANGE GROUP (Support Technique team), I was placed under the supervision of Théo KACEL, a Systems & Network Administrator. The team handles support requests for managed clients across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
+        "During an internship at MIDRANGE GROUP (Support Technique team), I was placed under the supervision of [administrateur systèmes & réseaux], a Systems & Network Administrator. The team handles support requests for managed clients across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
         "Once a ticket is opened in Autotask, it is routed either to the Support Technique team (user-facing incidents) or to the Exploitation team (infrastructure and monitoring). Théo assigned me a live client ticket to handle under his guidance."
       ]
     },
@@ -139,7 +139,7 @@ UPDATE projects SET
       "type": "text",
       "title": "Contexte",
       "paragraphs": [
-        "Lors d''un stage chez MIDRANGE GROUP (équipe Support Technique), j''ai été placée sous la tutelle de Théo KACEL, Administrateur Systèmes et Réseaux. L''équipe traite les demandes de support des clients gérés via trois canaux d''entrée : appels téléphoniques directs vers la ligne support, e-mails à l''adresse support, et alertes automatiques levées par l''agent Datto RMM installé sur les postes clients.",
+        "Lors d''un stage chez MIDRANGE GROUP (équipe Support Technique), j''ai été placée sous la tutelle de [administrateur systèmes & réseaux], Administrateur Systèmes et Réseaux. L''équipe traite les demandes de support des clients gérés via trois canaux d''entrée : appels téléphoniques directs vers la ligne support, e-mails à l''adresse support, et alertes automatiques levées par l''agent Datto RMM installé sur les postes clients.",
         "Une fois un ticket ouvert dans Autotask, il est routé soit vers l''équipe Support Technique (incidents utilisateurs), soit vers l''équipe Exploitation (infrastructure et supervision). Théo m''a confié un ticket client en production à traiter sous sa supervision."
       ]
     },

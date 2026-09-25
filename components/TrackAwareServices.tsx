@@ -120,7 +120,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const sectors = t.raw("services.sectors") as { label: string; note: string }[];
 
   /**
-   * handleDiscuss — bouton "Discuter de ce service"
+   * handleDiscuss — bouton « En parler pour un poste »
    *
    * 1. Dispatche un custom event `contact:prefill` avec topic + subject.
    *    ContactForm écoute cet événement et pré-remplit ses champs.
@@ -163,7 +163,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <h3 className="font-semibold leading-snug pt-1.5 text-slate-900 dark:text-white">{c.title}</h3>
             </div>
 
-            {/* Pitch client — problème + solution en 2 phrases */}
+            {/* Ce que j'apporte à l'équipe — 1 à 2 phrases */}
             <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{c.pitch}</p>
 
             {/* Détail technique — repliable visuellement par un séparateur discret */}
@@ -173,7 +173,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             {/* dark:text-slate-400 : explicit color breaks inheritance from transitioning body */}
             <p className="text-sm text-muted dark:text-slate-400">{c.description}</p>
 
-            {/* Bullets des prestations incluses */}
+            {/* Compétences concrètes */}
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted dark:text-slate-400">
               {c.bullets.map((b) => (
                 <li key={b}>{b}</li>
@@ -182,23 +182,25 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
 
             </div>{/* fin du bloc technique */}
 
-            {/* Livrable + durée typique */}
+            {/* Où je l'ai pratiqué + où le vérifier — remplacent « Livrable » et
+                « Durée typique » (vocabulaire de devis) depuis l'audit de contenu
+                du 2026-09-25. */}
             <div className="mt-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 space-y-1.5 text-sm">
               <p className="text-muted dark:text-slate-400">
                 <span className="font-medium text-slate-700 dark:text-slate-200">
-                  {locale === "fr" ? "Livrable :" : locale === "es" ? "Entregable:" : "You'll receive:"}
+                  {locale === "fr" ? "Où je l'ai pratiqué :" : locale === "es" ? "Dónde lo he practicado:" : "Where I've practised it:"}
                 </span>{" "}
-                {c.deliverable}
+                {c.experience}
               </p>
               <p className="text-muted dark:text-slate-400">
                 <span className="font-medium text-slate-700 dark:text-slate-200">
-                  {locale === "fr" ? "Durée typique :" : locale === "es" ? "Duración típica:" : "Typical timeline:"}
+                  {locale === "fr" ? "Preuves :" : locale === "es" ? "Pruebas:" : "Evidence:"}
                 </span>{" "}
-                {c.duration}
+                {c.proof}
               </p>
             </div>
 
-            {/* CTA — pré-remplit le formulaire de contact avec ce service */}
+            {/* CTA — pré-remplit le sujet du formulaire de contact (poste Salesforce / IT Ops) */}
             <div className="mt-4 pt-4 border-t border-black/8 dark:border-white/8">
               <button
                 type="button"
@@ -245,9 +247,12 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       </div>
     </Reveal>
 
-    {/* MATURITÉ D'EXPLOITATION — /status et /changelog présentés comme preuve
-        DevSecOps (observabilité réelle, remédiation CVE documentée), pas comme
-        de simples liens de pied de page. Affiché sur les deux tracks depuis
+    {/* MATURITÉ D'EXPLOITATION — /status et /colophon présentés comme preuve
+        DevSecOps (observabilité réelle, sécurité documentée), pas comme
+        de simples liens de pied de page. Le /changelog public a été retiré
+        lors de l'audit de contenu du 2026-09-25 (il exposait des notes
+        internes) : la clé i18n maturityChangelogCta pointe désormais vers
+        le colophon. Affiché sur les deux tracks depuis
         l'audit 2026-08-13 : c'était auparavant IT Ops uniquement au motif que
         /status et /changelog sont des artefacts d'exploitation, pas un argument
         de vente Salesforce — mais la discipline qu'ils prouvent (rigueur,
@@ -277,7 +282,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <span aria-hidden="true"> ↗</span>
             </Link>
             <Link
-              href={`/${locale}/changelog`}
+              href={`/${locale}/colophon`}
               className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
             >
               {t("services.maturityChangelogCta")}

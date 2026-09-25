@@ -3,7 +3,7 @@
 -- Case study n°7 — IT Ops
 -- "Cloud Computing & Backup Supervision with Acronis"
 -- Internship at MIDRANGE GROUP — Exploitation team
--- Supervisor: Théo KACEL (Systems & Networks Administrator)
+-- Supervisor: [administrateur systèmes & réseaux] (Systems & Networks Administrator)
 -- -----------------------------------------------------------
 
 -- ── EN ───────────────────────────────────────────────────────────────────────

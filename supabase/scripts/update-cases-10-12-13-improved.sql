@@ -16,7 +16,7 @@ UPDATE projects SET
       {"label":"Connection","value":"RJ45 cable from AP to LAN switch"},
       {"label":"Default admin UI","value":"http://192.168.0.1 (default gateway)"},
       {"label":"Configuration method","value":"Web browser — TP-Link admin panel"},
-      {"label":"Supervisor","value":"Marc HAZAN (training instructor)"},
+      {"label":"Supervisor","value":"[formateur] (training instructor)"},
       {"label":"Work mode","value":"Autonomous — independent configuration"}
     ]},
     {"type":"timeline","title":"Configuration procedure","steps":[
@@ -47,7 +47,7 @@ UPDATE projects SET
       {"label":"Connexion","value":"Câble RJ45 du PA vers le switch LAN du labo"},
       {"label":"Interface admin par défaut","value":"http://192.168.0.1 (passerelle par défaut)"},
       {"label":"Méthode de configuration","value":"Navigateur web — panneau d''administration TP-Link"},
-      {"label":"Formateur","value":"Marc HAZAN"},
+      {"label":"Formateur","value":"[formateur]"},
       {"label":"Mode de travail","value":"En autonomie"}
     ]},
     {"type":"timeline","title":"Procédure de configuration","steps":[

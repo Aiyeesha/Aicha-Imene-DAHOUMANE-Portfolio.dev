@@ -130,6 +130,11 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               ) : null}
             </div>
 
+            {/* Période du projet (audit de contenu 2026-09-25) — affichée seulement si connue */}
+            {p.nature?.period && (
+              <p className="mt-1 text-xs text-muted-2">{p.nature.period}</p>
+            )}
+
             {/* Logo client — silencieux si absent, lazy (jusqu'à 6 cartes avec le projet-pont) */}
             <div className="mt-1">
               <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />

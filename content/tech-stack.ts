@@ -7,7 +7,9 @@
 //   name     — nom affiché
 //   abbr     — 2-3 lettres pour le badge icône (si pas de SVG dédié)
 //   category — regroupe visuellement par couleur de badge
-//   level    — maîtrise de 1 (Débutant) à 4 (Expert)
+//   level    — maîtrise de 1 (Débutant) à 4 (Expert). Aucun item n'est au
+//              niveau 4 depuis l'audit de contenu du 2026-09-25 : « Expert »
+//              après 2 à 3 ans d'expérience n'était pas défendable en entretien.
 //   years    — années d'expérience (nombre décimal)
 //   context  — phrase courte de contexte (EN, traduite en FR ci-dessous)
 //   track    — "salesforce" | "itops" | "both"
@@ -44,7 +46,7 @@ const TECH_STACK: TechItem[] = [
     name: "Apex",
     abbr: "Ax",
     category: "salesforce",
-    level: 4,
+    level: 3,
     years: 2,
     context: {
       en: "10+ classes, triggers and batch jobs in production.",
@@ -58,7 +60,7 @@ const TECH_STACK: TechItem[] = [
     name: "Flow Builder",
     abbr: "FL",
     category: "salesforce",
-    level: 4,
+    level: 3,
     years: 2,
     context: {
       en: "20+ Flows built, reducing manual workload by 30%.",
@@ -86,7 +88,7 @@ const TECH_STACK: TechItem[] = [
     name: "SOQL / SOSL",
     abbr: "SQ",
     category: "salesforce",
-    level: 4,
+    level: 3,
     years: 2,
     context: {
       en: "Complex queries, governor limits awareness, optimized reports.",
@@ -202,7 +204,7 @@ const TECH_STACK: TechItem[] = [
     name: "Git",
     abbr: "Gt",
     category: "devops",
-    level: 4,
+    level: 3,
     years: 3,
     context: {
       en: "Daily use: branching, PRs, conflict resolution.",
@@ -348,7 +350,7 @@ const TECH_STACK: TechItem[] = [
     name: "VS Code",
     abbr: "VS",
     category: "tools",
-    level: 4,
+    level: 3,
     years: 3,
     context: {
       en: "Primary IDE: extensions, debugging, CLI integration.",

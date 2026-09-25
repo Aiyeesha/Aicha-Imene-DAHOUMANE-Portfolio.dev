@@ -10,6 +10,8 @@ export type BlogFrontmatter = {
   date?: string; // YYYY-MM-DD
   tags?: string[];
   cover?: string; // /blog/<slug>/cover.jpg (optional)
+  /** Études de cas où la technique de l'article est mise en pratique (slugs de projets, ou "colophon"). */
+  projects?: string[];
 };
 
 export type BlogPostMeta = {
@@ -20,6 +22,8 @@ export type BlogPostMeta = {
   date: string;
   tags: string[];
   cover?: string;
+  /** Voir BlogFrontmatter.projects — affiché en « Mis en pratique dans ». */
+  projects: string[];
   readingTime: number; // estimated minutes
   file: string; // absolute path (server-only)
 };
@@ -77,6 +81,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
           : "1970-01-01";
     const tags = Array.isArray(fm.tags) ? fm.tags : [];
     const cover = fm.cover;
+    const projects = Array.isArray(fm.projects) ? fm.projects : [];
     const readingTime = calcReadingTime(String(parsed.content || ""));
 
     out.push({
@@ -87,6 +92,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
       date,
       tags,
       cover,
+      projects,
       readingTime,
       file: abs
     });
@@ -120,6 +126,7 @@ export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | n
     })(),
     tags: Array.isArray(fm.tags) ? fm.tags : [],
     cover: fm.cover,
+    projects: Array.isArray(fm.projects) ? fm.projects : [],
     readingTime: calcReadingTime(String(parsed.content || "")),
     file: abs
   };

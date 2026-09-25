@@ -4,6 +4,7 @@ excerpt: "Comment un script de ré-import aurait pu effacer silencieusement le f
 date: "2026-08-12"
 tags: ["IT Ops", "Security", "Supabase", "Data Integrity", "Monitoring"]
 featured: false
+projects: ["colophon"]
 ---
 
 Les données projets de ce site vivent à deux endroits : Supabase (la source de vérité à l'exécution) et deux fichiers TypeScript générés, `content/projects.ts` et `content/projectDetails.ts`, conservés comme filet de sécurité local. Deux scripts assurent la synchronisation : `scripts/export-projects-from-supabase.ts` tire Supabase → fichiers, `scripts/seed.ts` pousse fichiers → Supabase.

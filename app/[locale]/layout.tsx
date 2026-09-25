@@ -201,8 +201,9 @@ export default async function LocaleLayout({
                     >
                       {t("footer.hybrid")}
                     </Link>
-                    {/* Formulaire de qualification étendu (secteur/délai/budget) — jusqu'ici
-                        orphelin de toute navigation, voir audit 2026-08-12. */}
+                    {/* Formulaire recruteur (poste, contrat, lieu, date de prise de
+                        poste) — remplace le formulaire « Qualifier une mission »
+                        (secteur/délai/budget) depuis l'audit de contenu du 2026-09-25. */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/contact`}
@@ -241,15 +242,17 @@ export default async function LocaleLayout({
                     </Link>
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
-                      href={`/${locale}/changelog`}
-                    >
-                      {t("footer.changelog")}
-                    </Link>
-                    <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/uses`}
                     >
                       {t("footer.uses")}
+                    </Link>
+                    {/* /resources a quitté le menu desktop au profit de /hybride
+                        (audit de contenu 2026-09-25) : lien conservé ici. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      href={`/${locale}/resources`}
+                    >
+                      {t("nav.resources")}
                     </Link>
                     {GITHUB_URL && (
                       <a
