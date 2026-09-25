@@ -106,7 +106,7 @@ INSERT INTO projects (slug, locale, title, summary, track, categories, tags, bad
 VALUES (
   'it-ops-wifi-config', 'en',
   'Wi-Fi Access Point Configuration (TP-Link)',
-  'Training exercise at Greta du Val d''Oise: configured a TP-Link Wi-Fi access point in router mode — WAN/LAN IP addressing, DHCP scope, SSID, WPA2 security, and connectivity verification. Supervised by trainer Marc HAZAN.',
+  'Training exercise at Greta du Val d''Oise: configured a TP-Link Wi-Fi access point in router mode — WAN/LAN IP addressing, DHCP scope, SSID, WPA2 security, and connectivity verification. Supervised by trainer [formateur].',
   'itops', ARRAY['IT Ops', 'Network'],
   ARRAY['Wi‑Fi', 'DHCP', 'Routing'],
   '{"tone": "training", "label": "TRAINING LAB"}',
@@ -118,7 +118,7 @@ VALUES (
     'Verified internet connectivity and access point status after saving configuration'
   ],
   false, 100, 'published', NULL, NULL,
-  'Hands-on TP-Link Wi-Fi access point configuration in router mode: WAN/LAN setup, DHCP, SSID and security settings. Training exercise at Greta du Val d''Oise under Marc HAZAN.'
+  'Hands-on TP-Link Wi-Fi access point configuration in router mode: WAN/LAN setup, DHCP, SSID and security settings. Training exercise at Greta du Val d''Oise under [formateur].'
 )
 ON CONFLICT (slug, locale) DO NOTHING;
 
@@ -126,7 +126,7 @@ INSERT INTO projects (slug, locale, title, summary, track, categories, tags, bad
 VALUES (
   'it-ops-wifi-config', 'fr',
   'Configuration d''un point d''accès Wi-Fi (TP-Link)',
-  'Exercice de formation au Greta du Val d''Oise : configuration d''un point d''accès Wi-Fi TP-Link en mode routeur — adressage IP WAN/LAN, étendue DHCP, SSID, sécurité WPA2 et vérification de la connectivité. Encadrement : formateur Marc HAZAN.',
+  'Exercice de formation au Greta du Val d''Oise : configuration d''un point d''accès Wi-Fi TP-Link en mode routeur — adressage IP WAN/LAN, étendue DHCP, SSID, sécurité WPA2 et vérification de la connectivité. Encadrement : formateur [formateur].',
   'itops', ARRAY['IT Ops', 'Network'],
   ARRAY['Wi‑Fi', 'DHCP', 'Routing'],
   '{"tone": "training", "label": "TRAINING LAB"}',
@@ -138,7 +138,7 @@ VALUES (
     'Vérification de la connectivité Internet et du statut du point d''accès après sauvegarde'
   ],
   false, 100, 'published', NULL, NULL,
-  'Configuration pratique d''un point d''accès Wi-Fi TP-Link en mode routeur : paramétrage WAN/LAN, DHCP, SSID et sécurité. Exercice de formation au Greta du Val d''Oise sous la supervision de Marc HAZAN.'
+  'Configuration pratique d''un point d''accès Wi-Fi TP-Link en mode routeur : paramétrage WAN/LAN, DHCP, SSID et sécurité. Exercice de formation au Greta du Val d''Oise sous la supervision de [formateur].'
 )
 ON CONFLICT (slug, locale) DO NOTHING;
 
@@ -161,7 +161,7 @@ VALUES (
     'Configured NTFS Full Control permissions for profile folder ownership',
     'Set user profile path in AD Users & Computers: \\\\DC1\\Profil itinérants\\%username%',
     'Verified roaming profile creation: technicien.tai.V6 folder appeared in share after first client login',
-    'Domain: ebtai.fr — supervised by trainer Marc HAZAN'
+    'Domain: ebtai.fr — supervised by trainer [formateur]'
   ],
   false, 110, 'published', NULL, NULL,
   'Full roaming profile setup on Windows Server 2016 / ebtai.fr domain: shared folder, NTFS permissions, AD user profile path, and client verification. Training at Greta du Val d''Oise.'
@@ -181,7 +181,7 @@ VALUES (
     'Configuration des permissions NTFS Contrôle total pour la propriété du dossier de profils',
     'Paramétrage du chemin de profil dans Utilisateurs et ordinateurs AD : \\\\DC1\\Profil itinérants\\%username%',
     'Vérification de la création du profil itinérant : dossier technicien.tai.V6 apparu dans le partage après première connexion cliente',
-    'Domaine : ebtai.fr — encadrement : formateur Marc HAZAN'
+    'Domaine : ebtai.fr — encadrement : formateur [formateur]'
   ],
   false, 110, 'published', NULL, NULL,
   'Configuration complète de profils itinérants sur Windows Server 2016 / domaine ebtai.fr : dossier partagé, permissions NTFS, chemin de profil AD et vérification depuis le client. Formation au Greta du Val d''Oise.'

@@ -1,13 +1,13 @@
 ---
 title: "Optimización de un backend Apex (FASHA)"
-heroSubtitle: "Hacerse cargo de un backend Apex en producción en FASHA: dos errores reales diagnosticados hasta su causa raíz (un trigger que se rompe con 100 pedidos, un cálculo que falla en silencio en la importación masiva), refactorización completa a un patrón handler bulk-safe, el batch semanal pasado a asíncrono, cobertura >85%."
+heroSubtitle: "Hacerse cargo del backend Apex de FASHA (escenario de formación): dos errores diagnosticados hasta su causa raíz (un trigger que se rompe con 100 pedidos, un cálculo que falla en silencio en la importación masiva), refactorización completa a un patrón handler bulk-safe, el batch semanal pasado a asíncrono, cobertura >85%."
 ---
 
 ## Contexto
 
 FASHA, distribuidora multinacional de ropa (350 empleados, Europa / EE. UU. / APAC), gestionaba cuentas, contactos y pedidos en Salesforce. La aplicación **se ralentizaba y acumulaba errores**.
 
-Misión encargada a través de la consultora SFQUAL: **diagnosticar, corregir y reorganizar un backend Apex existente**. No un proyecto desde cero — código en producción, con comerciales reales afectados en cada despliegue.
+El escenario del proyecto: **diagnosticar, corregir y reorganizar un backend Apex existente**. No un proyecto desde cero — código heredado, descrito como en producción en el escenario, donde cada defecto afecta a los comerciales.
 
 ## Los dos errores — y su causa raíz
 
@@ -27,7 +27,7 @@ Causa raíz: la lógica procesaba implícitamente **un solo registro** (un patr�
 
 ### Y lo demás
 
-- El **batch semanal de recálculo de la facturación** (tras la actualización de precios de productos) tardaba varias horas de forma síncrona — un problema de arquitectura, no de ajuste.
+- El **proceso semanal de recálculo de la facturación** (tras la actualización de precios de productos) tardaba varias horas de forma síncrona — un problema de arquitectura, no de ajuste.
 - Código desorganizado: sin convenciones de nomenclatura, clases demasiado largas, lógica de negocio en los triggers.
 - Existían tests pero eran **poco fiables**: no validaban realmente los resultados.
 
@@ -38,7 +38,7 @@ Causa raíz: la lógica procesaba implícitamente **un solo registro** (un patr�
 | Lógica en `OrderTrigger` | `OrderTriggerHandler` + `TriggerHelper` — un trigger por objeto, cero lógica dentro |
 | `NetAmount` sobre un solo registro | Recálculo por **colecciones** — idéntico vía la UI o una importación de 200 |
 | Actualización de facturación síncrona, bloquea el guardado del comercial | `AccountService` vía **`@future`** — la transacción del usuario ya no espera |
-| Batch de facturación síncrono, varias horas | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (domingo 22h) |
+| Recálculo de facturación síncrono, varias horas | `UpdateAllAccountsBatch` + `UpdateAllAccountsScheduler` (domingo 22h) |
 | Tests poco fiables | `TestDataFactory` + `@testSetup`, cobertura **>85%**, casos nominal / límite / error por clase |
 
 Además de las correcciones: `MyTeamOrdersController` — un nuevo controlador que muestra los pedidos de todo un equipo (mismo `UserRoleId`), una funcionalidad solicitada por el cliente.
@@ -57,7 +57,7 @@ El punto importante: la refactorización no corrige dos errores, hace que **esta
 | Decisión | Alternativa descartada | Por qué |
 |---|---|---|
 | **`@future`** para la actualización puntual de la facturación | Procesamiento síncrono | No hacer esperar al comercial en su guardado; el recálculo no necesita ser inmediato |
-| **`Batchable` + `Schedulable`** para el recálculo global | Mantener el batch síncrono y optimizarlo | Un proceso de varias horas es un problema de *modelo de ejecución*, no de rendimiento de consulta |
+| **`Batchable` + `Schedulable`** para el recálculo global | Mantener el proceso síncrono y optimizarlo | Un proceso de varias horas es un problema de *modelo de ejecución*, no de rendimiento de consulta |
 | **Patrón Handler** | Corregir la lógica en el propio trigger | Hacer el código testeable y bulk-safe *por construcción*, no parche a parche |
 | **Recálculo semanal completo** | Recálculo incremental solo en las cuentas modificadas | Suficiente al volumen de FASHA; el incremental sería el siguiente paso a mucha mayor escala |
 
@@ -72,10 +72,10 @@ El punto importante: la refactorización no corrige dos errores, hace que **esta
 
 | Indicador | Valor |
 |---|---|
-| Errores reales corregidos (causa raíz documentada) | 2 (trigger no bulk-safe · cálculo incorrecto en importación) |
+| Errores corregidos (causa raíz documentada) | 2 (trigger no bulk-safe · cálculo incorrecto en importación) |
 | SOQL / DML en bucles, tras la refactorización | 0 |
 | Cobertura de tests | >85% (inicio: tests poco fiables) |
-| Batch semanal | varias horas síncrono → asíncrono programado |
+| Recálculo semanal | proceso síncrono de varias horas → Batch Apex programado |
 | Evaluación del título RNCP | 2/2 competencias validadas — con distinción, correcciones completas y bien justificadas |
 
 ## Lo que demuestra este proyecto

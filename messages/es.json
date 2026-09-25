@@ -100,7 +100,7 @@
     "profile_title": "Perfil",
     "profile_subtitle": "De sistemas y redes al desarrollo Salesforce",
     "bridge_title": "Donde mis dos mundos se encuentran",
-    "bridge_body": "En el despliegue de Légarant-AXG, no me limité a escribir los endpoints Apex REST del lado Salesforce — también construí y desplegué la aplicación Heroku que los consume: una API Node.js/PostgreSQL, dos entornos aislados conectados por un pipeline de Heroku, Heroku Connect configurado objeto por objeto, hasta el runbook de despliegue. Un perfil solo-Salesforce se habría detenido en la capa Apex y habría delegado la infraestructura a otra persona, con el riesgo habitual de decisiones tomadas sin conocer las restricciones del otro lado. Un perfil solo-infraestructura podría haber desplegado la app Heroku, pero no diseñar el trigger Apex de External ID ni la Matching Rule que evita duplicados en el origen. Entregar ambas partes juntas eliminó el vaivén habitual entre equipos Salesforce y DevOps — el entorno de staging ya existía antes de escribir la primera línea de Apex, no después. Este proyecto, no una insignia, es la prueba de que Salesforce, infraestructura y seguridad no son dos currículums superpuestos, sino una sola persona tomando ambas decisiones a la vez. El mismo reflejo aparece de otra forma en el pipeline CI/CD de abajo: disciplina DevOps —protección de ramas, validación automatizada, un procedimiento de rollback documentado— aplicada a cómo se entregan los releases de Salesforce, no solo a cómo se construyen.",
+    "bridge_body": "En el despliegue de Légarant-AXG, mi proyecto integrador del título RNCP 6, no me limité a escribir los endpoints Apex REST del lado Salesforce — también construí y desplegué la aplicación Heroku que los consume: una API Node.js/PostgreSQL, dos entornos aislados conectados por un pipeline de Heroku, Heroku Connect configurado objeto por objeto, hasta el runbook de despliegue. Un perfil solo-Salesforce se habría detenido en la capa Apex y habría delegado la infraestructura a otra persona, con el riesgo habitual de decisiones tomadas sin conocer las restricciones del otro lado. Un perfil solo-infraestructura podría haber desplegado la app Heroku, pero no diseñar el trigger Apex de External ID ni la Matching Rule que evita duplicados en el origen. Entregar ambas partes juntas eliminó el vaivén habitual entre equipos Salesforce y DevOps — el entorno de staging ya existía antes de escribir la primera línea de Apex, no después. Este proyecto, no una insignia, es la prueba de que Salesforce, infraestructura y seguridad no son dos currículums superpuestos, sino una sola persona tomando ambas decisiones a la vez. El mismo reflejo aparece de otra forma en el pipeline CI/CD de abajo: disciplina DevOps —protección de ramas, validación automatizada, un procedimiento de rollback documentado— aplicada a cómo se entregan los releases de Salesforce, no solo a cómo se construyen.",
     "bridge_cta": "Ver el caso de estudio Légarant-AXG",
     "bridge_cta2": "Ver el caso de estudio del pipeline CI/CD",
     "security_title": "El clúster Seguridad — {count} proyectos, una sola disciplina",
@@ -322,8 +322,8 @@
     "maturityStatusCta": "Ver el estado en directo",
     "maturityChangelogCta": "Ver cómo está construido este sitio",
     "discuss": "Hablar de ello para un puesto",
-    "sectorsTitle": "Sectores en los que ya he entregado",
-    "sectorsBody": "Los estudios de caso siguientes no son ejercicios abstractos: cada uno está anclado en un sector con sus propias exigencias de cumplimiento, trazabilidad y tolerancia al error.",
+    "sectorsTitle": "Sectores tratados en mis casos de estudio",
+    "sectorsBody": "Mis proyectos de formación (título RNCP nivel 6, OpenClassrooms) se basan en escenarios empresariales ficticios pero realistas: cada uno me obligó a tener en cuenta las exigencias de su sector en materia de cumplimiento, trazabilidad y tolerancia al error.",
     "sectors": [
       {
         "label": "Lujo y moda",
@@ -361,7 +361,7 @@
     "kicker": "Perfil",
     "title": "De sistemas y redes al desarrollo Salesforce",
     "p1": "Desarrolladora Salesforce con 2 años de experiencia profesional y una sólida base en infraestructura IT — cimientos que marcan la diferencia en proyectos complejos.",
-    "p2": "Empecé mi carrera en el área de infraestructura — prácticas en MIDRANGE GROUP (feb. – may. 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 200 equipos Dell mediante Windows Autopilot, administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
+    "p2": "Empecé mi carrera en el área de infraestructura — prácticas en MIDRANGE GROUP (feb. – may. 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 264 equipos Dell mediante Windows Autopilot, administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
     "p3": "De oct. 2023 a oct. 2025 trabajé como Desarrolladora Salesforce en LD Digitales (remoto), a la vez que obtenía el título de Desarrolladora Diseñadora de Software (RNCP Nivel 6) en OpenClassrooms. Construí y mantuve más de 10 clases Apex, creé más de 20 Flows de automatización (reduciendo la carga manual en un 30 %), diseñé componentes LWC reutilizables e implementé pipelines de CI/CD con Salesforce CLI.",
     "p4": "Doy lo mejor de mí en entornos que valoran la autonomía, la transparencia y el aprendizaje continuo. Mi objetivo es contribuir a proyectos Salesforce e IT Ops ambiciosos — en Francia o a nivel internacional, en equipos distribuidos.",
     "p1_salesforce": "Desarrolladora y consultora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
@@ -509,7 +509,7 @@
     "breadcrumbHome": "Inicio",
     "breadcrumbCurrent": "Perfil híbrido",
     "h1": "Donde Salesforce, la infraestructura y la seguridad son una sola cabeza, no dos",
-    "lead": "No soy una desarrolladora Salesforce que sabe Docker, ni una administradora de sistemas que sabe Salesforce. Resuelvo problemas transversales que un especialista solo — de un lado o del otro — abordaría más despacio, peor o directamente no abordaría: las decisiones de ambas capas se toman a la vez, por la misma persona, antes de que empiece el habitual ida y vuelta entre equipos.",
+    "lead": "No soy una desarrolladora Salesforce que sabe de servidores, ni una administradora de sistemas que sabe Salesforce. Resuelvo problemas transversales que un especialista solo — de un lado o del otro — abordaría más despacio, peor o directamente no abordaría: las decisiones de ambas capas se toman a la vez, por la misma persona, antes de que empiece el habitual ida y vuelta entre equipos. Las pruebas citadas a continuación proceden de proyectos de formación y proyectos personales; cada página indica su naturaleza y su periodo.",
     "scenariosTitle": "Tres casos donde la combinación cambia el resultado",
     "scenarios": [
       {
@@ -521,7 +521,7 @@
         "mine": "Ambas cosas: los endpoints Apex REST, la app Node.js/PostgreSQL que los consume, Heroku Connect configurado objeto por objeto, dos entornos aislados unidos por un pipeline, hasta el runbook de despliegue. El entorno de staging existía antes de escribir la primera línea de Apex — no después.",
         "proofs": [
           {
-            "label": "Estudio de caso — Despliegue Legarant-AXG",
+            "label": "Proyecto integrador RNCP 6 — Despliegue Legarant-AXG",
             "href": "/projects/legarant-axg-salesforce-deployment"
           }
         ],
@@ -537,7 +537,7 @@
         "mine": "Una disciplina DevOps real — protección de ramas, validación automatizada, procedimiento de rollback SFDX documentado — aplicada a cómo se entregan las releases de Salesforce, no solo a cómo se programan.",
         "proofs": [
           {
-            "label": "Estudio de caso — Pipeline CI/CD Salesforce",
+            "label": "Proyecto personal — Pipeline CI/CD Salesforce",
             "href": "/projects/cicd-pipeline-setup"
           }
         ],
@@ -553,11 +553,11 @@
         "mine": "Modelo la superficie de ataque con STRIDE y diseño el control del lado de Salesforce — usuario de integración dedicado, Permission Set explícito, verificaciones CRUD/FLS, WITH SECURITY_ENFORCED — en el mismo sprint. El ciclo se cierra antes de la puesta en producción, no tres tickets después.",
         "proofs": [
           {
-            "label": "Estudio de caso — Backend Apex iDEM Connect",
+            "label": "Proyecto de formación RNCP 6 — Backend Apex iDEM Connect",
             "href": "/projects/idemconnect-apex-backend"
           },
           {
-            "label": "Proyecto — risque360 (modelado STRIDE)",
+            "label": "Proyecto personal — risque360 (modelado STRIDE)",
             "href": "/projects/risque360"
           }
         ],

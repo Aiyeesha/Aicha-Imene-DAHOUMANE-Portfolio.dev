@@ -23,9 +23,9 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         {
           title: "Programmation & plateformes",
           items: [
-            "Java · JavaScript / TypeScript (expérience production)",
-            "PostgreSQL (avancé · 2 ans) · MySQL (intermédiaire · 1 an) — requêtes complexes, administration, intégrations Salesforce via Heroku Connect",
-            "Heroku (avancé · 2 ans) — déploiements d’applications connectées à Salesforce via Heroku Connect, gestion de dynos et variables d’environnement",
+            "JavaScript / TypeScript (projets personnels, dont ce portfolio) · Java (contexte formation)",
+            "PostgreSQL · MySQL (intermédiaire) — requêtes, schémas, intégrations Salesforce via Heroku Connect (projet Légarant-AXG)",
+            "Heroku (intermédiaire) — déploiement d’applications connectées à Salesforce via Heroku Connect, pipeline staging → production, variables d’environnement (projet Légarant-AXG)",
             "API REST / SOAP — conception et intégration",
             "Tests unitaires & assertions",
             "Git & workflows GitHub",
@@ -117,9 +117,9 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         {
           title: "Programación y plataformas",
           items: [
-            "Java · JavaScript / TypeScript (experiencia en producción)",
-            "PostgreSQL (avanzado · 2 años) · MySQL (intermedio · 1 año) — consultas complejas, administración, integraciones Salesforce vía Heroku Connect",
-            "Heroku (avanzado · 2 años) — despliegues de aplicaciones conectadas a Salesforce vía Heroku Connect, gestión de dynos y variables de entorno",
+            "JavaScript / TypeScript (proyectos personales, incluido este portfolio) · Java (contexto de formación)",
+            "PostgreSQL · MySQL (intermedio) — consultas, esquemas, integraciones Salesforce vía Heroku Connect (proyecto Légarant-AXG)",
+            "Heroku (intermedio) — despliegue de aplicaciones conectadas a Salesforce vía Heroku Connect, pipeline staging → producción, variables de entorno (proyecto Légarant-AXG)",
             "API REST / SOAP — diseño e integración",
             "Pruebas unitarias y aserciones",
             "Git y flujos de trabajo en GitHub",
@@ -211,9 +211,9 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       {
         title: "Programming & platforms",
         items: [
-          "Java · JavaScript / TypeScript (production experience)",
-          "PostgreSQL (advanced · 2 yrs) · MySQL (intermediate · 1 yr) — complex queries, administration, Salesforce integrations via Heroku Connect",
-          "Heroku (advanced · 2 yrs) — Salesforce-connected app deployments via Heroku Connect, dynos & environment variables",
+          "JavaScript / TypeScript (personal projects, including this portfolio) · Java (training context)",
+          "PostgreSQL · MySQL (intermediate) — queries, schemas, Salesforce integrations via Heroku Connect (Légarant-AXG project)",
+          "Heroku (intermediate) — Salesforce-connected app deployments via Heroku Connect, staging → production pipeline, environment variables (Légarant-AXG project)",
           "REST / SOAP API design and integration",
           "Unit tests & assertions",
           "Git & GitHub workflows",

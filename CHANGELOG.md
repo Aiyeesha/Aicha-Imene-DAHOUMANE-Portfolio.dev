@@ -20,6 +20,14 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Honnêteté des projets (audit de contenu du 2026-09-25, lot 3)** —
+  - Bandeau « nature du projet » en tête de chaque page projet (formation RNCP 6 / OpenClassrooms / Greta TAI ou TSSR, stage MIDRANGE GROUP, projet personnel, étude reconstituée) avec sa période quand elle est connue (`lib/projectNature.ts`, champ `nature` dans `content/projects.ts`) ; période aussi affichée sur les cartes et dans l'encadré « Informations ». Aucune date n'est inventée : les projets personnels et les 3 projets Java OpenClassrooms restent sans date en attendant qu'elle soit renseignée.
+  - Badge « Projet fil rouge — Titre RNCP 6 » réservé à Légarant-AXG ; les 7 autres projets OpenClassrooms passent en « Projet de formation — Titre RNCP 6 ». « Pratique terrain » devient « Stage en entreprise » ; `it-ops-workstation-setup` (exercice Greta) passe en « Lab de formation ».
+  - Formulations de réel retirées des projets de formation : FASHA (« en production », « bugs réels », « vrais commerciaux »), Avenir Télécom (« pilote terrain », « bugs de production » → pilote simulé par le scénario), highlights de cartes ; personnages nommés retirés (Avenir, Tours For Life, Digit Learning, Heme Biotech, Poch'Lib) ; nom d'un formateur retiré (profils itinérants).
+  - Accueil et /hybride : Légarant-AXG présenté comme projet fil rouge du titre RNCP 6, preuves étiquetées par nature, mention de Docker retirée ; note de /projects sur le ratio IT Ops / Salesforce réécrite.
+  - Niveaux « Expert » ramenés à « Avancé » (Apex, Flow, SOQL, Git, VS Code) ; Java requalifié « contexte formation », Heroku et PostgreSQL « intermédiaire (projet Légarant-AXG) » ; 264 postes Dell partout (au lieu de 200 / 200+) ; chiffres Trailhead de /uses alignés sur /certifications.
+  - Section « Ce que j'apporte à une équipe » : cartes réécrites (où je l'ai pratiqué, preuves) à la place du pitch client, du livrable et de la durée typique ; encadré « Secteurs » requalifié en secteurs abordés dans des projets de formation.
+
 - **Repositionnement salarié (audit de contenu du 2026-09-25, lot 2)** —
   - `/contact` devient « Me proposer un poste » : les champs de prestation (secteur, délai, enveloppe budgétaire) sont remplacés par des champs recruteur facultatifs (intitulé du poste, type de contrat, lieu et mode de travail, date de prise de poste), toujours composés en préfixe du message (aucun changement d'API). Sujets du formulaire renommés (« Poste Salesforce », « Disponibilité / entretien »…).
   - `/work-with-me` réécrite en page « Me recruter » (URL conservée) : disponibilité, postes visés, contrats (CDI · CDD · intérim · portage salarial), tous secteurs, déroulé d'un recrutement, FAQ recruteur. Suppression de l'appel découverte gratuit, du devis sous 48 h, des durées « récurrentes » et du JSON-LD `ProfessionalService` (également retiré du layout racine ; description `Person` réécrite).
