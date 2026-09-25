@@ -18,46 +18,6 @@ export type BlogPostMeta = {
  * This registry is convenient for curated lists, home page highlights, etc.
  */
 export const BLOG_POSTS: BlogPostMeta[] = [
-  // --- Next.js / i18n
-  {
-    slug: "next-intl-app-router",
-    locale: "en",
-    title: "Next.js App Router i18n with next-intl: a clean, production-ready setup",
-    excerpt:
-      "A step-by-step guide to build a robust i18n architecture in Next.js App Router with next-intl, including routing, messages, and SEO-friendly locales.",
-    date: "2025-01-15",
-    tags: ["Next.js", "i18n", "next-intl"],
-  },
-  {
-    slug: "next-intl-app-router",
-    locale: "fr",
-    title: "Next.js App Router + next-intl : une i18n propre et prête pour la prod",
-    excerpt:
-      "Guide pas à pas pour une architecture i18n robuste sur Next.js App Router avec next-intl : routing, messages, et bonnes pratiques SEO multi-langues.",
-    date: "2025-01-15",
-    tags: ["Next.js", "i18n", "next-intl"],
-  },
-
-  // --- Salesforce / CI-CD
-  {
-    slug: "salesforce-cicd-github-actions",
-    locale: "en",
-    title: "Salesforce CI/CD with GitHub Actions: validate, test, and deploy safely",
-    excerpt:
-      "A pragmatic CI/CD pipeline for Salesforce: scratch org validation, Apex tests, quality gates, and safe deployments with GitHub Actions.",
-    date: "2025-01-22",
-    tags: ["Salesforce", "CI/CD", "GitHub Actions"],
-  },
-  {
-    slug: "salesforce-cicd-github-actions",
-    locale: "fr",
-    title: "Salesforce CI/CD avec GitHub Actions : valider, tester et déployer proprement",
-    excerpt:
-      "Pipeline CI/CD pragmatique pour Salesforce : validation en scratch org, tests Apex, quality gates et déploiements sécurisés avec GitHub Actions.",
-    date: "2025-01-22",
-    tags: ["Salesforce", "CI/CD", "GitHub Actions"],
-  },
-
   // --- IT Ops / RMM / Ticketing / Security / Backup
   {
     slug: "datto-rmm-supervision-runbooks",

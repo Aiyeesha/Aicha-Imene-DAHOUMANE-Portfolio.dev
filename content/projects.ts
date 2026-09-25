@@ -260,7 +260,7 @@ export const projects: Project[] = [
       "Created a full disk image backup with AOMEI Backupper Standard — operation completed successfully",
       "Installed the Windows Server Backup feature via Server Manager on Windows Server 2012",
       "Configured a scheduled daily VSS backup (14:00) to a dedicated virtual disk (22.67 GB transferred)",
-      "Supervised by trainer Miguel MI-POUDOU — Greta du Val d'Oise, Lycée Louis Jouvet (Taverny)"
+      "Supervised training exercise — Greta du Val d'Oise, Lycée Louis Jouvet (Taverny)"
     ],
     "featured": false,
     "sortOrder": 80,
@@ -1736,8 +1736,8 @@ export const projects: Project[] = [
       "Migration"
     ],
     "badge": {
-      "tone": "anonymized",
-      "label": "ANONYMIZED ENGAGEMENT"
+      "tone": "simulation",
+      "label": "RECONSTRUCTED CASE STUDY"
     },
     "techStack": [
       "Lightning Web Components",

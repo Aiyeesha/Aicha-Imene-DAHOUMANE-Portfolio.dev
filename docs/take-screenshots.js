@@ -51,7 +51,7 @@ async function shot(page, name, url, { waitFor, action } = {}) {
   });
 
   // 4. Blog article (premier article disponible)
-  await shot(page, "blog-article", "/en/blog/salesforce-cicd-github-actions", {
+  await shot(page, "blog-article", "/en/blog/salesforce-sandbox-management", {
     waitFor: "h1",
   });
 

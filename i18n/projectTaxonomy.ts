@@ -348,7 +348,8 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "TRAINING PROJECT": "Case study",
   "CAPSTONE RNCP 6": "RNCP 6 capstone project",
   "SIMULATION PROJECT": "Professional simulation",
-  "ANONYMIZED ENGAGEMENT": "Anonymized engagement"
+  "ANONYMIZED ENGAGEMENT": "Anonymized engagement",
+  "RECONSTRUCTED CASE STUDY": "Reconstructed case study"
 },
   fr: {
   "CLIENT CONTEXT": "Contexte client",
@@ -360,7 +361,8 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "TRAINING PROJECT": "Étude de cas",
   "CAPSTONE RNCP 6": "Projet fil rouge — Titre RNCP 6",
   "SIMULATION PROJECT": "Simulation professionnelle",
-  "ANONYMIZED ENGAGEMENT": "Mission anonymisée"
+  "ANONYMIZED ENGAGEMENT": "Mission anonymisée",
+  "RECONSTRUCTED CASE STUDY": "Étude de cas reconstituée"
 },
   es: {
   "CLIENT CONTEXT": "Contexto cliente",
@@ -372,7 +374,8 @@ const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   "TRAINING PROJECT": "Caso de estudio",
   "CAPSTONE RNCP 6": "Proyecto integrador — Título RNCP 6",
   "SIMULATION PROJECT": "Simulación profesional",
-  "ANONYMIZED ENGAGEMENT": "Encargo anonimizado"
+  "ANONYMIZED ENGAGEMENT": "Encargo anonimizado",
+  "RECONSTRUCTED CASE STUDY": "Caso de estudio reconstruido"
 },
 };
 
