@@ -20,6 +20,8 @@ export type Serie = {
 };
 
 // ── Séries Salesforce ─────────────────────────────────────────────────────────
+// Séries resserrées à l'audit de contenu du 2026-09-25 (lot 4) : le blog ne
+// garde que 14 articles, tous rattachés à un projet du portfolio.
 
 const SALESFORCE_DEV: Serie = {
   id: "salesforce-dev",
@@ -31,34 +33,22 @@ const SALESFORCE_DEV: Serie = {
   slugs: [
     "flow-vs-apex-decision-guide",
     "apex-triggers-best-practices",
-    "apex-batch-jobs-scheduling",
+    "salesforce-governor-limits",
     "soql-performance-optimization",
+    "apex-test-classes-best-practices",
   ],
 };
 
-const SALESFORCE_LWC: Serie = {
-  id: "salesforce-lwc",
+const SALESFORCE_DEVOPS: Serie = {
+  id: "salesforce-devops",
   name: {
-    en: "Lightning Web Components",
-    fr: "Lightning Web Components",
-    es: "Lightning Web Components",
-  },
-  slugs: [
-    "lwc-reusable-components",
-    "salesforce-lwc-testing",
-  ],
-};
-
-const SALESFORCE_CICD: Serie = {
-  id: "salesforce-cicd",
-  name: {
-    en: "Salesforce DevOps & CI/CD",
-    fr: "DevOps Salesforce & CI/CD",
-    es: "DevOps Salesforce y CI/CD",
+    en: "Salesforce DevOps",
+    fr: "DevOps Salesforce",
+    es: "DevOps Salesforce",
   },
   slugs: [
     "salesforce-sandbox-management",
-    "salesforce-cicd-github-actions",
+    "salesforce-deployment-strategies",
   ],
 };
 
@@ -78,42 +68,12 @@ const ITOPS_WINDOWS: Serie = {
   ],
 };
 
-const ITOPS_MONITORING: Serie = {
-  id: "itops-monitoring",
-  name: {
-    en: "IT Ops: Monitoring & Security",
-    fr: "IT Ops : Supervision & Sécurité",
-    es: "IT Ops: Supervisión y Seguridad",
-  },
-  slugs: [
-    "datto-rmm-supervision-runbooks",
-    "acronis-backup-recovery-ops",
-    "malwarebytes-alert-triage-mitre",
-  ],
-};
-
-const ITOPS_AUTOMATION: Serie = {
-  id: "itops-automation",
-  name: {
-    en: "IT Ops: Automation & Ticketing",
-    fr: "IT Ops : Automatisation & Ticketing",
-    es: "IT Ops: Automatización y Ticketing",
-  },
-  slugs: [
-    "powershell-sysadmin-automation",
-    "autotask-ticketing-workflow",
-  ],
-};
-
 // ── Export ────────────────────────────────────────────────────────────────────
 
 export const SERIES: Serie[] = [
   SALESFORCE_DEV,
-  SALESFORCE_LWC,
-  SALESFORCE_CICD,
+  SALESFORCE_DEVOPS,
   ITOPS_WINDOWS,
-  ITOPS_MONITORING,
-  ITOPS_AUTOMATION,
 ];
 
 // ── Helper : trouver la série d'un article ────────────────────────────────────

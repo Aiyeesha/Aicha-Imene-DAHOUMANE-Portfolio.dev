@@ -21,6 +21,7 @@ import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { LINKEDIN_URL } from "@/lib/social";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
+import { oneBySlug } from "@/lib/data/projectsSource";
 
 type Params = { locale: "en" | "fr" | "es"; slug: string };
 
@@ -108,6 +109,25 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
   // Série d'articles — null si l'article n'appartient à aucune série
   const seriePosition = getSeriePosition(slug);
+
+  // « Mis en pratique dans » (audit de contenu 2026-09-25, lot 4) : chaque
+  // article renvoie vers les études de cas où sa technique est appliquée.
+  // "colophon" désigne ce site lui-même ; les slugs inconnus sont ignorés.
+  const practiceLinks = meta.projects
+    .map((p) => {
+      if (p === "colophon") {
+        return {
+          href: `/${locale}/colophon`,
+          label: locale === "fr" ? "Ce portfolio (colophon)" : locale === "es" ? "Este portfolio (colofón)" : "This portfolio (colophon)",
+          nature: null as string | null,
+        };
+      }
+      const project = oneBySlug(locale, p);
+      return project
+        ? { href: `/${locale}/projects/${p}`, label: project.title, nature: project.nature?.label ?? null }
+        : null;
+    })
+    .filter((x): x is { href: string; label: string; nature: string | null } => x !== null);
 
   // Related posts: same locale, overlapping tags, exclude current
   const allPosts = readAllPosts(locale);
@@ -237,6 +257,27 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
               readingTimeMin={meta.readingTime}
             />
           </article>
+
+          {practiceLinks.length > 0 && (
+            <aside
+              aria-labelledby="practice-title"
+              className="mt-6 rounded-2xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.04] p-5"
+            >
+              <h2 id="practice-title" className="text-sm font-semibold text-slate-900 dark:text-white">
+                {locale === "fr" ? "Mis en pratique dans" : locale === "es" ? "Puesto en práctica en" : "Put into practice in"}
+              </h2>
+              <ul className="mt-3 space-y-2">
+                {practiceLinks.map((l) => (
+                  <li key={l.href} className="text-sm">
+                    <Link href={l.href} className="font-medium underline underline-offset-4 hover:opacity-80 soft-ring rounded">
+                      {l.label}
+                    </Link>
+                    {l.nature && <span className="text-muted"> — {l.nature}</span>}
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
 
           <BlogAuthorCard
             authorName={authorName}

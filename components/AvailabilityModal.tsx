@@ -74,6 +74,9 @@ export default function AvailabilityModal() {
 
   const rows = [
     { icon: <IconClock />,    label: t("delay"),    value: t("delayValue")     },
+    // Ligne « Contrats » ajoutée à l'audit de contenu du 2026-09-25 : CDI, CDD,
+    // intérim et portage n'étaient nommés nulle part sur le site.
+    { icon: <IconTarget />,   label: t("contracts"), value: t("contractValues") },
     { icon: <IconMonitor />,  label: t("workMode"), value: t("workModeValues") },
     { icon: <IconLocation />, label: t("mobility"), value: t("mobilityValues") },
     { icon: <IconSector />,   label: t("sector"),   value: t("sectorValues")   },

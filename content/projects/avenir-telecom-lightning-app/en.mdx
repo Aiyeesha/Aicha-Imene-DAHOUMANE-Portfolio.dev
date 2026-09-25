@@ -1,15 +1,15 @@
 ---
 title: "Lightning app delivery & backlog (Avenir Télécom)"
-heroSubtitle: "Implementation strategy for a field-facing Salesforce Lightning app delivered by a 3-person team: a 20-story costed product backlog, a test plan + Apex reference standard, then a 3-month pilot → Kanban evolutions backlog loop."
+heroSubtitle: "Implementation strategy for a field-facing Salesforce Lightning app delivered by a 3-person team: a 20-story costed product backlog, a test plan + Apex reference standard, then a 3-month pilot (simulated by the scenario) → Kanban evolutions backlog loop."
 ---
 
 ## Context
 
 Following an internal audit, Avenir Télécom's South-zone sales teams needed a Salesforce Lightning app better aligned with their daily work (leads, accounts, opportunities, quotes).
 
-The mission wasn't to code the app but to **define and equip its delivery**: an implementation strategy for a small 3-person Salesforce dev team, a costed product backlog, a test plan, a best-practices reference — then, after a **3-month field pilot**, consolidating the feedback into a prioritized evolutions backlog.
+The mission wasn't to code the app but to **define and equip its delivery**: an implementation strategy for a small 3-person Salesforce dev team, a costed product backlog, a test plan, a best-practices reference — then, from the feedback of a **3-month pilot simulated by the scenario**, consolidating the feedback into a prioritized evolutions backlog.
 
-The team: Romain (senior — Apex & API integrations), Guillaume (mid-level — automation & workflows), Hélène (junior — UI/UX, testing, documentation).
+The scenario's team: a senior developer (Apex & API integrations), a mid-level developer (automation & workflows) and a junior developer (UI/UX, testing, documentation).
 
 ## The product backlog (Scrum)
 
@@ -17,13 +17,13 @@ The team: Romain (senior — Apex & API integrations), Guillaume (mid-level — 
 
 | User story | What it requires | Effort · dev |
 |---|---|---|
-| **US1** — Lead management | Auto creation (web form), rule-based assignment (sector, potential) + immediate notification, conversion without data loss | 4 d · Romain |
-| **US2 / US11** — SIREN verification | Webservice call **in real time on account creation**; blocked + explicit error message on inconsistency | 4+2 d · Romain |
-| **US4 / US9** — DeviQo quotes | Real-time integration with the DeviQo API, quotes shown in **< 2 s, no local storage**, auto-refresh | 4+2 d · Guillaume |
-| **US14 / US15** — PDF + email | Summary PDF generation (merging Opportunity/Account/Contact), auto email to the primary contact, send archived | 2+2 d · Hélène |
-| **US13** — GDPR purge | Scheduled job deleting accounts/contacts inactive > 3 years, **with an audit log** | 3 d · Guillaume |
-| **US18 / US20** — Dev Org hardening | Profile/access-rights config + Apex `run as user` tests validating each profile only accesses authorized data | 2+1 d · Romain/Guillaume |
-| **US19** — Datafactory | Automating import and continuous sync from external sources | 2 d · Guillaume |
+| **US1** — Lead management | Auto creation (web form), rule-based assignment (sector, potential) + immediate notification, conversion without data loss | 4 d · Senior |
+| **US2 / US11** — SIREN verification | Webservice call **in real time on account creation**; blocked + explicit error message on inconsistency | 4+2 d · Senior |
+| **US4 / US9** — DeviQo quotes | Real-time integration with the DeviQo API, quotes shown in **< 2 s, no local storage**, auto-refresh | 4+2 d · Mid |
+| **US14 / US15** — PDF + email | Summary PDF generation (merging Opportunity/Account/Contact), auto email to the primary contact, send archived | 2+2 d · Junior |
+| **US13** — GDPR purge | Scheduled job deleting accounts/contacts inactive > 3 years, **with an audit log** | 3 d · Mid |
+| **US18 / US20** — Dev Org hardening | Profile/access-rights config + Apex `run as user` tests validating each profile only accesses authorized data | 2+1 d · Senior/Mid |
+| **US19** — Datafactory | Automating import and continuous sync from external sources | 2 d · Mid |
 
 The costing isn't decorative: every story is estimated **and assigned to the right seniority level** — API integrations and security go to the senior, automation to the mid-level, UI and tests to the junior. That's what makes the sprint plan sustainable rather than optimistic.
 
@@ -48,13 +48,13 @@ Security isn't an end-of-project workstream — it's **in the user stories**:
 
 ## From pilot to evolutions backlog
 
-After 3 months of deployment to the South-zone field teams, the feedback was consolidated into a **prioritized Kanban backlog**, with WIP limits and Notion documentation dynamically linking product backlog ↔ test plan ↔ evolutions backlog:
+The scenario then simulates a 3-month pilot with the South-zone field teams: the feedback provided by the brief was consolidated into a **prioritized Kanban backlog**, with WIP limits and Notion documentation dynamically linking product backlog ↔ test plan ↔ evolutions backlog:
 
 - **3 evolutions** — E1 two-way interface with the CaseIn request-management tool · E2 automatic daily backup to a dedicated SFTP · E3 Dev Org config hardening.
 - **3 fixes** — C1 account sync via SIREN Webservice · C2 standardized opportunity naming format · C3 immediate rep notification on lead assignment.
-- **3 tracked production bugs** — B001 broken lead → opportunity conversion (high priority) · B002 incorrect imported account data · B003 assignment notifications not sending (fixed).
+- **3 bugs reported by the simulated pilot** — B001 broken lead → opportunity conversion (high priority) · B002 incorrect imported account data · B003 assignment notifications not sending (fixed).
 
-The loop is closed: a bug reported from the field (B003) links to fix C3, which links back to story US1. A reviewer can follow the thread.
+The loop is closed: a bug reported by the pilot (B003) links to fix C3, which links back to story US1. A reviewer can follow the thread.
 
 ## Decisions & assumed limitations
 
@@ -67,7 +67,7 @@ The loop is closed: a bug reported from the field (B003) links to fix C3, which 
 
 Assumed limitations:
 
-- **The product backlog is a costed specification, not an end-to-end executed deliverable** — the value is in the quality of the framing and the test plan, validated by a real pilot, not in a rollout across all of Avenir Télécom.
+- **The product backlog is a costed specification, not an end-to-end executed deliverable** — the value is in the quality of the framing and the test plan, tested against the feedback of a simulated pilot, not in a rollout across all of Avenir Télécom.
 - **B002 (incorrect imported account data) is tracked but not resolved** within scope: identified, prioritized, left to the next sprint — flagged rather than hidden.
 
 ## Results
@@ -76,7 +76,7 @@ Assumed limitations:
 |---|---|
 | Costed & prioritized user stories | 20 |
 | Test classes (required coverage ≥ 75%) | 20 |
-| Field pilot duration (South zone) | 3 months |
+| Pilot duration set by the scenario | 3 months |
 | RNCP diploma evaluation | 4/4 competencies validated |
 
 ## Deliverables

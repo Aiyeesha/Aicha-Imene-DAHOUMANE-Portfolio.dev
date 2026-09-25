@@ -12,6 +12,8 @@
 import { projects as CARD_PROJECTS, type Project } from "@/content/projects";
 import { projectDetails as DETAILS, type ProjectSection } from "@/content/projectDetails";
 import { GITHUB_REPOS } from "@/content/github-repos";
+import { PROJECT_HIGHLIGHTS } from "@/content/projectHighlights";
+import { resolveNature, type ResolvedNature } from "@/lib/projectNature";
 
 export type ProjectLocale = "en" | "fr" | "es";
 
@@ -59,6 +61,8 @@ export type ProjectWithAssets = {
   updated_at?: string | null;
   /** Always empty — retained so existing consumers keep type-checking. */
   project_assets: ProjectAsset[];
+  /** Nature (formation, stage, personnel, reconstitué), période et note, déjà localisées. */
+  nature?: ResolvedNature | null;
 };
 
 const normLocale = (l: string): ProjectLocale =>
@@ -102,7 +106,11 @@ function merge(card: Project, requested: ProjectLocale): ProjectWithAssets {
     badge: card.badge
       ? { label: card.badge.label, tone: (card.badge.tone ?? "personal") as ProjectBadge["tone"] }
       : null,
-    highlights: card.highlights ?? [],
+    // Puces traduites (content/projectHighlights.ts) ; repli sur l'anglais.
+    highlights:
+      (requested !== "en" ? PROJECT_HIGHLIGHTS[card.slug]?.[requested] : undefined) ??
+      card.highlights ??
+      [],
     featured: Boolean(card.featured),
     sort_order: card.sortOrder ?? 0,
     status: card.status ?? "published",
@@ -110,6 +118,7 @@ function merge(card: Project, requested: ProjectLocale): ProjectWithAssets {
     is_security: Boolean(card.isSecurity),
     updated_at: card.updatedAt ?? null,
     project_assets: [],
+    nature: resolveNature(card.nature, requested, card.period),
   };
 }
 
