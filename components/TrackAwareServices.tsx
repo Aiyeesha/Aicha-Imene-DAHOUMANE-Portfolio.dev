@@ -245,9 +245,12 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       </div>
     </Reveal>
 
-    {/* MATURITÉ D'EXPLOITATION — /status et /changelog présentés comme preuve
-        DevSecOps (observabilité réelle, remédiation CVE documentée), pas comme
-        de simples liens de pied de page. Affiché sur les deux tracks depuis
+    {/* MATURITÉ D'EXPLOITATION — /status et /colophon présentés comme preuve
+        DevSecOps (observabilité réelle, sécurité documentée), pas comme
+        de simples liens de pied de page. Le /changelog public a été retiré
+        lors de l'audit de contenu du 2026-09-25 (il exposait des notes
+        internes) : la clé i18n maturityChangelogCta pointe désormais vers
+        le colophon. Affiché sur les deux tracks depuis
         l'audit 2026-08-13 : c'était auparavant IT Ops uniquement au motif que
         /status et /changelog sont des artefacts d'exploitation, pas un argument
         de vente Salesforce — mais la discipline qu'ils prouvent (rigueur,
@@ -277,7 +280,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <span aria-hidden="true"> ↗</span>
             </Link>
             <Link
-              href={`/${locale}/changelog`}
+              href={`/${locale}/colophon`}
               className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
             >
               {t("services.maturityChangelogCta")}

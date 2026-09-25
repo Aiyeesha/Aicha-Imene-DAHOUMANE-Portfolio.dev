@@ -94,6 +94,26 @@ const nextConfig = {
         destination: "/:locale/blog/visualforce-to-lwc-migration",
         permanent: true,
       },
+      // Articles dépubliés (audit de contenu 2026-09-25) — contenu trop court et
+      // non relu ; redirection temporaire pour ne pas casser les liens existants.
+      {
+        source: "/:locale(en|fr|es)/blog/next-intl-app-router",
+        destination: "/:locale/blog",
+        permanent: false,
+      },
+      {
+        source: "/:locale(en|fr|es)/blog/salesforce-cicd-github-actions",
+        destination: "/:locale/projects/cicd-pipeline-setup",
+        permanent: false,
+      },
+      // Changelog public retiré (audit de contenu 2026-09-25) : l'historique
+      // détaillé reste dans CHANGELOG.md du dépôt ; la preuve DevSecOps lisible
+      // pour un visiteur est le colophon.
+      {
+        source: "/:locale(en|fr|es)/changelog",
+        destination: "/:locale/colophon",
+        permanent: false,
+      },
       // /rss.xml retournait 404 — le feed est servi sous /feed.xml
       {
         source: "/rss.xml",

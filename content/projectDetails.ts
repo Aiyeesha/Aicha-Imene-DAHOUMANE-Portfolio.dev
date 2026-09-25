@@ -1602,7 +1602,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Windows Server 2012 Backup · VirtualBox",
         "sections": [
           {
-            "body": "As part of a training exercise at Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) under trainer Miguel MI-POUDOU, I worked on two VMs in VirtualBox: a Windows 10 client VM (partition resize + disk backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup role installation + scheduled daily backup).",
+            "body": "As part of a training exercise at Greta du Val d'Oise (Lycée Louis Jouvet, Taverny), I worked on two VMs in VirtualBox: a Windows 10 client VM (partition resize + disk backup with AOMEI tools) and a Windows Server 2012 VM (Windows Server Backup role installation + scheduled daily backup).",
             "type": "text",
             "title": "Context"
           },
@@ -1695,7 +1695,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "AOMEI Partition Assistant · AOMEI Backupper · Sauvegarde Windows Server 2012 · VirtualBox",
         "sections": [
           {
-            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) sous la direction de Miguel MI-POUDOU, j'ai travaillé sur deux VM VirtualBox : une VM cliente Windows 10 (redimensionnement de partition + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée quotidienne).",
+            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise (Lycée Louis Jouvet, Taverny), j'ai travaillé sur deux VM VirtualBox : une VM cliente Windows 10 (redimensionnement de partition + sauvegarde avec les outils AOMEI) et une VM serveur Windows Server 2012 (installation du rôle Sauvegarde Windows Server + sauvegarde planifiée quotidienne).",
             "type": "text",
             "title": "Contexte"
           },
@@ -1791,7 +1791,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Como parte de un ejercicio de formación en el Greta du Val d'Oise (Lycée Louis Jouvet, Taverny) bajo la dirección de Miguel MI-POUDOU, trabajé en dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
+              "Como parte de un ejercicio de formación en el Greta du Val d'Oise (Lycée Louis Jouvet, Taverny), trabajé en dos VM VirtualBox: una VM cliente Windows 10 (redimensionamiento de partición + copia de seguridad con herramientas AOMEI) y una VM servidor Windows Server 2012 (instalación del rol Copia de seguridad de Windows Server + copia programada diaria)."
             ]
           },
           {
@@ -2641,7 +2641,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows 10 Pro · Ninite · Office 2016 · BIOS · Driver setup",
         "sections": [
           {
-            "body": "As part of a training exercise at Greta du Val d'Oise under trainer Miguel MI-POUDOU, a client brought me an extremely slow HP laptop with no data to recover. My mission: full workstation rebuild — clean OS reinstall, driver validation, batch software deployment, and final configuration before client handover.",
+            "body": "As part of a training exercise at Greta du Val d'Oise, a client brought me an extremely slow HP laptop with no data to recover. My mission: full workstation rebuild — clean OS reinstall, driver validation, batch software deployment, and final configuration before client handover.",
             "type": "text",
             "title": "Context"
           },
@@ -2739,7 +2739,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Windows 10 Pro · Ninite · Office 2016 · BIOS · Installation pilotes",
         "sections": [
           {
-            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise sous la direction de Miguel MI-POUDOU, un client m'a apporté un portable HP extrêmement lent, sans données à récupérer. Ma mission : remise à neuf complète du poste — réinstallation propre de l'OS, validation des pilotes, déploiement automatisé des logiciels métier et configuration finale avant remise au client.",
+            "body": "Dans le cadre d'un exercice de formation au Greta du Val d'Oise, un client m'a apporté un portable HP extrêmement lent, sans données à récupérer. Ma mission : remise à neuf complète du poste — réinstallation propre de l'OS, validation des pilotes, déploiement automatisé des logiciels métier et configuration finale avant remise au client.",
             "type": "text",
             "title": "Contexte"
           },
@@ -2840,7 +2840,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Como parte de un ejercicio de formación en el Greta du Val d'Oise bajo la dirección de Miguel MI-POUDOU, un cliente me trajo un portátil HP extremadamente lento, sin datos que recuperar. Mi misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
+              "Como parte de un ejercicio de formación en el Greta du Val d'Oise, un cliente me trajo un portátil HP extremadamente lento, sin datos que recuperar. Mi misión: puesta a punto completa del equipo — reinstalación limpia del SO, validación de controladores, despliegue automatizado del software profesional y configuración final antes de la entrega al cliente."
             ]
           },
           {
@@ -4917,7 +4917,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside Théo KACEL (Systems & Networks Administrator). The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
+              "At MIDRANGE GROUP, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside the team's systems & network administrator. The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
             ]
           },
           {
@@ -5073,7 +5073,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux). Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
+              "Chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe. Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
             ]
           },
           {
@@ -5229,7 +5229,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto a Théo KACEL (Administrador de Sistemas y Redes). El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
+              "En MIDRANGE GROUP, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto al administrador de sistemas y redes del equipo. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
             ]
           },
           {
@@ -5834,7 +5834,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP, within the Support Technique team alongside Théo KACEL (Systems & Network Administrator), I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
+              "At MIDRANGE GROUP, within the Support Technique team alongside the team's systems & network administrator, I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
               "Once a ticket is opened in Autotask, it is routed either to the Support Technique team (user-facing incidents) or to the Exploitation team (infrastructure and monitoring). Here's how I handled a live client ticket from intake to resolution."
             ]
           },
@@ -5964,7 +5964,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP, au sein de l'équipe Support Technique aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux), je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
+              "Chez MIDRANGE GROUP, au sein de l'équipe Support Technique aux côtés de l'administrateur systèmes & réseaux de l'équipe, je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
               "Une fois un ticket ouvert dans Autotask, il est routé soit vers l'équipe Support Technique (incidents utilisateurs), soit vers l'équipe Exploitation (infrastructure et supervision). Voici le traitement d'un ticket client en production, de la prise en charge à la résolution."
             ]
           },
@@ -6094,7 +6094,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP, dentro del equipo de Soporte Técnico junto a Théo KACEL (Administrador de Sistemas y Redes), atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
+              "En MIDRANGE GROUP, dentro del equipo de Soporte Técnico junto al administrador de sistemas y redes del equipo, atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
               "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). A continuación, el tratamiento de un ticket real de cliente, de la recepción a la resolución."
             ]
           },
@@ -6226,23 +6226,23 @@ export const projectDetails: ProjectDetails[] = [
         "src": "/projects/it-ops-acronis-backup/2023-05-16%2015_54_50-.webp"
       },
       {
-        "alt": "Acronis Backup — SRV-MGT vue 1",
+        "alt": "Acronis Backup — console de gestion, vue 1",
         "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_02_50-SRV-MGT.webp"
       },
       {
-        "alt": "Acronis Backup — SRV-MGT vue 2",
+        "alt": "Acronis Backup — console de gestion, vue 2",
         "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_03_47-SRV-MGT.webp"
       },
       {
-        "alt": "Acronis Backup — SRV-MGT vue 3",
+        "alt": "Acronis Backup — console de gestion, vue 3",
         "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_04_30-SRV-MGT.webp"
       },
       {
-        "alt": "Acronis Backup — SRV-MGT vue 4",
+        "alt": "Acronis Backup — console de gestion, vue 4",
         "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_04_51-SRV-MGT.webp"
       },
       {
-        "alt": "Acronis Backup — SRV-MGT vue 5",
+        "alt": "Acronis Backup — console de gestion, vue 5",
         "src": "/projects/it-ops-acronis-backup/2023-05-16%2016_05_10-SRV-MGT.webp"
       }
     ],
@@ -6255,7 +6255,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP (a French IT services / MSP firm), within the Operations team alongside Théo KACEL (Systems & Network Administrator), I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
+              "At MIDRANGE GROUP (a French IT services / MSP firm), within the Operations team alongside the team's systems & network administrator, I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
             ]
           },
           {
@@ -6282,11 +6282,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "NAS destination 1",
-                "value": "smb://10.20.30.11/backups — 8.77 Tio / 10.5 Tio"
+                "value": "smb://nas-client/backups — 8.77 Tio / 10.5 Tio"
               },
               {
                 "label": "NAS destination 2",
-                "value": "smb://10.20.30.11/backups-new — 9.57 Tio / 10.5 Tio"
+                "value": "smb://nas-client/backups-new — 9.57 Tio / 10.5 Tio"
               },
               {
                 "label": "Cloud destination",
@@ -6298,7 +6298,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Unprotected devices",
-                "value": "6 (UPS_LENOVO, VMware vCenter Server, ACRONIS, SRV-EXCH)"
+                "value": "6 (UPS-01, VMware vCenter Server, ACRONIS, SRV-MAIL-01)"
               },
               {
                 "label": "Total storage used",
@@ -6311,7 +6311,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Backup Plans",
             "paragraphs": [
-              "The client had 5 active backup plans configured in Acronis Cyber Backup: 'Toutes les VM' (all VMs — 16 devices including SRV-RDS04, SRV-BDD, SRV-PRINT2 and 13 others — scheduled Mon–Sat at 23:00, destination: smb backups-new, retention: 2 months monthly / 4 weeks weekly / 6 days daily); 'TMP-BDD' (1 device); 'SQL-CLOUD 2' (86 devices, Mon–Fri at 23:00); 'SQL-CLOUD' (86 devices); 'Bases_Exchange' (2 devices, daily at 03:00)."
+              "The client had 5 active backup plans configured in Acronis Cyber Backup: 'Toutes les VM' (all VMs — 16 devices including SRV-RDS-01, SRV-DB-01, SRV-PRINT-01 and 13 others — scheduled Mon–Sat at 23:00, destination: smb backups-new, retention: 2 months monthly / 4 weeks weekly / 6 days daily); 'TMP-BDD' (1 device); 'SQL-CLOUD 2' (86 devices, Mon–Fri at 23:00); 'SQL-CLOUD' (86 devices); 'Bases_Exchange' (2 devices, daily at 03:00)."
             ]
           },
           {
@@ -6347,11 +6347,11 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "label": "SRV-RDS04 warning",
+                "label": "SRV-RDS-01 warning",
                 "value": "VM backup succeeded with warning: CBT disabled — backup ran without Changed Block Tracking (VMware snapshots present)"
               },
               {
-                "label": "SRV-BDD.acces.local error",
+                "label": "SRV-DB-01 error",
                 "value": "Replication failed — client cloud account storage quota exceeded, new backups will fail"
               },
               {
@@ -6441,7 +6441,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP (ESN/MSP), au sein de l'équipe Exploitation aux côtés de Théo KACEL (Administrateur Systèmes & Réseaux), j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
+              "Chez MIDRANGE GROUP (ESN/MSP), au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe, j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
             ]
           },
           {
@@ -6468,11 +6468,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Destination NAS 1",
-                "value": "smb://10.20.30.11/backups — 8,77 Tio / 10,5 Tio"
+                "value": "smb://nas-client/backups — 8,77 Tio / 10,5 Tio"
               },
               {
                 "label": "Destination NAS 2",
-                "value": "smb://10.20.30.11/backups-new — 9,57 Tio / 10,5 Tio"
+                "value": "smb://nas-client/backups-new — 9,57 Tio / 10,5 Tio"
               },
               {
                 "label": "Destination cloud",
@@ -6484,7 +6484,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Appareils non protégés",
-                "value": "6 (UPS_LENOVO, VMware vCenter Server, ACRONIS, SRV-EXCH)"
+                "value": "6 (UPS-01, VMware vCenter Server, ACRONIS, SRV-MAIL-01)"
               },
               {
                 "label": "Stockage total utilisé",
@@ -6497,7 +6497,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Plans de sauvegarde",
             "paragraphs": [
-              "Le client disposait de 5 plans de sauvegarde actifs dans Acronis Cyber Backup : 'Toutes les VM' (16 appareils dont SRV-RDS04, SRV-BDD, SRV-PRINT2 et 13 autres — planification Lun–Sam à 23h00, destination : smb backups-new, conservation : 2 mois mensuel / 4 semaines hebdo / 6 jours quotidien) ; 'TMP-BDD' (1 appareil) ; 'SQL-CLOUD 2' (86 appareils, Lun–Ven à 23h00) ; 'SQL-CLOUD' (86 appareils) ; 'Bases_Exchange' (2 appareils, tous les jours à 03h00)."
+              "Le client disposait de 5 plans de sauvegarde actifs dans Acronis Cyber Backup : 'Toutes les VM' (16 appareils dont SRV-RDS-01, SRV-DB-01, SRV-PRINT-01 et 13 autres — planification Lun–Sam à 23h00, destination : smb backups-new, conservation : 2 mois mensuel / 4 semaines hebdo / 6 jours quotidien) ; 'TMP-BDD' (1 appareil) ; 'SQL-CLOUD 2' (86 appareils, Lun–Ven à 23h00) ; 'SQL-CLOUD' (86 appareils) ; 'Bases_Exchange' (2 appareils, tous les jours à 03h00)."
             ]
           },
           {
@@ -6533,11 +6533,11 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "label": "Avertissement SRV-RDS04",
+                "label": "Avertissement SRV-RDS-01",
                 "value": "Sauvegarde VM réussie avec avertissement : CBT désactivé — sauvegarde exécutée sans Changed Block Tracking (snapshots VMware présents)"
               },
               {
-                "label": "Erreur SRV-BDD.acces.local",
+                "label": "Erreur SRV-DB-01",
                 "value": "Réplication échouée — quota de stockage du compte cloud client dépassé, les nouvelles sauvegardes échoueront"
               },
               {
@@ -6627,7 +6627,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP (ESN/MSP francesa), dentro del equipo de Operaciones junto a Théo KACEL (Administrador de Sistemas y Redes), me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
+              "En MIDRANGE GROUP (ESN/MSP francesa), dentro del equipo de Operaciones junto al administrador de sistemas y redes del equipo, me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
             ]
           },
           {
@@ -6654,11 +6654,11 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Destino NAS 1",
-                "value": "smb://10.20.30.11/backups — 8,77 Tio / 10,5 Tio"
+                "value": "smb://nas-client/backups — 8,77 Tio / 10,5 Tio"
               },
               {
                 "label": "Destino NAS 2",
-                "value": "smb://10.20.30.11/backups-new — 9,57 Tio / 10,5 Tio"
+                "value": "smb://nas-client/backups-new — 9,57 Tio / 10,5 Tio"
               },
               {
                 "label": "Destino en la nube",
@@ -6670,7 +6670,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Dispositivos no protegidos",
-                "value": "6 (UPS_LENOVO, VMware vCenter Server, ACRONIS, SRV-EXCH)"
+                "value": "6 (UPS-01, VMware vCenter Server, ACRONIS, SRV-MAIL-01)"
               },
               {
                 "label": "Almacenamiento total utilizado",
@@ -6683,7 +6683,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Planes de backup",
             "paragraphs": [
-              "El cliente disponía de 5 planes de backup activos configurados en Acronis Cyber Backup: ‘Toutes les VM’ (todas las VM — 16 dispositivos incluyendo SRV-RDS04, SRV-BDD, SRV-PRINT2 y otros 13 — programado de lunes a sábado a las 23:00, destino: smb backups-new, retención: 2 meses mensual / 4 semanas semanal / 6 días diario); ‘TMP-BDD’ (1 dispositivo); ‘SQL-CLOUD 2’ (86 dispositivos, lunes a viernes a las 23:00); ‘SQL-CLOUD’ (86 dispositivos); ‘Bases_Exchange’ (2 dispositivos, diario a las 03:00)."
+              "El cliente disponía de 5 planes de backup activos configurados en Acronis Cyber Backup: ‘Toutes les VM’ (todas las VM — 16 dispositivos incluyendo SRV-RDS-01, SRV-DB-01, SRV-PRINT-01 y otros 13 — programado de lunes a sábado a las 23:00, destino: smb backups-new, retención: 2 meses mensual / 4 semanas semanal / 6 días diario); ‘TMP-BDD’ (1 dispositivo); ‘SQL-CLOUD 2’ (86 dispositivos, lunes a viernes a las 23:00); ‘SQL-CLOUD’ (86 dispositivos); ‘Bases_Exchange’ (2 dispositivos, diario a las 03:00)."
             ]
           },
           {
@@ -6719,11 +6719,11 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "label": "Advertencia SRV-RDS04",
+                "label": "Advertencia SRV-RDS-01",
                 "value": "Backup de VM completado con advertencia: CBT desactivado — backup ejecutado sin Changed Block Tracking (snapshots VMware presentes)"
               },
               {
-                "label": "Error SRV-BDD.acces.local",
+                "label": "Error SRV-DB-01",
                 "value": "Replicación fallida — cuota de almacenamiento de la cuenta cloud del cliente superada, los próximos backups fallarán"
               },
               {
@@ -11233,7 +11233,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Classic to Lightning migration and Apex security hardening for an international industrial equipment manufacturer.",
         "sections": [
           {
-            "body": "> Anonymized project, inspired by an engagement carried out in a professional environment. Names, data, and specific details have been altered to respect client confidentiality.\n\nNova Manufacturing is an international manufacturer of industrial equipment (~150 sales reps spread across 3 sites/hubs in Europe). Its Salesforce CRM, still mostly running on Classic, had accumulated several generations of development: Visualforce pages, JavaScript buttons, Process Builder, heavily customized profiles, and REST integrations with third-party systems (ERP, billing). With Classic being progressively deprecated, the company brought in a Salesforce consulting team (myself included) to modernize the application — with an explicit mandate: don't just migrate the interface, harden the security of the legacy Apex code along the way, some of which had never been audited since its initial release.",
+            "body": "> Reconstructed case study: the scenario, company and figures are fictional. It is inspired by the kind of work I do in my role, whose specifics remain confidential, and does not describe a client engagement.\n\nNova Manufacturing is an international manufacturer of industrial equipment (~150 sales reps spread across 3 sites/hubs in Europe). Its Salesforce CRM, still mostly running on Classic, had accumulated several generations of development: Visualforce pages, JavaScript buttons, Process Builder, heavily customized profiles, and REST integrations with third-party systems (ERP, billing). With Classic being progressively deprecated, the scenario is the modernization of the application — with an explicit mandate: don't just migrate the interface, harden the security of the legacy Apex code along the way, some of which had never been audited since its initial release.",
             "type": "text",
             "title": "Context"
           },
@@ -11263,7 +11263,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "ContractService.updateStatus(): before the rebuild, it wrote directly to Contract with no checks, and the class ran without sharing by default from an old Visualforce controller. After: Security.stripInaccessible(AccessType.UPDATABLE, records) before every DML, explicit with sharing on the class",
               "Dedicated unit test simulating a user without edit rights on Contract.Statut__c to verify the write is correctly blocked by stripInaccessible()",
-              "Audit of the 4 legacy controllers: no CRUD/FLS rights test existed before this engagement — systematic addition of explicit checks wherever queries weren't eligible for WITH SECURITY_ENFORCED. Security designed in from the start on the 4 new controllers built for the project",
+              "Audit of the 4 legacy controllers: no CRUD/FLS rights test existed before this project — systematic addition of explicit checks wherever queries weren't eligible for WITH SECURITY_ENFORCED. Security designed in from the start on the 4 new controllers built for the project",
               "Profile-to-permission-set mapping matrix validated with business managers before cutover, to avoid any silent regression on access rights"
             ],
             "title": "Security & Best Practices"
@@ -11330,7 +11330,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Migration Classic → Lightning et durcissement sécurité Apex pour un fabricant industriel international.",
         "sections": [
           {
-            "body": "> Projet anonymisé, inspiré d'une mission réalisée en environnement professionnel. Noms, données et éléments spécifiques ont été modifiés pour respecter la confidentialité client.\n\nNova Manufacturing est un fabricant international d'équipements industriels (~150 commerciaux répartis sur 3 sites/pôles en Europe). Son CRM Salesforce, encore majoritairement sous Classic, accumulait plusieurs générations de développements : pages Visualforce, boutons JavaScript, Process Builder, profils très personnalisés, intégrations REST vers des systèmes tiers (ERP, facturation). Avec la dépréciation progressive de Classic, l'entreprise a confié à l'équipe de consultants Salesforce (dont moi) la modernisation de l'application — avec un mandat explicite : ne pas se contenter de migrer l'interface, mais durcir la sécurité des développements Apex historiques au passage, dont plusieurs n'avaient jamais été audités depuis leur mise en production initiale.",
+            "body": "> Étude de cas reconstituée : le scénario, l'entreprise et les chiffres sont fictifs. Elle s'inspire du type de travaux que je réalise en poste, dont le détail reste confidentiel, et ne décrit pas une mission client.\n\nNova Manufacturing est un fabricant international d'équipements industriels (~150 commerciaux répartis sur 3 sites/pôles en Europe). Son CRM Salesforce, encore majoritairement sous Classic, accumulait plusieurs générations de développements : pages Visualforce, boutons JavaScript, Process Builder, profils très personnalisés, intégrations REST vers des systèmes tiers (ERP, facturation). Avec la dépréciation progressive de Classic, le scénario porte sur la modernisation de l'application — avec un mandat explicite : ne pas se contenter de migrer l'interface, mais durcir la sécurité des développements Apex historiques au passage, dont plusieurs n'avaient jamais été audités depuis leur mise en production initiale.",
             "type": "text",
             "title": "Contexte"
           },
@@ -11360,7 +11360,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "ContractService.updateStatus() : avant refonte, écriture directe sur Contract sans vérification et classe en without sharing par défaut d'un ancien contrôleur Visualforce. Après refonte : Security.stripInaccessible(AccessType.UPDATABLE, records) avant tout DML, with sharing explicite sur la classe",
               "Test unitaire dédié simulant un utilisateur sans droit d'édition sur Contract.Statut__c pour vérifier que l'écriture est bien bloquée par stripInaccessible()",
-              "Audit des 4 contrôleurs historiques : aucun test de droits CRUD/FLS n'existait avant cette mission — ajout systématique de vérifications explicites là où les requêtes ne sont pas éligibles à WITH SECURITY_ENFORCED. Sécurité intégrée dès la conception sur les 4 nouveaux contrôleurs créés pour le projet",
+              "Audit des 4 contrôleurs historiques : aucun test de droits CRUD/FLS n'existait avant ce projet — ajout systématique de vérifications explicites là où les requêtes ne sont pas éligibles à WITH SECURITY_ENFORCED. Sécurité intégrée dès la conception sur les 4 nouveaux contrôleurs créés pour le projet",
               "Matrice de comparaison profils → permission sets validée avec les managers métier avant bascule, pour éviter toute régression silencieuse sur les droits d'accès"
             ],
             "title": "Sécurité & bonnes pratiques"
@@ -11427,7 +11427,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Migración de Classic a Lightning y refuerzo de seguridad Apex para un fabricante internacional de equipos industriales.",
         "sections": [
           {
-            "body": "> Proyecto anonimizado, inspirado en un encargo realizado en un entorno profesional. Nombres, datos y elementos específicos han sido modificados para respetar la confidencialidad del cliente.\n\nNova Manufacturing es un fabricante internacional de equipos industriales (~150 comerciales repartidos en 3 sedes/polos en Europa). Su CRM Salesforce, todavía mayoritariamente en Classic, acumulaba varias generaciones de desarrollos: páginas Visualforce, botones JavaScript, Process Builder, perfiles muy personalizados, integraciones REST con sistemas externos (ERP, facturación). Con la progresiva desaparición de Classic, la empresa encargó al equipo de consultores Salesforce (yo incluida) la modernización de la aplicación — con un mandato explícito: no limitarse a migrar la interfaz, sino reforzar también la seguridad de los desarrollos Apex heredados, varios de los cuales nunca habían sido auditados desde su puesta en producción inicial.",
+            "body": "> Caso de estudio reconstruido: el escenario, la empresa y las cifras son ficticios. Se inspira en el tipo de trabajo que realizo en mi puesto, cuyos detalles siguen siendo confidenciales, y no describe un encargo de cliente.\n\nNova Manufacturing es un fabricante internacional de equipos industriales (~150 comerciales repartidos en 3 sedes/polos en Europa). Su CRM Salesforce, todavía mayoritariamente en Classic, acumulaba varias generaciones de desarrollos: páginas Visualforce, botones JavaScript, Process Builder, perfiles muy personalizados, integraciones REST con sistemas externos (ERP, facturación). Con la progresiva desaparición de Classic, el escenario plantea la modernización de la aplicación — con un mandato explícito: no limitarse a migrar la interfaz, sino reforzar también la seguridad de los desarrollos Apex heredados, varios de los cuales nunca habían sido auditados desde su puesta en producción inicial.",
             "type": "text",
             "title": "Contexto"
           },
