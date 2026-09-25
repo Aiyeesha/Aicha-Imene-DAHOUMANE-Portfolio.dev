@@ -23,7 +23,7 @@ VALUES (
     'Created a full disk image backup with AOMEI Backupper Standard — operation completed successfully',
     'Installed the Windows Server Backup feature via Server Manager on Windows Server 2012',
     'Configured a scheduled daily VSS backup (14:00) to a dedicated virtual disk (22.67 GB transferred)',
-    'Supervised by trainer Miguel MI-POUDOU — Greta du Val d''Oise, Lycée Louis Jouvet (Taverny)'
+    'Supervised by trainer [formateur] — Greta du Val d''Oise, Lycée Louis Jouvet (Taverny)'
   ],
   false, 80, 'published', NULL, NULL,
   'Training exercise combining client-side disk partitioning and backup (AOMEI tools) with server-side backup scheduling (Windows Server 2012 Backup role) inside VirtualBox VMs.'
@@ -43,7 +43,7 @@ VALUES (
     'Création d''une image disque complète avec AOMEI Backupper Standard — opération réussie',
     'Installation de la fonctionnalité Sauvegarde Windows Server via le Gestionnaire de serveur (Windows Server 2012)',
     'Planification d''une sauvegarde VSS complète quotidienne (14h00) sur disque virtuel dédié (22,67 Go transférés)',
-    'Encadrement : Miguel MI-POUDOU, formateur — Greta du Val d''Oise, Lycée Louis Jouvet (Taverny)'
+    'Encadrement : [formateur], formateur — Greta du Val d''Oise, Lycée Louis Jouvet (Taverny)'
   ],
   false, 80, 'published', NULL, NULL,
   'Exercice de formation combinant partitionnement et sauvegarde côté client (outils AOMEI) et planification de sauvegarde côté serveur (rôle Sauvegarde Windows Server 2012) dans des VM VirtualBox.'

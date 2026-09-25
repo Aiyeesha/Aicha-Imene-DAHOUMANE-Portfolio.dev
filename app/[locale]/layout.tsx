@@ -241,12 +241,6 @@ export default async function LocaleLayout({
                     </Link>
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
-                      href={`/${locale}/changelog`}
-                    >
-                      {t("footer.changelog")}
-                    </Link>
-                    <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
                       href={`/${locale}/uses`}
                     >
                       {t("footer.uses")}

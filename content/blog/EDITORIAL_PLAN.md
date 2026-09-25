@@ -28,7 +28,6 @@
 | apex-triggers-best-practices | Apex Triggers Best Practices | Salesforce, Apex |
 | flow-vs-apex-decision-guide | Flow vs Apex — Decision Guide | Salesforce, Flow |
 | lwc-reusable-components | LWC Reusable Components | Salesforce, LWC |
-| salesforce-cicd-github-actions | CI/CD with GitHub Actions | Salesforce, CI/CD |
 | salesforce-governor-limits | Governor Limits | Salesforce, Apex |
 | salesforce-lwc-testing | LWC Testing | Salesforce, LWC |
 | salesforce-sandbox-management | Sandbox Management | Salesforce |
@@ -52,7 +51,6 @@
 
 | Slug | Titre | Tags |
 |------|-------|------|
-| next-intl-app-router | Next.js App Router i18n with next-intl | Next.js, i18n |
 | nextjs-admin-dashboard-supabase | Secure Admin Dashboard (Next.js 16 + Supabase) | Next.js, Supabase, Security |
 
 ---

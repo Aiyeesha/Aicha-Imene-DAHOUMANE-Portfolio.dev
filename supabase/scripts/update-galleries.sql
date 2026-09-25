@@ -56,7 +56,7 @@ UPDATE projects SET gallery = '[
   {"src":"/projects/it-ops-acronis-backup/img-2.png","alt":"Acronis Cyber Backup — backup plans list (Toutes les VM, SQL-CLOUD 2, Bases_Exchange)"},
   {"src":"/projects/it-ops-acronis-backup/img-3.png","alt":"Acronis Cyber Backup — Toutes les VM plan details (16 devices, NAS backups-new, 2-month retention)"},
   {"src":"/projects/it-ops-acronis-backup/img-4.png","alt":"Acronis Cyber Backup — Alertes view with SRV-BDD01 replication failure and CBT warning"},
-  {"src":"/projects/it-ops-acronis-backup/img-5.png","alt":"Acronis Cyber Backup — Emplacements NAS (smb://10.15.231.11/backups, backups-new) and Acronis cloud"}
+  {"src":"/projects/it-ops-acronis-backup/img-5.png","alt":"Acronis Cyber Backup — Emplacements NAS (smb://10.0.0.10/backups, backups-new) and Acronis cloud"}
 ]' WHERE slug = 'it-ops-acronis-backup';
 
 -- ── CASE 8 — it-ops-disk-backup ──────────────────────────────────────────────

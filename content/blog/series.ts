@@ -49,19 +49,6 @@ const SALESFORCE_LWC: Serie = {
   ],
 };
 
-const SALESFORCE_CICD: Serie = {
-  id: "salesforce-cicd",
-  name: {
-    en: "Salesforce DevOps & CI/CD",
-    fr: "DevOps Salesforce & CI/CD",
-    es: "DevOps Salesforce y CI/CD",
-  },
-  slugs: [
-    "salesforce-sandbox-management",
-    "salesforce-cicd-github-actions",
-  ],
-};
-
 // ── Séries IT Ops ─────────────────────────────────────────────────────────────
 
 const ITOPS_WINDOWS: Serie = {
@@ -110,7 +97,6 @@ const ITOPS_AUTOMATION: Serie = {
 export const SERIES: Serie[] = [
   SALESFORCE_DEV,
   SALESFORCE_LWC,
-  SALESFORCE_CICD,
   ITOPS_WINDOWS,
   ITOPS_MONITORING,
   ITOPS_AUTOMATION,
