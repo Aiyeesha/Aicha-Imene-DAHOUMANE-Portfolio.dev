@@ -299,6 +299,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   };
 
   const badge       = project.badge ?? null;
+  const nature      = project.nature ?? null;
   const tags        = (project.tags ?? []) as string[];
   const techStack   = project.tech_stack ?? [];
   const sections    = (project.sections ?? []) as ProjectSection[];
@@ -407,6 +408,23 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               {heroSubtitle}
             </p>
           )}
+          {/* ── NATURE DU PROJET ──────────────────────────────────────────────
+              Bandeau obligatoire depuis l'audit de contenu du 2026-09-25 :
+              dit en une ligne si le projet relève d'une formation, d'un stage,
+              d'un projet personnel ou d'une reconstitution, avec sa période
+              quand elle est connue (lib/projectNature.ts). */}
+          {nature && (
+            <aside
+              aria-label={isFr ? "Nature du projet" : isEs ? "Naturaleza del proyecto" : "Project type"}
+              className="mt-6 max-w-3xl rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 text-sm"
+            >
+              <p className="font-medium text-strong">
+                {nature.label}
+                {nature.period && <span className="text-muted font-normal"> · {nature.period}</span>}
+              </p>
+              <p className="mt-1 text-muted">{nature.note}</p>
+            </aside>
+          )}
         </header>
 
         <div className="mt-8 h-px w-full bg-black/8 dark:bg-white/8" />
@@ -453,6 +471,15 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">Type</p>
                     <span className={badgeClass}>{tBadge(badge.label, safeLocale)}</span>
+                  </div>
+                )}
+
+                {nature?.period && (
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
+                      {isFr ? "Période" : isEs ? "Periodo" : "Period"}
+                    </p>
+                    <p className="text-sm text-strong">{nature.period}</p>
                   </div>
                 )}
 

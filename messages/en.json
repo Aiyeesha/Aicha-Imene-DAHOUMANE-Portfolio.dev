@@ -100,7 +100,7 @@
     "profile_title": "Profile",
     "profile_subtitle": "From systems & networks to Salesforce development",
     "bridge_title": "Where my two worlds meet",
-    "bridge_body": "On the Légarant-AXG deployment, I didn't just write the Apex REST endpoints on the Salesforce side — I also built and deployed the Heroku application that consumes them: a Node.js/PostgreSQL API, two isolated environments connected by a Heroku pipeline, Heroku Connect configured object by object, down to the deployment runbook. A Salesforce-only profile would have stopped at the Apex layer and handed the infrastructure piece to someone else, with the usual risk of decisions made without knowing the constraints on the other side. An infra-only profile could have deployed the Heroku app, but not designed the Apex External ID trigger or the Matching Rule that stops duplicates at the source. Delivering both together removed the usual back-and-forth between Salesforce and DevOps teams — the staging environment existed before the first line of Apex was written, not after. This project, not a badge, is the proof that Salesforce, infrastructure, and security aren't two overlapping résumés — they're one person making both decisions at once. The same reflex shows up in a different shape on the CI/CD pipeline below: DevOps discipline — branch protection, automated validation, a documented rollback path — applied to how Salesforce releases ship, not just how they're built.",
+    "bridge_body": "On the Légarant-AXG deployment — my RNCP Level 6 capstone project — I didn't just write the Apex REST endpoints on the Salesforce side — I also built and deployed the Heroku application that consumes them: a Node.js/PostgreSQL API, two isolated environments connected by a Heroku pipeline, Heroku Connect configured object by object, down to the deployment runbook. A Salesforce-only profile would have stopped at the Apex layer and handed the infrastructure piece to someone else, with the usual risk of decisions made without knowing the constraints on the other side. An infra-only profile could have deployed the Heroku app, but not designed the Apex External ID trigger or the Matching Rule that stops duplicates at the source. Delivering both together removed the usual back-and-forth between Salesforce and DevOps teams — the staging environment existed before the first line of Apex was written, not after. This project, not a badge, is the proof that Salesforce, infrastructure, and security aren't two overlapping résumés — they're one person making both decisions at once. The same reflex shows up in a different shape on the CI/CD pipeline below: DevOps discipline — branch protection, automated validation, a documented rollback path — applied to how Salesforce releases ship, not just how they're built.",
     "bridge_cta": "See the Légarant-AXG case study",
     "bridge_cta2": "See the CI/CD pipeline case study",
     "security_title": "The Security cluster — {count} projects, one discipline",
@@ -322,8 +322,8 @@
     "maturityBodySalesforce": "The same discipline carries over to my Salesforce delivery work: a CI/CD pipeline with automated Apex validations and traceable sandbox-to-production deployments (see the Salesforce ⇄ Infra bridge project above). This portfolio is that discipline applied at scale: /status exposes the real health of its services live, and the colophon explains its security choices and continuous integration.",
     "maturityStatusCta": "See live status",
     "maturityChangelogCta": "See how this site is built",
-    "sectorsTitle": "Sectors I've already delivered in",
-    "sectorsBody": "The case studies below aren't abstract exercises: each is anchored in a sector with its own compliance, traceability and error-tolerance constraints.",
+    "sectorsTitle": "Sectors covered by my case studies",
+    "sectorsBody": "My training projects (RNCP Level 6 diploma, OpenClassrooms) are built on fictional but realistic business scenarios: each one made me work within its sector's compliance, traceability and error-tolerance constraints.",
     "sectors": [
       {
         "label": "Luxury & Fashion",
@@ -361,7 +361,7 @@
     "kicker": "Profile",
     "title": "From systems & networks to Salesforce development",
     "p1": "Salesforce developer with 2 years of professional experience and a strong IT infrastructure background — foundations that make a real difference on complex projects.",
-    "p2": "I started my career on the infrastructure side — internship at MIDRANGE GROUP (Feb – May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 200 Dell machines via Windows Autopilot, Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
+    "p2": "I started my career on the infrastructure side — internship at MIDRANGE GROUP (Feb – May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 264 Dell machines via Windows Autopilot, Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
     "p3": "From Oct. 2023 to Oct. 2025, I worked as a Salesforce Developer at LD Digitales (remote) while earning the Développeur Concepteur Logiciel title (RNCP Level 6) from OpenClassrooms. I built and maintained 10+ Apex classes, created 20+ automation Flows (reducing manual workload by 30%), designed reusable LWC components, and implemented CI/CD pipelines with Salesforce CLI.",
     "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My goal is to contribute to ambitious Salesforce and IT Ops projects — in France or internationally, within distributed teams.",
     "p1_salesforce": "Salesforce developer & consultant: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
@@ -509,7 +509,7 @@
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Hybrid profile",
     "h1": "Where Salesforce, infrastructure and security are one head, not two",
-    "lead": "I'm not a Salesforce developer who knows Docker, nor a sysadmin who knows Salesforce. I solve cross-cutting problems that a single specialist — on either side — would handle more slowly, less well, or not at all: both layers' decisions are made at the same time, by the same person, before the usual back-and-forth between teams even starts.",
+    "lead": "I'm not a Salesforce developer who knows servers, nor a sysadmin who knows Salesforce. I solve cross-cutting problems that a single specialist — on either side — would handle more slowly, less well, or not at all: both layers' decisions are made at the same time, by the same person, before the usual back-and-forth between teams even starts. The evidence cited below comes from training and personal projects; each page states its type and period.",
     "scenariosTitle": "Three cases where the combination changes the outcome",
     "scenarios": [
       {
@@ -521,7 +521,7 @@
         "mine": "Both: the Apex REST endpoints, the Node.js/PostgreSQL app that consumes them, Heroku Connect configured object by object, two isolated environments linked by a pipeline, right down to the deployment runbook. The staging environment existed before the first line of Apex was written — not after.",
         "proofs": [
           {
-            "label": "Case study — Legarant-AXG deployment",
+            "label": "RNCP 6 capstone project — Legarant-AXG deployment",
             "href": "/projects/legarant-axg-salesforce-deployment"
           }
         ],
@@ -537,7 +537,7 @@
         "mine": "Real DevOps discipline — branch protection, automated validation, a documented SFDX rollback procedure — applied to how Salesforce releases are delivered, not just how they're coded.",
         "proofs": [
           {
-            "label": "Case study — Salesforce CI/CD pipeline",
+            "label": "Personal project — Salesforce CI/CD pipeline",
             "href": "/projects/cicd-pipeline-setup"
           }
         ],
@@ -553,11 +553,11 @@
         "mine": "I model the attack surface with STRIDE and design the control on the Salesforce side — a dedicated integration user, an explicit Permission Set, CRUD/FLS checks, WITH SECURITY_ENFORCED — in the same sprint. The loop is closed before go-live, not three tickets later.",
         "proofs": [
           {
-            "label": "Case study — iDEM Connect Apex backend",
+            "label": "RNCP 6 training project — iDEM Connect Apex backend",
             "href": "/projects/idemconnect-apex-backend"
           },
           {
-            "label": "Project — risque360 (STRIDE modelling)",
+            "label": "Personal project — risque360 (STRIDE modelling)",
             "href": "/projects/risque360"
           }
         ],
