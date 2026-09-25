@@ -335,10 +335,10 @@
   "services": {
     "discuss": "Discuter de ce service",
     "maturityTitle": "Maturité d'exploitation",
-    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (base de données, cache, formulaire de contact) avec latence et disponibilité mesurées en direct — pas une page statique. Le /changelog documente chaque incident réellement traité, dont une fuite de données client détectée et corrigée et plusieurs alertes de sécurité (CVE) remédiées avec la justification technique du choix retenu, pas un correctif appliqué à l'aveugle.",
-    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose en direct la santé réelle de ses services, et le /changelog documente chaque incident traité — dont une fuite de données client détectée et corrigée — avec la justification technique retenue, pas un correctif appliqué à l'aveugle.",
+    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (base de données, cache, formulaire de contact) avec latence et disponibilité mesurées en direct — pas une page statique. Le colophon détaille comment il est construit et sécurisé : CSP à nonce, en-têtes de sécurité, limites de débit, audits Lighthouse et axe en intégration continue, dépendances surveillées.",
+    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose en direct la santé réelle de ses services, et le colophon détaille ses choix de sécurité et son intégration continue.",
     "maturityStatusCta": "Voir le statut en direct",
-    "maturityChangelogCta": "Voir le changelog",
+    "maturityChangelogCta": "Voir comment ce site est construit",
     "sectorsTitle": "Secteurs où j'ai déjà livré",
     "sectorsBody": "Les études de cas ci-dessous ne sont pas des exercices hors-sol : chacune est ancrée dans un secteur avec ses propres contraintes de conformité, de traçabilité et de tolérance à l'erreur.",
     "sectors": [
@@ -368,7 +368,6 @@
     "legal": "Mentions légales",
     "accessibility": "Accessibilité",
     "status": "Statut",
-    "changelog": "Changelog",
     "workWithMe": "Travaillons ensemble",
     "uses": "Setup & Outils",
     "colophon": "Colophon",
