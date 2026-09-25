@@ -17,19 +17,19 @@ export default async function Image({ params }: Props) {
 
   const title    = isFr ? "Contactez-moi" : isEs ? "Contáctame" : "Get in touch";
   const subtitle = isFr
-    ? "Réponse sous 48h — Mission, CDI, CDD"
+    ? "Recruteurs — réponse sous 48 h"
     : isEs
-    ? "Respuesta en 48h — Proyecto, contrato indefinido, temporal"
-    : "Reply within 48h — Contract, Permanent, Fixed-term";
+    ? "Reclutadores — respuesta en 48 h"
+    : "Recruiters — reply within 48 hours";
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
   const pills = isFr
-    ? ["CDI · CDD", "Mission · Prestation", "100 % Remote", "France & international"]
+    ? ["CDI · CDD", "Intérim · Portage", "Hybride · Sur site · Télétravail", "Tous secteurs"]
     : isEs
-    ? ["Indefinido · Temporal", "Proyecto · Servicios", "100 % Remoto", "España & internacional"]
-    : ["Permanent · Fixed-term", "Contract · Consulting", "100 % Remote", "France & worldwide"];
+    ? ["Indefinido · Temporal", "ETT · Portage", "Híbrido · Presencial · Remoto", "Todos los sectores"]
+    : ["Permanent · Fixed-term", "Temp · Umbrella", "Hybrid · On-site · Remote", "Any industry"];
 
   return new ImageResponse(
     (

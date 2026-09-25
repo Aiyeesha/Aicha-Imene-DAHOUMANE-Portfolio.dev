@@ -4,7 +4,7 @@
     "certifications": "Certificaciones",
     "skills": "Habilidades",
     "experience": "Experiencia",
-    "services": "Servicios",
+    "services": "Áreas",
     "projects": "Proyectos",
     "contact": "Contacto",
     "testimonials": "Testimonios",
@@ -38,7 +38,7 @@
     "proof1": "Seguridad ante todo",
     "proof2": "Escalable por diseño",
     "proof3": "Documentado y mantenible",
-    "availability": "Indefinido · Temporal · Por proyecto",
+    "availability": "Indefinido · Temporal · ETT · Portage salarial",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Empieza aquí:",
     "switchToSalesforce": "Ver perfil Salesforce →",
@@ -50,7 +50,7 @@
     "downloadCvItops": "CV IT Ops (PDF)",
     "downloadCvSalesforce": "CV Salesforce (PDF)",
     "downloadCvHybrid": "CV Híbrido Salesforce/Infra (PDF)",
-    "workWithMe": "Trabajemos juntos",
+    "workWithMe": "Contratarme",
     "message": "Mensaje",
     "call15": "Reservar llamada de 30 min",
     "downloadProfile": "Descargar mi perfil (PDF)",
@@ -89,8 +89,8 @@
     "experience_subtitle": "Despliega los elementos para ver el detalle (formato acordeón).",
     "roles_title": "Roles",
     "certifications_title": "Certificaciones",
-    "services_title": "Servicios",
-    "services_subtitle": "Servicios a medida según tus necesidades (Salesforce o IT Ops).",
+    "services_title": "Lo que aporto a un equipo",
+    "services_subtitle": "Mis áreas de trabajo diarias, según el perfil mostrado (Salesforce o IT Ops).",
     "projects_title": "Proyectos",
     "projects_subtitle": "Implementaciones Salesforce, automatización IT Ops y proyectos web — filtrados por área.",
     "contact_title": "Contacto",
@@ -113,7 +113,7 @@
     "messageLabel": "Mensaje",
     "namePlaceholder": "Tu nombre completo",
     "emailPlaceholder": "tu@dominio.com",
-    "messagePlaceholder": "Cuéntame sobre tu proyecto, el contexto y lo que necesitas…",
+    "messagePlaceholder": "Cuéntame sobre el puesto, el equipo y el contexto…",
     "send": "Enviar",
     "sending": "Enviando…",
     "success": "Mensaje enviado.",
@@ -150,62 +150,45 @@
     "homeLinkedIn": "LinkedIn",
     "homeEmail": "Email",
     "homeFormTitle": "Enviar un mensaje",
-    "homeFormSubtitle": "Suelo responder en un plazo de 24 a 48 horas.",
+    "homeFormSubtitle": "Respondo en 48 horas.",
     "topicLabel": "Tema",
     "topicPlaceholder": "Selecciona un tema",
-    "topicGeneral": "General",
-    "topicSalesforce": "Proyecto Salesforce",
-    "topicItOps": "IT Ops / DevOps",
-    "topicAvailability": "Proyecto / disponibilidad",
+    "topicGeneral": "Oportunidad / consulta general",
+    "topicSalesforce": "Puesto Salesforce",
+    "topicItOps": "Puesto IT Ops / DevOps / Infraestructura",
+    "topicAvailability": "Disponibilidad / entrevista",
     "topicOther": "Otro",
     "envHint": "Configuración incompleta: falta cierta información de contacto.",
     "linkedInMissing": "El enlace de LinkedIn no está disponible por el momento.",
     "acceptPolicyAria": "Acepto la política de privacidad",
     "acceptPolicyPrefix": "He leído y acepto la",
     "acceptPolicyLink": "política de privacidad",
-    "availability": "Indefinido · Temporal · Por proyecto",
+    "availability": "Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "intake": {
-      "title": "Contexto de la misión (opcional)",
-      "subtitle": "Me ayuda a responder con el contexto adecuado desde el primer mensaje — nada de esto es vinculante.",
-      "sectorLabel": "Sector",
-      "sectorPlaceholder": "Selecciona un sector",
-      "sector": {
-        "automotive": "Automoción",
-        "industry": "Industria",
-        "logistics": "Logística",
-        "supplyChain": "Cadena de suministro",
-        "maintenance": "Mantenimiento",
-        "quality": "Calidad",
-        "energy": "Energía",
-        "cybersecurity": "Ciberseguridad",
-        "supervision": "Supervisión",
-        "automation": "Automatización",
-        "fieldService": "Servicio de campo",
-        "operationalData": "Datos operativos",
-        "traceability": "Trazabilidad",
-        "healthcare": "Salud",
-        "luxury": "Lujo / Moda",
-        "other": "Otro"
+      "title": "El puesto (opcional)",
+      "subtitle": "Esta información me ayuda a responderte con precisión desde el primer mensaje.",
+      "roleLabel": "Nombre del puesto",
+      "rolePlaceholder": "Ej.: Desarrolladora Salesforce, Ingeniera de sistemas…",
+      "contractLabel": "Tipo de contrato",
+      "contractPlaceholder": "Seleccionar un tipo de contrato",
+      "contract": {
+        "permanent": "Indefinido",
+        "fixedTerm": "Temporal",
+        "temp": "ETT (trabajo temporal)",
+        "portage": "Portage salarial",
+        "other": "Otro / a precisar"
       },
-      "timelineLabel": "Plazo",
-      "timelinePlaceholder": "Selecciona un plazo",
-      "timeline": {
-        "asap": "Lo antes posible",
-        "thisMonth": "En el próximo mes",
-        "oneToThree": "1 a 3 meses",
-        "threeToSix": "3 a 6 meses",
-        "tbd": "Aún sin definir"
+      "workplaceLabel": "Lugar y modalidad",
+      "workplacePlaceholder": "Ej.: París, híbrido 2 días/semana",
+      "startLabel": "Fecha de incorporación deseada",
+      "startPlaceholder": "Seleccionar una fecha",
+      "start": {
+        "dec2026": "A partir del 1 de diciembre de 2026",
+        "q1_2027": "Primer trimestre de 2027",
+        "later": "Más adelante",
+        "tbd": "Por definir"
       },
-      "budgetLabel": "Rango de presupuesto",
-      "budgetPlaceholder": "Selecciona un rango (opcional)",
-      "budget": {
-        "under5k": "Menos de 5.000 €",
-        "from5to15k": "5.000 € – 15.000 €",
-        "from15to40k": "15.000 € – 40.000 €",
-        "over40k": "40.000 € o más",
-        "tbd": "A negociar"
-      },
-      "messagePrefixHeading": "Contexto de la misión"
+      "messagePrefixHeading": "El puesto"
     }
   },
   "blog": {
@@ -309,9 +292,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce & Consultora IT | Remoto · Europa",
-    "description": "Desarrolladora Salesforce & Consultora IT (Île-de-France, remoto) — Apex, LWC, CI/CD. 50+ artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial.",
+    "description": "Desarrolladora Salesforce & Consultora IT (Île-de-France) — Apex, LWC, CI/CD, integraciones, infraestructura. Incorporación en dic. 2026, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Remoto · Europa",
-    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France, remoto) — Infraestructura, seguridad, automatización, CI/CD. 50+ artículos técnicos, proyectos concretos. Entrevistas ya — incorporación en dic. 2026. Proyectos en Europa y a nivel mundial."
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France) — Infraestructura, seguridad, automatización, CI/CD, Salesforce. Incorporación en dic. 2026, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -338,7 +321,7 @@
     "maturityBodySalesforce": "La misma disciplina se aplica a mis entregas Salesforce: un pipeline CI/CD con validaciones Apex automatizadas y despliegues trazables de sandbox a producción (ver el proyecto puente Salesforce ⇄ Infra más arriba). Este portfolio es esa disciplina aplicada a escala: /status muestra en directo el estado real de sus servicios, y el colofón explica sus decisiones de seguridad y su integración continua.",
     "maturityStatusCta": "Ver el estado en directo",
     "maturityChangelogCta": "Ver cómo está construido este sitio",
-    "discuss": "Consultar sobre este servicio",
+    "discuss": "Hablar de ello para un puesto",
     "sectorsTitle": "Sectores en los que ya he entregado",
     "sectorsBody": "Los estudios de caso siguientes no son ejercicios abstractos: cada uno está anclado en un sector con sus propias exigencias de cumplimiento, trazabilidad y tolerancia al error.",
     "sectors": [
@@ -368,10 +351,10 @@
     "legal": "Aviso legal",
     "accessibility": "Accesibilidad",
     "status": "Estado",
-    "workWithMe": "Trabajemos juntos",
+    "workWithMe": "Contratarme",
     "uses": "Herramientas y configuración",
     "colophon": "Colophon",
-    "qualifyMission": "Calificar una misión",
+    "qualifyMission": "Formulario para reclutadores",
     "hybrid": "Perfil híbrido"
   },
   "profile": {
@@ -388,7 +371,7 @@
     "p1_itops": "IT Ops & DevOps: ayudo a los equipos a diseñar, mantener y proteger infraestructuras resilientes, con procesos operativos pragmáticos (runbooks, monitorización, remediación).",
     "p2_itops": "Implemento estándares operativos: monitorización y alertas accionables, reducción del ruido, procedimientos de escalado, documentación y automatización (scripts, jobs, playbooks).",
     "p3_itops": "Presto especial atención a la seguridad y la continuidad: copias de seguridad, hardening, gestión de accesos y prácticas de gestión del cambio para reducir incidentes.",
-    "p4_itops": "Desarrolladora Salesforce a tiempo completo en LD Digitales — mis habilidades de IT Ops y DevOps, forjadas en entornos de producción reales, siguen plenamente disponibles para proyectos específicos. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) es la prueba más directa de que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
+    "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE GROUP y en formación, siguen plenamente disponibles en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
     "basedInValue": "Val-d'Oise (95), Île-de-France — prioridad operativa París / Île-de-France · Híbrido · Presencial · Remoto — Movilidad y traslado posibles",
@@ -399,9 +382,9 @@
     "rolesValueSalesforce": "Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "rolesValueItops": "Administradora de sistemas y redes · DevOps · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "availabilityLabel": "Disponibilidad",
-    "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Abierta a puestos indefinidos, temporales y por proyecto",
+    "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "goalLabel": "Objetivo",
-    "goalValue": "Profundizar mi experiencia en Salesforce, completar las certificaciones 2026 y encontrar el entorno adecuado para crecer — indefinido, temporal o por proyecto.",
+    "goalValue": "Profundizar mi experiencia en Salesforce, obtener mis certificaciones e incorporarme a un equipo donde Salesforce, infraestructura y seguridad se cruzan.",
     "focusLabel": "Enfoque",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Calidad · Seguridad",
     "focusValueItOps": "Monitorización · Runbooks · Automatización · Seguridad",
@@ -432,18 +415,18 @@
     "analyticsTitle": "Analítica y rendimiento",
     "analyticsBody": "Este sitio utiliza Vercel Analytics y Vercel Speed Insights en producción para medir los Core Web Vitals y el rendimiento real de los usuarios. No se recopila ningún dato personal — las métricas son agregadas y anónimas. Estos servicios están desactivados en desarrollo.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "No se instalan cookies de marketing ni de seguimiento. La preferencia de idioma se guarda en la URL (por ejemplo, /en/, /fr/) y no en una cookie. Vercel puede instalar cookies técnicas con fines de infraestructura (CDN, protección contra DDoS).",
+    "cookiesBody": "No se instalan cookies de marketing ni de seguimiento. La preferencia de idioma se guarda en la URL (por ejemplo, /en/, /fr/) y no en una cookie. Una cookie funcional «track» (duración: 1 año) y una entrada equivalente en el almacenamiento local del navegador solo recuerdan el perfil mostrado (Salesforce o IT Ops); no contienen datos personales. Vercel puede instalar cookies técnicas con fines de infraestructura (CDN, protección contra DDoS). El módulo de reservas de Calendly solo se carga si lo abres; en ese caso se aplica la política de cookies de Calendly.",
     "formTitle": "Datos del formulario de contacto",
     "formBody": "Al enviar el formulario de contacto, los datos que introduces — nombre, email, tema, mensaje — se envían por correo electrónico a través de Formhook (servicio de entrega de emails alojado en la Unión Europea) para tramitar tu solicitud. El sitio no conserva ninguna copia de estos datos en sus servidores. Tu dirección IP se utiliza únicamente de forma transitoria para limitar los envíos abusivos (anti-spam) y no se conserva junto con tu mensaje.",
-    "retention": "Conservación: el sitio no almacena los mensajes de contacto. Una vez enviado por correo electrónico, tu mensaje se conserva en la bandeja de entrada según las prácticas habituales de correo; puedes solicitar su eliminación en cualquier momento contactándonos.",
+    "retention": "Conservación: el sitio no almacena los mensajes de contacto. Una vez enviado por correo electrónico, tu mensaje se conserva en la bandeja de entrada según las prácticas habituales de correo; puedes solicitar su eliminación en cualquier momento contactándome.",
     "rightsTitle": "Tus derechos",
     "rightsBody": "De conformidad con la normativa de protección de datos aplicable (RGPD), tienes derecho a acceder, rectificar, solicitar la eliminación y obtener la portabilidad de tus datos personales.",
     "contact": "Para ejercer tus derechos: {email}",
     "processorsTitle": "Encargados del tratamiento",
     "processorsBody": "Los datos recopilados a través de este sitio son tratados por los siguientes subencargados: Formhook (entrega de emails del formulario de contacto — Unión Europea), Vercel (alojamiento y CDN — Estados Unidos), Supabase (testimonios enviados mediante el formulario dedicado e historial de estado/incidencias — Estados Unidos, conforme al RGPD mediante Cláusulas Contractuales Tipo), Upstash (limitación anti-spam, contador por IP — datos efímeros). Estos proveedores actúan como encargados del tratamiento en el sentido del artículo 28 del RGPD.",
-    "lastUpdated": "3 de septiembre de 2026",
+    "lastUpdated": "25 de septiembre de 2026",
     "controllerTitle": "Responsable del tratamiento",
-    "controllerBody": "La responsable del tratamiento de los datos personales recopilados a través de este sitio es Aïcha Imène DAHOUMANE, profesional autónoma. Contacto: {email}",
+    "controllerBody": "La responsable del tratamiento de los datos personales recopilados a través de este sitio es Aïcha Imène DAHOUMANE, a título personal (portfolio profesional, sin actividad comercial). Contacto: {email}",
     "breachTitle": "Notificación de brechas de datos",
     "breachBody": "En caso de una brecha de datos que pueda suponer un riesgo para tus derechos y libertades, se te notificará lo antes posible. De conformidad con el artículo 33 del RGPD, se notificará a la autoridad de control competente en un plazo de 72 horas. También tienes derecho a presentar una reclamación ante tu autoridad nacional de protección de datos (en Francia: CNIL — www.cnil.fr)."
   },
@@ -462,31 +445,31 @@
   },
   "faq": {
     "title": "Preguntas frecuentes",
-    "subtitle": "Todo lo que necesitas saber antes de contactarme.",
+    "subtitle": "Respuestas a las preguntas que más me hacen los reclutadores.",
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación posible a partir del 1 de diciembre de 2026. Actualmente trabajo como Desarrolladora Salesforce en LD Digitales, y estoy abierta a puestos indefinidos, temporales y por proyecto — en Francia y a nivel internacional. No dudes en escribirme para hablar de tus necesidades."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir del 1 de diciembre de 2026. Actualmente soy Desarrolladora Salesforce con contrato indefinido en LD Digitales."
+      },
+      {
+        "q": "¿Qué tipos de contrato buscas?",
+        "a": "Indefinido, temporal, ETT o portage salarial, en todos los sectores de actividad. Lo que me importa es el puesto: un entorno donde Salesforce, infraestructura y seguridad se cruzan."
+      },
+      {
+        "q": "¿A qué puestos aspiras?",
+        "a": "Desarrolladora, administradora o consultora Salesforce, ingeniera Salesforce & infraestructura y, en general, puestos de sistemas y redes o DevOps donde un perfil doble sea una ventaja."
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
-        "a": "El mercado me hace esta pregunta a menudo, y tres entrevistas recientes me enseñaron lo que realmente escondía: lo que faltaba no era una línea más en un currículum, sino una prueba visible de que diseño y opero ambas capas — ver el caso de estudio Légarant-AXG, donde el trigger Apex y el despliegue Heroku los entrega la misma persona. En cuanto a certificación oficial: Salesforce Administrator, App Builder y Platform Developer I en preparación activa. Ya obtenidos y verificables: título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, 2025) y perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos)."
+        "a": "Todavía no: Salesforce Administrator, App Builder y Platform Developer I están en preparación. Ya obtenidos y verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, 2025) y un perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos). El caso de estudio Légarant-AXG, donde el trigger Apex y el despliegue Heroku los realiza la misma persona, muestra de forma concreta lo que sé hacer."
       },
       {
-        "q": "¿Trabajas en remoto?",
-        "a": "Sí — en remoto total, híbrido o presencial, según tus necesidades. Estoy ubicada en Val-d'Oise (95), Île-de-France, con prioridad operativa en París / Île-de-France, y abierta a trasladarme dentro de Francia o al extranjero, incluyendo cualquier entorno de habla inglesa. Las videollamadas, la comunicación asíncrona y los traspasos documentados forman parte de mi forma habitual de trabajar."
+        "q": "¿Dónde estás ubicada? ¿Teletrabajo?",
+        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France, con prioridad para París y la región de Île-de-France: híbrido, presencial o remoto según el puesto. Estoy abierta a la movilidad y al traslado, en Francia y a nivel internacional, incluidos entornos de habla inglesa."
       },
       {
-        "q": "¿Cuáles son tus plazos habituales?",
-        "a": "Depende del alcance. Una auditoría Salesforce o una funcionalidad puntual (Flow, clase Apex) suele tomar de 1 a 5 días. Una implementación completa con pruebas y documentación normalmente lleva entre 2 y 8 semanas. Te daré una estimación precisa después de una primera llamada de análisis — sin compromiso."
-      },
-      {
-        "q": "¿Cómo funciona un proyecto típico?",
-        "a": "Por lo general: una breve llamada exploratoria (30 min) para entender tu contexto → una propuesta por escrito con alcance, entregables y calendario → entrega con documentación clara → una sesión de traspaso para que tu equipo pueda mantenerlo todo de forma autónoma. Tú eres propietario de todo el código y la configuración que produzco."
-      },
-      {
-        "q": "¿Ofreces soporte después de la entrega?",
-        "a": "Sí. Incluyo un breve periodo de soporte después de cada entrega para ajustes y preguntas. Para mantenimiento continuo o evolución de funcionalidades, podemos hablar de un acuerdo de asistencia recurrente."
+        "q": "¿Qué pasa después de contactarme?",
+        "a": "Respondo en 48 horas. Después estoy disponible para una llamada o videollamada, entrevistas técnicas (ejercicios de Apex, SOQL o Flow, casos prácticos de sistemas y redes) y puedo aportar mis diplomas y referencias."
       }
     ]
   },
@@ -505,15 +488,15 @@
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
     "delayValue": "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026",
-    "contracts": "Siguiente paso",
-    "contractValues": "Indefinido · Temporal · Por proyecto — Francia y a nivel mundial",
+    "contracts": "Contratos",
+    "contractValues": "Indefinido · Temporal · ETT · Portage salarial",
     "workMode": "Modalidades de trabajo",
-    "workModeValues": "100 % remoto · Híbrido · Presencial",
+    "workModeValues": "Híbrido · Presencial · Remoto",
     "mobility": "Movilidad",
     "mobilityValues": "Movilidad y traslado posibles (Francia e internacional)",
-    "sector": "Sectores",
-    "sectorValues": "Salesforce · IT Ops / DevOps",
-    "roles": "Áreas de especialización",
+    "sector": "Sectores de actividad",
+    "sectorValues": "Todos los sectores",
+    "roles": "Puestos buscados",
     "rolesValuesSalesforce": "Administradora Salesforce · Desarrolladora Salesforce · Consultora Salesforce · Ingeniera Salesforce & Infraestructura",
     "rolesValuesItops": "Administradora de sistemas y redes · DevOps · Consultora IT · Ingeniera Salesforce & Infraestructura",
     "location": "Ubicación",
@@ -588,9 +571,23 @@
       "Decisiones tomadas de un lado sin conocer las restricciones del otro — un trigger diseñado sin saber cómo lo solicita la infraestructura, un pipeline diseñado sin conocer los límites de despliegue de Salesforce.",
       "El desfase entre «la API está auditada» y «el control está en marcha»: ambas cosas ocurren en el mismo sprint."
     ],
-    "ctaTitle": "¿Tienes una necesidad transversal en mente?",
-    "ctaText": "Si el problema toca a la vez Salesforce e infraestructura — integración, migración, puesta en producción trazable, seguridad de API — es exactamente el terreno donde este perfil ahorra tiempo.",
-    "ctaContact": "Hablemos de tu necesidad",
+    "ctaTitle": "¿Tienes un puesto transversal por cubrir?",
+    "ctaText": "Si el puesto toca a la vez Salesforce e infraestructura — integración, migración, puesta en producción trazable, seguridad de API — es exactamente el terreno donde este perfil ahorra tiempo a un equipo.",
+    "ctaContact": "Presentar un puesto",
     "ctaCv": "Descargar el CV híbrido (PDF)"
+  },
+  "recruiter": {
+    "title": "¿Para qué puesto estás contratando?",
+    "subtitle": "Elige el perfil que corresponde a tu necesidad: el sitio y el CV se adaptan.",
+    "recommended": "Mi perfil de referencia",
+    "hybridTitle": "Perfil híbrido Salesforce + infraestructura",
+    "hybridBody": "Un puesto donde Salesforce, infraestructura y seguridad se cruzan: integraciones, puestas en producción trazables, seguridad de API. Ahí es donde mi trayectoria marca la diferencia.",
+    "hybridCta": "Ver el perfil híbrido",
+    "salesforceTitle": "Puesto Salesforce",
+    "salesforceBody": "Desarrolladora, administradora o consultora Salesforce: Apex, Flows, LWC, modelo de seguridad y CI/CD.",
+    "itopsTitle": "Puesto de sistemas, redes y DevOps",
+    "itopsBody": "Administración de Windows Server y Active Directory, supervisión, copias de seguridad, automatización y seguridad.",
+    "showProfile": "Mostrar este perfil",
+    "cv": "CV (PDF)"
   }
 }

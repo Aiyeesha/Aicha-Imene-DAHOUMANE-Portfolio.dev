@@ -4,7 +4,7 @@
     "certifications": "Certifications",
     "skills": "Skills",
     "experience": "Experience",
-    "services": "Services",
+    "services": "Expertise",
     "projects": "Projects",
     "contact": "Contact",
     "testimonials": "Testimonials",
@@ -38,7 +38,7 @@
     "proof1": "Security-first",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
-    "availability": "Permanent · Fixed-term · Contract",
+    "availability": "Permanent · Fixed-term · Temp · Umbrella (portage)",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Start here:",
     "switchToSalesforce": "View Salesforce profile →",
@@ -50,7 +50,7 @@
     "downloadCvItops": "IT Ops CV (PDF)",
     "downloadCvSalesforce": "Salesforce CV (PDF)",
     "downloadCvHybrid": "Salesforce/Infra Hybrid CV (PDF)",
-    "workWithMe": "Work with me",
+    "workWithMe": "Hire me",
     "message": "Message",
     "call15": "Book a 30-min call",
     "downloadProfile": "Download my profile (PDF)",
@@ -89,8 +89,8 @@
     "experience_subtitle": "Expand items to see details (accordion-style).",
     "roles_title": "Roles",
     "certifications_title": "Certifications",
-    "services_title": "Services",
-    "services_subtitle": "Tailored services depending on your needs (Salesforce or IT Ops).",
+    "services_title": "What I bring to a team",
+    "services_subtitle": "My day-to-day areas of work, depending on the profile shown (Salesforce or IT Ops).",
     "projects_title": "Projects",
     "projects_subtitle": "Salesforce implementations, IT Ops automation, and web projects — filtered by track.",
     "contact_title": "Contact",
@@ -113,7 +113,7 @@
     "messageLabel": "Message",
     "namePlaceholder": "Your full name",
     "emailPlaceholder": "you@domain.com",
-    "messagePlaceholder": "Tell me about your project, context, and what you need…",
+    "messagePlaceholder": "Tell me about the role, the team and the context…",
     "send": "Send",
     "sending": "Sending…",
     "success": "Message sent.",
@@ -150,62 +150,45 @@
     "homeLinkedIn": "LinkedIn",
     "homeEmail": "Email",
     "homeFormTitle": "Send a message",
-    "homeFormSubtitle": "I usually reply within 24–48 hours.",
+    "homeFormSubtitle": "I reply within 48 hours.",
     "topicLabel": "Topic",
     "topicPlaceholder": "Select a topic",
-    "topicGeneral": "General",
-    "topicSalesforce": "Salesforce project",
-    "topicItOps": "IT Ops / DevOps",
-    "topicAvailability": "Mission / availability",
+    "topicGeneral": "Opportunity / general question",
+    "topicSalesforce": "Salesforce role",
+    "topicItOps": "IT Ops / DevOps / Infrastructure role",
+    "topicAvailability": "Availability / interview",
     "topicOther": "Other",
     "envHint": "Missing configuration: some contact information is not set.",
     "linkedInMissing": "The LinkedIn link is not available right now.",
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
-    "availability": "Permanent · Fixed-term · Contract",
+    "availability": "Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "intake": {
-      "title": "Mission context (optional)",
-      "subtitle": "Helps me reply with the right context on the first message — none of this is binding.",
-      "sectorLabel": "Sector",
-      "sectorPlaceholder": "Select a sector",
-      "sector": {
-        "automotive": "Automotive",
-        "industry": "Industry",
-        "logistics": "Logistics",
-        "supplyChain": "Supply chain",
-        "maintenance": "Maintenance",
-        "quality": "Quality",
-        "energy": "Energy",
-        "cybersecurity": "Cybersecurity",
-        "supervision": "Supervision / Monitoring",
-        "automation": "Automation",
-        "fieldService": "Field service",
-        "operationalData": "Operational data",
-        "traceability": "Traceability",
-        "healthcare": "Healthcare",
-        "luxury": "Luxury / Fashion",
-        "other": "Other"
+      "title": "The role (optional)",
+      "subtitle": "This helps me give you a precise answer from the very first reply.",
+      "roleLabel": "Job title",
+      "rolePlaceholder": "e.g. Salesforce Developer, Systems Engineer…",
+      "contractLabel": "Contract type",
+      "contractPlaceholder": "Select a contract type",
+      "contract": {
+        "permanent": "Permanent",
+        "fixedTerm": "Fixed-term",
+        "temp": "Temp (agency)",
+        "portage": "Umbrella company (portage)",
+        "other": "Other / to be discussed"
       },
-      "timelineLabel": "Timeline",
-      "timelinePlaceholder": "Select a timeline",
-      "timeline": {
-        "asap": "As soon as possible",
-        "thisMonth": "Within a month",
-        "oneToThree": "1–3 months",
-        "threeToSix": "3–6 months",
-        "tbd": "Not defined yet"
+      "workplaceLabel": "Location and work mode",
+      "workplacePlaceholder": "e.g. Paris, hybrid 2 days/week",
+      "startLabel": "Desired start date",
+      "startPlaceholder": "Select a date",
+      "start": {
+        "dec2026": "From December 1, 2026",
+        "q1_2027": "Q1 2027",
+        "later": "Later",
+        "tbd": "To be defined"
       },
-      "budgetLabel": "Budget range",
-      "budgetPlaceholder": "Select a range (optional)",
-      "budget": {
-        "under5k": "Under €5k",
-        "from5to15k": "€5k – €15k",
-        "from15to40k": "€15k – €40k",
-        "over40k": "€40k+",
-        "tbd": "To be discussed"
-      },
-      "messagePrefixHeading": "Mission context"
+      "messagePrefixHeading": "The role"
     }
   },
   "blog": {
@@ -309,9 +292,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce Developer & IT Consultant | Remote · Europe",
-    "description": "Salesforce Developer & IT Consultant (Île-de-France, remote) — Apex, LWC, CI/CD. 50+ technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide.",
+    "description": "Salesforce Developer & IT Consultant (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Role from Dec 2026, interviews now. Permanent, fixed-term, temp or umbrella — any industry.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Remote · Europe",
-    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France, remote) — Infrastructure, security, automation, CI/CD. 50+ technical articles, concrete projects. Available for interviews now — role from Dec 2026. Missions Europe & worldwide."
+    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, security, automation, CI/CD, Salesforce. Role from Dec 2026, interviews now. Permanent, fixed-term, temp or umbrella — any industry."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -333,7 +316,7 @@
     "periodItops": "Internship at Midrange Group — February to May 2023"
   },
   "services": {
-    "discuss": "Discuss this service",
+    "discuss": "Discuss this for a role",
     "maturityTitle": "Operational maturity",
     "maturityBody": "This portfolio is itself run like a production product, not just presented as one: /status exposes the real state of its services (database, cache, contact form) with live-measured latency and uptime — not a static page. The colophon explains how it is built and secured: nonce-based CSP, security headers, rate limits, Lighthouse and axe audits in CI, monitored dependencies.",
     "maturityBodySalesforce": "The same discipline carries over to my Salesforce delivery work: a CI/CD pipeline with automated Apex validations and traceable sandbox-to-production deployments (see the Salesforce ⇄ Infra bridge project above). This portfolio is that discipline applied at scale: /status exposes the real health of its services live, and the colophon explains its security choices and continuous integration.",
@@ -368,10 +351,10 @@
     "legal": "Legal notice",
     "accessibility": "Accessibility",
     "status": "Status",
-    "workWithMe": "Work with me",
+    "workWithMe": "Hire me",
     "uses": "Uses & Setup",
     "colophon": "Colophon",
-    "qualifyMission": "Start an engagement",
+    "qualifyMission": "Recruiter form",
     "hybrid": "Hybrid profile"
   },
   "profile": {
@@ -388,7 +371,7 @@
     "p1_itops": "IT Ops & DevOps: I help teams design, maintain, and secure resilient infrastructure, with pragmatic operations processes (runbooks, monitoring, remediation).",
     "p2_itops": "I implement operations standards: actionable monitoring/alerting, noise reduction, escalation procedures, documentation, and automation (scripts, jobs, playbooks).",
     "p3_itops": "I pay close attention to security and continuity: backups, hardening, access management, and change practices to reduce incidents.",
-    "p4_itops": "Full-time Salesforce Developer at LD Digitales — IT Ops & DevOps skills, built through real production environments, remain fully available for targeted projects. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) is the clearest proof that this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
+    "p4_itops": "Full-time Salesforce Developer at LD Digitales — my IT Ops & DevOps skills, built during my internship at MIDRANGE GROUP and in training, remain fully available in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
     "basedInValue": "Val-d'Oise (95), Île-de-France — operational focus Paris / Île-de-France · Hybrid · On-site · Remote — Mobility & relocation considered",
@@ -399,9 +382,9 @@
     "rolesValueSalesforce": "Salesforce Developer · Salesforce Admin · Salesforce Consultant · IT Consultant · Salesforce & Infrastructure Engineer",
     "rolesValueItops": "Systems & Network Admin · DevOps · IT Consultant · Salesforce & Infrastructure Engineer",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Role starting December 1, 2026 · Interviews now · Open to permanent, fixed-term & contract roles",
+    "availabilityValue": "Role starting December 1, 2026 · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "goalLabel": "Goal",
-    "goalValue": "Deepen Salesforce expertise, complete 2026 certifications, and find the right environment to grow — permanent, fixed-term, or contract.",
+    "goalValue": "Deepen my Salesforce expertise, earn my certifications, and join a team where Salesforce, infrastructure and security meet.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Quality · Security",
     "focusValueItOps": "Monitoring · Runbooks · Automation · Security",
@@ -432,18 +415,18 @@
     "analyticsTitle": "Analytics & Performance",
     "analyticsBody": "This site uses Vercel Analytics and Vercel Speed Insights in production to measure Core Web Vitals and real-user performance. No personal data is collected — metrics are aggregated and anonymous. These services are disabled in development.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "No marketing or tracking cookies are set. The language preference is stored in the URL (e.g. /en/, /fr/) and not in a cookie. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection).",
+    "cookiesBody": "No marketing or tracking cookies are set. The language preference is stored in the URL (e.g. /en/, /fr/) and not in a cookie. A functional 'track' cookie (1-year lifetime) and a matching browser local-storage entry only remember which profile is displayed (Salesforce or IT Ops); they contain no personal data. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection). The Calendly booking widget is only loaded if you open it; Calendly's own cookie policy then applies.",
     "formTitle": "Contact form data",
     "formBody": "When you submit the contact form, the data you enter — name, email, topic, message — is forwarded by email via Formhook (an EU-hosted email delivery service) to handle your request. The site keeps no copy of this data on its servers. Your IP address is used only transiently to rate-limit abusive submissions (anti-spam) and is not stored with your message.",
-    "retention": "Retention: the site does not store contact messages. Once forwarded by email, your message is retained in the mailbox under normal email practice; you may request its deletion at any time by contacting us.",
+    "retention": "Retention: the site does not store contact messages. Once forwarded by email, your message is retained in the mailbox under normal email practice; you may request its deletion at any time by contacting me.",
     "rightsTitle": "Your rights",
     "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, request deletion of, and obtain portability of your personal data.",
     "contact": "To exercise your rights: {email}",
     "processorsTitle": "Data processors",
     "processorsBody": "Data collected through this website is processed by the following sub-processors: Formhook (contact-form email delivery — EU-hosted), Vercel (hosting and CDN — United States), Supabase (testimonials submitted via the dedicated form, and service-status / incident history — United States, GDPR compliance via Standard Contractual Clauses), Upstash (anti-spam rate limiting, per-IP counter — ephemeral data). These providers act as data processors within the meaning of Article 28 of the GDPR.",
-    "lastUpdated": "September 3, 2026",
+    "lastUpdated": "September 25, 2026",
     "controllerTitle": "Data controller",
-    "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, a self-employed professional. Contact: {email}",
+    "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, acting in a personal capacity (professional portfolio, no commercial activity). Contact: {email}",
     "breachTitle": "Data breach notification",
     "breachBody": "In the event of a data breach likely to result in a risk to your rights and freedoms, you will be notified as soon as possible. In accordance with Article 33 of the GDPR, the relevant supervisory authority will be notified within 72 hours. You also have the right to lodge a complaint with your national data protection authority (in France: CNIL — www.cnil.fr)."
   },
@@ -462,31 +445,31 @@
   },
   "faq": {
     "title": "Frequently asked questions",
-    "subtitle": "Everything you need to know before reaching out.",
+    "subtitle": "Answers to the questions recruiters ask me most often.",
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a possible start date from December 1, 2026. I'm currently working as a Salesforce Developer at LD Digitales, and I'm open to permanent, fixed-term, and contract roles — in France and internationally. Feel free to reach out to discuss your needs."
+        "a": "I'm available for interviews right away, with a start date from December 1, 2026. I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
+      },
+      {
+        "q": "What contract types are you looking for?",
+        "a": "Permanent, fixed-term, temp (agency) or umbrella-company (portage) contracts, in any industry. What matters to me is the role: an environment where Salesforce, infrastructure and security meet."
+      },
+      {
+        "q": "Which roles are you targeting?",
+        "a": "Salesforce Developer, Administrator or Consultant, Salesforce & Infrastructure Engineer, and more broadly systems & network or DevOps roles where a dual profile is an asset."
       },
       {
         "q": "Do you have a Salesforce certification?",
-        "a": "The market asks me this question often, and three recent interviews taught me what it was really about: what was missing wasn't one more line on a résumé, but visible proof that I design and operate both layers — see the Légarant-AXG case study, where the Apex trigger and the Heroku deployment are shipped by the same person. On vendor certification: Salesforce Administrator, App Builder, and Platform Developer I in active preparation. Already earned and verifiable: RNCP Level 6 'Développeur Concepteur Logiciel' diploma (Salesforce specialization, 2025) and an active Trailhead profile (Expeditioner rank, 94 badges, 59,775 points)."
+        "a": "Not yet: Salesforce Administrator, App Builder and Platform Developer I are in preparation. Already earned and verifiable: the RNCP Level 6 'Développeur Concepteur Logiciel' diploma (Salesforce specialization, 2025) and an active Trailhead profile (Expeditioner rank, 94 badges, 59,775 points). The Légarant-AXG case study, where the Apex trigger and the Heroku deployment are built by the same person, shows concretely what I can do."
       },
       {
-        "q": "Do you work remotely?",
-        "a": "Yes — full remote, hybrid, or on-site depending on your needs. I'm based in Val-d'Oise (95), Île-de-France, with an operational focus on Paris / Île-de-France, and open to relocation in France and internationally, including any English-speaking context. Video calls, async communication, and documented handovers are part of my standard workflow."
+        "q": "Where are you based? Remote work?",
+        "a": "I'm based in Val-d'Oise (95), Île-de-France, with a priority for Paris and the Île-de-France region: hybrid, on-site or remote depending on the role. I'm open to mobility and relocation, in France and internationally, including English-speaking contexts."
       },
       {
-        "q": "What are your typical timelines?",
-        "a": "It depends on the scope. A Salesforce audit or a focused feature (Flow, Apex class) usually takes 1–5 days. A full implementation with testing and documentation typically runs 2–8 weeks. I'll give you a precise estimate after an initial scoping call — no commitment required."
-      },
-      {
-        "q": "How does a typical engagement work?",
-        "a": "It usually goes like this: a short discovery call (30 min) to understand your context → a written proposal with scope, deliverables, and timeline → delivery with clear documentation → a handover session so your team can maintain everything independently. You own all the code and configuration I produce."
-      },
-      {
-        "q": "Do you offer support after delivery?",
-        "a": "Yes. I include a short support window after each delivery for adjustments and questions. For ongoing maintenance or feature evolution, we can discuss a retainer arrangement."
+        "q": "What happens after you're contacted?",
+        "a": "I reply within 48 hours. I'm then available for a phone or video call, technical interviews (Apex, SOQL or Flow exercises, systems and network scenarios), and I can provide my diplomas and references."
       }
     ]
   },
@@ -505,15 +488,15 @@
     "title": "My availability",
     "delay": "Availability",
     "delayValue": "Interviews now · Role starting December 1, 2026",
-    "contracts": "Next step",
-    "contractValues": "Permanent · Fixed-term · Contract — France & worldwide",
+    "contracts": "Contracts",
+    "contractValues": "Permanent · Fixed-term · Temp · Umbrella (portage)",
     "workMode": "Work modes",
-    "workModeValues": "100 % Remote · Hybrid · On-site",
+    "workModeValues": "Hybrid · On-site · Remote",
     "mobility": "Mobility",
     "mobilityValues": "Mobility & relocation considered (France & international)",
-    "sector": "Sectors",
-    "sectorValues": "Salesforce · IT Ops / DevOps",
-    "roles": "Areas of expertise",
+    "sector": "Industries",
+    "sectorValues": "Any industry",
+    "roles": "Target roles",
     "rolesValuesSalesforce": "Salesforce Admin · Salesforce Developer · Salesforce Consultant · Salesforce & Infrastructure Engineer",
     "rolesValuesItops": "Systems & Network Admin · DevOps · IT Consultant · Salesforce & Infrastructure Engineer",
     "location": "Location",
@@ -588,9 +571,23 @@
       "Decisions made on one side without knowing the constraints of the other — a trigger designed without knowing how the infra calls it, a pipeline designed without knowing Salesforce's deployment limits.",
       "The gap between \"the API is audited\" and \"the control is in place\": both happen in the same sprint."
     ],
-    "ctaTitle": "A cross-cutting need in mind?",
-    "ctaText": "If the problem touches both Salesforce and infrastructure — integration, migration, traceable go-live, API security — that's exactly where this profile saves time.",
-    "ctaContact": "Discuss your need",
+    "ctaTitle": "Hiring for a cross-cutting role?",
+    "ctaText": "If the role touches both Salesforce and infrastructure — integration, migration, traceable go-live, API security — that's exactly where this profile saves a team time.",
+    "ctaContact": "Tell me about the role",
     "ctaCv": "Download the hybrid CV (PDF)"
+  },
+  "recruiter": {
+    "title": "Which role are you hiring for?",
+    "subtitle": "Pick the profile that matches your need: the site and the résumé adapt.",
+    "recommended": "My core profile",
+    "hybridTitle": "Hybrid Salesforce + infrastructure profile",
+    "hybridBody": "A role where Salesforce, infrastructure and security meet: integrations, traceable go-lives, API security. That's where my background makes the difference.",
+    "hybridCta": "See the hybrid profile",
+    "salesforceTitle": "Salesforce role",
+    "salesforceBody": "Salesforce Developer, Administrator or Consultant: Apex, Flows, LWC, security model and CI/CD.",
+    "itopsTitle": "Systems, network & DevOps role",
+    "itopsBody": "Windows Server and Active Directory administration, monitoring, backups, automation and security.",
+    "showProfile": "Show this profile",
+    "cv": "Résumé (PDF)"
   }
 }

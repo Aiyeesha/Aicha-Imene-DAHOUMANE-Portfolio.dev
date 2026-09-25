@@ -46,13 +46,13 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 
 // IDs visibles dans le desktop nav — défini au niveau module pour être accessible
 // depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
-// "hybrid" (page /hybride) est volontairement ABSENT de cette liste : l'ajouter
-// recréait un débordement du nav scrollable à 1280px (+111px) et à 1920px
-// (+137px) — pile les deux largeurs que l'audit du header avait ramenées à zéro.
-// Sur desktop, la page /hybride est atteignable via la pastille du hero, le lien
-// dans l'encart About et le footer (audit P2). Elle reste dans le menu mobile,
-// qui n'a pas de contrainte de débordement (audit P5).
-const DESKTOP_IDS_STATIC = new Set(["about", "skills", "experience", "certifications", "resources", "services", "testimonials", "projects", "blog", "contact"]);
+// "hybrid" (page /hybride) REMPLACE "resources" depuis l'audit de contenu du
+// 2026-09-25 : /hybride est la page la plus différenciante pour un recruteur,
+// /resources la moins utile. Les AJOUTER toutes les deux recréait un débordement
+// du nav scrollable (+111px à 1280px, +137px à 1920px) ; l'échange à nombre
+// d'items constant n'ajoute que l'écart de longueur des libellés. /resources
+// reste accessible via le menu mobile, la palette ⌘K et le pied de page.
+const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "certifications", "services", "testimonials", "projects", "blog", "contact"]);
 
 type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
 
@@ -436,7 +436,7 @@ useEffect(() => {
     { id: "contact", label: t("nav.contact") }
   ];
 
-  // Desktop nav : 9 items à xl (1280px) — About, Compétences, Expérience, Certifications, Ressources, Services, Projets, Blog, Contact.
+  // Desktop nav : 9 items à xl (1280px) — About, Profil hybride, Compétences, Expérience, Certifications, Services, Projets, Blog, Contact.
   // Le conteneur est scrollable (overflow-x-auto) pour les écrans compacts.
   const DESKTOP_IDS = DESKTOP_IDS_STATIC;
   const desktopSections = sections.filter((s) => DESKTOP_IDS.has(s.id));
