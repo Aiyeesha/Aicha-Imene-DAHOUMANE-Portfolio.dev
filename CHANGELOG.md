@@ -20,6 +20,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Cartes projet traduites (FR/ES)** — Les puces des cartes de `/projects`, rédigées en anglais dans `content/projects.ts`, s'affichaient telles quelles sur les pages FR et ES (audit de contenu du 2026-09-25). Leurs traductions vivent dans `content/projectHighlights.ts` (107 puces × 2 langues pour les 26 projets publiés, repli sur l'anglais) et un test vérifie qu'elles suivent la version anglaise. Sous-titres FR/ES ajoutés à 4 projets qui retombaient sur le résumé anglais (Incident Response Tracker, CVE Watchlist, Log Anomaly Detector, risque360).
+
 - **Élagage du blog et des projets (audit de contenu du 2026-09-25, lot 4)** —
   - Blog ramené de 54 à 14 articles : 41 articles (front-end/Next.js, sujets hors profil, runbooks redondants, articles avec erreurs Salesforce) déplacés dans `content/blog/unpublished/`, avec redirections temporaires ; les 4 runbooks MIDRANGE GROUP sont remplacés par un retour d'expérience daté (`msp-internship-lessons`, FR/EN/ES).
   - Chaque article publié porte un frontmatter `projects` affiché en « Mis en pratique dans » (lien vers l'étude de cas et sa nature).
