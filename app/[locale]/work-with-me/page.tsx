@@ -13,15 +13,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/work-with-me`;
   const title = isFr
-    ? "Travaillons ensemble — Aïcha Imène DAHOUMANE"
+    ? "Me recruter — Aïcha Imène DAHOUMANE"
     : isEs
-    ? "Trabajemos juntas — Aïcha Imène DAHOUMANE"
-    : "Work with me — Aïcha Imène DAHOUMANE";
+    ? "Contratarme — Aïcha Imène DAHOUMANE"
+    : "Hire me — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Développeuse Salesforce & IT Ops — 100 % Remote, hybride ou sur site, mobilité & relocalisation envisageables. Disponible pour missions en France, Europe et pays anglophones."
+    ? "Développeuse Salesforce & IT Ops — disponibilité, contrats recherchés (CDI, CDD, intérim, portage), postes visés et déroulé d'un recrutement. Hybride, sur site ou télétravail ; mobilité envisageable."
     : isEs
-    ? "Desarrolladora Salesforce & IT Ops — 100 % remoto, híbrido o presencial, abierta a movilidad y relocalización. Disponible para proyectos en Francia, Europa y países de habla inglesa."
-    : "Salesforce Developer & IT Ops consultant — 100 % Remote, hybrid or on-site, open to mobility & relocation. Available for missions in France, Europe & English-speaking markets.";
+    ? "Desarrolladora Salesforce & IT Ops — disponibilidad, contratos buscados (indefinido, temporal, ETT, portage), puestos y proceso de selección. Híbrido, presencial o remoto; abierta a la movilidad."
+    : "Salesforce Developer & IT Ops — availability, contract types (permanent, fixed-term, temp, umbrella), target roles and how hiring works. Hybrid, on-site or remote; open to relocation.";
   return {
     title,
     description,
@@ -63,7 +63,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : isEs ? "Inicio" : "Home", item: `${siteUrl}/${locale}` },
-      { "@type": "ListItem", position: 2, name: isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntas" : "Work with me", item: `${siteUrl}/${locale}/work-with-me` },
+      { "@type": "ListItem", position: 2, name: isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me", item: `${siteUrl}/${locale}/work-with-me` },
     ],
   };
   return (

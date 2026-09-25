@@ -15,12 +15,12 @@ export default async function Image({ params }: Props) {
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl().replace(/^https?:\/\//, "");
 
-  const title    = isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntos" : "Work with me";
+  const title    = isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me";
   const subtitle = isFr
-    ? "Salesforce · IT Ops · 100 % Remote · France & international"
+    ? "Salesforce · IT Ops · CDI, CDD, intérim, portage · Tous secteurs"
     : isEs
-    ? "Salesforce · IT Ops · 100 % Remoto · España e internacional"
-    : "Salesforce · IT Ops · 100 % Remote · France & worldwide";
+    ? "Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
+    : "Salesforce · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
   const availLabel = isFr ? "Entretiens dès maintenant — Poste déc. 2026" : isEs ? "Entrevistas ya — Incorporación dic. 2026" : "Interviews now — Role from Dec 2026";
 
   const cyan   = "#22d3ee";

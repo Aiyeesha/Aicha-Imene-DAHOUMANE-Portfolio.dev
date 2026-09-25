@@ -181,7 +181,7 @@ export default function CommandPalette() {
     certifications: "Certifications",
     resources:   isFr ? "Ressources" : isEs ? "Recursos" : "Resources",
     allProjects: isFr ? "Tous les projets" : isEs ? "Todos los proyectos" : "All projects",
-    workWithMe:  isFr ? "Travaillons ensemble" : isEs ? "Trabajemos juntos" : "Work with me",
+    workWithMe:  isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
     colophon:    "Colophon",
     legal:       isFr ? "Mentions légales" : isEs ? "Aviso legal" : "Legal",
     privacy:     isFr ? "Politique de confidentialité" : isEs ? "Política de privacidad" : "Privacy",
