@@ -28,8 +28,15 @@ export default function ColophonContent({ locale }: { locale: string }) {
     archTitle:      isFr ? "Décisions d'architecture" : isEs ? "Decisiones de arquitectura" : "Architecture decisions",
     cacheTitle:     isFr ? "Stratégie de cache" : isEs ? "Estrategia de caché" : "Caching strategy",
     secTitle:       isFr ? "Sécurité" : isEs ? "Seguridad" : "Security",
-    openSourceTitle:isFr ? "Open source" : isEs ? "Código abierto" : "Open source",
-    learnMore:      isFr ? "Voir le code source" : isEs ? "Ver el código fuente" : "View source code",
+    openSourceTitle:isFr ? "Code source" : isEs ? "Código fuente" : "Source code",
+    // Le dépôt GitHub est privé : un lien direct menait les visiteurs sur une
+    // 404. Reformulé à l'audit de contenu du 2026-09-25 en accès sur demande.
+    sourceNote:     isFr
+      ? "Le dépôt de ce site est privé. Je le présente volontiers en entretien (architecture, CI, tests, sécurité), et je peux ouvrir un accès en lecture sur demande."
+      : isEs
+      ? "El repositorio de este sitio es privado. Lo presento con gusto en una entrevista (arquitectura, CI, pruebas, seguridad) y puedo dar acceso de lectura bajo petición."
+      : "This site's repository is private. I'm happy to walk through it in an interview (architecture, CI, tests, security), and I can grant read access on request.",
+    learnMore:      isFr ? "Demander un accès au code" : isEs ? "Solicitar acceso al código" : "Request access to the code",
     viewLive:       isFr ? "Voir le site en ligne" : isEs ? "Ver el sitio en vivo" : "View live site",
   };
 
@@ -279,13 +286,14 @@ export default function ColophonContent({ locale }: { locale: string }) {
         </ul>
       </section>
 
-      {/* Open source */}
+      {/* Code source — dépôt privé, accès sur demande */}
       <section aria-labelledby="section-oss" className="mt-14">
         <h2 id="section-oss" className="text-xl font-semibold">{labels.openSourceTitle}</h2>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">{labels.sourceNote}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <a href="https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev" target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
-            {labels.learnMore}<span aria-hidden="true"> ↗</span>
-          </a>
+          <Link href={`/${locale}/contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
+            {labels.learnMore}<span aria-hidden="true"> →</span>
+          </Link>
           <a href={`/${locale}`} target="_blank" rel="noreferrer noopener" className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium soft-ring ${ctaBtnClass}`}>
             {labels.viewLive}<span aria-hidden="true"> ↗</span>
           </a>
