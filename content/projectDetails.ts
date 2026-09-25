@@ -8941,6 +8941,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Incident Response Tracker — Workflow de ticketing SOC",
+        "heroSubtitle": "Workflow de ticketing pour incidents de sécurité : cycle de vie strict imposé par une machine à états, délai SLA par sévérité et piste d'audit horodatée de chaque changement de statut, commentaire et affectation.",
         "sections": [
           {
             "type": "text",
@@ -8985,6 +8986,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Incident Response Tracker — Flujo de tickets SOC",
+        "heroSubtitle": "Flujo de tickets para incidentes de seguridad: ciclo de vida estricto impuesto por una máquina de estados, plazo SLA por gravedad y registro de auditoría con marca de tiempo de cada cambio de estado, comentario y asignación.",
         "sections": [
           {
             "type": "text",
@@ -9088,6 +9090,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "CVE Watchlist — Triage de vulnérabilités en temps réel (API NVD)",
+        "heroSubtitle": "Tableau de bord de triage des vulnérabilités, synchronisé avec les CVE réelles de l'API publique NVD et classé par un moteur de priorité transparent qui croise la sévérité CVSS avec le catalogue CISA des vulnérabilités activement exploitées (KEV).",
         "sections": [
           {
             "type": "text",
@@ -9132,6 +9135,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "CVE Watchlist — Triaje de vulnerabilidades en tiempo real (API NVD)",
+        "heroSubtitle": "Panel de clasificación de vulnerabilidades, sincronizado con CVE reales de la API pública NVD y ordenado por un motor de prioridad transparente que cruza la gravedad CVSS con el catálogo CISA de vulnerabilidades explotadas activamente (KEV).",
         "sections": [
           {
             "type": "text",
@@ -9235,6 +9239,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Log Anomaly Detector — Analyse de logs d'authentification par règles",
+        "heroSubtitle": "Moteur de détection par règles pour les logs d'authentification : tentatives de force brute, connexions impossibles géographiquement, vagues de credential stuffing et accès hors horaires — chaque règle est une fonction pure, testée unitairement, sans entrée-sortie.",
         "sections": [
           {
             "type": "text",
@@ -9279,6 +9284,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Log Anomaly Detector — Análisis de logs de autenticación por reglas",
+        "heroSubtitle": "Motor de detección por reglas para logs de autenticación: intentos de fuerza bruta, inicios de sesión geográficamente imposibles, oleadas de credential stuffing y accesos fuera de horario — cada regla es una función pura, probada unitariamente, sin entrada/salida.",
         "sections": [
           {
             "type": "text",
@@ -9823,6 +9829,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "risque360 — Modélisation STRIDE, Risques Fournisseurs & Recalibration par Incidents",
+        "heroSubtitle": "Registre des risques unifié qui réunit trois sources sous un même moteur de notation probabilité × impact : modélisation STRIDE par composant applicatif, risque fournisseur noté par une heuristique transparente, et journal d'incidents qui propose un recalibrage de la probabilité sur 12 mois glissants — jamais appliqué sans validation explicite.",
         "sections": [
           {
             "type": "text",
@@ -9922,6 +9929,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "risque360 — Modelado STRIDE, Riesgo de Proveedores y Recalibración por Incidentes",
+        "heroSubtitle": "Registro de riesgos unificado que reúne tres fuentes bajo un mismo motor de puntuación probabilidad × impacto: modelado STRIDE por componente de la aplicación, riesgo de proveedores puntuado con una heurística transparente y un registro de incidentes que propone recalibrar la probabilidad en 12 meses móviles — nunca aplicado sin validación explícita.",
         "sections": [
           {
             "type": "text",

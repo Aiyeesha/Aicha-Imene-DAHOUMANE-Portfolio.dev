@@ -151,7 +151,7 @@ export const projects: Project[] = [
       "Cowrie honeypot deployed and isolated on a dedicated VMnet2 network",
       "Hydra brute-force attack executed and analyzed (3 passwords recovered)",
       "17 attacker commands captured and parsed with jq",
-      "Attacker VM fully rebuilt after a real incident"
+      "Attacker VM fully rebuilt after a lab lockout incident"
     ],
     "featured": false,
     "sortOrder": 0,
@@ -1523,7 +1523,7 @@ export const projects: Project[] = [
       "3 business rules (RG-01/02/03) implemented via a strict trigger-handler pattern, zero logic in the trigger",
       "Batch + Scheduler for the monthly automatic re-engagement of dormant accounts, with configurable deduplication",
       "23 unit tests, 100% pass rate, 90% org-wide coverage — per-class breakdown documented",
-      "Security enforced throughout: WITH SECURITY_ENFORCED, stripInaccessible, explicit CRUD/FLS checks wherever the aggregate query can''t cover them"
+      "Security enforced throughout: WITH SECURITY_ENFORCED, stripInaccessible, explicit CRUD/FLS checks wherever the aggregate query can't cover them"
     ],
     "featured": true,
     "sortOrder": 1,
