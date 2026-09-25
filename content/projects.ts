@@ -72,7 +72,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 70,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "hemebiotech-java-debug",
@@ -112,7 +112,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 200,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "homelab-cowrie-honeypot",
@@ -276,7 +276,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 80,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "it-ops-roaming-profiles",
@@ -314,7 +314,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 110,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "it-ops-virtualization-lab",
@@ -395,7 +395,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 90,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "parkit-java-testing",
@@ -437,7 +437,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 210,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "pochlib-ui",
@@ -481,7 +481,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 220,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "python-network-scanner",
@@ -553,7 +553,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 230,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "risk-assessment-matrix",
@@ -594,7 +594,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 290,
-    "status": "published",
+    "status": "draft",
     "isSecurity": true
   },
   {
@@ -909,7 +909,7 @@ export const projects: Project[] = [
     ],
     "featured": true,
     "sortOrder": 60,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "incident-management-dashboard",
@@ -982,7 +982,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 100,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "it-ops-hardware-procurement",
@@ -1012,7 +1012,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 120,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "it-ops-email-config",
@@ -1041,7 +1041,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 130,
-    "status": "published"
+    "status": "draft"
   },
   {
     "slug": "cyber-soc-curriculum",
@@ -1296,7 +1296,7 @@ export const projects: Project[] = [
     ],
     "featured": false,
     "sortOrder": 270,
-    "status": "published",
+    "status": "draft",
     "isSecurity": true
   },
   {
