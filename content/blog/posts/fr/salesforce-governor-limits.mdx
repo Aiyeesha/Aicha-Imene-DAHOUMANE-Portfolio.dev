@@ -2,6 +2,7 @@
 title: "Governor Limits Salesforce : comprendre, surveiller et les éviter"
 excerpt: "Guide pratique sur les governor limits Salesforce — les plus critiques, comment surveiller votre consommation et les patterns pour rester bien en dessous des seuils."
 date: "2025-11-03"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Bonnes pratiques"]
 projects: ["fasha-apex-backend-optimization"]
 ---
@@ -186,23 +187,31 @@ System.enqueueJob(new SyncQueueable(accountIds));
 4. **Refactoriser** — appliquer les patterns de bulkification
 5. **Considérer l'asynchrone** — déplacer le traitement lourd vers Batch ou Queueable
 
-### Scénario courant : Trigger + Process Builder double-déclenchement
+### Scénario courant : Trigger + Flow déclenché par enregistrement
 
 ```apex
-// Un trigger se déclenche → Process Builder crée des enregistrements → le trigger se redéclenche
-// Solution : garde de récursion statique
+// Un trigger se déclenche → un Flow déclenché par enregistrement met à jour des enregistrements → le trigger se redéclenche
+// Solution : garde de récursion fondée sur les Id déjà traités — un simple booléen
+// ignorerait les lots suivants de 200 enregistrements (voir l'article sur les triggers)
 
-public class GuardRecursion {
-    private static Boolean enCours = false;
+public class TriggerControl {
+    // Clé = trigger + contexte + Id : un enregistrement est traité une fois par contexte
+    private static Set<String> processed = new Set<String>();
 
-    public static Boolean isEnCours() { return enCours; }
-    public static void setEnCours() { enCours = true; }
+    public static Boolean markProcessed(String triggerName, Id recordId) {
+        return processed.add(triggerName + ':' + Trigger.operationType + ':' + recordId);
+    }
 }
 
 // Dans le handler du trigger
-if (GuardRecursion.isEnCours()) return;
-GuardRecursion.setEnCours();
-// ... votre logique
+List<Account> toProcess = new List<Account>();
+for (Account acc : (List<Account>) Trigger.new) {
+    if (TriggerControl.markProcessed('AccountTrigger', acc.Id)) {
+        toProcess.add(acc);
+    }
+}
+if (toProcess.isEmpty()) return;
+// ... votre logique, sur toProcess uniquement
 ```
 
 ## Tableau récapitulatif : anti-patterns → solutions
@@ -212,7 +221,7 @@ GuardRecursion.setEnCours();
 | SOQL dans une boucle | Limite de 100 requêtes | Collecter les ID, requête unique avec `IN` |
 | DML dans une boucle | Limite de 150 DML | Collecter les enregistrements, DML unique |
 | SOQL large sans LIMIT | Limite de 50 000 lignes | Ajouter WHERE, LIMIT ou agrégat |
-| Récursion de trigger | Boucle infinie | Classe garde de récursion statique |
+| Récursion de trigger | Boucle infinie | Garde de récursion fondée sur les Id déjà traités |
 | Callout synchrone | Limites CPU/callout | @future ou Queueable + AllowsCallouts |
 | Stockage de listes SObject complètes | Heap de 6 Mo | Utiliser des ensembles/maps d'ID |
 

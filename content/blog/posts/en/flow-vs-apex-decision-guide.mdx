@@ -2,6 +2,7 @@
 title: "Flow Builder vs Apex: When to Choose What?"
 excerpt: "Practical decision guide for choosing between Flow Builder and Apex for your Salesforce automation needs."
 date: "2026-02-10"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Flow", "Apex", "Automation", "Architecture"]
 featured: false
 projects: ["tours-for-life-salesforce-solution", "digit-learning-salesforce-update"]
@@ -11,7 +12,7 @@ One of the most common questions in Salesforce development: **"Should I use a Fl
 
 ## The "Clicks, not Code" Principle
 
-Salesforce recommends the **"Clicks, not Code"** philosophy: prefer declarative tools (Flow Builder, Process Builder) over code when possible.
+Salesforce recommends the **"Clicks, not Code"** philosophy: prefer declarative tools (Flow Builder) over code when possible. Process Builder and Workflow Rules have been out of support since December 31, 2025: any new declarative automation is built in Flow.
 
 **Why?**
 - ✅ Faster development
@@ -33,7 +34,7 @@ Salesforce recommends the **"Clicks, not Code"** philosophy: prefer declarative 
 | **Testing** | ✅ No coverage required | ❌ 75% minimum |
 | **Debugging** | ⚠️ Debug Logs | ✅ Debug logs + IDE |
 | **Bulk operations** | ⚠️ Watch limits | ✅ Full control |
-| **External integrations** | ❌ Limited HTTP callouts | ✅ Total control |
+| **External integrations** | ⚠️ HTTP Callout action for simple REST calls | ✅ Total control (authentication, transformation, retries) |
 
 ## Scenarios: Flow Builder is Ideal
 
@@ -129,6 +130,13 @@ Logic:
 public class PricingEngine {
     
     public static Decimal calculatePrice(Opportunity opp) {
+        return calculatePrice(opp, System.today());
+    }
+
+    // The date is a parameter, so the Q4 discount can be tested on a fixed date.
+    // opp must be queried with Account.Years_as_Customer__c: a record that was just
+    // inserted has no Account relationship loaded (NullPointerException).
+    public static Decimal calculatePrice(Opportunity opp, Date pricingDate) {
         Decimal basePrice = opp.Amount;
         Decimal discount = 0;
         
@@ -147,7 +155,7 @@ public class PricingEngine {
         }
         
         // Seasonal discount (Q4)
-        if (System.today().month() >= 10) {
+        if (pricingDate.month() >= 10) {
             discount += 0.03;
         }
         
@@ -167,7 +175,9 @@ public class PricingEngine {
 **Example:** Batch update of 50,000 Contacts.
 
 ```apex
-public class ContactUpdateBatch implements Database.Batchable<SObject> {
+// Database.AllowsCallouts is required to make callouts from a batch. Run with
+// Database.executeBatch(new ContactUpdateBatch(), 100): 1 callout per Contact, at most 100 per transaction.
+public class ContactUpdateBatch implements Database.Batchable<SObject>, Database.AllowsCallouts {
     
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator([
@@ -214,7 +224,7 @@ public class ContactUpdateBatch implements Database.Batchable<SObject> {
 **Why Apex?**
 - Processing tens of thousands of records
 - External HTTP calls (geocoding API)
-- Fine-grained chunking control (200 records/batch)
+- Fine-grained batch size control (100 records at most here, to stay under the 100-callouts-per-transaction limit)
 - Advanced error handling
 
 ### 3. Complex REST/SOAP Integrations
@@ -307,10 +317,13 @@ private class PricingEngine_Test {
             CloseDate = Date.today().addDays(30)
         );
         insert opp;
+        // Query the relationship field PricingEngine reads (otherwise NullPointerException)
+        opp = [SELECT Id, Amount, Account.Years_as_Customer__c FROM Opportunity WHERE Id = :opp.Id];
         
         // Act
         Test.startTest();
-        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        // Fixed date outside Q4: the result doesn't depend on the day the test runs
+        Decimal finalPrice = PricingEngine.calculatePrice(opp, Date.newInstance(2026, 3, 15));
         Test.stopTest();
         
         // Assert
@@ -333,10 +346,13 @@ private class PricingEngine_Test {
             CloseDate = Date.today().addDays(30)
         );
         insert opp;
+        // Query the relationship field PricingEngine reads (otherwise NullPointerException)
+        opp = [SELECT Id, Amount, Account.Years_as_Customer__c FROM Opportunity WHERE Id = :opp.Id];
         
         // Act
         Test.startTest();
-        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        // Fixed date outside Q4: the result doesn't depend on the day the test runs
+        Decimal finalPrice = PricingEngine.calculatePrice(opp, Date.newInstance(2026, 3, 15));
         Test.stopTest();
         
         // Assert
@@ -367,10 +383,12 @@ In many cases, the best solution is **a combination** of Flow + Apex.
 public class SIRETValidator {
     
     @InvocableMethod(label='Validate SIRET' 
-                     description='Validates French SIRET number via external API')
+                     description='Validates French SIRET number via external API'
+                     callout=true)
     public static List<Result> validateSIRET(List<Request> requests) {
         List<Result> results = new List<Result>();
         
+        // One callout per request: at most 100 per transaction, keep this in mind for large volumes
         for (Request req : requests) {
             Result result = new Result();
             result.isValid = callSIRETAPI(req.siretNumber);
@@ -409,7 +427,8 @@ public class SIRETValidator {
 ```
 Flow: "Validate Account SIRET"
 Type: Record-Triggered Flow
-Trigger: Account - Before Save - Create, Update
+Trigger: Account - After Save - Create, Update
+Path: Run Asynchronously
 
 Logic:
 1. Decision: Country = 'France' AND SIRET changed?
@@ -420,10 +439,10 @@ Logic:
    Input: SIRET__c
    Output: isValid
 
-3. Decision: isValid = false?
-   - Yes → Show Error: "Invalid SIRET number"
-   - No → Allow save
+3. Update Records: SIRET_Status__c = isValid ? 'Valid' : 'Invalid'
 ```
+
+**Why not a before-save flow?** A before-save flow only accepts the Assignment, Decision, Get Records and Loop elements: it can call neither an Apex action nor a callout. So the check runs after the save, in an asynchronous path where callouts are allowed, and its result is recorded in a status field instead of blocking the entry.
 
 **Benefits:**
 - ✅ Simple and readable Flow logic
@@ -438,7 +457,7 @@ Use this checklist to choose:
 **Prefer Flow Builder if:**
 - [ ] Logic is linear (< 10 steps)
 - [ ] No complex algorithms
-- [ ] No external HTTP calls
+- [ ] No external HTTP call, or a simple REST call (HTTP Callout action)
 - [ ] < 1,000 records processed
 - [ ] Maintenance by non-developer admins
 

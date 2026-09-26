@@ -2,6 +2,7 @@
 title: "Triggers Apex : 10 bonnes pratiques pour un code maintenable"
 excerpt: "Guide pratique pour développer des triggers Apex robustes, performants et faciles à maintenir dans vos projets Salesforce."
 date: "2026-02-15"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Bonnes pratiques", "Développement"]
 featured: false
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
@@ -137,12 +138,14 @@ Un simple booléen statique (« le trigger a déjà tourné ») est un piège cl
 
 ```apex
 public class TriggerControl {
-    // Clé = nom du trigger + Id : chaque enregistrement n'est traité qu'une fois
-    // par transaction, quel que soit le nombre de lots de 200.
+    // Clé = nom du trigger + contexte + Id : chaque enregistrement n'est traité
+    // qu'une fois par contexte et par transaction, quel que soit le nombre de lots de 200.
     private static Set<String> processed = new Set<String>();
 
     public static Boolean markProcessed(String triggerName, Id recordId) {
-        return processed.add(triggerName + ':' + recordId); // false si déjà présent
+        // Le contexte (BEFORE_INSERT, AFTER_UPDATE…) fait partie de la clé :
+        // un même enregistrement peut ainsi passer en before puis en after.
+        return processed.add(triggerName + ':' + Trigger.operationType + ':' + recordId); // false si déjà présent
     }
 }
 
@@ -241,17 +244,14 @@ private class AccountTriggerHandler_Test {
 ```apex
 public static void validateBusinessRules(List<Account> accounts) {
     for (Account acc : accounts) {
-        try {
-            if (acc.Type == 'Customer' && acc.AnnualRevenue < 10000) {
-                acc.addError('Customer accounts must have revenue >= 10,000');
-            }
-            
-            if (acc.BillingCountry == 'France' && String.isBlank(acc.SIRET__c)) {
-                acc.SIRET__c.addError('SIRET is mandatory for French companies');
-            }
-        } catch (Exception e) {
-            System.debug(LoggingLevel.ERROR, 'Validation error: ' + e.getMessage());
-            acc.addError('Unexpected validation error: ' + e.getMessage());
+        // Pas de try/catch : addError ne lève pas d'exception, il marque l'enregistrement en erreur.
+        // AnnualRevenue peut être vide : ce cas est traité explicitement.
+        if (acc.Type == 'Customer' && (acc.AnnualRevenue == null || acc.AnnualRevenue < 10000)) {
+            acc.addError('Customer accounts must have revenue >= 10,000');
+        }
+
+        if (acc.BillingCountry == 'France' && String.isBlank(acc.SIRET__c)) {
+            acc.SIRET__c.addError('SIRET is mandatory for French companies');
         }
     }
 }
@@ -262,7 +262,7 @@ public static void validateBusinessRules(List<Account> accounts) {
 ```apex
 /**
  * @description Handler for Account trigger operations
- * @author Aïcha Imène DAHOUNANE
+ * @author Aïcha Imène DAHOUMANE
  * @date 2026-02-15
  * @group Trigger Handlers
  */

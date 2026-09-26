@@ -2,6 +2,7 @@
 title: "Déploiement Salesforce : Change Sets vs CLI vs DevOps Center"
 excerpt: "Comparez les trois méthodes de déploiement Salesforce — quand utiliser les Change Sets, Salesforce CLI (SFDX) ou DevOps Center selon votre projet."
 date: "2025-12-16"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "DevOps", "CI/CD", "Deployment"]
 featured: false
 projects: ["cicd-pipeline-setup", "legarant-axg-salesforce-deployment"]
@@ -73,7 +74,7 @@ sf project deploy start \
 
 ```yaml
 # .github/workflows/deploy-prod.yml
-name: Deploy to Production
+name: Déploiement en production
 on:
   push:
     branches: [main]
@@ -84,15 +85,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Salesforce CLI
+      - name: Installer la Salesforce CLI
         run: npm install -g @salesforce/cli
 
-      - name: Authenticate Production Org
+      - name: Authentifier l'org de production
         run: |
           echo "${{ secrets.SF_AUTH_URL }}" > auth.txt
           sf org login sfdx-url --sfdx-url-file auth.txt --alias prod
 
-      - name: Run Tests & Deploy
+      - name: Lancer les tests et déployer
         run: |
           sf project deploy start \
             --source-dir force-app \

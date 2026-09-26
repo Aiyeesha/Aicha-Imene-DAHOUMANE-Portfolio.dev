@@ -2,6 +2,7 @@
 title: "Apex Test Classes: 85%+ Coverage Without Cheating"
 excerpt: "Write meaningful Apex tests that actually catch bugs — TestDataFactory, async testing, callout mocks, and the anti-patterns that inflate coverage without value."
 date: "2026-01-20"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
 featured: false
 projects: ["idemconnect-apex-backend", "fasha-apex-backend-optimization"]
@@ -21,7 +22,7 @@ Salesforce requires 75% code coverage to deploy. But there's a difference betwee
 
 ## The TestDataFactory Pattern
 
-Never create test data ad hoc inside test methods. Centralise everything in a `TestDataFactory` utility class:
+Centralise test data creation in a `TestDataFactory` utility class instead of repeating it in every method — including data sets specific to one test, such as the 200 records of a bulk test:
 
 ```apex
 @isTest
@@ -35,6 +36,15 @@ public class TestDataFactory {
         );
         if (doInsert) insert acc;
         return acc;
+    }
+
+    public static List<Account> createAccounts(String namePrefix, Integer count, Boolean doInsert) {
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < count; i++) {
+            accounts.add(createAccount(namePrefix + ' ' + i, false));
+        }
+        if (doInsert) insert accounts;
+        return accounts;
     }
 
     public static List<Contact> createContacts(Id accountId, Integer count, Boolean doInsert) {
@@ -96,7 +106,7 @@ private class AccountServiceTest {
 }
 ```
 
-> **Important:** `@TestSetup` data is rolled back and re-created for each test method. DML changes made in one method don't affect another.
+> **Important:** `@TestSetup` data is created only once per class. Each test method starts from its initial state: the DML changes one method makes to it are rolled back before the next one.
 
 ---
 
@@ -179,7 +189,7 @@ Always use the third parameter (message) — it tells you *what* failed when the
 
 ## Anti-Patterns to Avoid
 
-- **`SeeAllData=true`**: Exposes your tests to real org data, making them environment-dependent and unreliable. Never use it.
+- **`SeeAllData=true`**: Exposes your tests to real org data, making them environment-dependent and unreliable. Avoid it by default, and keep it for the rare cases where the data you need can't be created in a test. You don't need it for the standard price book: `Test.getStandardPricebookId()` works without it.
 - **Inserting in every test method**: Costs DML limits and slows runs. Use `@TestSetup` or `TestDataFactory`.
 - **Testing only the happy path**: Write at least one negative test — what happens with null input, missing fields, or invalid data?
 - **Ignoring bulk tests**: Add a test with 200 records to verify your code is properly bulkified.
@@ -187,11 +197,8 @@ Always use the third parameter (message) — it tells you *what* failed when the
 ```apex
 @isTest
 static void testBulk200Records() {
-    List<Account> accounts = new List<Account>();
-    for (Integer i = 0; i < 200; i++) {
-        accounts.add(new Account(Name = 'Bulk ' + i));
-    }
-    insert accounts;
+    // Volume specific to this test, created through the factory
+    List<Account> accounts = TestDataFactory.createAccounts('Bulk', 200, true);
 
     Test.startTest();
     AccountService.processAll(accounts);

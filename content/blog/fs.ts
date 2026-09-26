@@ -8,6 +8,8 @@ export type BlogFrontmatter = {
   title?: string;
   excerpt?: string;
   date?: string; // YYYY-MM-DD
+  /** Date de dernière mise à jour du fond (YYYY-MM-DD), distincte de la date de publication. */
+  updatedDate?: string;
   tags?: string[];
   cover?: string; // /blog/<slug>/cover.jpg (optional)
   /** Études de cas où la technique de l'article est mise en pratique (slugs de projets, ou "colophon"). */
@@ -20,6 +22,8 @@ export type BlogPostMeta = {
   title: string;
   excerpt: string;
   date: string;
+  /** Voir BlogFrontmatter.updatedDate — affichée « Mis à jour le … » et reprise en dateModified. */
+  updatedDate?: string;
   tags: string[];
   cover?: string;
   /** Voir BlogFrontmatter.projects — affiché en « Mis en pratique dans ». */
@@ -27,6 +31,15 @@ export type BlogPostMeta = {
   readingTime: number; // estimated minutes
   file: string; // absolute path (server-only)
 };
+
+/**
+ * gray-matter (via js-yaml) convertit « YYYY-MM-DD » en objet Date à l'exécution,
+ * même si le type annonce une chaîne : on renormalise en « YYYY-MM-DD ».
+ */
+function normalizeDate(raw: unknown): string | undefined {
+  if (raw instanceof Date) return raw.toISOString().slice(0, 10);
+  return typeof raw === "string" && raw ? raw : undefined;
+}
 
 /** Estimate reading time in minutes from raw MDX content.
  * Text prose: 200 wpm. Code blocks: 40 wpm (readers parse code more slowly).
@@ -79,6 +92,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
         : typeof rawDate === "string" && rawDate
           ? rawDate
           : "1970-01-01";
+    const updatedDate = normalizeDate(fm.updatedDate);
     const tags = Array.isArray(fm.tags) ? fm.tags : [];
     const cover = fm.cover;
     const projects = Array.isArray(fm.projects) ? fm.projects : [];
@@ -90,6 +104,7 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
       title,
       excerpt,
       date,
+      updatedDate,
       tags,
       cover,
       projects,
@@ -124,6 +139,7 @@ export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | n
           ? raw
           : "1970-01-01";
     })(),
+    updatedDate: normalizeDate(fm.updatedDate),
     tags: Array.isArray(fm.tags) ? fm.tags : [],
     cover: fm.cover,
     projects: Array.isArray(fm.projects) ? fm.projects : [],
