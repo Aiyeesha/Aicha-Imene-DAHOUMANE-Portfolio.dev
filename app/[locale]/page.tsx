@@ -7,7 +7,7 @@
 import dynamic from "next/dynamic";
 import TrackAwareHero from "./track-aware-hero";
 import Reveal from "@/components/Reveal";
-import Accordion from "@/components/Accordion";
+import ExperienceTimeline from "@/components/ExperienceTimeline";
 import SkeletonCard from "@/components/SkeletonCard";
 // Above-the-fold — chargés immédiatement
 import TrackAwareSkills from "@/components/TrackAwareSkills";
@@ -134,14 +134,11 @@ export default async function Home({ params }: Props) {
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.experience_title")}</h2>
         </Reveal>
-        <Reveal delayMs={70}>
-          <p className="mt-3 text-muted">{t("sections.experience_subtitle")}</p>
-        </Reveal>
-        {/* Accordéon expérience — pleine largeur.
+        {/* Frise chronologique toujours dépliée — pleine largeur.
             Les certifications ont été déplacées vers /certifications (page dédiée). */}
         <div className="mt-8">
           <Reveal delayMs={110}>
-            <Accordion items={experienceItems} defaultOpenId="exp-1" />
+            <ExperienceTimeline items={experienceItems} />
           </Reveal>
         </div>
 
