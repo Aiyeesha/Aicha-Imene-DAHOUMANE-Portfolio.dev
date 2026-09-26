@@ -51,7 +51,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         location: "Télétravail",
         highlights: [
           "Développement et maintenance de 10+ classes Apex et batchs pour automatiser le traitement de données et le reporting.",
-          "Création de 20+ Flows pour orchestrer les processus métier, réduisant la charge manuelle d’environ 30%.",
+          "Création de 20+ Flows pour orchestrer les processus métier, réduisant la charge manuelle d’environ 30 %.",
           "Conception de composants réutilisables via Lightning App Builder et Lightning Web Components.",
           "Mise en place de pratiques CI/CD avec Salesforce CLI et Git, rationalisant les déploiements entre sandboxes.",
           "Support migrations de données (CSV / assistants d’import), avec contrôle qualité et intégrité des données.",
@@ -104,7 +104,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         location: "Remoto",
         highlights: [
           "Desarrollo y mantenimiento de más de 10 clases Apex y batch jobs para automatizar el procesamiento de datos y los informes.",
-          "Creación de más de 20 Flows para orquestar procesos de negocio, reduciendo la carga manual en cerca de un 30%.",
+          "Creación de más de 20 Flows para orquestar procesos de negocio, reduciendo la carga manual en cerca de un 30 %.",
           "Diseño de componentes reutilizables con Lightning App Builder y Lightning Web Components.",
           "Implementación de prácticas CI/CD con Salesforce CLI y Git, agilizando los despliegues entre sandboxes.",
           "Soporte en migraciones de datos (CSV / asistentes de importación), con control de calidad e integridad de los datos.",

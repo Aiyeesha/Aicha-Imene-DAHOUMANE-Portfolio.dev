@@ -2,6 +2,7 @@
 title: "Classes de test Apex : couverture 85 %+ sans tricher"
 excerpt: "Écrivez des tests Apex qui détectent vraiment les bugs — TestDataFactory, tests asynchrones, mocks de callouts et anti-patterns à éviter."
 date: "2026-01-20"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
 featured: false
 projects: ["idemconnect-apex-backend", "fasha-apex-backend-optimization"]
@@ -21,7 +22,7 @@ Salesforce exige 75 % de couverture pour déployer. Mais il y a une différence 
 
 ## Le pattern TestDataFactory
 
-Ne créez jamais des données de test à la volée dans les méthodes de test. Centralisez tout dans une classe utilitaire `TestDataFactory` :
+Centralisez la création des données de test dans une classe utilitaire `TestDataFactory` plutôt que de la répéter dans chaque méthode — y compris pour les jeux propres à un test, comme les 200 enregistrements d'un test de masse :
 
 ```apex
 @isTest
@@ -35,6 +36,15 @@ public class TestDataFactory {
         );
         if (doInsert) insert acc;
         return acc;
+    }
+
+    public static List<Account> createAccounts(String namePrefix, Integer count, Boolean doInsert) {
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < count; i++) {
+            accounts.add(createAccount(namePrefix + ' ' + i, false));
+        }
+        if (doInsert) insert accounts;
+        return accounts;
     }
 
     public static List<Contact> createContacts(Id accountId, Integer count, Boolean doInsert) {
@@ -96,7 +106,7 @@ private class AccountServiceTest {
 }
 ```
 
-> **Important :** les données `@TestSetup` sont annulées et recréées pour chaque méthode de test. Les modifications DML d'une méthode n'affectent pas les autres.
+> **Important :** les données `@TestSetup` sont créées une seule fois par classe. Chaque méthode de test part de leur état initial : les modifications DML qu'une méthode leur apporte sont annulées avant la suivante.
 
 ---
 
@@ -177,7 +187,7 @@ Utilisez toujours le troisième paramètre (message) — il vous indique *ce qui
 
 ## Anti-patterns à éviter
 
-- **`SeeAllData=true`** : expose vos tests aux données réelles de l'org, les rendant dépendants de l'environnement. Ne jamais utiliser.
+- **`SeeAllData=true`** : expose vos tests aux données réelles de l'org, les rendant dépendants de l'environnement. À éviter par défaut, et à réserver aux rares cas où les données nécessaires ne peuvent pas être créées en test. Pour le catalogue de prix standard, il est inutile : `Test.getStandardPricebookId()` fonctionne sans.
 - **Insertion dans chaque méthode** : consomme les limites DML et ralentit les exécutions. Utilisez `@TestSetup` ou `TestDataFactory`.
 - **Tester uniquement le chemin heureux** : écrivez au moins un test négatif.
 - **Ignorer les tests en masse** : ajoutez un test avec 200 enregistrements pour vérifier la bulkification.
@@ -185,11 +195,8 @@ Utilisez toujours le troisième paramètre (message) — il vous indique *ce qui
 ```apex
 @isTest
 static void testBulk200Records() {
-    List<Account> accounts = new List<Account>();
-    for (Integer i = 0; i < 200; i++) {
-        accounts.add(new Account(Name = 'Bulk ' + i));
-    }
-    insert accounts;
+    // Volume propre à ce test, créé via la factory
+    List<Account> accounts = TestDataFactory.createAccounts('Bulk', 200, true);
 
     Test.startTest();
     AccountService.processAll(accounts);

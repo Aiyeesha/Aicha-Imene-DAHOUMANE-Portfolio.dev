@@ -1,7 +1,8 @@
 ---
 title: "Apex Integration Patterns: REST, Callouts, and Named Credentials"
-excerpt: "Build reliable Salesforce integrations — REST callouts with Named Credentials, handling async limits, retry logic with Platform Events, and external service mocking."
+excerpt: "Build reliable Salesforce integrations — REST callouts with Named Credentials, handling async limits, retry logic with Queueable, Platform Events, and external service mocking."
 date: "2026-02-17"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Integration", "API"]
 featured: false
 projects: ["legarant-axg-salesforce-deployment", "ltp-apex-backend-prototype"]
@@ -24,17 +25,19 @@ Integrating Salesforce with external systems involves more than making an HTTP c
 Named Credentials store endpoint URLs and authentication details securely, outside your code. They survive sandbox refreshes and org migrations without code changes.
 
 ```
-Setup → Security → Named Credentials → New Named Credential
+Setup → Security → Named Credentials → External Credentials tab → New
 ```
 
-Configuration:
-- Label: `Stripe API`
-- Name: `Stripe_API`
-- URL: `https://api.stripe.com`
-- Identity Type: Named Principal
-- Authentication Protocol: Password Authentication
-- Username: (empty)
-- Password: `sk_live_...` (stored securely in Salesforce)
+Configuration uses two objects — the model Salesforce has recommended since Winter '23, legacy Named Credentials being deprecated:
+
+1. **External Credential** `Stripe`
+   - Authentication protocol: Custom
+   - Principal: `StripePrincipal` (Named Principal), with an `ApiKey` authentication parameter whose value — the Stripe secret key — is entered in Setup only, never in code or in the repository
+   - Custom header: `Authorization` = `{!'Bearer ' & $Credential.Stripe.ApiKey}`
+2. **Named Credential** `Stripe_API`
+   - URL: `https://api.stripe.com`
+   - External Credential: `Stripe`
+3. **Permission set**: grant access to the `StripePrincipal` principal (External Credential Principal Access) to the user or process that runs the callout
 
 ```apex
 // Using Named Credentials in callouts — no URL or auth in code
@@ -64,12 +67,12 @@ public class StripeService {
 
 ## Handling Callout Governor Limits
 
-Apex has a 10-second callout timeout per call and a 120-second total per transaction. Bulk operations hit these limits fast.
+An Apex callout waits 10 seconds by default (120 seconds at most, configurable with `setTimeout`), and the cumulative callout time in a transaction is capped at 120 seconds. Above all, a trigger can't make a synchronous callout: you have to go asynchronous.
 
 **Pattern: Queue callouts via Platform Events**
 
 ```apex
-// Instead of calling external API in a trigger (blocked by limits),
+// Instead of calling the external API in a trigger (synchronous callouts aren't allowed),
 // publish a Platform Event and process asynchronously
 
 trigger OpportunityTrigger on Opportunity (after update) {
@@ -88,11 +91,30 @@ trigger OpportunityTrigger on Opportunity (after update) {
     if (!events.isEmpty()) EventBus.publish(events);
 }
 
-// Separate trigger on the Platform Event fires in its own transaction
+// A separate trigger on the Platform Event fires in its own transaction.
+// Events arrive in batches (up to 2,000 per execution) that share the same
+// governor limits — and this trigger can't make callouts either:
+// it hands off to a Queueable that allows them.
 trigger IntegrationRequestTrigger on Integration_Request__e (after insert) {
+    List<String> recordIds = new List<String>();
     for (Integration_Request__e event : Trigger.New) {
-        // Each event fires in its own async context — fresh governor limits
-        ExternalCRMService.createDeal(event.Record_Id__c);
+        recordIds.add(event.Record_Id__c);
+    }
+    System.enqueueJob(new CreateDealQueueable(recordIds));
+}
+
+public class CreateDealQueueable implements Queueable, Database.AllowsCallouts {
+    private List<String> recordIds;
+
+    public CreateDealQueueable(List<String> recordIds) {
+        this.recordIds = recordIds;
+    }
+
+    public void execute(QueueableContext ctx) {
+        // At most 100 callouts per transaction: beyond that, split into several jobs
+        for (String recordId : recordIds) {
+            ExternalCRMService.createDeal(recordId);
+        }
     }
 }
 ```
@@ -104,34 +126,14 @@ trigger IntegrationRequestTrigger on Integration_Request__e (after insert) {
 External APIs fail. Always build retry logic for transient errors:
 
 ```apex
-public class RetryableCallout {
-
-    private static final Integer MAX_RETRIES = 3;
-    private static final List<Integer> BACKOFF_SECONDS = new List<Integer>{1, 3, 7};
-
-    public static HttpResponse callWithRetry(HttpRequest req) {
-        Http http = new Http();
-        Integer attempt = 0;
-
-        while (attempt < MAX_RETRIES) {
-            HttpResponse res = http.send(req);
-
-            // Success or non-retryable error
-            if (res.getStatusCode() < 500) return res;
-
-            attempt++;
-            if (attempt < MAX_RETRIES) {
-                // Note: you can't actually sleep in Apex — use Queueable for true delays
-                // This pattern is simplified; in production, re-queue as a Queueable job
-            }
-        }
-
-        throw new CalloutException('Max retries exceeded');
-    }
-}
-
-// Real retry with Queueable chaining
+// Apex can't wait inside a transaction: the delay between attempts is handed
+// to the async queue, using the delay parameter of System.enqueueJob
+// (0 to 10 minutes, since Spring '23). First call: new RetryQueueable(id, 1).
 public class RetryQueueable implements Queueable, Database.AllowsCallouts {
+    private static final Integer MAX_ATTEMPTS = 4;
+    // Exponential backoff: 1, 2, then 4 minutes before attempts 2, 3 and 4
+    private static final List<Integer> BACKOFF_MINUTES = new List<Integer>{1, 2, 4};
+
     private String recordId;
     private Integer attempt;
 
@@ -144,8 +146,9 @@ public class RetryQueueable implements Queueable, Database.AllowsCallouts {
         try {
             ExternalCRMService.createDeal(recordId);
         } catch (Exception e) {
-            if (attempt < 3) {
-                System.enqueueJob(new RetryQueueable(recordId, attempt + 1));
+            if (attempt < MAX_ATTEMPTS) {
+                Integer delayMinutes = BACKOFF_MINUTES[attempt - 1];
+                System.enqueueJob(new RetryQueueable(recordId, attempt + 1), delayMinutes);
             } else {
                 // Log to custom object or send alert
                 ErrorLog__c log = new ErrorLog__c(
@@ -250,7 +253,7 @@ static void testCreateCustomerError() {
 
 ## Common Pitfalls
 
-- **Callouts in triggers**: synchronous triggers can't make callouts — use `@future`, Queueable, or Platform Events
+- **Callouts in triggers**: synchronous triggers can't make callouts — use `@future(callout=true)` or a Queueable with `Database.AllowsCallouts` (a Platform Event trigger can't make callouts either)
 - **Secrets in code**: never store API keys in Apex classes or Custom Metadata — use Named Credentials
 - **No timeout set**: default callout timeout is 10s — always set explicitly with `req.setTimeout(5000)` for critical paths
 - **DML before callout**: Apex blocks callouts after DML in the same transaction — restructure or use async

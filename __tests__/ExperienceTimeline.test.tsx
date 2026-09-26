@@ -27,11 +27,14 @@ describe("ExperienceTimeline", () => {
     expect(screen.queryAllByRole("button")).toHaveLength(0);
     expect(container.querySelector("[aria-expanded]")).toBeNull();
 
+    // Testing Library normalise les espaces du DOM (espace insécable → espace
+    // simple) mais pas la chaîne recherchée : on applique la même normalisation.
+    const normalize = (text: string) => text.replace(/\s+/g, " ");
     for (const item of items) {
       for (const highlight of item.highlights) {
-        expect(screen.getByText(highlight)).toBeInTheDocument();
+        expect(screen.getByText(normalize(highlight))).toBeInTheDocument();
       }
-      if (item.note) expect(screen.getByText(item.note)).toBeInTheDocument();
+      if (item.note) expect(screen.getByText(normalize(item.note))).toBeInTheDocument();
     }
   });
 

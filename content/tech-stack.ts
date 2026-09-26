@@ -51,7 +51,7 @@ const TECH_STACK: TechItem[] = [
     context: {
       en: "10+ classes, triggers and batch jobs in production.",
       fr: "10+ classes, triggers et batchs en production.",
-      es: "10+ classes, triggers y batch jobs en producción.",
+      es: "Más de 10 clases, triggers y batch jobs en producción.",
     },
     track: "salesforce",
   },
@@ -63,9 +63,9 @@ const TECH_STACK: TechItem[] = [
     level: 3,
     years: 2,
     context: {
-      en: "20+ Flows built, reducing manual workload by 30%.",
-      fr: "20+ Flows créés, réduisant la charge manuelle de 30 %.",
-      es: "20+ Flows creados, reduciendo la carga manual en un 30 %.",
+      en: "20+ Flows built, reducing manual workload by ~30%.",
+      fr: "20+ Flows créés, réduisant la charge manuelle d'environ 30 %.",
+      es: "Más de 20 Flows creados, reduciendo la carga manual en cerca de un 30 %.",
     },
     track: "salesforce",
   },

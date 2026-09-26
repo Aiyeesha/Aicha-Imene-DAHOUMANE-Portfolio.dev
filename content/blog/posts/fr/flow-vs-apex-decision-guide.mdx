@@ -2,6 +2,7 @@
 title: "Flow Builder vs Apex : Quand choisir quoi ?"
 excerpt: "Guide de décision pratique pour choisir entre Flow Builder et Apex selon vos besoins d'automatisation Salesforce."
 date: "2026-02-10"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Flow", "Apex", "Automatisation", "Architecture"]
 featured: false
 projects: ["tours-for-life-salesforce-solution", "digit-learning-salesforce-update"]
@@ -11,7 +12,7 @@ L'une des questions les plus fréquentes en développement Salesforce : **"Dois-
 
 ## Le principe du "Clicks, not Code"
 
-Salesforce recommande la philosophie **"Clicks, not Code"** : privilégier les outils déclaratifs (Flow Builder, Process Builder) plutôt que le code lorsque c'est possible.
+Salesforce recommande la philosophie **"Clicks, not Code"** : privilégier les outils déclaratifs (Flow Builder) plutôt que le code lorsque c'est possible. Process Builder et les Workflow Rules ne sont plus pris en charge depuis le 31 décembre 2025 : toute nouvelle automatisation déclarative se construit dans Flow.
 
 **Pourquoi ?**
 - ✅ Développement plus rapide
@@ -25,15 +26,15 @@ Salesforce recommande la philosophie **"Clicks, not Code"** : privilégier les o
 
 | Critère | Flow Builder | Apex |
 |---------|-------------|------|
-| **Logique simple** | ✅ Excellent | ⚠️ Overkill |
+| **Logique simple** | ✅ Excellent | ⚠️ Disproportionné |
 | **Logique complexe** | ⚠️ Possible mais verbeux | ✅ Excellent |
 | **Performance critique** | ⚠️ Limité | ✅ Optimisable |
 | **Réutilisabilité** | ⚠️ Limitée | ✅ Service layer |
-| **Maintenance** | ✅ Interface visuelle | ⚠️ Requires dev skills |
+| **Maintenance** | ✅ Interface visuelle | ⚠️ Compétences de développement requises |
 | **Tests** | ✅ Pas de couverture requise | ❌ 75% minimum |
-| **Debugging** | ⚠️ Debug Logs | ✅ Debug logs + IDE |
-| **Bulk operations** | ⚠️ Attention aux limites | ✅ Contrôle total |
-| **Intégrations externes** | ❌ HTTP Callouts limités | ✅ Total control |
+| **Débogage** | ⚠️ Journaux de débogage | ✅ Journaux de débogage + IDE |
+| **Traitements en masse** | ⚠️ Attention aux limites | ✅ Contrôle total |
+| **Intégrations externes** | ⚠️ Action HTTP Callout pour les appels REST simples | ✅ Contrôle total (authentification, transformation, reprises) |
 
 ## Scénarios : Flow Builder est idéal
 
@@ -129,6 +130,13 @@ Logic:
 public class PricingEngine {
     
     public static Decimal calculatePrice(Opportunity opp) {
+        return calculatePrice(opp, System.today());
+    }
+
+    // La date est un paramètre : la remise Q4 devient testable à date fixe.
+    // opp doit être requêtée avec Account.Years_as_Customer__c : un enregistrement
+    // simplement inséré n'a pas de relation Account chargée (NullPointerException).
+    public static Decimal calculatePrice(Opportunity opp, Date pricingDate) {
         Decimal basePrice = opp.Amount;
         Decimal discount = 0;
         
@@ -147,7 +155,7 @@ public class PricingEngine {
         }
         
         // Remise saisonnière (Q4)
-        if (System.today().month() >= 10) {
+        if (pricingDate.month() >= 10) {
             discount += 0.03;
         }
         
@@ -167,7 +175,9 @@ public class PricingEngine {
 **Exemple :** Batch de mise à jour massive de 50 000 Contacts.
 
 ```apex
-public class ContactUpdateBatch implements Database.Batchable<SObject> {
+// Database.AllowsCallouts est obligatoire pour faire des callouts dans un batch. Lancer avec
+// Database.executeBatch(new ContactUpdateBatch(), 100) : 1 callout par Contact, 100 au plus par transaction.
+public class ContactUpdateBatch implements Database.Batchable<SObject>, Database.AllowsCallouts {
     
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator([
@@ -214,7 +224,7 @@ public class ContactUpdateBatch implements Database.Batchable<SObject> {
 **Pourquoi Apex ?**
 - Traitement de dizaines de milliers d'enregistrements
 - Appels HTTP externes (geocoding API)
-- Contrôle fin du chunking (200 records/batch)
+- Contrôle fin de la taille des lots (100 enregistrements au plus ici, pour rester sous la limite de 100 callouts par transaction)
 - Gestion d'erreurs avancée
 
 ### 3. Intégrations REST/SOAP complexes
@@ -307,10 +317,13 @@ private class PricingEngine_Test {
             CloseDate = Date.today().addDays(30)
         );
         insert opp;
+        // Requêter le champ de relation lu par PricingEngine (sinon NullPointerException)
+        opp = [SELECT Id, Amount, Account.Years_as_Customer__c FROM Opportunity WHERE Id = :opp.Id];
         
         // Act
         Test.startTest();
-        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        // Date fixe hors Q4 : le résultat ne dépend pas du jour d'exécution du test
+        Decimal finalPrice = PricingEngine.calculatePrice(opp, Date.newInstance(2026, 3, 15));
         Test.stopTest();
         
         // Assert
@@ -333,10 +346,13 @@ private class PricingEngine_Test {
             CloseDate = Date.today().addDays(30)
         );
         insert opp;
+        // Requêter le champ de relation lu par PricingEngine (sinon NullPointerException)
+        opp = [SELECT Id, Amount, Account.Years_as_Customer__c FROM Opportunity WHERE Id = :opp.Id];
         
         // Act
         Test.startTest();
-        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        // Date fixe hors Q4 : le résultat ne dépend pas du jour d'exécution du test
+        Decimal finalPrice = PricingEngine.calculatePrice(opp, Date.newInstance(2026, 3, 15));
         Test.stopTest();
         
         // Assert
@@ -367,10 +383,12 @@ Dans de nombreux cas, la meilleure solution est **une combinaison** Flow + Apex.
 public class SIRETValidator {
     
     @InvocableMethod(label='Validate SIRET' 
-                     description='Validates French SIRET number via external API')
+                     description='Validates French SIRET number via external API'
+                     callout=true)
     public static List<Result> validateSIRET(List<Request> requests) {
         List<Result> results = new List<Result>();
         
+        // Un callout par requête : 100 au plus par transaction, à garder en tête pour les gros volumes
         for (Request req : requests) {
             Result result = new Result();
             result.isValid = callSIRETAPI(req.siretNumber);
@@ -409,7 +427,8 @@ public class SIRETValidator {
 ```
 Flow: "Validate Account SIRET"
 Type: Record-Triggered Flow
-Trigger: Account - Before Save - Create, Update
+Trigger: Account - After Save - Create, Update
+Path: Run Asynchronously
 
 Logic:
 1. Decision: Country = 'France' AND SIRET changed?
@@ -420,10 +439,10 @@ Logic:
    Input: SIRET__c
    Output: isValid
 
-3. Decision: isValid = false?
-   - Yes → Show Error: "Invalid SIRET number"
-   - No → Allow save
+3. Update Records: SIRET_Status__c = isValid ? 'Valid' : 'Invalid'
 ```
+
+**Pourquoi pas un flow before-save ?** Un flow before-save n'accepte que les éléments Assignment, Decision, Get Records et Loop : il ne peut appeler ni action Apex ni callout. La vérification se fait donc après l'enregistrement, dans un chemin asynchrone où les callouts sont autorisés, et son résultat est tracé dans un champ de statut au lieu de bloquer la saisie.
 
 **Avantages :**
 - ✅ Logique Flow simple et lisible
@@ -438,7 +457,7 @@ Utilisez cette checklist pour choisir :
 **Privilégier Flow Builder si :**
 - [ ] La logique est linéaire (< 10 étapes)
 - [ ] Pas d'algorithmes complexes
-- [ ] Pas d'appels HTTP externes
+- [ ] Pas d'appel HTTP externe, ou un appel REST simple (action HTTP Callout)
 - [ ] < 1000 enregistrements traités
 - [ ] Maintenance par des admins non-développeurs
 

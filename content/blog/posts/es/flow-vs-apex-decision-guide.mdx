@@ -2,6 +2,7 @@
 title: "Flow Builder vs Apex: ¿cuándo elegir cada uno?"
 excerpt: "Guía práctica de decisión para elegir entre Flow Builder y Apex según las necesidades de automatización de tu Salesforce."
 date: "2026-02-10"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Flow", "Apex", "Automation", "Architecture"]
 featured: false
 projects: ["tours-for-life-salesforce-solution", "digit-learning-salesforce-update"]
@@ -11,7 +12,7 @@ Una de las preguntas más habituales en el desarrollo Salesforce: **"¿Debería 
 
 ## El principio "Clics, no código"
 
-Salesforce recomienda la filosofía **"Clics, no código"**: preferir las herramientas declarativas (Flow Builder, Process Builder) frente al código siempre que sea posible.
+Salesforce recomienda la filosofía **"Clics, no código"**: preferir las herramientas declarativas (Flow Builder) frente al código siempre que sea posible. Process Builder y las Workflow Rules no tienen soporte desde el 31 de diciembre de 2025: toda nueva automatización declarativa se construye en Flow.
 
 **¿Por qué?**
 - ✅ Desarrollo más rápido
@@ -33,7 +34,7 @@ Salesforce recomienda la filosofía **"Clics, no código"**: preferir las herram
 | **Testing** | ✅ Sin cobertura requerida | ❌ 75% mínimo |
 | **Depuración** | ⚠️ Debug Logs | ✅ Debug logs + IDE |
 | **Operaciones masivas** | ⚠️ Cuidado con los límites | ✅ Control total |
-| **Integraciones externas** | ❌ Callouts HTTP limitados | ✅ Control total |
+| **Integraciones externas** | ⚠️ Acción HTTP Callout para llamadas REST simples | ✅ Control total (autenticación, transformación, reintentos) |
 
 ## Escenarios: Flow Builder es ideal
 
@@ -129,6 +130,13 @@ Logic:
 public class PricingEngine {
     
     public static Decimal calculatePrice(Opportunity opp) {
+        return calculatePrice(opp, System.today());
+    }
+
+    // La fecha es un parámetro: el descuento Q4 se puede probar con una fecha fija.
+    // opp debe consultarse con Account.Years_as_Customer__c: un registro recién
+    // insertado no tiene cargada la relación Account (NullPointerException).
+    public static Decimal calculatePrice(Opportunity opp, Date pricingDate) {
         Decimal basePrice = opp.Amount;
         Decimal discount = 0;
         
@@ -147,7 +155,7 @@ public class PricingEngine {
         }
         
         // Descuento estacional (Q4)
-        if (System.today().month() >= 10) {
+        if (pricingDate.month() >= 10) {
             discount += 0.03;
         }
         
@@ -167,7 +175,9 @@ public class PricingEngine {
 **Ejemplo:** Actualización por lotes de 50.000 Contactos.
 
 ```apex
-public class ContactUpdateBatch implements Database.Batchable<SObject> {
+// Database.AllowsCallouts es obligatorio para hacer callouts en un batch. Lanzar con
+// Database.executeBatch(new ContactUpdateBatch(), 100): 1 callout por Contacto, 100 como máximo por transacción.
+public class ContactUpdateBatch implements Database.Batchable<SObject>, Database.AllowsCallouts {
     
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator([
@@ -214,7 +224,7 @@ public class ContactUpdateBatch implements Database.Batchable<SObject> {
 **¿Por qué Apex?**
 - Procesamiento de decenas de miles de registros
 - Llamadas HTTP externas (API de geocodificación)
-- Control fino del tamaño de los chunks (200 registros/lote)
+- Control fino del tamaño de los lotes (100 registros como máximo aquí, para no superar el límite de 100 callouts por transacción)
 - Manejo avanzado de errores
 
 ### 3. Integraciones REST/SOAP complejas
@@ -307,10 +317,13 @@ private class PricingEngine_Test {
             CloseDate = Date.today().addDays(30)
         );
         insert opp;
+        // Consultar el campo de relación que lee PricingEngine (si no, NullPointerException)
+        opp = [SELECT Id, Amount, Account.Years_as_Customer__c FROM Opportunity WHERE Id = :opp.Id];
         
         // Act
         Test.startTest();
-        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        // Fecha fija fuera de Q4: el resultado no depende del día en que se ejecuta el test
+        Decimal finalPrice = PricingEngine.calculatePrice(opp, Date.newInstance(2026, 3, 15));
         Test.stopTest();
         
         // Assert
@@ -333,10 +346,13 @@ private class PricingEngine_Test {
             CloseDate = Date.today().addDays(30)
         );
         insert opp;
+        // Consultar el campo de relación que lee PricingEngine (si no, NullPointerException)
+        opp = [SELECT Id, Amount, Account.Years_as_Customer__c FROM Opportunity WHERE Id = :opp.Id];
         
         // Act
         Test.startTest();
-        Decimal finalPrice = PricingEngine.calculatePrice(opp);
+        // Fecha fija fuera de Q4: el resultado no depende del día en que se ejecuta el test
+        Decimal finalPrice = PricingEngine.calculatePrice(opp, Date.newInstance(2026, 3, 15));
         Test.stopTest();
         
         // Assert
@@ -367,10 +383,12 @@ En muchos casos, la mejor solución es **una combinación** de Flow + Apex.
 public class SIRETValidator {
     
     @InvocableMethod(label='Validate SIRET' 
-                     description='Validates French SIRET number via external API')
+                     description='Validates French SIRET number via external API'
+                     callout=true)
     public static List<Result> validateSIRET(List<Request> requests) {
         List<Result> results = new List<Result>();
         
+        // Un callout por solicitud: 100 como máximo por transacción, a tener en cuenta con grandes volúmenes
         for (Request req : requests) {
             Result result = new Result();
             result.isValid = callSIRETAPI(req.siretNumber);
@@ -409,7 +427,8 @@ public class SIRETValidator {
 ```
 Flow: "Validate Account SIRET"
 Type: Record-Triggered Flow
-Trigger: Account - Before Save - Create, Update
+Trigger: Account - After Save - Create, Update
+Path: Run Asynchronously
 
 Logic:
 1. Decision: Country = 'France' AND SIRET changed?
@@ -420,10 +439,10 @@ Logic:
    Input: SIRET__c
    Output: isValid
 
-3. Decision: isValid = false?
-   - Yes → Show Error: "Invalid SIRET number"
-   - No → Allow save
+3. Update Records: SIRET_Status__c = isValid ? 'Valid' : 'Invalid'
 ```
+
+**¿Por qué no un flow before-save?** Un flow before-save solo admite los elementos Assignment, Decision, Get Records y Loop: no puede llamar ni a una acción Apex ni a un callout. Por eso la verificación se hace después de guardar, en una ruta asíncrona donde los callouts están permitidos, y su resultado se registra en un campo de estado en lugar de bloquear la entrada.
 
 **Ventajas:**
 - ✅ Lógica de Flow simple y legible
@@ -438,7 +457,7 @@ Usa esta checklist para elegir:
 **Prefiere Flow Builder si:**
 - [ ] La lógica es lineal (< 10 pasos)
 - [ ] No hay algoritmos complejos
-- [ ] No hay llamadas HTTP externas
+- [ ] No hay llamadas HTTP externas, o solo una llamada REST simple (acción HTTP Callout)
 - [ ] Se procesan < 1.000 registros
 - [ ] El mantenimiento lo hacen administradores sin perfil de desarrollador
 

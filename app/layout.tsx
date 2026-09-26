@@ -91,7 +91,7 @@ function buildJsonLd(locale: string) {
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const personName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce Developer & Consultant";
+  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps · Security";
 
   // Liste des profils sociaux/professionnels (LinkedIn, GitHub…) — séparés par des virgules dans l'env var
   // Note : les URLs doivent déjà être en ASCII dans l'env var (slug LinkedIn sans accents).

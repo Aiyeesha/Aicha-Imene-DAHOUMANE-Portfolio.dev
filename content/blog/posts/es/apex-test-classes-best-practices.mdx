@@ -2,6 +2,7 @@
 title: "Clases de test Apex: cobertura del 85 %+ sin hacer trampa"
 excerpt: "Escribe tests Apex significativos que realmente detecten bugs — TestDataFactory, tests asíncronos, mocks de callouts y los antipatrones que inflan la cobertura sin aportar valor."
 date: "2026-01-20"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
 featured: false
 projects: ["idemconnect-apex-backend", "fasha-apex-backend-optimization"]
@@ -21,7 +22,7 @@ Salesforce exige un 75 % de cobertura de código para poder desplegar. Pero hay 
 
 ## El patrón TestDataFactory
 
-Nunca crees datos de prueba de forma improvisada dentro de los métodos de test. Centraliza todo en una clase de utilidad `TestDataFactory`:
+Centraliza la creación de datos de prueba en una clase de utilidad `TestDataFactory` en lugar de repetirla en cada método — también para los conjuntos propios de un test, como los 200 registros de un test masivo:
 
 ```apex
 @isTest
@@ -35,6 +36,15 @@ public class TestDataFactory {
         );
         if (doInsert) insert acc;
         return acc;
+    }
+
+    public static List<Account> createAccounts(String namePrefix, Integer count, Boolean doInsert) {
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < count; i++) {
+            accounts.add(createAccount(namePrefix + ' ' + i, false));
+        }
+        if (doInsert) insert accounts;
+        return accounts;
     }
 
     public static List<Contact> createContacts(Id accountId, Integer count, Boolean doInsert) {
@@ -96,7 +106,7 @@ private class AccountServiceTest {
 }
 ```
 
-> **Importante:** los datos de `@TestSetup` se revierten y se vuelven a crear para cada método de test. Los cambios DML hechos en un método no afectan a otro.
+> **Importante:** los datos de `@TestSetup` se crean una sola vez por clase. Cada método de test parte de su estado inicial: los cambios DML que un método les aplica se revierten antes del siguiente.
 
 ---
 
@@ -179,7 +189,7 @@ Usa siempre el tercer parámetro (el mensaje) — te indica *qué* falló cuando
 
 ## Antipatrones a evitar
 
-- **`SeeAllData=true`**: expone tus tests a los datos reales de la org, haciéndolos dependientes del entorno y poco fiables. No lo uses nunca.
+- **`SeeAllData=true`**: expone tus tests a los datos reales de la org, haciéndolos dependientes del entorno y poco fiables. Evítalo por defecto y resérvalo para los raros casos en que los datos necesarios no se pueden crear en un test. Para el catálogo de precios estándar no hace falta: `Test.getStandardPricebookId()` funciona sin él.
 - **Insertar en cada método de test**: consume límites de DML y ralentiza las ejecuciones. Usa `@TestSetup` o `TestDataFactory`.
 - **Probar solo el camino feliz**: escribe al menos un test negativo — ¿qué ocurre con una entrada nula, campos faltantes o datos inválidos?
 - **Ignorar los tests masivos**: añade un test con 200 registros para verificar que tu código está correctamente "bulkificado".
@@ -187,11 +197,8 @@ Usa siempre el tercer parámetro (el mensaje) — te indica *qué* falló cuando
 ```apex
 @isTest
 static void testBulk200Records() {
-    List<Account> accounts = new List<Account>();
-    for (Integer i = 0; i < 200; i++) {
-        accounts.add(new Account(Name = 'Bulk ' + i));
-    }
-    insert accounts;
+    // Volumen propio de este test, creado mediante la factory
+    List<Account> accounts = TestDataFactory.createAccounts('Bulk', 200, true);
 
     Test.startTest();
     AccountService.processAll(accounts);

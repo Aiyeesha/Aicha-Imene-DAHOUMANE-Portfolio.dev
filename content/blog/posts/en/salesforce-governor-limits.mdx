@@ -2,6 +2,7 @@
 title: "Salesforce Governor Limits: Understanding, Monitoring, and Avoiding Them"
 excerpt: "A practical guide to Salesforce governor limits — the most critical ones, how to monitor your consumption, and patterns to stay well within bounds."
 date: "2025-11-03"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Best Practices"]
 projects: ["fasha-apex-backend-optimization"]
 ---
@@ -219,23 +220,31 @@ System.enqueueJob(new SyncQueueable(accountIds));
 4. **Refactor** — apply bulkification patterns
 5. **Consider async** — move heavy processing to Batch or Queueable
 
-### Common Scenario: Trigger + Process Builder Double-Fire
+### Common Scenario: Trigger + Record-Triggered Flow Double-Fire
 
 ```apex
-// A trigger fires → Process Builder creates records → trigger fires again
-// Solution: static recursion guard
+// A trigger fires → a record-triggered Flow updates records → the trigger fires again
+// Solution: a recursion guard based on the Ids already processed — a plain boolean
+// would skip the following 200-record chunks (see the triggers article)
 
-public class TriggerRecursionGuard {
-    private static Boolean running = false;
+public class TriggerControl {
+    // Key = trigger + context + Id: a record is processed once per context
+    private static Set<String> processed = new Set<String>();
 
-    public static Boolean isRunning() { return running; }
-    public static void setRunning() { running = true; }
+    public static Boolean markProcessed(String triggerName, Id recordId) {
+        return processed.add(triggerName + ':' + Trigger.operationType + ':' + recordId);
+    }
 }
 
-// In trigger handler
-if (TriggerRecursionGuard.isRunning()) return;
-TriggerRecursionGuard.setRunning();
-// ... your logic
+// In the trigger handler
+List<Account> toProcess = new List<Account>();
+for (Account acc : (List<Account>) Trigger.new) {
+    if (TriggerControl.markProcessed('AccountTrigger', acc.Id)) {
+        toProcess.add(acc);
+    }
+}
+if (toProcess.isEmpty()) return;
+// ... your logic, on toProcess only
 ```
 
 ## Developer Console Limit Tracking
@@ -251,7 +260,7 @@ You'll see a chart of governor limit consumption throughout the transaction — 
 | SOQL in loop | 100 query limit | Collect IDs, query once with `IN` |
 | DML in loop | 150 DML limit | Collect records, DML once |
 | Large SOQL without LIMIT | 50,000 row limit | Add WHERE, LIMIT, or use aggregate |
-| Trigger recursion | Infinite loop | Static recursion guard class |
+| Trigger recursion | Infinite loop | Recursion guard based on processed Ids |
 | Synchronous callout | CPU/callout limit | @future or Queueable + AllowsCallouts |
 | Storing full SObject lists | 6MB heap | Use ID sets/maps instead |
 
