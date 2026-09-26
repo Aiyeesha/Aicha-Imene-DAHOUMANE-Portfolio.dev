@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     description: meta.excerpt || meta.title,
     url: postUrl,
     datePublished: meta.date,
-    dateModified: (meta as { updatedDate?: string }).updatedDate ?? meta.date,
+    dateModified: meta.updatedDate ?? meta.date,
     inLanguage: locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US",
     keywords: meta.tags.join(", "),
     image: coverImageUrl,
@@ -211,8 +211,18 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
           <div className="flex items-start justify-between gap-4">
             <div>
               {/* Date + reading time */}
-              <div className="flex items-center gap-2 text-xs text-muted-2">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-2">
                 <span>{formatDate(meta.date, locale)}</span>
+                {/* Date de mise à jour du fond — n'apparaît que si le frontmatter la définit */}
+                {meta.updatedDate ? (
+                  <>
+                    <span>·</span>
+                    <span>
+                      {t("updatedOn")}{" "}
+                      <time dateTime={meta.updatedDate}>{formatDate(meta.updatedDate, locale)}</time>
+                    </span>
+                  </>
+                ) : null}
                 <span>·</span>
                 <span>{meta.readingTime} {t("readingTime")}</span>
               </div>

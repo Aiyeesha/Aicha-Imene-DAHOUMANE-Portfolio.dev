@@ -2,6 +2,7 @@
 title: "Optimización de rendimiento SOQL: de consultas lentas a resultados en menos de un segundo"
 excerpt: "Técnicas prácticas para escribir consultas SOQL más rápidas en Salesforce — índices, filtros selectivos, planes de consulta y anti-patrones comunes a eliminar."
 date: "2025-05-05"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "SOQL", "Rendimiento", "Base de datos", "Buenas prácticas"]
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
@@ -26,22 +27,25 @@ La herramienta Query Plan en Developer Console es tu primera arma:
 
 **Interpretando los resultados:**
 
-| Cardinalidad | Qué significa |
-|-------------|--------------|
-| Baja (< 10%) | Se usará un índice — rápido |
-| Media (10–30%) | Puede usar índice — aceptable |
-| Alta (> 30%) | Full table scan — ¡optimiza! |
+| Coste (columna *Cost*) | Qué significa |
+|------------------------|--------------|
+| **< 1** | Filtro selectivo — el optimizador puede usar el índice |
+| **≥ 1** | No selectivo — probable recorrido completo de la tabla: ¡optimiza! |
+
+**Umbrales de selectividad oficiales** (proporción de registros a los que apunta el filtro):
+- índice estándar: 30 % del primer millón de registros, luego 15 % por encima, con un tope de 1 millón;
+- índice personalizado: 10 % del primer millón, luego 5 % por encima, con un tope de 333.333.
 
 **Ejemplo de un plan malo:**
 ```
 Query: SELECT Id FROM Account WHERE Industry = 'Technology'
-Plan: TableScan — Cost: 0.92 (high)
+Plan: TableScan — Cost: 1.35 (≥ 1: no selectivo)
 ```
 
 **Después de añadir un filtro selectivo:**
 ```
 Query: SELECT Id FROM Account WHERE Industry = 'Technology' AND OwnerId = :currentUserId
-Plan: Index on OwnerId — Cost: 0.04 (low)
+Plan: Index on OwnerId — Cost: 0.04 (< 1: selectivo)
 ```
 
 ## 2. Filtra siempre sobre campos indexados
@@ -51,7 +55,7 @@ Plan: Index on OwnerId — Cost: 0.04 (low)
 - `Name`
 - `OwnerId`
 - `RecordTypeId`
-- `CreatedDate` / `LastModifiedDate`
+- `CreatedDate` / `SystemModstamp` (y no `LastModifiedDate`, que no está indexado)
 - Campos de relación Lookup/Master-Detail
 
 **Cómo comprobar si un campo está indexado:**
@@ -164,7 +168,7 @@ Los literales de fecha son más eficientes que las expresiones dinámicas porque
 // ✅ Usa literales de fecha
 WHERE CreatedDate = LAST_N_DAYS:30
 WHERE CloseDate = THIS_QUARTER
-WHERE LastModifiedDate > LAST_MONTH
+WHERE SystemModstamp > LAST_MONTH  // indexado, a diferencia de LastModifiedDate
 
 // ⚠️ Fechas dinámicas — funcionan pero son ligeramente más pesadas
 WHERE CreatedDate > :Date.today().addDays(-30)
@@ -226,7 +230,7 @@ Candidatos para indexación personalizada:
 
 Antes de desplegar una consulta a producción:
 
-- [ ] Ejecutaste Query Plan — la cardinalidad es baja (< 10%)
+- [ ] Ejecutaste Query Plan — coste < 1 en el plan elegido
 - [ ] Al menos un campo indexado en la cláusula WHERE
 - [ ] Ningún SOQL dentro de bucles
 - [ ] LIMIT aplicado donde corresponda

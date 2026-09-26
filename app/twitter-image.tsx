@@ -14,7 +14,7 @@ export const revalidate  = 86400;
 
 export default function Image() {
   const name     = process.env.NEXT_PUBLIC_OG_NAME     || "Aïcha Imène DAHOUMANE";
-  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce Developer & Consultant";
+  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps · Security";
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();

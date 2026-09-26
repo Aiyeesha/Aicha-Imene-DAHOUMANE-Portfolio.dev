@@ -2,6 +2,7 @@
 title: "Gestión de sandboxes en Salesforce: tipos, estrategia de refresh y flujo de despliegue"
 excerpt: "Cómo gestionar los sandboxes de Salesforce de forma eficaz — elegir el tipo de sandbox adecuado, planificar el refresh, enmascarar datos para cumplimiento normativo y un flujo de despliegue limpio de dev a producción."
 date: "2025-12-08"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Despliegue"]
 projects: ["cicd-pipeline-setup"]
 ---
@@ -46,14 +47,14 @@ Para un equipo de 3 o más desarrolladores, este modelo de ramificación funcion
 
 ```bash
 # Crear un sandbox vía CLI (requiere un alias de org con acceso de administrador)
-sf env create sandbox \
+sf org create sandbox \
     --name DEV-feature-lwc \
     --license-type Developer \
     --target-org production \
     --alias dev-lwc
 
 # Esperar a que se cree el sandbox (tarda entre 5 y 30 minutos)
-sf env create sandbox --wait 60 --name DEV-feature-lwc ...
+sf org create sandbox --wait 60 --name DEV-feature-lwc ...
 ```
 
 ### Conectarse a un sandbox
@@ -114,24 +115,34 @@ Define las reglas de enmascaramiento por campo → aplícalas en el siguiente re
 Ejecuta esto inmediatamente después del refresh del sandbox, antes de dar acceso a los desarrolladores:
 
 ```apex
-// MaskProductionData.apex — ejecutar como Anonymous Apex tras el refresh
-List<Contact> contacts = [
-    SELECT Id, FirstName, LastName, Email, Phone, MailingStreet
-    FROM Contact LIMIT 50000
-];
+// MaskContactsBatch.cls — Batch Apex: una transacción está limitada a 10.000 filas DML,
+// demasiado pocas para 50.000 Contactos en Anonymous Apex. Cada lote es una transacción distinta.
+public class MaskContactsBatch implements Database.Batchable<SObject> {
 
-Integer i = 0;
-for (Contact c : contacts) {
-    c.FirstName = 'Test';
-    c.LastName  = 'User' + i;
-    c.Email     = 'testuser' + i + '@sandbox.test';
-    c.Phone     = '0600000' + String.valueOf(i).leftPad(4, '0');
-    c.MailingStreet = '123 Test Street';
-    i++;
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([SELECT Id FROM Contact]);
+    }
+
+    public void execute(Database.BatchableContext bc, List<Contact> scope) {
+        for (Contact c : scope) {
+            // Sin contador compartido entre lotes: el sufijo sale del Id
+            String suffix = String.valueOf(c.Id).right(6);
+            c.FirstName     = 'Test';
+            c.LastName      = 'User ' + suffix;
+            c.Email         = 'testuser.' + suffix + '@sandbox.test';
+            c.Phone         = '0600000000';
+            c.MailingStreet = '123 Test Street';
+        }
+        update scope;
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug('Anonimización de Contactos terminada');
+    }
 }
 
-update contacts;
-System.debug('Masked ' + contacts.size() + ' contacts');
+// Lanzar desde Anonymous Apex, justo después del refresh:
+// Database.executeBatch(new MaskContactsBatch(), 2000);
 ```
 
 **Enmascara siempre antes de dar acceso a los desarrolladores.** Un sandbox con emails reales de clientes acabará tarde o temprano enviando un email de prueba a un cliente real.
