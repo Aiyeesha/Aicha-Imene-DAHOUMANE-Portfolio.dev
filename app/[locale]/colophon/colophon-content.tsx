@@ -29,14 +29,15 @@ export default function ColophonContent({ locale }: { locale: string }) {
     cacheTitle:     isFr ? "Stratégie de cache" : isEs ? "Estrategia de caché" : "Caching strategy",
     secTitle:       isFr ? "Sécurité" : isEs ? "Seguridad" : "Security",
     openSourceTitle:isFr ? "Code source" : isEs ? "Código fuente" : "Source code",
-    // Le dépôt GitHub est privé : un lien direct menait les visiteurs sur une
-    // 404. Reformulé à l'audit de contenu du 2026-09-25 en accès sur demande.
+    // Le dépôt GitHub est public depuis le 2026-09-26 (repassé en public après
+    // l'audit du 2026-09-25 qui avait constaté qu'il cassait OSSF Scorecard,
+    // Drift Check et CodeQL — tous conçus pour un dépôt public).
     sourceNote:     isFr
-      ? "Le dépôt de ce site est privé. Je le présente volontiers en entretien (architecture, CI, tests, sécurité), et je peux ouvrir un accès en lecture sur demande."
+      ? "Le dépôt de ce site est public — architecture, CI/CD, tests et sécurité consultables directement sur GitHub."
       : isEs
-      ? "El repositorio de este sitio es privado. Lo presento con gusto en una entrevista (arquitectura, CI, pruebas, seguridad) y puedo dar acceso de lectura bajo petición."
-      : "This site's repository is private. I'm happy to walk through it in an interview (architecture, CI, tests, security), and I can grant read access on request.",
-    learnMore:      isFr ? "Demander un accès au code" : isEs ? "Solicitar acceso al código" : "Request access to the code",
+      ? "El repositorio de este sitio es público — arquitectura, CI/CD, pruebas y seguridad consultables directamente en GitHub."
+      : "This site's repository is public — architecture, CI/CD, tests, and security are all viewable directly on GitHub.",
+    learnMore:      isFr ? "Voir le dépôt GitHub" : isEs ? "Ver el repositorio en GitHub" : "View the GitHub repository",
     viewLive:       isFr ? "Voir le site en ligne" : isEs ? "Ver el sitio en vivo" : "View live site",
   };
 
@@ -87,9 +88,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
       title: isFr ? "CI/CD & Qualité" : isEs ? "CI/CD y Calidad" : "CI/CD & Quality",
       items: [
         { name: "GitHub Actions",    role: isFr ? "Pipeline CI : build, lint, typecheck, tests unitaires, audit sécurité npm, E2E Playwright, Lighthouse CI" : isEs ? "Pipeline de CI: build, lint, typecheck, pruebas unitarias, auditoría de seguridad npm, E2E Playwright, Lighthouse CI" : "CI pipeline: build, lint, typecheck, unit tests, npm security audit, Playwright E2E, Lighthouse CI" },
-        { name: "Lighthouse CI",     role: isFr ? "Budgets performance & accessibilité sur chaque PR — accessibilité ≥ 95 (bloquant), performance ≥ 65 (avertissement)" : isEs ? "Presupuestos de rendimiento y accesibilidad en cada PR — accesibilidad ≥ 95 (bloqueante), rendimiento ≥ 65 (advertencia)" : "Performance & accessibility budgets on every PR — accessibility ≥ 95 (blocking), performance ≥ 65 (warning)", link: "https://github.com/GoogleChrome/lighthouse-ci" },
-        { name: "axe-core / Playwright", role: isFr ? "Audit WCAG 2.2 AA automatisé sur 6 routes — zéro tolérance pour les violations critiques" : isEs ? "Auditoría WCAG 2.2 AA automatizada en 6 rutas — tolerancia cero para violaciones críticas" : "Automated WCAG 2.2 AA audit on 6 routes — zero tolerance for critical violations", link: "https://github.com/dequelabs/axe-core" },
-        { name: "Dependabot",        role: isFr ? "Mises à jour npm hebdomadaires (8 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle" : isEs ? "Actualizaciones npm semanales (8 grupos), Actions mensuales — versiones mayores de next-intl/framer-motion bajo revisión manual" : "Weekly npm updates (8 groups), monthly Actions — next-intl/framer-motion majors require manual review" },
+        { name: "Lighthouse CI",     role: isFr ? "Budgets performance & accessibilité sur chaque PR — accessibilité ≥ 90 (bloquant), performance ≥ 40 (bloquant)" : isEs ? "Presupuestos de rendimiento y accesibilidad en cada PR — accesibilidad ≥ 90 (bloqueante), rendimiento ≥ 40 (bloqueante)" : "Performance & accessibility budgets on every PR — accessibility ≥ 90 (blocking), performance ≥ 40 (blocking)", link: "https://github.com/GoogleChrome/lighthouse-ci" },
+        { name: "axe-core / Playwright", role: isFr ? "Audit WCAG 2.2 AA automatisé sur 9 routes — zéro tolérance pour les violations critiques" : isEs ? "Auditoría WCAG 2.2 AA automatizada en 9 rutas — tolerancia cero para violaciones críticas" : "Automated WCAG 2.2 AA audit on 9 routes — zero tolerance for critical violations", link: "https://github.com/dequelabs/axe-core" },
+        { name: "Dependabot",        role: isFr ? "Mises à jour npm hebdomadaires (5 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle" : isEs ? "Actualizaciones npm semanales (5 grupos), Actions mensuales — versiones mayores de next-intl/framer-motion bajo revisión manual" : "Weekly npm updates (5 groups), monthly Actions — next-intl/framer-motion majors require manual review" },
         { name: "OpenSSF Scorecard", role: isFr ? "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits" : isEs ? "Puntuación semanal de seguridad de la cadena de suministro — branch protection, SAST, dependency pinning, signed commits" : "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits", link: "https://securityscorecard.com" },
         { name: "Content Publish Safety", role: isFr ? "Check quotidien sur public.projects : bloque la parité de locale rompue (publié sans les 3 langues) et l'embargo produits SaaS (aucun produit personnel publiable avant 2027, quel que soit le statut en base)" : isEs ? "Verificación diaria sobre public.projects: bloquea la paridad de idioma rota (publicado sin los 3 idiomas) y el embargo de productos SaaS (ningún producto propio publicable antes de 2027, sea cual sea el estado en base de datos)" : "Daily check on public.projects: blocks broken locale parity (published without all 3 languages) and the personal SaaS product embargo (no product of mine goes public before 2027, regardless of its database status)" },
       ],
@@ -159,7 +160,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**CORS restreint** : `/api/health` scoped à l'origine du site uniquement — les outils de monitoring opèrent en serveur-à-serveur.",
         "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116) — contact de divulgation responsable.",
         "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (service role, token Redis, credentials admin) restent strictement côté serveur.",
-        "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app) — posture HTTP vérifiée indépendamment du site.",
+        "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — posture HTTP vérifiée indépendamment du site.",
       ]
     : isEs
     ? [
@@ -173,10 +174,11 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**CORS restringido**: `/api/health` limitado únicamente al origen del sitio — las herramientas de monitorización operan servidor a servidor.",
         "**security.txt** disponible en `/.well-known/security.txt` (RFC 9116) — contacto de divulgación responsable.",
         "**Ningún secreto** en las variables `NEXT_PUBLIC_*` — todas las claves sensibles (service role, token de Redis, credenciales de admin) permanecen estrictamente en el servidor.",
-        "**Validación externa (terceros neutrales)**: [securityheaders.com](https://securityheaders.com/?q=Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app) — postura HTTP verificada de forma independiente al sitio.",
+        "**Validación externa (terceros neutrales)**: [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — postura HTTP verificada de forma independiente al sitio.",
       ]
     : [
-        "**HTTP headers** in `next.config.mjs`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`). Framework fingerprinting suppressed via `poweredByHeader: false`.",
+        "**Nonce-based CSP**: `'unsafe-inline'` removed from `script-src`. A unique cryptographic nonce is generated per request in the Edge middleware (`proxy.ts`) and injected into every authorized inline script (JSON-LD, Vercel Analytics, Next.js hydration). Any inline script without a nonce is blocked by the browser.",
+        "**HTTP headers** in `next.config.mjs`: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, extended Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Framework fingerprinting disabled (`poweredByHeader: false`).",
         "**Version-controlled project content**: project entries and their assets are committed to the repo and served statically — no database is exposed for this part. **Row Level Security (RLS)** remains enabled on the remaining Supabase tables (incidents / status).",
         "**Rate-limiting** via Upstash Redis (sliding window) on sensitive endpoints: contact (5 req/10 min), testimonials (3 req/24h), cache invalidation (10 req/min), health check (30 req/min), CSP reports (20 req/min), admin panel (5 req/15 min — brute-force protection). If Redis is **not configured** in production, the limiter fails closed (all requests blocked). During a **transient Redis outage**, it fails open to avoid blocking legitimate users — except on `/admin`, which remains fail-closed.",
         "**Honeypot fields** on contact and testimonial forms — bots filling hidden fields receive a silent 200 response.",
@@ -185,7 +187,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**CORS restricted**: `/api/health` scoped to the site origin only — monitoring tools call server-to-server, no browser CORS needed.",
         "**security.txt** at `/.well-known/security.txt` (RFC 9116) — responsible disclosure contact.",
         "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (service role, Redis token, admin credentials) remain strictly server-side.",
-        "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app) — HTTP security posture verified independently from the site.",
+        "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — HTTP security posture verified independently from the site.",
       ];
 
   function renderMarkdown(text: string): React.ReactNode[] {
@@ -291,9 +293,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
         <h2 id="section-oss" className="text-xl font-semibold">{labels.openSourceTitle}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">{labels.sourceNote}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link href={`/${locale}/contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
-            {labels.learnMore}<span aria-hidden="true"> →</span>
-          </Link>
+          <a href="https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev" target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
+            {labels.learnMore}<span aria-hidden="true"> ↗</span>
+          </a>
           <a href={`/${locale}`} target="_blank" rel="noreferrer noopener" className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium soft-ring ${ctaBtnClass}`}>
             {labels.viewLive}<span aria-hidden="true"> ↗</span>
           </a>
