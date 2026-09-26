@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
+- **Corrections critiques et majeures (audit intégral du 2026-09-26, lot 2)** — Dépôt GitHub repassé en public (il était resté privé, cassant silencieusement OSSF Scorecard, Drift Check et CodeQL — les trois conçus pour un dépôt public). Ajout de `.github/workflows/codeql.yml` : le SAST était orphelin, OSSF Scorecard publiait un score de 0/10 (« 0 commits out of 5 checked »). Domaine cassé (résidu de fusion vers l'ancien nom de domaine) corrigé dans `security.txt` (Policy/Canonical/Acknowledgments) et dans les liens de validation externe du colophon (FR/ES/EN). Colophon : dépôt désormais présenté comme public (lien direct au lieu de « accès sur demande »), seuils Lighthouse CI corrigés (accessibilité ≥ 90, performance ≥ 40 bloquant — pas ≥ 95/≥ 65 dont performance en avertissement), Dependabot « 5 groupes » (pas 8 — confusion avec la limite de PR), WCAG « 9 routes » (pas 6), section sécurité anglaise complétée (mécanisme du nonce CSP) pour égaler le niveau de détail FR/ES.
+
 - **Corrections d'intégrité et de confidentialité (audit de contenu du 2026-09-25, lot 1)** —
   - Page publique `/changelog` retirée (redirection temporaire vers `/colophon`) ainsi que ses liens (pied de page, palette de commandes, encart « Maturité d'exploitation », sitemap) : elle republiait des notes internes. Ce fichier reste l'historique de référence du dépôt ; l'IP interne, l'email client et le nom d'un auteur tiers y ont été retirés.
   - Noms complets de tiers (ancien collègue, formateur) et identifiants d'infrastructure client (IP de NAS, noms d'hôtes, domaine AD) retirés des études de cas Midrange et des anciens scripts `supabase/`.
@@ -19,6 +21,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - Articles `next-intl-app-router` et `salesforce-cicd-github-actions` dépubliés (redirections temporaires vers `/blog` et `/projects/cicd-pipeline-setup`).
 
 ### Changed
+
+- **Corrections de contenu (audit intégral du 2026-09-26)** — Certifications : calendrier recalé (Salesforce Platform Foundations/Administrator ADM-201/App Builder/Platform Developer I → nov. 2026 ; CompTIA Network+/Security+/Linux+ → début 2027, rejoignent le roadmap 2027). About (ES) : récit réconcilié avec FR/EN — contradiction factuelle supprimée (« participe à des CTF » vs « prépare un parcours Blue Team »), détails du stage MIDRANGE complétés (64 Optiplex, Datto RMM, Blancco, Autotask, Splashtop). Uses : traduction espagnole complète des 24 outils et 5 catégories (repli silencieux vers l'anglais supprimé). Blog FR « Déploiement Salesforce » : pipeline GitHub Actions extrait dans sa propre section pour aligner la structure sur EN/ES.
 
 - **CV : métriques harmonisées avec le site** — Les 18 CV (FR/EN/ES × Salesforce, IT Ops, hybride, versions visuelles et ATS) reprennent les formulations du site : « environ 30 % » (FR), « ~30% » (EN, « approximately 30% » en ATS), « cerca de un 30 % » (ES) pour la réduction de charge manuelle, et « más de 10 clases Apex » / « más de 20 Flows » en espagnol. CV ATS français : « 10 ou plus classes Apex », « 200 ou plus workstations »… reformulés en « au moins 10 classes Apex », « au moins 200 workstations »… PDF régénérés via `npm run cv:pdf` (pagination inchangée : 1 page par CV visuel, 2 par CV ATS).
 

@@ -1,0 +1,40 @@
+name: CodeQL
+
+# ── Objectif ──────────────────────────────────────────────────────────────────
+# SAST réel sur chaque push/PR vers main, plus un scan hebdomadaire de fond.
+# Remplace le "default setup" GitHub qui s'était tu silencieusement (dernier
+# run réel : 2026-06-17, sur une branche depuis supprimée) alors qu'OpenSSF
+# Scorecard continuait de publier "SAST tool is not run on all commits" avec
+# un score de 0/10 — audit du 2026-09-26.
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "30 4 * * 1" # lundi 04:30 UTC
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (javascript-typescript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          build-mode: none
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"

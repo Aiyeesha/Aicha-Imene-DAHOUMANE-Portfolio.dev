@@ -70,7 +70,28 @@ sf project deploy start \
   --dry-run  # validation sans déploiement effectif
 ```
 
-**Déploiement depuis un pipeline GitHub Actions :**
+---
+
+## DevOps Center — Le pipeline sans code
+
+DevOps Center est la réponse de Salesforce aux équipes qui veulent du CI/CD sans maîtriser le CLI. Il s'intègre nativement avec GitHub et offre une interface graphique pour gérer les pipelines.
+
+**Quand l'utiliser :**
+- Équipes mixtes (admins + développeurs)
+- Projets où vous voulez Git sans apprendre le CLI
+- Organisations qui standardisent sur l'écosystème Salesforce
+
+**Flux typique :**
+1. Créer un Work Item dans DevOps Center
+2. Associer les modifications à ce Work Item
+3. Promouvoir vers l'environnement suivant (Dev → UAT → Prod)
+4. DevOps Center gère les commits Git automatiquement
+
+---
+
+## Pipeline CI/CD avec GitHub Actions
+
+Pour aller au-delà du déploiement manuel, voici un pipeline complet basé sur la Salesforce CLI :
 
 ```yaml
 # .github/workflows/deploy-prod.yml
@@ -101,23 +122,6 @@ jobs:
             --test-level RunLocalTests \
             --wait 30
 ```
-
----
-
-## DevOps Center — Le pipeline sans code
-
-DevOps Center est la réponse de Salesforce aux équipes qui veulent du CI/CD sans maîtriser le CLI. Il s'intègre nativement avec GitHub et offre une interface graphique pour gérer les pipelines.
-
-**Quand l'utiliser :**
-- Équipes mixtes (admins + développeurs)
-- Projets où vous voulez Git sans apprendre le CLI
-- Organisations qui standardisent sur l'écosystème Salesforce
-
-**Flux typique :**
-1. Créer un Work Item dans DevOps Center
-2. Associer les modifications à ce Work Item
-3. Promouvoir vers l'environnement suivant (Dev → UAT → Prod)
-4. DevOps Center gère les commits Git automatiquement
 
 ---
 
