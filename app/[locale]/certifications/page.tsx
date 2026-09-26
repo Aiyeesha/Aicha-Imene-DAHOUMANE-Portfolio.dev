@@ -33,10 +33,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (sept. 2026 – 2027/2028)."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (nov. 2026 – 2027/2028)."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (sept. 2026 – 2027/2028)."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (Sep 2026 – 2027/2028).";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (nov. 2026 – 2027/2028)."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (Nov 2026 – 2027/2028).";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -284,6 +284,11 @@ export default async function CertificationsPage({ params }: PageProps) {
   // Certifications en préparation — groupées par horizon (2026 en cours vs. 2027 roadmap).
   // Les certifications reportées à date indéterminée (Sales Foundations, CPQ Admin,
   // MC Engagement Admin) ne sont volontairement PAS affichées ici.
+  //
+  // Recalage du 2026-09-26 : les 4 certifications Salesforce, initialement
+  // réparties sept.–oct., sont regroupées sur novembre 2026. Les 3 CompTIA
+  // (Network+, Security+, Linux+), initialement oct.–déc. 2026, rejoignent
+  // le roadmap 2027 ("Début 2027") pour laisser la place au sprint Salesforce.
   type UpcomingItem = {
     id: string;
     name: string;
@@ -307,7 +312,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Sept. 2026" : isEs ? "Sep. 2026" : "Sep 2026",
+      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : isEs
@@ -318,13 +323,12 @@ export default async function CertificationsPage({ params }: PageProps) {
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
       phase: "2026",
-      isActive: true,
     },
     {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator (ADM-201)",
       issuer: "Salesforce",
-      target: isFr ? "Fin sept. 2026" : isEs ? "Fin. sep. 2026" : "Late Sep 2026",
+      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
@@ -340,7 +344,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Début oct. 2026" : isEs ? "Inicio oct. 2026" : "Early Oct 2026",
+      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
         : isEs
@@ -356,7 +360,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-developer-i",
       name: "Salesforce Platform Developer I (PD1)",
       issuer: "Salesforce",
-      target: isFr ? "Mi-oct. 2026" : isEs ? "Mediados oct. 2026" : "Mid-Oct 2026",
+      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
         : isEs
@@ -368,11 +372,12 @@ export default async function CertificationsPage({ params }: PageProps) {
       track: "salesforce",
       phase: "2026",
     },
+    // ── 2027 — roadmap (pas encore de dates fines, ordre indicatif) ──────────
     {
       id: "comptia-network-plus",
       name: "CompTIA Network+",
       issuer: "CompTIA",
-      target: isFr ? "Oct. 2026" : isEs ? "Oct. 2026" : "Oct 2026",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Fondamentaux des réseaux : protocoles TCP/IP, infrastructure, sécurité réseau, dépannage et virtualisation."
         : isEs
@@ -382,13 +387,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
-      phase: "2026",
+      phase: "2027",
     },
     {
       id: "comptia-security-plus",
       name: "CompTIA Security+ (SY0-701)",
       issuer: "CompTIA",
-      target: isFr ? "Nov. 2026 ⭐" : isEs ? "Nov. 2026 ⭐" : "Nov 2026 ⭐",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
         : isEs
@@ -398,13 +403,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
-      phase: "2026",
+      phase: "2027",
     },
     {
       id: "comptia-linux-plus",
       name: "CompTIA Linux+",
       issuer: "CompTIA",
-      target: isFr ? "Déc. 2026" : isEs ? "Dic. 2026" : "Dec 2026",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Administration Linux : ligne de commande, scripts shell, gestion des utilisateurs, sécurité et automatisation système."
         : isEs
@@ -414,9 +419,8 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
-      phase: "2026",
+      phase: "2027",
     },
-    // ── 2027 — roadmap (pas encore de dates fines, ordre indicatif) ──────────
     {
       id: "comptia-cysa-plus",
       name: "CompTIA CySA+",
@@ -736,7 +740,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {isFr ? "En cours / Planifiées 2026" : isEs ? "En curso / Planificadas 2026" : "In progress / Planned 2026"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint sept. → déc. 2026" : isEs ? "— sprint sept. → dic. 2026" : "— sprint Sep. → Dec. 2026"}
+              {isFr ? "— sprint novembre 2026" : isEs ? "— sprint noviembre 2026" : "— November 2026 sprint"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

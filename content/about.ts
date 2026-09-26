@@ -101,21 +101,22 @@ export const aboutContent = {
     }
   },
 
-  // Contenido ya presente en producción (Supabase about_pages, locale='es') pero
-  // ausente de este archivo — versionado aquí para que scripts/seed.ts pueda
-  // reproducirlo y para que un futur reset de la tabla no lo borre en silencio.
+  // Reconciliado le 2026-09-26 (audit) : cette section avait dérivé de la
+  // trame FR/EN (intro, détails du stage, affirmation CTF contredisant "je
+  // prépare un parcours Blue Team" en FR/EN) depuis sa reconstruction à partir
+  // de Supabase — jamais réconciliée depuis, cf. commentaire précédent.
   es: {
     headline: "Sobre mí",
-    introduction: `Desarrolladora y consultora Salesforce con contrato indefinido en LD Digitales, diseño soluciones fiables, seguras y mantenibles. Mi formación en sistemas y redes (TAI, TSSR, prácticas en MIDRANGE GROUP) me enseñó a abordar la plataforma con una mentalidad de operaciones: CI/CD, seguridad, documentación y automatización.`,
+    introduction: `Apasionada por la tecnología desde siempre, construí una base sólida en soporte informático, sistemas y redes antes de especializarme en el desarrollo Salesforce. Este recorrido anclado en el terreno me enseñó el rigor, la importancia de los fundamentos técnicos y el sentido del servicio.`,
 
     journey: {
       title: "Mi trayectoria",
       paragraphs: [
-        `Obtuve mi título TAI (Técnico de Soporte Informático, nivel 4 RNCP) en el GRETA del Val d'Oise en julio de 2022, tras una formación práctica en el Lycée Louis Jouvet de Taverny. Allí desarrollé habilidades en soporte a usuarios, configuración de redes, virtualización y administración de Active Directory.`,
+        `Obtuve mi título TAI (Técnico de Soporte Informático, nivel 4 RNCP) en el GRETA del Val d'Oise en julio de 2022, tras una formación práctica en el Lycée Louis Jouvet de Taverny. Allí desarrollé habilidades en soporte a usuarios, instalación de Windows, virtualización con VirtualBox (formación inicial 2022), configuración de red y administración de Active Directory.`,
 
-        `De octubre de 2022 a junio de 2023 completé el programa TSSR (Técnico Superior en Sistemas y Redes, nivel 5 RNCP) en el GRETA del Val d'Oise, incluyendo unas prácticas de cuatro meses en MIDRANGE GROUP (febrero-mayo 2023). Di soporte técnico a más de 50 puestos de trabajo, desplegué 264 equipos Dell (200 de ellos mediante Windows Autopilot), administré un entorno completo con Windows Server 2022 (AD DS, DNS, DHCP, GPO, PXE), configuré un firewall PfSense con proxy Squid y gestioné copias de seguridad con Acronis Cyber Protect Cloud.`,
+        `De octubre de 2022 a junio de 2023 completé el programa TSSR (Técnico Superior en Sistemas y Redes, nivel 5 RNCP) en el GRETA del Val d'Oise, incluyendo unas prácticas de cuatro meses en MIDRANGE GROUP (febrero-mayo 2023). Di soporte técnico a más de 50 puestos de trabajo, desplegué 264 equipos Dell (64 Optiplex reacondicionados, 200 Latitude mediante Windows Autopilot), administré un entorno completo con Windows Server 2022 (AD DS, DNS, DHCP, WDS, GPO, PXE), configuré un firewall PfSense con proxy Squid, gestioné copias de seguridad con Acronis Cyber Protect Cloud, y utilicé Datto RMM, Blancco, Autotask y Splashtop a diario.`,
 
-        `Mientras cursaba el TSSR, empecé a explorar Salesforce por mi cuenta desde 2022 — Trailhead, documentación, proyectos personales. Esa curiosidad me llevó a especializarme. De octubre de 2023 a septiembre de 2025 realicé mi formación dual en LD Digitales (en remoto) como desarrolladora Salesforce, en paralelo con el título de Desarrolladora Diseñadora de Software de OpenClassrooms (nivel 6 RNCP). Construí y mantuve más de 10 clases Apex y batch jobs, creé más de 20 Flows de automatización (reduciendo la carga manual en cerca de un 30 %), diseñé componentes LWC reutilizables e implementé pipelines de CI/CD con Salesforce CLI y GitHub Actions. Desde octubre de 2025 tengo un contrato indefinido en LD Digitales — una continuación natural de la formación dual.`,
+        `Mientras cursaba el TSSR, empecé a explorar Salesforce por mi cuenta desde 2022 — Trailhead, documentación, proyectos personales. Esa curiosidad me llevó a especializarme. De octubre de 2023 a septiembre de 2025 realicé mi formación dual en LD Digitales (en remoto) como desarrolladora Salesforce, en paralelo con el título de Desarrolladora Diseñadora de Software de OpenClassrooms (nivel 6 RNCP). Construí y mantuve más de 10 clases Apex y batch jobs, creé más de 20 Flows de automatización (reduciendo la carga manual en cerca de un 30 %), diseñé componentes LWC reutilizables e implementé pipelines de CI/CD con Salesforce CLI y GitHub Actions. Desde octubre de 2025 tengo un contrato indefinido como desarrolladora Salesforce en LD Digitales — 2 años de experiencia profesional en Salesforce, entregables concretos en proyectos reales de negocio, y un dominio completo del ciclo de desarrollo.`,
 
         `Este contrato indefinido explica en parte por qué la galería de proyectos de este portfolio incluye notablemente más proyectos IT Ops que Salesforce: mi trabajo Salesforce en el puesto está sujeto a confidencialidad con el cliente y no puede mostrarse tal cual, a diferencia de mis proyectos IT Ops personales — un desequilibrio de volumen que refleja una restricción, no una elección de especialización.`
       ]
@@ -148,7 +149,7 @@ export const aboutContent = {
       paragraphs: [
         `Cuando no estoy programando, es probable que me encuentres leyendo blogs técnicos (¡me encanta seguir las notas de versión de Salesforce!), colaborando en foros de ayuda, o trasteando con proyectos personales en Python o TypeScript.`,
 
-        `También me apasiona la ciberseguridad — una pasión heredada de mis años en administración de sistemas. Participo regularmente en CTFs (Capture The Flag) e intento mantenerme al día sobre las últimas amenazas y buenas prácticas.`,
+        `También me apasiona la ciberseguridad — una pasión heredada de mis años en administración de sistemas. Sigo activamente las publicaciones MITRE ATT&CK, los avisos de seguridad y las buenas prácticas defensivas. Estoy preparando un itinerario estructurado Blue Team que llevaré en paralelo a mis certificaciones Salesforce.`,
 
         `Fuera de lo digital, me atrae la moda — dibujar siluetas, imaginar creaciones, seguir los desfiles. No es solo un pasatiempo: es lo que hace que el sector del lujo y la moda me resulte especialmente legible en el lado de los proyectos (una casa de alta costura nupcial y un distribuidor textil entre mis estudios de caso Salesforce), donde la trazabilidad de una entrega nunca puede quedarse en "más o menos bien".`,
 
