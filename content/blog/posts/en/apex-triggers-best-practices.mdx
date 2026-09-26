@@ -2,6 +2,7 @@
 title: "Apex Triggers: 10 Best Practices for Maintainable Code"
 excerpt: "Practical guide to building robust, performant, and maintainable Apex triggers in your Salesforce projects."
 date: "2026-02-15"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Apex", "Best Practices", "Development"]
 featured: false
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
@@ -137,12 +138,14 @@ A simple static boolean ("the trigger already ran") is a classic trap: when Data
 
 ```apex
 public class TriggerControl {
-    // Key = trigger name + Id: each record is processed once per transaction,
-    // however many 200-record chunks there are.
+    // Key = trigger name + context + Id: each record is processed once per context
+    // and per transaction, however many 200-record chunks there are.
     private static Set<String> processed = new Set<String>();
 
     public static Boolean markProcessed(String triggerName, Id recordId) {
-        return processed.add(triggerName + ':' + recordId); // false if already present
+        // The context (BEFORE_INSERT, AFTER_UPDATE…) is part of the key,
+        // so the same record can still run in before and then in after.
+        return processed.add(triggerName + ':' + Trigger.operationType + ':' + recordId); // false if already present
     }
 }
 
@@ -241,17 +244,14 @@ private class AccountTriggerHandler_Test {
 ```apex
 public static void validateBusinessRules(List<Account> accounts) {
     for (Account acc : accounts) {
-        try {
-            if (acc.Type == 'Customer' && acc.AnnualRevenue < 10000) {
-                acc.addError('Customer accounts must have revenue >= 10,000');
-            }
-            
-            if (acc.BillingCountry == 'France' && String.isBlank(acc.SIRET__c)) {
-                acc.SIRET__c.addError('SIRET is mandatory for French companies');
-            }
-        } catch (Exception e) {
-            System.debug(LoggingLevel.ERROR, 'Validation error: ' + e.getMessage());
-            acc.addError('Unexpected validation error: ' + e.getMessage());
+        // No try/catch: addError doesn't throw, it flags the record as failed.
+        // AnnualRevenue can be empty: that case is handled explicitly.
+        if (acc.Type == 'Customer' && (acc.AnnualRevenue == null || acc.AnnualRevenue < 10000)) {
+            acc.addError('Customer accounts must have revenue >= 10,000');
+        }
+
+        if (acc.BillingCountry == 'France' && String.isBlank(acc.SIRET__c)) {
+            acc.SIRET__c.addError('SIRET is mandatory for French companies');
         }
     }
 }
@@ -262,7 +262,7 @@ public static void validateBusinessRules(List<Account> accounts) {
 ```apex
 /**
  * @description Handler for Account trigger operations
- * @author Aïcha Imène DAHOUNANE
+ * @author Aïcha Imène DAHOUMANE
  * @date 2026-02-15
  * @group Trigger Handlers
  */

@@ -2,6 +2,7 @@
 title: "Salesforce Sandbox Management: Types, Refresh Strategy, and Deployment Workflow"
 excerpt: "How to manage Salesforce sandboxes effectively — choosing the right sandbox type, refresh planning, data masking for compliance, and a clean deployment workflow from dev to production."
 date: "2025-12-08"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Deployment"]
 projects: ["cicd-pipeline-setup"]
 ---
@@ -46,14 +47,14 @@ For a team of 3+ developers, this branching model works well:
 
 ```bash
 # Create a sandbox via CLI (requires org alias with admin access)
-sf env create sandbox \
+sf org create sandbox \
     --name DEV-feature-lwc \
     --license-type Developer \
     --target-org production \
     --alias dev-lwc
 
 # Wait for sandbox creation (takes 5-30 minutes)
-sf env create sandbox --wait 60 --name DEV-feature-lwc ...
+sf org create sandbox --wait 60 --name DEV-feature-lwc ...
 ```
 
 ### Connecting to a Sandbox
@@ -114,24 +115,34 @@ Define masking rules per field → apply on next refresh
 Run this immediately after sandbox refresh, before granting access to developers:
 
 ```apex
-// MaskProductionData.apex — run as Anonymous Apex after refresh
-List<Contact> contacts = [
-    SELECT Id, FirstName, LastName, Email, Phone, MailingStreet
-    FROM Contact LIMIT 50000
-];
+// MaskContactsBatch.cls — Batch Apex: a transaction is limited to 10,000 DML rows,
+// too few for 50,000 Contacts in Anonymous Apex. Each chunk is a separate transaction.
+public class MaskContactsBatch implements Database.Batchable<SObject> {
 
-Integer i = 0;
-for (Contact c : contacts) {
-    c.FirstName = 'Test';
-    c.LastName  = 'User' + i;
-    c.Email     = 'testuser' + i + '@sandbox.test';
-    c.Phone     = '0600000' + String.valueOf(i).leftPad(4, '0');
-    c.MailingStreet = '123 Test Street';
-    i++;
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([SELECT Id FROM Contact]);
+    }
+
+    public void execute(Database.BatchableContext bc, List<Contact> scope) {
+        for (Contact c : scope) {
+            // No counter shared across chunks: the suffix comes from the Id
+            String suffix = String.valueOf(c.Id).right(6);
+            c.FirstName     = 'Test';
+            c.LastName      = 'User ' + suffix;
+            c.Email         = 'testuser.' + suffix + '@sandbox.test';
+            c.Phone         = '0600000000';
+            c.MailingStreet = '123 Test Street';
+        }
+        update scope;
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug('Contact masking finished');
+    }
 }
 
-update contacts;
-System.debug('Masked ' + contacts.size() + ' contacts');
+// Run from Anonymous Apex, right after the refresh:
+// Database.executeBatch(new MaskContactsBatch(), 2000);
 ```
 
 **Always mask before developer access.** A sandbox with real customer emails will eventually result in a test email going to a real customer.

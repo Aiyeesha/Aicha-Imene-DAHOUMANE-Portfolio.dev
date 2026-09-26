@@ -157,9 +157,9 @@ const MILESTONES: Milestone[] = [
     period: "2025 →",
     type: "emploi",
     title: {
-      en: "Salesforce Developer & Consultant (CDI)",
-      fr: "Développeuse & Consultante Salesforce (CDI)",
-      es: "Desarrolladora y Consultora Salesforce (contrato indefinido)",
+      en: "Salesforce Developer (Full-time)",
+      fr: "Développeuse Salesforce (CDI)",
+      es: "Desarrolladora Salesforce (contrato indefinido)",
     },
     org: "LD Digitales",
     description: {

@@ -2,6 +2,7 @@
 title: "Gestion des sandboxes Salesforce : types, stratégie de rafraîchissement et workflow de déploiement"
 excerpt: "Comment gérer efficacement les sandboxes Salesforce — choisir le bon type, planifier les rafraîchissements, anonymiser les données pour la conformité et mettre en place un workflow de déploiement propre de dev à production."
 date: "2025-12-08"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Déploiement"]
 projects: ["cicd-pipeline-setup"]
 ---
@@ -46,7 +47,7 @@ Pour une équipe de 3+ développeurs, ce modèle de branchement fonctionne bien 
 
 ```bash
 # Créer un sandbox via CLI
-sf env create sandbox \
+sf org create sandbox \
     --name DEV-feature-lwc \
     --license-type Developer \
     --target-org production \
@@ -103,27 +104,37 @@ Disponible en option payante. Masque automatiquement les champs DCP lors de la c
 Exécuter immédiatement après le rafraîchissement, avant d'accorder l'accès aux développeurs :
 
 ```apex
-// AnonymiserDonneesProduction.apex — exécuter en Apex anonyme après rafraîchissement
-List<Contact> contacts = [
-    SELECT Id, FirstName, LastName, Email, Phone, MailingStreet
-    FROM Contact LIMIT 50000
-];
+// AnonymiserContactsBatch.cls — Batch Apex : une transaction est limitée à 10 000 lignes DML,
+// trop peu pour 50 000 Contacts en Apex anonyme. Chaque lot est une transaction distincte.
+public class AnonymiserContactsBatch implements Database.Batchable<SObject> {
 
-Integer i = 0;
-for (Contact c : contacts) {
-    c.FirstName   = 'Test';
-    c.LastName    = 'Utilisateur' + i;
-    c.Email       = 'testuser' + i + '@sandbox.test';
-    c.Phone       = '0600000' + String.valueOf(i).leftPad(4, '0');
-    c.MailingStreet = '123 Rue de Test';
-    i++;
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([SELECT Id FROM Contact]);
+    }
+
+    public void execute(Database.BatchableContext bc, List<Contact> scope) {
+        for (Contact c : scope) {
+            // Pas de compteur partagé entre les lots : le suffixe vient de l'Id
+            String suffix = String.valueOf(c.Id).right(6);
+            c.FirstName     = 'Test';
+            c.LastName      = 'Utilisateur ' + suffix;
+            c.Email         = 'testuser.' + suffix + '@sandbox.test';
+            c.Phone         = '0600000000';
+            c.MailingStreet = '123 Rue de Test';
+        }
+        update scope;
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug('Anonymisation des Contacts terminée');
+    }
 }
 
-update contacts;
-System.debug('Anonymisés : ' + contacts.size() + ' contacts');
+// Lancement en Apex anonyme, juste après le rafraîchissement :
+// Database.executeBatch(new AnonymiserContactsBatch(), 2000);
 ```
 
-**Anonymisez toujours avant l'accès développeur.** Un sandbox avec de vrais emails clients finira inevitablement par envoyer un email de test à un vrai client.
+**Anonymisez toujours avant l'accès développeur.** Un sandbox avec de vrais emails clients finira inévitablement par envoyer un email de test à un vrai client.
 
 ## Workflow de déploiement : dev → production
 

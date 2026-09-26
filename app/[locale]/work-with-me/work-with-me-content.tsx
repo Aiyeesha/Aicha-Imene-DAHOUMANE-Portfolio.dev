@@ -75,10 +75,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
     domains:        isFr
-      ? ["Développeuse Salesforce", "Administratrice Salesforce", "Consultante Salesforce", "Ingénieure Salesforce & Infrastructure", "Systèmes & réseaux · DevOps"]
+      ? ["Développeuse Salesforce", "Administratrice Salesforce", "Consultante Salesforce", "Ingénieure Salesforce & Infrastructure", "Administratrice systèmes & réseaux", "Ingénieure DevOps junior", "Analyste SOC N1"]
       : isEs
-      ? ["Desarrolladora Salesforce", "Administradora Salesforce", "Consultora Salesforce", "Ingeniera Salesforce & Infraestructura", "Sistemas y redes · DevOps"]
-      : ["Salesforce Developer", "Salesforce Administrator", "Salesforce Consultant", "Salesforce & Infrastructure Engineer", "Systems & Network · DevOps"],
+      ? ["Desarrolladora Salesforce", "Administradora Salesforce", "Consultora Salesforce", "Ingeniera Salesforce & Infraestructura", "Administradora de sistemas y redes", "Ingeniera DevOps junior", "Analista SOC N1"]
+      : ["Salesforce Developer", "Salesforce Administrator", "Salesforce Consultant", "Salesforce & Infrastructure Engineer", "Systems & Network Administrator", "Junior DevOps Engineer", "SOC Analyst (Tier 1)"],
     durationLabel:  isFr ? "Contrats" : isEs ? "Contratos" : "Contracts",
     durations:      isFr
       ? ["CDI", "CDD", "Intérim", "Portage salarial"]

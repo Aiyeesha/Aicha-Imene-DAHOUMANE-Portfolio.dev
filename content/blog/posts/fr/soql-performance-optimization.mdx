@@ -2,6 +2,7 @@
 title: "Optimisation des performances SOQL : des requêtes lentes aux résultats en moins d'une seconde"
 excerpt: "Techniques concrètes pour écrire des requêtes SOQL plus rapides dans Salesforce — index, filtres sélectifs, Query Plan et anti-patterns à éliminer."
 date: "2025-05-05"
+updatedDate: "2026-09-26"
 tags: ["Salesforce", "SOQL", "Performance", "Base de données", "Bonnes pratiques"]
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
@@ -26,17 +27,20 @@ Le Query Plan Tool dans la Developer Console est votre premier outil :
 
 **Lecture des résultats :**
 
-| Cardinalité | Signification |
-|-------------|--------------|
-| Basse (< 10%) | Index utilisé — rapide |
-| Moyenne (10–30%) | Peut utiliser l'index — acceptable |
-| Haute (> 30%) | Full table scan — à optimiser ! |
+| Coût (colonne *Cost*) | Signification |
+|-----------------------|--------------|
+| **< 1** | Filtre sélectif — l'optimiseur peut utiliser l'index |
+| **≥ 1** | Non sélectif — parcours complet de la table probable : à optimiser |
+
+**Seuils de sélectivité officiels** (part des enregistrements ciblés par le filtre) :
+- index standard : 30 % du premier million d'enregistrements, puis 15 % au-delà, plafonné à 1 million ;
+- index personnalisé : 10 % du premier million, puis 5 % au-delà, plafonné à 333 333.
 
 ## 2. Toujours filtrer sur des champs indexés
 
 **Champs standards toujours indexés :**
 - `Id`, `Name`, `OwnerId`, `RecordTypeId`
-- `CreatedDate` / `LastModifiedDate`
+- `CreatedDate` / `SystemModstamp` (et non `LastModifiedDate`, qui n'est pas indexé)
 - Champs de relation lookup/Master-Detail
 
 ```apex
@@ -125,7 +129,7 @@ Les littéraux de date sont plus performants car ils sont optimisés par le mote
 // ✅ Utiliser les littéraux de date
 WHERE CreatedDate = LAST_N_DAYS:30
 WHERE CloseDate = THIS_QUARTER
-WHERE LastModifiedDate > LAST_MONTH
+WHERE SystemModstamp > LAST_MONTH  // indexé, contrairement à LastModifiedDate
 
 // ⚠️ Dates dynamiques — fonctionne mais légèrement plus lourd
 WHERE CreatedDate > :Date.today().addDays(-30)
@@ -186,7 +190,7 @@ Candidats à l'indexation personnalisée :
 
 Avant de déployer une requête en production :
 
-- [ ] Query Plan exécuté — cardinalité basse (< 10%)
+- [ ] Query Plan exécuté — coût < 1 sur le plan retenu
 - [ ] Au moins un champ indexé dans la clause WHERE
 - [ ] Aucun SOQL dans les boucles
 - [ ] LIMIT appliqué partout où c'est approprié
