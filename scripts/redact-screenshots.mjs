@@ -10,7 +10,7 @@
 
 import { createWorker } from "tesseract.js";
 import sharp from "sharp";
-import { readdirSync, statSync, existsSync, unlinkSync, readFileSync, writeFileSync } from "fs";
+import { readdirSync, statSync, readFileSync, writeFileSync } from "fs";
 import { join, extname, basename } from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";

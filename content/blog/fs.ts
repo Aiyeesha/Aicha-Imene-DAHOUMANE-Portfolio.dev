@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseFrontmatter } from "@/lib/frontmatter";
+import { isValidSlug } from "@/lib/security/slug";
 
 export type BlogLocale = "en" | "fr" | "es";
 
@@ -74,8 +75,11 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
   const out: BlogPostMeta[] = [];
 
   for (const file of files) {
-    const abs = path.join(dir, file);
     const slug = file.replace(/\.mdx$/, "");
+    // Un nom de fichier hors kebab-case est ignoré : le slug finit dans des
+    // href et des chemins, il ne doit jamais contenir de caractère spécial.
+    if (!isValidSlug(slug)) continue;
+    const abs = path.join(dir, file);
     const raw = fs.readFileSync(abs, "utf-8");
     const parsed = parseFrontmatter(raw);
     const fm = (parsed.data || {}) as BlogFrontmatter;
@@ -117,6 +121,9 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
 }
 
 export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | null {
+  // Le slug vient de l'URL : refus immédiat de tout ce qui n'est pas un slug
+  // kebab-case (bloque notamment « ../ » avant path.join).
+  if (!isValidSlug(slug)) return null;
   const dir = postsDir(locale);
   const abs = path.join(dir, `${slug}.mdx`);
   if (!fs.existsSync(abs)) return null;
