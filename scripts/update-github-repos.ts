@@ -49,7 +49,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 
   for (const [slug, repoUrl] of Object.entries(GITHUB_REPOS)) {
     // Met à jour toutes les lignes avec ce slug (EN + FR)
-    const { error, count } = await supabase
+    const { error } = await supabase
       .from("projects")
       .update({ repo_url: repoUrl })
       .eq("slug", slug)

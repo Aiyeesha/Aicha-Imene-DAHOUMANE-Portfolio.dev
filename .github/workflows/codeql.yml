@@ -15,26 +15,34 @@ on:
   schedule:
     - cron: "30 4 * * 1" # lundi 04:30 UTC
 
-permissions:
-  contents: read
-  security-events: write
+# Permissions par défaut en lecture seule au niveau workflow (Scorecard
+# Token-Permissions) ; seul le job d'analyse reçoit security-events: write,
+# nécessaire à l'upload SARIF vers Code Scanning.
+permissions: read-all
 
 jobs:
   analyze:
     name: Analyze (javascript-typescript)
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
     steps:
+      # Actions épinglées par SHA complet (Scorecard Pinned-Dependencies),
+      # mêmes versions que ci.yml et scorecard.yml ; Dependabot les tient à jour.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938  # v4.37.9
         with:
           languages: javascript-typescript
           build-mode: none
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938  # v4.37.9
         with:
           category: "/language:javascript-typescript"
