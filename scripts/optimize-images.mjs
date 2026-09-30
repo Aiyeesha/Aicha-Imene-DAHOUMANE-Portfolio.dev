@@ -8,7 +8,7 @@
 
 import sharp from "sharp";
 import { readdir, stat, mkdir, copyFile, writeFile } from "fs/promises";
-import { join, relative, extname, basename, dirname } from "path";
+import { join, relative, extname, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -33,12 +33,6 @@ async function walk(dir) {
 
 async function getSize(p) {
   return (await stat(p)).size;
-}
-
-function toWebpPath(src) {
-  const ext = extname(src);
-  const base = basename(src, ext);
-  return join(dirname(src), base + ".webp");
 }
 
 async function main() {

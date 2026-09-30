@@ -379,14 +379,6 @@ useEffect(() => {
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
   const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "blog", "projects"]);
 
-  // Pour le menu mobile — suit le scroll-spy complet
-  const linkClass = (id: string) =>
-    `relative z-10 rounded-full px-2 2xl:px-3 py-2 text-sm leading-none transition-colors soft-ring ${
-      activeId === id
-        ? "text-cyan-700 dark:text-cyan-200"
-        : "text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white"
-    }`;
-
   // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
   // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
   // FR/ES sont plus longs qu'en anglais et débordaient le conteneur scrollable à 1280px
