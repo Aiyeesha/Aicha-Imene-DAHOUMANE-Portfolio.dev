@@ -10,7 +10,7 @@
 //   - Aucun détail interne exposé dans les réponses d'erreur.
 //
 // Body JSON attendu :
-//   { type: "projects" | "blog" | "all", locale?: "en" | "fr", slug?: string }
+//   { type: "projects" | "blog" | "all", locale?: "en" | "fr" | "es", slug?: string }
 //
 // Variables d'env requises :
 //   REVALIDATE_SECRET — secret partagé avec le webhook Supabase
@@ -19,9 +19,12 @@ import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateRatelimit, safeLimit } from "@/lib/ratelimit";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
+import { isValidSlug } from "@/lib/security/slug";
+import { routing } from "@/i18n/routing";
 
-// Locales supportées par le site
-const LOCALES = ["en", "fr"] as const;
+// Locales supportées par le site — source unique : i18n/routing.ts
+// (auparavant figée à ["en", "fr"], ce qui n'invalidait jamais les pages /es).
+const LOCALES = routing.locales;
 
 export async function POST(request: NextRequest) {
   // ── 0. Rate-limit par IP ──────────────────────────────────────────────────
@@ -69,6 +72,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   }
 
+  // Le slug est injecté dans des chemins revalidés puis journalisés : on
+  // n'accepte qu'un slug kebab-case (pas de retour à la ligne, « / », « .. »).
+  if (slug && !isValidSlug(slug)) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
+
   // ── 3. Invalidation ciblée ────────────────────────────────────────────────
   const revalidated: string[] = [];
 
@@ -111,7 +120,12 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  console.info("[revalidate] Chemins invalidés :", revalidated);
+  // Le slug est déjà validé plus haut ; on neutralise tout de même CR/LF au
+  // point d'écriture du log (défense en profondeur contre l'injection de logs).
+  console.info(
+    "[revalidate] Chemins invalidés :",
+    revalidated.join(", ").replace(/[\r\n]/g, "")
+  );
 
   return NextResponse.json({ revalidated, now: Date.now() }, { status: 200 });
 }
