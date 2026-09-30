@@ -131,19 +131,6 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
 
   const cvUrl = `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-${track}.pdf`;
 
-  // Show configuration hints only in non-production builds.
-  // The page should not display internal setup instructions to visitors.
-  const showEnvHint = useMemo(() => {
-    if (process.env.NODE_ENV === "production") return false;
-
-    const missingCalendly = !process.env.NEXT_PUBLIC_CALENDLY_URL;
-    const missingEmail = !CONTACT_EMAIL;
-    const missingLinkedIn = !LINKEDIN_URL;
-    // CV has a sensible default (/cv.pdf), so we don't consider it "missing".
-
-    return missingCalendly || missingEmail || missingLinkedIn;
-  }, []);
-
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus({ kind: "sending" });
