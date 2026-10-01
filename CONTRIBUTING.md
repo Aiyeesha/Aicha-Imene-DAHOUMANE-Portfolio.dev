@@ -24,8 +24,8 @@ This is a personal site — contributions are limited to bug reports, accessibil
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Aiyeesha/portfolio-next.git
-cd portfolio-next
+git clone https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev.git
+cd Aicha-Imene-DAHOUMANE-Portfolio.dev
 
 # 2. Install dependencies
 npm install
