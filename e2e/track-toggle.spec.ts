@@ -85,11 +85,11 @@ test.describe("Track toggle", () => {
   }) => {
     await gotoHydrated(page, "/en");
     const h1 = page.getByRole("heading", { level: 1 });
-    // Assertions sur l'intitulé propre à chaque track (messages/en.json,
-    // hero.title_*) : les deux H1 contiennent « Salesforce » et un sous-titre
-    // peut évoluer, seul l'intitulé distingue réellement les deux états.
-    const itopsTitle = /Network Administrator/i;
-    const salesforceTitle = /Salesforce Developer/i;
+    // Depuis le 01/10/2026, le titre du H1 est commun aux deux tracks
+    // (« Salesforce & Infrastructure Developer ») : seul le sous-titre
+    // (messages/en.json, hero.subtitle_*) distingue les deux états.
+    const itopsTitle = /From workstations and servers/i;
+    const salesforceTitle = /From the CRM to the servers/i;
 
     await page.getByRole("button", { name: /switch to it ops/i }).click();
     await expect(h1).toContainText(itopsTitle);
