@@ -18,14 +18,14 @@
     "hybrid": "Hybrid profile"
   },
   "hero": {
-    "title": "Salesforce Developer · Systems, DevOps & Security",
+    "title": "Salesforce & Infrastructure Developer",
     "subtitle": "Apex · LWC · Integrations · Systems",
     "intro_salesforce": "On an industrial site, in energy, healthcare or logistics, an incident rarely stays in one layer: a broken integration, a poorly hardened server, a deployment with no safety net, access that's too broad. I've worked across all four — Salesforce, systems and networks, CI/CD, security — and that's what lets me bridge the teams behind them.",
     "intro_itops": "On an industrial site, in energy, healthcare or logistics, an incident rarely stays in one layer: a broken integration, a poorly hardened server, a deployment with no safety net, access that's too broad. I've worked across all four — Salesforce, systems and networks, CI/CD, security — and that's what lets me bridge the teams behind them.",
-    "avatar_alt": "Profile photo of Aïcha Imène DAHOUMANE, Salesforce Developer · Systems, DevOps & Security",
-    "title_salesforce": "Salesforce Developer · Systems, DevOps & Security",
+    "avatar_alt": "Profile photo of Aïcha Imène DAHOUMANE, Salesforce & Infrastructure Developer",
+    "title_salesforce": "Salesforce & Infrastructure Developer",
     "subtitle_salesforce": "From the CRM to the servers, networks and pipelines around it — security built in.",
-    "title_itops": "Systems & Network Administrator · DevOps, Security & Salesforce",
+    "title_itops": "Salesforce & Infrastructure Developer",
     "subtitle_itops": "From workstations and servers to networks and pipelines — all the way to the Salesforce CRM they run.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
     "value_itops": "Infrastructure · Automation · Security — built to scale.",
@@ -378,9 +378,9 @@
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1+), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
-    "rolesValue": "Salesforce Developer · Salesforce Administrator · Salesforce Consultant · Salesforce & Infrastructure Engineer · Systems & Network Administrator · Junior DevOps Engineer · SOC Analyst (Tier 1)",
-    "rolesValueSalesforce": "Salesforce Developer · Salesforce Administrator · Salesforce Consultant · Salesforce & Infrastructure Engineer · Systems & Network Administrator · Junior DevOps Engineer · SOC Analyst (Tier 1)",
-    "rolesValueItops": "Systems & Network Administrator · Junior DevOps Engineer · SOC Analyst (Tier 1) · Salesforce & Infrastructure Engineer · Salesforce Developer · Salesforce Administrator · Salesforce Consultant",
+    "rolesValue": "Salesforce & Infrastructure Engineer · Salesforce Developer · Systems & Network Administrator — also open to any role where a hybrid profile adds value, including: Salesforce Administrator or Consultant, DevOps Engineer, SOC Analyst (Tier 1)",
+    "rolesValueSalesforce": "Salesforce & Infrastructure Engineer · Salesforce Developer · Systems & Network Administrator — also open to any role where a hybrid profile adds value, including: Salesforce Administrator or Consultant, DevOps Engineer, SOC Analyst (Tier 1)",
+    "rolesValueItops": "Salesforce & Infrastructure Engineer · Systems & Network Administrator · Salesforce Developer — also open to any role where a hybrid profile adds value, including: DevOps Engineer, SOC Analyst (Tier 1), Salesforce Administrator or Consultant",
     "availabilityLabel": "Availability",
     "availabilityValue": "Role starting December 1, 2026 · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "goalLabel": "Goal",
@@ -457,7 +457,7 @@
       },
       {
         "q": "Which roles are you targeting?",
-        "a": "Salesforce Developer, Administrator or Consultant, Salesforce & Infrastructure Engineer, and more broadly systems & network or DevOps roles where a dual profile is an asset."
+        "a": "Salesforce & Infrastructure Engineer, Salesforce Developer or Systems & Network Administrator. I remain open to any role where this hybrid profile adds value — Salesforce administration or consulting, DevOps, SOC analysis — wherever Salesforce, infrastructure or security meet."
       },
       {
         "q": "Do you have a Salesforce certification?",
@@ -497,8 +497,8 @@
     "sector": "Industries",
     "sectorValues": "Any industry",
     "roles": "Target roles",
-    "rolesValuesSalesforce": "Salesforce Developer · Salesforce Administrator · Salesforce Consultant · Salesforce & Infrastructure Engineer · Systems & Network Administrator · Junior DevOps Engineer · SOC Analyst (Tier 1)",
-    "rolesValuesItops": "Systems & Network Administrator · Junior DevOps Engineer · SOC Analyst (Tier 1) · Salesforce & Infrastructure Engineer · Salesforce Developer · Salesforce Administrator · Salesforce Consultant",
+    "rolesValuesSalesforce": "Salesforce & Infrastructure Engineer · Salesforce Developer · Systems & Network Administrator — also open to any role where a hybrid profile adds value, including: Salesforce Administrator or Consultant, DevOps Engineer, SOC Analyst (Tier 1)",
+    "rolesValuesItops": "Salesforce & Infrastructure Engineer · Systems & Network Administrator · Salesforce Developer — also open to any role where a hybrid profile adds value, including: DevOps Engineer, SOC Analyst (Tier 1), Salesforce Administrator or Consultant",
     "location": "Location",
     "locationValues": "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France, then Provence-Alpes-Côte d'Azur · International: Europe (BE, LU, DE, IT, ES, IE, SE, MT), United Kingdom, Maghreb (TN, DZ), Canada, United States, New Zealand, Asia",
     "cta": "Get in touch →"
