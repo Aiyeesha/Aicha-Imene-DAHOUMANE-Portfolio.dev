@@ -339,12 +339,12 @@ const TAG_LABELS: Record<SupportedLocale, Record<string, string>> = {
 
 const BADGE_LABELS: Record<SupportedLocale, Record<string, string>> = {
   en: {
-  "CLIENT CONTEXT": "CLIENT CONTEXT",
+  "CLIENT CONTEXT": "Client context",
   "FIELD PRACTICE": "Company internship",
-  "PERSONAL PROJECT": "PERSONAL PROJECT",
+  "PERSONAL PROJECT": "Personal project",
   "Personal — In Progress": "Personal — In Progress",
   "Personal — Coming Soon": "Personal — Coming Soon",
-  "TRAINING LAB": "TRAINING LAB",
+  "TRAINING LAB": "Training lab",
   "TRAINING PROJECT": "Training project",
   "RNCP 6 TRAINING PROJECT": "Training project — RNCP 6 diploma",
   "CAPSTONE RNCP 6": "RNCP 6 capstone project",
