@@ -7269,7 +7269,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/portfolio-next",
+                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
                 "label": "GitHub repository"
               },
               {
@@ -7376,7 +7376,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/portfolio-next",
+                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
                 "label": "Dépôt GitHub"
               },
               {
@@ -7483,7 +7483,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "https://github.com/Aiyeesha/portfolio-next",
+                "href": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
                 "label": "Repositorio GitHub"
               },
               {
@@ -10766,10 +10766,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Git branching strategy: feature → develop → staging → main with branch protection rules",
+              "Git branching strategy: feature → develop → main, with branch protection on develop and main",
               "GitHub Actions workflow: Apex validation + automated tests triggered on every Pull Request",
-              "Automatic deployment to sandbox on develop merge, staging deployment on main merge",
-              "Quick Deploy to production after full test run validation",
+              "Automatic deployment to the integration sandbox on develop merge, and to the staging (UAT) sandbox on main merge",
+              "Production release by Quick Deploy, triggered manually after UAT sign-off, reusing the validation already run against production",
               "Salesforce credentials management via GitHub Secrets (encrypted SFDX Auth URL)",
               "Deployment status notifications integrated at every pipeline stage"
             ],
@@ -10799,15 +10799,15 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "CI Pipeline",
-                "description": "GitHub Actions workflows: Apex validation job with unit test execution triggered on every Pull Request to develop"
+                "description": "GitHub Actions workflows: Apex validation job with unit test execution triggered on every Pull Request to develop and to main"
               },
               {
                 "label": "CD Pipeline",
-                "description": "Deployment automation: sandbox on develop merge, staging on main merge — with Quick Deploy to production reusing the already-validated test run instead of re-running the full suite"
+                "description": "Deployment automation: integration sandbox on develop merge, staging (UAT) sandbox on main merge plus a check-only validation against production — then a manually triggered Quick Deploy to production that reuses that validated test run instead of re-running the full suite"
               },
               {
                 "label": "Security",
-                "description": "SFDX Auth URL credentials stored in GitHub Secrets, main and staging branch protection, mandatory review rules"
+                "description": "SFDX Auth URL credentials stored in GitHub Secrets; develop and main protected by required status checks (the CI validation must pass before any merge)"
               },
               {
                 "label": "Rollback procedure",
@@ -10821,7 +10821,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Quick Deploy reuses the CI stage's already-validated test run instead of re-running the full Apex suite — Salesforce allows this within a 10-day validation window, cutting minutes off every release without skipping coverage",
               "No automated rollback trigger: rollback is the documented manual procedure above, not a one-click tool — building true rollback tooling for Salesforce metadata would be its own separate project",
-              "Branch protection requires one review before merge to main — sized for a single-maintainer pipeline, not yet exercised at multi-developer scale",
+              "Branch protection relies on required status checks, not on a mandatory human review: on a single-maintainer pipeline, GitHub does not let authors approve their own Pull Request — a required reviewer is the first rule I would add with a second contributor",
               "No post-deploy smoke tests: the pipeline validates before deploying, not after — a gap I'd close first if this pipeline had to support a live production org today"
             ],
             "title": "Decisions & Limitations"
@@ -10830,19 +10830,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "Dev, Staging, Production",
+                "note": "Integration, staging, production",
                 "label": "Environments covered",
                 "value": "3"
-              },
-              {
-                "note": "Per Pull Request",
-                "label": "Validation time",
-                "value": "< 5 min"
-              },
-              {
-                "note": "Fully automated",
-                "label": "Manual deployments",
-                "value": "0"
               },
               {
                 "note": "Apex — required for deployment",
@@ -10866,10 +10856,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Stratégie de branches Git : feature → develop → staging → main avec protection des branches critiques",
+              "Stratégie de branches Git : feature → develop → main, avec protection des branches develop et main",
               "Workflow GitHub Actions : validation Apex + tests automatiques à chaque Pull Request",
-              "Déploiement automatique en sandbox dès merge sur develop, déploiement en staging sur main",
-              "Quick Deploy en production après validation complète du test run",
+              "Déploiement automatique dans la sandbox d'intégration au merge sur develop, puis dans la sandbox de recette (staging) au merge sur main",
+              "Mise en production par Quick Deploy, déclenchée manuellement après validation de la recette, en réutilisant la validation déjà exécutée contre la production",
               "Gestion des credentials Salesforce via GitHub Secrets (SFDX Auth URL chiffrée)",
               "Notifications de statut de déploiement intégrées à chaque étape du pipeline"
             ],
@@ -10899,15 +10889,15 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Pipeline CI",
-                "description": "Création des workflows GitHub Actions : job de validation Apex avec exécution des tests unitaires déclenchée à chaque Pull Request sur develop"
+                "description": "Création des workflows GitHub Actions : job de validation Apex avec exécution des tests unitaires déclenchée à chaque Pull Request vers develop et vers main"
               },
               {
                 "label": "Pipeline CD",
-                "description": "Automatisation des déploiements : sandbox au merge sur develop, staging au merge sur main — avec Quick Deploy en production réutilisant le test run déjà validé plutôt que de relancer toute la suite"
+                "description": "Automatisation des déploiements : sandbox d'intégration au merge sur develop, sandbox de recette (staging) au merge sur main, accompagnée d'une validation à blanc contre la production — puis Quick Deploy en production, déclenché manuellement, qui réutilise ce test run validé plutôt que de relancer toute la suite"
               },
               {
                 "label": "Sécurisation",
-                "description": "Stockage des credentials SFDX Auth URL dans GitHub Secrets, protection des branches main et staging, règles de review obligatoires"
+                "description": "Stockage des credentials SFDX Auth URL dans GitHub Secrets ; develop et main protégées par des contrôles de statut obligatoires (la validation CI doit passer avant tout merge)"
               },
               {
                 "label": "Procédure de rollback",
@@ -10921,7 +10911,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Le Quick Deploy réutilise le test run déjà validé côté CI plutôt que de relancer toute la suite Apex — Salesforce l'autorise dans une fenêtre de validation de 10 jours, ce qui réduit chaque release de plusieurs minutes sans sacrifier la couverture",
               "Aucun déclenchement automatique de rollback : le rollback reste la procédure manuelle documentée ci-dessus, pas un outil en un clic — un vrai outillage de rollback pour les métadonnées Salesforce serait un projet à part entière",
-              "La protection de branche exige une seule revue avant merge sur main — dimensionné pour un pipeline à un seul mainteneur, jamais éprouvé à l'échelle d'une équipe de plusieurs développeurs",
+              "La protection de branche repose sur des contrôles de statut obligatoires, pas sur une revue humaine imposée : sur un pipeline à une seule mainteneuse, GitHub ne permet pas d'approuver sa propre Pull Request — un relecteur obligatoire est la première règle que j'ajouterais avec une deuxième contributrice ou un deuxième contributeur",
               "Aucun test de fumée post-déploiement : le pipeline valide avant de déployer, pas après — la première limite que je comblerais si ce pipeline devait servir une org de production réelle aujourd'hui"
             ],
             "title": "Décisions & Limites"
@@ -10930,19 +10920,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "Dev, Staging, Production",
+                "note": "Intégration, recette, production",
                 "label": "Environnements couverts",
                 "value": "3"
-              },
-              {
-                "note": "Par Pull Request",
-                "label": "Temps de validation",
-                "value": "< 5 min"
-              },
-              {
-                "note": "Entièrement automatisé",
-                "label": "Déploiements manuels",
-                "value": "0"
               },
               {
                 "note": "Apex — requis pour déploiement",
@@ -10966,10 +10946,10 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Estrategia de ramas Git: feature → develop → staging → main con reglas de protección de ramas",
+              "Estrategia de ramas Git: feature → develop → main, con protección de las ramas develop y main",
               "Workflow de GitHub Actions: validación Apex + tests automáticos en cada Pull Request",
-              "Despliegue automático a sandbox al hacer merge en develop, despliegue a staging al hacer merge en main",
-              "Quick Deploy a producción tras la validación completa del test run",
+              "Despliegue automático al sandbox de integración al hacer merge en develop, y al sandbox de validación (staging) al hacer merge en main",
+              "Paso a producción mediante Quick Deploy, lanzado manualmente tras la validación de usuario, reutilizando la validación ya ejecutada contra producción",
               "Gestión de credenciales Salesforce vía GitHub Secrets (SFDX Auth URL cifrada)",
               "Notificaciones de estado de despliegue integradas en cada etapa del pipeline"
             ],
@@ -10999,15 +10979,15 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Pipeline CI",
-                "description": "Workflows de GitHub Actions: job de validación Apex con ejecución de tests unitarios en cada Pull Request hacia develop"
+                "description": "Workflows de GitHub Actions: job de validación Apex con ejecución de tests unitarios en cada Pull Request hacia develop y hacia main"
               },
               {
                 "label": "Pipeline CD",
-                "description": "Automatización de despliegues: sandbox al merge en develop, staging al merge en main — con Quick Deploy a producción reutilizando el test run ya validado en vez de repetir toda la suite"
+                "description": "Automatización de despliegues: sandbox de integración al merge en develop, sandbox de validación (staging) al merge en main junto con una validación en seco contra producción — después, un Quick Deploy a producción lanzado manualmente que reutiliza ese test run validado en vez de repetir toda la suite"
               },
               {
                 "label": "Seguridad",
-                "description": "Credenciales SFDX Auth URL almacenadas en GitHub Secrets, protección de ramas main y staging, revisión obligatoria antes de merge"
+                "description": "Credenciales SFDX Auth URL almacenadas en GitHub Secrets; develop y main protegidas por comprobaciones de estado obligatorias (la validación de CI debe pasar antes de cualquier merge)"
               },
               {
                 "label": "Procedimiento de rollback",
@@ -11021,7 +11001,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "El Quick Deploy reutiliza el test run ya validado en la etapa de CI en vez de repetir toda la suite Apex — Salesforce lo permite dentro de una ventana de validación de 10 días, recortando minutos en cada release sin sacrificar cobertura",
               "Sin disparador automático de rollback: el rollback sigue siendo el procedimiento manual documentado arriba, no una herramienta de un clic — construir un rollback automatizado real para metadatos Salesforce sería un proyecto aparte",
-              "La protección de rama exige una sola revisión antes del merge a main — dimensionado para un pipeline con un único mantenedor, nunca probado a la escala de un equipo con varios desarrolladores",
+              "La protección de rama se basa en comprobaciones de estado obligatorias, no en una revisión humana impuesta: en un pipeline con una sola mantenedora, GitHub no permite aprobar la propia Pull Request — un revisor obligatorio es la primera regla que añadiría con una segunda persona en el equipo",
               "Sin pruebas de humo tras el despliegue: el pipeline valida antes de desplegar, no después — la primera limitación que resolvería si este pipeline tuviera que dar servicio a una org de producción real hoy"
             ],
             "title": "Decisiones y límites"
@@ -11030,19 +11010,9 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "Dev, Staging, Production",
+                "note": "Integración, validación, producción",
                 "label": "Entornos cubiertos",
                 "value": "3"
-              },
-              {
-                "note": "Por Pull Request",
-                "label": "Tiempo de validación",
-                "value": "< 5 min"
-              },
-              {
-                "note": "Totalmente automatizado",
-                "label": "Despliegues manuales",
-                "value": "0"
               },
               {
                 "note": "Apex — requerida para el despliegue",
@@ -11234,7 +11204,12 @@ export const projectDetails: ProjectDetails[] = [
   },
   {
     "slug": "nova-manufacturing-classic-to-lightning",
-    "gallery": [],
+    "gallery": [
+      {
+        "alt": "Before/after architecture: Salesforce Classic components (Visualforce, JavaScript button, Process Builder, 8 profiles, Custom Settings, unsecured Apex) and their Lightning Experience replacements (LWC, Quick Action and Screen Flow, Record-Triggered Flow, 5 Permission Set Groups, Named Credentials, Apex with sharing and stripInaccessible)",
+        "src": "/projects/nova-manufacturing-classic-to-lightning/architecture.svg"
+      }
+    ],
     "locales": {
       "en": {
         "title": "Salesforce Classic to Lightning Experience Migration (Nova Manufacturing)",
