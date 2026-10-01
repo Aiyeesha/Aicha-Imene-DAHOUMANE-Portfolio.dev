@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="t d">
+  <title id="t">Nova Manufacturing — Salesforce Classic to Lightning Experience</title>
+  <desc id="d">Before/after architecture: Visualforce, JavaScript button, Process Builder, 8 profiles, Custom Settings endpoints and unsecured Apex replaced by LWC, Quick Action and Screen Flow, Record-Triggered Flow, 5 Permission Set Groups, Named Credentials and Apex with sharing plus stripInaccessible.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070B1A"/><stop offset="100%" stop-color="#0d1b2e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#06b6d4"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="600" y="52" text-anchor="middle" font-family="system-ui, sans-serif" font-size="26" font-weight="700" fill="#f8fafc">Nova Manufacturing · Classic → Lightning Experience</text>
+  <text x="290" y="98" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="#94a3b8">SALESFORCE CLASSIC</text>
+  <text x="910" y="98" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="#22d3ee">LIGHTNING EXPERIENCE</text>
+  <rect x="70" y="118" width="440" height="62" rx="10" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+  <text x="90" y="145" font-family="ui-monospace, monospace" font-size="17" fill="#e2e8f0">Visualforce · Compte360</text>
+  <text x="90" y="167" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8">dynamic SOQL in controller</text>
+  <line x1="522" y1="149" x2="676" y2="149" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="690" y="118" width="440" height="62" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="710" y="145" font-family="ui-monospace, monospace" font-size="17" fill="#67e8f9">LWC · AccountOrdersOverview</text>
+  <text x="710" y="167" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e1">WITH SECURITY_ENFORCED · cacheable</text>
+  <rect x="70" y="196" width="440" height="62" rx="10" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+  <text x="90" y="223" font-family="ui-monospace, monospace" font-size="17" fill="#e2e8f0">JavaScript button</text>
+  <text x="90" y="245" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8">UpdateContractStatus · no rights check</text>
+  <line x1="522" y1="227" x2="676" y2="227" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="690" y="196" width="440" height="62" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="710" y="223" font-family="ui-monospace, monospace" font-size="17" fill="#67e8f9">Quick Action + Screen Flow</text>
+  <text x="710" y="245" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e1">invocable Apex method</text>
+  <rect x="70" y="274" width="440" height="62" rx="10" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+  <text x="90" y="301" font-family="ui-monospace, monospace" font-size="17" fill="#e2e8f0">Process Builder</text>
+  <text x="90" y="323" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8">Order Validation · not bulkified</text>
+  <line x1="522" y1="305" x2="676" y2="305" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="690" y="274" width="440" height="62" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="710" y="301" font-family="ui-monospace, monospace" font-size="17" fill="#67e8f9">Record-Triggered Flow</text>
+  <text x="710" y="323" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e1">before-save / after-save · 200+ records</text>
+  <rect x="70" y="352" width="440" height="62" rx="10" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+  <text x="90" y="379" font-family="ui-monospace, monospace" font-size="17" fill="#e2e8f0">Profiles × 8</text>
+  <text x="90" y="401" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8">near-duplicate</text>
+  <line x1="522" y1="383" x2="676" y2="383" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="690" y="352" width="440" height="62" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="710" y="379" font-family="ui-monospace, monospace" font-size="17" fill="#67e8f9">Permission Set Groups × 5</text>
+  <text x="710" y="401" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e1">mapping matrix validated before cutover</text>
+  <rect x="70" y="430" width="440" height="62" rx="10" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+  <text x="90" y="457" font-family="ui-monospace, monospace" font-size="17" fill="#e2e8f0">Custom Settings</text>
+  <text x="90" y="479" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8">hardcoded REST endpoints + credentials</text>
+  <line x1="522" y1="461" x2="676" y2="461" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="690" y="430" width="440" height="62" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="710" y="457" font-family="ui-monospace, monospace" font-size="17" fill="#67e8f9">Named Credentials</text>
+  <text x="710" y="479" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e1">platform-managed authentication</text>
+  <rect x="70" y="508" width="440" height="62" rx="10" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+  <text x="90" y="535" font-family="ui-monospace, monospace" font-size="17" fill="#e2e8f0">Apex × 4 legacy</text>
+  <text x="90" y="557" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8">without sharing · no CRUD/FLS</text>
+  <line x1="522" y1="539" x2="676" y2="539" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="690" y="508" width="440" height="62" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="710" y="535" font-family="ui-monospace, monospace" font-size="17" fill="#67e8f9">Apex × 8 · with sharing</text>
+  <text x="710" y="557" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e1">stripInaccessible() before every DML</text>
+  <text x="600" y="606" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#64748b">LWC · Flow · Permission Set Groups · Named Credentials · CRUD/FLS · WITH SECURITY_ENFORCED</text>
+</svg>

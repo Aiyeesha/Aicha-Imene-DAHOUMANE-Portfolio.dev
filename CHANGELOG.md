@@ -26,6 +26,17 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Cohérence du profil hybride (audit global du 2026-10-01)** —
+  - Accueil : le bloc « pont » (Légarant-AXG) remonte juste sous « Vous recrutez pour quel poste ? » ; sa seconde preuve devient le workflow GitHub Actions public de MediCare Solutions (projet en cours : JWT Bearer, validation à blanc, tests Apex). Le lien « Profil hybride » du menu prend l'accent visuel ; l'ambre du « Cluster Sécurité » est atténué. Mobile : avatar réduit et bouton « Me recruter » visible sans défilement.
+  - `/hybride` : libellé « Vérifiable » sur les preuves qui renvoient vers un artefact public ; MediCare ajouté en première preuve du scénario 2.
+  - Fiche « Pipeline CI/CD » : n'est plus marquée « projet pont » ; métriques non démontrées (« < 5 min », « 0 déploiement manuel ») et mention Gearset retirées ; stratégie de branches (feature → develop → main) et règle de protection (contrôles de statut obligatoires) rendues cohérentes en FR/EN/ES.
+  - Nova Manufacturing : « 14 profils » corrigé en 8 ; schéma d'architecture avant/après ajouté.
+  - IT Ops : doublon du sous-titre du hero supprimé ; positionnement À propos réécrit au passé et sourcé (stage MIDRANGE, TAI/TSSR, labs) ; contexte précisé pour Docker et la supervision.
+  - Certifications : roadmap 2027 repliée par défaut ; formulation « planifiées pour novembre 2026 » alignée entre FAQ, À propos et page dédiée.
+  - Ancienneté : 3 ans d'expérience Salesforce (alternance puis CDI) sur le site et dans les CV Salesforce ; le CV hybride garde « bientôt 4 ans de pratique combinée ».
+  - Mobilité : priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur, puis relocalisation internationale (Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande, Asie) — FAQ, À propos, modale de disponibilité, `/work-with-me`, JSON-LD et 18 CV (PDF régénérés, pagination inchangée).
+  - Dépôt : URL de production et nom du dépôt corrigés (README, `next.config.mjs`, CONTRIBUTING, modèle d'issue, workflow drift-check) ; badges anglais en casse de phrase.
+
 - **Dépendances : regroupement des 3 PR Dependabot du 30/09 (#416, #423, #424)** — `@supabase/supabase-js` 2.117.2 (correctif de typage TypeScript de postgrest, sans changement d'exécution) ; outillage : `ts-jest` 29.4.14 (annule une régression de la 29.4.13), `dotenv` 18.0.4 (`import "dotenv/config"` silencieux par défaut, non utilisé par les scripts du dépôt). `package-lock.json` identique aux lockfiles générés par Dependabot (npm 11) ; les binaires `@img/sharp-*` n'y sont plus marqués `dev`, ce qui est exact puisque Next.js utilise `sharp` en production. Versions publiées le 25/09, aucune alerte de sécurité associée.
 
 - **Dépendances : regroupement des 8 PR Dependabot du 28/09 (#412 à #419)** — `@supabase/supabase-js` 2.117.1, `@upstash/ratelimit` 2.2.0, `@upstash/redis` 1.39.0, `next-intl` 4.14.7, `zod` 4.6.5, `js-yaml` 5.4.2 ; outillage : `dotenv` 18.0.3 (majeure — préchargement `-r dotenv/config` et `.env.vault` supprimés, fonctions non utilisées par les scripts du dépôt ; `dotenv.config()` inchangé), `puppeteer` 25.12.0, `tsx` 4.23.15, `eslint-config-next` 16.3.6, `jest`/`jest-environment-jsdom` 30.5.2, `ts-jest` 29.4.13. `package-lock.json` reconstruit à l'identique des lockfiles générés par Dependabot (versions revues, aucune publiée depuis moins de 48 h). Aucune alerte de sécurité associée.

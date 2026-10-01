@@ -891,7 +891,7 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/portfolio-next",
+    "repoUrl": "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev",
     "techStack": [
       "Next.js 16",
       "Supabase",
@@ -1701,7 +1701,7 @@ export const projects: Project[] = [
     "slug": "cicd-pipeline-setup",
     "nature": "personal",
     "title": "CI/CD Pipeline — Multi-environment Salesforce Deployment",
-    "excerpt": "Design and implementation of a complete Salesforce CI/CD pipeline: Git branching strategy, automated Apex validations and continuous deployments via GitHub Actions across sandbox and production.",
+    "excerpt": "Design of a Salesforce release pipeline: Git branching strategy, automated Apex validation on every Pull Request via GitHub Actions, staged sandbox promotion and a documented rollback procedure.",
     "track": "salesforce",
     "categories": [
       "DevOps",
@@ -1720,22 +1720,19 @@ export const projects: Project[] = [
     "techStack": [
       "Salesforce DX",
       "GitHub Actions",
-      "Gearset",
       "CI/CD",
       "Git",
       "Sandbox Management"
     ],
     "updatedAt": "2025-02-04T00:00:00+00:00",
     "highlights": [
-      "🔗 Cross-domain proof: a Salesforce release pipeline designed and run as a real DevOps infrastructure — secrets management, branch protection, rollback — not just a deployment checklist.",
       "Branching strategy + environment promotions",
       "Automated validations + SFDX deployments",
       "Secrets management + rollback guidelines"
     ],
     "featured": true,
     "sortOrder": 6,
-    "status": "published",
-    "isBridge": true
+    "status": "published"
   },
   {
     "slug": "industrak-salesforce",
@@ -1772,7 +1769,7 @@ export const projects: Project[] = [
     "slug": "nova-manufacturing-classic-to-lightning",
     "nature": "reconstructed",
     "title": "Salesforce Classic to Lightning Experience Migration (Nova Manufacturing)",
-    "excerpt": "Full Classic to Lightning migration for an international industrial equipment manufacturer (~150 sales reps across 3 sites/hubs in Europe): rebuilt Visualforce pages and JS buttons as LWC/Flow, and systematically hardened legacy Apex security (with sharing, stripInaccessible, consolidating 14 profiles into 5 Permission Set Groups).",
+    "excerpt": "Full Classic to Lightning migration for an international industrial equipment manufacturer (~150 sales reps across 3 sites/hubs in Europe): rebuilt Visualforce pages and JS buttons as LWC/Flow, and systematically hardened legacy Apex security (with sharing, stripInaccessible, consolidating 8 near-duplicate profiles into 5 Permission Set Groups).",
     "track": "salesforce",
     "categories": [
       "Salesforce",
