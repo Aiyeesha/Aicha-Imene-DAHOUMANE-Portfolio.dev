@@ -156,13 +156,13 @@ export default function TrackAwareHero() {
         style={shouldReduce ? undefined : { y: parallaxY }}
       >
         <div className={`rounded-2xl p-[3px] shadow-xl ${track === "salesforce" ? "bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 shadow-cyan-500/20 dark:shadow-cyan-400/15" : "bg-gradient-to-br from-violet-400 via-violet-500 to-purple-700 shadow-violet-500/20 dark:shadow-violet-400/15"}`}>
-          <div className="relative h-[240px] w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
+          <div className="relative h-[140px] w-[140px] sm:h-[240px] sm:w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
             <Image
               src={src}
               alt={t("hero.avatar_alt")}
               fill
               priority
-              sizes="240px"
+              sizes="(max-width: 639px) 140px, 240px"
               className="object-cover object-top"
               onError={() => setSrc("/avatar-placeholder.svg")}
             />
@@ -230,7 +230,7 @@ export default function TrackAwareHero() {
             </p>
 
             {/* Titre H1 — gradient animé */}
-            <h1 className="mt-2 font-display text-4xl sm:text-5xl font-semibold leading-tight tracking-tight">
+            <h1 className="mt-2 font-display text-3xl sm:text-5xl font-semibold leading-tight tracking-tight">
               <span className={`block animate-gradient-x bg-clip-text text-transparent bg-gradient-to-r ${track === "salesforce" ? "from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white" : "from-slate-900 via-violet-600 to-slate-900 dark:from-white dark:via-violet-300 dark:to-white"}`}>
                 {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
               </span>
@@ -241,6 +241,21 @@ export default function TrackAwareHero() {
                 {track === "salesforce" ? t("hero.subtitle_salesforce") : t("hero.subtitle_itops")}
               </span>
             </h1>
+
+            {/* CTA mobile (< 640 px) — audit 2026-10-01 : sur un écran de 390 × 844,
+                l'avatar, les badges et le titre repoussaient tous les boutons sous le
+                pli. Ce bouton placé juste sous le H1 rend « Me recruter » visible dès
+                l'arrivée ; la rangée complète de CTA reste plus bas, où son propre
+                « Me recruter » est masqué sur mobile pour éviter le doublon. */}
+            <div className="mt-4 sm:hidden">
+              <a
+                className={`inline-flex rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
+                href="#contact"
+                onClick={() => trackEvent("contact_click", { locale, track })}
+              >
+                {t("cta.workWithMe")}
+              </a>
+            </div>
 
             {/* Tagline percutante — répond à "pourquoi travailler avec moi ?" */}
             <p className="mt-3 max-w-2xl text-muted text-base sm:text-lg leading-relaxed">
@@ -269,7 +284,7 @@ export default function TrackAwareHero() {
         <div className="mt-6 flex flex-wrap items-center gap-3">
           {/* CTA primaire : scroll vers la section contact */}
           <a
-            className={`rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
+            className={`hidden sm:inline-block rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
             href="#contact"
             onClick={() => trackEvent("contact_click", { locale, track })}
           >

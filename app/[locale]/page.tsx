@@ -117,6 +117,45 @@ export default async function Home({ params }: Props) {
           le track Salesforce / IT Ops, avec le CV correspondant. */}
       <RecruiterPaths />
 
+      {/* PONT SALESFORCE ⇄ INFRA — remonté juste sous « Vous recrutez pour quel
+          poste ? » (audit 2026-10-01) : c'est la preuve la plus directe du profil
+          hybride, elle doit être lue dans les 30 premières secondes et non après
+          sept blocs. Le seul projet réellement croisé (Légarant-AXG, badge-bridge)
+          y est expliqué en clair, avec en seconde preuve le workflow public de
+          MediCare Solutions. Dégradé cyan→violet repris de .badge-bridge (globals.css). */}
+      <section id="bridge" className="py-14">
+        <Reveal>
+          <div
+            className="rounded-2xl border-transparent bg-gradient-to-r from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10 p-6 md:p-8"
+            style={{ borderImage: "linear-gradient(to right, rgb(34 211 238 / 0.4), rgb(167 139 250 / 0.4)) 1", borderWidth: "1px", borderStyle: "solid" }}
+          >
+            <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
+            <p className="mt-4 text-muted leading-[1.8]">{t("sections.bridge_body")}</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href={`/${locale}/projects/legarant-axg-salesforce-deployment`}
+                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("sections.bridge_cta")}
+                <span aria-hidden="true"> →</span>
+              </Link>
+              {/* Seconde preuve : artefact public vérifiable (workflow GitHub
+                  Actions de MediCare Solutions, projet en cours) plutôt qu'une
+                  page descriptive — d'où un lien externe et non un <Link>. */}
+              <a
+                href="https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("sections.bridge_cta2")}
+                <span aria-hidden="true"> ↗</span>
+              </a>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* COMPÉTENCES — section-stripe (fond alterné) */}
       <section id="skills" className="section-stripe py-14">
         <Reveal>
@@ -193,39 +232,7 @@ export default async function Home({ params }: Props) {
         )}
       </section>
 
-      {/* PONT SALESFORCE ⇄ INFRA — callout distinct juste avant les projets, pour que
-          le seul projet réellement croisé (Légarant-AXG, badge-bridge) soit expliqué
-          en clair avant que le visiteur ne tombe sur sa carte parmi d'autres.
-          Dégradé cyan→violet repris de .badge-bridge (globals.css) pour le lien visuel. */}
-      <section id="bridge" className="py-14">
-        <Reveal>
-          <div
-            className="rounded-2xl border-transparent bg-gradient-to-r from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10 p-6 md:p-8"
-            style={{ borderImage: "linear-gradient(to right, rgb(34 211 238 / 0.4), rgb(167 139 250 / 0.4)) 1", borderWidth: "1px", borderStyle: "solid" }}
-          >
-            <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
-            <p className="mt-4 text-muted leading-[1.8]">{t("sections.bridge_body")}</p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link
-                href={`/${locale}/projects/legarant-axg-salesforce-deployment`}
-                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-              >
-                {t("sections.bridge_cta")}
-                <span aria-hidden="true"> →</span>
-              </Link>
-              <Link
-                href={`/${locale}/projects/cicd-pipeline-setup`}
-                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-              >
-                {t("sections.bridge_cta2")}
-                <span aria-hidden="true"> →</span>
-              </Link>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* CLUSTER SÉCURITÉ — même logique que la section bridge ci-dessus : le
+      {/* CLUSTER SÉCURITÉ — même logique que la section bridge (en haut de page) : le
           sous-cluster le plus dense du portfolio (16/39 projets, STRIDE, CVSS,
           machine à états SLA, sync NVD réelle) était invisible hors du 5e onglet
           de /projects. Ambre repris de .badge-security pour le lien visuel. */}
