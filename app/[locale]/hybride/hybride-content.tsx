@@ -5,7 +5,12 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
+// Une preuve est soit une page interne (href relatif, préfixé par la locale),
+// soit un artefact public vérifiable (href absolu, ex. un workflow GitHub) :
+// ce second cas reçoit le libellé « Vérifiable » pour qu'un lecteur sache
+// d'un coup d'œil qu'il peut ouvrir la source plutôt qu'une description.
 type Proof = { label: string; href: string };
+const isExternal = (href: string) => /^https?:\/\//.test(href);
 type Scenario = {
   title: string;
   problem: string;
@@ -29,6 +34,8 @@ export default async function HybrideContent({ locale }: { locale: string }) {
   const labels = {
     problem: isFr ? "Le problème" : isEs ? "El problema" : "The problem",
     proofs: isFr ? "Preuves" : isEs ? "Pruebas" : "Proof",
+    verifiable: isFr ? "Vérifiable" : isEs ? "Verificable" : "Verifiable",
+    newTab: isFr ? "(s'ouvre dans un nouvel onglet)" : isEs ? "(se abre en una nueva pestaña)" : "(opens in a new tab)",
     backHome: isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
     breadLabel: isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb",
     cvHref: `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-hybrid.pdf`,
@@ -102,15 +109,31 @@ export default async function HybrideContent({ locale }: { locale: string }) {
                   <span className="text-xs font-semibold uppercase tracking-widest text-muted-2">
                     {labels.proofs}
                   </span>
-                  {s.proofs.map((p) => (
-                    <Link
-                      key={p.href}
-                      href={`/${locale}${p.href}`}
-                      className="inline-flex items-center gap-1 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
-                    >
-                      {p.label} →
-                    </Link>
-                  ))}
+                  {s.proofs.map((p) =>
+                    isExternal(p.href) ? (
+                      <a
+                        key={p.href}
+                        href={p.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/[0.07] px-3 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-emerald-500/15 soft-ring transition-colors"
+                      >
+                        <span className="rounded-full bg-emerald-600/15 px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                          {labels.verifiable}
+                        </span>
+                        {p.label} ↗
+                        <span className="sr-only"> {labels.newTab}</span>
+                      </a>
+                    ) : (
+                      <Link
+                        key={p.href}
+                        href={`/${locale}${p.href}`}
+                        className="inline-flex items-center gap-1 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+                      >
+                        {p.label} →
+                      </Link>
+                    )
+                  )}
                 </div>
               )}
             </li>

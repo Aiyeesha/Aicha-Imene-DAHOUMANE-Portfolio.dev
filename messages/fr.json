@@ -26,7 +26,7 @@
     "title_salesforce": "Développeuse Salesforce · Systèmes, DevOps & Sécurité",
     "subtitle_salesforce": "Du CRM aux serveurs, réseaux et pipelines qui l'entourent — sécurité comprise.",
     "title_itops": "Administratrice systèmes & réseaux · DevOps, Sécurité & Salesforce",
-    "subtitle_itops": "Infrastructure · Sécurité · Automatisation — pensée pour scaler",
+    "subtitle_itops": "Des postes et serveurs aux réseaux et aux pipelines — jusqu'au CRM Salesforce qu'ils font tourner.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — pensé pour durer.",
     "value_itops": "Infrastructure · Automatisation · Sécurité — pensé pour scaler.",
     "proof1_salesforce": "Sécurité d'abord",
@@ -99,9 +99,9 @@
     "profile_title": "Profil",
     "profile_subtitle": "Des systèmes & réseaux au développement Salesforce",
     "bridge_title": "Où mes deux mondes se rencontrent",
-    "bridge_body": "Sur le déploiement Légarant-AXG, mon projet fil rouge du titre RNCP 6, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps. Le même réflexe se retrouve sous une autre forme sur le pipeline CI/CD ci-dessous : une discipline DevOps — protection des branches, validation automatisée, procédure de rollback documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
+    "bridge_body": "Sur le déploiement Légarant-AXG, mon projet fil rouge du titre RNCP 6, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps. Le même réflexe se retrouve, sous une forme vérifiable, dans le pipeline de validation de MediCare Solutions (projet en cours) : chaque Pull Request est validée contre l'org Salesforce par GitHub Actions, avec une authentification serveur à serveur JWT Bearer et une clé privée supprimée du runner après chaque exécution — une discipline DevOps appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
     "bridge_cta": "Voir l'étude de cas Légarant-AXG",
-    "bridge_cta2": "Voir l'étude de cas du pipeline CI/CD",
+    "bridge_cta2": "Voir le workflow MediCare (GitHub)",
     "security_title": "Le cluster Sécurité — {count} projets, une seule discipline",
     "security_body": "Modélisation de menaces STRIDE, scoring CVSS, machine à états avec SLA par sévérité, triage synchronisé en temps réel avec l'API publique du NVD — ce n'est pas une ligne de plus dans une liste de compétences, c'est le sous-cluster le plus dense du portfolio : {count} projets sur {total}, à cheval sur les deux tracks.",
     "security_cta": "Explorer le cluster Sécurité"
@@ -360,13 +360,13 @@
   "profile": {
     "kicker": "Profil",
     "title": "Des systèmes & réseaux au développement Salesforce",
-    "p1": "Développeuse Salesforce avec 2 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
+    "p1": "Développeuse Salesforce avec 3 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
     "p2": "J'ai commencé ma carrière côté infrastructure — stage chez MIDRANGE GROUP (fév – mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 264 postes Dell (dont 200 via Windows Autopilot), administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
     "p3": "D'oct. 2023 à oct. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction d'environ 30 % de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité opérationnelle Paris / Île-de-France · Hybride · Sur site · Remote — Mobilité & relocalisation envisageable",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Hybride · Sur site · Remote — Mobilité internationale envisageable",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
@@ -384,10 +384,10 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, avec 2 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — la certification éditeur Salesforce Administrator est en préparation active.",
-    "p1_itops": "IT Ops & DevOps : j'aide les équipes à concevoir, maintenir et sécuriser des infrastructures résilientes, avec des processus d'exploitation pragmatiques (runbooks, supervision, remédiation).",
-    "p2_itops": "Je mets en place des standards d'exploitation : monitoring/alerting actionnable, réduction du bruit, procédures d'escalade, documentation et automatisation (scripts, jobs, playbooks).",
-    "p3_itops": "Je porte une attention particulière à la sécurité et à la continuité : sauvegardes, durcissement, gestion des accès, et pratiques de changement pour limiter les incidents.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les certifications éditeur Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) sont planifiées pour novembre 2026.",
+    "p1_itops": "IT Ops & DevOps : en stage chez MIDRANGE GROUP (févr.–mai 2023), j'ai supervisé plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (Windows Autopilot, image Sysprep, effacement certifié NIST 800-88).",
+    "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
+    "p3_itops": "Je garde une attention particulière à la sécurité et à la continuité : 85 alertes de sauvegarde Acronis triées pendant le stage, et des labs personnels (honeypot, analyse de trafic, gestion des vulnérabilités) pour entretenir ces réflexes en dehors du poste.",
     "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, acquises en stage chez MIDRANGE GROUP puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
   },
   "mdx": {
@@ -461,11 +461,11 @@
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
-        "a": "Pas encore : les certifications Salesforce Administrator, App Builder et Platform Developer I sont en préparation. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Légarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
+        "a": "Pas encore : les certifications Salesforce Platform Foundations, Administrator, App Builder et Platform Developer I sont planifiées pour novembre 2026. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Légarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
         "q": "Où êtes-vous basée ? Télétravail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France, avec une priorité pour Paris et l'Île-de-France : hybride, sur site ou télétravail selon le poste. Je suis ouverte à la mobilité et à la relocalisation, en France comme à l'international, y compris dans un contexte anglophone."
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la région Provence-Alpes-Côte d'Azur : hybride, sur site ou télétravail selon le poste. Je suis également ouverte à la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie."
       },
       {
         "q": "Comment se passe la suite après une prise de contact ?",
@@ -493,14 +493,14 @@
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site · Télétravail",
     "mobility": "Mobilité",
-    "mobilityValues": "Mobilité & relocalisation envisageables (France & international)",
+    "mobilityValues": "Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Relocalisation internationale envisageable",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
     "rolesValuesSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1",
     "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1 · Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce",
     "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité opérationnelle Paris / Île-de-France · Mobilité France & international (BE, LU, DE, IT, ES, UK, IE, MT + pays anglophones)",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · International : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
     "cta": "Prendre contact →"
   },
   "hybrid": {
@@ -534,10 +534,14 @@
         "soloTitle": "Un profil spécialiste seul",
         "solo": "Un profil Salesforce sait coder la fonctionnalité, mais déploie en Change Set manuel, sans procédure de rollback documentée. Un profil DevOps sait construire un pipeline, mais ne connaît pas les pièges du déploiement de métadonnées Salesforce — pas d'annulation native, ordre de dépendance entre composants.",
         "mineTitle": "Ce que je livre",
-        "mine": "Une discipline DevOps réelle — protection des branches, validation automatisée, procédure de rollback SFDX documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
+        "mine": "Une discipline DevOps réelle — validation automatisée de chaque Pull Request contre l'org, authentification serveur à serveur JWT Bearer, clé privée supprimée du runner après chaque exécution, procédure de rollback SFDX documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
         "proofs": [
           {
-            "label": "Projet personnel — Pipeline CI/CD Salesforce",
+            "label": "MediCare Solutions — workflow de validation (projet en cours)",
+            "href": "https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
+          },
+          {
+            "label": "Projet personnel — procédure de release Salesforce",
             "href": "/projects/cicd-pipeline-setup"
           }
         ],
