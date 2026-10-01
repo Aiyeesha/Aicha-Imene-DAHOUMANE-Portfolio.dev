@@ -21,6 +21,6 @@ labels: bug
 
 ## Environment
 
-- URL: <!-- e.g. https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en/... -->
+- URL: <!-- e.g. https://aicha-imene-dahoumane-portfolio.vercel.app/en/... -->
 - Locale: <!-- en / fr / es -->
 - Browser / device:

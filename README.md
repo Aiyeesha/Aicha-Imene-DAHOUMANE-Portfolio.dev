@@ -2,14 +2,14 @@
 
 [![CI](https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/actions/workflows/ci.yml/badge.svg)](https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/badge)](https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev)
-[![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en)
-[![Live](https://img.shields.io/badge/live-portfolio--next--one--gold.vercel.app-22d3ee?style=flat)](https://Aicha-Imene-DAHOUMANE-Portfolio.vercel.app/en)
+[![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://aicha-imene-dahoumane-portfolio.vercel.app/en)
+[![Live](https://img.shields.io/badge/live-aicha--imene--dahoumane--portfolio.vercel.app-22d3ee?style=flat)](https://aicha-imene-dahoumane-portfolio.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Professional portfolio of a **Salesforce Developer & Consultant** with a background in systems, networks, and DevOps.
 Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills, services, and projects sections.
 
-**Live → [Aicha-Imene-DAHOUMANE-Portfolio.dev-one-gold.vercel.app/en](https://Aicha-Imene-DAHOUMANE-Portfolio.vercel.app/en)**
+**Live → [aicha-imene-dahoumane-portfolio.vercel.app/en](https://aicha-imene-dahoumane-portfolio.vercel.app/en)**
 
 ---
 
@@ -36,7 +36,7 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 | Framework | Next.js 16 (App Router) + React 19 + TypeScript 5 |
 | Styling | Tailwind CSS + next-themes (dark mode) |
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
-| i18n | next-intl (EN default / FR) |
+| i18n | next-intl (EN default / FR / ES) |
 | Backend | Supabase (PostgreSQL) — projects, contact, testimonials, uptime |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |

@@ -352,13 +352,11 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
   },
   "cicd-pipeline-setup": {
     "fr": [
-      "🔗 Preuve de croisement : un pipeline de release Salesforce conçu et exploité comme une vraie infrastructure DevOps (gestion des secrets, protection des branches, retour arrière), pas une simple checklist de déploiement",
       "Stratégie de branches et promotions entre environnements",
       "Validations automatisées et déploiements SFDX",
       "Gestion des secrets et procédure de retour arrière"
     ],
     "es": [
-      "🔗 Prueba de cruce: un pipeline de releases Salesforce diseñado y operado como una verdadera infraestructura DevOps (gestión de secretos, protección de ramas, vuelta atrás), no una simple checklist de despliegue",
       "Estrategia de ramas y promociones entre entornos",
       "Validaciones automatizadas y despliegues SFDX",
       "Gestión de secretos y procedimiento de vuelta atrás"
