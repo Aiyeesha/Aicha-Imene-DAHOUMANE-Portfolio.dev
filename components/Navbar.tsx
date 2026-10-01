@@ -54,6 +54,13 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 // reste accessible via le menu mobile, la palette ⌘K et le pied de page.
 const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "certifications", "services", "testimonials", "projects", "blog", "contact"]);
 
+// Accent visuel du lien « Profil hybride » (audit 2026-10-01) : c'est le profil
+// de référence déclaré sur l'accueil, il doit être l'entrée la plus saillante du
+// menu — devant le lien « Cluster Sécurité », dont l'ambre est désormais atténué.
+// Dégradé repris de la page /hybride (cyan→violet = la combinaison des deux tracks).
+const HYBRID_ACCENT =
+  "font-semibold bg-gradient-to-r from-cyan-600 to-violet-600 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent";
+
 type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
 
 export default function Navbar({
@@ -618,7 +625,7 @@ useEffect(() => {
                   return (
                     <Link key={s.id} className={cls} data-section={s.id} href={href}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.label}{pageIcon}
+                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}{pageIcon}
                     </Link>
                   );
                 }
@@ -645,7 +652,7 @@ useEffect(() => {
               <Link
                 href={`/${locale}/projects?tab=security`}
                 data-section="security-cluster"
-                className="relative z-10 whitespace-nowrap rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 transition-colors soft-ring"
+                className="relative z-10 whitespace-nowrap rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none inline-flex items-center gap-1.5 text-amber-700/75 dark:text-amber-300/75 hover:text-amber-800 dark:hover:text-amber-200 transition-colors soft-ring"
               >
                 {t("nav.securityClusterLink", { count: securityClusterCount })}
               </Link>
@@ -779,7 +786,7 @@ useEffect(() => {
                     <Link key={s.id} href={hrefFor(s.id)} data-section={s.id}
                       className={cls} onClick={() => setMobileOpen(false)}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.label}{pageIcon}
+                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}{pageIcon}
                     </Link>
                   );
                 }
@@ -803,7 +810,7 @@ useEffect(() => {
               <Link
                 href={`/${locale}/projects?tab=security`}
                 data-section="security-cluster"
-                className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm text-amber-700 dark:text-amber-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors soft-ring"
+                className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm text-amber-700/75 dark:text-amber-300/75 hover:bg-black/5 dark:hover:bg-white/10 transition-colors soft-ring"
                 onClick={() => setMobileOpen(false)}
               >
                 {t("nav.securityClusterLink", { count: securityClusterCount })}
