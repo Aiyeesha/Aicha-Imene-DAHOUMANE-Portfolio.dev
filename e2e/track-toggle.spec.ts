@@ -85,16 +85,24 @@ test.describe("Track toggle", () => {
   }) => {
     await gotoHydrated(page, "/en");
     const h1 = page.getByRole("heading", { level: 1 });
+    // Assertions sur l'intitulé propre à chaque track (messages/en.json,
+    // hero.title_*) : les deux H1 contiennent « Salesforce » et un sous-titre
+    // peut évoluer, seul l'intitulé distingue réellement les deux états.
+    const itopsTitle = /Network Administrator/i;
+    const salesforceTitle = /Salesforce Developer/i;
 
     await page.getByRole("button", { name: /switch to it ops/i }).click();
-    await expect(h1).toContainText(/IT Ops|Infrastructure/i);
+    await expect(h1).toContainText(itopsTitle);
+    await expect(h1).not.toContainText(salesforceTitle);
 
     // 2e clic — celui qui reproduisait le gel
     await page.getByRole("button", { name: /switch to salesforce/i }).click();
-    await expect(h1).toContainText(/Salesforce/i);
+    await expect(h1).toContainText(salesforceTitle);
+    await expect(h1).not.toContainText(itopsTitle);
 
     // 3e clic — retour, pour confirmer que ce n'est pas un cas isolé
     await page.getByRole("button", { name: /switch to it ops/i }).click();
-    await expect(h1).toContainText(/IT Ops|Infrastructure/i);
+    await expect(h1).toContainText(itopsTitle);
+    await expect(h1).not.toContainText(salesforceTitle);
   });
 });
