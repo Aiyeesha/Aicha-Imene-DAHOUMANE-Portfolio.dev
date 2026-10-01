@@ -74,11 +74,19 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
+    // Postes visés (décision du 01/10/2026) : trois intitulés mis en avant,
+    // puis une ouverture explicite à tout poste où le profil hybride apporte
+    // de la valeur — hiérarchie claire sans fermer de porte.
     domains:        isFr
-      ? ["Développeuse Salesforce", "Administratrice Salesforce", "Consultante Salesforce", "Ingénieure Salesforce & Infrastructure", "Administratrice systèmes & réseaux", "Ingénieure DevOps junior", "Analyste SOC N1"]
+      ? ["Ingénieure Salesforce & Infrastructure", "Développeuse Salesforce", "Administratrice systèmes & réseaux"]
       : isEs
-      ? ["Desarrolladora Salesforce", "Administradora Salesforce", "Consultora Salesforce", "Ingeniera Salesforce & Infraestructura", "Administradora de sistemas y redes", "Ingeniera DevOps junior", "Analista SOC N1"]
-      : ["Salesforce Developer", "Salesforce Administrator", "Salesforce Consultant", "Salesforce & Infrastructure Engineer", "Systems & Network Administrator", "Junior DevOps Engineer", "SOC Analyst (Tier 1)"],
+      ? ["Ingeniera Salesforce & Infraestructura", "Desarrolladora Salesforce", "Administradora de sistemas y redes"]
+      : ["Salesforce & Infrastructure Engineer", "Salesforce Developer", "Systems & Network Administrator"],
+    domainsOpen:    isFr
+      ? "Également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1."
+      : isEs
+      ? "También abierta a cualquier puesto donde mi perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1."
+      : "Also open to any role where my hybrid profile adds value, including: Salesforce Administrator or Consultant, DevOps Engineer, SOC Analyst (Tier 1).",
     durationLabel:  isFr ? "Contrats" : isEs ? "Contratos" : "Contracts",
     durations:      isFr
       ? ["CDI", "CDD", "Intérim", "Portage salarial"]
@@ -199,6 +207,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
                 <span key={d} className={`rounded-full border px-3 py-1 text-sm font-medium ${accent.domainBadge}`}>{d}</span>
               ))}
             </div>
+            <p className="mt-2 text-sm text-muted leading-relaxed">{labels.domainsOpen}</p>
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-2 mb-2">{labels.durationLabel}</p>
