@@ -18,14 +18,14 @@
     "hybrid": "Perfil híbrido"
   },
   "hero": {
-    "title": "Desarrolladora Salesforce · Sistemas, DevOps y Seguridad",
+    "title": "Desarrolladora Salesforce e Infraestructura",
     "subtitle": "Apex · LWC · Integraciones · Sistemas",
     "intro_salesforce": "En un sitio industrial, en energía, salud o logística, un incidente rara vez se queda en una sola capa: una integración que falla, un servidor mal bastionado, un despliegue sin red de seguridad, un acceso demasiado amplio. He trabajado en las cuatro — Salesforce, sistemas y redes, CI/CD, seguridad — y eso me permite hacer de puente entre los equipos que las gestionan.",
     "intro_itops": "En un sitio industrial, en energía, salud o logística, un incidente rara vez se queda en una sola capa: una integración que falla, un servidor mal bastionado, un despliegue sin red de seguridad, un acceso demasiado amplio. He trabajado en las cuatro — Salesforce, sistemas y redes, CI/CD, seguridad — y eso me permite hacer de puente entre los equipos que las gestionan.",
-    "avatar_alt": "Foto de perfil de Aïcha Imène DAHOUMANE, Desarrolladora Salesforce · Sistemas, DevOps y Seguridad",
-    "title_salesforce": "Desarrolladora Salesforce · Sistemas, DevOps y Seguridad",
+    "avatar_alt": "Foto de perfil de Aïcha Imène DAHOUMANE, desarrolladora Salesforce e infraestructura",
+    "title_salesforce": "Desarrolladora Salesforce e Infraestructura",
     "subtitle_salesforce": "Del CRM a los servidores, redes y pipelines que lo rodean — con la seguridad incluida.",
-    "title_itops": "Administradora de sistemas y redes · DevOps, Seguridad y Salesforce",
+    "title_itops": "Desarrolladora Salesforce e Infraestructura",
     "subtitle_itops": "De los puestos y servidores a las redes y los pipelines — hasta el CRM Salesforce que sostienen.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — construido para durar.",
     "value_itops": "Infraestructura · Automatización · Seguridad — construido para escalar.",
@@ -378,9 +378,9 @@
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1+), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
-    "rolesValue": "Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce · Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Ingeniera DevOps junior · Analista SOC N1",
-    "rolesValueSalesforce": "Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce · Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Ingeniera DevOps junior · Analista SOC N1",
-    "rolesValueItops": "Administradora de sistemas y redes · Ingeniera DevOps junior · Analista SOC N1 · Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce",
+    "rolesValue": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
+    "rolesValueSalesforce": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
+    "rolesValueItops": "Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Desarrolladora Salesforce — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: ingeniera DevOps, analista SOC N1, administradora o consultora Salesforce",
     "availabilityLabel": "Disponibilidad",
     "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "goalLabel": "Objetivo",
@@ -457,7 +457,7 @@
       },
       {
         "q": "¿A qué puestos aspiras?",
-        "a": "Desarrolladora, administradora o consultora Salesforce, ingeniera Salesforce & infraestructura y, en general, puestos de sistemas y redes o DevOps donde un perfil doble sea una ventaja."
+        "a": "Ingeniera Salesforce e infraestructura, desarrolladora Salesforce o administradora de sistemas y redes. Sigo abierta a cualquier puesto donde este perfil híbrido aporte valor — administración o consultoría Salesforce, DevOps, análisis SOC — siempre que se crucen Salesforce, la infraestructura o la seguridad."
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
@@ -497,8 +497,8 @@
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
-    "rolesValuesSalesforce": "Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce · Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Ingeniera DevOps junior · Analista SOC N1",
-    "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps junior · Analista SOC N1 · Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora Salesforce · Consultora Salesforce",
+    "rolesValuesSalesforce": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
+    "rolesValuesItops": "Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Desarrolladora Salesforce — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: ingeniera DevOps, analista SOC N1, administradora o consultora Salesforce",
     "location": "Ubicación",
     "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France y, después, Provenza-Alpes-Costa Azul · Internacional: Europa (BE, LU, DE, IT, ES, IE, SE, MT), Reino Unido, Magreb (TN, DZ), Canadá, Estados Unidos, Nueva Zelanda, Asia",
     "cta": "Ponte en contacto →"
