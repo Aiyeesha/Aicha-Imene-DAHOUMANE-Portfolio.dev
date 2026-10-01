@@ -99,7 +99,7 @@
 
 <header class="cv-header">
   <div class="cv-name">Aïcha Imène DAHOUMANE</div>
-  <div class="cv-title">Ingeniera Salesforce &amp; Infraestructura &nbsp;·&nbsp; DevSecOps integrado</div>
+  <div class="cv-title">Desarrolladora Salesforce e Infraestructura &nbsp;·&nbsp; DevSecOps integrado</div>
   <div class="cv-contacts">
     <span class="avail">● Entrevistas ya — incorporación dic. 2026</span>
     <span>Indefinido · Temporal · Por proyecto</span>
@@ -120,7 +120,7 @@
     <div class="section">
       <div class="section-title">Perfil</div>
       <p class="summary">
-        Ingeniera híbrida Salesforce &amp; Infraestructura — <strong>casi 4 años de práctica combinada</strong> (desarrollo Salesforce y administración de sistemas/redes), con especial atención a los entornos donde el CRM y la infraestructura que lo aloja deben pensarse juntos: <strong>industria, energía, logística, automoción, salud, lujo</strong>. Apex, Flows, LWC del lado de la plataforma; Windows Server, AD DS, PfSense, seguridad y CI/CD del lado de infraestructura. RNCP Nivel 6 — Desarrolladora Diseñadora de Software, especialización Salesforce (OpenClassrooms, oct. 2025) y RNCP Nivel 5 — Sistemas y Redes. Prueba concreta: en Légarant-AXG (seguros), entregué el endpoint Apex REST Y la aplicación Heroku que lo consume — una sola persona tomando ambas decisiones a la vez, no dos competencias yuxtapuestas.
+        Desarrolladora híbrida Salesforce e Infraestructura — <strong>casi 4 años de práctica combinada</strong> (desarrollo Salesforce y administración de sistemas/redes), con especial atención a los entornos donde el CRM y la infraestructura que lo aloja deben pensarse juntos: <strong>industria, energía, logística, automoción, salud, lujo</strong>. Apex, Flows, LWC del lado de la plataforma; Windows Server, AD DS, PfSense, seguridad y CI/CD del lado de infraestructura.
       </p>
     </div>
 
@@ -151,6 +151,8 @@
         <ul class="exp-ul">
           <li>Más de 10 clases Apex y batch jobs · más de 20 Flows (cerca de un 30&nbsp;% menos de carga manual) · LWC reutilizables</li>
           <li>CI/CD entre sandboxes con Salesforce CLI · migraciones de datos</li>
+          <li>Migraciones de datos (CSV / Data Import Wizard) con 99,8&nbsp;% de precisión en 3 módulos principales</li>
+          <li>Documentación de escenarios de prueba, incorporación de 5+ usuarios</li>
         </ul>
       </div>
 
@@ -165,7 +167,43 @@
           <li>Administración de Windows Server 2022: AD DS, DNS, DHCP, GPO &nbsp;·&nbsp; PfSense/Squid &nbsp;·&nbsp; Acronis &nbsp;·&nbsp; Datto RMM</li>
           <li>Supervisión de red y respuesta a incidentes de seguridad (simulacros de ransomware)</li>
         </ul>
-        <div class="exp-note">↳ Esta doble práctica no son dos currículums superpuestos — es la misma persona tomando ambas decisiones a la vez.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Proyectos — pruebas del cruce</div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Légarant-AXG — Salesforce ⇄ Heroku</span>
+          <span class="exp-period">Proyecto final RNCP 6</span>
+        </div>
+        <div class="exp-company">Seguros · github.com/Aiyeesha/legarant-axg-crm-sync</div>
+        <ul class="exp-ul">
+          <li>Endpoints Apex REST <em>y</em> la aplicación Heroku (Node.js/PostgreSQL) que los consume: 2 entornos aislados, pipeline Heroku, Heroku Connect, runbook de despliegue</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">MediCare Solutions — CRM sanitario</span>
+          <span class="exp-period">Proyecto en curso</span>
+        </div>
+        <div class="exp-company">Salud · github.com/Aiyeesha/medicare-solutions</div>
+        <ul class="exp-ul">
+          <li>19 objetos personalizados, modelo de seguridad con 324 FLS; cada Pull Request validada por GitHub Actions (autenticación JWT Bearer)</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-top">
+          <span class="exp-title">Seguridad de integración — iDEM Connect &amp; risque360</span>
+          <span class="exp-period">RNCP 6 · personal</span>
+        </div>
+        <div class="exp-company">github.com/Aiyeesha/iDEM-Connect · github.com/Aiyeesha/risque360</div>
+        <ul class="exp-ul">
+          <li>Backend Apex con patrón trigger-handler (23 tests, 90&nbsp;% de cobertura) y registro de riesgos basado en el modelado STRIDE</li>
+        </ul>
       </div>
     </div>
 
