@@ -43,7 +43,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.pdf",
-    scale: 1.02,
+    scale: 0.96,
     title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -57,7 +57,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-es-salesforce.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-salesforce.pdf",
-    scale: 0.97,
+    scale: 0.95,
     title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
