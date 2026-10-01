@@ -18,14 +18,14 @@
     "hybrid": "Profil hybride"
   },
   "hero": {
-    "title": "Développeuse Salesforce · Systèmes, DevOps & Sécurité",
+    "title": "Développeuse Salesforce & Infrastructure",
     "subtitle": "Apex · LWC · Intégrations · Sysadmin",
     "intro_salesforce": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal durci, un déploiement sans filet, un accès trop large. J'ai pratiqué les quatre — Salesforce, systèmes et réseaux, CI/CD, sécurité — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
     "intro_itops": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal durci, un déploiement sans filet, un accès trop large. J'ai pratiqué les quatre — Salesforce, systèmes et réseaux, CI/CD, sécurité — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
-    "avatar_alt": "Photo de profil d'Aïcha Imène DAHOUMANE, développeuse Salesforce · systèmes, DevOps & sécurité",
-    "title_salesforce": "Développeuse Salesforce · Systèmes, DevOps & Sécurité",
+    "avatar_alt": "Photo de profil d'Aïcha Imène DAHOUMANE, développeuse Salesforce & infrastructure",
+    "title_salesforce": "Développeuse Salesforce & Infrastructure",
     "subtitle_salesforce": "Du CRM aux serveurs, réseaux et pipelines qui l'entourent — sécurité comprise.",
-    "title_itops": "Administratrice systèmes & réseaux · DevOps, Sécurité & Salesforce",
+    "title_itops": "Développeuse Salesforce & Infrastructure",
     "subtitle_itops": "Des postes et serveurs aux réseaux et aux pipelines — jusqu'au CRM Salesforce qu'ils font tourner.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — pensé pour durer.",
     "value_itops": "Infrastructure · Automatisation · Sécurité — pensé pour scaler.",
@@ -370,9 +370,9 @@
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
-    "rolesValue": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1",
-    "rolesValueSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1",
-    "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1 · Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce",
+    "rolesValue": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
+    "rolesValueSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
+    "rolesValueItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
     "availabilityLabel": "Disponibilité",
     "availabilityValue": "Poste à partir du 1er décembre 2026 · Entretiens dès maintenant · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "goalLabel": "Objectif",
@@ -457,7 +457,7 @@
       },
       {
         "q": "Quels postes visez-vous ?",
-        "a": "Développeuse, administratrice ou consultante Salesforce, ingénieure Salesforce & infrastructure, et plus largement des postes systèmes & réseaux ou DevOps où mon double profil est un atout."
+        "a": "Ingénieure Salesforce & infrastructure, développeuse Salesforce ou administratrice systèmes & réseaux. Je reste ouverte à tout poste où ce profil hybride apporte de la valeur — administration ou conseil Salesforce, DevOps, analyse SOC — dès lors que Salesforce, l'infrastructure ou la sécurité s'y croisent."
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
@@ -497,8 +497,8 @@
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
-    "rolesValuesSalesforce": "Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce · Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1",
-    "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps junior · Analyste SOC N1 · Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice Salesforce · Consultante Salesforce",
+    "rolesValuesSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
+    "rolesValuesItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
     "location": "Localisation",
     "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · International : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
     "cta": "Prendre contact →"
