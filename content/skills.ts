@@ -73,8 +73,8 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         items: [
           "CI/CD avec GitHub Actions",
           "Automatisation par scripts (approche pragmatique)",
-          "Dockerisation & environnements reproductibles",
-          "Monitoring & alerting",
+          "Docker & environnements reproductibles (projets personnels)",
+          "Supervision & alerting (Datto RMM en stage)",
           "Gestion de versions (Git)"
         ]
       },
@@ -167,8 +167,8 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         items: [
           "CI/CD con GitHub Actions",
           "Automatización por scripts (enfoque pragmático)",
-          "Dockerización y entornos reproducibles",
-          "Monitorización y alertas",
+          "Docker y entornos reproducibles (proyectos personales)",
+          "Monitorización y alertas (Datto RMM en prácticas)",
           "Control de versiones (Git)"
         ]
       },
@@ -260,8 +260,8 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       items: [
         "CI/CD with GitHub Actions",
         "Pragmatic scripting & automation",
-        "Docker & reproducible environments",
-        "Monitoring & alerting",
+        "Docker & reproducible environments (personal projects)",
+        "Monitoring & alerting (Datto RMM, internship)",
         "Version control (Git)"
       ]
     },

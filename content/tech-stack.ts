@@ -47,7 +47,7 @@ const TECH_STACK: TechItem[] = [
     abbr: "Ax",
     category: "salesforce",
     level: 3,
-    years: 2,
+    years: 3,
     context: {
       en: "10+ classes, triggers and batch jobs in production.",
       fr: "10+ classes, triggers et batchs en production.",
@@ -61,7 +61,7 @@ const TECH_STACK: TechItem[] = [
     abbr: "FL",
     category: "salesforce",
     level: 3,
-    years: 2,
+    years: 3,
     context: {
       en: "20+ Flows built, reducing manual workload by ~30%.",
       fr: "20+ Flows créés, réduisant la charge manuelle d'environ 30 %.",
@@ -89,7 +89,7 @@ const TECH_STACK: TechItem[] = [
     abbr: "SQ",
     category: "salesforce",
     level: 3,
-    years: 2,
+    years: 3,
     context: {
       en: "Complex queries, governor limits awareness, optimized reports.",
       fr: "Requêtes complexes, respect des governor limits, rapports optimisés.",
@@ -103,7 +103,7 @@ const TECH_STACK: TechItem[] = [
     abbr: "SF",
     category: "salesforce",
     level: 3,
-    years: 2,
+    years: 3,
     context: {
       en: "Deployments, scratch orgs, metadata management.",
       fr: "Déploiements, scratch orgs, gestion des métadonnées.",

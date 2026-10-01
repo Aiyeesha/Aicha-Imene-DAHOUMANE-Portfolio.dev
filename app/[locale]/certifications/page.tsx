@@ -304,10 +304,12 @@ export default async function CertificationsPage({ params }: PageProps) {
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── 2026 — dans l'ordre (Sept. → Déc. 2026) ──────────────────────────────
-    // Report : plus de créneau disponible en centre agréé avant septembre —
-    // les 4 certifications Salesforce, initialement juil.–sept., sont
-    // repoussées et compressées sur sept.–oct. 2026, même ordre relatif.
+    // ── 2026 — sprint de novembre 2026 ───────────────────────────────────────
+    // Report : plus de créneau disponible en centre agréé avant septembre, puis
+    // déplacement des examens Administrator en novembre — les 4 certifications
+    // Salesforce sont désormais toutes visées en novembre 2026, même ordre relatif.
+    // Formulation alignée sur la FAQ et la page À propos (« planifiées pour
+    // novembre 2026 ») : à mettre à jour aux trois endroits après chaque résultat.
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
@@ -774,13 +776,21 @@ export default async function CertificationsPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* ── Sous-groupe 2027 — roadmap ────────────────────────────────────── */}
-        <div className="mt-8">
-          <div className="flex items-center gap-2 mb-4">
+        {/* ── Sous-groupe 2027 — roadmap, repliée par défaut ─────────────────
+            Audit 2026-10-01 : une longue liste de certifications « à venir »
+            affichée en entier renforçait la perception « profil en formation ».
+            La preuve par les projets prime ; la roadmap reste consultable en un
+            clic via <details> natif (accessible au clavier, sans JavaScript). */}
+        <details className="group mt-8">
+          <summary className="flex cursor-pointer list-none items-center gap-2 mb-4 rounded soft-ring [&::-webkit-details-marker]:hidden">
+            <span aria-hidden="true" className="text-xs text-muted-2 transition-transform group-open:rotate-90">▶</span>
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
               {isFr ? "Roadmap 2027" : isEs ? "Roadmap 2027" : "2027 Roadmap"}
             </span>
-          </div>
+            <span className="text-xs text-muted-2">
+              — {certs2027.length} {isFr ? "certifications, ordre indicatif" : isEs ? "certificaciones, orden indicativo" : "certifications, indicative order"}
+            </span>
+          </summary>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {certs2027.map((cert) => (
               <article
@@ -804,7 +814,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               </article>
             ))}
           </div>
-        </div>
+        </details>
       </section>
 
       {/* ── Bouton retour accueil ────────────────────────────────────────────── */}
