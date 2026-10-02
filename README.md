@@ -163,8 +163,15 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
 | `ADMIN_USERNAME` | Optional | Username for `/admin` HTTP Basic Auth |
 | `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
-| `BREVO_API_KEY` | Optional | Brevo (ex-Sendinblue) API key for newsletter subscriptions |
-| `BREVO_LIST_ID` | Optional | Brevo contact list ID |
+| `REVALIDATE_SECRET` | Optional | Shared secret for `/api/revalidate` (header `x-revalidate-secret`, Supabase webhook) |
+| `IP_HASH_SALT` | Optional | Salt for SHA-256 IP pseudonymisation |
+| `HEALTHCHECK_URL` | Optional | Dead-man's switch URL pinged after each successful `/api/cron/ping` run |
+| `ALERT_WEBHOOK_URL` | Optional | Discord/Slack/ntfy webhook alerted when global status != operational |
+| `CSP_ALERT_WEBHOOK_URL` | Optional | Discord/Slack/ntfy webhook alerted on CSP violation reports (rate-limited) |
+| `NEXT_PUBLIC_SITE_NAME` / `NEXT_PUBLIC_OG_NAME` / `NEXT_PUBLIC_OG_HEADLINE` | Optional | Site name, person name and headline used in metadata and OG images |
+| `NEXT_PUBLIC_BRAND_INITIALS` | Optional | Navbar logo initials (default: `A`) |
+| `NEXT_PUBLIC_SITE_LASTMOD` | Optional | Pins sitemap `lastModified` (YYYY-MM-DD); defaults to build date |
+| `NEXT_PUBLIC_SHOW_TESTIMONIALS` | Optional | `true` to display the testimonials section |
 
 ---
 
