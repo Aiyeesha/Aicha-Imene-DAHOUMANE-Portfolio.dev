@@ -41,10 +41,12 @@ jobs:
       # ── 1. Récupération du SHA HEAD de main ──────────────────────────────
       - name: Get main HEAD SHA
         id: main
+        # API authentifiée via GITHUB_TOKEN : un `git ls-remote` anonyme échoue
+        # dès que le dépôt est privé.
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          SHA=$(git ls-remote \
-            https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev.git \
-            refs/heads/main | cut -f1)
+          SHA=$(gh api "repos/${{ github.repository }}/commits/main" --jq .sha)
           if [ -z "$SHA" ]; then
             echo "::error::Could not retrieve main HEAD SHA."
             exit 1
