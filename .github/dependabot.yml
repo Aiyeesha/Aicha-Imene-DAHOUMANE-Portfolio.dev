@@ -120,3 +120,12 @@ updates:
     open-pull-requests-limit: 3
     commit-message:
       prefix: "chore(ci)"
+    groups:
+      # Les sous-actions de CodeQL (init, analyze, upload-sarif) doivent être
+      # à la même version : init écrit un fichier de configuration que analyze
+      # refuse s'il provient d'une autre version (« Loaded a configuration file
+      # for version 'X', but running version 'Y' »). Une PR par sous-action
+      # casse donc le job CodeQL — on les regroupe en une seule PR.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
