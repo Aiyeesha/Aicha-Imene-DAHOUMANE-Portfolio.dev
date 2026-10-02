@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
+- **Dépendances : regroupement des 3 PR Dependabot du 02/10 (#432, #433, #434)** — `@next/bundle-analyzer` 16.3.6 (aligné sur `@next/mdx` 16.3.6) ; outillage : `@types/node` 24.19.0 (définitions de types uniquement), `sharp` 0.35.5 (correctif, binaires `@img/sharp-*` et `libvips` 1.3.4). `package-lock.json` identique à la réunion des lockfiles générés par Dependabot (npm 11), versions épinglées sur celles proposées. Typecheck, 224 tests et `npm audit --omit=dev` (0 vulnérabilité) au vert en local.
+
 - **`github/codeql-action` v4.37.9 → v4.38.2 (Dependabot regroupé)** — Remplace les PR Dependabot #426 (`upload-sarif`), #427 (`init`) et #428 (`analyze`), qui ne pouvaient pas être fusionnées séparément : `analyze` refuse un fichier de configuration écrit par une autre version d'`init` (« Loaded a configuration file for version '4.38.2', but running version '4.37.9' »), d'où l'échec du job CodeQL sur la #427. Les trois sous-actions sont épinglées sur le même SHA (`2892aa5e`, tag `v4.38.2` vérifié) dans `codeql.yml` et `scorecard.yml`, et `dependabot.yml` regroupe désormais `github/codeql-action*` en une seule PR pour éviter que le problème se reproduise.
 
 - **`brace-expansion` 2.1.4 → 2.1.7 (override)** — Corrige 3 avis de déni de service (GHSA-6j4f-fj2g-mc7p et GHSA-qhr7-859c-m2p7 élevés, GHSA-q2hr-2g5m-vwhr modéré) sur la copie utilisée par ESLint et Jest (`minimatch`). Non détecté par la CI, dont l'audit exclut les devDependencies (`--omit=dev`). `npm audit` complet : 0 vulnérabilité.
