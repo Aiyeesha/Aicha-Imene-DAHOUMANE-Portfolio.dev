@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Carte LTP : retrait du lien GitHub erroné** — Le bouton GitHub de « Delivery tracking CRM design (LTP) » pointait vers `Optimisez-un-backend-Apex`, qui est le dépôt du projet FASHA (backend Apex SFQUAL), pas celui de LTP. Le dépôt LTP dédié ne contient qu'un commit initial (README d'une ligne) : le rendre public aurait exposé un dépôt vide. LTP étant un projet de conception, sa preuve reste l'étude de cas et le PDF de spécifications ; `repoUrl` est retiré (aucun repli dans `content/github-repos.ts`), le bouton GitHub disparaît de la carte et de la fiche.
+
 ### Security
 
 - **Dépendances : regroupement des 5 PR Dependabot du 02/10 après recréation du dépôt (#2 à #6)** — écosystème Next aligné sur 16.3.7 : `next`, `@next/mdx`, `@next/bundle-analyzer` (binaires `@next/swc-*` et `@next/env` inclus) et, en outillage, `eslint-config-next` ; `next-intl` 4.14.8 (version épinglée). Versions fixées sur celles proposées par Dependabot (la 16.3.8, publiée depuis, sera traitée séparément). `package-lock.json` régénéré avec npm 11.
