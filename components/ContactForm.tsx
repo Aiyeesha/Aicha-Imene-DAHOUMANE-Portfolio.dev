@@ -325,7 +325,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
                 className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
               >
                 <option value="">{t("contact.intake.startPlaceholder")}</option>
-                {["dec2026","q1_2027","later","tbd"].map((key) => (
+                {["asap","q1_2027","later","tbd"].map((key) => (
                   <option key={key} value={key}>{t(`contact.intake.start.${key}`)}</option>
                 ))}
               </select>
