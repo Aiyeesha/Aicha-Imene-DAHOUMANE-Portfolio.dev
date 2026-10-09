@@ -105,18 +105,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? [
           { n: "01", title: "Premier contact",      desc: "Par email, LinkedIn ou le formulaire recruteur. Je réponds sous 48 h, avec mon CV adapté au poste.",                        badge: "48 h" },
           { n: "02", title: "Entretiens",           desc: "Échange RH, entretien technique (Apex, SOQL, Flow, ou mise en situation systèmes et réseaux), rencontre de l'équipe.",       badge: "Dès maintenant" },
-          { n: "03", title: "Prise de poste",       desc: "Arrivée sous 1 mois (préavis), diplômes et références fournis sur demande.",                                                 badge: "1 mois" },
+          { n: "03", title: "Prise de poste",       desc: "Arrivée sous 1 mois (préavis), diplômes fournis sur demande.",                                                 badge: "1 mois" },
         ]
       : isEs
       ? [
           { n: "01", title: "Primer contacto",      desc: "Por email, LinkedIn o el formulario para reclutadores. Respondo en 48 h, con mi CV adaptado al puesto.",                     badge: "48 h" },
           { n: "02", title: "Entrevistas",          desc: "Entrevista de RR. HH., entrevista técnica (Apex, SOQL, Flow o caso práctico de sistemas y redes), encuentro con el equipo.", badge: "Desde ya" },
-          { n: "03", title: "Incorporación",        desc: "Incorporación en 1 mes (preaviso); diplomas y referencias disponibles bajo petición.",                                       badge: "1 mes" },
+          { n: "03", title: "Incorporación",        desc: "Incorporación en 1 mes (preaviso); diplomas disponibles bajo petición.",                                       badge: "1 mes" },
         ]
       : [
           { n: "01", title: "First contact",        desc: "By email, LinkedIn or the recruiter form. I reply within 48 hours, with a résumé tailored to the role.",                    badge: "48 h" },
           { n: "02", title: "Interviews",           desc: "HR screening, technical interview (Apex, SOQL, Flow, or a systems and network scenario), meeting the team.",                 badge: "Now" },
-          { n: "03", title: "Start",                desc: "Start within 1 month (notice period); diplomas and references available on request.",                                       badge: "1 month" },
+          { n: "03", title: "Start",                desc: "Start within 1 month (notice period); diplomas available on request.",                                       badge: "1 month" },
         ],
 
     faqTitle: isFr ? "Questions fréquentes" : isEs ? "Preguntas frecuentes" : "FAQ",
