@@ -670,7 +670,7 @@ export const projects: Project[] = [
     "slug": "it-ops-rmm-supervision",
     "nature": "internship",
     "title": "Infrastructure Monitoring with Datto RMM",
-    "excerpt": "At MIDRANGE GROUP, I supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
+    "excerpt": "At MIDRANGE GROUP, I remotely supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -696,7 +696,7 @@ export const projects: Project[] = [
       "ITSM"
     ],
     "highlights": [
-      "I monitored 550+ devices (desktops, laptops, servers) across multiple client sites via the Datto RMM dashboard",
+      "I remotely monitored 550+ devices (desktops, laptops, servers) across multiple client sites via the Datto RMM dashboard",
       "I checked patch status, antivirus coverage, and software inventory for managed endpoints",
       "I deployed software components (MalwareBytes) remotely via Quick Jobs without on-site intervention",
       "I used Splashtop remote access to assist end users and troubleshoot issues on client machines",

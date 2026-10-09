@@ -4923,7 +4923,7 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Distinguishing a genuine problem from background noise across 550+ endpoints spread over multiple client sites requires a consistent daily triage method, not just a glance at the dashboard.",
+              "Distinguishing a genuine problem from background noise across 550+ endpoints spread over multiple client sites, all monitored remotely, requires a consistent daily triage method, not just a glance at the dashboard.",
               "Antivirus coverage gaps only became visible by cross-referencing the Default Dashboard's aggregate counts against the software inventory of individual devices — no single view surfaced both at once.",
               "A Quick Job has to be scoped to the exact device group that needs the fix; pushing MalwareBytes fleet-wide when only a handful of machines were missing it would have wasted bandwidth and cluttered the job history for the whole team.",
               "Splashtop sessions depend on the end user being present to grant access in real time, so remote troubleshooting has to work around whoever is actually at the keyboard, not around an ideal maintenance window.",
@@ -4943,7 +4943,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               {
                 "label": "Devices monitored",
-                "value": "550+ endpoints (desktops, laptops, servers) across multiple client sites"
+                "value": "550+ endpoints (desktops, laptops, servers) monitored remotely across multiple client sites"
               },
               {
                 "label": "Reference site",
@@ -5079,7 +5079,7 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Distinguer un problème réel du bruit de fond sur 550+ postes répartis sur plusieurs sites clients exige une méthode de triage quotidienne cohérente, pas juste un coup d'œil au tableau de bord.",
+              "Distinguer un problème réel du bruit de fond sur 550+ postes répartis sur plusieurs sites clients, tous supervisés à distance, exige une méthode de triage quotidienne cohérente, pas juste un coup d'œil au tableau de bord.",
               "Les écarts de couverture antivirus n'apparaissaient qu'en croisant les compteurs agrégés du Default Dashboard avec l'inventaire logiciel de chaque poste — aucune vue unique ne réunissait les deux.",
               "Un Quick Job doit être ciblé précisément sur le groupe d'appareils concerné : déployer MalwareBytes sur l'ensemble du parc alors que seule une poignée de postes en avait besoin aurait gaspillé de la bande passante et pollué l'historique des tâches pour toute l'équipe.",
               "Les sessions Splashtop dépendent de la présence de l'utilisateur pour autoriser l'accès en temps réel : le dépannage à distance doit s'adapter à qui est réellement devant le poste, pas à une fenêtre de maintenance idéale.",
@@ -5099,7 +5099,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               {
                 "label": "Équipements supervisés",
-                "value": "550+ postes (desktops, laptops, serveurs) sur plusieurs sites clients"
+                "value": "550+ postes (desktops, laptops, serveurs) supervisés à distance sur plusieurs sites clients"
               },
               {
                 "label": "Site de référence",
@@ -5235,7 +5235,7 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Distinguir un problema real del ruido de fondo en más de 550 equipos repartidos en varios sitios de clientes exige un método de triaje diario coherente, no solo un vistazo al panel.",
+              "Distinguir un problema real del ruido de fondo en más de 550 equipos repartidos en varios sitios de clientes, todos supervisados en remoto, exige un método de triaje diario coherente, no solo un vistazo al panel.",
               "Las brechas de cobertura antivirus solo se hacían visibles cruzando los recuentos agregados del Default Dashboard con el inventario de software de cada equipo — ninguna vista única mostraba ambos a la vez.",
               "Un Quick Job debe acotarse exactamente al grupo de equipos que lo necesita; desplegar MalwareBytes en todo el parque cuando solo unos pocos equipos carecían de él habría desperdiciado ancho de banda y saturado el historial de tareas de todo el equipo.",
               "Las sesiones de Splashtop dependen de que el usuario esté presente para autorizar el acceso en tiempo real, así que la resolución remota debe adaptarse a quién está realmente frente al equipo, no a una ventana de mantenimiento ideal.",
@@ -5255,7 +5255,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               {
                 "label": "Equipos supervisados",
-                "value": "550+ dispositivos (desktops, laptops, servidores) en varios sitios de clientes"
+                "value": "550+ dispositivos (desktops, laptops, servidores) supervisados en remoto en varios sitios de clientes"
               },
               {
                 "label": "Sitio de referencia",
