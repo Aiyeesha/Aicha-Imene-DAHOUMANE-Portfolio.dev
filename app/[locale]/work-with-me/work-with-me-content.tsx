@@ -51,16 +51,16 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
     subtitle:       isFr
-      ? "Développeuse Salesforce en CDI chez LD Digitales, je recherche mon prochain poste à partir du 1er décembre 2026 : un rôle où Salesforce, l'infrastructure et la sécurité se croisent. Voici l'essentiel pour un recruteur, en une page."
+      ? "Développeuse Salesforce en CDI chez LD Digitales, je recherche mon prochain poste, disponible sous 1 mois (préavis) : un rôle où Salesforce, l'infrastructure et la sécurité se croisent. Voici l'essentiel pour un recruteur, en une page."
       : isEs
-      ? "Desarrolladora Salesforce con contrato indefinido en LD Digitales, busco mi próximo puesto a partir del 1 de diciembre de 2026: un rol donde Salesforce, infraestructura y seguridad se cruzan. Aquí tienes lo esencial para un reclutador, en una página."
-      : "A full-time Salesforce Developer at LD Digitales, I'm looking for my next role from December 1, 2026: one where Salesforce, infrastructure and security meet. Here is everything a recruiter needs, on one page.",
+      ? "Desarrolladora Salesforce con contrato indefinido en LD Digitales, busco mi próximo puesto, disponible en 1 mes (preaviso): un rol donde Salesforce, infraestructura y seguridad se cruzan. Aquí tienes lo esencial para un reclutador, en una página."
+      : "A full-time Salesforce Developer at LD Digitales, I'm looking for my next role, available within 1 month (notice period): one where Salesforce, infrastructure and security meet. Here is everything a recruiter needs, on one page.",
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
-    availSince:     isFr ? "Entretiens dès maintenant · Prise de poste à partir du 1er décembre 2026" : isEs ? "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026" : "Interviews now · Start date from December 1, 2026",
+    availSince:     isFr ? "Entretiens dès maintenant · Disponible sous 1 mois (préavis)" : isEs ? "Entrevistas desde ya · Disponible en 1 mes (preaviso)" : "Interviews now · Available within 1 month (notice period)",
     availContracts: isFr
       ? "CDI · CDD · Intérim · Portage salarial — tous secteurs d'activité"
       : isEs
@@ -105,36 +105,36 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? [
           { n: "01", title: "Premier contact",      desc: "Par email, LinkedIn ou le formulaire recruteur. Je réponds sous 48 h, avec mon CV adapté au poste.",                        badge: "48 h" },
           { n: "02", title: "Entretiens",           desc: "Échange RH, entretien technique (Apex, SOQL, Flow, ou mise en situation systèmes et réseaux), rencontre de l'équipe.",       badge: "Dès maintenant" },
-          { n: "03", title: "Prise de poste",       desc: "Arrivée à partir du 1er décembre 2026, diplômes et références fournis sur demande.",                                         badge: "1er déc. 2026" },
+          { n: "03", title: "Prise de poste",       desc: "Arrivée sous 1 mois (préavis), diplômes et références fournis sur demande.",                                                 badge: "1 mois" },
         ]
       : isEs
       ? [
           { n: "01", title: "Primer contacto",      desc: "Por email, LinkedIn o el formulario para reclutadores. Respondo en 48 h, con mi CV adaptado al puesto.",                     badge: "48 h" },
           { n: "02", title: "Entrevistas",          desc: "Entrevista de RR. HH., entrevista técnica (Apex, SOQL, Flow o caso práctico de sistemas y redes), encuentro con el equipo.", badge: "Desde ya" },
-          { n: "03", title: "Incorporación",        desc: "Incorporación a partir del 1 de diciembre de 2026; diplomas y referencias disponibles bajo petición.",                        badge: "1 dic. 2026" },
+          { n: "03", title: "Incorporación",        desc: "Incorporación en 1 mes (preaviso); diplomas y referencias disponibles bajo petición.",                                       badge: "1 mes" },
         ]
       : [
           { n: "01", title: "First contact",        desc: "By email, LinkedIn or the recruiter form. I reply within 48 hours, with a résumé tailored to the role.",                    badge: "48 h" },
           { n: "02", title: "Interviews",           desc: "HR screening, technical interview (Apex, SOQL, Flow, or a systems and network scenario), meeting the team.",                 badge: "Now" },
-          { n: "03", title: "Start",                desc: "Start date from December 1, 2026; diplomas and references available on request.",                                            badge: "Dec 1, 2026" },
+          { n: "03", title: "Start",                desc: "Start within 1 month (notice period); diplomas and references available on request.",                                       badge: "1 month" },
         ],
 
     faqTitle: isFr ? "Questions fréquentes" : isEs ? "Preguntas frecuentes" : "FAQ",
     faqs: isFr
       ? [
           { q: "Quels types de contrat acceptez-vous ?",  a: "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est un poste où mon double profil Salesforce et infrastructure est utile." },
-          { q: "Quand pouvez-vous commencer ?",           a: "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste à partir du 1er décembre 2026." },
+          { q: "Quand pouvez-vous commencer ?",           a: "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste sous 1 mois (durée de mon préavis)." },
           { q: "Quelle est votre zone géographique ?",    a: "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la région Provence-Alpes-Côte d'Azur — hybride, sur site ou télétravail selon le poste. Je suis également ouverte à la relocalisation à l'international : en Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Irlande, Suède, Malte), au Royaume-Uni, au Maghreb (Tunisie, Algérie), au Canada, aux États-Unis, en Nouvelle-Zélande et en Asie." },
         ]
       : isEs
       ? [
           { q: "¿Qué tipos de contrato aceptas?",           a: "Indefinido, temporal, ETT o portage salarial, en todos los sectores. Lo que me importa es un puesto donde mi doble perfil Salesforce e infraestructura sea útil." },
-          { q: "¿Cuándo puedes empezar?",                   a: "Estoy disponible para entrevistas desde ya, con incorporación a partir del 1 de diciembre de 2026." },
+          { q: "¿Cuándo puedes empezar?",                   a: "Estoy disponible para entrevistas desde ya, con incorporación en 1 mes (mi preaviso)." },
           { q: "¿Cuál es tu zona geográfica?",              a: "Estoy ubicada en Val-d'Oise (95), en Île-de-France. Mi prioridad es París y la región de Île-de-France y, después, Provenza-Alpes-Costa Azul — híbrido, presencial o remoto según el puesto. También estoy abierta a un traslado internacional: en Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Irlanda, Suecia, Malta), al Reino Unido, al Magreb (Túnez, Argelia), a Canadá, a Estados Unidos, a Nueva Zelanda y a Asia." },
         ]
       : [
           { q: "Which contract types do you accept?",       a: "Permanent, fixed-term, temp (agency) or umbrella-company (portage) contracts, in any industry. What matters to me is a role where my dual Salesforce and infrastructure profile is useful." },
-          { q: "When can you start?",                       a: "I'm available for interviews right away, with a start date from December 1, 2026." },
+          { q: "When can you start?",                       a: "I'm available for interviews right away, with a start date within 1 month (my notice period)." },
           { q: "Where are you based?",                      a: "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, then Provence-Alpes-Côte d'Azur — hybrid, on-site or remote depending on the role. I'm also open to international relocation: Europe (Belgium, Luxembourg, Germany, Italy, Spain, Ireland, Sweden, Malta), the United Kingdom, the Maghreb (Tunisia, Algeria), Canada, the United States, New Zealand and Asia." },
         ],
 
