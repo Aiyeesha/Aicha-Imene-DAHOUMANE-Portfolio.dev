@@ -86,14 +86,14 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
   },
   "it-ops-rmm-supervision": {
     "fr": [
-      "J'ai supervisé plus de 550 appareils (postes fixes, portables, serveurs) sur plusieurs sites clients via le tableau de bord Datto RMM",
+      "J'ai supervisé à distance plus de 550 appareils (postes fixes, portables, serveurs) sur plusieurs sites clients via le tableau de bord Datto RMM",
       "J'ai contrôlé l'état des correctifs, la couverture antivirus et l'inventaire logiciel des postes gérés",
       "J'ai déployé des composants logiciels (Malwarebytes) à distance via des Quick Jobs, sans intervention sur site",
       "J'ai utilisé la prise en main à distance Splashtop pour assister les utilisateurs et dépanner leurs postes",
       "J'ai travaillé au sein de l'équipe Exploitation d'un MSP, aux côtés d'un administrateur systèmes confirmé"
     ],
     "es": [
-      "Supervisé más de 550 equipos (sobremesa, portátiles, servidores) en varios sitios de clientes desde el panel de Datto RMM",
+      "Supervisé en remoto más de 550 equipos (sobremesa, portátiles, servidores) en varios sitios de clientes desde el panel de Datto RMM",
       "Revisé el estado de los parches, la cobertura antivirus y el inventario de software de los equipos gestionados",
       "Desplegué componentes de software (Malwarebytes) en remoto mediante Quick Jobs, sin desplazamiento",
       "Utilicé el acceso remoto Splashtop para asistir a los usuarios y resolver incidencias en sus equipos",
