@@ -1593,7 +1593,6 @@ export const projects: Project[] = [
       "label": "RNCP 6 TRAINING PROJECT"
     },
     "pdfUrl": "/docs/projects/ltp-apex-backend-prototype/specifications.pdf",
-    "repoUrl": "https://github.com/Aiyeesha/Optimisez-un-backend-Apex",
     "techStack": [
       "Salesforce",
       "Apex",
