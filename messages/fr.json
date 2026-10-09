@@ -308,7 +308,7 @@
     "flows": "Flows d'automatisation",
     "workload": "Charge manuelle réduite",
     "projects": "Projets en poste · non publiés",
-    "rmm": "Équipements supervisés (Datto RMM)",
+    "rmm": "Équipements supervisés à distance (Datto RMM)",
     "tickets": "Tickets IT gérés",
     "alerts": "Alertes de sauvegarde triées",
     "deployments": "Postes déployés",
@@ -385,7 +385,7 @@
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
     "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les certifications éditeur Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) sont planifiées pour novembre 2026.",
-    "p1_itops": "IT Ops & DevOps : en stage chez MIDRANGE GROUP (févr.–mai 2023), j'ai supervisé plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (Windows Autopilot, image Sysprep, effacement certifié NIST 800-88).",
+    "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE GROUP (févr.–mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (Windows Autopilot, image Sysprep, effacement certifié NIST 800-88).",
     "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
     "p3_itops": "Je garde une attention particulière à la sécurité et à la continuité : 85 alertes de sauvegarde Acronis triées pendant le stage, et des labs personnels (honeypot, analyse de trafic, gestion des vulnérabilités) pour entretenir ces réflexes en dehors du poste.",
     "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, acquises en stage chez MIDRANGE GROUP puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
