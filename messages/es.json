@@ -182,7 +182,7 @@
       "startLabel": "Fecha de incorporación deseada",
       "startPlaceholder": "Seleccionar una fecha",
       "start": {
-        "dec2026": "A partir del 1 de diciembre de 2026",
+        "asap": "Lo antes posible (en 1 mes)",
         "q1_2027": "Primer trimestre de 2027",
         "later": "Más adelante",
         "tbd": "Por definir"
@@ -292,9 +292,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Sistemas y Redes · DevOps · Seguridad | Île-de-France",
-    "description": "Salesforce · Sistemas y Redes · DevOps · Seguridad (Île-de-France) — Apex, LWC, CI/CD, integraciones, infraestructura. Incorporación en dic. 2026, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores.",
+    "description": "Salesforce · Sistemas y Redes · DevOps · Seguridad (Île-de-France) — Apex, LWC, CI/CD, integraciones, infraestructura. Disponible en 1 mes, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Île-de-France",
-    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France) — Infraestructura, seguridad, automatización, CI/CD, Salesforce. Incorporación en dic. 2026, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores."
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France) — Infraestructura, seguridad, automatización, CI/CD, Salesforce. Disponible en 1 mes, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -382,7 +382,7 @@
     "rolesValueSalesforce": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
     "rolesValueItops": "Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Desarrolladora Salesforce — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: ingeniera DevOps, analista SOC N1, administradora o consultora Salesforce",
     "availabilityLabel": "Disponibilidad",
-    "availabilityValue": "Incorporación a partir del 1 de diciembre de 2026 · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
+    "availabilityValue": "Disponible en 1 mes (preaviso) · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "goalLabel": "Objetivo",
     "goalValue": "Profundizar mi experiencia en Salesforce, obtener mis certificaciones e incorporarme a un equipo donde Salesforce, infraestructura y seguridad se cruzan.",
     "focusLabel": "Enfoque",
@@ -449,7 +449,7 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir del 1 de diciembre de 2026. Actualmente soy Desarrolladora Salesforce con contrato indefinido en LD Digitales."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación en 1 mes (mi preaviso). Actualmente soy Desarrolladora Salesforce con contrato indefinido en LD Digitales."
       },
       {
         "q": "¿Qué tipos de contrato buscas?",
@@ -484,10 +484,10 @@
     "lastAudit": "Última verificación: 28 de junio de 2026 — Herramientas: axe-core (CI automatizado), pruebas manuales de navegación por teclado."
   },
   "availModal": {
-    "badge": "Entrevistas ya — Incorporación dic. 2026",
+    "badge": "Entrevistas ya — Disponible en 1 mes",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
-    "delayValue": "Entrevistas desde ya · Incorporación a partir del 1 de diciembre de 2026",
+    "delayValue": "Entrevistas desde ya · Disponible en 1 mes (preaviso)",
     "contracts": "Contratos",
     "contractValues": "Indefinido · Temporal · ETT · Portage salarial",
     "workMode": "Modalidades de trabajo",
