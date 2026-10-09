@@ -182,7 +182,7 @@
       "startLabel": "Desired start date",
       "startPlaceholder": "Select a date",
       "start": {
-        "dec2026": "From December 1, 2026",
+        "asap": "As soon as possible (within 1 month)",
         "q1_2027": "Q1 2027",
         "later": "Later",
         "tbd": "To be defined"
@@ -292,9 +292,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps · Security | Île-de-France",
-    "description": "Salesforce · Systems & Networks · DevOps · Security (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Role from Dec 2026, interviews now. Permanent, fixed-term, temp or umbrella — any industry.",
+    "description": "Salesforce · Systems & Networks · DevOps · Security (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Available within 1 month, interviews now. Permanent, fixed-term, temp or umbrella — any industry.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Île-de-France",
-    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, security, automation, CI/CD, Salesforce. Role from Dec 2026, interviews now. Permanent, fixed-term, temp or umbrella — any industry."
+    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, security, automation, CI/CD, Salesforce. Available within 1 month, interviews now. Permanent, fixed-term, temp or umbrella — any industry."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -308,7 +308,7 @@
     "flows": "Automation Flows",
     "workload": "Manual workload reduced",
     "projects": "In-role projects · unpublished",
-    "rmm": "Endpoints monitored (Datto RMM)",
+    "rmm": "Endpoints monitored remotely (Datto RMM)",
     "tickets": "IT tickets handled",
     "alerts": "Backup alerts triaged",
     "deployments": "Workstations deployed",
@@ -368,7 +368,7 @@
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
     "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, after two years as a work-study developer at the same company: 3 years of production Salesforce experience. The Legarant-AXG project (Heroku Connect, environment management, traceable production releases) remains the clearest proof of that Salesforce/infra crossover: not an application layer sitting on infrastructure someone else manages, but the same person on both sides. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title, Salesforce specialization (OpenClassrooms, 2025), and an active Trailhead profile (Expeditioner rank, 94 badges) — the Salesforce certifications (Platform Foundations, Administrator, App Builder, Platform Developer I) are scheduled for November 2026.",
-    "p1_itops": "IT Ops & DevOps: during my internship at MIDRANGE GROUP (Feb–May 2023), I monitored 550+ devices through Datto RMM, handled 316 support tickets and deployed 264 Dell workstations (Windows Autopilot, Sysprep image, NIST 800-88 certified wipe).",
+    "p1_itops": "IT Ops & DevOps: during my two one-month internships at MIDRANGE GROUP (Feb–May 2023), I remotely monitored 550+ devices through Datto RMM, handled 316 support tickets and deployed 264 Dell workstations (Windows Autopilot, Sysprep image, NIST 800-88 certified wipe).",
     "p2_itops": "During my TAI and TSSR training (Greta du Val-d'Oise), I installed and administered Windows Server environments — AD DS, DNS, DHCP, GPO, pfSense/Squid filtering, virtualization — documenting every procedure as a runbook.",
     "p3_itops": "I pay close attention to security and continuity: 85 Acronis backup alerts triaged during the internship, and personal labs (honeypot, traffic analysis, vulnerability management) to keep those reflexes sharp outside of work.",
     "p4_itops": "Full-time Salesforce Developer at LD Digitales — my IT Ops & DevOps skills, built during my internship at MIDRANGE GROUP and in training, remain fully available in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
@@ -382,7 +382,7 @@
     "rolesValueSalesforce": "Salesforce & Infrastructure Engineer · Salesforce Developer · Systems & Network Administrator — also open to any role where a hybrid profile adds value, including: Salesforce Administrator or Consultant, DevOps Engineer, SOC Analyst (Tier 1)",
     "rolesValueItops": "Salesforce & Infrastructure Engineer · Systems & Network Administrator · Salesforce Developer — also open to any role where a hybrid profile adds value, including: DevOps Engineer, SOC Analyst (Tier 1), Salesforce Administrator or Consultant",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Role starting December 1, 2026 · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
+    "availabilityValue": "Available within 1 month (notice period) · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "goalLabel": "Goal",
     "goalValue": "Deepen my Salesforce expertise, earn my certifications, and join a team where Salesforce, infrastructure and security meet.",
     "focusLabel": "Focus",
@@ -449,7 +449,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a start date from December 1, 2026. I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
+        "a": "I'm available for interviews right away, with a start date within 1 month (my notice period). I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
       },
       {
         "q": "What contract types are you looking for?",
@@ -484,10 +484,10 @@
     "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
   },
   "availModal": {
-    "badge": "Interviews now — Role from Dec 2026",
+    "badge": "Interviews now — Available within 1 month",
     "title": "My availability",
     "delay": "Availability",
-    "delayValue": "Interviews now · Role starting December 1, 2026",
+    "delayValue": "Interviews now · Available within 1 month (notice period)",
     "contracts": "Contracts",
     "contractValues": "Permanent · Fixed-term · Temp · Umbrella (portage)",
     "workMode": "Work modes",
