@@ -111,20 +111,6 @@ const TECH_STACK: TechItem[] = [
     },
     track: "salesforce",
   },
-  {
-    id: "change-sets",
-    name: "Change Sets",
-    abbr: "CS",
-    category: "salesforce",
-    level: 3,
-    years: 1.5,
-    context: {
-      en: "Sandbox-to-production deployments.",
-      fr: "Déploiements sandbox → production.",
-      es: "Despliegues sandbox → producción.",
-    },
-    track: "salesforce",
-  },
 
   // ── Programmation ──────────────────────────────────────────────────────
   {

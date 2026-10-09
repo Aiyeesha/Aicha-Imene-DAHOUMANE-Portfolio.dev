@@ -17,7 +17,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
             "Flow Builder & bonnes pratiques d’automatisation",
             "Lightning App Builder & Lightning Web Components",
             "Modélisation de données & sécurité (types d’enregistrement, rôles, profils, permission sets)",
-            "Déploiements via Change Sets & Salesforce CLI"
+            "Déploiements via Salesforce CLI"
           ]
         },
         {
@@ -111,7 +111,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
             "Flow Builder y buenas prácticas de automatización",
             "Lightning App Builder y Lightning Web Components",
             "Modelado de datos y seguridad (tipos de registro, roles, perfiles, permission sets)",
-            "Despliegues vía Change Sets y Salesforce CLI"
+            "Despliegues vía Salesforce CLI"
           ]
         },
         {
@@ -205,7 +205,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
           "Flow Builder & automation best practices",
           "Lightning App Builder & Lightning Web Components",
           "Data modeling & security (record types, roles, profiles, permission sets)",
-          "Deployments via Change Sets & Salesforce CLI"
+          "Deployments via Salesforce CLI"
         ]
       },
       {
