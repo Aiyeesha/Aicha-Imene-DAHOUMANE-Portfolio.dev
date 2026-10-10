@@ -18,11 +18,11 @@ module.exports = {
   transform: {
     "^.+\\.(t|j)sx?$": ["ts-jest", { tsconfig: "<rootDir>/tsconfig.json" }]
   },
-  // next-intl et @vercel/analytics sont des packages ESM purs.
+  // next-intl et use-intl sont des packages ESM purs.
   // Jest (CommonJS) ne peut pas les importer sans transformation.
   // On les exclut de transformIgnorePatterns pour que ts-jest les traite.
   transformIgnorePatterns: [
-    "/node_modules/(?!(next-intl|@vercel/analytics|use-intl)/).*"
+    "/node_modules/(?!(next-intl|use-intl)/).*"
   ],
   coverageDirectory: "coverage",
   // Périmètre de la couverture : l'ensemble du code livré (app/components/lib),

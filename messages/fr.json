@@ -413,7 +413,7 @@
   "privacy": {
     "title": "Politique de confidentialité",
     "analyticsTitle": "Analytics & Performance",
-    "analyticsBody": "Ce site utilise Vercel Analytics et Vercel Speed Insights en production pour mesurer les Core Web Vitals et les performances réelles. Aucune donnée personnelle n’est collectée — les métriques sont agrégées et anonymes. Ces services sont désactivés en développement.",
+    "analyticsBody": "Ce site utilise Umami Cloud en production pour mesurer l’audience (pages vues, téléchargements de CV, clics de contact) et les Core Web Vitals, c’est-à-dire les performances réellement perçues par les visiteurs. Umami ne dépose aucun cookie ; les statistiques sont agrégées et anonymes, et les données sont hébergées dans l’Union européenne (Francfort). Ce service est désactivé en développement.",
     "cookiesTitle": "Cookies",
     "cookiesBody": "Aucun cookie marketing ni de suivi n'est déposé. La préférence de langue est reflétée dans l'URL (ex. /en/, /fr/) et non dans un cookie. Un cookie fonctionnel « track » (durée : 1 an) et une entrée équivalente dans le stockage local du navigateur mémorisent uniquement le profil affiché (Salesforce ou IT Ops) ; ils ne contiennent aucune donnée personnelle. Vercel peut déposer des cookies techniques à des fins d'infrastructure (CDN, protection DDoS). Le module de prise de rendez-vous Calendly n'est chargé que si vous l'ouvrez ; Calendly applique alors sa propre politique de cookies.",
     "formTitle": "Données du formulaire de contact",

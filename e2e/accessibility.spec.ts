@@ -43,7 +43,7 @@ function formatViolations(violations: Result[]) {
 
 // ── Helper d'attente robuste ──────────────────────────────────────────────
 // networkidle est préférable (hydration React complète) mais peut ne jamais
-// se résoudre en CI : Vercel Analytics (NODE_ENV=production) fait des requêtes
+// se résoudre en CI : un script d'analytics en production peut faire des requêtes
 // continues qui empêchent l'idle. On tente networkidle 8s max, puis on continue.
 async function waitForReady(page: Page) {
   // Émule prefers-reduced-motion: reduce — les composants Framer Motion (useReducedMotion())
