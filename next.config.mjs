@@ -160,7 +160,10 @@ const nextConfig = {
   // bloqueurs de publicité. Placé sous /api : exclu du middleware next-intl.
   async rewrites() {
     return [
-      { source: "/api/umami/:path*", destination: "https://cloud.umami.is/:path*" },
+      // Le script est servi par cloud.umami.is ; les événements partent vers
+      // gateway.umami.is (endpoint par défaut lu dans le script Umami Cloud).
+      { source: "/api/umami/script.js", destination: "https://cloud.umami.is/script.js" },
+      { source: "/api/umami/api/send", destination: "https://gateway.umami.is/api/send" },
     ];
   },
 
