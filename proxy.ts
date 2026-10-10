@@ -45,6 +45,9 @@ const intlHandler = createMiddleware({
 // 'unsafe-inline' est remplacé par 'nonce-{nonce}' dans script-src.
 // 'unsafe-eval' est conservé uniquement en développement (webpack HMR).
 // Les origines externes (Calendly, Umami) restent dans la liste blanche
+// Umami Cloud : le script est servi par cloud.umami.is, mais la version Cloud
+// peut envoyer les événements vers api-gateway.umami.dev — les deux sont
+// autorisés dans connect-src.
 // pour les navigateurs qui ne supportent pas encore CSP3 strict-dynamic.
 function buildCSP(nonce: string, isDev: boolean): string {
   return [
@@ -69,8 +72,8 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Aucun script client ne contacte Upstash directement — l'autoriser dans
     // la CSP du navigateur serait une permission inutile (overpermission).
     isDev
-      ? "connect-src 'self' data: https://*.supabase.co https://formhook.app https://cloud.umami.is https://github-contributions-api.jogruber.de"
-      : "connect-src 'self' https://*.supabase.co https://formhook.app https://cloud.umami.is https://github-contributions-api.jogruber.de",
+      ? "connect-src 'self' data: https://*.supabase.co https://formhook.app https://cloud.umami.is https://api-gateway.umami.dev https://github-contributions-api.jogruber.de"
+      : "connect-src 'self' https://*.supabase.co https://formhook.app https://cloud.umami.is https://api-gateway.umami.dev https://github-contributions-api.jogruber.de",
     "object-src 'none'",
     "base-uri 'self'",
     // Empêche les <form action="..."> de soumettre vers une URL externe.
