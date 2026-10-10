@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 
 // ── Mocks globaux pour les packages ESM purs ──────────────────────────────────
-// next-intl et @vercel/analytics utilisent des modules ESM natifs que ts-jest
+// next-intl utilise des modules ESM natifs que ts-jest
 // (CommonJS) ne peut pas parser. On les remplace par des stubs légers.
 
 // next-intl — useTranslations retourne les traductions réelles pour les clés
@@ -23,7 +23,3 @@ jest.mock("next-intl", () => ({
   NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-// @vercel/analytics — track est une no-op en tests
-jest.mock("@vercel/analytics", () => ({
-  track: jest.fn(),
-}));
