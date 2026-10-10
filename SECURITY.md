@@ -51,7 +51,7 @@ img-src 'self' data: https://*.supabase.co https://*.supabase.in
 font-src 'self'
 frame-src https://calendly.com
 connect-src 'self' https://*.supabase.co https://*.upstash.io https://formhook.app
-            https://cloud.umami.is https://github-contributions-api.jogruber.de
+            https://cloud.umami.is https://api-gateway.umami.dev https://github-contributions-api.jogruber.de
 object-src 'none'
 base-uri 'self'
 frame-ancestors 'none'
