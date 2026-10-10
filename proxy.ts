@@ -44,7 +44,7 @@ const intlHandler = createMiddleware({
 // La CSP est construite à chaque requête car elle contient un nonce unique.
 // 'unsafe-inline' est remplacé par 'nonce-{nonce}' dans script-src.
 // 'unsafe-eval' est conservé uniquement en développement (webpack HMR).
-// Les origines externes (Calendly, Vercel Analytics) restent dans la liste blanche
+// Les origines externes (Calendly, Umami) restent dans la liste blanche
 // pour les navigateurs qui ne supportent pas encore CSP3 strict-dynamic.
 function buildCSP(nonce: string, isDev: boolean): string {
   return [
@@ -55,11 +55,11 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Prod : nonce uniquement — Next.js lit le header CSP de la requête (pas x-nonce)
     // pour injecter nonce= sur ses propres <script> (chunks d'hydratation, bootstrap webpack).
     isDev
-      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://va.vercel-scripts.com`
+      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://cloud.umami.is`
       // 'strict-dynamic' (CSP3) : seuls les scripts chargés par un script noncé
       // héritent de la confiance — la whitelist de domaines est ignorée par les
       // navigateurs qui supportent strict-dynamic, mais reste en fallback pour les autres.
-      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://assets.calendly.com https://va.vercel-scripts.com`,
+      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://assets.calendly.com https://cloud.umami.is`,
     "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
     "img-src 'self' data: https://*.supabase.co https://*.supabase.in",
     "font-src 'self'",
@@ -69,8 +69,8 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Aucun script client ne contacte Upstash directement — l'autoriser dans
     // la CSP du navigateur serait une permission inutile (overpermission).
     isDev
-      ? "connect-src 'self' data: https://*.supabase.co https://formhook.app https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de"
-      : "connect-src 'self' https://*.supabase.co https://formhook.app https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de",
+      ? "connect-src 'self' data: https://*.supabase.co https://formhook.app https://cloud.umami.is https://github-contributions-api.jogruber.de"
+      : "connect-src 'self' https://*.supabase.co https://formhook.app https://cloud.umami.is https://github-contributions-api.jogruber.de",
     "object-src 'none'",
     "base-uri 'self'",
     // Empêche les <form action="..."> de soumettre vers une URL externe.

@@ -41,7 +41,7 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
 | Forms | API Route + Formhook (fallback) + honeypot + rate-limit |
-| Analytics | Vercel Analytics + Speed Insights (production only) |
+| Analytics | Umami Cloud — cookie-free, EU-hosted, custom events + Core Web Vitals via `useReportWebVitals` (production only) |
 | Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → Supabase `uptime_pings` |
 | Deployment | Vercel (Hobby) |
 
@@ -77,7 +77,6 @@ Browser
   └─ Vercel
         CDN (static assets, ISR pages)
         Cron jobs (vercel.json)
-        Analytics + Speed Insights
 ```
 
 ---
