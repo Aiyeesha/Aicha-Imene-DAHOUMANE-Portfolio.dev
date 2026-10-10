@@ -413,7 +413,7 @@
   "privacy": {
     "title": "Privacy policy",
     "analyticsTitle": "Analytics & Performance",
-    "analyticsBody": "This site uses Umami Cloud in production to measure audience (page views, CV downloads, contact clicks) and Core Web Vitals, i.e. the performance real visitors actually experience. Umami sets no cookies; statistics are aggregated and anonymous, and data is hosted in the European Union (Frankfurt). This service is disabled in development. The data is used only for my visit statistics: it is neither combined with other processing nor shared with third parties. Measurement is automatically disabled if your browser sends a “Do Not Track” signal.",
+    "analyticsBody": "This site uses Umami Cloud in production to measure audience (page views, CV downloads, contact clicks) and Core Web Vitals, i.e. the performance real visitors actually experience. Umami sets no cookies; statistics are aggregated and anonymous, and data is hosted in the European Union (Frankfurt). This service is disabled in development. The data is used only for my visit statistics: it is neither combined with other processing nor shared with third parties, and is kept for no more than 6 months. Measurement is automatically disabled if your browser sends a “Do Not Track” signal.",
     "optOutBody": "You can object to this measurement at any time: your choice is stored in this browser's local storage (no cookie) and takes effect immediately. It must be repeated on each browser or device.",
     "optOutStatusOn": "Audience measurement is active in this browser.",
     "optOutStatusOff": "You have opted out of audience measurement in this browser.",
