@@ -413,7 +413,7 @@
   "privacy": {
     "title": "Privacy policy",
     "analyticsTitle": "Analytics & Performance",
-    "analyticsBody": "This site uses Vercel Analytics and Vercel Speed Insights in production to measure Core Web Vitals and real-user performance. No personal data is collected — metrics are aggregated and anonymous. These services are disabled in development.",
+    "analyticsBody": "This site uses Umami Cloud in production to measure audience (page views, CV downloads, contact clicks) and Core Web Vitals, i.e. the performance real visitors actually experience. Umami sets no cookies; statistics are aggregated and anonymous, and data is hosted in the European Union (Frankfurt). This service is disabled in development.",
     "cookiesTitle": "Cookies",
     "cookiesBody": "No marketing or tracking cookies are set. The language preference is stored in the URL (e.g. /en/, /fr/) and not in a cookie. A functional 'track' cookie (1-year lifetime) and a matching browser local-storage entry only remember which profile is displayed (Salesforce or IT Ops); they contain no personal data. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection). The Calendly booking widget is only loaded if you open it; Calendly's own cookie policy then applies.",
     "formTitle": "Contact form data",
