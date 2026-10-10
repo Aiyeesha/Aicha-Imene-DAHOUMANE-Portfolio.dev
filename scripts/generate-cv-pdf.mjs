@@ -36,7 +36,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops.pdf",
-    scale: 0.96,
+    scale: 0.94,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -50,7 +50,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-es-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-itops.pdf",
-    scale: 0.96,
+    scale: 0.89,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -78,7 +78,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-es-hybrid.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-hybrid.pdf",
-    scale: 0.96,
+    scale: 0.95,
     title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce e Infraestructura — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
