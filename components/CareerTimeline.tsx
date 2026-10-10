@@ -98,15 +98,15 @@ const MILESTONES: Milestone[] = [
     period: "2023",
     type: "stage",
     title: {
-      en: "Systems & Networks Internship",
-      fr: "Stage Systèmes & Réseaux",
+      en: "Systems & Networks Internships",
+      fr: "Stages Systèmes & Réseaux",
       es: "Prácticas de Sistemas y Redes",
     },
     org: "Midrange Group",
     description: {
-      en: "Required internship as part of the TSSR program (GRETA du Val d'Oise). Deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
-      fr: "Stage de fin de formation TSSR (GRETA du Val d'Oise). Déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
-      es: "Prácticas obligatorias del programa TSSR (GRETA du Val d'Oise). Despliegue de 264 puestos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      en: "Two one-month internships as part of the TSSR program (GRETA du Val d'Oise). Deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      fr: "Deux stages d'un mois dans le cadre de la formation TSSR (GRETA du Val d'Oise). Déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
+      es: "Dos prácticas de un mes en el marco del programa TSSR (GRETA du Val d'Oise). Despliegue de 264 puestos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
     },
     tags: ["Windows Server 2022", "Autopilot", "PfSense", "Acronis", "Datto RMM"],
     logos: [
