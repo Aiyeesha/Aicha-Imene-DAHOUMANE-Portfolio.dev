@@ -1,19 +1,19 @@
 ---
-title: "Four months as an intern at an MSP: what monitoring, backups and support taught me"
-excerpt: "A dated look back at my internship at MIDRANGE GROUP (February–May 2023): Datto RMM monitoring, Autotask tickets, Acronis backup alerts and a 264-device Dell rollout — and the habits I kept from it."
+title: "Two one-month internships at an MSP: what monitoring, backups and support taught me"
+excerpt: "A dated look back at my two one-month internships at MIDRANGE GROUP (February–May 2023): Datto RMM monitoring, Autotask tickets, Acronis backup alerts and a 264-device Dell rollout — and the habits I kept from it."
 date: "2026-09-25"
 tags: ["IT Ops", "Lessons learned", "Monitoring", "Backup", "Support"]
 projects: ["it-ops-rmm-supervision", "it-ops-incident-management", "it-ops-acronis-backup", "workstation-mass-deployment"]
 ---
 
-From February to May 2023, I did the internship that concluded my TSSR (systems & network technician) course at MIDRANGE GROUP, an IT services company that manages its clients' IT (an MSP). I worked in the Operations team, supervised by a systems and network administrator. This article replaces the four runbooks I had published separately: it brings together what I actually did and, above all, what I took away from it. No client data is reproduced here.
+Between February and May 2023, as part of my TSSR (systems & network technician) course, I did two one-month internships at MIDRANGE GROUP, an IT services company that manages its clients' IT (an MSP). The two periods were separated by six weeks of training at GRETA du Val d'Oise. I worked in the Operations team, supervised by my tutor, a systems and network administrator. This article replaces the four runbooks I had published separately: it brings together what I actually did and, above all, what I took away from it. No client data is reproduced here.
 
 ## What I did
 
-- **Monitoring** — daily follow-up of 550+ devices in Datto RMM: patch status, antivirus coverage, software inventory. When a machine was no longer protected, I deployed the Malwarebytes agent remotely through a Quick Job, with no on-site visit.
-- **Support** — handling tickets in Autotask, coming in through three channels (phone, email, RMM agent), with remote sessions through Splashtop and time entries for billing.
+- **Monitoring** — daily remote follow-up of 550+ devices in Datto RMM: patch status, antivirus coverage, software inventory. When a machine was no longer protected, I deployed the Malwarebytes agent remotely through a Quick Job, with no on-site visit.
+- **Support** — on-site and remote support for a fleet of 50+ desktops and laptops: handling tickets in Autotask, coming in through three channels (phone, email, RMM agent), with remote sessions through Splashtop and time entries for billing.
 - **Backups** — daily checks of one client's Acronis backups: 105 protected devices, 5 backup plans, 85 alerts to triage (33 errors, 52 warnings).
-- **Deployment** — provisioning 264 Dell machines: 64 Optiplex wiped with Blancco then re-imaged, 200 Latitude deployed through Windows Autopilot and Intune.
+- **Deployment** — provisioning 264 Dell machines: 64 Optiplex wiped with Blancco then re-imaged, 200 Latitude deployed through Windows Autopilot and Intune. I ran this project autonomously under my tutor's supervision, using PowerShell scripts to prepare the machines.
 
 ## What I took away
 
