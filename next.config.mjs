@@ -154,6 +154,19 @@ const nextConfig = {
     ],
   },
 
+  // Relais Umami : le script et l'envoi des événements passent par le domaine
+  // du site (/api/umami/*) au lieu de cloud.umami.is. Avantages : aucune origine
+  // tierce à autoriser dans la CSP ('self' suffit) et moins de blocages par les
+  // bloqueurs de publicité. Placé sous /api : exclu du middleware next-intl.
+  async rewrites() {
+    return [
+      // Le script est servi par cloud.umami.is ; les événements partent vers
+      // gateway.umami.is (endpoint par défaut lu dans le script Umami Cloud).
+      { source: "/api/umami/script.js", destination: "https://cloud.umami.is/script.js" },
+      { source: "/api/umami/api/send", destination: "https://gateway.umami.is/api/send" },
+    ];
+  },
+
   async redirects() {
     return [
       // Blog élagué à l'audit de contenu du 2026-09-25 (lot 4) : 41 articles

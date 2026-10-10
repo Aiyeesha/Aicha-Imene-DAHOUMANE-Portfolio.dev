@@ -244,7 +244,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             {/* Chargé après hydratation par le runtime Next (noncé) : autorisé par
                 'strict-dynamic' dans la CSP (proxy.ts). */}
             <Script
-              src="https://cloud.umami.is/script.js"
+              src="/api/umami/script.js"
+              data-host-url="/api/umami"
               data-website-id={UMAMI_WEBSITE_ID}
               data-domains={UMAMI_DOMAIN}
               strategy="afterInteractive"
