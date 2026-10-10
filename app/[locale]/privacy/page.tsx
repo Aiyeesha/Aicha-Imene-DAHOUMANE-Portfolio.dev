@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getSiteUrl } from "@/lib/siteUrl";
+import AnalyticsOptOut from "@/components/AnalyticsOptOut";
 
 export async function generateMetadata({
   params,
@@ -80,9 +81,12 @@ export default async function PrivacyPage({
         </section>
 
         {/* Analytics & Performance */}
-        <section className="card p-6">
+        <section id="opt-out" className="card p-6">
           <h2 className="text-lg font-semibold">{t("analyticsTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("analyticsBody")}</p>
+          <p className="mt-3 text-sm text-muted-2">{t("optOutBody")}</p>
+          {/* Droit d'opposition (CNIL) : bascule de la clé umami.disabled */}
+          <AnalyticsOptOut />
         </section>
 
         {/* Cookies */}

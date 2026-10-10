@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Droit d'opposition à la mesure d'audience (CNIL)** — Nouveau composant `AnalyticsOptOut` sur `/privacy` (section « Analytics & Performance », ancre `#opt-out`) : un bouton pose ou retire la clé `umami.disabled` du stockage local, que le script Umami relit avant chaque envoi (pages vues, événements et Web Vitals coupés immédiatement sur ce navigateur, sans cookie). Le script Umami respecte aussi le signal « Do Not Track » (`data-do-not-track="true"`). Politique de confidentialité FR/EN/ES : finalité exclusive (ni croisement, ni transmission à des tiers), droit d'opposition dans « Vos droits », Umami Software, Inc. ajouté aux sous-traitants, date de mise à jour au 10 octobre 2026. Objectif : réunir les conditions de l'exemption de consentement CNIL pour la mesure d'audience.
+
 ### Fixed
 
 - **Article « stage en ESN/MSP » et frise de carrière alignés sur les CV** — Le stage Midrange Group était présenté comme « quatre mois de stage » / « stage de fin de formation TSSR ». Il s'agit de deux stages d'un mois (février–mai 2023), séparés par six semaines de formation au GRETA. Titre, extrait et introduction corrigés en FR/EN/ES ; ajout du support de proximité et à distance (parc d'au moins 50 postes), de la supervision à distance via Datto RMM et du déploiement mené en autonomie sous la supervision du tuteur (scripts PowerShell). `CareerTimeline` : « Stages » au pluriel et description identique.

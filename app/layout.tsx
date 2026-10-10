@@ -248,6 +248,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               data-host-url="/api/umami"
               data-website-id={UMAMI_WEBSITE_ID}
               data-domains={UMAMI_DOMAIN}
+              data-do-not-track="true"
               strategy="afterInteractive"
             />
             <WebVitals />
