@@ -45,13 +45,13 @@ The following security headers are set on all responses via `next.config.mjs`:
 
 ```
 default-src 'self'
-script-src 'self' 'nonce-{per-request}' https://assets.calendly.com https://va.vercel-scripts.com
+script-src 'self' 'nonce-{per-request}' https://assets.calendly.com https://cloud.umami.is
 style-src 'self' 'unsafe-inline' https://assets.calendly.com
 img-src 'self' data: https://*.supabase.co https://*.supabase.in
 font-src 'self'
 frame-src https://calendly.com
 connect-src 'self' https://*.supabase.co https://*.upstash.io https://formhook.app
-            https://vitals.vercel-insights.com https://github-contributions-api.jogruber.de
+            https://cloud.umami.is https://github-contributions-api.jogruber.de
 object-src 'none'
 base-uri 'self'
 frame-ancestors 'none'
@@ -62,7 +62,7 @@ report-to csp-endpoint
 **Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` (Edge Runtime) using the Web Crypto API. The nonce is:
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
 - Forwarded to Server Components via the `x-nonce` request header
-- Applied to all inline scripts that require it: JSON-LD, Vercel Analytics, Vercel Speed Insights, and Next.js hydration scripts
+- Applied to Next.js hydration scripts; scripts they load afterwards (such as the Umami tracker, loaded via `next/script`) are trusted through `'strict-dynamic'`
 
 Any inline script without a matching nonce is blocked by the browser. `'unsafe-eval'` is retained in development only (webpack HMR).
 

@@ -80,8 +80,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
       title: isFr ? "Déploiement & Observabilité" : isEs ? "Despliegue y Observabilidad" : "Deployment & Observability",
       items: [
         { name: "Vercel",                role: isFr ? "Hébergement — CDN mondial, HTTPS automatique, preview deployments" : isEs ? "Alojamiento — CDN global, HTTPS automático, despliegues de preview" : "Hosting — global CDN, automatic HTTPS, preview deployments", link: "https://vercel.com" },
-        { name: "Vercel Analytics",      role: isFr ? "Métriques Core Web Vitals (production uniquement)" : isEs ? "Métricas Core Web Vitals (solo en producción)" : "Core Web Vitals metrics (production only)" },
-        { name: "Vercel Speed Insights", role: isFr ? "Analyse des performances en production" : isEs ? "Análisis de rendimiento en producción" : "Production performance analysis" },
+        { name: "Umami Cloud",           role: isFr ? "Mesure d'audience sans cookie (UE) + Core Web Vitals réelles via useReportWebVitals (production uniquement)" : isEs ? "Analítica sin cookies (UE) + Core Web Vitals reales mediante useReportWebVitals (solo en producción)" : "Cookie-free analytics (EU) + real-user Core Web Vitals via useReportWebVitals (production only)", link: "https://umami.is" },
       ],
     },
     {
