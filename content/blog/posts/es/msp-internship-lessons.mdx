@@ -1,19 +1,19 @@
 ---
-title: "Cuatro meses de prácticas en un MSP: lo que me enseñaron la supervisión, las copias de seguridad y el soporte"
-excerpt: "Retrospectiva fechada de mis prácticas en MIDRANGE GROUP (febrero–mayo de 2023): supervisión con Datto RMM, tickets en Autotask, alertas de copias de seguridad Acronis y despliegue de 264 equipos Dell — y los hábitos que conservo."
+title: "Dos prácticas de un mes en un MSP: lo que me enseñaron la supervisión, las copias de seguridad y el soporte"
+excerpt: "Retrospectiva fechada de mis dos prácticas de un mes en MIDRANGE GROUP (febrero–mayo de 2023): supervisión con Datto RMM, tickets en Autotask, alertas de copias de seguridad Acronis y despliegue de 264 equipos Dell — y los hábitos que conservo."
 date: "2026-09-25"
 tags: ["IT Ops", "Retrospectiva", "Supervisión", "Copias de seguridad", "Soporte"]
 projects: ["it-ops-rmm-supervision", "it-ops-incident-management", "it-ops-acronis-backup", "workstation-mass-deployment"]
 ---
 
-De febrero a mayo de 2023 realicé las prácticas de fin de mi formación TSSR (técnica superior de sistemas y redes) en MIDRANGE GROUP, una empresa de servicios informáticos que gestiona el parque de sus clientes (MSP). Trabajé en el equipo de Explotación, supervisada por un administrador de sistemas y redes. Este artículo sustituye a los cuatro runbooks que había publicado por separado: reúne lo que hice realmente y, sobre todo, lo que aprendí. No se reproduce ningún dato de los clientes.
+Entre febrero y mayo de 2023, en el marco de mi formación TSSR (técnica superior de sistemas y redes), realicé dos prácticas de un mes en MIDRANGE GROUP, una empresa de servicios informáticos que gestiona el parque de sus clientes (MSP). Ambos periodos estuvieron separados por seis semanas de formación en el GRETA du Val d'Oise. Trabajé en el equipo de Explotación, supervisada por mi tutor, administrador de sistemas y redes. Este artículo sustituye a los cuatro runbooks que había publicado por separado: reúne lo que hice realmente y, sobre todo, lo que aprendí. No se reproduce ningún dato de los clientes.
 
 ## Lo que hice
 
-- **Supervisión** — seguimiento diario de más de 550 equipos en Datto RMM: estado de los parches, cobertura antivirus, inventario de software. Cuando un equipo dejaba de estar protegido, desplegaba el agente Malwarebytes en remoto mediante un Quick Job, sin desplazamiento.
-- **Soporte** — gestión de tickets en Autotask, recibidos por tres canales (teléfono, correo, agente RMM), con asistencia remota mediante Splashtop y registro del tiempo dedicado para la facturación.
+- **Supervisión** — seguimiento diario, en remoto, de más de 550 equipos en Datto RMM: estado de los parches, cobertura antivirus, inventario de software. Cuando un equipo dejaba de estar protegido, desplegaba el agente Malwarebytes en remoto mediante un Quick Job, sin desplazamiento.
+- **Soporte** — soporte presencial y remoto de un parque de más de 50 puestos de trabajo y portátiles: gestión de tickets en Autotask, recibidos por tres canales (teléfono, correo, agente RMM), con asistencia remota mediante Splashtop y registro del tiempo dedicado para la facturación.
 - **Copias de seguridad** — control diario de las copias Acronis de un cliente: 105 equipos protegidos, 5 planes de copia, 85 alertas que clasificar (33 errores, 52 avisos).
-- **Despliegue** — puesta en servicio de 264 equipos Dell: 64 Optiplex borrados con Blancco y vueltos a instalar a partir de una imagen, 200 Latitude desplegados con Windows Autopilot e Intune.
+- **Despliegue** — puesta en servicio de 264 equipos Dell: 64 Optiplex borrados con Blancco y vueltos a instalar a partir de una imagen, 200 Latitude desplegados con Windows Autopilot e Intune. Llevé este proyecto de forma autónoma, bajo la supervisión de mi tutor, con scripts PowerShell para preparar los equipos.
 
 ## Lo que aprendí
 

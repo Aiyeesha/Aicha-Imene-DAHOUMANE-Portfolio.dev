@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Article « stage en ESN/MSP » et frise de carrière alignés sur les CV** — Le stage Midrange Group était présenté comme « quatre mois de stage » / « stage de fin de formation TSSR ». Il s'agit de deux stages d'un mois (février–mai 2023), séparés par six semaines de formation au GRETA. Titre, extrait et introduction corrigés en FR/EN/ES ; ajout du support de proximité et à distance (parc d'au moins 50 postes), de la supervision à distance via Datto RMM et du déploiement mené en autonomie sous la supervision du tuteur (scripts PowerShell). `CareerTimeline` : « Stages » au pluriel et description identique.
+
 - **Carte LTP : retrait du lien GitHub erroné** — Le bouton GitHub de « Delivery tracking CRM design (LTP) » pointait vers `Optimisez-un-backend-Apex`, qui est le dépôt du projet FASHA (backend Apex SFQUAL), pas celui de LTP. Le dépôt LTP dédié ne contient qu'un commit initial (README d'une ligne) : le rendre public aurait exposé un dépôt vide. LTP étant un projet de conception, sa preuve reste l'étude de cas et le PDF de spécifications ; `repoUrl` est retiré (aucun repli dans `content/github-repos.ts`), le bouton GitHub disparaît de la carte et de la fiche.
 
 ### Security
