@@ -45,13 +45,13 @@ The following security headers are set on all responses via `next.config.mjs`:
 
 ```
 default-src 'self'
-script-src 'self' 'nonce-{per-request}' https://assets.calendly.com https://cloud.umami.is
+script-src 'self' 'nonce-{per-request}' https://assets.calendly.com
 style-src 'self' 'unsafe-inline' https://assets.calendly.com
 img-src 'self' data: https://*.supabase.co https://*.supabase.in
 font-src 'self'
 frame-src https://calendly.com
 connect-src 'self' https://*.supabase.co https://*.upstash.io https://formhook.app
-            https://cloud.umami.is https://api-gateway.umami.dev https://github-contributions-api.jogruber.de
+            https://github-contributions-api.jogruber.de
 object-src 'none'
 base-uri 'self'
 frame-ancestors 'none'
@@ -63,6 +63,7 @@ report-to csp-endpoint
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
 - Forwarded to Server Components via the `x-nonce` request header
 - Applied to Next.js hydration scripts; scripts they load afterwards (such as the Umami tracker, loaded via `next/script`) are trusted through `'strict-dynamic'`
+- Umami analytics is relayed same-origin through `/api/umami/*` (Next.js rewrites to `cloud.umami.is` for the script and `gateway.umami.is` for events), so no third-party origin is needed in `script-src` or `connect-src`
 
 Any inline script without a matching nonce is blocked by the browser. `'unsafe-eval'` is retained in development only (webpack HMR).
 
