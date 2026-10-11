@@ -102,7 +102,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
 
   // Onglet "Sécurité" — projets is_security=true, indépendamment du track
   // (même patron que "bridge" ci-dessus). Volontairement transversal plutôt
-  // que rattaché au seul track IT Ops : Légarant-AXG (côté Salesforce) porte
+  // que rattaché au seul track IT Ops : Legarant-AXG (côté Salesforce) porte
   // aussi le flag, pour que ce filtre reste une preuve de croisement plutôt
   // qu'un 3e bucket isolé du narratif hybride.
   const securityCount = useMemo(
