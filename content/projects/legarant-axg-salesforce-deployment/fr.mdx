@@ -1,17 +1,17 @@
 ---
-title: "Déploiement Salesforce avec Heroku (Légarant-AXG)"
-heroSubtitle: "Intégrer AXG dans le CRM Salesforce de Légarant et livrer la couche d'intégration d'une application mobile — API REST Apex, synchronisation Heroku Connect, mise en production tracée."
+title: "Déploiement Salesforce avec Heroku (Legarant-AXG)"
+heroSubtitle: "Intégrer AXG dans le CRM Salesforce de Legarant et livrer la couche d'intégration d'une application mobile — API REST Apex, synchronisation Heroku Connect, mise en production tracée."
 ---
 
 ## Le contexte métier
 
-LÉGARANT est une société d'assurance vie française fondée en 1980 à Nantes, qui gère plus de 1,2 million de particuliers sur Salesforce. Pour accélérer son implantation en Allemagne, elle rachète AXG — un acteur local qui pilotait déjà plus de 50 000 clients sur un CRM interne propriétaire.
+LEGARANT est une société d'assurance vie française fondée en 1980 à Nantes, qui gère plus de 1,2 million de particuliers sur Salesforce. Pour accélérer son implantation en Allemagne, elle rachète AXG — un acteur local qui pilotait déjà plus de 50 000 clients sur un CRM interne propriétaire.
 
 La décision structurante est prise en amont du projet : **Salesforce reste l'unique système de référence**. Pas de coexistence de deux CRM, pas de fédération. Les données AXG doivent donc remonter dans Salesforce en flux unidirectionnel (Allemagne → France), les APIs d'intégration doivent être documentées et testables par un tiers, et les assureurs de terrain doivent disposer d'une application mobile qui lit et écrit dans le même socle.
 
 Trois exigences métier encadrent la conception, avant toute considération technique :
 
-- **Aucun doublon de client.** Un contact AXG déjà présent côté Légarant ne doit jamais être recréé — sur un portefeuille d'assurance vie, un doublon, c'est un dossier orphelin et un risque de non-conformité.
+- **Aucun doublon de client.** Un contact AXG déjà présent côté Legarant ne doit jamais être recréé — sur un portefeuille d'assurance vie, un doublon, c'est un dossier orphelin et un risque de non-conformité.
 - **Pas de suppression physique.** Le secteur assurance impose une conservation longue des données client. Un « DELETE » fonctionnel doit se traduire par une désactivation, jamais par un `DELETE` SQL.
 - **Un flux intra-UE traçable.** Les données de contact allemandes entrent dans une org hébergée pour la France : le flux doit rester documenté et l'accès restreint par le rôle applicatif, pas par un contournement.
 
@@ -19,7 +19,7 @@ Trois exigences métier encadrent la conception, avant toute considération tech
 
 | Contrainte | Origine | Conséquence de conception |
 |---|---|---|
-| Salesforce = système de référence unique | Décision Légarant | La logique d'identité (unicité, dédoublonnage) doit vivre **dans** Salesforce, pas dans la couche de synchro |
+| Salesforce = système de référence unique | Décision Legarant | La logique d'identité (unicité, dédoublonnage) doit vivre **dans** Salesforce, pas dans la couche de synchro |
 | Synchronisation à sens unique AXG → Salesforce | Périmètre projet | Pas de résolution de conflit à écrire — mais le sens doit être garanti par l'architecture, pas par convention |
 | Conservation réglementaire des données | Secteur assurance | `DELETE` = passage de `IsActive` à `false` ; endpoint dédié, jamais de suppression de ligne |
 | APIs testables par un évaluateur externe | Cadre du titre RNCP | Collection Postman complète, exécutable de bout en bout sans ressaisie d'identifiants |

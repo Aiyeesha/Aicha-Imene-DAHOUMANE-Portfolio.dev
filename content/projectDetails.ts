@@ -10736,7 +10736,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Salesforce deployment and integration for LEGARANT-AXG: REST API, Heroku synchronization and a staging → production release procedure."
       },
       "fr": {
-        "title": "Déploiement Salesforce avec Heroku (Légarant‑AXG)",
+        "title": "Déploiement Salesforce avec Heroku (Legarant‑AXG)",
         "heroSubtitle": "Déploiement et intégration Salesforce pour LEGARANT-AXG : API REST, synchronisation Heroku et procédure de mise en production staging → production."
       },
       "es": {
