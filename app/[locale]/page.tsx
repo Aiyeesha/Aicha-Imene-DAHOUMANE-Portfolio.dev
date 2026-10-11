@@ -120,7 +120,7 @@ export default async function Home({ params }: Props) {
       {/* PONT SALESFORCE ⇄ INFRA — remonté juste sous « Vous recrutez pour quel
           poste ? » (audit 2026-10-01) : c'est la preuve la plus directe du profil
           hybride, elle doit être lue dans les 30 premières secondes et non après
-          sept blocs. Le seul projet réellement croisé (Légarant-AXG, badge-bridge)
+          sept blocs. Le seul projet réellement croisé (Legarant-AXG, badge-bridge)
           y est expliqué en clair, avec en seconde preuve le workflow public de
           MediCare Solutions. Dégradé cyan→violet repris de .badge-bridge (globals.css). */}
       <section id="bridge" className="py-14">
