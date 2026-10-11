@@ -126,7 +126,7 @@ html.dark .card:hover {
 }
 /* Badge "sécurité" — signale un projet cybersécurité/Blue Team, transversal
    aux tracks (voir is_security en base : couvre des projets IT Ops dédiés
-   ET la dimension sécurité de Légarant-AXG côté Salesforce). Ambre pour ne
+   ET la dimension sécurité de Legarant-AXG côté Salesforce). Ambre pour ne
    pas se confondre avec le rouge/rose déjà utilisé pour les statuts "outage". */
 .badge-security {
   @apply border-amber-300 bg-amber-50 text-amber-800;
