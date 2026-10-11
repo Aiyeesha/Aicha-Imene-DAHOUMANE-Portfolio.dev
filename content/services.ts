@@ -67,8 +67,8 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "CI/CD avec Salesforce CLI & GitHub Actions",
           "Procédures de déploiement et de retour arrière"
         ],
-        experience: "LD Digitales ; projet de diplôme Légarant-AXG ; projet personnel de pipeline CI/CD.",
-        proof: "Études de cas Légarant-AXG et Pipeline CI/CD."
+        experience: "LD Digitales ; projet de diplôme Legarant-AXG ; projet personnel de pipeline CI/CD.",
+        proof: "Études de cas Legarant-AXG et Pipeline CI/CD."
       },
       {
         title: "Cadrage, documentation & accompagnement",
@@ -178,8 +178,8 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "CI/CD with Salesforce CLI & GitHub Actions",
           "Deployment and rollback procedures"
         ],
-        experience: "LD Digitales; Légarant-AXG diploma project; personal CI/CD pipeline project.",
-        proof: "Légarant-AXG and CI/CD Pipeline case studies."
+        experience: "LD Digitales; Legarant-AXG diploma project; personal CI/CD pipeline project.",
+        proof: "Legarant-AXG and CI/CD Pipeline case studies."
       },
       {
         title: "Scoping, documentation & user support",
@@ -289,8 +289,8 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "CI/CD con Salesforce CLI y GitHub Actions",
           "Procedimientos de despliegue y de vuelta atrás"
         ],
-        experience: "LD Digitales; proyecto de titulación Légarant-AXG; proyecto personal de pipeline CI/CD.",
-        proof: "Casos de estudio Légarant-AXG y Pipeline CI/CD."
+        experience: "LD Digitales; proyecto de titulación Legarant-AXG; proyecto personal de pipeline CI/CD.",
+        proof: "Casos de estudio Legarant-AXG y Pipeline CI/CD."
       },
       {
         title: "Análisis, documentación y acompañamiento",

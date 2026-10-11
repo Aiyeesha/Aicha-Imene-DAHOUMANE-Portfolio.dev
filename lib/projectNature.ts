@@ -15,7 +15,7 @@
 // nature, jusqu'à ce que sa date soit renseignée dans content/projects.ts.
 
 export type ProjectNature =
-  | "rncp_capstone"   // projet fil rouge du titre RNCP 6 (Légarant-AXG uniquement)
+  | "rncp_capstone"   // projet fil rouge du titre RNCP 6 (Legarant-AXG uniquement)
   | "rncp"            // autres projets du titre RNCP 6 (OpenClassrooms, alternance)
   | "openclassrooms"  // autres projets de formation OpenClassrooms
   | "greta_tai"       // exercices de la formation TAI (Greta du Val d'Oise)
