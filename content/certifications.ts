@@ -52,10 +52,11 @@ export const certifications: Certification[] = [
 ];
 
 export const upcomingCertifications: string[] = [
-  'Salesforce Platform Foundations — préparation active en cours',
-  'Salesforce Platform Administrator (ADM-201) — à venir',
-  'Salesforce Platform App Builder — à venir',
-  'Salesforce Platform Developer I (PD1) — à venir',
+  'INSIDE LVMH Certificate 2026 — en cours (décembre 2026)',
+  'Salesforce Platform Foundations — début 2027',
+  'Salesforce Platform Administrator (ADM-201) — début 2027',
+  'Salesforce Platform App Builder — début 2027',
+  'Salesforce Platform Developer I (PD1) — début 2027',
   'CompTIA Network+ — à venir',
   'CompTIA Security+ — à venir',
   'CompTIA Linux+ — à venir',
