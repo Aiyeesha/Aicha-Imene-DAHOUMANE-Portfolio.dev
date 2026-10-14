@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { useTrack } from "@/app/[locale]/providers";
-import CalendlyPopupButton from "@/components/CalendlyEmbed";
-
-const CALENDLY_URL = "https://calendly.com/ai-dahoumane/30min";
+import BookingLink from "@/components/BookingLink";
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
 
@@ -255,8 +253,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
           <Link href={`/${locale}/contact`} className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}>
             {labels.ctaContact}
           </Link>
-          <CalendlyPopupButton
-            url={CALENDLY_URL}
+          <BookingLink
+            variant="plain"
             label={labels.ctaCall}
             className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 text-slate-700 dark:text-white px-6 py-2.5 text-sm font-medium soft-ring transition-colors"
           />
