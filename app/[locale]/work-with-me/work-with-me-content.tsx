@@ -168,7 +168,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     <div className="mx-auto max-w-3xl px-4 py-10">
       {/* Breadcrumb */}
       <nav aria-label={labels.breadLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">{labels.breadHome}</Link>
+        <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">{labels.breadHome}</Link>
         <span aria-hidden="true">›</span>
         <span className="text-muted">{labels.h1}</span>
       </nav>
@@ -183,7 +183,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       {/* Disponibilité */}
       <section aria-labelledby="section-availability" className="mb-10">
         <h2 id="section-availability" className="text-lg font-semibold mb-4">{labels.availTitle}</h2>
-        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium self-start ${statusColor}`}>
             <span className={`h-2 w-2 rounded-full ${dotColor} ${AVAILABILITY.status === "open" ? "animate-pulse" : ""}`} />
             {statusLabel}
@@ -199,7 +199,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       {/* Ce que je recherche */}
       <section aria-labelledby="section-looking" className="mb-10">
         <h2 id="section-looking" className="text-lg font-semibold mb-4">{labels.lookingTitle}</h2>
-        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-6 space-y-5">
+        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6 space-y-5">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-2 mb-2">{labels.domainsLabel}</p>
             <div className="flex flex-wrap gap-2">
@@ -233,8 +233,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         <h2 id="section-process" className="text-lg font-semibold mb-4">{labels.processTitle}</h2>
         <ol className="space-y-4">
           {labels.steps.map((step) => (
-            <li key={step.n} className="flex gap-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5">
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl font-bold text-sm grid place-items-center ${accent.stepNum}`}>{step.n}</div>
+            <li key={step.n} className="flex gap-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5">
+              <div className={`shrink-0 w-10 h-10 rounded-xl font-bold text-sm grid place-items-center ${accent.stepNum}`}>{step.n}</div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-semibold text-slate-900 dark:text-white">{step.title}</span>
@@ -274,7 +274,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         <h2 id="section-faq" className="text-lg font-semibold mb-4">{labels.faqTitle}</h2>
         <dl className="space-y-4">
           {labels.faqs.map((item) => (
-            <div key={item.q} className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5">
+            <div key={item.q} className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5">
               <dt className="font-medium text-slate-900 dark:text-white">{item.q}</dt>
               <dd className="mt-1.5 text-sm text-muted leading-relaxed">{item.a}</dd>
             </div>

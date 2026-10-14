@@ -80,7 +80,7 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
           "cursor-default select-none",
           "transition-all duration-200",
           "hover:scale-105 focus-visible:scale-105",
-          "soft-ring outline-none",
+          "soft-ring outline-hidden",
           colors.bg,
           colors.border,
         ].join(" ")}
@@ -116,7 +116,7 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
           "w-52",
           // Apparence
           "rounded-xl border border-black/10 dark:border-white/10",
-          "bg-white/95 dark:bg-[#0d1b2e]/95 backdrop-blur-sm",
+          "bg-white/95 dark:bg-[#0d1b2e]/95 backdrop-blur-xs",
           "p-3 shadow-xl shadow-black/10 dark:shadow-black/30",
           // Flèche pointant vers le bas
           "after:absolute after:top-full after:left-1/2 after:-translate-x-1/2",

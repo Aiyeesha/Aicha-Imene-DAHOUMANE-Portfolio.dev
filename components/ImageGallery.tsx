@@ -32,7 +32,7 @@ export default function ImageGallery({
   return (
     <div className={className}>
       <div className="card overflow-hidden">
-        <div className="relative aspect-[16/9] w-full">
+        <div className="relative aspect-video w-full">
           <SafeImage
             src={current.src}
             alt={current.alt}
@@ -51,7 +51,7 @@ export default function ImageGallery({
               type="button"
               onClick={() => setIdx(i)}
               className={[
-                "relative h-16 w-28 flex-shrink-0 overflow-hidden rounded-xl border transition-colors",
+                "relative h-16 w-28 shrink-0 overflow-hidden rounded-xl border transition-colors",
                 i === idx
                   ? "border-cyan-400/50"
                   : "border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20"

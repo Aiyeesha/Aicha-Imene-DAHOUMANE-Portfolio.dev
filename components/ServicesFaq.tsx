@@ -56,7 +56,7 @@ export default function ServicesFaq() {
                 // Remove default disclosure triangle (webkit)
                 "[&::-webkit-details-marker]:hidden",
                 // Focus visible — ring visible pour les utilisateurs clavier
-                "rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2",
+                "rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2",
               ].join(" ")}
             >
               {/* Question */}

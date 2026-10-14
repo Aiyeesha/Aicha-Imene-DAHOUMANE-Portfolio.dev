@@ -123,7 +123,7 @@ export default async function ResourcesPage({ params }: PageProps) {
       <nav aria-label={labels.ariaLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link
           href={`/${locale}`}
-          className="hover:underline soft-ring rounded px-1"
+          className="hover:underline soft-ring rounded-sm px-1"
         >
           {labels.home}
         </Link>
@@ -160,7 +160,7 @@ export default async function ResourcesPage({ params }: PageProps) {
               {category.resources.map((resource) => (
                 <article
                   key={resource.name}
-                  className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 flex flex-col gap-3 hover:border-cyan-400/40 transition-colors"
+                  className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 flex flex-col gap-3 hover:border-cyan-400/40 transition-colors"
                 >
                   {/* Name + tag */}
                   <div className="flex items-start justify-between gap-2">

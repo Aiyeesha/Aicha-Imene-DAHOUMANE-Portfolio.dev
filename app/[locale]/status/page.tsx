@@ -203,7 +203,7 @@ export default async function StatusPage({
 
       {/* ── Breadcrumb ────────────────────────────────────────────────────── */}
       <nav aria-label={labels.ariaLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
+        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm px-1">
           {labels.home}
         </Link>
         <span aria-hidden="true">›</span>
@@ -248,7 +248,7 @@ export default async function StatusPage({
             return (
               <div
                 key={service.name}
-                className="flex items-center justify-between gap-2 bg-white dark:bg-white/[0.02] px-4 py-4 sm:gap-4 sm:px-6"
+                className="flex items-center justify-between gap-2 bg-white dark:bg-white/2 px-4 py-4 sm:gap-4 sm:px-6"
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{service.name}</p>
@@ -292,7 +292,7 @@ export default async function StatusPage({
         <h2 id="incidents-heading" className="mb-4 text-xl font-semibold">
           {labels.incidentTitle}
         </h2>
-        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.02] px-6 py-8 text-center">
+        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/2 px-6 py-8 text-center">
           <p className="text-sm text-muted-2">{labels.noIncidents}</p>
         </div>
       </section>
@@ -303,7 +303,7 @@ export default async function StatusPage({
           href="/api/health"
           target="_blank"
           rel="noreferrer"
-          className="text-xs text-muted-2 hover:underline soft-ring rounded"
+          className="text-xs text-muted-2 hover:underline soft-ring rounded-sm"
         >
           {labels.apiLink}
         </a>
