@@ -5,7 +5,7 @@ import "./globals.css";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
-import { Space_Grotesk, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import DevConsoleMessage from "@/components/DevConsoleMessage";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import GlobalErrorHandler from "@/components/GlobalErrorHandler";
@@ -14,21 +14,26 @@ import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 // Space Grotesk : display/titres — distinctive, géométrique, moderne
 // Inter         : corps de texte — lisible, neutre, éprouvée
 //
+// Auto-hébergées (app/fonts/, fichiers variables Fontsource, licence SIL OFL
+// 1.1) au lieu de next/font/google : le build ne dépend plus d'un
+// téléchargement chez Google Fonts au moment du build (cause d'échecs
+// intermittents en CI). Rendu identique pour les visiteurs.
 // font-display: swap évite le FOIT (flash of invisible text).
-// subsets : latin couvre le français et l'anglais.
+// Sous-ensemble latin : couvre le français, l'anglais et l'espagnol.
 // variable : expose une CSS variable pour Tailwind.
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
+const spaceGrotesk = localFont({
+  src: "./fonts/space-grotesk-latin-wght.woff2",
   variable: "--font-display",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: "300 700",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "./fonts/inter-latin-wght.woff2",
   variable: "--font-body",
   display: "swap",
+  weight: "100 900",
 });
 
 // Root layout — point d'entrée HTML unique (html + body)
