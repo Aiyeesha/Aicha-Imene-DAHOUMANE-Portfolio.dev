@@ -26,6 +26,7 @@ export async function generateMetadata(
       languages: {
         en: `${siteUrl}/en/blog/tags`,
         fr: `${siteUrl}/fr/blog/tags`,
+        es: `${siteUrl}/es/blog/tags`,
         "x-default": `${siteUrl}/en/blog/tags`,
       },
       types: {
