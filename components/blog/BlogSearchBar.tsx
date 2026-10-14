@@ -98,7 +98,7 @@ export default function BlogSearchBar() {
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="w-full bg-transparent text-sm outline-none placeholder:text-muted-2"
+          className="w-full bg-transparent text-sm outline-hidden placeholder:text-muted-2"
         />
         {loading && (
           <span className="size-4 shrink-0 animate-spin rounded-full border-2 border-muted border-t-transparent" />
@@ -109,7 +109,7 @@ export default function BlogSearchBar() {
       {open && results.length > 0 && (
         <div
           role="listbox"
-          className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-black/10 bg-[var(--bg)] shadow-lg dark:border-white/10"
+          className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-black/10 bg-(--bg) shadow-lg dark:border-white/10"
         >
           {results.map((r) => (
             <Link
@@ -141,7 +141,7 @@ export default function BlogSearchBar() {
       )}
 
       {open && results.length === 0 && query.length >= 2 && !loading && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border border-black/10 bg-[var(--bg)] px-4 py-3 shadow-lg dark:border-white/10">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border border-black/10 bg-(--bg) px-4 py-3 shadow-lg dark:border-white/10">
           <p className="text-sm text-muted-2">
             {isFr ? <>Aucun résultat pour &laquo;&nbsp;</> : isEs ? <>Sin resultados para &laquo;&nbsp;</> : <>No results for &ldquo;</>}{query}{isFr ? <>&nbsp;&raquo;</> : isEs ? <>&nbsp;&raquo;</> : <>&rdquo;</>}
           </p>

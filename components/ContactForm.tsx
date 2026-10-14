@@ -218,7 +218,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
             required
             minLength={2}
             maxLength={80}
-            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
+            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.namePlaceholder")}
           />
         </div>
@@ -231,7 +231,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
             type="email"
             autoComplete="email"
             required
-            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
+            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.emailPlaceholder")}
           />
         </div>
@@ -245,7 +245,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
             required
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
+            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring scheme-light dark:scheme-dark"
           >
             <option value="general">{t("contact.topicGeneral")}</option>
             <option value="salesforce">{t("contact.topicSalesforce")}</option>
@@ -270,7 +270,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
                 maxLength={100}
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring"
                 placeholder={t("contact.intake.rolePlaceholder")}
               />
             </div>
@@ -282,7 +282,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
                 autoComplete="off"
                 value={contract}
                 onChange={(e) => setContract(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring scheme-light dark:scheme-dark"
               >
                 <option value="">{t("contact.intake.contractPlaceholder")}</option>
                 {["permanent","fixedTerm","temp","portage","other"].map((key) => (
@@ -299,7 +299,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
                 maxLength={80}
                 value={workplace}
                 onChange={(e) => setWorkplace(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring"
                 placeholder={t("contact.intake.workplacePlaceholder")}
               />
             </div>
@@ -311,7 +311,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
                 autoComplete="off"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring [color-scheme:light] dark:[color-scheme:dark]"
+                className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring scheme-light dark:scheme-dark"
               >
                 <option value="">{t("contact.intake.startPlaceholder")}</option>
                 {["asap","q1_2027","later","tbd"].map((key) => (
@@ -340,7 +340,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
             minLength={10}
             maxLength={MSG_MAX}
             rows={5}
-            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-400/40 soft-ring"
+            className="mt-2 w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 text-sm text-slate-900 dark:text-white outline-hidden focus:border-cyan-400/40 soft-ring"
             placeholder={t("contact.messagePlaceholder")}
             onChange={(e) => setMsgLen(e.target.value.length)}
           />
@@ -352,7 +352,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
             name="acceptedPolicy"
             type="checkbox"
             required
-            className="mt-1 h-4 w-4 rounded border border-black/20 dark:border-white/20 bg-black/5 dark:bg-white/5"
+            className="mt-1 h-4 w-4 rounded-sm border border-black/20 dark:border-white/20 bg-black/5 dark:bg-white/5"
           />
           <label htmlFor="contact-accepted-policy" className="text-xs text-muted-2">
             {t("contact.acceptPolicyPrefix")} {" "}
@@ -462,7 +462,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
 
         {/* Availability badge */}
         <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3">
-          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+          <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
           <span className="text-sm text-emerald-700 dark:text-emerald-300">{t("contact.availability")}</span>
         </div>
 

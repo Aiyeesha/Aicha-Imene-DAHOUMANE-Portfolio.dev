@@ -150,7 +150,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             {/* En-tête : icône dans un badge coloré + titre */}
             <div className="flex items-start gap-3">
               <div
-                className={`flex-shrink-0 grid h-10 w-10 place-items-center rounded-xl ${
+                className={`shrink-0 grid h-10 w-10 place-items-center rounded-xl ${
                   effectiveTrack === "salesforce"
                     ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
                     : "bg-violet-500/10 text-violet-700 dark:text-violet-300"
@@ -185,7 +185,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
             {/* Où je l'ai pratiqué + où le vérifier — remplacent « Livrable » et
                 « Durée typique » (vocabulaire de devis) depuis l'audit de contenu
                 du 2026-09-25. */}
-            <div className="mt-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 space-y-1.5 text-sm">
+            <div className="mt-4 rounded-xl bg-black/3 dark:bg-white/4 px-4 py-3 space-y-1.5 text-sm">
               <p className="text-muted dark:text-slate-400">
                 <span className="font-medium text-slate-700 dark:text-slate-200">
                   {locale === "fr" ? "Où je l'ai pratiqué :" : locale === "es" ? "Dónde lo he practicado:" : "Where I've practised it:"}
@@ -205,7 +205,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               <button
                 type="button"
                 onClick={() => handleDiscuss(c.title)}
-                className={`text-sm font-medium ${effectiveTrack === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"} hover:underline underline-offset-4 soft-ring rounded transition-opacity hover:opacity-80`}
+                className={`text-sm font-medium ${effectiveTrack === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"} hover:underline underline-offset-4 soft-ring rounded-sm transition-opacity hover:opacity-80`}
               >
                 {t("services.discuss")} →
               </button>
@@ -221,14 +221,14 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
         toggle → aucun risque d'hydration mismatch). Luxe & Mode en tête : c'est
         le lot P4 (LTP couture nuptiale + FASHA distribution textile). */}
     <Reveal delayMs={110 + cards.length * 60}>
-      <div className="mt-4 rounded-2xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] p-6 md:p-7">
+      <div className="mt-4 rounded-2xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/3 p-6 md:p-7">
         <h3 className="font-semibold text-slate-900 dark:text-white">{t("services.sectorsTitle")}</h3>
         <p className="mt-2 text-sm leading-relaxed text-muted dark:text-slate-400">{t("services.sectorsBody")}</p>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {sectors.map((s) => (
             <li
               key={s.label}
-              className="rounded-xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/[0.03] p-4"
+              className="rounded-xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/3 p-4"
             >
               <p className="text-sm font-semibold text-slate-900 dark:text-white">{s.label}</p>
               <p className="mt-1 text-sm leading-relaxed text-muted dark:text-slate-400">{s.note}</p>
@@ -266,8 +266,8 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       <Reveal delayMs={110 + (cards.length + 1) * 60}>
         <div className={`mt-4 rounded-2xl border p-6 md:p-7 ${
           effectiveTrack === "salesforce"
-            ? "border-cyan-500/20 bg-cyan-500/[0.04] dark:bg-cyan-400/[0.06]"
-            : "border-violet-500/20 bg-violet-500/[0.04] dark:bg-violet-400/[0.06]"
+            ? "border-cyan-500/20 bg-cyan-500/4 dark:bg-cyan-400/6"
+            : "border-violet-500/20 bg-violet-500/4 dark:bg-violet-400/6"
         }`}>
           <h3 className="font-semibold text-slate-900 dark:text-white">{t("services.maturityTitle")}</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted dark:text-slate-400">

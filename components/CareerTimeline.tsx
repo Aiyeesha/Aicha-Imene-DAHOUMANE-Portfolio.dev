@@ -191,7 +191,7 @@ const TYPE_CONFIG: Record<MilestoneType, {
     badgeEs: "Formación",
     badgeClass: "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300",
     dotClass:   "bg-violet-500 dark:bg-violet-400",
-    lineClass:  "bg-gradient-to-b from-violet-400/40 to-violet-400/10",
+    lineClass:  "bg-linear-to-b from-violet-400/40 to-violet-400/10",
     borderStyle: { borderLeft: "3px solid #8b5cf6" },
   },
   stage: {
@@ -200,7 +200,7 @@ const TYPE_CONFIG: Record<MilestoneType, {
     badgeEs: "Prácticas",
     badgeClass: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
     dotClass:   "bg-amber-500 dark:bg-amber-400",
-    lineClass:  "bg-gradient-to-b from-amber-400/40 to-amber-400/10",
+    lineClass:  "bg-linear-to-b from-amber-400/40 to-amber-400/10",
     borderStyle: { borderLeft: "3px solid #f59e0b" },
   },
   alternance: {
@@ -209,7 +209,7 @@ const TYPE_CONFIG: Record<MilestoneType, {
     badgeEs: "Formación dual",
     badgeClass: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300",
     dotClass:   "bg-cyan-500 dark:bg-cyan-400",
-    lineClass:  "bg-gradient-to-b from-cyan-400/50 to-cyan-400/10",
+    lineClass:  "bg-linear-to-b from-cyan-400/50 to-cyan-400/10",
     borderStyle: { borderLeft: "3px solid #06b6d4" },
   },
   emploi: {
@@ -218,7 +218,7 @@ const TYPE_CONFIG: Record<MilestoneType, {
     badgeEs: "Puesto",
     badgeClass: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300",
     dotClass:   "bg-emerald-500 dark:bg-emerald-400",
-    lineClass:  "bg-gradient-to-b from-emerald-400/50 to-emerald-400/10",
+    lineClass:  "bg-linear-to-b from-emerald-400/50 to-emerald-400/10",
     borderStyle: { borderLeft: "3px solid #10b981" },
   },
 };
@@ -247,7 +247,7 @@ function TimelineItem({
     <li ref={ref} className="flex gap-4 md:gap-6">
 
       {/* ── Colonne gauche : point + ligne ──────────────────────────────── */}
-      <div className="flex flex-col items-center flex-shrink-0 pt-1">
+      <div className="flex flex-col items-center shrink-0 pt-1">
         {/* Badge année */}
         <motion.div
           initial={shouldReduce ? false : { opacity: 0, scale: 0.7 }}
@@ -263,7 +263,7 @@ function TimelineItem({
           initial={shouldReduce ? false : { opacity: 0, scale: 0.5 }}
           animate={show ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.05 }}
-          className={`h-3 w-3 rounded-full shrink-0 shadow-sm ${cfg.dotClass}`}
+          className={`h-3 w-3 rounded-full shrink-0 shadow-xs ${cfg.dotClass}`}
           aria-hidden="true"
         />
 
@@ -274,7 +274,7 @@ function TimelineItem({
             animate={show ? { scaleY: 1 } : {}}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
             style={{ originY: 0 }}
-            className={`mt-1.5 w-px flex-1 min-h-[3rem] ${cfg.lineClass}`}
+            className={`mt-1.5 w-px flex-1 min-h-12 ${cfg.lineClass}`}
             aria-hidden="true"
           />
         )}
@@ -285,7 +285,7 @@ function TimelineItem({
         initial={shouldReduce ? false : { opacity: 0, x: 16 }}
         animate={show ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.08 }}
-        className={`flex-1 rounded-2xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/[0.02] p-4 md:p-5 ${isLast ? "mb-0" : "mb-6"}`}
+        className={`flex-1 rounded-2xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/2 p-4 md:p-5 ${isLast ? "mb-0" : "mb-6"}`}
         style={cfg.borderStyle}
       >
         {/* En-tête : type + titre */}
@@ -309,7 +309,7 @@ function TimelineItem({
               {milestone.logos.map((logo) => (
                 <div
                   key={logo.src}
-                  className="h-8 w-auto flex items-center justify-center rounded bg-white dark:bg-white/5 px-1.5 py-1 border border-black/8 dark:border-white/8"
+                  className="h-8 w-auto flex items-center justify-center rounded-sm bg-white dark:bg-white/5 px-1.5 py-1 border border-black/8 dark:border-white/8"
                 >
                   <Image
                     src={logo.src}

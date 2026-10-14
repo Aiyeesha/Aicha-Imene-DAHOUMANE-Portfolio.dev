@@ -160,7 +160,7 @@ export default async function LocaleLayout({
               - Top padding is handled here so every page clears the fixed navbar.
               - Pages can focus on their content and internal spacing.
             */}
-            <main id="main" className="mx-auto max-w-6xl px-6 pt-[var(--nav-offset)]">
+            <main id="main" className="mx-auto max-w-6xl px-6 pt-(--nav-offset)">
               {children}
             </main>
 
@@ -181,13 +181,13 @@ export default async function LocaleLayout({
                         l'objection « pas de certif » et elle n'était reliée qu'au
                         header, jamais au footer. Voir audit P5. */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/certifications`}
                     >
                       {t("nav.certifications")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/work-with-me`}
                     >
                       {t("footer.workWithMe")}
@@ -196,7 +196,7 @@ export default async function LocaleLayout({
                         Salesforce + infra + sécurité est nécessaire. Point d'entrée
                         neutre (hors toggle), voir audit P2. */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/hybride`}
                     >
                       {t("footer.hybrid")}
@@ -205,43 +205,43 @@ export default async function LocaleLayout({
                         poste) — remplace le formulaire « Qualifier une mission »
                         (secteur/délai/budget) depuis l'audit de contenu du 2026-09-25. */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/contact`}
                     >
                       {t("footer.qualifyMission")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/colophon`}
                     >
                       {t("footer.colophon")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/privacy`}
                     >
                       {t("footer.privacy")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/legal`}
                     >
                       {t("footer.legal")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/accessibility`}
                     >
                       {t("footer.accessibility")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/status`}
                     >
                       {t("footer.status")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/uses`}
                     >
                       {t("footer.uses")}
@@ -249,7 +249,7 @@ export default async function LocaleLayout({
                     {/* /resources a quitté le menu desktop au profit de /hybride
                         (audit de contenu 2026-09-25) : lien conservé ici. */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/resources`}
                     >
                       {t("nav.resources")}
@@ -260,7 +260,7 @@ export default async function LocaleLayout({
                         target="_blank"
                         rel="noreferrer"
                         aria-label="GitHub"
-                        className="underline underline-offset-4 hover:opacity-80 soft-ring rounded"
+                        className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       >
                         GitHub
                       </a>

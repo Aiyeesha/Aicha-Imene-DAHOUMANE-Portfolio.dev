@@ -70,7 +70,7 @@ function LogoItem({ company }: { company: (typeof companies)[0] }) {
   return (
     <div
       className="
-        flex-shrink-0
+        shrink-0
         relative flex items-center justify-center
         opacity-50 grayscale transition-all duration-300
         group-hover:opacity-90 group-hover:grayscale-0

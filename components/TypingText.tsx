@@ -36,7 +36,7 @@ export function TypingText({ text, speed = 32, className }: TypingTextProps) {
         {displayed}
         {!done && (
           <span
-            className="ml-0.5 inline-block h-[0.85em] w-[2px] translate-y-[1px] bg-current align-middle animate-[blink_0.75s_step-end_infinite]"
+            className="ml-0.5 inline-block h-[0.85em] w-[2px] translate-y-px bg-current align-middle animate-[blink_0.75s_step-end_infinite]"
           />
         )}
       </span>

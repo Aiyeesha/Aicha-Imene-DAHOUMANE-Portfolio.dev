@@ -67,7 +67,7 @@ export default async function IncidentDetailPage({
       </div>
 
       {incident.description && (
-        <p className="text-sm text-slate-300 leading-relaxed rounded-lg border border-white/10 bg-white/[0.03] p-4">
+        <p className="text-sm text-slate-300 leading-relaxed rounded-lg border border-white/10 bg-white/3 p-4">
           {incident.description}
         </p>
       )}

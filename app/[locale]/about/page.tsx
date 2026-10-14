@@ -101,7 +101,7 @@ export default async function AboutPage({ params }: PageProps) {
       <div className="mx-auto max-w-4xl px-4 py-10">
         {/* Breadcrumb retour accueil */}
         <nav aria-label={t("breadcrumbAria")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-          <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded">
+          <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm">
             {t("breadcrumbHome")}
           </Link>
           <span aria-hidden="true">›</span>
@@ -135,7 +135,7 @@ export default async function AboutPage({ params }: PageProps) {
       {/* Breadcrumb — navigation retour vers l'accueil
           Permet à l'utilisateur de comprendre qu'il est sur une page dédiée (hors landing). */}
       <nav aria-label={t("breadcrumbAria")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
+        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm px-1">
           {t("breadcrumbHome")}
         </Link>
         <span aria-hidden="true">›</span>
@@ -170,8 +170,8 @@ export default async function AboutPage({ params }: PageProps) {
         <Suspense fallback={
           <div className="rounded-2xl border p-6 space-y-3">
             <div className="h-3 w-16 rounded-full bg-black/5 dark:bg-white/5 animate-pulse" />
-            <div className="h-4 rounded bg-black/5 dark:bg-white/5 animate-pulse" />
-            <div className="h-4 w-5/6 rounded bg-black/5 dark:bg-white/5 animate-pulse" />
+            <div className="h-4 rounded-sm bg-black/5 dark:bg-white/5 animate-pulse" />
+            <div className="h-4 w-5/6 rounded-sm bg-black/5 dark:bg-white/5 animate-pulse" />
           </div>
         }>
           <AboutTrackIntro />
