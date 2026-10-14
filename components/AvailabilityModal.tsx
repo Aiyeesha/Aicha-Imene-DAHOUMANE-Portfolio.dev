@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Modal from "./Modal";
 import { useTrack } from "@/app/[locale]/providers";
-import { trackEvent } from "@/lib/analytics";
 
 // ── Icônes inline légères (SVG 16×16) ────────────────────────────────────
 // Couleur héritée du parent via currentColor — ne pas mettre de text-* ici.
@@ -89,10 +88,7 @@ export default function AvailabilityModal() {
       {/* ── Trigger : badge pulsant cliquable ─────────────────────────────── */}
       <button
         type="button"
-        onClick={() => {
-          setOpen(true);
-          trackEvent("availability_checked", { locale, track });
-        }}
+        onClick={() => setOpen(true)}
         className="group flex items-center gap-2 rounded-full px-2 py-1 -mx-2 -my-1
           hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2
           focus-visible:ring-emerald-400/60 transition-colors soft-ring"
