@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Removed
+
+- **Mesure d'audience et Web Vitals** — Retrait complet d'Umami Cloud (script, relais `/api/umami/*`, variable `NEXT_PUBLIC_UMAMI_WEBSITE_ID`), du suivi des Core Web Vitals (`components/WebVitals.tsx`), du suivi d'événements (`lib/analytics.ts`, `trackEvent` dans le hero, la modale de disponibilité, le formulaire de contact, les projets, le sélecteur de profil, `ArticleReadTracker`) et du bouton d'opposition de `/privacy`, devenu sans objet. La politique de confidentialité (FR/EN/ES) indique désormais qu'aucune mesure d'audience n'est réalisée ; Umami Software, Inc. est retiré des sous-traitants. Les performances restent contrôlées en CI par Lighthouse CI, sans donnée visiteur.
+
 ### Added
 
 - **Droit d'opposition à la mesure d'audience (CNIL)** — Nouveau composant `AnalyticsOptOut` sur `/privacy` (section « Analytics & Performance », ancre `#opt-out`) : un bouton pose ou retire la clé `umami.disabled` du stockage local, que le script Umami relit avant chaque envoi (pages vues, événements et Web Vitals coupés immédiatement sur ce navigateur, sans cookie). Le script Umami respecte aussi le signal « Do Not Track » (`data-do-not-track="true"`). Politique de confidentialité FR/EN/ES : finalité exclusive (ni croisement, ni transmission à des tiers), droit d'opposition dans « Vos droits », Umami Software, Inc. ajouté aux sous-traitants, date de mise à jour au 10 octobre 2026. Objectif : réunir les conditions de l'exemption de consentement CNIL pour la mesure d'audience. Durée de conservation des statistiques précisée : 6 mois au plus (offre Umami Cloud), sous le plafond CNIL de 25 mois.

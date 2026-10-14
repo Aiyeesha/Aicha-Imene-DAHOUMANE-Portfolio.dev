@@ -62,8 +62,8 @@ report-to csp-endpoint
 **Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` (Edge Runtime) using the Web Crypto API. The nonce is:
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
 - Forwarded to Server Components via the `x-nonce` request header
-- Applied to Next.js hydration scripts; scripts they load afterwards (such as the Umami tracker, loaded via `next/script`) are trusted through `'strict-dynamic'`
-- Umami analytics is relayed same-origin through `/api/umami/*` (Next.js rewrites to `cloud.umami.is` for the script and `gateway.umami.is` for events), so no third-party origin is needed in `script-src` or `connect-src`
+- Applied to Next.js hydration scripts; scripts they load afterwards are trusted through `'strict-dynamic'`
+- No analytics or tracking script is loaded
 
 Any inline script without a matching nonce is blocked by the browser. `'unsafe-eval'` is retained in development only (webpack HMR).
 
