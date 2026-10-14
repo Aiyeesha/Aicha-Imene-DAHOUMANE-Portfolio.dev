@@ -1,6 +1,6 @@
 Contact: mailto:ai.dahoumane@proton.me
 Expires: 2027-01-01T00:00:00.000Z
 Preferred-Languages: fr, en
-Policy: https://aicha-imene-dahoumane-portfolio.vercel.app/en/privacy
+Policy: https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/security/policy
 Canonical: https://aicha-imene-dahoumane-portfolio.vercel.app/.well-known/security.txt
 Acknowledgments: https://aicha-imene-dahoumane-portfolio.vercel.app/en/security/acknowledgments

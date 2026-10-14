@@ -37,7 +37,11 @@ export async function GET(req: Request) {
   // ── End Rate limiting ─────────────────────────────────────────────────
 
   const { searchParams } = new URL(req.url);
-  const locale = (searchParams.get("locale") || "en") as "en" | "fr";
+  // Liste blanche : le paramètre sert à construire un chemin de fichiers dans
+  // readAllPosts() — jamais de valeur libre (ex. « ../unpublished/fr »), audit du
+  // 2026-10-14, S8. Même règle que /api/search.
+  const rawLocale = searchParams.get("locale");
+  const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   const limit = Math.min(6, Math.max(1, Number(searchParams.get("limit") || "2")));
 
   const posts = readAllPosts(locale).slice(0, limit).map((p) => ({
