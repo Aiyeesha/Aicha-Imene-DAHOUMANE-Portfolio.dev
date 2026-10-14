@@ -16,7 +16,6 @@ import ShareButtons from "@/components/blog/ShareButtons";
 import { getPrevNext } from "@/content/blog/navigation";
 import { formatDate, detectTrack, translateTag } from "@/lib/blog-utils";
 import { getSeriePosition } from "@/content/blog/series";
-import ArticleReadTracker from "@/components/blog/ArticleReadTracker";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { LINKEDIN_URL } from "@/lib/social";
@@ -260,12 +259,6 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
             <div className="mdx space-y-5 text-slate-700 dark:text-white/80">
               <Post />
             </div>
-            {/* Sentinel: fires blog_article_completed when the reader reaches the end */}
-            <ArticleReadTracker
-              slug={slug}
-              locale={locale}
-              readingTimeMin={meta.readingTime}
-            />
           </article>
 
           {practiceLinks.length > 0 && (

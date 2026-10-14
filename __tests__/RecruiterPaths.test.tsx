@@ -20,7 +20,6 @@ jest.mock("@/app/[locale]/providers", () => ({
   useTrack: () => ({ track: "salesforce", setTrack }),
 }));
 
-jest.mock("@/lib/analytics", () => ({ trackEvent: jest.fn() }));
 
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

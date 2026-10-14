@@ -2,16 +2,14 @@
 
 import { useTrack } from "@/app/[locale]/providers";
 import { useTranslations } from "next-intl";
-import { trackEvent } from "@/lib/analytics";
 
 export default function TrackToggle() {
   const { track, setTrack } = useTrack();
   const t = useTranslations();
 
-  // Trackage + switch — pas d'événement si on clique le track déjà actif
+  // Pas de bascule si on clique le track déjà actif
   const handleSwitch = (to: "itops" | "salesforce") => {
     if (to === track) return;
-    trackEvent("track_switch", { from: track, to });
     setTrack(to);
   };
 
