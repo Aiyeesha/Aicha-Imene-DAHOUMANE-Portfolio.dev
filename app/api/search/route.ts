@@ -98,7 +98,9 @@ function buildIndex(locale: BlogLocale): { index: MiniSearch<SearchDoc>; docs: S
 }
 
 export async function GET(request: NextRequest) {
-  const q      = (request.nextUrl.searchParams.get("q") ?? "").trim();
+  // Requête plafonnée à 64 caractères : la recherche floue (fuzzy + prefix) a un
+  // coût qui croît avec la longueur — audit du 2026-10-14, S7.
+  const q      = (request.nextUrl.searchParams.get("q") ?? "").trim().slice(0, 64);
   const locale = (request.nextUrl.searchParams.get("locale") ?? "en") as BlogLocale;
   const validLocale: BlogLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 

@@ -25,7 +25,7 @@ This portfolio is a single-version application. Security fixes are applied to th
 
 ### HTTP Headers
 
-The following security headers are set on all responses via `next.config.mjs`:
+The following security headers are set on all responses — static headers via `next.config.mjs`, the per-request CSP via `proxy.ts`:
 
 | Header | Value | Purpose |
 |--------|-------|---------|
@@ -43,23 +43,28 @@ The following security headers are set on all responses via `next.config.mjs`:
 
 #### Content Security Policy (CSP)
 
+Production policy, as built by `buildCSP()` in `proxy.ts`:
+
 ```
 default-src 'self'
-script-src 'self' 'nonce-{per-request}' https://assets.calendly.com
+script-src 'self' 'nonce-{per-request}' 'strict-dynamic' https://assets.calendly.com
 style-src 'self' 'unsafe-inline' https://assets.calendly.com
-img-src 'self' data: https://*.supabase.co https://*.supabase.in
+img-src 'self' data: https://*.supabase.co
 font-src 'self'
 frame-src https://calendly.com
-connect-src 'self' https://*.supabase.co https://*.upstash.io https://formhook.app
-            https://github-contributions-api.jogruber.de
+connect-src 'self' https://*.supabase.co
 object-src 'none'
 base-uri 'self'
+form-action 'self'
+worker-src 'self'
 frame-ancestors 'none'
 report-uri /api/csp-report
 report-to csp-endpoint
 ```
 
-**Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` (Edge Runtime) using the Web Crypto API. The nonce is:
+Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs.
+
+**Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` using the Web Crypto API. The nonce is:
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
 - Forwarded to Server Components via the `x-nonce` request header
 - Applied to Next.js hydration scripts; scripts they load afterwards are trusted through `'strict-dynamic'`
@@ -84,18 +89,33 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `GET /api/health` | 30 requests | 60 seconds / IP | Prevents infrastructure probing in a loop |
 | `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
 | `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
-| `GET /admin/*` | 5 requests | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth |
+| `GET /api/blog/latest` | 30 requests | 60 seconds / IP | Public read route |
+| `GET /api/storage/redirect` | 30 requests | 60 seconds / IP | Signed-URL issuance |
+| `GET /admin/*` | 5 requests | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — counts every request, checked before the credentials |
 
 IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controlled) with `x-forwarded-for` as fallback.
 
-**Fail-closed in production**: if Upstash Redis is unavailable, rate limiters return `success: false` — no request passes through unthrottled. In development and CI (no Redis configured), limiters are permissive (`success: true`).
+**No IP in clear in Redis**: every limiter key is replaced by a truncated HMAC-SHA-256 keyed with `IP_HASH_SALT` before it reaches Upstash (`pseudonymizeKey()` in `lib/ratelimit.ts`). Without the salt (local development, CI) keys stay readable.
+
+**Behaviour when Redis is degraded** (current state, documented as is):
+
+| Situation | Effect |
+|-----------|--------|
+| Upstash variables missing in production | Fail-closed — every limiter returns `success: false` |
+| Upstash variables missing in development / CI | Permissive — `success: true` |
+| Redis slower than 500 ms (`timeout`) | Fail-open — the request is allowed |
+| Redis throws (quota, network, token) | Fail-open through `safeLimit()`, **except `/admin`**, which is fail-closed (`proxy.ts`) |
+
+Fail-open on slowness or errors keeps the contact form usable during an Upstash incident, at the cost of rate limiting during that window. Moving the sensitive limiters to fail-closed is under review.
 
 ---
 
 ### Admin Dashboard (`/admin`)
 
-- Protected by HTTP Basic Auth (credentials from `ADMIN_USERNAME` / `ADMIN_PASSWORD` environment variables)
-- Rate-limited: **5 failed attempts per 15 minutes per IP** — brute force locked out at the middleware level (`proxy.ts`)
+- Protected by HTTP Basic Auth (credentials from `ADMIN_USERNAME` / `ADMIN_PASSWORD` environment variables, compared in constant time)
+- `ADMIN_PASSWORD` is validated at 8 characters minimum by `lib/env.ts`; 24 or more random characters are recommended (see the rotation table below)
+- Rate-limited: **5 requests per 15 minutes per IP**, checked before the credentials — brute force locked out at the middleware level (`proxy.ts`)
+- Never cached by the service worker (`/admin` is network-only in `public/sw-template.js`), so contact messages are not stored in the browser cache
 - Returns `503` if credentials are not configured
 - Metadata set to `robots: { index: false, follow: false }` — not indexed by search engines
 - Not linked from public navigation
@@ -195,7 +215,7 @@ All secrets below should be rotated **immediately** if compromised, and periodic
 4. **Revoke** the old secret from its source (Supabase, Upstash Console) if applicable
 5. **Verify** the deployment is healthy via `/api/health` and `/status`
 
-> **Note on `IP_HASH_SALT` rotation**: changing this salt invalidates all existing rate-limit keys in Upstash Redis (IPs are hashed before storage). This has no functional impact beyond briefly resetting in-flight rate-limit counters.
+> **Note on `IP_HASH_SALT` rotation**: changing this salt invalidates all existing rate-limit keys in Upstash Redis (keys are HMAC-pseudonymised with this salt before storage). This has no functional impact beyond briefly resetting in-flight rate-limit counters.
 
 ### Signs of compromise to watch for
 

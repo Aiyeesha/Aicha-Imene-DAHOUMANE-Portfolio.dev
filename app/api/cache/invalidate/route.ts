@@ -103,7 +103,8 @@ export async function POST(req: Request) {
   }
 
   // ── 5. Log de l'opération ───────────────────────────────────────────────────
-  console.info(`[cache/invalidate] IP=${ip} deleted=${deleted.join(", ")}`);
+  // IP volontairement absente du journal (audit du 2026-10-14, S11).
+  console.info(`[cache/invalidate] deleted=${deleted.join(", ")}`);
 
   return NextResponse.json({ ok: true, deleted });
 }
