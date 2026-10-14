@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
+import { LINKEDIN_URL } from "@/lib/social";
 
 import localFont from "next/font/local";
 import DevConsoleMessage from "@/components/DevConsoleMessage";
@@ -206,8 +207,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         )}
         {/* Formhook : formulaire de contact (chargé à la demande) */}
         <link rel="dns-prefetch" href="https://formhook.app" />
-        {/* Identité sociale — vérification IndieWeb */}
-        <link rel="me" href="https://www.linkedin.com/in/aicha-imene-dahoumane" />
+        {/* Identité sociale — vérification IndieWeb. LinkedIn lit la même source
+            (NEXT_PUBLIC_LINKEDIN_URL) que les liens visibles, pour n'exposer
+            qu'une seule URL (audit du 2026-10-14, constat 8). */}
+        {LINKEDIN_URL && <link rel="me" href={LINKEDIN_URL} />}
         <link rel="me" href="https://github.com/Aiyeesha" />
         {/* Preload avatar — candidat LCP (Largest Contentful Paint) sur le hero.
             fetchpriority="high" priorise le téléchargement avant le parsing du Hero.
