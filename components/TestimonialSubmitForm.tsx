@@ -235,7 +235,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
             autoComplete="name"
             value={fields.full_name}
             onChange={handleChange}
-            className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+            className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
           />
         </div>
 
@@ -252,7 +252,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
             maxLength={120}
             value={fields.role}
             onChange={handleChange}
-            className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+            className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
           />
         </div>
       </div>
@@ -270,7 +270,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
           autoComplete="organization"
           value={fields.company}
           onChange={handleChange}
-          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
         />
       </div>
 
@@ -285,7 +285,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
           required
           value={fields.relation_type}
           onChange={handleChange}
-          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
         >
           <option value="" disabled>—</option>
           {l.relation_opts.map((opt) => (
@@ -306,7 +306,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
           maxLength={200}
           value={fields.collaboration_context}
           onChange={handleChange}
-          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
         />
       </div>
 
@@ -324,7 +324,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
           rows={7}
           value={fields.message}
           onChange={handleChange}
-          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40 resize-y"
+          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40 resize-y"
         />
         {/* Compteur de caractères */}
         <p className="text-xs text-muted-2 text-right">
@@ -345,7 +345,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
           placeholder="https://..."
           value={fields.photo_url}
           onChange={handleChange}
-          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
         />
       </div>
 
@@ -359,7 +359,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
           name="locale"
           value={fields.locale}
           onChange={handleChange}
-          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-cyan-500/40"
+          className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40"
         >
           <option value="en">{l.lang_en}</option>
           <option value="fr">{l.lang_fr}</option>

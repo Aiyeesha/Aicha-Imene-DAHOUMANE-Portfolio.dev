@@ -299,7 +299,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
       {/* ── Note de cadrage — pourquoi IT Ops (30) dépasse largement Salesforce (9) ──
           Sans contexte, le ratio brut raconte l'histoire inverse du positionnement.
           Uniquement sur la page /projects complète (ce composant n'est monté que là). */}
-      <div className="mb-6 rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] px-4 py-3 text-sm text-muted">
+      <div className="mb-6 rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/3 px-4 py-3 text-sm text-muted">
         {locale === "fr"
           ? `Pourquoi ${trackCounts.itops} projets IT Ops pour ${trackCounts.salesforce} projets Salesforce ? Mon travail Salesforce en poste est confidentiel et ne peut pas être publié : les projets Salesforce présentés ici sont des projets de formation et une étude de cas reconstituée. Les projets IT Ops, surtout personnels, n'ont pas cette contrainte. Chaque page indique la nature du projet et sa période.`
           : locale === "es"
@@ -319,7 +319,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
           onChange={(e) => setQ(e.target.value)}
           placeholder={t("search")}
           className="w-full rounded-full border border-black/10 bg-black/5 px-5 py-3 text-sm text-slate-900
-            outline-none placeholder:text-slate-400 hover:bg-black/10 focus:border-cyan-400/40 soft-ring
+            outline-hidden placeholder:text-slate-400 hover:bg-black/10 focus:border-cyan-400/40 soft-ring
             dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:placeholder:text-white/40 dark:hover:bg-white/10"
         />
       </div>

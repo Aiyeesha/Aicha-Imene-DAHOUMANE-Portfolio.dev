@@ -37,7 +37,7 @@ export default function ExperienceTimeline({ items }: { items: ExperienceItem[] 
       {items.map((item) => (
         <li
           key={item.id}
-          className="relative pb-8 pl-6 last:pb-0 before:absolute before:-left-[7px] before:top-[0.45rem] before:h-3 before:w-3 before:rounded-full before:bg-cyan-600 before:content-[''] dark:before:bg-cyan-400"
+          className="relative pb-8 pl-6 last:pb-0 before:absolute before:left-[-7px] before:top-[0.45rem] before:h-3 before:w-3 before:rounded-full before:bg-cyan-600 before:content-[''] dark:before:bg-cyan-400"
         >
           <h3 className="text-lg font-semibold leading-snug">
             {item.role}
