@@ -28,13 +28,11 @@ import {
   type Variants,
 } from "framer-motion";
 import { TypingText } from "@/components/TypingText";
+import BookingLink from "@/components/BookingLink";
 
-// CalendlyModal / AvailabilityModal ne sont utiles qu'au clic (modales fermées
-// par défaut) : chargées en dynamic import (ssr: false) pour ne pas alourdir
-// le JS exécuté au premier rendu du hero (above the fold).
-const CalendlyModal = dynamic(() => import("@/components/CalendlyModal"), {
-  ssr: false,
-});
+// AvailabilityModal n'est utile qu'au clic (modale fermée par défaut) : chargée
+// en dynamic import (ssr: false) pour ne pas alourdir le JS exécuté au premier
+// rendu du hero (above the fold).
 const AvailabilityModal = dynamic(() => import("@/components/AvailabilityModal"), {
   ssr: false,
 });
@@ -288,8 +286,9 @@ export default function TrackAwareHero() {
             {t("cta.workWithMe")}
           </a>
 
-          {/* CTA secondaire 1 : ouvre la modale Calendly (disparaît si URL non configurée) */}
-          <CalendlyModal variant="hero" />
+          {/* CTA secondaire 1 : page de réservation Proton Calendar, nouvel onglet
+              (disparaît si NEXT_PUBLIC_BOOKING_URL n'est pas configurée) */}
+          <BookingLink variant="hero" />
 
           {/* CTA secondaire 2 & 3 : télécharge le CV PDF — un bouton par track,
               toujours tous les deux visibles (indépendants du toggle), car le
