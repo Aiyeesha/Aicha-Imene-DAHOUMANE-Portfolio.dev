@@ -6,6 +6,8 @@
  *   - Assets (images, icônes, CV PDF)  : Cache First
  *   - Pages HTML                       : Network First → Cache → Offline fallback
  *   - Routes API (/api/*)              : Network Only (jamais mis en cache)
+ *   - /admin et /<locale>/testimonial-submit : Network Only (données personnelles :
+ *     messages de contact, lien d'invitation signé — audit du 2026-10-14, S3)
  *
  * CACHE_VERSION est injecté au runtime par app/sw.js/route.ts, avec le hash
  * court du commit Git (VERCEL_GIT_COMMIT_SHA) — ne pas modifier manuellement.
@@ -21,6 +23,17 @@ const PRECACHE_URLS = [
   "/avatar.webp",
   "/icon-192.png",
   "/icon-512.png",
+];
+
+// Pages jamais mises en cache : elles affichent des données personnelles
+// (messages de contact dans /admin) ou portent un jeton d'invitation signé
+// (testimonial-submit). Exclusion par chemin plutôt que par en-tête : toutes les
+// pages HTML du site sont servies en « private, no-store » (rendu dynamique
+// imposé par le nonce CSP), donc un filtre sur Cache-Control supprimerait
+// tout le mode hors-ligne.
+const NETWORK_ONLY_PATHS = [
+  /^\/admin(\/|$)/,
+  /^\/(fr|en|es)\/testimonial-submit(\/|$)/,
 ];
 
 // ── Install : précache du shell ───────────────────────────────────────────────
@@ -59,6 +72,9 @@ self.addEventListener("fetch", (event) => {
 
   // Routes API → Network Only (données dynamiques, rate-limiting, etc.)
   if (url.pathname.startsWith("/api/")) return;
+
+  // Pages sensibles → Network Only (voir NETWORK_ONLY_PATHS)
+  if (NETWORK_ONLY_PATHS.some((re) => re.test(url.pathname))) return;
 
   // Chunks Next.js statiques → Cache First (hash dans l'URL = immuable)
   if (url.pathname.startsWith("/_next/static/")) {
