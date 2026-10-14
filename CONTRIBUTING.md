@@ -59,7 +59,7 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 | `UPSTASH_REDIS_REST_URL` | Recommended | Upstash Redis URL (rate-limiting) |
 | `UPSTASH_REDIS_REST_TOKEN` | Recommended | Upstash Redis token — server-only |
 | `NEXT_PUBLIC_LINKEDIN_URL` | No | LinkedIn profile URL |
-| `NEXT_PUBLIC_CALENDLY_URL` | No | Calendly booking URL |
+| `NEXT_PUBLIC_BOOKING_URL` | No | Proton Calendar booking page URL |
 | `NEXT_PUBLIC_CV_PDF_URL` | No | CV PDF URL (fallback: `/cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf`) |
 | `FORMHOOK_ENDPOINT` | No | Formhook contact form endpoint |
 | `FORMHOOK_AUTH_TOKEN` | No | Formhook X-Auth-Token for server-to-server requests |

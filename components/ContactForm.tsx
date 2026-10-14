@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
-import CalendlyModal from "./CalendlyModal";
+import BookingLink from "./BookingLink";
 import { useTrack } from "@/app/[locale]/providers";
 
 type Status =
@@ -468,7 +468,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
 
         {/* Direct contact */}
         <div className="border-t border-black/10 pt-2 dark:border-white/10 space-y-3">
-          <CalendlyModal />
+          <BookingLink />
           {CONTACT_EMAIL ? (
             <a
               href={`mailto:${CONTACT_EMAIL}`}
