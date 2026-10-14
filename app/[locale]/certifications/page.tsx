@@ -3,7 +3,7 @@
 // Page dédiée "Certifications & Diplômes" — layout premium en 3 sections :
 //   1. Obtenu (✓ vert)  — diplômes RNCP + Linguaskill
 //   2. Actif   (↻ cyan) — Trailhead Ranger
-//   3. En préparation (◎ ambre) — Salesforce Admin, PDI, ISC2 CC
+//   3. En préparation (◎ ambre) — INSIDE LVMH Certificate, Salesforce Admin, PDI…
 //
 // Source : content/certifications.ts (données statiques fiables).
 
@@ -33,10 +33,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (nov. 2026 – 2027/2028)."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (début 2027 – 2027/2028), INSIDE LVMH Certificate en cours."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (nov. 2026 – 2027/2028)."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (Nov 2026 – 2027/2028).";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (principios de 2027 – 2027/2028), INSIDE LVMH Certificate en curso."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (early 2027 – 2027/2028), with the INSIDE LVMH Certificate in progress.";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -289,6 +289,12 @@ export default async function CertificationsPage({ params }: PageProps) {
   // réparties sept.–oct., sont regroupées sur novembre 2026. Les 3 CompTIA
   // (Network+, Security+, Linux+), initialement oct.–déc. 2026, rejoignent
   // le roadmap 2027 ("Début 2027") pour laisser la place au sprint Salesforce.
+  //
+  // Recalage du 2026-10-14 : les 4 certifications Salesforce passent de
+  // novembre 2026 à début 2027 ; l'INSIDE LVMH Certificate (parcours en ligne,
+  // à terminer avant le 15 décembre 2026) devient la seule échéance 2026.
+  // Le groupe "2026" regroupe désormais les prochaines échéances (déc. 2026 –
+  // début 2027) ; le groupe "2027" reste la roadmap repliée.
   type UpcomingItem = {
     id: string;
     name: string;
@@ -298,23 +304,36 @@ export default async function CertificationsPage({ params }: PageProps) {
     initials: string;
     color: string;
     logoUrl?: string;
-    track: "salesforce" | "comptia";
+    track: "salesforce" | "comptia" | "luxury";
     phase: "2026" | "2027";
     isActive?: boolean;
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── 2026 — sprint de novembre 2026 ───────────────────────────────────────
-    // Report : plus de créneau disponible en centre agréé avant septembre, puis
-    // déplacement des examens Administrator en novembre — les 4 certifications
-    // Salesforce sont désormais toutes visées en novembre 2026, même ordre relatif.
+    // ── Prochaines échéances — déc. 2026 (LVMH) puis début 2027 (Salesforce) ─
     // Formulation alignée sur la FAQ et la page À propos (« planifiées pour
-    // novembre 2026 ») : à mettre à jour aux trois endroits après chaque résultat.
+    // début 2027 ») : à mettre à jour aux trois endroits après chaque résultat.
+    {
+      id: "inside-lvmh-certificate",
+      name: "INSIDE LVMH Certificate 2026",
+      issuer: "LVMH — INSIDE LVMH",
+      target: isFr ? "Déc. 2026" : isEs ? "Dic. 2026" : "Dec 2026",
+      description: isFr
+        ? "Parcours en ligne de 4 cours et une évaluation finale : LVMH et l’industrie du luxe, luxe et société, options Creation & Branding et Retail & Client Experience."
+        : isEs
+        ? "Itinerario en línea de 4 cursos y una evaluación final: LVMH y la industria del lujo, lujo y sociedad, optativas Creation & Branding y Retail & Client Experience."
+        : "Online learning path of 4 courses and a final assessment: LVMH and the luxury industry, luxury and society, Creation & Branding and Retail & Client Experience electives.",
+      initials: "LV",
+      color: "bg-neutral-900",
+      track: "luxury",
+      phase: "2026",
+      isActive: true,
+    },
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : isEs
@@ -330,7 +349,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator (ADM-201)",
       issuer: "Salesforce",
-      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
@@ -346,7 +365,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
         : isEs
@@ -362,7 +381,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-developer-i",
       name: "Salesforce Platform Developer I (PD1)",
       issuer: "Salesforce",
-      target: isFr ? "Nov. 2026" : isEs ? "Nov. 2026" : "Nov 2026",
+      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
         : isEs
@@ -739,10 +758,10 @@ export default async function CertificationsPage({ params }: PageProps) {
         <div className="mt-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              {isFr ? "En cours / Planifiées 2026" : isEs ? "En curso / Planificadas 2026" : "In progress / Planned 2026"}
+              {isFr ? "En cours / Prochaines échéances" : isEs ? "En curso / Próximos plazos" : "In progress / Next up"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— sprint novembre 2026" : isEs ? "— sprint noviembre 2026" : "— November 2026 sprint"}
+              {isFr ? "— déc. 2026 · début 2027" : isEs ? "— dic. 2026 · principios de 2027" : "— Dec 2026 · early 2027"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
