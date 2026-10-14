@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Calendrier des certifications** — Les 4 certifications Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) passent de novembre 2026 à début 2027 (page Certifications, FAQ, page À propos, FR/EN/ES). Ajout de l'INSIDE LVMH Certificate 2026 (Creation & Branding, Retail & Client Experience) en cours, échéance décembre 2026. Le groupe « En cours / Planifiées 2026 » devient « En cours / Prochaines échéances » ; la roadmap 2027 est inchangée.
+
 ### Added
 
 - **Droit d'opposition à la mesure d'audience (CNIL)** — Nouveau composant `AnalyticsOptOut` sur `/privacy` (section « Analytics & Performance », ancre `#opt-out`) : un bouton pose ou retire la clé `umami.disabled` du stockage local, que le script Umami relit avant chaque envoi (pages vues, événements et Web Vitals coupés immédiatement sur ce navigateur, sans cookie). Le script Umami respecte aussi le signal « Do Not Track » (`data-do-not-track="true"`). Politique de confidentialité FR/EN/ES : finalité exclusive (ni croisement, ni transmission à des tiers), droit d'opposition dans « Vos droits », Umami Software, Inc. ajouté aux sous-traitants, date de mise à jour au 10 octobre 2026. Objectif : réunir les conditions de l'exemption de consentement CNIL pour la mesure d'audience. Durée de conservation des statistiques précisée : 6 mois au plus (offre Umami Cloud), sous le plafond CNIL de 25 mois.
