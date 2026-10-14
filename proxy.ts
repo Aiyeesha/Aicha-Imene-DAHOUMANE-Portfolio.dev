@@ -45,8 +45,6 @@ const intlHandler = createMiddleware({
 // 'unsafe-inline' est remplacé par 'nonce-{nonce}' dans script-src.
 // 'unsafe-eval' est conservé uniquement en développement (webpack HMR).
 // Les origines externes (Calendly) restent dans la liste blanche
-// Umami n'y figure pas : script et événements passent par le relais same-origin
-// /api/umami/* (rewrites dans next.config.mjs), couvert par 'self'.
 // pour les navigateurs qui ne supportent pas encore CSP3 strict-dynamic.
 function buildCSP(nonce: string, isDev: boolean): string {
   return [

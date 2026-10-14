@@ -27,7 +27,6 @@ import {
   useTransform,
   type Variants,
 } from "framer-motion";
-import { trackEvent } from "@/lib/analytics";
 import { TypingText } from "@/components/TypingText";
 
 // CalendlyModal / AvailabilityModal ne sont utiles qu'au clic (modales fermées
@@ -251,7 +250,6 @@ export default function TrackAwareHero() {
               <a
                 className={`inline-flex rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
                 href="#contact"
-                onClick={() => trackEvent("contact_click", { locale, track })}
               >
                 {t("cta.workWithMe")}
               </a>
@@ -286,7 +284,6 @@ export default function TrackAwareHero() {
           <a
             className={`hidden sm:inline-block rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
             href="#contact"
-            onClick={() => trackEvent("contact_click", { locale, track })}
           >
             {t("cta.workWithMe")}
           </a>
@@ -302,7 +299,6 @@ export default function TrackAwareHero() {
             href={cvItopsUrl}
             target="_blank"
             rel="noreferrer"
-            onClick={() => trackEvent("cv_download", { locale, track: "itops" })}
           >
             {t("cta.downloadCvItops")} ↓
           </a>
@@ -311,7 +307,6 @@ export default function TrackAwareHero() {
             href={cvSalesforceUrl}
             target="_blank"
             rel="noreferrer"
-            onClick={() => trackEvent("cv_download", { locale, track: "salesforce" })}
           >
             {t("cta.downloadCvSalesforce")} ↓
           </a>
@@ -324,7 +319,6 @@ export default function TrackAwareHero() {
             href={cvHybridUrl}
             target="_blank"
             rel="noreferrer"
-            onClick={() => trackEvent("cv_download", { locale, track: "hybrid" })}
           >
             {t("cta.downloadCvHybrid")} ↓
           </a>

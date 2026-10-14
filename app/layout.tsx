@@ -6,8 +6,6 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 import { Space_Grotesk, Inter } from "next/font/google";
-import Script from "next/script";
-import WebVitals from "@/components/WebVitals";
 import DevConsoleMessage from "@/components/DevConsoleMessage";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import GlobalErrorHandler from "@/components/GlobalErrorHandler";
@@ -41,15 +39,6 @@ const inter = Inter({
 //       WebSite + Person
 //   - Validable sur : https://validator.schema.org/
 //
-// Mesure d'audience Umami (sans cookie, données hébergées dans l'UE) + Core Web
-// Vitals réelles, uniquement en production et si NEXT_PUBLIC_UMAMI_WEBSITE_ID
-// est défini. data-domains limite la collecte au domaine canonique (pas de
-// comptage des previews ni de localhost).
-const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
-const UMAMI_DOMAIN = process.env.NEXT_PUBLIC_SITE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname
-  : undefined;
-const UMAMI_ENABLED = process.env.NODE_ENV === "production" && Boolean(UMAMI_WEBSITE_ID);
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -239,21 +228,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <GlobalErrorHandler />
         <DevConsoleMessage />
         <ServiceWorkerRegistration />
-        {UMAMI_ENABLED && (
-          <>
-            {/* Chargé après hydratation par le runtime Next (noncé) : autorisé par
-                'strict-dynamic' dans la CSP (proxy.ts). */}
-            <Script
-              src="/api/umami/script.js"
-              data-host-url="/api/umami"
-              data-website-id={UMAMI_WEBSITE_ID}
-              data-domains={UMAMI_DOMAIN}
-              data-do-not-track="true"
-              strategy="afterInteractive"
-            />
-            <WebVitals />
-          </>
-        )}
       </body>
     </html>
   );
