@@ -77,6 +77,12 @@ async function sendCriticalAlert(data: {
   }).catch((e) => console.warn("[CSP-VIOLATION] Alert webhook failed:", String(e)));
 }
 
+/** Coupe une URL avant « ? » ou « # » (valeurs spéciales comme « inline » inchangées). */
+function stripQuery(uri: string): string {
+  const cut = uri.search(/[?#]/);
+  return cut === -1 ? uri : uri.slice(0, cut);
+}
+
 export async function POST(req: NextRequest) {
   // ── Déterminer si c'est un rapport report-only (CSPO) ────────────────────
   const { searchParams } = new URL(req.url);
@@ -99,10 +105,13 @@ export async function POST(req: NextRequest) {
     // Certaines anciennes implémentations envoient les champs au niveau racine.
     const report = (body["csp-report"] ?? body) as Record<string, unknown>;
 
-    const blockedUri        = String(report["blocked-uri"]        ?? report["blockedURI"]        ?? "");
+    // Requête et fragment retirés des URL avant journalisation : ils peuvent
+    // porter un jeton (lien d'invitation signé) ou des données de formulaire —
+    // audit du 2026-10-14, S11.
+    const blockedUri        = stripQuery(String(report["blocked-uri"]  ?? report["blockedURI"]  ?? ""));
     const violatedDirective = String(report["violated-directive"] ?? report["violatedDirective"] ?? "");
-    const documentUri       = String(report["document-uri"]       ?? report["documentURL"]       ?? "");
-    const referrer          = String(report["referrer"]           ?? "");
+    const documentUri       = stripQuery(String(report["document-uri"] ?? report["documentURL"] ?? ""));
+    const referrer          = stripQuery(String(report["referrer"]     ?? ""));
 
     // ── Filtrer les faux positifs silencieusement ─────────────────────────
     // Pas de log pour éviter le bruit — les extensions navigateur génèrent
