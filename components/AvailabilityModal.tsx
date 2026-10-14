@@ -90,7 +90,7 @@ export default function AvailabilityModal() {
         type="button"
         onClick={() => setOpen(true)}
         className="group flex items-center gap-2 rounded-full px-2 py-1 -mx-2 -my-1
-          hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2
+          hover:bg-emerald-500/10 focus-visible:outline-hidden focus-visible:ring-2
           focus-visible:ring-emerald-400/60 transition-colors soft-ring"
         aria-haspopup="dialog"
       >

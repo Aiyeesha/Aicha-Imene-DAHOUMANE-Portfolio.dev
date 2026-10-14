@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
+- **Migration Tailwind CSS 3 → 4 (remplace la PR Dependabot #40)** — `tailwindcss` 4.3.3 et `@tailwindcss/postcss` (remplace `autoprefixer`). Migration faite avec l'outil officiel `@tailwindcss/upgrade` : configuration déplacée de `tailwind.config.ts` vers `@theme` dans `app/globals.css`, classes renommées dans 46 fichiers (`bg-gradient-to-*` → `bg-linear-to-*`, `rounded` → `rounded-sm`, etc.), compatibilité de couleur de bordure conservée. Sources limitées aux mêmes fichiers que l'ancienne option `content` (`source(none)` + `@source`). Sélecteur des blocs de code `[data-theme*=' ']` remplacé par `[data-theme~='github-light']` (l'optimiseur de Tailwind 4 le rendait illisible pour le minifieur de Next.js). Polices exposées sous `--font-space-grotesk` / `--font-inter`. Rendu comparé avant/après sur 36 captures (9 pages, clair/sombre, bureau/mobile) : écarts < 0,6 % des pixels ; seul le titre du hero gagne en interligne (`leading-tight` désormais appliqué). Audit complet : 9 → 5 alertes, les 5 restantes viennent de `eslint-config-next` (outillage). `npm audit --omit=dev` : 0 vulnérabilité.
+
 - **Dépendances : regroupement des 8 PR Dependabot du 12/10 (#28 à #35)** — `@radix-ui/react-dialog` 1.2.0, `@supabase/supabase-js` 2.117.3, `js-yaml` 5.4.3, `next-intl` 4.14.9 (version épinglée) ; outillage : `axe-core` 4.14.0, `dotenv` 18.0.7, `postcss` 8.5.29, `puppeteer` 25.13.0. Versions fixées sur celles proposées par Dependabot ; `package-lock.json` régénéré avec npm 11. `npm audit --omit=dev` : 0 vulnérabilité.
 
 ### Changed

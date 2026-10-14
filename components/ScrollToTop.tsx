@@ -42,7 +42,7 @@ export default function ScrollToTop() {
         "fixed bottom-6 right-6 z-40",
         "grid h-10 w-10 place-items-center rounded-full",
         "border border-black/10 dark:border-white/10",
-        "bg-white/80 dark:bg-[#070B1A]/80 backdrop-blur",
+        "bg-white/80 dark:bg-[#070B1A]/80 backdrop-blur-sm",
         "shadow-md text-slate-700 dark:text-white/70",
         track === "salesforce"
           ? "hover:bg-cyan-500 hover:text-black hover:border-cyan-500"
