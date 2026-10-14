@@ -205,8 +205,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
         )}
-        {/* Formhook : formulaire de contact (chargé à la demande) */}
-        <link rel="dns-prefetch" href="https://formhook.app" />
         {/* Identité sociale — vérification IndieWeb. LinkedIn lit la même source
             (NEXT_PUBLIC_LINKEDIN_URL) que les liens visibles, pour n'exposer
             qu'une seule URL (audit du 2026-10-14, constat 8). */}
