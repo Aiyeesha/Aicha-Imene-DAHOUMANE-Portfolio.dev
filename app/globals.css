@@ -1,6 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Détection automatique désactivée : on scanne exactement les mêmes fichiers
+   que l'ancienne option `content` de Tailwind 3. Sans cela, Tailwind 4 lit tout
+   le dépôt (CV HTML, scripts SQL, Markdown…) et en extrait des classes
+   parasites, dont un sélecteur que le minifieur CSS de Next.js ne sait pas lire. */
+@import 'tailwindcss' source(none);
+@source "../app/**/*.{js,ts,jsx,tsx,mdx}";
+@source "../components/**/*.{js,ts,jsx,tsx,mdx}";
+@source "../content/**/*.{js,ts}";
+@source "../i18n/**/*.{js,ts}";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Familles injectées par next/font/local (app/layout.tsx) sous un nom distinct :
+     une variable de thème qui se référencerait elle-même serait invalide. */
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  --animate-marquee: marquee 35s linear infinite;
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /*
   Fixed navbar offset
@@ -75,7 +119,7 @@ h1, h2, h3 {
 }
 
 .card {
-  @apply rounded-2xl border shadow-[0_0_0_1px_rgba(0,0,0,0.03)] backdrop-blur;
+  @apply rounded-2xl border shadow-[0_0_0_1px_rgba(0,0,0,0.03)] backdrop-blur-sm;
   @apply border-black/10 bg-black/5;
   @apply transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out;
 }
@@ -120,7 +164,7 @@ html.dark .card:hover {
    indépendamment du track actif. Dégradé cyan→violet pour ne pas se confondre
    avec les tons mono-track existants (client/personal/training). */
 .badge-bridge {
-  @apply border-transparent bg-gradient-to-r from-cyan-500/15 to-violet-500/15 text-slate-800;
+  @apply border-transparent bg-linear-to-r from-cyan-500/15 to-violet-500/15 text-slate-800;
   @apply dark:from-cyan-400/20 dark:to-violet-400/20 dark:text-white;
   border-image: linear-gradient(to right, rgb(34 211 238 / 0.5), rgb(167 139 250 / 0.5)) 1;
 }
@@ -551,14 +595,18 @@ html.dark .mdx-code__copy {
      --shiki-dark  : couleur token en mode sombre
    On affiche la variante correcte selon la classe .dark sur <html>.
    keepBackground: false → fond géré par .mdx pre ci-dessus.
+   Sélecteur [data-theme~='github-light'] (et non [data-theme*=' ']) : en
+   production, l'optimiseur de Tailwind 4 réécrit ' ' en `\ ` sans guillemets,
+   forme que le minifieur CSS de Next.js ne sait pas analyser. Équivalent ici :
+   le thème double vaut toujours « github-light github-dark-default ».
    ──────────────────────────────────────────────────────────────────────── */
-code[data-theme*=' '],
-code[data-theme*=' '] span {
+code[data-theme~='github-light'],
+code[data-theme~='github-light'] span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg);
 }
-html.dark code[data-theme*=' '],
-html.dark code[data-theme*=' '] span {
+html.dark code[data-theme~='github-light'],
+html.dark code[data-theme~='github-light'] span {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
 }

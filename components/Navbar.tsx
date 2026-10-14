@@ -59,7 +59,7 @@ const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "
 // menu — devant le lien « Cluster Sécurité », dont l'ambre est désormais atténué.
 // Dégradé repris de la page /hybride (cyan→violet = la combinaison des deux tracks).
 const HYBRID_ACCENT =
-  "font-semibold bg-gradient-to-r from-cyan-600 to-violet-600 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent";
+  "font-semibold bg-linear-to-r from-cyan-600 to-violet-600 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent";
 
 type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
 
@@ -445,7 +445,7 @@ useEffect(() => {
       <ScrollProgress />
 
       <header
-        className="fixed inset-x-0 top-0 z-50 h-[var(--nav-h)] border-b border-black/10 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-[#070B1A]/70"
+        className="fixed inset-x-0 top-0 z-50 h-(--nav-h) border-b border-black/10 bg-white/70 backdrop-blur-sm dark:border-white/10 dark:bg-[#070B1A]/70"
       >
         {/*
           Desktop layout (robust against truncation):
@@ -467,7 +467,7 @@ useEffect(() => {
         <div className="mx-auto flex h-full max-w-[1780px] items-center gap-3 px-4 lg:px-4 min-[1850px]:px-6">
           <Link
             href={`/${locale}`}
-            className={`flex flex-shrink-0 items-center gap-3 rounded-2xl border px-2.5 py-1.5 -mx-2.5 -my-1.5 transition-colors soft-ring ${
+            className={`flex shrink-0 items-center gap-3 rounded-2xl border px-2.5 py-1.5 -mx-2.5 -my-1.5 transition-colors soft-ring ${
               track === "salesforce"
                 ? "border-cyan-500/20 hover:bg-cyan-500/5 dark:hover:bg-cyan-400/5"
                 : "border-violet-500/20 hover:bg-violet-500/5 dark:hover:bg-violet-400/5"
@@ -512,7 +512,7 @@ useEffect(() => {
             {navOverflow.left && (
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute left-0 z-10 h-11 w-12 bg-gradient-to-r from-white/95 dark:from-[#070B1A]/95 to-transparent"
+                className="pointer-events-none absolute left-0 z-10 h-11 w-12 bg-linear-to-r from-white/95 dark:from-[#070B1A]/95 to-transparent"
               />
             )}
             {navOverflow.left && (
@@ -532,7 +532,7 @@ useEffect(() => {
               id="desktop-nav"
               ref={desktopNavRef}
               className="relative flex h-11 max-w-full min-w-0 items-center gap-0 overflow-x-auto rounded-full px-1
-                         [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                         [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden"
             >
               <NavbarPill activeId={desktopActiveId} containerId="desktop-nav" />
               {desktopSections.map((s) => {
@@ -561,7 +561,7 @@ useEffect(() => {
                           ref={projectsMenuRef}
                           role="menu"
                           style={{ top: projectsMenuPos.top, left: projectsMenuPos.left }}
-                          className="fixed w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-[60]"
+                          className="fixed w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-60"
                         >
                           {trackFeaturedProjects.length > 0 && (
                             <>
@@ -663,7 +663,7 @@ useEffect(() => {
             {navOverflow.right && (
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute right-0 z-10 h-11 w-12 bg-gradient-to-l from-white/95 dark:from-[#070B1A]/95 to-transparent"
+                className="pointer-events-none absolute right-0 z-10 h-11 w-12 bg-linear-to-l from-white/95 dark:from-[#070B1A]/95 to-transparent"
               />
             )}
             {navOverflow.right && (
@@ -681,7 +681,7 @@ useEffect(() => {
             )}
           </div>
 
-          <div className="flex flex-shrink-0 items-center gap-2 min-[1850px]:gap-3">
+          <div className="flex shrink-0 items-center gap-2 min-[1850px]:gap-3">
             {/*
               Desktop / tablet controls. On very small screens we move these into the mobile drawer
               to prevent them from being pushed out of view by the brand.
@@ -722,7 +722,7 @@ useEffect(() => {
           le backdrop fade en opacity — aucune dépendance Framer Motion pour
           ne pas charger ~25 KB gzip sur toutes les pages. */}
       <div
-        className={`fixed inset-0 z-[80] xl:hidden transition-opacity duration-200 ease-out ${
+        className={`fixed inset-0 z-80 xl:hidden transition-opacity duration-200 ease-out ${
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!mobileOpen}
@@ -744,7 +744,7 @@ useEffect(() => {
             aria-label={t("nav.menu")}
             ref={menuRef}>
             {/* En-tête fixe — toujours visible en haut du drawer */}
-            <div className="flex flex-shrink-0 items-center justify-between px-5 pt-5 pb-0">
+            <div className="flex shrink-0 items-center justify-between px-5 pt-5 pb-0">
               <div className="text-sm font-semibold">{t("nav.menu")}</div>
               <button
                 type="button"

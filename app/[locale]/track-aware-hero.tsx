@@ -154,7 +154,7 @@ export default function TrackAwareHero() {
         variants={shouldReduce ? {} : avatarVariants}
         style={shouldReduce ? undefined : { y: parallaxY }}
       >
-        <div className={`rounded-2xl p-[3px] shadow-xl ${track === "salesforce" ? "bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 shadow-cyan-500/20 dark:shadow-cyan-400/15" : "bg-gradient-to-br from-violet-400 via-violet-500 to-purple-700 shadow-violet-500/20 dark:shadow-violet-400/15"}`}>
+        <div className={`rounded-2xl p-[3px] shadow-xl ${track === "salesforce" ? "bg-linear-to-br from-cyan-400 via-cyan-500 to-blue-600 shadow-cyan-500/20 dark:shadow-cyan-400/15" : "bg-linear-to-br from-violet-400 via-violet-500 to-purple-700 shadow-violet-500/20 dark:shadow-violet-400/15"}`}>
           <div className="relative h-[140px] w-[140px] sm:h-[240px] sm:w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
             <Image
               src={src}
@@ -196,7 +196,7 @@ export default function TrackAwareHero() {
               que soit le track actif : c'est justement le sujet. */}
           <Link
             href={`/${locale}/hybride`}
-            className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 dark:border-cyan-400/20 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 px-3 py-1 text-xs text-muted hover:from-cyan-500/20 hover:to-violet-500/20 transition-colors soft-ring"
+            className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 dark:border-cyan-400/20 bg-linear-to-r from-cyan-500/10 to-violet-500/10 px-3 py-1 text-xs text-muted hover:from-cyan-500/20 hover:to-violet-500/20 transition-colors soft-ring"
           >
             🔗 {t("nav.hybrid")} →
           </Link>
@@ -230,7 +230,7 @@ export default function TrackAwareHero() {
 
             {/* Titre H1 — gradient animé */}
             <h1 className="mt-2 font-display text-3xl sm:text-5xl font-semibold leading-tight tracking-tight">
-              <span className={`block animate-gradient-x bg-clip-text text-transparent bg-gradient-to-r ${track === "salesforce" ? "from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white" : "from-slate-900 via-violet-600 to-slate-900 dark:from-white dark:via-violet-300 dark:to-white"}`}>
+              <span className={`block animate-gradient-x bg-clip-text text-transparent bg-linear-to-r ${track === "salesforce" ? "from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white" : "from-slate-900 via-violet-600 to-slate-900 dark:from-white dark:via-violet-300 dark:to-white"}`}>
                 {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
               </span>
               {/* Séparateur invisible pour les lecteurs d'écran et les moteurs de recherche
@@ -329,7 +329,7 @@ export default function TrackAwareHero() {
           <button
             type="button"
             onClick={() => setTrack(track === "salesforce" ? "itops" : "salesforce")}
-            className="underline underline-offset-2 hover:text-muted transition-colors soft-ring rounded"
+            className="underline underline-offset-2 hover:text-muted transition-colors soft-ring rounded-sm"
           >
             {track === "salesforce"
               ? t("hero.switchToItops")
