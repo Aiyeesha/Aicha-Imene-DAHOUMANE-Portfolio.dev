@@ -44,8 +44,9 @@ const intlHandler = createMiddleware({
 // La CSP est construite à chaque requête car elle contient un nonce unique.
 // 'unsafe-inline' est remplacé par 'nonce-{nonce}' dans script-src.
 // 'unsafe-eval' est conservé uniquement en développement (webpack HMR).
-// Les origines externes (Calendly) restent dans la liste blanche
-// pour les navigateurs qui ne supportent pas encore CSP3 strict-dynamic.
+// Aucune origine externe dans script-src, style-src ni frame-src : la prise de
+// rendez-vous passe par un simple lien vers Proton Calendar (lib/booking.ts),
+// sans script ni iframe tiers — Calendly retiré (audit du 2026-10-14, S4).
 function buildCSP(nonce: string, isDev: boolean): string {
   return [
     "default-src 'self'",
@@ -55,15 +56,16 @@ function buildCSP(nonce: string, isDev: boolean): string {
     // Prod : nonce uniquement — Next.js lit le header CSP de la requête (pas x-nonce)
     // pour injecter nonce= sur ses propres <script> (chunks d'hydratation, bootstrap webpack).
     isDev
-      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com`
+      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval'`
       // 'strict-dynamic' (CSP3) : seuls les scripts chargés par un script noncé
       // héritent de la confiance — la whitelist de domaines est ignorée par les
       // navigateurs qui supportent strict-dynamic, mais reste en fallback pour les autres.
-      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://assets.calendly.com`,
-    "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
+      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https://*.supabase.co",
     "font-src 'self'",
-    "frame-src https://calendly.com",
+    // Aucune iframe sur le site : tout cadre est refusé.
+    "frame-src 'none'",
     // Hôtes réduits à ceux que le navigateur contacte réellement (audit du
     // 2026-10-14, S10) : Formhook n'est appelé que côté serveur (/api/contact),
     // l'API de contributions GitHub n'est plus utilisée, *.supabase.in est un

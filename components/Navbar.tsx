@@ -17,6 +17,7 @@ import useHashSync from "./useHashSync";
 import { useTrack } from "@/app/[locale]/providers";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
+import { BOOKING_URL } from "@/lib/booking";
 
 /** Petit bouton discret ⌘K pour rappeler le raccourci palette de commandes. */
 function CommandPaletteTrigger() {
@@ -91,7 +92,6 @@ export default function Navbar({
   const locale = (pathname.split("/")[1] || routing.defaultLocale) as AppLocale;
   const [avatarSrc, setAvatarSrc] = useState<string | null>(process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp");
 
-  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "";
 
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
@@ -827,19 +827,19 @@ useEffect(() => {
                   {t("cta.workWithMe")}
                 </Link>
 
-                <a
-                  href={calendlyUrl || "#"}
-                  target={calendlyUrl ? "_blank" : undefined}
-                  rel={calendlyUrl ? "noreferrer" : undefined}
-                  aria-disabled={!calendlyUrl ? true : undefined}
-                  className={`inline-flex w-full justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-3 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring ${
-                    calendlyUrl ? "" : "pointer-events-none opacity-50"
-                  }`}
-                  onClick={() => setMobileOpen(false)}
-                  title={!calendlyUrl ? t("contact.bookCallMissing") : undefined}
-                >
-                  {t("contact.bookCall")}
-                </a>
+                {/* Réservation Proton Calendar (lib/booking.ts) — masquée si non configurée */}
+                {BOOKING_URL && (
+                  <a
+                    href={BOOKING_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${t("contact.bookCall")} (${t("contact.opensInNewTab")})`}
+                    className="inline-flex w-full justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-3 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t("contact.bookCall")}
+                  </a>
+                )}
                 {GITHUB_URL && (
                   <a
                     href={GITHUB_URL}

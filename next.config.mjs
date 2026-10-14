@@ -14,7 +14,7 @@
 //
 // IMPORTANT CSP :
 //   - 'unsafe-inline' et 'unsafe-eval' sont nécessaires pour next-intl et Tailwind en développement.
-//   - Calendly requiert frame-src et script-src supplémentaires.
+//   - Prise de rendez-vous : simple lien vers Proton Calendar, aucune origine tierce dans la CSP.
 //   - Supabase requiert connect-src *.supabase.co (Upstash est server-side uniquement — absent de connect-src).
 //   - Formhook est appelé côté serveur uniquement (/api/contact) : absent de la CSP.
 //   - Si vous ajoutez Google Analytics / Plausible / autres, mettez à jour script-src et connect-src.
@@ -252,7 +252,7 @@ const nextConfig = {
           },
           // Désactive les APIs sensibles non utilisées dans ce portfolio.
           // Liste étendue pour couvrir les APIs modernes (payment, USB, bluetooth…)
-          // qui pourraient être exploitées via des scripts tiers (Calendly, Analytics).
+          // qui pourraient être exploitées par un script tiers ou injecté.
           {
             key: "Permissions-Policy",
             value: [

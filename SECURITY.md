@@ -47,11 +47,11 @@ Production policy, as built by `buildCSP()` in `proxy.ts`:
 
 ```
 default-src 'self'
-script-src 'self' 'nonce-{per-request}' 'strict-dynamic' https://assets.calendly.com
-style-src 'self' 'unsafe-inline' https://assets.calendly.com
+script-src 'self' 'nonce-{per-request}' 'strict-dynamic'
+style-src 'self' 'unsafe-inline'
 img-src 'self' data: https://*.supabase.co
 font-src 'self'
-frame-src https://calendly.com
+frame-src 'none'
 connect-src 'self' https://*.supabase.co
 object-src 'none'
 base-uri 'self'
@@ -62,7 +62,7 @@ report-uri /api/csp-report
 report-to csp-endpoint
 ```
 
-Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs.
+Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. No third-party script, stylesheet or frame is allowed: booking a call is a plain link to a Proton Calendar booking page, opened in a new tab. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs.
 
 **Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` using the Web Crypto API. The nonce is:
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
@@ -170,7 +170,7 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 ### Environment Variables
 
 - All secrets (`SUPABASE_SERVICE_ROLE_KEY`, `UPSTASH_REDIS_REST_TOKEN`, `ADMIN_PASSWORD`, etc.) are server-only — no `NEXT_PUBLIC_` prefix
-- Only genuinely public values use `NEXT_PUBLIC_*` (site URL, Supabase anon key, contact email, Calendly URL)
+- Only genuinely public values use `NEXT_PUBLIC_*` (site URL, Supabase anon key, contact email, booking page URL)
 - `.env.local` is excluded from version control via `.gitignore` (pattern: `.env*`)
 - See `.env.example` for the full list of expected variables
 
