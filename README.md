@@ -92,7 +92,7 @@ Browser
 - **Article series** — 6 curated reading paths (Salesforce DevOps, LWC, Windows Server, IT Ops Monitoring…)
 - **Certifications page** — 3 sections: Completed, Active (Trailhead animated counters), In preparation
 - **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
-- **Contact form** — rate-limited, honeypot, topic selector, Calendly modal in hero + contact section
+- **Contact form** — rate-limited, honeypot, topic selector, booking link (Proton Calendar) in hero + contact section
 - **Status page** — real health checks (Supabase, Redis, Formhook), uptime % over 30 days, latency sparklines (7 days), ISR 60s
 - **Admin dashboard** — `/admin` (HTTP Basic Auth) — project/cert/testimonial/message stats and recent contact messages
 - **Command palette** — `⌘K` / `Ctrl+K` — navigate sections, switch track/theme/language, download CV, open LinkedIn
@@ -151,7 +151,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `FORMHOOK_AUTH_TOKEN` | Recommended | Formhook X-Auth-Token — required for server-to-server submissions, Origin allow-listing alone rejects them |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Recommended | Displayed contact email |
 | `NEXT_PUBLIC_LINKEDIN_URL` | Recommended | LinkedIn profile URL |
-| `NEXT_PUBLIC_CALENDLY_URL` | Optional | Calendly booking link |
+| `NEXT_PUBLIC_BOOKING_URL` | Optional | Proton Calendar booking page link (HTTPS) |
 | `NEXT_PUBLIC_CV_PDF_URL` | Optional | CV PDF URL (fallback: `/cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf`) |
 | `NEXT_PUBLIC_AVATAR_URL` | Optional | Avatar image URL (fallback: `/avatar.webp`) |
 | `NEXT_PUBLIC_SAME_AS` | Optional | Comma-separated social profile URLs (JSON-LD sameAs) |
