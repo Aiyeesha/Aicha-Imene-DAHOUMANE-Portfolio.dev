@@ -41,6 +41,20 @@ const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "PWA / Service Worker": { en: "Offline mode and static asset caching",         fr: "Mode hors-ligne et cache des fichiers statiques",       es: "Modo sin conexión y cache de archivos estáticos" },
 };
 
+// Noms affichés — les clés restent les identifiants techniques renvoyés par
+// lib/health.ts (aussi exposés tels quels par /api/health), seule la page les
+// traduit (audit du 2026-10-14, constat 10).
+const SERVICE_NAMES: Record<string, Record<Locale, string>> = {
+  "Website":              { en: "Website",              fr: "Site web",                       es: "Sitio web" },
+  "Contact form":         { en: "Contact form",         fr: "Formulaire de contact",          es: "Formulario de contacto" },
+  "Database (Supabase)":  { en: "Database (Supabase)",  fr: "Base de données (Supabase)",     es: "Base de datos (Supabase)" },
+  "Content integrity":    { en: "Content integrity",    fr: "Intégrité du contenu",           es: "Integridad del contenido" },
+  "Security cluster integrity": { en: "Security cluster integrity", fr: "Intégrité du cluster Sécurité", es: "Integridad del clúster de seguridad" },
+  "Cache (Upstash Redis)":{ en: "Cache (Upstash Redis)", fr: "Cache (Upstash Redis)",         es: "Caché (Upstash Redis)" },
+  "Blog & MDX":           { en: "Blog & MDX",           fr: "Blog et MDX",                    es: "Blog y MDX" },
+  "PWA / Service Worker": { en: "PWA / Service Worker", fr: "PWA / Service Worker",           es: "PWA / Service Worker" },
+};
+
 // ── Configuration visuelle par statut ─────────────────────────────────────────
 
 const STATUS_CONFIG: Record<
@@ -210,6 +224,9 @@ export default async function StatusPage({
         <span className="text-muted">{labels.breadcrumb}</span>
       </nav>
 
+      {/* ── Titre de page — seul h1 (audit du 2026-10-14, constat 10) ────────── */}
+      <h1 className="mb-6 text-3xl font-bold tracking-tight">{labels.headline}</h1>
+
       {/* ── Garde de fraîcheur — avertissement si données > 48 h ─────────── */}
       {isStale && (
         <div
@@ -251,7 +268,7 @@ export default async function StatusPage({
                 className="flex items-center justify-between gap-2 bg-white dark:bg-white/2 px-4 py-4 sm:gap-4 sm:px-6"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{service.name}</p>
+                  <p className="truncate text-sm font-medium">{SERVICE_NAMES[service.name]?.[safeLocale] ?? service.name}</p>
                   <p className="truncate text-xs text-muted-2">{desc}</p>
                 </div>
 

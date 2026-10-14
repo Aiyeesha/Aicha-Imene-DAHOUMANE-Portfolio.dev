@@ -58,12 +58,14 @@ export async function generateMetadata(
   const languages: Record<string, string> = {};
   const enExists = locale === "en" ? meta : readPostMeta("en", slug);
   const frExists = locale === "fr" ? meta : readPostMeta("fr", slug);
+  const esExists = locale === "es" ? meta : readPostMeta("es", slug);
 
   // Hreflang symétrique : si un article n'existe que dans une seule langue,
   // pointer l'alternate manquant vers l'index blog plutôt que de l'omettre.
   // Google exige des paires symétriques — une entrée orpheline génère un avertissement GSC.
   languages.en = enExists ? `${siteUrl}/en/blog/${slug}` : `${siteUrl}/en/blog`;
   languages.fr = frExists ? `${siteUrl}/fr/blog/${slug}` : `${siteUrl}/fr/blog`;
+  languages.es = esExists ? `${siteUrl}/es/blog/${slug}` : `${siteUrl}/es/blog`;
   if (enExists) languages["x-default"] = `${siteUrl}/en/blog/${slug}`;
   else if (frExists) languages["x-default"] = `${siteUrl}/fr/blog/${slug}`;
   else languages["x-default"] = `${siteUrl}/en/blog`;

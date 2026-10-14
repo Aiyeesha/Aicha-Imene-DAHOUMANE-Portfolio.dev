@@ -104,17 +104,21 @@ export default function NotFound() {
     <div className="min-h-screen grid place-items-center px-6 bg-white dark:bg-[#070B1A] text-slate-900 dark:text-white">
       <div className="w-full max-w-md text-center animate-[fadeIn_0.4s_ease_forwards]">
 
+        {/* React 19 remonte <title> dans <head> : un composant client ne peut pas
+            exporter de metadata, et axe exige un titre (règle document-title). */}
+        <title>{`${c.title} — 404`}</title>
+
         <Icon404 />
 
         {/* Code d'erreur */}
-        <p className="mt-4 text-8xl font-black text-cyan-500/30 dark:text-cyan-400/20 select-none leading-none">
+        <p className="mt-4 text-8xl font-black text-cyan-700 dark:text-cyan-300 select-none leading-none">
           {c.code}
         </p>
 
         {/* Titre + description */}
         <h1 className="mt-4 text-2xl font-semibold">{c.title}</h1>
-        <p className="mt-3 text-sm text-slate-500 dark:text-white/60">{c.description}</p>
-        <p className="mt-2 text-sm text-slate-400 dark:text-white/40">{c.hint}</p>
+        <p className="mt-3 text-sm text-slate-600 dark:text-white/75">{c.description}</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-white/70">{c.hint}</p>
 
         {/* CTAs — accueil + contact (minimum requis même sur ce fallback autonome) */}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -134,7 +138,7 @@ export default function NotFound() {
 
         {/* Sélecteur de langue complet — EN/FR/ES, cohérent avec le reste du site */}
         <div className="mt-8 flex flex-col items-center gap-2">
-          <span className="text-xs uppercase tracking-widest text-slate-400 dark:text-white/40">
+          <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-white/70">
             {c.langLabel}
           </span>
           <div className="flex items-center gap-2">

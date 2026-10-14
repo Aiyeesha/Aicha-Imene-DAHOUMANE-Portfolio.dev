@@ -15,6 +15,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - **Dépendances : regroupement des 8 PR Dependabot du 12/10 (#28 à #35)** — `@radix-ui/react-dialog` 1.2.0, `@supabase/supabase-js` 2.117.3, `js-yaml` 5.4.3, `next-intl` 4.14.9 (version épinglée) ; outillage : `axe-core` 4.14.0, `dotenv` 18.0.7, `postcss` 8.5.29, `puppeteer` 25.13.0. Versions fixées sur celles proposées par Dependabot ; `package-lock.json` régénéré avec npm 11. `npm audit --omit=dev` : 0 vulnérabilité.
 
+### Fixed
+
+- **Audit du 14 octobre 2026 — lot 1 (SEO, i18n, accessibilité)** — Les URL inconnues sous `/fr`, `/en` et `/es` passent par une route attrape-tout (`app/[locale]/[...rest]`) qui sert la 404 dans la langue de l'URL, avec ses liens vers la bonne locale ; les deux pages 404 reçoivent un `<title>` et des couleurs conformes au contraste WCAG AA (le titre d'un projet introuvable est aussi traduit). Le blog annonce son alternate `hreflang="es"` (liste, tags, articles). `/uses` et `/colophon`, en `noindex`, sortent du sitemap. Palette ⌘K : entrée `/hybride` ajoutée, libellés « About », « Experience », « Status » et « Blog → » traduits. `/hybride` a son image OpenGraph dédiée (aperçu LinkedIn). `<link rel="me">` LinkedIn lit `NEXT_PUBLIC_LINKEDIN_URL`, comme les liens visibles. `/status` gagne un `h1` et des noms de services traduits. L'article sur le flag `is_security` ne cite plus un nombre de projets devenu inexact.
+
 ### Changed
 
 - **Polices auto-hébergées** — Space Grotesk et Inter sont servies depuis `app/fonts/` (fichiers variables Fontsource, licence SIL OFL 1.1 jointe) via `next/font/local` au lieu de `next/font/google`. Le build ne télécharge plus rien chez Google Fonts : supprime les échecs intermittents `next/font` (« Cannot read properties of null ») vus en CI sur les PR #24, #27 et #29. Rendu inchangé pour les visiteurs.
