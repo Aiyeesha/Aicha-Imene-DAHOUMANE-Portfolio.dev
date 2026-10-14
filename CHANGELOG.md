@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Polices auto-hébergées** — Space Grotesk et Inter sont servies depuis `app/fonts/` (fichiers variables Fontsource, licence SIL OFL 1.1 jointe) via `next/font/local` au lieu de `next/font/google`. Le build ne télécharge plus rien chez Google Fonts : supprime les échecs intermittents `next/font` (« Cannot read properties of null ») vus en CI sur les PR #24, #27 et #29. Rendu inchangé pour les visiteurs.
+
 - **Calendrier des certifications** — Les 4 certifications Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) passent de novembre 2026 à début 2027 (page Certifications, FAQ, page À propos, FR/EN/ES). Ajout de l'INSIDE LVMH Certificate 2026 (Creation & Branding, Retail & Client Experience) en cours, échéance décembre 2026. Le groupe « En cours / Planifiées 2026 » devient « En cours / Prochaines échéances » ; la roadmap 2027 est inchangée.
 ### Removed
 
