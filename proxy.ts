@@ -31,7 +31,7 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
-import { adminRatelimit } from "./lib/ratelimit";
+import { adminRatelimit, pseudonymizeKey } from "./lib/ratelimit";
 import { timingSafeStringEqual } from "./lib/security/timingSafeEqual";
 
 const intlHandler = createMiddleware({
@@ -61,16 +61,20 @@ function buildCSP(nonce: string, isDev: boolean): string {
       // navigateurs qui supportent strict-dynamic, mais reste en fallback pour les autres.
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://assets.calendly.com`,
     "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
-    "img-src 'self' data: https://*.supabase.co https://*.supabase.in",
+    "img-src 'self' data: https://*.supabase.co",
     "font-src 'self'",
     "frame-src https://calendly.com",
+    // Hôtes réduits à ceux que le navigateur contacte réellement (audit du
+    // 2026-10-14, S10) : Formhook n'est appelé que côté serveur (/api/contact),
+    // l'API de contributions GitHub n'est plus utilisée, *.supabase.in est un
+    // ancien domaine Supabase.
     // Upstash Redis intentionnellement absent de connect-src :
     // les appels Redis sont exclusivement server-side (API routes, middleware).
     // Aucun script client ne contacte Upstash directement — l'autoriser dans
     // la CSP du navigateur serait une permission inutile (overpermission).
     isDev
-      ? "connect-src 'self' data: https://*.supabase.co https://formhook.app https://github-contributions-api.jogruber.de"
-      : "connect-src 'self' https://*.supabase.co https://formhook.app https://github-contributions-api.jogruber.de",
+      ? "connect-src 'self' data: https://*.supabase.co"
+      : "connect-src 'self' https://*.supabase.co",
     "object-src 'none'",
     "base-uri 'self'",
     // Empêche les <form action="..."> de soumettre vers une URL externe.
@@ -168,7 +172,7 @@ export async function proxy(request: NextRequest) {
 
     let rlSuccess = false;
     try {
-      ({ success: rlSuccess } = await adminRatelimit.limit(ip));
+      ({ success: rlSuccess } = await adminRatelimit.limit(await pseudonymizeKey(ip)));
     } catch (err) {
       // Panne Redis : fail-closed volontaire sur /admin (endpoint sensible).
       console.error("[admin] rate-limit error → fail-closed", err);

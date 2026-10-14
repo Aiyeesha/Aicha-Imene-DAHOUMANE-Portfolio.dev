@@ -143,6 +143,36 @@ export const cspAlertRatelimit = redis
   ? createRatelimit(redis, 5, 600, "portfolio:rl:csp-alert")
   : createNoOpRatelimit(5, 600_000);
 
+// ── Pseudonymisation des identifiants ─────────────────────────────────
+// Les identifiants passés aux limiteurs contiennent l'IP du visiteur
+// (« contact:ip:1.2.3.4 »). Ils sont remplacés par un HMAC-SHA-256 tronqué,
+// clé = IP_HASH_SALT, avant d'atteindre Upstash : aucune IP en clair dans
+// Redis, et un hachage simple (non salé) serait réversible par force brute
+// sur l'espace IPv4 — audit du 2026-10-14, S11.
+// Sans IP_HASH_SALT (dev local, CI), l'identifiant reste lisible : pratique
+// pour déboguer, et aucune donnée réelle n'y transite.
+// Web Crypto (crypto.subtle) : disponible dans le runtime Node comme dans proxy.ts.
+let hmacKey: Promise<CryptoKey> | null = null;
+let hmacSalt = "";
+
+export async function pseudonymizeKey(key: string): Promise<string> {
+  const salt = process.env.IP_HASH_SALT ?? "";
+  if (!salt) return key;
+  if (!hmacKey || hmacSalt !== salt) {
+    hmacSalt = salt;
+    hmacKey = crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(salt),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+  }
+  const sig = await crypto.subtle.sign("HMAC", await hmacKey, new TextEncoder().encode(key));
+  // 16 octets (128 bits) suffisent pour éviter toute collision entre visiteurs.
+  return Array.from(new Uint8Array(sig).slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 // ── Helper fail-open pour les erreurs Redis immédiates ────────────────
 // Quand Redis est KO (quota épuisé, connexion refusée, token expiré),
 // `.limit()` peut throw même avec timeout. Ce wrapper retourne
@@ -152,7 +182,7 @@ export async function safeLimit(
   key: string
 ): Promise<{ success: boolean; reset: number }> {
   try {
-    const result = await limiter.limit(key);
+    const result = await limiter.limit(await pseudonymizeKey(key));
     return { success: result.success, reset: result.reset ?? Date.now() + 10_000 };
   } catch {
     return { success: true, reset: Date.now() + 10_000 };
