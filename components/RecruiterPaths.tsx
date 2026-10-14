@@ -19,7 +19,6 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useTrack, type Track } from "@/app/[locale]/providers";
-import { trackEvent } from "@/lib/analytics";
 
 type PathId = "hybrid" | "salesforce" | "itops";
 
@@ -35,7 +34,6 @@ export default function RecruiterPaths() {
   // Bascule le profil affiché puis fait défiler jusqu'aux compétences, qui
   // sont la première section track-aware sous ce bloc.
   const choose = (next: Track) => {
-    trackEvent("track_switch", { from: track, to: next });
     setTrack(next);
     document.getElementById("skills")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
