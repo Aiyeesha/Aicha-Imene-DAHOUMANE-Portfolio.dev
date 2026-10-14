@@ -192,7 +192,7 @@ function renderSection(section: ProjectSection, idx: number) {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const project = await getPublishedProjectBySlugWithAssetsCached(locale, slug);
-  if (!project) return { title: "Project not found" };
+  if (!project) return { title: locale === "fr" ? "Projet introuvable" : locale === "es" ? "Proyecto no encontrado" : "Project not found" };
 
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const siteUrl = getSiteUrl();
