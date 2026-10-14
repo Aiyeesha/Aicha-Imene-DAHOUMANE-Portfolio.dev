@@ -58,7 +58,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTrack } from "@/app/[locale]/providers";
 import { usePathname } from "next/navigation";
-import { trackEvent } from "@/lib/analytics";
 import { useTranslations } from "next-intl";
 import { getBadgeClass, tBadge, tCategory, tTag } from "@/i18n/projectTaxonomy";
 import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
@@ -441,7 +440,6 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   <Link
                     href={`/${locale}/projects/${p.slug}`}
                     className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
-                    onClick={() => trackEvent("project_view", { slug: p.slug, track: p.track ?? track })}
                   >
                     {t("details")}
                   </Link>
