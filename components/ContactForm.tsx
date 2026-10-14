@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import CalendlyModal from "./CalendlyModal";
 import { useTrack } from "@/app/[locale]/providers";
-import { trackEvent } from "@/lib/analytics";
 
 type Status =
   | { kind: "idle" }
@@ -66,7 +65,6 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
   const { track } = useTrack();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   // Guard: fire contact_form_started only once per mount (first keystroke)
-  const startedRef = useRef(false);
 
   // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
   const [topic, setTopic] = useState("general");
@@ -192,9 +190,6 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
         throw new Error(msg);
       }
 
-      // Track form submission (topic anonymisé — pas de données perso)
-      trackEvent("contact_form_submit", { topic: payload.topic, locale });
-
       // Reset le formulaire (champs non contrôlés) + réinitialise les états contrôlés.
       formEl.reset();
       setTopic("general");
@@ -213,12 +208,6 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
       <form
         onSubmit={onSubmit}
         className="card p-6 space-y-3"
-        onChange={() => {
-          // Fire once on first user interaction with any form field
-          if (startedRef.current) return;
-          startedRef.current = true;
-          trackEvent("contact_form_started", { locale });
-        }}
       >
         <div>
           <label htmlFor="contact-name" className="text-xs text-muted-2">{t("contact.nameLabel")}</label>

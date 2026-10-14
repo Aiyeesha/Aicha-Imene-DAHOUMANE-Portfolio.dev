@@ -41,7 +41,7 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
 | Forms | API Route + Formhook (fallback) + honeypot + rate-limit |
-| Analytics | Umami Cloud — cookie-free, EU-hosted, custom events + Core Web Vitals via `useReportWebVitals` (production only) |
+| Analytics | None — no audience measurement or visitor tracking; performance is checked in CI with Lighthouse CI |
 | Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → Supabase `uptime_pings` |
 | Deployment | Vercel (Hobby) |
 
@@ -211,7 +211,7 @@ portfolio/
 │   │   └── github-activity/    # GitHub contribution data
 │   ├── error.tsx               # Root error boundary (500)
 │   ├── feed.xml/               # RSS feed route handler
-│   ├── layout.tsx              # Root HTML layout (JSON-LD, fonts, analytics, GlobalErrorHandler)
+│   ├── layout.tsx              # Root HTML layout (JSON-LD, fonts, GlobalErrorHandler)
 │   ├── opengraph-image.tsx     # Default OG image (1200×630)
 │   ├── twitter-image.tsx       # Twitter card image
 │   ├── sitemap.ts              # Dynamic sitemap
@@ -235,7 +235,7 @@ portfolio/
 │   ├── security/               # timingSafeEqual.ts — HMAC-SHA256 via Web Crypto API
 │   ├── env.ts                  # Zod env validation (called from instrumentation.ts)
 │   ├── social.ts               # NEXT_PUBLIC_LINKEDIN_URL sanitization (comma-separated)
-│   └── ratelimit.ts / redis.ts / cache.ts / analytics.ts
+│   └── ratelimit.ts / redis.ts / cache.ts
 ├── messages/
 │   ├── en.json                 # English translations (~400 keys)
 │   └── fr.json                 # French translations (~400 keys)
