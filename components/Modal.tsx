@@ -68,7 +68,7 @@ export default function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[80]">
+    <div className="fixed inset-0 z-80">
       <button
         type="button"
         aria-label={t("a11y.closeModal")}

@@ -65,7 +65,7 @@ function TimelineStep({
     <li ref={ref} className="flex gap-4 md:gap-6">
 
       {/* ── Colonne gauche — cercle + ligne ────────────────────────────── */}
-      <div className="flex flex-col items-center flex-shrink-0">
+      <div className="flex flex-col items-center shrink-0">
 
         {/* Cercle numéroté — gradient cyan/bleu */}
         <motion.div
@@ -75,11 +75,11 @@ function TimelineStep({
           className="
             relative flex h-10 w-10 shrink-0 items-center justify-center
             rounded-full
-            bg-gradient-to-br from-cyan-400/20 to-blue-500/20
+            bg-linear-to-br from-cyan-400/20 to-blue-500/20
             border border-cyan-500/40 dark:border-cyan-400/30
             text-sm font-bold font-display
             text-cyan-700 dark:text-cyan-300
-            shadow-sm shadow-cyan-500/10
+            shadow-xs shadow-cyan-500/10
             z-10
           "
           aria-hidden="true"
@@ -100,8 +100,8 @@ function TimelineStep({
             animate={animate}
             style={{ originY: 0 }}
             className="
-              mt-1 w-px flex-1 min-h-[2.5rem]
-              bg-gradient-to-b from-cyan-500/40 to-cyan-500/10
+              mt-1 w-px flex-1 min-h-10
+              bg-linear-to-b from-cyan-500/40 to-cyan-500/10
               dark:from-cyan-400/30 dark:to-cyan-400/5
             "
             aria-hidden="true"
@@ -118,8 +118,8 @@ function TimelineStep({
           "flex-1 rounded-2xl border p-4 md:p-5",
           // Fond subtil différencié selon la position
           index % 2 === 0
-            ? "bg-black/[0.02] dark:bg-white/[0.02]"
-            : "bg-cyan-500/[0.03] dark:bg-cyan-400/[0.03]",
+            ? "bg-black/2 dark:bg-white/2"
+            : "bg-cyan-500/3 dark:bg-cyan-400/3",
           // Bordure légère
           "border-black/8 dark:border-white/8",
           // Espacement avec la prochaine étape

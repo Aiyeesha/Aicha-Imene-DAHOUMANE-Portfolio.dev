@@ -132,7 +132,7 @@ export default function UsesContent({ locale }: { locale: string }) {
     <div className="mx-auto max-w-4xl px-4 py-10">
 
       <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">
+        <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">
           {isFr ? "Accueil" : isEs ? "Inicio" : "Home"}
         </Link>
         <span aria-hidden="true">›</span>
@@ -158,7 +158,7 @@ export default function UsesContent({ locale }: { locale: string }) {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {cat.items.map((item) => (
-                <article key={item.name} className={`flex flex-col gap-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-colors ${cardHover}`}>
+                <article key={item.name} className={`flex flex-col gap-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-colors ${cardHover}`}>
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-sm font-semibold leading-snug">{item.name}</h3>
                     {item.badge && <Badge label={item.badge} />}
