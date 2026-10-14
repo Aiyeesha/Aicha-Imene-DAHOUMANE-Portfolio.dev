@@ -126,7 +126,7 @@ export default async function Home({ params }: Props) {
       <section id="bridge" className="py-14">
         <Reveal>
           <div
-            className="rounded-2xl border-transparent bg-gradient-to-r from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10 p-6 md:p-8"
+            className="rounded-2xl border-transparent bg-linear-to-r from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10 p-6 md:p-8"
             style={{ borderImage: "linear-gradient(to right, rgb(34 211 238 / 0.4), rgb(167 139 250 / 0.4)) 1", borderWidth: "1px", borderStyle: "solid" }}
           >
             <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
@@ -238,7 +238,7 @@ export default async function Home({ params }: Props) {
           de /projects. Ambre repris de .badge-security pour le lien visuel. */}
       <section id="security-cluster" className="py-14">
         <Reveal>
-          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] dark:bg-amber-400/[0.06] p-6 md:p-8">
+          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/4 dark:bg-amber-400/6 p-6 md:p-8">
             <h2 className="text-2xl font-semibold">{t("sections.security_title", { count: securityProjectCount })}</h2>
             <p className="mt-4 text-muted leading-[1.8]">{t("sections.security_body", { count: securityProjectCount, total: totalProjectCount })}</p>
             <div className="mt-5">

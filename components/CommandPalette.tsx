@@ -110,7 +110,7 @@ const PALETTE_STYLES = `
 const Icon = ({ d }: { d: string }) => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
-    className="opacity-50 flex-shrink-0">
+    className="opacity-50 shrink-0">
     <path d={d} />
   </svg>
 );
@@ -200,7 +200,7 @@ export default function CommandPalette() {
   };
 
   // ── Classe partagée pour les items (répétée inline car CSS injecté globalement) ──
-  const itemCls = "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm cursor-pointer outline-none";
+  const itemCls = "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm cursor-pointer outline-hidden";
 
   return (
     <>

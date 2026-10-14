@@ -552,7 +552,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
         className="mb-6 flex items-center gap-2 text-sm text-muted-2"
       >
-        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded px-1">
+        <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm px-1">
           {labels.breadcrumbHome}
         </Link>
         <span aria-hidden="true">›</span>
@@ -582,7 +582,7 @@ export default async function CertificationsPage({ params }: PageProps) {
           {completedCerts.map((cert) => (
             <article
               key={cert.id}
-              className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+              className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
             >
               {/* En-tête de carte */}
               <div className="flex items-start gap-4">
@@ -658,11 +658,11 @@ export default async function CertificationsPage({ params }: PageProps) {
         <p className="mt-1 text-sm text-muted">{labels.sectionActiveSub}</p>
 
         <div className="mt-6">
-          <article className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-6 transition-shadow hover:shadow-md dark:hover:shadow-none">
+          <article className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6 transition-shadow hover:shadow-md dark:hover:shadow-none">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
 
               {/* Icône Trailhead stylisée */}
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 text-lg font-bold text-white">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-cyan-500 to-blue-600 text-lg font-bold text-white">
                 ☁
               </div>
 
@@ -768,7 +768,7 @@ export default async function CertificationsPage({ params }: PageProps) {
             {certs2026.map((cert) => (
               <article
                 key={cert.id}
-                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
               >
                 <div className="flex items-start gap-3">
                   <CertIcon initials={cert.initials} color={cert.color} logoUrl={cert.logoUrl} />
@@ -801,7 +801,7 @@ export default async function CertificationsPage({ params }: PageProps) {
             La preuve par les projets prime ; la roadmap reste consultable en un
             clic via <details> natif (accessible au clavier, sans JavaScript). */}
         <details className="group mt-8">
-          <summary className="flex cursor-pointer list-none items-center gap-2 mb-4 rounded soft-ring [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-center gap-2 mb-4 rounded-sm soft-ring [&::-webkit-details-marker]:hidden">
             <span aria-hidden="true" className="text-xs text-muted-2 transition-transform group-open:rotate-90">▶</span>
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
               {isFr ? "Roadmap 2027" : isEs ? "Roadmap 2027" : "2027 Roadmap"}
@@ -814,7 +814,7 @@ export default async function CertificationsPage({ params }: PageProps) {
             {certs2027.map((cert) => (
               <article
                 key={cert.id}
-                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
               >
                 <div className="flex items-start gap-3">
                   <CertIcon initials={cert.initials} color={cert.color} logoUrl={cert.logoUrl} />

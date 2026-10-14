@@ -167,7 +167,7 @@ function StatCard({ label, value, sub, color = "slate" }: {
   color?: "slate" | "cyan" | "emerald" | "violet" | "amber" | "rose";
 }) {
   const colors: Record<string, string> = {
-    slate:   "border-white/10 bg-white/[0.04]",
+    slate:   "border-white/10 bg-white/4",
     cyan:    "border-cyan-500/30 bg-cyan-500/10",
     emerald: "border-emerald-500/30 bg-emerald-500/10",
     violet:  "border-violet-500/30 bg-violet-500/10",
@@ -380,7 +380,7 @@ export default async function AdminPage() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {projectTranslationGaps.map((g) => (
-                  <tr key={`${g.slug}-${g.locale}-${g.field}`} className="hover:bg-white/[0.03] transition-colors">
+                  <tr key={`${g.slug}-${g.locale}-${g.field}`} className="hover:bg-white/3 transition-colors">
                     <td className="px-4 py-3 font-mono text-xs text-slate-300">{g.slug}</td>
                     <td className="px-4 py-3">
                       <Badge label={g.locale.toUpperCase()} color="bg-slate-500/15 text-slate-400" />
@@ -422,7 +422,7 @@ export default async function AdminPage() {
                 </tr>
               ) : (
                 enProjectRows.map((p) => (
-                  <tr key={p.id} className="hover:bg-white/[0.03] transition-colors group">
+                  <tr key={p.id} className="hover:bg-white/3 transition-colors group">
                     <td className="px-4 py-3 max-w-[220px]">
                       <a
                         href={`/en/projects/${p.slug}`}
@@ -470,7 +470,7 @@ export default async function AdminPage() {
               .map((t) => (
                 <div
                   key={t.id}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex gap-4 items-start"
+                  className="rounded-xl border border-white/10 bg-white/3 p-4 flex gap-4 items-start"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -487,7 +487,7 @@ export default async function AdminPage() {
                       </p>
                     )}
                   </div>
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <TogglePublished id={t.id} isPublished={t.is_published} />
                   </div>
                 </div>
@@ -506,7 +506,7 @@ export default async function AdminPage() {
             {messages.map((m) => (
               <div
                 key={m.id}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                className="rounded-xl border border-white/10 bg-white/3 p-4"
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <span className="font-medium text-slate-100">{m.name}</span>
@@ -549,7 +549,7 @@ export default async function AdminPage() {
                 </tr>
               ) : (
                 staticCertifications.map((c) => (
-                  <tr key={c.id} className="hover:bg-white/[0.03] transition-colors">
+                  <tr key={c.id} className="hover:bg-white/3 transition-colors">
                     <td className="px-4 py-3 font-medium text-slate-200">{c.name}</td>
                     <td className="px-4 py-3 text-slate-400">{c.issuer}</td>
                     <td className="px-4 py-3 text-xs text-slate-500">{c.earnedDate}</td>

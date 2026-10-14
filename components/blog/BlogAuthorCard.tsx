@@ -45,7 +45,7 @@ export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedIn
 
       {/* Ligne haute — avatar + identité + badge track */}
       <div className="flex items-center gap-4">
-        <div className={`shrink-0 rounded-full p-[2.5px] ${isSalesforce ? "bg-gradient-to-br from-cyan-400 via-sky-500 to-blue-600" : "bg-gradient-to-br from-violet-400 via-purple-500 to-violet-600"}`}>
+        <div className={`shrink-0 rounded-full p-[2.5px] ${isSalesforce ? "bg-linear-to-br from-cyan-400 via-sky-500 to-blue-600" : "bg-linear-to-br from-violet-400 via-purple-500 to-violet-600"}`}>
           <Image
             src={avatarUrl}
             alt={authorName}

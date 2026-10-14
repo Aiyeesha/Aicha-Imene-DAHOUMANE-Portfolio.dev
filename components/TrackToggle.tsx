@@ -23,9 +23,9 @@ export default function TrackToggle() {
   const btnBase =
     "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors soft-ring";
   const activeItops =
-    "bg-white dark:bg-white/10 font-semibold text-violet-700 dark:text-violet-200 ring-1 ring-violet-500/40 shadow-sm";
+    "bg-white dark:bg-white/10 font-semibold text-violet-700 dark:text-violet-200 ring-1 ring-violet-500/40 shadow-xs";
   const activeSalesforce =
-    "bg-white dark:bg-white/10 font-semibold text-cyan-700 dark:text-cyan-200 ring-1 ring-cyan-500/40 shadow-sm";
+    "bg-white dark:bg-white/10 font-semibold text-cyan-700 dark:text-cyan-200 ring-1 ring-cyan-500/40 shadow-xs";
   const inactive =
     "text-slate-700 dark:text-white/70 hover:text-slate-900 dark:hover:text-white";
 
