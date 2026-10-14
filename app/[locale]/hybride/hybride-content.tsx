@@ -45,7 +45,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
     <div className="mx-auto max-w-3xl px-4 py-10">
       {/* Breadcrumb */}
       <nav aria-label={labels.breadLabel} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">
+        <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">
           {t("breadcrumbHome")}
         </Link>
         <span aria-hidden="true">›</span>
@@ -54,7 +54,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
 
       {/* Header */}
       <header className="mb-10">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest bg-gradient-to-r from-cyan-600 to-violet-600 dark:from-cyan-400 dark:to-violet-400 bg-clip-text text-transparent">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest bg-linear-to-r from-cyan-600 to-violet-600 dark:from-cyan-400 dark:to-violet-400 bg-clip-text text-transparent">
           {t("breadcrumbCurrent")}
         </p>
         <h1 className="text-4xl font-display font-semibold tracking-tight">{t("h1")}</h1>
@@ -70,10 +70,10 @@ export default async function HybrideContent({ locale }: { locale: string }) {
           {scenarios.map((s, i) => (
             <li
               key={s.title}
-              className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-6"
+              className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6"
             >
               <div className="flex items-baseline gap-3">
-                <span className="font-display text-sm font-bold bg-gradient-to-br from-cyan-500 to-violet-600 bg-clip-text text-transparent">
+                <span className="font-display text-sm font-bold bg-linear-to-br from-cyan-500 to-violet-600 bg-clip-text text-transparent">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="font-semibold text-slate-900 dark:text-white">{s.title}</h3>
@@ -85,14 +85,14 @@ export default async function HybrideContent({ locale }: { locale: string }) {
               </p>
 
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] p-4">
+                <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/2 p-4">
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-2 mb-1.5">
                     {s.soloTitle}
                   </p>
                   <p className="text-sm text-muted leading-relaxed">{s.solo}</p>
                 </div>
-                <div className="rounded-xl border border-cyan-500/20 dark:border-cyan-400/20 bg-gradient-to-br from-cyan-500/[0.06] to-violet-500/[0.06] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-1.5 bg-gradient-to-r from-cyan-700 to-violet-700 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent">
+                <div className="rounded-xl border border-cyan-500/20 dark:border-cyan-400/20 bg-linear-to-br from-cyan-500/6 to-violet-500/6 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-1.5 bg-linear-to-r from-cyan-700 to-violet-700 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent">
                     {s.mineTitle}
                   </p>
                   <p className="text-sm text-muted leading-relaxed">{s.mine}</p>
@@ -150,11 +150,11 @@ export default async function HybrideContent({ locale }: { locale: string }) {
           {eliminates.map((item) => (
             <li
               key={item}
-              className="flex gap-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 text-sm text-muted leading-relaxed"
+              className="flex gap-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-4 text-sm text-muted leading-relaxed"
             >
               <span
                 aria-hidden="true"
-                className="mt-0.5 flex-shrink-0 font-bold bg-gradient-to-br from-cyan-500 to-violet-600 bg-clip-text text-transparent"
+                className="mt-0.5 shrink-0 font-bold bg-linear-to-br from-cyan-500 to-violet-600 bg-clip-text text-transparent"
               >
                 ✕
               </span>
@@ -167,7 +167,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
       {/* CTA */}
       <section
         aria-labelledby="section-cta"
-        className="mb-10 rounded-2xl border border-cyan-500/20 dark:border-cyan-400/20 bg-gradient-to-br from-cyan-500/[0.06] to-violet-500/[0.06] p-8 text-center"
+        className="mb-10 rounded-2xl border border-cyan-500/20 dark:border-cyan-400/20 bg-linear-to-br from-cyan-500/6 to-violet-500/6 p-8 text-center"
       >
         <h2 id="section-cta" className="text-xl font-semibold text-slate-900 dark:text-white">
           {t("ctaTitle")}
@@ -176,7 +176,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
             href={`/${locale}/contact`}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-600 to-violet-600 px-6 py-2.5 text-sm font-medium text-white hover:opacity-90 soft-ring transition-opacity"
+            className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-cyan-600 to-violet-600 px-6 py-2.5 text-sm font-medium text-white hover:opacity-90 soft-ring transition-opacity"
           >
             {t("ctaContact")}
           </Link>

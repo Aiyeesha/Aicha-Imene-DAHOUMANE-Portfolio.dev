@@ -68,7 +68,7 @@ export default function AboutTrackIntro() {
       <p className="pt-1 text-sm">
         <Link
           href={`/${locale}/hybride`}
-          className="font-medium bg-gradient-to-r from-cyan-700 to-violet-700 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent hover:underline soft-ring rounded"
+          className="font-medium bg-linear-to-r from-cyan-700 to-violet-700 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent hover:underline soft-ring rounded-sm"
         >
           {t("nav.hybrid")} →
         </Link>

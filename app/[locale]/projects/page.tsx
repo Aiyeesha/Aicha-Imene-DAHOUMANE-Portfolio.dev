@@ -110,7 +110,7 @@ export default async function ProjectsPage({ params }: PageProps) {
         aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
         className="mb-6 flex items-center gap-2 text-sm text-muted-2"
       >
-        <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">
+        <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">
           {L.breadcrumbHome}
         </Link>
         <span aria-hidden="true">›</span>

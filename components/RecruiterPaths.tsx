@@ -61,8 +61,8 @@ export default function RecruiterPaths() {
           // « pont » de l'accueil) ; les deux autres signalent le profil actif.
           const isActive = !isHybrid && track === p.id;
           const cls = isHybrid
-            ? `${cardBase} border-violet-500/30 bg-gradient-to-br from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10`
-            : `${cardBase} ${isActive ? "border-cyan-500/40" : "border-black/10 dark:border-white/10"} bg-white dark:bg-white/[0.03]`;
+            ? `${cardBase} border-violet-500/30 bg-linear-to-br from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10`
+            : `${cardBase} ${isActive ? "border-cyan-500/40" : "border-black/10 dark:border-white/10"} bg-white dark:bg-white/3`;
 
           return (
             <li key={p.id} className={cls}>

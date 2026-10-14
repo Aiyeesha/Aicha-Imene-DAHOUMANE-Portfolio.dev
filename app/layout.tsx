@@ -20,18 +20,19 @@ import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 // intermittents en CI). Rendu identique pour les visiteurs.
 // font-display: swap évite le FOIT (flash of invisible text).
 // Sous-ensemble latin : couvre le français, l'anglais et l'espagnol.
-// variable : expose une CSS variable pour Tailwind.
+// variable : expose une CSS variable, reprise par le thème Tailwind
+// (--font-display / --font-body dans app/globals.css).
 
 const spaceGrotesk = localFont({
   src: "./fonts/space-grotesk-latin-wght.woff2",
-  variable: "--font-display",
+  variable: "--font-space-grotesk",
   display: "swap",
   weight: "300 700",
 });
 
 const inter = localFont({
   src: "./fonts/inter-latin-wght.woff2",
-  variable: "--font-body",
+  variable: "--font-inter",
   display: "swap",
   weight: "100 900",
 });

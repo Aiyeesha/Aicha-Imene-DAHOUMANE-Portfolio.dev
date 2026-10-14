@@ -112,7 +112,7 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
             {/* En-tête : icône + titre du groupe */}
             <div className="flex items-center gap-2.5 mb-3">
               <div
-                className={`grid h-8 w-8 place-items-center rounded-lg flex-shrink-0 ${
+                className={`grid h-8 w-8 place-items-center rounded-lg shrink-0 ${
                   track === "salesforce"
                     ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
                     : "bg-violet-500/10 text-violet-700 dark:text-violet-300"

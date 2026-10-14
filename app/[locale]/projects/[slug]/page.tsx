@@ -54,7 +54,7 @@ function renderSection(section: ProjectSection, idx: number) {
   const wrapper = (children: React.ReactNode) => (
     <div key={idx} className="card p-6 md:p-7">
       <div className="flex items-center gap-3 mb-5">
-        <span className={`h-5 w-1.5 rounded-full ${accent} flex-shrink-0`} aria-hidden />
+        <span className={`h-5 w-1.5 rounded-full ${accent} shrink-0`} aria-hidden />
         <h2 className="text-base font-semibold text-strong tracking-tight">{section.title}</h2>
       </div>
       {children}
@@ -67,7 +67,7 @@ function renderSection(section: ProjectSection, idx: number) {
         <ul className="space-y-3">
           {section.items.map((item, i) => (
             <li key={i} className="flex gap-3">
-              <span className="mt-[5px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-500" aria-hidden />
+              <span className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-500" aria-hidden />
               <span className="text-sm text-muted leading-relaxed">{item}</span>
             </li>
           ))}
@@ -96,7 +96,7 @@ function renderSection(section: ProjectSection, idx: number) {
         isStatLayout ? (
           <div className="grid gap-3 sm:grid-cols-2">
             {section.items.map((item, i) => (
-              <div key={i} className="rounded-xl border border-black/8 dark:border-white/8 bg-black/[0.02] dark:bg-white/[0.02] p-4">
+              <div key={i} className="rounded-xl border border-black/8 dark:border-white/8 bg-black/2 dark:bg-white/2 p-4">
                 <div className="text-2xl font-bold text-cyan-500 tabular-nums">{item.value}</div>
                 <div className="mt-1 text-sm font-medium text-strong">{item.label}</div>
                 {item.note ? <div className="mt-1 text-xs text-muted-2">{item.note}</div> : null}
@@ -124,12 +124,12 @@ function renderSection(section: ProjectSection, idx: number) {
         <ol className="space-y-0">
           {section.steps.map((step, i) => (
             <li key={i} className="flex gap-4">
-              <div className="flex flex-col items-center flex-shrink-0">
+              <div className="flex flex-col items-center shrink-0">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/15 text-xs font-bold text-amber-600 dark:text-amber-300 ring-1 ring-amber-500/20">
                   {i + 1}
                 </span>
                 {i < section.steps.length - 1 && (
-                  <span className="mt-1 flex-1 w-px bg-amber-500/20 min-h-[1.5rem]" />
+                  <span className="mt-1 flex-1 w-px bg-amber-500/20 min-h-6" />
                 )}
               </div>
               <div className="pb-6 min-w-0">
@@ -148,7 +148,7 @@ function renderSection(section: ProjectSection, idx: number) {
             const href = safeHref(item.href);
             return (
               <li key={i} className="flex items-start gap-3 text-sm">
-                <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-sky-500/10 text-sky-500 text-xs" aria-hidden>↗</span>
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-500/10 text-sky-500 text-xs" aria-hidden>↗</span>
                 <span>
                   {href ? (
                     <a href={href} target="_blank" rel="noreferrer"
@@ -170,7 +170,7 @@ function renderSection(section: ProjectSection, idx: number) {
       const dlUrl = safeHref(section.downloadUrl);
       return wrapper(
         <>
-          <pre className="overflow-x-auto rounded-xl bg-black/[0.04] dark:bg-white/[0.04] border border-black/8 dark:border-white/8 p-5 text-xs leading-relaxed font-mono">
+          <pre className="overflow-x-auto rounded-xl bg-black/4 dark:bg-white/4 border border-black/8 dark:border-white/8 p-5 text-xs leading-relaxed font-mono">
             <code>{section.code}</code>
           </pre>
           {dlUrl ? (
@@ -354,7 +354,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         {/* ── COVER IMAGE ──────────────────────────────────────────────────── */}
         {coverImage && (
           <div className="mt-8 card overflow-hidden">
-            <div className="relative aspect-[16/9] w-full">
+            <div className="relative aspect-video w-full">
               <Image
                 src={coverImage.src}
                 alt={coverImage.alt}
@@ -416,7 +416,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           {nature && (
             <aside
               aria-label={isFr ? "Nature du projet" : isEs ? "Naturaleza del proyecto" : "Project type"}
-              className="mt-6 max-w-3xl rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.04] px-4 py-3 text-sm"
+              className="mt-6 max-w-3xl rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/4 px-4 py-3 text-sm"
             >
               <p className="font-medium text-strong">
                 {nature.label}
@@ -447,7 +447,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             {galleryRest.length > 0 && (
               <div className="card p-6 md:p-7">
                 <div className="flex items-center gap-3 mb-5">
-                  <span className="h-5 w-1.5 rounded-full bg-slate-400 flex-shrink-0" aria-hidden />
+                  <span className="h-5 w-1.5 rounded-full bg-slate-400 shrink-0" aria-hidden />
                   <h2 className="text-base font-semibold text-strong tracking-tight">
                     {isFr ? "Captures d'écran" : isEs ? "Capturas de pantalla" : "Screenshots"}
                   </h2>

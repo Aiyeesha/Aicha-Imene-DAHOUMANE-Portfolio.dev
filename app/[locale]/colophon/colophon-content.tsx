@@ -199,7 +199,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
       if (match[1] !== undefined) {
         result.push(<strong key={key++} className="font-semibold text-slate-900 dark:text-white">{match[1]}</strong>);
       } else {
-        result.push(<a key={key++} href={match[3]} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70 soft-ring rounded">{match[2]}</a>);
+        result.push(<a key={key++} href={match[3]} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70 soft-ring rounded-sm">{match[2]}</a>);
       }
       lastIndex = regex.lastIndex;
     }
@@ -211,7 +211,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     <div className="mx-auto max-w-3xl px-4 py-10">
 
       <nav aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
-        <Link href={`/${locale}`} className="hover:underline soft-ring rounded px-1">{labels.breadcrumbHome}</Link>
+        <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">{labels.breadcrumbHome}</Link>
         <span aria-hidden="true">›</span>
         <span className="text-muted">{labels.title}</span>
       </nav>
@@ -231,7 +231,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
                   <div key={item.name} className={`flex items-start gap-4 px-5 py-4 ${idx < section.items.length - 1 ? "border-b border-black/5 dark:border-white/5" : ""}`}>
                     <div className="w-40 shrink-0">
                       {item.link ? (
-                        <a href={item.link} target="_blank" rel="noreferrer noopener" className="font-medium text-sm hover:underline underline-offset-4 soft-ring rounded">
+                        <a href={item.link} target="_blank" rel="noreferrer noopener" className="font-medium text-sm hover:underline underline-offset-4 soft-ring rounded-sm">
                           {item.name}<span aria-hidden="true"> ↗</span>
                         </a>
                       ) : (

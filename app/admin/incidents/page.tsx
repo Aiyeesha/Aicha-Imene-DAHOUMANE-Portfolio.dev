@@ -102,7 +102,7 @@ export default async function IncidentsPage() {
               incidents.map((incident) => {
                 const progress = progressMap.get(incident.id);
                 return (
-                  <tr key={incident.id} className="hover:bg-white/[0.03] transition-colors group">
+                  <tr key={incident.id} className="hover:bg-white/3 transition-colors group">
                     <td className="px-4 py-3 max-w-[240px]">
                       <Link
                         href={`/admin/incidents/${incident.id}`}

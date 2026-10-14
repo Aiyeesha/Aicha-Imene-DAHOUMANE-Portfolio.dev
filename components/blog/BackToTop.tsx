@@ -20,7 +20,7 @@ export default function BackToTop({ label }: BackToTopProps) {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="fixed bottom-6 right-6 z-50 rounded-full border border-black/10 bg-white/90 px-4 py-2 text-sm shadow-md backdrop-blur hover:bg-black/5 dark:border-white/10 dark:bg-black/80 dark:hover:bg-white/10 soft-ring"
+      className="fixed bottom-6 right-6 z-50 rounded-full border border-black/10 bg-white/90 px-4 py-2 text-sm shadow-md backdrop-blur-sm hover:bg-black/5 dark:border-white/10 dark:bg-black/80 dark:hover:bg-white/10 soft-ring"
       aria-label={label}
     >
       ↑ {label}

@@ -264,7 +264,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
           {practiceLinks.length > 0 && (
             <aside
               aria-labelledby="practice-title"
-              className="mt-6 rounded-2xl border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.04] p-5"
+              className="mt-6 rounded-2xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/4 p-5"
             >
               <h2 id="practice-title" className="text-sm font-semibold text-slate-900 dark:text-white">
                 {locale === "fr" ? "Mis en pratique dans" : locale === "es" ? "Puesto en práctica en" : "Put into practice in"}
@@ -272,7 +272,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
               <ul className="mt-3 space-y-2">
                 {practiceLinks.map((l) => (
                   <li key={l.href} className="text-sm">
-                    <Link href={l.href} className="font-medium underline underline-offset-4 hover:opacity-80 soft-ring rounded">
+                    <Link href={l.href} className="font-medium underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm">
                       {l.label}
                     </Link>
                     {l.nature && <span className="text-muted"> — {l.nature}</span>}
