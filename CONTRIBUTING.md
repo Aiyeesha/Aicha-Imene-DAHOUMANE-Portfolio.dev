@@ -97,7 +97,7 @@ main
 
 ## Scripts
 
-All commands run from the `portfolio/` directory.
+All commands run from the repository root.
 
 | Command | Description |
 |---------|-------------|
@@ -134,14 +134,14 @@ The CI pipeline runs exactly these four checks in order.
 - No direct `fetch` in Client Components — use Server Components or API routes
 
 ### Styling
-- Tailwind CSS utility classes — no custom CSS unless unavoidable
-- Dark mode via `dark:` prefix (`html.dark` strategy via next-themes)
+- Tailwind CSS 4 utility classes — no custom CSS unless unavoidable; theme tokens live in `@theme` in `app/globals.css` (there is no `tailwind.config.ts`)
+- Dark mode via `dark:` prefix (`@custom-variant dark` in `app/globals.css`, `html.dark` set by next-themes)
 - Responsive design: mobile-first (`sm:`, `md:`, `lg:` breakpoints)
 
 ### i18n
-- All user-facing strings must be in `messages/en.json` and `messages/fr.json`
+- All user-facing strings must be in `messages/en.json`, `messages/fr.json` and `messages/es.json` (same keys in all three)
 - Never hardcode English text directly in components — use `useTranslations()`
-- EN is the source language; FR is translated from EN
+- EN is the source language; FR and ES are translated from EN
 
 ### Accessibility
 - Every interactive element must be keyboard-navigable
@@ -207,7 +207,7 @@ Use the imperative mood: "add" not "added", "fix" not "fixed".
    - [ ] Tested on mobile (375px) and desktop (1440px)
    - [ ] Tested in dark mode and light mode
    - [ ] Tested with both tracks (Salesforce and IT Ops)
-   - [ ] New strings added to both `messages/en.json` and `messages/fr.json`
+   - [ ] New strings added to `messages/en.json`, `messages/fr.json` and `messages/es.json`
    - [ ] `CHANGELOG.md` updated under `[Unreleased]`
    - [ ] No secrets introduced in `NEXT_PUBLIC_*` variables or committed files
    - [ ] New API routes have rate-limiting, input validation, and appropriate auth
