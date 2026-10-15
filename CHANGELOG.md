@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **Données personnelles retirées des CV et des diplômes** — Numéro de téléphone supprimé des 18 CV (sources HTML et PDF régénérés). Diplômes publiés (titres TSSR et TAI, OpenClassrooms, Linguaskill) : date et lieu de naissance, numéros de titre et identifiants de diplôme, QR code, signatures et adresse e-mail floutés de façon irréversible (réduction à quelques pixels puis flou) ; PDF republiés en image seule, sans couche texte. Les vignettes `*-badge.png` de la page Certifications, qui étaient des captures des diplômes originaux, sont régénérées à partir des versions floutées. Suppression d'un PDF de diplôme non utilisé (nom de fichier et date de naissance) et de `scripts/certifications-to-png.mjs`, remplacé par `scripts/redact-certifications.py` (à lancer sur les originaux conservés hors du dépôt).
+
 ### Changed
 
 - **Captures d'écran du README régénérées** — hero Salesforce et IT Ops, blog, article, frise de carrière et nouvelle capture du profil hybride, prises sur la version actuelle (Tailwind 4, lot 1 de l'audit, bouton de réservation). `docs/take-screenshots.js` : URL de production corrigée, `SCREENSHOT_BASE_URL`, `SCREENSHOT_ONLY` et `CHROMIUM_PATH` optionnels, capture IT Ops prise en dernier (le choix de profil est mémorisé), attente de la fin des animations, défilement jusqu'à la frise de carrière. La capture `/status` est conservée : elle nécessite les données réelles de production.
