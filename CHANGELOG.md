@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Hero sans boutons de CV** — Les trois boutons « CV IT Ops », « CV Salesforce » et « CV hybride » sont retirés du premier écran : les trois CV sont déjà proposés dans le bloc de profils juste en dessous. Le hero garde « Me recruter » et « Appel 30 min ». Clés de traduction `cta.downloadCv*` devenues inutiles supprimées (FR/EN/ES).
+
 ### Security
 
 - **Données personnelles retirées des CV et des diplômes** — Numéro de téléphone supprimé des 18 CV (sources HTML et PDF régénérés). Diplômes publiés (titres TSSR et TAI, OpenClassrooms, Linguaskill) : date et lieu de naissance, numéros de titre et identifiants de diplôme, QR code, signatures et adresse e-mail floutés de façon irréversible (réduction à quelques pixels puis flou) ; PDF republiés en image seule, sans couche texte. Les vignettes `*-badge.png` de la page Certifications, qui étaient des captures des diplômes originaux, sont régénérées à partir des versions floutées. Suppression d'un PDF de diplôme non utilisé (nom de fichier et date de naissance) et de `scripts/certifications-to-png.mjs`, remplacé par `scripts/redact-certifications.py` (à lancer sur les originaux conservés hors du dépôt).

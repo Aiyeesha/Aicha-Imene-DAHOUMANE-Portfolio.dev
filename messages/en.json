@@ -47,9 +47,6 @@
   "cta": {
     "call": "Schedule a discovery call",
     "projects": "View selected projects",
-    "downloadCvItops": "IT Ops CV (PDF)",
-    "downloadCvSalesforce": "Salesforce CV (PDF)",
-    "downloadCvHybrid": "Salesforce/Infra Hybrid CV (PDF)",
     "workWithMe": "Hire me",
     "message": "Message",
     "call15": "Book a 30-min call",

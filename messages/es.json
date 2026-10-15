@@ -47,9 +47,6 @@
   "cta": {
     "call": "Agendar una llamada exploratoria",
     "projects": "Ver proyectos seleccionados",
-    "downloadCvItops": "CV IT Ops (PDF)",
-    "downloadCvSalesforce": "CV Salesforce (PDF)",
-    "downloadCvHybrid": "CV Híbrido Salesforce/Infra (PDF)",
     "workWithMe": "Contratarme",
     "message": "Mensaje",
     "call15": "Reservar llamada de 30 min",
