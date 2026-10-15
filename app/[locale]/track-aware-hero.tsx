@@ -84,34 +84,9 @@ export default function TrackAwareHero() {
   const { scrollY } = useScroll();
   const parallaxY = useTransform(scrollY, [0, 400], [0, -28]);
 
-  // URLs des CV — deux boutons explicites (IT Ops / Salesforce), toujours
-  // visibles tous les deux quel que soit le track actif du toggle : les deux
-  // CV ont un contenu réellement différent (titre, résumé, bullets, skills
-  // mis en avant), donc les cacher l'un derrière l'autre forçait le visiteur
-  // à comprendre puis actionner le toggle avant de trouver le bon PDF.
-  //
-  // Priorité par CV :
-  //   1. NEXT_PUBLIC_CV_PDF_URL si elle contient les tokens {locale} et/ou {track}
-  //      (ex: "https://storage.example.com/cv-{locale}-{track}.pdf")
-  //   2. Pattern local : /cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf  (6 fichiers dans /public/cv/)
-  const getCvUrl = (cvTrack: "itops" | "salesforce" | "hybrid") => {
-    const envUrl =
-      process.env.NEXT_PUBLIC_CV_PDF_URL ||
-      process.env.NEXT_PUBLIC_CV_URL ||
-      process.env.NEXT_PUBLIC_PROFILE_PDF_URL;
-
-    if (envUrl && (envUrl.includes("{locale}") || envUrl.includes("{track}"))) {
-      return envUrl
-        .replace(/\{locale\}/g, locale)
-        .replace(/\{track\}/g, cvTrack);
-    }
-
-    return `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-${cvTrack}.pdf`;
-  };
-
-  const cvItopsUrl = getCvUrl("itops");
-  const cvSalesforceUrl = getCvUrl("salesforce");
-  const cvHybridUrl = getCvUrl("hybrid");
+  // Les téléchargements de CV ne sont plus dans le hero : les trois CV
+  // (hybride, Salesforce, IT Ops) sont proposés dans le bloc RecruiterPaths
+  // juste en dessous — les répéter ici multipliait les choix au premier écran.
 
   // Avatar : env var ou image locale
   const avatarUrl = useMemo(
@@ -289,38 +264,6 @@ export default function TrackAwareHero() {
           {/* CTA secondaire 1 : page de réservation Proton Calendar, nouvel onglet
               (disparaît si NEXT_PUBLIC_BOOKING_URL n'est pas configurée) */}
           <BookingLink variant="hero" />
-
-          {/* CTA secondaire 2 & 3 : télécharge le CV PDF — un bouton par track,
-              toujours tous les deux visibles (indépendants du toggle), car le
-              contenu des deux CV diffère réellement (titre, résumé, bullets). */}
-          <a
-            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
-            href={cvItopsUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t("cta.downloadCvItops")} ↓
-          </a>
-          <a
-            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
-            href={cvSalesforceUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t("cta.downloadCvSalesforce")} ↓
-          </a>
-          {/* CTA secondaire 4 : télécharge le CV hybride — mène avec la combinaison
-              Salesforce + infra + DevSecOps comme identité propre, plutôt qu'un
-              choix binaire itops/salesforce. Toujours visible, indépendant du
-              toggle, même logique que les deux boutons ci-dessus. */}
-          <a
-            className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
-            href={cvHybridUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t("cta.downloadCvHybrid")} ↓
-          </a>
         </div>
 
         {/* Hint de switch de profil */}
