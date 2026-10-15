@@ -9,6 +9,9 @@ title = "gitleaks config — Aicha-Imene-DAHOUMANE-Portfolio.dev"
   regexes = [
     '''placeholder-anon-key''',
     '''placeholder\.supabase\.co''',
+    # Lien public de la page de réservation Proton Calendar (lib/booking.ts) :
+    # l'identifiant après « # » est affiché à tous les visiteurs, ce n'est pas un secret.
+    '''calendar\.proton\.me/bookings#[A-Za-z0-9+/=_-]+''',
   ]
 
   # Fichiers exclus du scan
