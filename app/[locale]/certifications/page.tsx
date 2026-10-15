@@ -3,7 +3,7 @@
 // Page dédiée "Certifications & Diplômes" — layout premium en 3 sections :
 //   1. Obtenu (✓ vert)  — diplômes RNCP + Linguaskill
 //   2. Actif   (↻ cyan) — Trailhead Ranger
-//   3. En préparation (◎ ambre) — INSIDE LVMH Certificate, Salesforce Admin, PDI…
+//   3. En préparation (◎ ambre) — Salesforce Admin, PDI, Security+…
 //
 // Source : content/certifications.ts (données statiques fiables).
 
@@ -33,10 +33,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et roadmap de 12 certifications Salesforce + Cyber/CompTIA (début 2027 – 2027/2028), INSIDE LVMH Certificate en cours."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et prochaines certifications Salesforce et CompTIA Security+ prévues début 2027."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y un roadmap de 12 certificaciones Salesforce + Cyber/CompTIA (principios de 2027 – 2027/2028), INSIDE LVMH Certificate en curso."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and a 12-certification roadmap across Salesforce + Cyber/CompTIA (early 2027 – 2027/2028), with the INSIDE LVMH Certificate in progress.";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y próximas certificaciones Salesforce y CompTIA Security+ previstas para principios de 2027."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and upcoming Salesforce and CompTIA Security+ certifications planned for early 2027.";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -168,7 +168,7 @@ export default async function CertificationsPage({ params }: PageProps) {
     sectionActive: isFr ? "Actif" : isEs ? "Activo" : "Active",
     sectionActiveSub: isFr ? "Progression continue" : isEs ? "Aprendizaje continuo" : "Continuous learning",
     sectionUpcoming: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation",
-    sectionUpcomingSub: isFr ? "Objectifs 2026–2027" : isEs ? "Objetivos 2026–2027" : "2026–2027 Goals",
+    sectionUpcomingSub: isFr ? "Objectifs début 2027" : isEs ? "Objetivos para principios de 2027" : "Early 2027 goals",
     trailheadBadges: isFr ? "badges" : isEs ? "badges" : "badges",
     trailheadPoints: isFr ? "points" : isEs ? "puntos" : "points",
     trailheadTrails: isFr ? "parcours" : isEs ? "trails" : "trails",
@@ -179,7 +179,6 @@ export default async function CertificationsPage({ params }: PageProps) {
       ? "Rango Trailhead: Expeditioner — verificable en línea · 6 badges para alcanzar Ranger"
       : "Trailhead rank: Expeditioner — verifiable online · 6 badges to reach Ranger",
     activelyPreparing: isFr ? "Préparation active" : isEs ? "Preparación activa" : "Actively preparing",
-    plannedRoadmap: isFr ? "Roadmap" : isEs ? "Roadmap" : "Roadmap",
     backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
     credentialLink: isFr ? "Voir le justificatif" : isEs ? "Ver el justificante" : "View credential",
     diplomaLink: isFr ? "Voir le diplôme" : isEs ? "Ver el diploma" : "View diploma",
@@ -295,6 +294,12 @@ export default async function CertificationsPage({ params }: PageProps) {
   // à terminer avant le 15 décembre 2026) devient la seule échéance 2026.
   // Le groupe "2026" regroupe désormais les prochaines échéances (déc. 2026 –
   // début 2027) ; le groupe "2027" reste la roadmap repliée.
+  //
+  // Recalage du 2026-10-15 : seules les échéances proches restent affichées
+  // (4 Salesforce + CompTIA Security+, début 2027). La roadmap 2027–2028 est
+  // retirée : une longue liste d'intentions nuisait à la crédibilité. L'INSIDE
+  // LVMH Certificate n'est plus affiché avant l'obtention ; il rejoindra les
+  // certifications obtenues une fois l'évaluation réussie.
   type UpcomingItem = {
     id: string;
     name: string;
@@ -304,31 +309,14 @@ export default async function CertificationsPage({ params }: PageProps) {
     initials: string;
     color: string;
     logoUrl?: string;
-    track: "salesforce" | "comptia" | "luxury";
-    phase: "2026" | "2027";
+    track: "salesforce" | "comptia";
     isActive?: boolean;
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── Prochaines échéances — déc. 2026 (LVMH) puis début 2027 (Salesforce) ─
+    // ── Prochaines échéances — début 2027 (Salesforce, puis Security+) ───────
     // Formulation alignée sur la FAQ et la page À propos (« planifiées pour
     // début 2027 ») : à mettre à jour aux trois endroits après chaque résultat.
-    {
-      id: "inside-lvmh-certificate",
-      name: "INSIDE LVMH Certificate 2026",
-      issuer: "LVMH — INSIDE LVMH",
-      target: isFr ? "Déc. 2026" : isEs ? "Dic. 2026" : "Dec 2026",
-      description: isFr
-        ? "Parcours en ligne de 4 cours et une évaluation finale : LVMH et l’industrie du luxe, luxe et société, options Creation & Branding et Retail & Client Experience."
-        : isEs
-        ? "Itinerario en línea de 4 cursos y una evaluación final: LVMH y la industria del lujo, lujo y sociedad, optativas Creation & Branding y Retail & Client Experience."
-        : "Online learning path of 4 courses and a final assessment: LVMH and the luxury industry, luxury and society, Creation & Branding and Retail & Client Experience electives.",
-      initials: "LV",
-      color: "bg-neutral-900",
-      track: "luxury",
-      phase: "2026",
-      isActive: true,
-    },
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
@@ -343,7 +331,6 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-700",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      phase: "2026",
     },
     {
       id: "sf-platform-administrator",
@@ -359,7 +346,6 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      phase: "2026",
     },
     {
       id: "sf-platform-app-builder",
@@ -375,7 +361,6 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      phase: "2026",
     },
     {
       id: "sf-platform-developer-i",
@@ -391,25 +376,8 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
-      phase: "2026",
     },
-    // ── 2027 — roadmap (pas encore de dates fines, ordre indicatif) ──────────
-    {
-      id: "comptia-network-plus",
-      name: "CompTIA Network+",
-      issuer: "CompTIA",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
-      description: isFr
-        ? "Fondamentaux des réseaux : protocoles TCP/IP, infrastructure, sécurité réseau, dépannage et virtualisation."
-        : isEs
-        ? "Fundamentos de redes: protocolos TCP/IP, infraestructura, seguridad de red, resolución de problemas y virtualización."
-        : "Networking fundamentals: TCP/IP protocols, infrastructure, network security, troubleshooting and virtualization.",
-      initials: "N+",
-      color: "bg-red-700",
-      logoUrl: "/certifications/comptia-security.svg",
-      track: "comptia",
-      phase: "2027",
-    },
+    // ── Cybersécurité — une seule certification affichée (début 2027) ───────
     {
       id: "comptia-security-plus",
       name: "CompTIA Security+ (SY0-701)",
@@ -424,108 +392,10 @@ export default async function CertificationsPage({ params }: PageProps) {
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
       track: "comptia",
-      phase: "2027",
-    },
-    {
-      id: "comptia-linux-plus",
-      name: "CompTIA Linux+",
-      issuer: "CompTIA",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
-      description: isFr
-        ? "Administration Linux : ligne de commande, scripts shell, gestion des utilisateurs, sécurité et automatisation système."
-        : isEs
-        ? "Administración Linux: línea de comandos, scripts de shell, gestión de usuarios, seguridad y automatización del sistema."
-        : "Linux administration: command line, shell scripting, user management, security and system automation.",
-      initials: "L+",
-      color: "bg-red-700",
-      logoUrl: "/certifications/comptia-security.svg",
-      track: "comptia",
-      phase: "2027",
-    },
-    {
-      id: "comptia-cysa-plus",
-      name: "CompTIA CySA+",
-      issuer: "CompTIA",
-      target: "2027",
-      description: isFr
-        ? "Analyse cybersécurité : threat intelligence, SIEM, analyse comportementale et gestion des vulnérabilités."
-        : isEs
-        ? "Análisis de ciberseguridad: threat intelligence, SIEM, análisis de comportamiento y gestión de vulnerabilidades."
-        : "Cybersecurity analysis: threat intelligence, SIEM, behavioral analysis and vulnerability management.",
-      initials: "CSA+",
-      color: "bg-red-700",
-      logoUrl: "/certifications/comptia-security.svg",
-      track: "comptia",
-      phase: "2027",
-    },
-    {
-      id: "btl1-blue-team-level-1",
-      name: "BTL1 — Blue Team Level 1",
-      issuer: "Security Blue Team",
-      target: "2027",
-      description: isFr
-        ? "Examen 100% pratique (24h en lab) : détection, triage et investigation d'incidents — complément indispensable au CySA+ théorique."
-        : isEs
-        ? "Examen 100% práctico (24h en laboratorio): detección, triaje e investigación de incidentes — complemento indispensable al CySA+ teórico."
-        : "100% hands-on exam (24h lab): detection, triage and incident investigation — the essential practical complement to the more theoretical CySA+.",
-      initials: "BTL1",
-      color: "bg-red-800",
-      logoUrl: "/certifications/comptia-security.svg",
-      track: "comptia",
-      phase: "2027",
-    },
-    {
-      id: "pnpt-pentest-plus",
-      name: "PNPT / CompTIA PenTest+",
-      issuer: "TCM Security / CompTIA",
-      target: "2027",
-      description: isFr
-        ? "Tests de pénétration réseau : PNPT (5 jours de lab réel + rapport écrit) complété par PenTest+ pour la reconnaissance institutionnelle/DoD."
-        : isEs
-        ? "Pruebas de penetración de red: PNPT (5 días de laboratorio real + informe escrito) complementado con PenTest+ para el reconocimiento institucional/DoD."
-        : "Network penetration testing: PNPT (5-day real-world lab + written report) complemented by PenTest+ for institutional/DoD recognition.",
-      initials: "PNPT",
-      color: "bg-red-800",
-      logoUrl: "/certifications/comptia-security.svg",
-      track: "comptia",
-      phase: "2027",
-    },
-    {
-      id: "sf-sharing-visibility-architect",
-      name: "Salesforce Sharing & Visibility Architect",
-      issuer: "Salesforce",
-      target: "2027",
-      description: isFr
-        ? "Modèles de sécurité Salesforce avancés : OWD, règles de partage, Apex Sharing — valorise directement l'expérience déjà acquise sur profils et permissions."
-        : isEs
-        ? "Modelos avanzados de seguridad Salesforce: OWD, reglas de colaboración, Apex Sharing — pone en valor directamente la experiencia ya adquirida en perfiles y permisos."
-        : "Advanced Salesforce security models: OWD, sharing rules, Apex Sharing — directly builds on existing profile & permissions experience.",
-      initials: "SVA",
-      color: "bg-sky-800",
-      logoUrl: "/certifications/salesforce.svg",
-      track: "salesforce",
-      phase: "2027",
-    },
-    {
-      id: "sf-iam-architect",
-      name: "Salesforce IAM Architect",
-      issuer: "Salesforce",
-      target: "2027–2028",
-      description: isFr
-        ? "SSO, OAuth, SAML, MFA, Identity Connect — pont entre l'expérience Active Directory/GPO (sysadmin) et l'écosystème Salesforce."
-        : isEs
-        ? "SSO, OAuth, SAML, MFA, Identity Connect — puente entre la experiencia en Active Directory/GPO (sysadmin) y el ecosistema Salesforce."
-        : "SSO, OAuth, SAML, MFA, Identity Connect — a bridge between existing Active Directory/GPO (sysadmin) experience and the Salesforce ecosystem.",
-      initials: "IAM",
-      color: "bg-sky-900",
-      logoUrl: "/certifications/salesforce.svg",
-      track: "salesforce",
-      phase: "2027",
     },
   ];
 
-  const certs2026 = upcomingItems.filter((c) => c.phase === "2026");
-  const certs2027 = upcomingItems.filter((c) => c.phase === "2027");
+  const certs2026 = upcomingItems;
 
   // ── JSON-LD — BreadcrumbList ──────────────────────────────────────────────
   const siteUrl = getSiteUrl();
@@ -761,7 +631,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {isFr ? "En cours / Prochaines échéances" : isEs ? "En curso / Próximos plazos" : "In progress / Next up"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— déc. 2026 · début 2027" : isEs ? "— dic. 2026 · principios de 2027" : "— Dec 2026 · early 2027"}
+              {isFr ? "— début 2027" : isEs ? "— principios de 2027" : "— early 2027"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -795,45 +665,6 @@ export default async function CertificationsPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* ── Sous-groupe 2027 — roadmap, repliée par défaut ─────────────────
-            Audit 2026-10-01 : une longue liste de certifications « à venir »
-            affichée en entier renforçait la perception « profil en formation ».
-            La preuve par les projets prime ; la roadmap reste consultable en un
-            clic via <details> natif (accessible au clavier, sans JavaScript). */}
-        <details className="group mt-8">
-          <summary className="flex cursor-pointer list-none items-center gap-2 mb-4 rounded-sm soft-ring [&::-webkit-details-marker]:hidden">
-            <span aria-hidden="true" className="text-xs text-muted-2 transition-transform group-open:rotate-90">▶</span>
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              {isFr ? "Roadmap 2027" : isEs ? "Roadmap 2027" : "2027 Roadmap"}
-            </span>
-            <span className="text-xs text-muted-2">
-              — {certs2027.length} {isFr ? "certifications, ordre indicatif" : isEs ? "certificaciones, orden indicativo" : "certifications, indicative order"}
-            </span>
-          </summary>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {certs2027.map((cert) => (
-              <article
-                key={cert.id}
-                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
-              >
-                <div className="flex items-start gap-3">
-                  <CertIcon initials={cert.initials} color={cert.color} logoUrl={cert.logoUrl} />
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-semibold leading-snug text-slate-900 dark:text-white">{cert.name}</h3>
-                    <p className="mt-0.5 text-xs text-muted">{cert.issuer}</p>
-                  </div>
-                </div>
-                <p className="mt-4 text-sm text-muted leading-relaxed">{cert.description}</p>
-                <div className="mt-4 flex items-center gap-2">
-                  <span className="inline-flex items-center rounded-full bg-black/5 dark:bg-white/10 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:text-slate-300 border border-black/10 dark:border-white/10">
-                    {labels.plannedRoadmap}
-                  </span>
-                  <span className="text-xs text-muted-2">— {cert.target}</span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </details>
       </section>
 
       {/* ── Bouton retour accueil ────────────────────────────────────────────── */}
