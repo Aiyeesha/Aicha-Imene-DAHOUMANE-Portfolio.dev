@@ -15,6 +15,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Certifications : seules les échéances proches restent affichées** — La roadmap 2027–2028 est retirée de la page Certifications (CompTIA Network+, Linux+, CySA+, BTL1, PNPT / PenTest+, Salesforce Sharing & Visibility Architect et IAM Architect). Restent en préparation, début 2027 : les 4 certifications Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) et CompTIA Security+. L'INSIDE LVMH Certificate n'est plus affiché avant l'obtention ; il rejoindra les certifications obtenues après réussite de l'évaluation. Description SEO de la page et liste `upcomingCertifications` mises à jour.
+
 - **Captures d'écran du README régénérées** — hero Salesforce et IT Ops, blog, article, frise de carrière et nouvelle capture du profil hybride, prises sur la version actuelle (Tailwind 4, lot 1 de l'audit, bouton de réservation). `docs/take-screenshots.js` : URL de production corrigée, `SCREENSHOT_BASE_URL`, `SCREENSHOT_ONLY` et `CHROMIUM_PATH` optionnels, capture IT Ops prise en dernier (le choix de profil est mémorisé), attente de la fin des animations, défilement jusqu'à la frise de carrière. La capture `/status` est conservée : elle nécessite les données réelles de production.
 
 - **Lien de réservation Proton Calendar par défaut** — `lib/booking.ts` embarque le lien public de la page de réservation comme valeur par défaut : les boutons « Réserver un appel » s'affichent sans configuration Vercel. `NEXT_PUBLIC_BOOKING_URL` reste prioritaire si elle est définie.
