@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **Données personnelles retirées des CV et des diplômes** — Numéro de téléphone supprimé des 18 CV (sources HTML et PDF régénérés). Diplômes publiés (titres TSSR et TAI, OpenClassrooms, Linguaskill) : date et lieu de naissance, numéros de titre et identifiants de diplôme, QR code, signatures et adresse e-mail floutés de façon irréversible (réduction à quelques pixels puis flou) ; PDF republiés en image seule, sans couche texte. Les vignettes `*-badge.png` de la page Certifications, qui étaient des captures des diplômes originaux, sont régénérées à partir des versions floutées. Suppression d'un PDF de diplôme non utilisé (nom de fichier et date de naissance) et de `scripts/certifications-to-png.mjs`, remplacé par `scripts/redact-certifications.py` (à lancer sur les originaux conservés hors du dépôt).
+
 ### Changed
 
 - **Certifications : seules les échéances proches restent affichées** — La roadmap 2027–2028 est retirée de la page Certifications (CompTIA Network+, Linux+, CySA+, BTL1, PNPT / PenTest+, Salesforce Sharing & Visibility Architect et IAM Architect). Restent en préparation, début 2027 : les 4 certifications Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) et CompTIA Security+. L'INSIDE LVMH Certificate n'est plus affiché avant l'obtention ; il rejoindra les certifications obtenues après réussite de l'évaluation. Description SEO de la page et liste `upcomingCertifications` mises à jour.
