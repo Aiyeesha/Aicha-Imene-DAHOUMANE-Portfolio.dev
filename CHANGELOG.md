@@ -9,6 +9,12 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Lien de réservation Proton Calendar par défaut** — `lib/booking.ts` embarque le lien public de la page de réservation comme valeur par défaut : les boutons « Réserver un appel » s'affichent sans configuration Vercel. `NEXT_PUBLIC_BOOKING_URL` reste prioritaire si elle est définie.
+
+- **Documentation à jour** — README : stack (Tailwind CSS 4, polices auto-hébergées, Formhook sans stockage, réservation Proton Calendar), architecture et clés Redis réelles, pages (`/hybride`, `/work-with-me`, `/contact`, 404 localisée), 14 articles × 3 langues, flux RSS FR/EN/ES, structure du projet (application à la racine du dépôt, routes API actuelles), variables (`IP_HASH_SALT`, `NEXT_PUBLIC_BOOKING_URL`), section sécurité (CSP sans tiers, limite admin 5 / 15 min, pseudonymisation). CONTRIBUTING : commandes depuis la racine, Tailwind 4 (`@theme`), traductions FR/EN/ES. Colophon : description CSP corrigée (plus de Vercel Analytics, proxy et `strict-dynamic`), Tailwind CSS 4.
+
 ### Security
 
 - **Prise de rendez-vous : Calendly remplacé par Proton Calendar (audit du 14 octobre 2026, S4)** — Les boutons « Réserver un appel » (hero, section contact, page « Me recruter », menu mobile) deviennent de simples liens vers la page de réservation Proton Calendar, ouverte dans un nouvel onglet (`rel="noopener noreferrer"`). Composants `CalendlyModal` et `CalendlyEmbed` supprimés : plus aucun script, feuille de style ni iframe tiers sur le site. CSP durcie : `assets.calendly.com` retiré de `script-src` et `style-src`, `frame-src` passe de `https://calendly.com` à `'none'`. Nouvelle variable `NEXT_PUBLIC_BOOKING_URL` (HTTPS obligatoire, boutons masqués si absente) à la place de `NEXT_PUBLIC_CALENDLY_URL`. Politique de confidentialité (FR/EN/ES), page Uses, README, CONTRIBUTING, `.env.example` et SECURITY.md mis à jour.
