@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Captures d'écran du README régénérées** — hero Salesforce et IT Ops, blog, article, frise de carrière et nouvelle capture du profil hybride, prises sur la version actuelle (Tailwind 4, lot 1 de l'audit, bouton de réservation). `docs/take-screenshots.js` : URL de production corrigée, `SCREENSHOT_BASE_URL`, `SCREENSHOT_ONLY` et `CHROMIUM_PATH` optionnels, capture IT Ops prise en dernier (le choix de profil est mémorisé), attente de la fin des animations, défilement jusqu'à la frise de carrière. La capture `/status` est conservée : elle nécessite les données réelles de production.
+
 - **Lien de réservation Proton Calendar par défaut** — `lib/booking.ts` embarque le lien public de la page de réservation comme valeur par défaut : les boutons « Réserver un appel » s'affichent sans configuration Vercel. `NEXT_PUBLIC_BOOKING_URL` reste prioritaire si elle est définie.
 
 - **Documentation à jour** — README : stack (Tailwind CSS 4, polices auto-hébergées, Formhook sans stockage, réservation Proton Calendar), architecture et clés Redis réelles, pages (`/hybride`, `/work-with-me`, `/contact`, 404 localisée), 14 articles × 3 langues, flux RSS FR/EN/ES, structure du projet (application à la racine du dépôt, routes API actuelles), variables (`IP_HASH_SALT`, `NEXT_PUBLIC_BOOKING_URL`), section sécurité (CSP sans tiers, limite admin 5 / 15 min, pseudonymisation). CONTRIBUTING : commandes depuis la racine, Tailwind 4 (`@theme`), traductions FR/EN/ES. Colophon : description CSP corrigée (plus de Vercel Analytics, proxy et `strict-dynamic`), Tailwind CSS 4.

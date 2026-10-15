@@ -23,9 +23,15 @@ Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the 
 |---|---|
 | ![Blog](docs/screenshots/blog.png) | ![Blog article](docs/screenshots/blog-article.png) |
 
-| About — career timeline | Status — health checks & sparklines |
+| About — career timeline | Hybrid profile — Salesforce × IT Ops |
 |---|---|
-| ![About](docs/screenshots/about.png) | ![Status](docs/screenshots/status.png) |
+| ![About](docs/screenshots/about.png) | ![Hybrid profile](docs/screenshots/hybride.png) |
+
+| Status — health checks & sparklines |
+|---|
+| ![Status](docs/screenshots/status.png) |
+
+Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280 × 800, dark theme). Set `SCREENSHOT_BASE_URL` to capture a local build and `SCREENSHOT_ONLY` to refresh a subset.
 
 ---
 
