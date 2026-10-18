@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **Chaîne CI durcie (analyse Code scanning du 18/10)** — Le binaire gitleaks téléchargé en CI est désormais vérifié par son empreinte SHA-256 officielle avant exécution ; `depcheck` (1.4.7) et `@lhci/cli` (0.14.0) sont épinglés à une version exacte au lieu d'une version flottante ou d'une plage ; dans `drift-check.yml`, l'entrée `debug` passe par une variable d'environnement au lieu d'être interpolée dans le script. Commentaire d'en-tête de `ci.yml` corrigé (il listait des SHA périmés). Analyse CodeQL reproduite en local avec la configuration de la CI : aucune alerte.
+
 ### Changed
 
 - **Hero sans boutons de CV** — Les trois boutons « CV IT Ops », « CV Salesforce » et « CV hybride » sont retirés du premier écran : les trois CV sont déjà proposés dans le bloc de profils juste en dessous. Le hero garde « Me recruter » et « Appel 30 min ». Clés de traduction `cta.downloadCv*` devenues inutiles supprimées (FR/EN/ES).

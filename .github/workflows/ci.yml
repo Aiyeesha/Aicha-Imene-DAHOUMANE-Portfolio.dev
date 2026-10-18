@@ -5,10 +5,10 @@ name: CI
 # Mutable tags (v4, v6) can be silently redirected by a compromised maintainer;
 # a SHA cannot be forged or reused for different content.
 #
-# Pinned versions (verified 2026-03-17 via GitHub API):
-#   actions/checkout           de0fac2e4500dabe0009e67214ff5f5447ce83dd  v6.0.2
-#   actions/setup-node         48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  v6.4.0
-#   actions/upload-artifact    043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  v7.0.1
+# Les versions épinglées sont indiquées en commentaire à côté de chaque `uses:`
+# (vérifiées le 2026-10-18 contre les tags amont avec `git ls-remote`).
+# Les outils téléchargés ou lancés via npx sont eux aussi épinglés à une version
+# exacte, et le binaire gitleaks est vérifié par son empreinte SHA-256.
 #
 # Dependabot (.github/dependabot.yml) opens monthly PRs to keep SHAs current.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -52,6 +52,9 @@ jobs:
       - name: Install gitleaks
         env:
           GITLEAKS_VERSION: "8.22.1"
+          # Empreinte officielle (gitleaks_8.22.1_checksums.txt de la release) :
+          # à mettre à jour avec la version. Un binaire altéré fait échouer l'étape.
+          GITLEAKS_SHA256: "2f92ab3b8e08319ac30836c32b90818e01519c3a4982771e4f45a7f5607872f7"
         # --retry-all-errors : la CDN des releases GitHub renvoie parfois des
         # 503/connexions coupées transitoires (observé 2 fois de suite le
         # 2026-08-12) ; -sSfL seul ne retente jamais. 5 tentatives, backoff
@@ -61,6 +64,7 @@ jobs:
           curl -sSfL --retry 5 --retry-all-errors --retry-delay 2 \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
             -o /tmp/gitleaks.tar.gz
+          echo "${GITLEAKS_SHA256}  /tmp/gitleaks.tar.gz" | sha256sum --check --strict
           tar xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
           chmod +x /tmp/gitleaks
 
@@ -113,7 +117,7 @@ jobs:
       # packages de config (tailwind, eslint…). Exemple détecté : @radix-ui/react-dialog.
       - name: Ghost dependency check (depcheck)
         run: |
-          npx --yes depcheck --ignores="server-only,playwright,mdx" --json 2>/dev/null > /tmp/depcheck.json || true
+          npx --yes depcheck@1.4.7 --ignores="server-only,playwright,mdx" --json 2>/dev/null > /tmp/depcheck.json || true
           node -e "
             const r = require('/tmp/depcheck.json');
             const missing = Object.keys(r.missing || {});
@@ -245,4 +249,4 @@ jobs:
         run: npm run build
 
       - name: Lighthouse CI
-        run: npx --yes @lhci/cli@0.14.x autorun
+        run: npx --yes @lhci/cli@0.14.0 autorun
