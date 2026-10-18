@@ -7,7 +7,7 @@
 //
 // Ordre des sections (brief §3.2) :
 //   1. Hero                    — components/home/HomeSections.tsx
-//   2. Sélecteur de profil     — components/RecruiterPaths.tsx (inchangé)
+//   2. Sélecteur de profil     — components/RecruiterPaths.tsx (1 phrase + CV par profil)
 //   3. Profil                  — #about
 //   4. Compétences en 4 couches — #skills
 //   5. Pont Salesforce ⇄ infra — #bridge (version raccourcie)
@@ -88,7 +88,7 @@ export default async function Home({ params }: Props) {
       <HomeHero locale={locale} />
 
       {/* 2. Sélecteur de profil — 3 cartes, chacune avec le CV de la locale. */}
-      <RecruiterPaths />
+      <RecruiterPaths locale={locale} />
 
       {/* 3 à 6. Profil, compétences, pont, projets phares */}
       <HomeProfile locale={locale} />
