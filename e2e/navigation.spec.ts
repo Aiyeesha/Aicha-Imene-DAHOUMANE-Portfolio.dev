@@ -99,38 +99,35 @@ test.describe("Navigation de base", () => {
     await expect(page.locator("main")).not.toBeEmpty();
   });
 
-  // Régression — audit 2026-08-13 : #desktop-nav (overflow-x-auto, scrollbar
-  // masquée) débordait silencieusement autour du seuil xl=1280px. Mesuré en
-  // conditions réelles : ~1011px de contenu pour ~512px de large sur un des
-  // viewports testés — Services/Projects/Blog/Contact/Security cluster hors
-  // champ sans scrollbar visible, sans dégradé, et la molette verticale ne
-  // redirigeait pas vers le scroll horizontal du conteneur. Ce test ne suppose
-  // pas qu'un débordement se produit à 1280px dans tous les environnements CI —
-  // il vérifie que SI ça déborde, l'affordance de scroll existe, et que dans
-  // tous les cas le lien le plus à droite (Cluster Sécurité) est réellement
-  // atteignable dans le viewport, pas juste présent dans le DOM.
-  test("le nav desktop reste utilisable à 1280px — le lien Security cluster reste atteignable", async ({ page }) => {
+  // Option C (accueil hybride) : la navigation principale est réduite à 6
+  // entrées (Profil, Compétences, Projets, Parcours, Blog, Contact). Remplace
+  // l'ancien test du lien « Cluster sécurité », retiré de la navigation (il
+  // reste accessible depuis le pied de page et la palette ⌘K). On vérifie que
+  // les 6 entrées sont présentes ET réellement visibles à 1280px — garde-fou
+  // contre le débordement silencieux de #desktop-nav relevé le 2026-08-13.
+  test("le nav desktop affiche ses 6 entrées, toutes visibles à 1280px", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/en");
 
     const nav = page.locator("#desktop-nav");
     await expect(nav).toBeVisible();
 
-    const securityLink = page.locator('#desktop-nav a[href="/en/projects?tab=security"]');
-    await expect(securityLink).toBeAttached();
-
-    const [scrollWidth, clientWidth] = await Promise.all([
-      nav.evaluate((el) => el.scrollWidth),
-      nav.evaluate((el) => el.clientWidth),
-    ]);
-
-    if (scrollWidth > clientWidth + 4) {
-      const rightChevron = page.getByRole("button", { name: /scroll menu right/i });
-      await expect(rightChevron).toBeVisible();
-      await rightChevron.click();
+    for (const id of ["about", "skills", "projects", "experience", "blog", "contact"]) {
+      const item = nav.locator(`[data-section="${id}"]`);
+      await expect(item, `Entrée de nav manquante : ${id}`).toHaveCount(1);
+      await expect(item, `Entrée de nav hors champ : ${id}`).toBeInViewport();
     }
+    await expect(nav.locator("[data-section]")).toHaveCount(6);
+  });
 
-    await securityLink.scrollIntoViewIfNeeded();
-    await expect(securityLink).toBeInViewport();
+  test("le pied de page relie le cluster sécurité et les pages secondaires", async ({ page }) => {
+    await page.goto("/en");
+    const footer = page.locator("footer");
+    for (const href of [
+      "/en/projects?tab=security", "/en/hybride", "/en/certifications", "/en/resources",
+      "/en/uses", "/en/colophon", "/en/status", "/en/legal", "/en/privacy", "/en/accessibility",
+    ]) {
+      await expect(footer.locator(`a[href="${href}"]`), `Lien absent du pied de page : ${href}`).toHaveCount(1);
+    }
   });
 });

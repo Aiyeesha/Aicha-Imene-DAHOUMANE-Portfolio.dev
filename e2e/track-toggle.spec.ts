@@ -75,34 +75,23 @@ test.describe("Track toggle", () => {
     ).toBeVisible({ timeout: 15000 });
   });
 
-  // Régression : au 2e clic consécutif du toggle, le H1/sous-titre du hero restait
-  // figé sur le track précédent (AnimatePresence mode="wait" ne signalait pas
-  // toujours la fin de son animation de sortie — React 19 + framer-motion 12).
-  // localStorage/CTA/lien CV se mettaient à jour correctement, ce qui masquait le
-  // bug si on ne vérifie que l'état, jamais le texte réellement affiché.
-  test("le H1 reflète le track actif même après plusieurs clics consécutifs", async ({
+  // Option C (accueil hybride) : le hero n'est plus track-aware — un même
+  // titre et une même accroche pour les deux profils. Ce test remplace la
+  // régression « H1 figé au 2e clic » (le H1 ne dépend plus du track) : il
+  // vérifie que la bascule ne modifie plus le hero, tout en continuant à
+  // piloter les pages secondaires (/projects, blog) et le sélecteur de profil.
+  test("le H1 du hero reste identique quel que soit le track actif", async ({
     page,
   }) => {
     await gotoHydrated(page, "/en");
     const h1 = page.getByRole("heading", { level: 1 });
-    // Depuis le 01/10/2026, le titre du H1 est commun aux deux tracks
-    // (« Salesforce & Infrastructure Developer ») : seul le sous-titre
-    // (messages/en.json, hero.subtitle_*) distingue les deux états.
-    const itopsTitle = /From workstations and servers/i;
-    const salesforceTitle = /From the CRM to the servers/i;
+    const initial = (await h1.textContent())?.trim();
+    expect(initial).toBe("Aïcha Imène DAHOUMANE");
 
     await page.getByRole("button", { name: /switch to it ops/i }).click();
-    await expect(h1).toContainText(itopsTitle);
-    await expect(h1).not.toContainText(salesforceTitle);
+    await expect(h1).toHaveText(initial!);
 
-    // 2e clic — celui qui reproduisait le gel
     await page.getByRole("button", { name: /switch to salesforce/i }).click();
-    await expect(h1).toContainText(salesforceTitle);
-    await expect(h1).not.toContainText(itopsTitle);
-
-    // 3e clic — retour, pour confirmer que ce n'est pas un cas isolé
-    await page.getByRole("button", { name: /switch to it ops/i }).click();
-    await expect(h1).toContainText(itopsTitle);
-    await expect(h1).not.toContainText(salesforceTitle);
+    await expect(h1).toHaveText(initial!);
   });
 });
