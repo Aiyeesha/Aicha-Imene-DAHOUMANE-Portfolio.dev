@@ -591,7 +591,7 @@
   },
   "recruiter": {
     "title": "Vous recrutez pour quel poste ?",
-    "subtitle": "Choisissez le profil qui correspond à votre besoin : le site et le CV s'adaptent.",
+    "subtitle": "Choisissez le profil qui correspond à votre poste et téléchargez le CV adapté.",
     "recommended": "Mon profil de référence",
     "hybridTitle": "Profil hybride Salesforce + infrastructure",
     "hybridBody": "Un poste où Salesforce, l'infrastructure et la sécurité se croisent : intégrations, mises en production tracées, sécurité d'API. C'est là que mon parcours fait la différence.",
@@ -600,7 +600,6 @@
     "salesforceBody": "Développeuse, administratrice ou consultante Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
     "itopsTitle": "Poste systèmes, réseaux & DevOps",
     "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et sécurité.",
-    "showProfile": "Afficher ce profil",
     "cv": "CV (PDF)"
   },
   "home": {

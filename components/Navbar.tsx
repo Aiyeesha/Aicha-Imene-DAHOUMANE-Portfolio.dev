@@ -317,11 +317,13 @@ useEffect(() => {
     return isHome ? `#${id}` : `/${locale}/#${id}`;
   };
 
+  // Libellés des ancres = titres des sections de l'accueil (namespace home),
+  // pour que l'entrée de menu et le titre affiché soient toujours identiques.
   const sections: { id: NavId; label: string }[] = [
     { id: "about", label: t("nav.profile") },
-    { id: "skills", label: t("nav.skills") },
+    { id: "skills", label: t("home.skills.title") },
     { id: "projects", label: t("nav.projects") },
-    { id: "experience", label: t("nav.experience") },
+    { id: "experience", label: t("home.experience.title") },
     { id: "blog", label: t("nav.blog") },
     { id: "contact", label: t("nav.contact") }
   ];
