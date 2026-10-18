@@ -58,6 +58,9 @@ jobs:
       - name: Get prod deployment SHA (Vercel)
         id: prod
         env:
+          # Entrée passée par env plutôt qu'interpolée dans le script (bonne pratique
+          # contre l'injection de commande, signalée par OpenSSF Scorecard).
+          DEBUG_OUTPUT: ${{ inputs.debug }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           if [ -z "$VERCEL_TOKEN" ]; then
@@ -74,7 +77,7 @@ jobs:
             "https://api.vercel.com/v6/deployments?projectId=${PROJECT_ID}&teamId=${TEAM_ID}&target=production&state=READY&limit=1" \
             -H "Authorization: Bearer ${VERCEL_TOKEN}")
 
-          if [ "${{ inputs.debug }}" = "true" ]; then
+          if [ "${DEBUG_OUTPUT}" = "true" ]; then
             echo "Vercel API response: $RESPONSE"
           fi
 
@@ -118,6 +121,9 @@ jobs:
       # Si les données sont > 48 h, émet un avertissement (pas d'échec bloquant).
       - name: Check monitoring freshness
         env:
+          # Entrée passée par env plutôt qu'interpolée dans le script (bonne pratique
+          # contre l'injection de commande, signalée par OpenSSF Scorecard).
+          DEBUG_OUTPUT: ${{ inputs.debug }}
           SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
         run: |
           if [ -z "$SITE_URL" ]; then
@@ -127,7 +133,7 @@ jobs:
 
           HEALTH=$(curl -sf --max-time 10 "${SITE_URL}/api/health" || echo "{}")
 
-          if [ "${{ inputs.debug }}" = "true" ]; then
+          if [ "${DEBUG_OUTPUT}" = "true" ]; then
             echo "Health API response: $HEALTH"
           fi
 
