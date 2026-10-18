@@ -11,7 +11,7 @@
 > [!WARNING]
 > **Incertitudes et points à vérifier par Aïcha (à lire en premier)**
 >
-> 1. **Dépôts des 3 projets vitrines non vérifiables depuis l'environnement d'audit.** Le proxy réseau de la session ne donne accès qu'au dépôt du portfolio : `github.com/Aiyeesha/<autre-dépôt>` renvoie systématiquement 403 (refus du proxy, **pas** une preuve d'absence). L'existence et la visibilité publique de `access-review-salesforce`, `soc-detection-lab` et `infra-lab-ad-pfsense` restent donc **à confirmer par vous**. Même limite pour tous les autres dépôts cités dans `content/projects.ts` (sauf le portfolio lui-même : HTTP 200).
+> 1. **Dépôts des 3 projets vitrines introuvables (mise à jour du 18/10/2026).** Aïcha indique qu'ils sont sous le compte `Aiyeesha`, mais **aucun** n'apparaît parmi les 45 dépôts du compte visibles par l'application GitHub de la session (§5). Soit ils ne sont pas encore créés ou poussés, soit ils portent un autre nom, soit l'application GitHub n'y a pas accès. **À confirmer avant toute publication en accueil.** Par ailleurs, `python-network-scanner` (projet publié) pointe vers un **dépôt privé** : lien mort en production (§5.2).
 > 2. **URL LinkedIn : deux variantes coexistent.** Le brief impose `https://www.linkedin.com/in/a%C3%AFcha-im%C3%A8ne-dahoumane` (avec accents) ; **les 36 CV de `public/cv/`** (HTML, et vraisemblablement les PDF générés depuis eux) utilisent `https://www.linkedin.com/in/aicha-imene-dahoumane` (sans accents). Sur le site, l'URL vient de la variable `NEXT_PUBLIC_LINKEDIN_URL` (valeur non lue, par principe). **Laquelle est la bonne ?** Si c'est la version accentuée, les CV devront être régénérés (`npm run cv:pdf`).
 > 3. **Situation contractuelle à clarifier.** La preview indique « Développeuse Salesforce **en CDI** (LD Digitales, oct. 2025 – aujourd'hui) » et « CDI recherché », tandis que le brief demande « disponible sous 1 mois, entretiens dès maintenant » (formulation déjà présente sur le site actuel). Les deux sont compatibles (préavis), mais la formulation publique doit être validée par vous.
 > 4. **Affirmation « 3 ans d'expérience Salesforce en production »** (`messages/fr.json`, clé `about.p4_salesforce`) : deux ans d'alternance + un an de CDI. Défendable, mais à confirmer pour l'entretien.
@@ -230,19 +230,36 @@ src/
 ## 5. État des dépôts GitHub
 
 > [!IMPORTANT]
-> Vérification automatique **impossible** depuis la session (403 du proxy pour tout dépôt autre que le portfolio). Le tableau ci-dessous est à compléter par Aïcha.
+> **Mise à jour du 18/10/2026.** Aïcha a confirmé que les dépôts vitrines sont sous le compte `Aiyeesha`. Le proxy refusant toujours l'accès direct, la vérification a été faite à partir de la **liste des 45 dépôts du compte auxquels l'application GitHub de la session a accès** (liste complète, sans pagination restante). Limite : un dépôt que l'application GitHub n'est pas autorisée à voir (installation limitée à une sélection de dépôts) n'apparaît pas dans cette liste.
 
-| Projet | Dépôt attendu | Référencé dans | Vérifié | À confirmer |
-|---|---|---|---|---|
-| Access Review | `Aiyeesha/access-review-salesforce` ? | preview (`github.com/TODO/…`) | ❌ | existe ? public ? nom exact ? CI verte ? |
-| SOC Detection Lab | `Aiyeesha/soc-detection-lab` ? | preview (`TODO`) | ❌ | idem |
-| Infra Lab | `Aiyeesha/infra-lab-ad-pfsense` ? | preview (`TODO`) | ❌ | idem |
-| Légarant-AXG | `Aiyeesha/legarant-axg-crm-sync` | site + preview | ❌ (403) | public ? |
-| MediCare (workflow) | `Aiyeesha/medicare-solutions` → `.github/workflows/validate.yml` | accueil (`#bridge`) | ❌ (403) | public ? |
-| Pipeline CI/CD | **aucun** | — | — | dépôt public existant ? sinon repli MediCare |
-| Portfolio | `Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev` | — | ✅ 200 | — |
+### 5.1 Projets phares de l'accueil
 
-Les autres `repoUrl` de `content/projects.ts` (iDEM-Connect, FASHA, Avenir-TELECOM, WireBrite…, risque360, cve-watchlist, log-anomaly-detector, etc.) n'ont pas pu être vérifiés non plus : à contrôler par un vérificateur de liens en Phase 6, depuis un poste ou une CI ayant accès à GitHub.
+| Projet | Dépôt attendu | Constat | Conséquence |
+|---|---|---|---|
+| Access Review | `access-review-salesforce` (nom de la preview) | ❌ **absent de la liste** — aucun dépôt approchant (`access`, `review`, `recert`) | Bloquant pour l'accueil tant que le dépôt n'est pas publié ou visible |
+| SOC Detection Lab | `soc-detection-lab` | ❌ **absent** — aucun dépôt `soc`, `sigma`, `detection` | idem |
+| Infra Lab | `infra-lab-ad-pfsense` | ❌ **absent** — aucun dépôt `infra`, `lab`, `pfsense`, `ad` | idem |
+| Légarant-AXG | `legarant-axg-crm-sync` | ✅ **public** (existe aussi `Legarant-app`, public) | Conforme |
+| MediCare (workflow) | `medicare-solutions` | ✅ **public** | Repli valable pour le projet n° 5 (fichier `validate.yml` à vérifier en recette) |
+| Pipeline CI/CD | aucun dépôt dédié | — (`jenkins-demo` public existe, mais sans rapport établi) | Repli MediCare recommandé |
+| Portfolio | `Aicha-Imene-DAHOUMANE-Portfolio.dev` | ✅ public | — |
+
+### 5.2 Liens déjà publiés sur le site actuel (constat hors Option C, mais à corriger)
+
+| Projet publié | `repoUrl` affiché | Constat | Gravité |
+|---|---|---|---|
+| `python-network-scanner` (publié, cluster sécurité) | `Python-network-scanner-project` | ⚠️ **dépôt privé** → lien mort (404) pour les visiteurs | **Élevée** — lien mort en production |
+| `python-password-checker` (brouillon) | `Python-Password-Checker-project` | dépôt privé | Faible (non publié) |
+| `wirebright-visualforce-to-lightning` | `WireBrite-…-Visualforce-jsbProject-` (projects.ts) | ✅ public | — |
+| ↳ repli `content/github-repos.ts` | `WireBrite-Consulting-Migration-Backup` | ❌ **n'existe pas** | Faible (repli non utilisé tant que `repoUrl` est renseigné) — à aligner |
+| `parkit-java-testing` (brouillon) | `ParkingSystem` (fork public) vs `Projet-12` (public) | les deux existent | À trancher avant publication |
+| `hemebiotech-java-debug` (brouillon) | `Hemebiotech` | public, mais **fork** | À signaler si publié (code d'origine OpenClassrooms) |
+| `risk-assessment-matrix` (brouillon) | `matrice-risques` | public ; un dépôt `risk-assessment-matrix` existe aussi | À aligner |
+| iDEM-Connect, FASHA, Avenir-TELECOM, risque360, cve-watchlist, log-anomaly-detector, incident-response-tracker, security-monitoring-dashboard, vulnerability-assessment-report, playbook-reponse-incidents, incident-response-playbook, PochLib | — | ✅ tous **publics** | — |
+
+**Règle §0 (OrgDocs / SFRelease)** : `orgdocs` existe et est **privé** ✅ ; aucun dépôt `sfrelease` visible ; aucun lien depuis le site ✅.
+
+Le statut HTTP réel des liens (200/404) reste à contrôler par un vérificateur de liens en Phase 6, depuis une CI ayant accès à GitHub.
 
 ---
 
@@ -326,7 +343,7 @@ Mesuré le 18/10/2026 sur `main` (`fac51b1`), dans l'environnement d'audit :
 | ID | Risque | Probabilité | Impact | Mitigation |
 |---|---|---|---|---|
 | R1 | Cible Lighthouse Performance ≥ 90 inatteignable sans revoir le rendu dynamique (`headers()` dans le layout, hero client + Framer Motion, `BAILOUT_TO_CLIENT_SIDE_RENDERING`) | Élevée | Élevé | Hero en Server Component (sans dépendance au cookie), suppression des compteurs/logos/blog de l'accueil, mesure à chaque phase ; si l'écart persiste, décision explicite d'Aïcha sur le seuil |
-| R2 | Dépôts vitrines non publics → 3 des 5 projets phares inapplicables | Moyenne | Élevé | Règle de repli §3.3 ; candidats : `security-monitoring-dashboard`, `cve-watchlist`, `incident-response-tracker` (sécurité), `it-ops-network-security` (infra), `idemconnect-apex-backend` (Salesforce) — à valider |
+| R2 | Dépôts vitrines non publics → 3 des 5 projets phares inapplicables (aucun des 3 visible au 18/10/2026, §5.1) | Élevée | Élevé | Règle de repli §3.3 ; candidats : `security-monitoring-dashboard`, `cve-watchlist`, `incident-response-tracker` (sécurité), `it-ops-network-security` (infra), `idemconnect-apex-backend` (Salesforce) — à valider |
 | R3 | Suppression du toggle track → régressions (cookie, E2E `track-toggle`, Navbar, `/projects`) | Moyenne | Moyen | Garder le toggle hors accueil (pages secondaires) dans un premier temps |
 | R4 | Pages devenues orphelines après réduction de la navigation | Moyenne | Moyen | Test automatisé « chaque route du sitemap est liée depuis le pied de page ou ⌘K » |
 | R5 | Traduction ES de qualité insuffisante | Moyenne | Moyen | Signalement systématique des chaînes ES nouvelles dans `docs/contenu-accueil-option-c.md` |
