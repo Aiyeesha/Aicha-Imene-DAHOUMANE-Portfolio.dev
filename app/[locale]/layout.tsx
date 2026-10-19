@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import Providers from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
@@ -9,8 +10,8 @@ import SkipToContent from "@/components/SkipToContent";
 import ScrollToTop from "@/components/ScrollToTop";
 import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 import CursorSpotlight from "@/components/CursorSpotlight";
-import SiteFooter from "@/components/SiteFooter";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { GITHUB_URL } from "@/lib/social";
 import { getFeaturedProjectsForNav, getSecurityClusterCount } from "@/lib/data/projects";
 
 /**
@@ -166,10 +167,108 @@ export default async function LocaleLayout({
             {/* Bouton "Retour en haut" — apparaît après 300px de scroll */}
             <ScrollToTop />
 
-            {/* Pied de page en 4 colonnes (Profil, Projets, Ressources, Légal) :
-                point d'accès garanti à toutes les pages secondaires, la navigation
-                principale étant réduite à 6 entrées (Option C). */}
-            <SiteFooter locale={locale} />
+            <footer className="border-t border-black/10 dark:border-white/10 py-10 mt-14">
+              <div className="mx-auto max-w-6xl px-6 text-sm text-muted-2">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <span>
+                    © 2025–{new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
+                  </span>
+                  {/* Link (Next.js) pour la navigation SPA — évite le rechargement de page
+                      complet que <a href> provoque sur les routes locales. */}
+                  <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-4">
+                    {/* Certifications — page primaire (diplôme RNCP 6, Trailhead,
+                        certif éditeur en préparation) : c'est la contre-preuve de
+                        l'objection « pas de certif » et elle n'était reliée qu'au
+                        header, jamais au footer. Voir audit P5. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/certifications`}
+                    >
+                      {t("nav.certifications")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/work-with-me`}
+                    >
+                      {t("footer.workWithMe")}
+                    </Link>
+                    {/* Page « Profil hybride » — trois cas où la combinaison
+                        Salesforce + infra + sécurité est nécessaire. Point d'entrée
+                        neutre (hors toggle), voir audit P2. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/hybride`}
+                    >
+                      {t("footer.hybrid")}
+                    </Link>
+                    {/* Formulaire recruteur (poste, contrat, lieu, date de prise de
+                        poste) — remplace le formulaire « Qualifier une mission »
+                        (secteur/délai/budget) depuis l'audit de contenu du 2026-09-25. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/contact`}
+                    >
+                      {t("footer.qualifyMission")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/colophon`}
+                    >
+                      {t("footer.colophon")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/privacy`}
+                    >
+                      {t("footer.privacy")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/legal`}
+                    >
+                      {t("footer.legal")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/accessibility`}
+                    >
+                      {t("footer.accessibility")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/status`}
+                    >
+                      {t("footer.status")}
+                    </Link>
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/uses`}
+                    >
+                      {t("footer.uses")}
+                    </Link>
+                    {/* /resources a quitté le menu desktop au profit de /hybride
+                        (audit de contenu 2026-09-25) : lien conservé ici. */}
+                    <Link
+                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/resources`}
+                    >
+                      {t("nav.resources")}
+                    </Link>
+                    {GITHUB_URL && (
+                      <a
+                        href={GITHUB_URL}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="GitHub"
+                        className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      >
+                        GitHub
+                      </a>
+                    )}
+                  </nav>
+                </div>
+              </div>
+            </footer>
           </div>
         </div>
       </Providers>

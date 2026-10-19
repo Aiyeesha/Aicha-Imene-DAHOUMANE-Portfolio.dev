@@ -9,10 +9,6 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Fixed
-
-- **Lien mort retiré sur le projet Python Network Scanner** — Le projet publié `python-network-scanner` renvoyait vers le dépôt GitHub `Python-network-scanner-project`, privé : les visiteurs obtenaient une erreur 404. Le lien « Voir le dépôt » est supprimé de `content/projects.ts` ; la fiche projet reste publiée, sans lien vers le code.
-
 ### Security
 
 - **Chaîne CI durcie (analyse Code scanning du 18/10)** — Le binaire gitleaks téléchargé en CI est désormais vérifié par son empreinte SHA-256 officielle avant exécution ; `depcheck` (1.4.7) et `@lhci/cli` (0.14.0) sont épinglés à une version exacte au lieu d'une version flottante ou d'une plage ; dans `drift-check.yml`, l'entrée `debug` passe par une variable d'environnement au lieu d'être interpolée dans le script. Commentaire d'en-tête de `ci.yml` corrigé (il listait des SHA périmés). Analyse CodeQL reproduite en local avec la configuration de la CI : aucune alerte.
