@@ -289,9 +289,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps · Sécurité | Île-de-France",
-    "description": "Salesforce · Systèmes & Réseaux · DevOps · Sécurité (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Disponible sous 1 mois, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs.",
+    "description": "Salesforce · Systèmes & Réseaux · DevOps · Sécurité (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Entretiens dès maintenant, prise de poste dès décembre 2026. CDI, CDD, intérim ou portage — tous secteurs.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops | Île-de-France",
-    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD, Salesforce. Disponible sous 1 mois, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs."
+    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD, Salesforce. Entretiens dès maintenant, prise de poste dès décembre 2026. CDI, CDD, intérim ou portage — tous secteurs."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -383,7 +383,7 @@
     "rolesValueSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
     "rolesValueItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Disponible sous 1 mois (préavis) · Entretiens dès maintenant · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
+    "availabilityValue": "Entretiens dès maintenant · Prise de poste dès décembre 2026 · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "goalLabel": "Objectif",
     "goalValue": "Approfondir mon expertise Salesforce, préparer mes certifications et rejoindre une équipe où Salesforce, infrastructure et sécurité se croisent.",
     "focusLabel": "Focus",
@@ -393,7 +393,7 @@
     "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les certifications éditeur Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) sont planifiées pour début 2027.",
+    "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les certifications éditeur Salesforce Platform Foundations et Administrator sont prévues à partir de décembre 2026, App Builder et Platform Developer I début 2027.",
     "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE GROUP (févr.–mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (Windows Autopilot, image Sysprep, effacement certifié NIST 800-88).",
     "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
     "p3_itops": "Je garde une attention particulière à la sécurité et à la continuité : 85 alertes de sauvegarde Acronis triées pendant le stage, et des labs personnels (honeypot, analyse de trafic, gestion des vulnérabilités) pour entretenir ces réflexes en dehors du poste.",
@@ -458,7 +458,7 @@
     "items": [
       {
         "q": "Quelle est votre disponibilité ?",
-        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible sous 1 mois (durée de mon préavis). Je suis actuellement développeuse Salesforce en CDI chez LD Digitales."
+        "a": "Je suis disponible dès maintenant pour des entretiens (octobre et novembre 2026), avec une prise de poste possible dès décembre 2026. Je suis actuellement développeuse Salesforce en CDI chez LD Digitales."
       },
       {
         "q": "Quels types de contrat recherchez-vous ?",
@@ -470,7 +470,7 @@
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
-        "a": "Pas encore : les certifications Salesforce Platform Foundations, Administrator, App Builder et Platform Developer I sont planifiées pour début 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
+        "a": "Pas encore : les certifications Salesforce Platform Foundations et Administrator sont prévues à partir de décembre 2026, App Builder et Platform Developer I début 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
         "q": "Où êtes-vous basée ? Télétravail ?",
@@ -493,10 +493,10 @@
     "lastAudit": "Dernière vérification : 28 juin 2026 — Outils : axe-core (CI automatisé), vérification manuelle Navigation clavier."
   },
   "availModal": {
-    "badge": "Entretiens dès maintenant — Disponible sous 1 mois",
+    "badge": "Entretiens dès maintenant — Prise de poste dès décembre 2026",
     "title": "Mes disponibilités",
     "delay": "Disponibilité",
-    "delayValue": "Entretiens dès maintenant · Disponible sous 1 mois (préavis)",
+    "delayValue": "Entretiens dès maintenant · Prise de poste dès décembre 2026",
     "contracts": "Contrats",
     "contractValues": "CDI · CDD · Intérim · Portage salarial",
     "workMode": "Modes de travail",
@@ -611,7 +611,7 @@
         "CDI · CDD · intérim · portage salarial",
         "France & international",
         "Télétravail, hybride ou sur site",
-        "Disponible sous 1 mois · entretiens dès maintenant"
+        "Entretiens dès maintenant · prise de poste dès décembre 2026"
       ],
       "ctaContact": "Me contacter",
       "ctaCall": "Réserver un appel (30 min)",
@@ -762,12 +762,12 @@
       "rncp": "Titre RNCP niveau 6 « Développeur Concepteur Logiciel », spécialisation Salesforce",
       "rncpMeta": "OpenClassrooms · 2025 · niveau 6 du cadre européen des certifications",
       "salesforceTitle": "Certifications Salesforce",
-      "salesforceStatus": "en préparation — prévues début 2027",
+      "salesforceStatus": "en préparation",
       "salesforceList": [
-        "Platform Foundations",
-        "Platform Administrator",
-        "Platform App Builder",
-        "Platform Developer I"
+        "Platform Foundations — à partir de décembre 2026",
+        "Platform Administrator — à partir de décembre 2026",
+        "Platform App Builder — début 2027",
+        "Platform Developer I — début 2027"
       ],
       "trailhead": "Trailhead : rang Expeditioner — 94 badges, 59 775 points.",
       "cta": "Toutes les certifications"

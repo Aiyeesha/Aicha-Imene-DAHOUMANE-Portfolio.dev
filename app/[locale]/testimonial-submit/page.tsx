@@ -14,7 +14,7 @@
 //   1. Définir TESTIMONIAL_SUBMIT_TOKEN dans les variables d'environnement Vercel
 //   2. Appeler POST /api/admin/testimonial-invite (Bearer ADMIN_PASSWORD) pour obtenir le lien
 //   3. Partager le lien privément avec le collaborateur
-//   4. Les soumissions apparaissent dans `testimonial_submissions` (Supabase), approved = false
+//   4. Les soumissions arrivent par e-mail via Formhook (rien n'est stocké côté serveur)
 
 import type { Metadata } from "next";
 import { createHmac, timingSafeEqual } from "crypto";

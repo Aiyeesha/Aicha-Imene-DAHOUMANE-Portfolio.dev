@@ -144,7 +144,7 @@ Row Level Security (RLS) is **enabled on all tables**. Policies by table:
 | `certifications` | ✅ (all) | ❌ | Public content |
 | `testimonials` | `is_published = true` only | ❌ | Unpublished testimonials not visible |
 | `messages` | ❌ | ❌ | **No longer used** — the contact form forwards to Formhook with no DB write; the table is retained only for historical rows |
-| `testimonial_submissions` | ❌ | ✅ | Pending admin review, `approved = false` by default |
+| `testimonial_submissions` | ❌ | ✅ | **No longer used** — the testimonial form forwards to Formhook with no DB write; historical unapproved rows are purged after 90 days by the daily cron |
 | `uptime_pings` | ❌ | ❌ | Server-side only (service_role) — anon SELECT policy removed |
 | `goals_2026` | ✅ (all) | ❌ | Public content (intentional — used for public roadmap display) |
 
@@ -219,7 +219,7 @@ All secrets below should be rotated **immediately** if compromised, and periodic
 
 ### Signs of compromise to watch for
 
-- Unexpected entries in the Supabase `testimonial_submissions` table
+- Unexpected new entries in the Supabase `testimonial_submissions` table (no code path writes to it any more)
 - Unusual spike in Vercel function invocations (> 100k/month on Hobby plan)
 - CSP violations reported to `/api/csp-report` from unexpected `document-uri`
 - `/api/health` returning degraded status for Redis (possible token invalidation)
