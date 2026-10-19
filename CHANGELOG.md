@@ -12,16 +12,12 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - **Témoignages reçus par e-mail via Formhook** — Le formulaire de témoignage (`/api/testimonial-submit`) n'écrit plus dans la table Supabase `testimonial_submissions` : comme le formulaire de contact, il transmet la soumission à Formhook (même `FORMHOOK_ENDPOINT` et même `FORMHOOK_AUTH_TOKEN`, sujet « Nouveau témoignage — … », `topic: "testimonial"`). Plus aucun stockage côté serveur, ni du témoignage ni de l'empreinte de l'IP. Lien d'invitation HMAC, limitation de débit et honeypot inchangés. Tests unitaires ajoutés.
-- **Disponibilité mise à jour** — « Disponible sous 1 mois (préavis) » devient « Entretiens dès maintenant · Prise de poste dès décembre 2026 » sur l'accueil, la FAQ, la page « Me recruter », son image de partage et les métadonnées, dans les trois langues.
-- **Calendrier des certifications Salesforce** — Platform Foundations et Platform Administrator sont prévues à partir de décembre 2026 ; App Builder, Platform Developer I et CompTIA Security+ restent prévues début 2027 (accueil, FAQ, À propos, page Certifications).
-
-### Removed
-
-- **Tableau de relecture de l'accueil** — `docs/contenu-accueil-option-c.md` est supprimé.
+- **Disponibilité mise à jour** — « Disponible sous 1 mois (préavis) » devient « Entretiens dès maintenant · Prise de poste dès décembre 2026 » dans la fenêtre de disponibilité, la page À propos, la FAQ, la page « Me recruter », son image de partage et les métadonnées, dans les trois langues.
+- **Calendrier des certifications Salesforce** — Platform Foundations et Platform Administrator sont prévues à partir de décembre 2026 ; App Builder, Platform Developer I et CompTIA Security+ restent prévues début 2027 (FAQ, À propos, page Certifications).
 
 ### Fixed
 
-- **Lien mort retiré sur le projet Python Network Scanner** — Le projet publié `python-network-scanner` renvoyait vers le dépôt GitHub `Python-network-scanner-project`, privé : les visiteurs obtenaient une erreur 404. Le lien « Voir le dépôt » est supprimé de `content/projects.ts` ; la fiche projet reste publiée, sans lien vers le code.
+- **Lien mort retiré sur le projet Python Network Scanner** — Le projet publié `python-network-scanner` renvoyait vers le dépôt GitHub `Python-network-scanner-project`, qui est privé : les visiteurs obtenaient une erreur 404. Le lien « Voir le dépôt » est supprimé de `content/projects.ts` ; la fiche projet reste publiée, sans lien vers le code.
 
 ### Security
 
