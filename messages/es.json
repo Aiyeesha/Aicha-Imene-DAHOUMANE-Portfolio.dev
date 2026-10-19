@@ -15,9 +15,7 @@
     "home": "Inicio",
     "seeAllProjects": "Ver todos los proyectos",
     "securityClusterLink": "Clúster Seguridad ({count})",
-    "hybrid": "Perfil híbrido",
-    "profile": "Perfil",
-    "bookCall": "Reservar una llamada"
+    "hybrid": "Perfil híbrido"
   },
   "hero": {
     "title": "Desarrolladora Salesforce e Infraestructura",
@@ -352,19 +350,7 @@
     "uses": "Herramientas y configuración",
     "colophon": "Colophon",
     "qualifyMission": "Formulario para reclutadores",
-    "hybrid": "Perfil híbrido",
-    "colProfile": "Perfil",
-    "colProjects": "Proyectos",
-    "colResources": "Recursos",
-    "colLegal": "Legal",
-    "about": "Sobre mí",
-    "certifications": "Certificaciones",
-    "allProjects": "Todos los proyectos",
-    "securityCluster": "Clúster de seguridad",
-    "blog": "Blog",
-    "resources": "Recursos",
-    "acknowledgments": "Agradecimientos de seguridad",
-    "contactPage": "Contacto"
+    "hybrid": "Perfil híbrido"
   },
   "profile": {
     "kicker": "Perfil",
@@ -591,7 +577,7 @@
   },
   "recruiter": {
     "title": "¿Para qué puesto estás contratando?",
-    "subtitle": "Elige el perfil que corresponde a tu puesto y descarga el CV adecuado.",
+    "subtitle": "Elige el perfil que corresponde a tu necesidad: el sitio y el CV se adaptan.",
     "recommended": "Mi perfil de referencia",
     "hybridTitle": "Perfil híbrido Salesforce + infraestructura",
     "hybridBody": "Un puesto donde Salesforce, infraestructura y seguridad se cruzan: integraciones, puestas en producción trazables, seguridad de API. Ahí es donde mi trayectoria marca la diferencia.",
@@ -600,185 +586,7 @@
     "salesforceBody": "Desarrolladora, administradora o consultora Salesforce: Apex, Flows, LWC, modelo de seguridad y CI/CD.",
     "itopsTitle": "Puesto de sistemas, redes y DevOps",
     "itopsBody": "Administración de Windows Server y Active Directory, supervisión, copias de seguridad, automatización y seguridad.",
+    "showProfile": "Mostrar este perfil",
     "cv": "CV (PDF)"
-  },
-  "home": {
-    "hero": {
-      "eyebrow": "Desarrolladora Salesforce · Infraestructura y Seguridad",
-      "tagline": "De la infraestructura al código de negocio: diseño, despliego y protejo soluciones Salesforce de principio a fin.",
-      "chipsLabel": "Disponibilidad y condiciones",
-      "chips": [
-        "Indefinido · temporal · ETT · portage salarial",
-        "Francia e internacional",
-        "Teletrabajo, híbrido o presencial",
-        "Disponible en 1 mes · entrevistas desde ahora"
-      ],
-      "ctaContact": "Contactarme",
-      "ctaCall": "Reservar una llamada (30 min)",
-      "avatarAlt": "Foto de perfil de Aïcha Imène DAHOUMANE"
-    },
-    "profile": {
-      "title": "Perfil",
-      "paragraphs": [
-        "Desarrolladora Salesforce con contrato indefinido tras dos años de formación en alternancia, diseño soluciones Apex, Flows y LWC pensadas para durar: probadas, revisadas y desplegadas mediante pipelines de CI/CD.",
-        "Mi particularidad: no me detengo en la capa de aplicación. Vengo de la administración de sistemas y redes, así que también diseño la infraestructura que la rodea (integraciones, Heroku, PostgreSQL, despliegue) con una cultura de seguridad y de control de accesos.",
-        "Busco un puesto en el que este doble perfil sea una ventaja: desarrollo Salesforce, integración o plataforma, en Francia o en el extranjero."
-      ],
-      "languagesTitle": "Idiomas",
-      "languages": [
-        {
-          "name": "Francés",
-          "level": "lengua materna"
-        },
-        {
-          "name": "Inglés",
-          "level": "C1+"
-        },
-        {
-          "name": "Español",
-          "level": "B1"
-        },
-        {
-          "name": "Italiano",
-          "level": "A1"
-        }
-      ]
-    },
-    "skills": {
-      "title": "Competencias",
-      "intro": "Cuatro áreas, una sola lógica: cada capa se apoya en la anterior.",
-      "layers": [
-        {
-          "title": "Infraestructura y sistemas",
-          "role": "La base: puestos de trabajo, servidores, red, supervisión.",
-          "items": [
-            "Administración Windows y Linux",
-            "Fundamentos de redes",
-            "Supervisión y respuesta a incidentes",
-            "Copia de seguridad y restauración"
-          ]
-        },
-        {
-          "title": "Seguridad",
-          "role": "Transversal: aplicada en cada capa, no añadida al final.",
-          "transverse": "transversal",
-          "items": [
-            "Control de accesos y mínimo privilegio",
-            "Modelo de seguridad de Salesforce (perfiles, permission sets, uso compartido)",
-            "Modelado de amenazas, CVSS",
-            "Gestión de vulnerabilidades"
-          ]
-        },
-        {
-          "title": "Salesforce",
-          "role": "El núcleo: desarrollo y configuración.",
-          "items": [
-            "Apex (triggers, clases, batch)",
-            "Lightning Web Components",
-            "Flow Builder y automatización",
-            "Modelado de datos",
-            "Change Sets y Salesforce CLI"
-          ]
-        },
-        {
-          "title": "Desarrollo y DevOps",
-          "role": "Lo que lo une todo: integración, automatización, despliegue.",
-          "items": [
-            "CI/CD: GitHub Actions, Salesforce CLI",
-            "Java, JavaScript / TypeScript",
-            "API REST y SOAP",
-            "PostgreSQL, MySQL",
-            "Heroku y Heroku Connect",
-            "Git / GitHub, pruebas unitarias"
-          ]
-        }
-      ]
-    },
-    "bridge": {
-      "title": "Donde mis dos mundos se encuentran",
-      "body": "En Legarant-AXG, el proyecto final de mi título RNCP de nivel 6, escribí los endpoints Apex REST del lado de Salesforce y construí y desplegué la aplicación Heroku que los consume. Entregar ambas partes a la vez eliminó el ir y venir habitual entre los equipos de Salesforce y de DevOps: el entorno de staging existía antes de la primera línea de Apex. El mismo reflejo aparece en el pipeline de validación de MediCare Solutions (proyecto en curso), donde GitHub Actions valida cada Pull Request contra la org de Salesforce. Salesforce, infraestructura y seguridad no son dos currículos superpuestos, sino una sola persona que toma ambas decisiones a la vez.",
-      "ctaCase": "Leer el caso de estudio Legarant-AXG",
-      "ctaWorkflow": "Ver el workflow de MediCare (GitHub)"
-    },
-    "projects": {
-      "title": "Proyectos destacados",
-      "subtitle": "Cinco proyectos que muestran cómo se combinan las competencias. Mis proyectos en el puesto son confidenciales: estos son proyectos de formación o personales, indicados como tales.",
-      "problem": "Problema",
-      "solution": "Solución",
-      "result": "Resultado",
-      "tech": "Tecnologías",
-      "readCase": "Leer el caso de estudio",
-      "viewRepo": "Ver el repositorio de GitHub",
-      "viewWorkflow": "Ver el workflow",
-      "allProjects": "Todos los proyectos",
-      "items": {
-        "legarant": {
-          "categories": "Salesforce · Integración · Infraestructura",
-          "title": "Sincronización Salesforce ↔ Heroku (Legarant-AXG)",
-          "status": "Proyecto final del título RNCP de nivel 6 (OpenClassrooms)",
-          "problem": "Un CRM y una aplicación externa debían compartir datos sin volver a introducirlos ni crear duplicados.",
-          "solution": "Endpoints Apex REST del lado de Salesforce, una aplicación Heroku (Node.js, PostgreSQL) desplegada en dos entornos aislados y Heroku Connect configurado objeto por objeto.",
-          "result": "Una integración entregada de la capa de aplicación al alojamiento, con runbook de despliegue y pruebas de API con Postman."
-        },
-        "cicd": {
-          "categories": "DevOps · Salesforce",
-          "title": "Pipeline de validación Salesforce (MediCare Solutions)",
-          "status": "Proyecto personal en curso",
-          "problem": "Los despliegues manuales entre entornos son lentos y propensos a errores.",
-          "solution": "GitHub Actions valida cada Pull Request contra la org de Salesforce con autenticación de servidor a servidor JWT Bearer; la clave privada se elimina del runner tras cada ejecución.",
-          "result": "Ningún cambio llega a la rama principal sin una validación automática contra la org."
-        },
-        "idem": {
-          "categories": "Salesforce · Back-end · Seguridad",
-          "title": "Back-end Apex seguro (iDEM Connect)",
-          "status": "Proyecto de formación del título RNCP de nivel 6",
-          "problem": "Había que aplicar tres reglas de negocio de forma fiable y reactivar cada mes las cuentas inactivas sin intervención manual.",
-          "solution": "Patrón trigger-handler estricto (ninguna lógica en el trigger), batch y scheduler mensuales y seguridad aplicada en todo el código: WITH SECURITY_ENFORCED, stripInaccessible y controles CRUD/FLS explícitos.",
-          "result": "23 pruebas unitarias superadas y un 90 % de cobertura en la org, con el detalle por clase documentado."
-        },
-        "cve": {
-          "categories": "Ciberseguridad · Gestión de vulnerabilidades",
-          "title": "CVE Watchlist — triaje de vulnerabilidades (API NVD)",
-          "status": "Proyecto personal — datos reales de la API pública NVD",
-          "problem": "Una puntuación CVSS por sí sola no indica qué corregir primero.",
-          "solution": "Un cliente de la API NVD v2.0 y una puntuación de prioridad de 0 a 100, documentada, que combina la puntuación CVSS, el catálogo CISA KEV de vulnerabilidades explotadas activamente, el vector de ataque y la antigüedad.",
-          "result": "100 CVE reales sincronizadas y 13 pruebas automatizadas; una RCE de Spring Data queda en primer lugar con 89/100."
-        },
-        "irt": {
-          "categories": "Ciberseguridad · SOC · Respuesta a incidentes",
-          "title": "Incident Response Tracker — flujo de tickets SOC",
-          "status": "Proyecto personal — datos de demostración",
-          "problem": "Cada alerta debe tener un responsable hasta su resolución, y hay que poder demostrar que se cumplió el SLA.",
-          "solution": "Una máquina de estados estricta (nuevo → clasificado → en investigación → contenido → resuelto → cerrado), un SLA por severidad (de 4 horas a 7 días) y un registro de auditoría con fecha y hora.",
-          "result": "15 pruebas automatizadas; una transición no permitida se rechaza con un HTTP 409 y la lista de estados autorizados."
-        }
-      }
-    },
-    "experience": {
-      "title": "Trayectoria"
-    },
-    "certs": {
-      "title": "Certificaciones y formación",
-      "rncp": "Título RNCP de nivel 6 «Desarrollador Diseñador de Software», especialización Salesforce",
-      "rncpMeta": "OpenClassrooms · 2025 · nivel 6 del Marco Europeo de Cualificaciones",
-      "salesforceTitle": "Certificaciones Salesforce",
-      "salesforceStatus": "en preparación — previstas para principios de 2027",
-      "salesforceList": [
-        "Platform Foundations",
-        "Platform Administrator",
-        "Platform App Builder",
-        "Platform Developer I"
-      ],
-      "trailhead": "Trailhead: rango Expeditioner — 94 insignias, 59.775 puntos.",
-      "cta": "Todas las certificaciones"
-    },
-    "faq": {
-      "title": "Preguntas frecuentes",
-      "seeAll": "Todas las preguntas"
-    },
-    "contact": {
-      "title": "Contacto",
-      "subtitle": "Para un puesto o una entrevista, escríbeme: respondo en 48 horas."
-    }
   }
 }
