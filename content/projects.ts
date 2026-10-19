@@ -506,6 +506,7 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
+    "repoUrl": "https://github.com/Aiyeesha/Python-network-scanner-project",
     "techStack": [
       "Python",
       "FastAPI",

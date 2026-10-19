@@ -15,9 +15,7 @@
     "home": "Home",
     "seeAllProjects": "See all projects",
     "securityClusterLink": "Security cluster ({count})",
-    "hybrid": "Hybrid profile",
-    "profile": "Profile",
-    "bookCall": "Book a call"
+    "hybrid": "Hybrid profile"
   },
   "hero": {
     "title": "Salesforce & Infrastructure Developer",
@@ -352,19 +350,7 @@
     "uses": "Uses & Setup",
     "colophon": "Colophon",
     "qualifyMission": "Recruiter form",
-    "hybrid": "Hybrid profile",
-    "colProfile": "Profile",
-    "colProjects": "Projects",
-    "colResources": "Resources",
-    "colLegal": "Legal",
-    "about": "About",
-    "certifications": "Certifications",
-    "allProjects": "All projects",
-    "securityCluster": "Security cluster",
-    "blog": "Blog",
-    "resources": "Resources",
-    "acknowledgments": "Security acknowledgments",
-    "contactPage": "Contact"
+    "hybrid": "Hybrid profile"
   },
   "profile": {
     "kicker": "Profile",
@@ -591,7 +577,7 @@
   },
   "recruiter": {
     "title": "Which role are you hiring for?",
-    "subtitle": "Pick the profile that matches your role and download the matching résumé.",
+    "subtitle": "Pick the profile that matches your need: the site and the résumé adapt.",
     "recommended": "My core profile",
     "hybridTitle": "Hybrid Salesforce + infrastructure profile",
     "hybridBody": "A role where Salesforce, infrastructure and security meet: integrations, traceable go-lives, API security. That's where my background makes the difference.",
@@ -600,185 +586,7 @@
     "salesforceBody": "Salesforce Developer, Administrator or Consultant: Apex, Flows, LWC, security model and CI/CD.",
     "itopsTitle": "Systems, network & DevOps role",
     "itopsBody": "Windows Server and Active Directory administration, monitoring, backups, automation and security.",
+    "showProfile": "Show this profile",
     "cv": "Résumé (PDF)"
-  },
-  "home": {
-    "hero": {
-      "eyebrow": "Salesforce Developer · Infrastructure & Security",
-      "tagline": "From infrastructure to business logic: I design, deploy and secure end-to-end Salesforce solutions.",
-      "chipsLabel": "Availability and terms",
-      "chips": [
-        "Permanent · fixed-term · temporary · umbrella company (portage)",
-        "France & international",
-        "Remote, hybrid or on-site",
-        "Available within 1 month · interviews now"
-      ],
-      "ctaContact": "Get in touch",
-      "ctaCall": "Book a call (30 min)",
-      "avatarAlt": "Profile photo of Aïcha Imène DAHOUMANE"
-    },
-    "profile": {
-      "title": "Profile",
-      "paragraphs": [
-        "Salesforce developer in a permanent role after a two-year apprenticeship, I build Apex, Flow and LWC solutions designed to last: tested, peer-reviewed and shipped through CI/CD pipelines.",
-        "What sets me apart: I don't stop at the application layer. With a background in systems and network administration, I also design the infrastructure around it — integrations, Heroku, PostgreSQL, deployment — with a strong security and access-control mindset.",
-        "I am looking for a role where this dual skill set is an asset: Salesforce development, integration or platform engineering, in France or abroad."
-      ],
-      "languagesTitle": "Languages",
-      "languages": [
-        {
-          "name": "French",
-          "level": "native"
-        },
-        {
-          "name": "English",
-          "level": "C1+"
-        },
-        {
-          "name": "Spanish",
-          "level": "B1"
-        },
-        {
-          "name": "Italian",
-          "level": "A1"
-        }
-      ]
-    },
-    "skills": {
-      "title": "Skills",
-      "intro": "Four areas, one logic: each layer builds on the one below.",
-      "layers": [
-        {
-          "title": "Infrastructure & systems",
-          "role": "The foundation: endpoints, servers, network, monitoring.",
-          "items": [
-            "Windows & Linux administration",
-            "Networking fundamentals",
-            "Monitoring & incident response",
-            "Backup & restore"
-          ]
-        },
-        {
-          "title": "Security",
-          "role": "Cross-cutting: built into every layer, not bolted on at the end.",
-          "transverse": "cross-cutting",
-          "items": [
-            "Access control & least privilege",
-            "Salesforce security model (profiles, permission sets, sharing)",
-            "Threat modelling, CVSS",
-            "Vulnerability management"
-          ]
-        },
-        {
-          "title": "Salesforce",
-          "role": "The core: development and configuration.",
-          "items": [
-            "Apex (triggers, classes, batch)",
-            "Lightning Web Components",
-            "Flow Builder & automation",
-            "Data modelling",
-            "Change Sets & Salesforce CLI"
-          ]
-        },
-        {
-          "title": "Development & DevOps",
-          "role": "What ties it all together: integration, automation, delivery.",
-          "items": [
-            "CI/CD: GitHub Actions, Salesforce CLI",
-            "Java, JavaScript / TypeScript",
-            "REST & SOAP APIs",
-            "PostgreSQL, MySQL",
-            "Heroku & Heroku Connect",
-            "Git / GitHub, unit testing"
-          ]
-        }
-      ]
-    },
-    "bridge": {
-      "title": "Where my two worlds meet",
-      "body": "On Legarant-AXG, the capstone project of my RNCP level 6 qualification, I wrote the Apex REST endpoints on the Salesforce side and built and deployed the Heroku application that consumes them. Delivering both together removed the usual back-and-forth between Salesforce and DevOps teams: the staging environment existed before the first line of Apex. The same reflex shows in the MediCare Solutions validation pipeline (work in progress), where every Pull Request is validated against the Salesforce org by GitHub Actions. Salesforce, infrastructure and security are not two stacked CVs, but one person making both decisions at once.",
-      "ctaCase": "Read the Legarant-AXG case study",
-      "ctaWorkflow": "See the MediCare workflow (GitHub)"
-    },
-    "projects": {
-      "title": "Featured projects",
-      "subtitle": "Five projects showing how the skills combine. My on-the-job projects are confidential: these are training or personal projects, labelled as such.",
-      "problem": "Problem",
-      "solution": "Solution",
-      "result": "Result",
-      "tech": "Technologies",
-      "readCase": "Read the case study",
-      "viewRepo": "View the GitHub repository",
-      "viewWorkflow": "View the workflow",
-      "allProjects": "All projects",
-      "items": {
-        "legarant": {
-          "categories": "Salesforce · Integration · Infrastructure",
-          "title": "Salesforce ↔ Heroku synchronisation (Legarant-AXG)",
-          "status": "RNCP level 6 capstone project (OpenClassrooms)",
-          "problem": "A CRM and an external application had to share data without manual re-entry or duplicates.",
-          "solution": "Apex REST endpoints on the Salesforce side, a Heroku application (Node.js, PostgreSQL) deployed to two isolated environments, Heroku Connect configured object by object.",
-          "result": "An integration delivered from the application layer to hosting, with a deployment runbook and Postman API tests."
-        },
-        "cicd": {
-          "categories": "DevOps · Salesforce",
-          "title": "Salesforce validation pipeline (MediCare Solutions)",
-          "status": "Personal project, work in progress",
-          "problem": "Manual deployments between environments are slow and error-prone.",
-          "solution": "Every Pull Request is validated against the Salesforce org by GitHub Actions, using server-to-server JWT Bearer authentication; the private key is removed from the runner after each run.",
-          "result": "No change reaches the main branch without automatic validation against the org."
-        },
-        "idem": {
-          "categories": "Salesforce · Back-end · Security",
-          "title": "Secure Apex back end (iDEM Connect)",
-          "status": "RNCP level 6 training project",
-          "problem": "Three business rules had to be enforced reliably, and dormant accounts re-engaged every month without manual work.",
-          "solution": "Strict trigger-handler pattern (no logic in the trigger), monthly batch and scheduler, security enforced throughout: WITH SECURITY_ENFORCED, stripInaccessible, explicit CRUD/FLS checks.",
-          "result": "23 passing unit tests and 90% org-wide coverage, with a documented per-class breakdown."
-        },
-        "cve": {
-          "categories": "Cybersecurity · Vulnerability management",
-          "title": "CVE Watchlist — vulnerability triage (NVD API)",
-          "status": "Personal project — real data from the public NVD API",
-          "problem": "A CVSS score alone does not tell you what to fix first.",
-          "solution": "An NVD API v2.0 client and a documented 0–100 priority score combining the CVSS score, the CISA KEV catalogue of actively exploited vulnerabilities, the attack vector and recency.",
-          "result": "100 real CVEs synced and 13 automated tests; a Spring Data RCE comes out on top at 89/100."
-        },
-        "irt": {
-          "categories": "Cybersecurity · SOC · Incident response",
-          "title": "Incident Response Tracker — SOC ticketing workflow",
-          "status": "Personal project — demo data",
-          "problem": "An alert must be owned until it is resolved, and you must be able to prove the SLA was met.",
-          "solution": "A strict state machine (new → triaged → investigating → contained → resolved → closed), a per-severity SLA clock (4 hours to 7 days) and a timestamped audit trail.",
-          "result": "15 automated tests; an illegal transition is rejected with an HTTP 409 and the list of allowed states."
-        }
-      }
-    },
-    "experience": {
-      "title": "Experience"
-    },
-    "certs": {
-      "title": "Certifications & education",
-      "rncp": "RNCP level 6 qualification “Software Designer and Developer”, Salesforce specialisation",
-      "rncpMeta": "OpenClassrooms · 2025 · level 6 of the European Qualifications Framework",
-      "salesforceTitle": "Salesforce certifications",
-      "salesforceStatus": "in preparation — planned for early 2027",
-      "salesforceList": [
-        "Platform Foundations",
-        "Platform Administrator",
-        "Platform App Builder",
-        "Platform Developer I"
-      ],
-      "trailhead": "Trailhead: Expeditioner rank — 94 badges, 59,775 points.",
-      "cta": "All certifications"
-    },
-    "faq": {
-      "title": "Frequently asked questions",
-      "seeAll": "All questions"
-    },
-    "contact": {
-      "title": "Contact",
-      "subtitle": "For a role or an interview, write to me: I reply within 48 hours."
-    }
   }
 }
