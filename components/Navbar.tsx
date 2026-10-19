@@ -4,7 +4,8 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import LocaleSwitcher from "./LocaleSwitcher";
 import NavbarPill from "./NavbarPill";
@@ -37,30 +38,51 @@ function CommandPaletteTrigger() {
   );
 }
 
-// Option C (accueil hybride) : navigation principale réduite à 6 entrées.
-// Cinq ancres de l'accueil (suivies par le scroll-spy) + une page (Blog).
-// Les autres pages restent accessibles par le pied de page et la palette ⌘K.
-const SECTION_IDS = ["about","skills","projects","experience","contact"] as const;
-const PAGE_IDS = ["blog"] as const;
+const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
+const PAGE_IDS = ["about","hybrid","certifications","resources"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
 const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-// IDs visibles dans le desktop nav : les 6 entrées, dans l'ordre du brief Option C.
-const DESKTOP_IDS_STATIC = new Set(["about", "skills", "projects", "experience", "blog", "contact"]);
+// IDs visibles dans le desktop nav — défini au niveau module pour être accessible
+// depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
+// "hybrid" (page /hybride) REMPLACE "resources" depuis l'audit de contenu du
+// 2026-09-25 : /hybride est la page la plus différenciante pour un recruteur,
+// /resources la moins utile. Les AJOUTER toutes les deux recréait un débordement
+// du nav scrollable (+111px à 1280px, +137px à 1920px) ; l'échange à nombre
+// d'items constant n'ajoute que l'écart de longueur des libellés. /resources
+// reste accessible via le menu mobile, la palette ⌘K et le pied de page.
+const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "certifications", "services", "testimonials", "projects", "blog", "contact"]);
+
+// Accent visuel du lien « Profil hybride » (audit 2026-10-01) : c'est le profil
+// de référence déclaré sur l'accueil, il doit être l'entrée la plus saillante du
+// menu — devant le lien « Cluster Sécurité », dont l'ambre est désormais atténué.
+// Dégradé repris de la page /hybride (cyan→violet = la combinaison des deux tracks).
+const HYBRID_ACCENT =
+  "font-semibold bg-linear-to-r from-cyan-600 to-violet-600 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent";
 
 type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
 
-// Les props featuredProjects / securityClusterCount servaient au menu déroulant
-// « Projets » et au lien « Cluster sécurité », retirés de la navigation (Option C).
-// Elles restent déclarées pour ne pas modifier l'appel dans app/[locale]/layout.tsx.
-export default function Navbar(_props: {
+export default function Navbar({
+  featuredProjects = [],
+  securityClusterCount = 0,
+}: {
   featuredProjects?: FeaturedProjectForNav[];
   securityClusterCount?: number;
 }) {
   const t = useTranslations();
   const { track } = useTrack();
+
+  // Filtered by the active track, not the raw fetch order — otherwise the dropdown
+  // mixes Salesforce/IT Ops items regardless of the toggle, which is the exact
+  // inconsistency flagged in the audit (a toggle that only affects the hero, not
+  // the one nav element that already carries per-project track data). Capped at 6,
+  // matching the original dropdown size before this became track-aware.
+  const trackFeaturedProjects = useMemo(
+    () => featuredProjects.filter((p) => p.track === track).slice(0, 6),
+    [featuredProjects, track]
+  );
 
   const pathname = usePathname();
   // Was cast to "en" | "fr" only, missing "es" — i18n/routing.ts has supported
@@ -72,7 +94,10 @@ export default function Navbar(_props: {
 
 
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
-  const spyActiveId = useActiveSection(isHome ? [...SECTION_IDS] : []);
+  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
+  const spyActiveId = useActiveSection(
+    isHome ? SECTION_IDS.filter((id) => id !== "testimonials" || showTestimonials) : []
+  );
 
   // null pour les pages non mappées dans la nav (status, colophon, legal, uses…)
   // Évite un faux aria-current="page" sur "Compétences" par défaut.
@@ -80,7 +105,15 @@ export default function Navbar(_props: {
     ? "blog"
     : pathname.startsWith(`/${locale}/projects`)
       ? "projects"
-      : null;
+      : pathname.startsWith(`/${locale}/about`)
+        ? "about"
+        : pathname.startsWith(`/${locale}/hybride`)
+          ? "hybrid"
+          : pathname.startsWith(`/${locale}/certifications`)
+            ? "certifications"
+            : pathname.startsWith(`/${locale}/resources`)
+              ? "resources"
+              : null;
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
@@ -133,6 +166,13 @@ export default function Navbar(_props: {
   }, [pathname]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false);
+  const projectsDropdownRef = useRef<HTMLDivElement | null>(null);
+  const projectsTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const projectsMenuRef = useRef<HTMLDivElement | null>(null);
+  // Position calculée du menu Projets — voir le useEffect plus bas pour le pourquoi
+  // (portail hors de #desktop-nav, qui clippe verticalement le menu en position absolute).
+  const [projectsMenuPos, setProjectsMenuPos] = useState<{ top: number; left: number } | null>(null);
 
   // Débordement du nav desktop — voir audit 2026-08-13 : #desktop-nav est
   // overflow-x-auto avec scrollbar masquée ([scrollbar-width:none]), ce qui
@@ -203,7 +243,8 @@ export default function Navbar(_props: {
       el.removeEventListener("scroll", updateNavOverflow);
       window.removeEventListener("resize", updateNavOverflow);
     };
-  }, [locale]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, securityClusterCount, featuredProjects]);
 
   const scrollNavBy = (delta: number) => {
     // Pas de behavior:"smooth" — sur certains environnements (navigateurs
@@ -282,9 +323,68 @@ useEffect(() => {
   }
 }, [mobileOpen]);
 
+  // Menu Projets rendu en portail (voir plus bas) : #desktop-nav a overflow-x-auto,
+  // ce qui force le navigateur à traiter overflow-y comme "auto" aussi (règle CSS
+  // implicite — un seul axe ne peut pas rester "visible" si l'autre ne l'est pas).
+  // Résultat en prod (audit temps réel 2026-08-13) : le menu déroulant "Projets"
+  // s'ouvrait bien côté React (chevron, aria-expanded, items dans le DOM) mais
+  // restait totalement invisible — entièrement clippé par la boîte de #desktop-nav
+  // (h-11) puisqu'il dépasse en position absolute/top-full. Un simple overflow-y
+  // explicite ne suffit pas à contourner cette règle CSS. Fix : sortir le menu de
+  // l'arbre DOM de #desktop-nav via un portail vers document.body, positionné en
+  // fixed à partir du rect du bouton déclencheur.
+  useEffect(() => {
+    if (!projectsDropdownOpen) return;
+
+    const computePosition = () => {
+      const trigger = projectsTriggerRef.current;
+      if (!trigger) return;
+      const rect = trigger.getBoundingClientRect();
+      const MENU_WIDTH = 288; // w-72
+      const MARGIN = 8;
+      const left = Math.min(
+        Math.max(rect.left + rect.width / 2 - MENU_WIDTH / 2, MARGIN),
+        window.innerWidth - MENU_WIDTH - MARGIN
+      );
+      setProjectsMenuPos({ top: rect.bottom + MARGIN, left });
+    };
+
+    computePosition();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setProjectsDropdownOpen(false);
+        projectsTriggerRef.current?.focus();
+      }
+    };
+    const onClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+      const insideTrigger = projectsDropdownRef.current?.contains(target);
+      const insideMenu = projectsMenuRef.current?.contains(target);
+      if (!insideTrigger && !insideMenu) {
+        setProjectsDropdownOpen(false);
+      }
+    };
+    // Le menu est positionné en fixed à partir du rect du déclencheur — un scroll
+    // ou un resize le désynchroniserait visuellement de son bouton. Le fermer est
+    // plus simple et plus sûr qu'un recalcul en continu pour un menu de nav.
+    const onScrollOrResize = () => setProjectsDropdownOpen(false);
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onClickOutside);
+    window.addEventListener("scroll", onScrollOrResize, { capture: true, passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("scroll", onScrollOrResize, { capture: true });
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, [projectsDropdownOpen]);
+
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["blog"]);
+  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "blog", "projects"]);
 
   // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
   // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
@@ -310,25 +410,32 @@ useEffect(() => {
         : "text-slate-700 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
     }`;
 
-  // Blog = page dédiée ; les autres entrées sont des ancres de l'accueil
-  // (préfixées par /<locale>/ quand on n'est pas sur l'accueil).
   const hrefFor = (id: NavId): string => {
+    if (id === "about") return `/${locale}/about`;
+    if (id === "hybrid") return `/${locale}/hybride`;
+    if (id === "certifications") return `/${locale}/certifications`;
+    if (id === "resources") return `/${locale}/resources`;
+    if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
-    return isHome ? `#${id}` : `/${locale}/#${id}`;
+    if (id === "projects") return `/${locale}/projects`;
+    return `/${locale}/#${id}`;
   };
 
-  // Libellés des ancres = titres des sections de l'accueil (namespace home),
-  // pour que l'entrée de menu et le titre affiché soient toujours identiques.
   const sections: { id: NavId; label: string }[] = [
-    { id: "about", label: t("nav.profile") },
-    { id: "skills", label: t("home.skills.title") },
+    { id: "about", label: t("nav.about") },
+    { id: "hybrid", label: t("nav.hybrid") },
+    { id: "skills", label: t("nav.skills") },
+    { id: "experience", label: t("nav.experience") },
+    { id: "certifications", label: t("nav.certifications") },
+    { id: "resources", label: t("nav.resources") },
+    { id: "services", label: t("nav.services") },
+    ...(showTestimonials ? [{ id: "testimonials" as NavId, label: t("nav.testimonials") }] : []),
     { id: "projects", label: t("nav.projects") },
-    { id: "experience", label: t("home.experience.title") },
     { id: "blog", label: t("nav.blog") },
     { id: "contact", label: t("nav.contact") }
   ];
 
-  // Desktop nav : 6 items à xl (1280px) — Profil, Compétences, Projets, Parcours, Blog, Contact.
+  // Desktop nav : 9 items à xl (1280px) — About, Profil hybride, Compétences, Expérience, Certifications, Services, Projets, Blog, Contact.
   // Le conteneur est scrollable (overflow-x-auto) pour les écrans compacts.
   const DESKTOP_IDS = DESKTOP_IDS_STATIC;
   const desktopSections = sections.filter((s) => DESKTOP_IDS.has(s.id));
@@ -429,9 +536,81 @@ useEffect(() => {
             >
               <NavbarPill activeId={desktopActiveId} containerId="desktop-nav" />
               {desktopSections.map((s) => {
+                // Projects: dropdown with featured projects + "see all" link
+                if (s.id === "projects") {
+                  return (
+                    <div key="projects" className="relative" ref={projectsDropdownRef}>
+                      <button
+                        ref={projectsTriggerRef}
+                        type="button"
+                        data-section="projects"
+                        aria-expanded={projectsDropdownOpen}
+                        aria-haspopup="true"
+                        onClick={() => setProjectsDropdownOpen((v) => !v)}
+                        className={`${desktopLinkClass("projects")} whitespace-nowrap inline-flex items-center gap-1`}
+                      >
+                        {s.label}
+                        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                          stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                          className={`transition-transform duration-200 ${projectsDropdownOpen ? "rotate-180" : ""}`}>
+                          <path d="M2 3.5 L5 6.5 L8 3.5" />
+                        </svg>
+                      </button>
+                      {projectsDropdownOpen && projectsMenuPos && createPortal(
+                        <div
+                          ref={projectsMenuRef}
+                          role="menu"
+                          style={{ top: projectsMenuPos.top, left: projectsMenuPos.left }}
+                          className="fixed w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-60"
+                        >
+                          {trackFeaturedProjects.length > 0 && (
+                            <>
+                              {trackFeaturedProjects.map((p) => (
+                                <Link
+                                  key={p.slug}
+                                  href={`/${locale}/projects/${p.slug}`}
+                                  role="menuitem"
+                                  className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-700 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                                  onClick={() => setProjectsDropdownOpen(false)}
+                                >
+                                  <span className="truncate">{p.title}</span>
+                                </Link>
+                              ))}
+                              <div className="my-1 border-t border-black/10 dark:border-white/10" />
+                            </>
+                          )}
+                          <Link
+                            href={`/${locale}/projects?tab=security`}
+                            role="menuitem"
+                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-amber-700 dark:text-amber-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                            onClick={() => setProjectsDropdownOpen(false)}
+                          >
+                            {t("nav.securityClusterLink", { count: securityClusterCount })}
+                          </Link>
+                          <div className="my-1 border-t border-black/10 dark:border-white/10" />
+                          <Link
+                            href={`/${locale}/projects`}
+                            role="menuitem"
+                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-cyan-700 dark:text-cyan-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                            onClick={() => setProjectsDropdownOpen(false)}
+                          >
+                            {t("nav.seeAllProjects")}
+                            <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9" fill="none"
+                              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                              className="opacity-60">
+                              <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
+                            </svg>
+                          </Link>
+                        </div>,
+                        document.body
+                      )}
+                    </div>
+                  );
+                }
+
                 const href = hrefFor(s.id);
                 const cls = `${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`;
-                const isPageLink = PAGE_LINKS.has(s.id);
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -446,7 +625,7 @@ useEffect(() => {
                   return (
                     <Link key={s.id} className={cls} data-section={s.id} href={href}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.label}{pageIcon}
+                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}{pageIcon}
                     </Link>
                   );
                 }
@@ -467,6 +646,16 @@ useEffect(() => {
                   </a>
                 );
               })}
+              {/* Cluster Sécurité — entrée de nav autonome, plus au 5e onglet d'un dropdown.
+                  17 projets is_security=true à cheval sur les deux tracks : le sous-cluster
+                  le plus dense du portfolio mérite mieux qu'un lien enterré (voir audit). */}
+              <Link
+                href={`/${locale}/projects?tab=security`}
+                data-section="security-cluster"
+                className="relative z-10 whitespace-nowrap rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none inline-flex items-center gap-1.5 text-amber-700/75 dark:text-amber-300/75 hover:text-amber-800 dark:hover:text-amber-200 transition-colors soft-ring"
+              >
+                {t("nav.securityClusterLink", { count: securityClusterCount })}
+              </Link>
             </div>
             {/* Chevron droit — visible seulement s'il reste du contenu hors champ à droite.
                 Voir le commentaire du chevron gauche : dégradé ajouté en itération 2 de
@@ -504,31 +693,6 @@ useEffect(() => {
               <TrackToggle />
               <ThemeToggle />
               <LocaleSwitcher current={locale} />
-              {/* Actions Option C : « Réserver un appel » (Proton Calendar, nouvel
-                  onglet) et lien GitHub — masqués si non configurés (lib/booking.ts,
-                  lib/social.ts). Visibles à partir de xl pour ne pas déborder. */}
-              {BOOKING_URL && (
-                <a
-                  href={BOOKING_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${t("contact.bookCall")} (${t("contact.opensInNewTab")})`}
-                  className="hidden xl:inline-flex whitespace-nowrap rounded-full bg-cyan-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-cyan-800 dark:bg-cyan-300 dark:text-black dark:hover:bg-cyan-300 soft-ring"
-                >
-                  {t("nav.bookCall")}
-                </a>
-              )}
-              {GITHUB_URL && (
-                <a
-                  href={GITHUB_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`GitHub (${t("contact.opensInNewTab")})`}
-                  className="hidden xl:inline-flex rounded-full border border-black/10 dark:border-white/10 px-3 py-1.5 text-xs text-slate-700 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10 soft-ring"
-                >
-                  GitHub
-                </a>
-              )}
               {/* Bouton ⌘K — ouvre la palette de commandes */}
               <CommandPaletteTrigger />
             </div>
@@ -607,7 +771,7 @@ useEffect(() => {
             <div className="mt-4 space-y-2">
               {sections.map((s) => {
                 const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
-                const isPageLink = PAGE_LINKS.has(s.id);
+                const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && (s.id === "blog" || s.id === "projects"));
                 const pageIcon = isPageLink ? (
                   <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9"
                     fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -622,7 +786,7 @@ useEffect(() => {
                     <Link key={s.id} href={hrefFor(s.id)} data-section={s.id}
                       className={cls} onClick={() => setMobileOpen(false)}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.label}{pageIcon}
+                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}{pageIcon}
                     </Link>
                   );
                 }
@@ -643,6 +807,14 @@ useEffect(() => {
                   </a>
                 );
               })}
+              <Link
+                href={`/${locale}/projects?tab=security`}
+                data-section="security-cluster"
+                className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm text-amber-700/75 dark:text-amber-300/75 hover:bg-black/5 dark:hover:bg-white/10 transition-colors soft-ring"
+                onClick={() => setMobileOpen(false)}
+              >
+                {t("nav.securityClusterLink", { count: securityClusterCount })}
+              </Link>
             </div>
 
             <div className="mt-6 border-t border-black/10 pt-5 dark:border-white/10">
