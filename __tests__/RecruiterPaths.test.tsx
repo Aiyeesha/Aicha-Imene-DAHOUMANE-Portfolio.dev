@@ -1,11 +1,12 @@
 // __tests__/RecruiterPaths.test.tsx
-// Sélecteur de profil « Vous recrutez pour quel poste ? » de l'accueil.
-// Option C (brief §3.2) : chaque carte = une phrase + le CV du profil dans la
-// langue de la page ; plus de bouton de bascule du track.
+// Bloc « Vous recrutez pour quel poste ? » de l'accueil (audit de contenu
+// 2026-09-25, lot 2) : lien vers /hybride, bascule du track et CV par profil.
 
-jest.mock("next-intl/server", () => ({
-  // Renvoie la clé telle quelle : on teste la structure, pas les traductions.
-  getTranslations: async () => (key: string) => key,
+const setTrack = jest.fn();
+
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => "fr",
 }));
 
 jest.mock("next/link", () => ({
@@ -15,40 +16,40 @@ jest.mock("next/link", () => ({
   ),
 }));
 
+jest.mock("@/app/[locale]/providers", () => ({
+  useTrack: () => ({ track: "salesforce", setTrack }),
+}));
+
+
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import RecruiterPaths from "@/components/RecruiterPaths";
 
-// Server Component asynchrone : on attend son rendu avant de le monter.
-async function renderPaths(locale: "fr" | "en" | "es") {
-  render(await RecruiterPaths({ locale }));
-}
-
 describe("RecruiterPaths", () => {
-  it("affiche les trois cartes de profil", async () => {
-    await renderPaths("fr");
-    expect(screen.getAllByRole("listitem")).toHaveLength(3);
-    for (const title of ["hybridTitle", "salesforceTitle", "itopsTitle"]) {
-      expect(screen.getByRole("heading", { level: 3, name: title })).toBeInTheDocument();
-    }
-  });
+  beforeEach(() => setTrack.mockClear());
 
-  it("propose le CV de chaque profil dans la langue de la page", async () => {
-    await renderPaths("es");
-    const cvHrefs = screen.getAllByRole("link", { name: /^cv/ }).map((a) => a.getAttribute("href"));
-    expect(cvHrefs).toEqual([
-      "/cv/Aicha-Imene-DAHOUMANE-CV-es-hybrid.pdf",
-      "/cv/Aicha-Imene-DAHOUMANE-CV-es-salesforce.pdf",
-      "/cv/Aicha-Imene-DAHOUMANE-CV-es-itops.pdf",
-    ]);
-  });
-
-  it("renvoie la carte hybride vers /hybride", async () => {
-    await renderPaths("fr");
+  it("renvoie la carte hybride vers /hybride", () => {
+    render(<RecruiterPaths />);
     expect(screen.getByRole("link", { name: /hybridCta/ })).toHaveAttribute("href", "/fr/hybride");
   });
 
-  it("n'affiche plus aucun bouton de bascule de profil", async () => {
-    await renderPaths("fr");
-    expect(screen.queryAllByRole("button")).toHaveLength(0);
+  it("propose le CV correspondant à chaque profil", () => {
+    render(<RecruiterPaths />);
+    const cvHrefs = screen.getAllByRole("link", { name: "cv" }).map((a) => a.getAttribute("href"));
+    expect(cvHrefs).toEqual([
+      "/cv/Aicha-Imene-DAHOUMANE-CV-fr-hybrid.pdf",
+      "/cv/Aicha-Imene-DAHOUMANE-CV-fr-salesforce.pdf",
+      "/cv/Aicha-Imene-DAHOUMANE-CV-fr-itops.pdf",
+    ]);
+  });
+
+  it("bascule le track IT Ops quand on choisit le poste systèmes & DevOps", async () => {
+    const user = userEvent.setup();
+    render(<RecruiterPaths />);
+    const buttons = screen.getAllByRole("button", { name: /showProfile/ });
+    // Ordre des cartes : hybride (lien), Salesforce, IT Ops.
+    expect(buttons[0]).toHaveAttribute("aria-pressed", "true");
+    await user.click(buttons[1]);
+    expect(setTrack).toHaveBeenCalledWith("itops");
   });
 });
