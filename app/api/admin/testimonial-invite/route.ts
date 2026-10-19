@@ -3,10 +3,8 @@
 // Endpoint admin — génère un lien d'invitation HMAC à durée limitée
 // pour la page de soumission de témoignage.
 //
-// Le lien ne contient JAMAIS le token brut (TESTIMONIAL_SUBMIT_TOKEN).
-// Il contient uniquement un dérivé HMAC signé et horodaté :
-//   invite = HMAC-SHA256(TESTIMONIAL_SUBMIT_TOKEN, "testimonial-invite:" + exp)
-//   URL    = /{locale}/testimonial-submit?invite={invite}&exp={exp}
+// Le lien ne contient JAMAIS le token brut (TESTIMONIAL_SUBMIT_TOKEN) : voir
+// lib/testimonialInvite.ts, partagé avec le bouton de la page /admin.
 //
 // Authentification : Bearer token = ADMIN_PASSWORD (comparaison timing-safe).
 // Rate-limit : partagé avec adminRatelimit (5 req / 15 min / IP).
@@ -18,15 +16,17 @@
 //     -d '{"locale":"fr","days":7}'
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 import { adminRatelimit, safeLimit } from "@/lib/ratelimit";
-import { getSiteUrl } from "@/lib/siteUrl";
+import {
+  createTestimonialInvite,
+  normalizeInviteDays,
+  normalizeInviteLocale,
+  INVITE_DEFAULT_DAYS,
+  type InviteLocale,
+} from "@/lib/testimonialInvite";
 
 export const runtime = "nodejs";
-
-const MAX_DAYS = 30;
-const DEFAULT_DAYS = 7;
 
 export async function POST(req: NextRequest) {
   // ── 1. Rate-limit anti brute-force ─────────────────────────────────────────
@@ -53,47 +53,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  // ── 3. Vérification TESTIMONIAL_SUBMIT_TOKEN configuré ─────────────────────
-  const secret = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
-  if (!secret) {
-    return NextResponse.json({ error: "Testimonial feature not configured." }, { status: 503 });
-  }
-
-  // ── 4. Paramètres optionnels ────────────────────────────────────────────────
-  let days = DEFAULT_DAYS;
-  let locale: "en" | "fr" | "es" = "en";
+  // ── 3. Paramètres optionnels ────────────────────────────────────────────────
+  let days = INVITE_DEFAULT_DAYS;
+  let locale: InviteLocale = "en";
 
   try {
     const body = (await req.json()) as Record<string, unknown>;
-    if (typeof body.days === "number" && body.days > 0 && body.days <= MAX_DAYS) {
-      days = Math.floor(body.days);
-    }
-    if (body.locale === "fr") locale = "fr";
-    else if (body.locale === "es") locale = "es";
+    days = normalizeInviteDays(body.days);
+    locale = normalizeInviteLocale(body.locale);
   } catch {
     // Body absent ou invalide → paramètres par défaut
   }
 
-  // ── 5. Génération du token d'invitation HMAC ────────────────────────────────
-  // exp = timestamp Unix (secondes) — date d'expiration du lien
-  const expUnix = Math.floor(Date.now() / 1000) + days * 86_400;
+  // ── 4. Génération du lien (null si TESTIMONIAL_SUBMIT_TOKEN absent) ─────────
+  const invite = createTestimonialInvite(locale, days);
+  if (!invite) {
+    return NextResponse.json({ error: "Testimonial feature not configured." }, { status: 503 });
+  }
 
-  // HMAC-SHA256(secret, "testimonial-invite:" + exp) — préfixe domain-separation
-  const invite = createHmac("sha256", secret)
-    .update(`testimonial-invite:${expUnix}`)
-    .digest("hex");
-
-  // ── 6. Construction de l'URL d'invitation ──────────────────────────────────
-  const siteUrl = getSiteUrl();
-  const url = `${siteUrl}/${locale}/testimonial-submit?invite=${invite}&exp=${expUnix}`;
-
-  return NextResponse.json(
-    {
-      url,
-      expiresAt: new Date(expUnix * 1000).toISOString(),
-      locale,
-      daysValid: days,
-    },
-    { status: 201 }
-  );
+  return NextResponse.json(invite, { status: 201 });
 }

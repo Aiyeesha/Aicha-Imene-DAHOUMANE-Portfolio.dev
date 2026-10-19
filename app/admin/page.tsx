@@ -8,6 +8,7 @@
 //   - Projets : table avec liens directs vers les pages publiques
 //   - Messages : 20 derniers avec mailto
 //   - Témoignages : liste complète avec toggle publish/unpublish inline
+//     + génération d'un lien d'invitation (TestimonialInviteGenerator)
 //   - Blog : compteur par catégorie (lecture filesystem)
 //   - Revalidation de cache ISR
 
@@ -18,6 +19,7 @@ import { join } from "path";
 import Link from "next/link";
 import TogglePublished from "./TogglePublished";
 import RevalidateButton from "./RevalidateButton";
+import TestimonialInviteGenerator from "./TestimonialInviteGenerator";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -461,6 +463,7 @@ export default async function AdminPage() {
             </div>
           }
         />
+        <TestimonialInviteGenerator />
         {testimonials.length === 0 ? (
           <p className="text-sm text-slate-500">Aucun témoignage.</p>
         ) : (
