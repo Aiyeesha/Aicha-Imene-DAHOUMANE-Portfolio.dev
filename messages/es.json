@@ -369,7 +369,7 @@
     "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE GROUP y en formación, siguen plenamente disponibles en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — prioridad París / Île-de-France y, después, Provenza-Alpes-Costa Azul · Híbrido · Presencial · Remoto — Abierta a traslado internacional",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — prioridad París / Île-de-France y, después, traslado internacional · Híbrido · Presencial",
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1+), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
@@ -459,8 +459,8 @@
         "a": "Todavía no: las certificaciones Salesforce Platform Foundations, Administrator, App Builder y Platform Developer I están previstas para principios de 2027. Ya obtenidos y verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, 2025) y un perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos). El caso de estudio Legarant-AXG, donde el trigger Apex y el despliegue Heroku los realiza la misma persona, muestra de forma concreta lo que sé hacer."
       },
       {
-        "q": "¿Dónde estás ubicada? ¿Teletrabajo?",
-        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Mi prioridad es París y la región de Île-de-France y, después, Provenza-Alpes-Costa Azul: híbrido, presencial o remoto según el puesto. También estoy abierta a un traslado internacional — Europa, Reino Unido, Magreb, Canadá, Estados Unidos, Nueva Zelanda y Asia."
+        "q": "¿Dónde estás ubicada? ¿Qué modalidad de trabajo?",
+        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Mi prioridad es París y la región de Île-de-France y, después, un traslado internacional — Europa, Reino Unido, Magreb, Canadá, Estados Unidos, Nueva Zelanda y Asia. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
       },
       {
         "q": "¿Qué pasa después de contactarme?",
@@ -486,16 +486,16 @@
     "contracts": "Contratos",
     "contractValues": "Indefinido · Temporal · ETT · Portage salarial",
     "workMode": "Modalidades de trabajo",
-    "workModeValues": "Híbrido · Presencial · Remoto",
+    "workModeValues": "Híbrido · Presencial",
     "mobility": "Movilidad",
-    "mobilityValues": "Prioridad París / Île-de-France y, después, Provenza-Alpes-Costa Azul · Abierta a traslado internacional",
+    "mobilityValues": "Prioridad París / Île-de-France y, después, traslado internacional",
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
     "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "location": "Ubicación",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France y, después, Provenza-Alpes-Costa Azul · Internacional: Europa (BE, LU, DE, IT, ES, IE, SE, MT), Reino Unido, Magreb (TN, DZ), Canadá, Estados Unidos, Nueva Zelanda, Asia",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France y, después, internacional: Europa (BE, LU, DE, IT, ES, IE, SE, MT), Reino Unido, Magreb (TN, DZ), Canadá, Estados Unidos, Nueva Zelanda, Asia",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
