@@ -646,16 +646,6 @@ useEffect(() => {
                   </a>
                 );
               })}
-              {/* Cluster Sécurité — entrée de nav autonome, plus au 5e onglet d'un dropdown.
-                  17 projets is_security=true à cheval sur les deux tracks : le sous-cluster
-                  le plus dense du portfolio mérite mieux qu'un lien enterré (voir audit). */}
-              <Link
-                href={`/${locale}/projects?tab=security`}
-                data-section="security-cluster"
-                className="relative z-10 whitespace-nowrap rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none inline-flex items-center gap-1.5 text-amber-700/75 dark:text-amber-300/75 hover:text-amber-800 dark:hover:text-amber-200 transition-colors soft-ring"
-              >
-                {t("nav.securityClusterLink", { count: securityClusterCount })}
-              </Link>
             </div>
             {/* Chevron droit — visible seulement s'il reste du contenu hors champ à droite.
                 Voir le commentaire du chevron gauche : dégradé ajouté en itération 2 de
@@ -807,14 +797,6 @@ useEffect(() => {
                   </a>
                 );
               })}
-              <Link
-                href={`/${locale}/projects?tab=security`}
-                data-section="security-cluster"
-                className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm text-amber-700/75 dark:text-amber-300/75 hover:bg-black/5 dark:hover:bg-white/10 transition-colors soft-ring"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t("nav.securityClusterLink", { count: securityClusterCount })}
-              </Link>
             </div>
 
             <div className="mt-6 border-t border-black/10 pt-5 dark:border-white/10">
