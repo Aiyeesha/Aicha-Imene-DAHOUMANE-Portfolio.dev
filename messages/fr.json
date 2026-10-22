@@ -237,7 +237,7 @@
     "readingTime": "min de lecture",
     "updatedOn": "Mis à jour le",
     "author": "À propos de l'auteure",
-    "authorRoleSalesforce": "Administratrice & Développeuse Salesforce · Consultante",
+    "authorRoleSalesforce": "Administratrice & Développeuse Salesforce",
     "authorRoleItops": "Ingénieure IT Ops · Administratrice systèmes",
     "authorBioSalesforce": "Développeuse Salesforce avec un background en infrastructures IT — je construis des solutions fiables et maintenables avec Apex, Flows, LWC et CI/CD.",
     "authorBioItops": "Ingénieure IT Ops & DevOps avec un background en administration systèmes & réseaux — monitoring, automatisation, sécurisation et infrastructure résiliente.",
@@ -286,8 +286,8 @@
     "salesforce": "Salesforce"
   },
   "metadata": {
-    "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps · Sécurité | Île-de-France",
-    "description": "Salesforce · Systèmes & Réseaux · DevOps · Sécurité (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Disponible sous 1 mois, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs.",
+    "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps | Île-de-France",
+    "description": "Salesforce · Systèmes & Réseaux · DevOps (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Disponible sous 1 mois, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops | Île-de-France",
     "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD, Salesforce. Disponible sous 1 mois, entretiens dès maintenant. CDI, CDD, intérim ou portage — tous secteurs."
   },
@@ -361,13 +361,13 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Hybride · Sur site · Remote — Mobilité internationale envisageable",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis relocalisation internationale · Hybride · Sur site",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
-    "rolesValue": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
-    "rolesValueSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
-    "rolesValueItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
+    "rolesValue": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValueSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "availabilityLabel": "Disponibilité",
     "availabilityValue": "Disponible sous 1 mois (préavis) · Entretiens dès maintenant · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "goalLabel": "Objectif",
@@ -376,7 +376,7 @@
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
     "readMore": "Lire la suite",
-    "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
+    "p1_salesforce": "Développeuse & administratrice Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
     "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les certifications éditeur Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) sont planifiées pour début 2027.",
@@ -428,7 +428,7 @@
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & administratrice Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
@@ -452,15 +452,15 @@
       },
       {
         "q": "Quels postes visez-vous ?",
-        "a": "Ingénieure Salesforce & infrastructure, développeuse Salesforce ou administratrice systèmes & réseaux. Je reste ouverte à tout poste où ce profil hybride apporte de la valeur — administration ou conseil Salesforce, DevOps, analyse SOC — dès lors que Salesforce, l'infrastructure ou la sécurité s'y croisent."
+        "a": "Trois postes, clairement définis : développeuse ou administratrice Salesforce, administratrice systèmes & réseaux, et ingénieure DevOps. Mon profil hybride prend toute sa valeur là où ces domaines se croisent — intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
         "a": "Pas encore : les certifications Salesforce Platform Foundations, Administrator, App Builder et Platform Developer I sont planifiées pour début 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
-        "q": "Où êtes-vous basée ? Télétravail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la région Provence-Alpes-Côte d'Azur : hybride, sur site ou télétravail selon le poste. Je suis également ouverte à la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie."
+        "q": "Où êtes-vous basée ? Quel mode de travail ?",
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
       },
       {
         "q": "Comment se passe la suite après une prise de contact ?",
@@ -486,16 +486,16 @@
     "contracts": "Contrats",
     "contractValues": "CDI · CDD · Intérim · Portage salarial",
     "workMode": "Modes de travail",
-    "workModeValues": "Hybride · Sur site · Télétravail",
+    "workModeValues": "Hybride · Sur site",
     "mobility": "Mobilité",
-    "mobilityValues": "Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Relocalisation internationale envisageable",
+    "mobilityValues": "Priorité Paris / Île-de-France, puis relocalisation internationale",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
-    "rolesValuesSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
-    "rolesValuesItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
+    "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · International : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis international : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
     "cta": "Prendre contact →"
   },
   "hybrid": {
@@ -583,7 +583,7 @@
     "hybridBody": "Un poste où Salesforce, l'infrastructure et la sécurité se croisent : intégrations, mises en production tracées, sécurité d'API. C'est là que mon parcours fait la différence.",
     "hybridCta": "Voir le profil hybride",
     "salesforceTitle": "Poste Salesforce",
-    "salesforceBody": "Développeuse, administratrice ou consultante Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
+    "salesforceBody": "Développeuse ou administratrice Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
     "itopsTitle": "Poste systèmes, réseaux & DevOps",
     "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et sécurité.",
     "showProfile": "Afficher ce profil",

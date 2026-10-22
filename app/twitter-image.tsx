@@ -14,7 +14,7 @@ export const revalidate  = 86400;
 
 export default function Image() {
   const name     = process.env.NEXT_PUBLIC_OG_NAME     || "Aïcha Imène DAHOUMANE";
-  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps · Security";
+  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps";
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
@@ -65,7 +65,7 @@ export default function Image() {
 
         {/* Milieu — Tagline */}
         <div style={{ display: "flex", fontSize: 20, color: "rgba(255,255,255,0.6)", lineHeight: 1.5, maxWidth: 680 }}>
-          Salesforce · Apex · LWC · CI/CD · IT Ops · DevOps — Remote · France
+          Salesforce · Apex · LWC · CI/CD · IT Ops · DevOps — Paris · Île-de-France
         </div>
 
         {/* Bas — URL */}

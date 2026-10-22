@@ -18,10 +18,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Contratarme — Aïcha Imène DAHOUMANE"
     : "Hire me — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Développeuse Salesforce & IT Ops — disponibilité, contrats recherchés (CDI, CDD, intérim, portage), postes visés et déroulé d'un recrutement. Hybride, sur site ou télétravail ; mobilité envisageable."
+    ? "Développeuse Salesforce & IT Ops — disponibilité, contrats recherchés (CDI, CDD, intérim, portage), postes visés et déroulé d'un recrutement. Sur site ou hybride, priorité Paris / Île-de-France ; mobilité internationale envisageable."
     : isEs
-    ? "Desarrolladora Salesforce & IT Ops — disponibilidad, contratos buscados (indefinido, temporal, ETT, portage), puestos y proceso de selección. Híbrido, presencial o remoto; abierta a la movilidad."
-    : "Salesforce Developer & IT Ops — availability, contract types (permanent, fixed-term, temp, umbrella), target roles and how hiring works. Hybrid, on-site or remote; open to relocation.";
+    ? "Desarrolladora Salesforce & IT Ops — disponibilidad, contratos buscados (indefinido, temporal, ETT, portage), puestos y proceso de selección. Presencial o híbrido, prioridad París / Île-de-France; abierta a la movilidad internacional."
+    : "Salesforce Developer & IT Ops — availability, contract types (permanent, fixed-term, temp, umbrella), target roles and how hiring works. On-site or hybrid, priority Paris / Île-de-France; open to international relocation.";
   return {
     title,
     description,
