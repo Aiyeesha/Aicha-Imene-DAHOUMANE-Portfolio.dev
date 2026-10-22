@@ -19,6 +19,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Postes visés recentrés sur trois intitulés** — Le portfolio ne cible plus que trois postes : développeuse / administratrice Salesforce, administratrice systèmes & réseaux et ingénieure DevOps. L'ouverture « tout poste où mon profil hybride apporte de la valeur » est retirée, ainsi que les mentions analyste SOC N1, consultante Salesforce et ingénieure Salesforce & Infrastructure. Fiche profil, modale de disponibilité, FAQ, page « Travailler avec moi » et chemins recruteurs sont alignés en FR, EN et ES ; les libellés « consultante » deviennent « administratrice ».
 - **Hero sans boutons de CV** — Les trois boutons « CV IT Ops », « CV Salesforce » et « CV hybride » sont retirés du premier écran : les trois CV sont déjà proposés dans le bloc de profils juste en dessous. Le hero garde « Me recruter » et « Appel 30 min ». Clés de traduction `cta.downloadCv*` devenues inutiles supprimées (FR/EN/ES).
 
 ### Security
