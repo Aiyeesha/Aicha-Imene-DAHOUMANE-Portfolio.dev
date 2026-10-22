@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **Livrables privés retirés de l'accès public** — Les 45 fichiers de `public/docs/projects/` (cahiers des charges, rapports d'audit, exports Excel, présentations, notes d'entretien…) étaient des copies du bucket Supabase privé `deliverables` servies publiquement : ils sont supprimés, ainsi que tous les liens qui y menaient (5 `pdfUrl` des fiches projets, sections « Livrables » de 15 études de cas, ressources de `projectDetails.ts`). La route `/api/storage/redirect`, qui délivrait à tout visiteur un lien signé vers n'importe quel fichier de ce bucket, est supprimée avec son limiteur de débit ; README et SECURITY.md sont mis à jour. Le bucket `deliverables` reste privé et intact dans Supabase.
+
 ### Fixed
 
 - **Lien mort retiré sur le projet Python Network Scanner** — Le projet publié `python-network-scanner` renvoyait vers le dépôt GitHub `Python-network-scanner-project`, qui est privé : les visiteurs obtenaient une erreur 404. Le lien « Voir le dépôt » est supprimé de `content/projects.ts` ; la fiche projet reste publiée, sans lien vers le code.

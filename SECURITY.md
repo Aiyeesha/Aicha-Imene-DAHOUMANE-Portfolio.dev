@@ -90,7 +90,6 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
 | `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
 | `GET /api/blog/latest` | 30 requests | 60 seconds / IP | Public read route |
-| `GET /api/storage/redirect` | 30 requests | 60 seconds / IP | Signed-URL issuance |
 | `GET /admin/*` | 5 requests | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — counts every request, checked before the credentials |
 
 IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controlled) with `x-forwarded-for` as fallback.
