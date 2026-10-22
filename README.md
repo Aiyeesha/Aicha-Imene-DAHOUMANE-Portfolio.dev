@@ -6,7 +6,7 @@
 [![Live](https://img.shields.io/badge/live-aicha--imene--dahoumane--portfolio.vercel.app-22d3ee?style=flat)](https://aicha-imene-dahoumane-portfolio.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Professional portfolio of a **Salesforce Developer & Consultant** with a background in systems, networks, and DevOps.
+Professional portfolio of a **Salesforce Developer & Administrator** targeting Salesforce, systems & network administration, and DevOps roles.
 Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills, services, and projects sections.
 
 **Live → [aicha-imene-dahoumane-portfolio.vercel.app/en](https://aicha-imene-dahoumane-portfolio.vercel.app/en)**
