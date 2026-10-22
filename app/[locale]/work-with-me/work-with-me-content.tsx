@@ -72,19 +72,19 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
-    // Postes visés (décision du 01/10/2026) : trois intitulés mis en avant,
-    // puis une ouverture explicite à tout poste où le profil hybride apporte
-    // de la valeur — hiérarchie claire sans fermer de porte.
+    // Postes visés (décision du 22/10/2026) : périmètre resserré à trois
+    // postes, sans ouverture « tout poste » — un ciblage net est plus lisible
+    // pour un recruteur qu'une liste large.
     domains:        isFr
-      ? ["Ingénieure Salesforce & Infrastructure", "Développeuse Salesforce", "Administratrice systèmes & réseaux"]
+      ? ["Développeuse / administratrice Salesforce", "Administratrice systèmes & réseaux", "Ingénieure DevOps"]
       : isEs
-      ? ["Ingeniera Salesforce & Infraestructura", "Desarrolladora Salesforce", "Administradora de sistemas y redes"]
-      : ["Salesforce & Infrastructure Engineer", "Salesforce Developer", "Systems & Network Administrator"],
+      ? ["Desarrolladora / administradora Salesforce", "Administradora de sistemas y redes", "Ingeniera DevOps"]
+      : ["Salesforce Developer / Administrator", "Systems & Network Administrator", "DevOps Engineer"],
     domainsOpen:    isFr
-      ? "Également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1."
+      ? "Mon profil hybride prend toute sa valeur là où ces domaines se croisent : intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
       : isEs
-      ? "También abierta a cualquier puesto donde mi perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1."
-      : "Also open to any role where my hybrid profile adds value, including: Salesforce Administrator or Consultant, DevOps Engineer, SOC Analyst (Tier 1).",
+      ? "Mi perfil híbrido aporta todo su valor donde estos ámbitos se cruzan: integraciones Salesforce, puestas en producción automatizadas y la infraestructura que las sostiene."
+      : "My hybrid profile is at its most valuable where these areas meet: Salesforce integrations, automated releases and the infrastructure that runs them.",
     durationLabel:  isFr ? "Contrats" : isEs ? "Contratos" : "Contracts",
     durations:      isFr
       ? ["CDI", "CDD", "Intérim", "Portage salarial"]

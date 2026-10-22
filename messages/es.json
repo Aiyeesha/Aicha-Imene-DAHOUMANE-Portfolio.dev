@@ -237,7 +237,7 @@
     "readingTime": "min de lectura",
     "updatedOn": "Actualizado el",
     "author": "Sobre la autora",
-    "authorRoleSalesforce": "Administradora y Desarrolladora Salesforce · Consultora",
+    "authorRoleSalesforce": "Administradora y Desarrolladora Salesforce",
     "authorRoleItops": "Ingeniera IT Ops · Administradora de sistemas",
     "authorBioSalesforce": "Desarrolladora Salesforce con formación en infraestructura IT — construyo soluciones fiables y mantenibles con Apex, Flows, LWC y CI/CD.",
     "authorBioItops": "Ingeniera IT Ops & DevOps con formación en administración de sistemas y redes — monitorización, automatización, hardening e infraestructura resiliente.",
@@ -359,7 +359,7 @@
     "p2": "Empecé mi carrera en el área de infraestructura — prácticas en MIDRANGE GROUP (feb. – may. 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 264 equipos Dell (200 de ellos mediante Windows Autopilot), administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
     "p3": "De oct. 2023 a oct. 2025 trabajé como Desarrolladora Salesforce en LD Digitales (remoto), a la vez que obtenía el título de Desarrolladora Diseñadora de Software (RNCP Nivel 6) en OpenClassrooms. Construí y mantuve más de 10 clases Apex, creé más de 20 Flows de automatización (reduciendo la carga manual en cerca de un 30 %), diseñé componentes LWC reutilizables e implementé pipelines de CI/CD con Salesforce CLI.",
     "p4": "Doy lo mejor de mí en entornos que valoran la autonomía, la transparencia y el aprendizaje continuo. Mi objetivo es contribuir a proyectos Salesforce e IT Ops ambiciosos — en Francia o a nivel internacional, en equipos distribuidos.",
-    "p1_salesforce": "Desarrolladora y consultora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
+    "p1_salesforce": "Desarrolladora y administradora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
     "p2_salesforce": "Trabajo con Apex, Flows, modelos de datos, seguridad (permission sets, sharing) y pipelines de CI/CD (Salesforce CLI, GitHub Actions) para llevar el código a producción de forma limpia.",
     "p3_salesforce": "Mi base en sistemas y DevOps me permite abordar Salesforce con mentalidad de operaciones: observabilidad, gestión de riesgos, documentación y automatización, para que las soluciones se mantengan sólidas con el tiempo.",
     "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales desde octubre de 2025, tras dos años de formación dual en la misma empresa: 3 años de experiencia Salesforce en producción. El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — las certificaciones Salesforce (Platform Foundations, Administrator, App Builder, Platform Developer I) están previstas para principios de 2027.",
@@ -373,9 +373,9 @@
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1+), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
-    "rolesValue": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
-    "rolesValueSalesforce": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
-    "rolesValueItops": "Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Desarrolladora Salesforce — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: ingeniera DevOps, analista SOC N1, administradora o consultora Salesforce",
+    "rolesValue": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
+    "rolesValueSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
+    "rolesValueItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "availabilityLabel": "Disponibilidad",
     "availabilityValue": "Disponible en 1 mes (preaviso) · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "goalLabel": "Objetivo",
@@ -428,7 +428,7 @@
   "legal": {
     "title": "Aviso legal",
     "editorTitle": "Editora",
-    "editorBody": "Este sitio web está publicado por Aïcha Imène Dahoumane, desarrolladora y consultora Salesforce, como portafolio personal. Directora de publicación: Aïcha Imène Dahoumane. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
+    "editorBody": "Este sitio web está publicado por Aïcha Imène Dahoumane, desarrolladora y administradora Salesforce, como portafolio personal. Directora de publicación: Aïcha Imène Dahoumane. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
     "hostingTitle": "Alojamiento",
     "hostingBody": "El alojamiento es proporcionado por Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, Estados Unidos. Sitio web: vercel.com.",
     "ipTitle": "Propiedad intelectual",
@@ -452,7 +452,7 @@
       },
       {
         "q": "¿A qué puestos aspiras?",
-        "a": "Ingeniera Salesforce e infraestructura, desarrolladora Salesforce o administradora de sistemas y redes. Sigo abierta a cualquier puesto donde este perfil híbrido aporte valor — administración o consultoría Salesforce, DevOps, análisis SOC — siempre que se crucen Salesforce, la infraestructura o la seguridad."
+        "a": "Tres puestos claramente definidos: desarrolladora o administradora Salesforce, administradora de sistemas y redes, e ingeniera DevOps. Mi perfil híbrido aporta todo su valor donde estos ámbitos se cruzan — integraciones Salesforce, puestas en producción automatizadas y la infraestructura que las sostiene."
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
@@ -492,8 +492,8 @@
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
-    "rolesValuesSalesforce": "Ingeniera Salesforce & Infraestructura · Desarrolladora Salesforce · Administradora de sistemas y redes — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: administradora o consultora Salesforce, ingeniera DevOps, analista SOC N1",
-    "rolesValuesItops": "Ingeniera Salesforce & Infraestructura · Administradora de sistemas y redes · Desarrolladora Salesforce — también abierta a cualquier puesto donde un perfil híbrido aporte valor, en particular: ingeniera DevOps, analista SOC N1, administradora o consultora Salesforce",
+    "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
+    "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "location": "Ubicación",
     "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France y, después, Provenza-Alpes-Costa Azul · Internacional: Europa (BE, LU, DE, IT, ES, IE, SE, MT), Reino Unido, Magreb (TN, DZ), Canadá, Estados Unidos, Nueva Zelanda, Asia",
     "cta": "Ponte en contacto →"
@@ -583,7 +583,7 @@
     "hybridBody": "Un puesto donde Salesforce, infraestructura y seguridad se cruzan: integraciones, puestas en producción trazables, seguridad de API. Ahí es donde mi trayectoria marca la diferencia.",
     "hybridCta": "Ver el perfil híbrido",
     "salesforceTitle": "Puesto Salesforce",
-    "salesforceBody": "Desarrolladora, administradora o consultora Salesforce: Apex, Flows, LWC, modelo de seguridad y CI/CD.",
+    "salesforceBody": "Desarrolladora o administradora Salesforce: Apex, Flows, LWC, modelo de seguridad y CI/CD.",
     "itopsTitle": "Puesto de sistemas, redes y DevOps",
     "itopsBody": "Administración de Windows Server y Active Directory, supervisión, copias de seguridad, automatización y seguridad.",
     "showProfile": "Mostrar este perfil",
