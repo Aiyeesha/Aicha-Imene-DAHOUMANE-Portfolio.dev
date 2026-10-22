@@ -95,10 +95,7 @@ export default function TrackAwareHero() {
   );
   const [src, setSrc] = useState<string>(avatarUrl);
 
-  // Proof tags différenciés par track. Le 3e tag IT Ops ("Mindset ops-first")
-  // devient un deep-link vers le cluster Sécurité (/projects?tab=security) —
-  // le sous-cluster le plus dense du track (16 projets) ne se mentionnait nulle
-  // part dans les 5 premières secondes de lecture du site, sa zone la plus vue.
+  // Proof tags différenciés par track.
   const proofTags: { label: string; href?: string }[] =
     track === "salesforce"
       ? [
@@ -109,7 +106,7 @@ export default function TrackAwareHero() {
       : [
           { label: t("hero.proof1_itops") },
           { label: t("hero.proof2_itops") },
-          { label: t("hero.proof3_itops"), href: `/${locale}/projects?tab=security` },
+          { label: t("hero.proof3_itops") },
         ];
 
   return (

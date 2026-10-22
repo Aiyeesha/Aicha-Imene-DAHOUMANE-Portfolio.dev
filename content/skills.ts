@@ -33,13 +33,12 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
           ]
         },
         {
-          title: "Systèmes, DevOps & sécurité",
+          title: "Systèmes & DevOps",
           items: [
             "Administration Windows & Linux",
             "Fondamentaux réseau & supervision",
             "Pipelines CI/CD avec Salesforce CLI & GitHub Actions",
-            "Pratiques de sauvegarde et restauration",
-            "Culture sécurité (contrôle d’accès, ransomware)"
+            "Pratiques de sauvegarde et restauration"
           ]
         },
         {
@@ -59,12 +58,11 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
     // IT Ops
     return [
       {
-        title: "Systèmes, DevOps & sécurité",
+        title: "Systèmes & DevOps",
         items: [
           "Administration Windows & Linux",
           "Fondamentaux réseau & supervision",
           "Sauvegarde / restauration & PRA (bonnes pratiques)",
-          "Culture sécurité (contrôle d’accès, ransomware)",
           "Documentation, runbooks & gestion d’incidents"
         ]
       },
@@ -127,13 +125,12 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
           ]
         },
         {
-          title: "Sistemas, DevOps y seguridad",
+          title: "Sistemas y DevOps",
           items: [
             "Administración Windows y Linux",
             "Fundamentos de red y supervisión",
             "Pipelines CI/CD con Salesforce CLI y GitHub Actions",
-            "Prácticas de copia de seguridad y restauración",
-            "Cultura de seguridad (control de accesos, concienciación sobre ransomware)"
+            "Prácticas de copia de seguridad y restauración"
           ]
         },
         {
@@ -153,12 +150,11 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
     // IT Ops
     return [
       {
-        title: "Sistemas, DevOps y seguridad",
+        title: "Sistemas y DevOps",
         items: [
           "Administración Windows y Linux",
           "Fundamentos de red y supervisión",
           "Copia de seguridad / restauración y DRP (buenas prácticas)",
-          "Cultura de seguridad (control de accesos, concienciación sobre ransomware)",
           "Documentación, runbooks y gestión de incidentes"
         ]
       },
@@ -221,13 +217,12 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         ]
       },
       {
-        title: "Systems, DevOps & security",
+        title: "Systems & DevOps",
         items: [
           "Windows & Linux administration",
           "Networking fundamentals & monitoring",
           "CI/CD pipelines with Salesforce CLI & GitHub Actions",
-          "Backup & restore practices",
-          "Security culture (access control, ransomware awareness)"
+          "Backup & restore practices"
         ]
       },
       {
@@ -246,12 +241,11 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
 
   return [
     {
-      title: "Systems, DevOps & security",
+      title: "Systems & DevOps",
       items: [
         "Windows & Linux administration",
         "Networking fundamentals & monitoring",
         "Backup/restore & DR best practices",
-        "Security culture (access control, ransomware awareness)",
         "Documentation, runbooks & incident handling"
       ]
     },

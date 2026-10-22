@@ -118,24 +118,11 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
         bullets: [
           "PowerShell & scripts d'administration",
           "GitHub Actions",
-          "Contrôles qualité et sécurité en CI",
+          "Contrôles qualité en CI",
           "Git & gestion de versions"
         ],
         experience: "Projets personnels, dont ce portfolio (Lighthouse, axe et CodeQL en intégration continue).",
         proof: "Étude de cas Pipeline CI/CD ; colophon de ce site."
-      },
-      {
-        title: "Sécurité défensive",
-        pitch: "J'aborde la sécurité côté défense : durcissement, triage des vulnérabilités et réponse aux incidents.",
-        description: "Réduction de la surface d'attaque, priorisation des correctifs et procédures d'incident.",
-        bullets: [
-          "Durcissement Windows & Linux",
-          "Triage de vulnérabilités (CVSS, KEV)",
-          "Playbooks de réponse aux incidents",
-          "Labs d'analyse réseau & honeypot"
-        ],
-        experience: "Labs et projets personnels.",
-        proof: "Études de cas CVE Watchlist, Incident Response Tracker et honeypot Cowrie."
       }
     ]
   },
@@ -229,24 +216,11 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
         bullets: [
           "PowerShell & administration scripts",
           "GitHub Actions",
-          "Quality and security checks in CI",
+          "Quality checks in CI",
           "Git & version control"
         ],
         experience: "Personal projects, including this portfolio (Lighthouse, axe and CodeQL in CI).",
         proof: "CI/CD Pipeline case study; this site's colophon."
-      },
-      {
-        title: "Defensive security",
-        pitch: "I approach security from the defensive side: hardening, vulnerability triage and incident response.",
-        description: "Attack-surface reduction, patch prioritization and incident procedures.",
-        bullets: [
-          "Windows & Linux hardening",
-          "Vulnerability triage (CVSS, KEV)",
-          "Incident response playbooks",
-          "Network analysis & honeypot labs"
-        ],
-        experience: "Personal labs and projects.",
-        proof: "CVE Watchlist, Incident Response Tracker and Cowrie honeypot case studies."
       }
     ]
   },
@@ -340,24 +314,11 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
         bullets: [
           "PowerShell y scripts de administración",
           "GitHub Actions",
-          "Controles de calidad y seguridad en CI",
+          "Controles de calidad en CI",
           "Git y control de versiones"
         ],
         experience: "Proyectos personales, incluido este portfolio (Lighthouse, axe y CodeQL en integración continua).",
         proof: "Caso de estudio Pipeline CI/CD; colofón de este sitio."
-      },
-      {
-        title: "Seguridad defensiva",
-        pitch: "Abordo la seguridad desde la defensa: bastionado, clasificación de vulnerabilidades y respuesta a incidentes.",
-        description: "Reducción de la superficie de ataque, priorización de parches y procedimientos de incidentes.",
-        bullets: [
-          "Bastionado Windows y Linux",
-          "Clasificación de vulnerabilidades (CVSS, KEV)",
-          "Playbooks de respuesta a incidentes",
-          "Laboratorios de análisis de red y honeypot"
-        ],
-        experience: "Laboratorios y proyectos personales.",
-        proof: "Casos de estudio CVE Watchlist, Incident Response Tracker y honeypot Cowrie."
       }
     ]
   }
