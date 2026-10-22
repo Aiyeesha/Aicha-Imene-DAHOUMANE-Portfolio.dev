@@ -1386,7 +1386,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "RNCP 6 TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/avenir-telecom-lightning-app/strategy-implementation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/Avenir-TELECOM",
     "techStack": [
       "Salesforce",
@@ -1469,7 +1468,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "RNCP 6 TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/tours-for-life-salesforce-solution/specifications.pdf",
     "techStack": [
       "Salesforce",
       "Sales Cloud",
@@ -1507,7 +1505,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "RNCP 6 TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/idemconnect-apex-backend/documentation.pdf",
     "repoUrl": "https://github.com/Aiyeesha/iDEM-Connect",
     "techStack": [
       "Salesforce",
@@ -1548,7 +1545,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "RNCP 6 TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/wirebright-visualforce-to-lightning/specifications.pdf",
     "repoUrl": "https://github.com/Aiyeesha/WireBrite-Consulting-Migration-Backup-Visualforce-jsbProject-",
     "techStack": [
       "Salesforce",
@@ -1591,7 +1587,6 @@ export const projects: Project[] = [
       "tone": "training",
       "label": "RNCP 6 TRAINING PROJECT"
     },
-    "pdfUrl": "/docs/projects/ltp-apex-backend-prototype/specifications.pdf",
     "techStack": [
       "Salesforce",
       "Apex",
