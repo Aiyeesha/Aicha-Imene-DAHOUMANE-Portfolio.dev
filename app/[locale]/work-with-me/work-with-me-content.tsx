@@ -65,10 +65,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? "Indefinido · Temporal · ETT · Portage salarial — todos los sectores"
       : "Permanent · Fixed-term · Temp · Umbrella (portage) — any industry",
     availMode:      isFr
-      ? "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Hybride · Sur site · Télétravail · Relocalisation internationale envisageable"
+      ? "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis relocalisation internationale · Hybride · Sur site"
       : isEs
-      ? "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France y, después, Provenza-Alpes-Costa Azul · Híbrido · Presencial · Remoto · Abierta a traslado internacional"
-      : "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France, then Provence-Alpes-Côte d'Azur · Hybrid · On-site · Remote · Open to international relocation",
+      ? "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France y, después, traslado internacional · Híbrido · Presencial"
+      : "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France, then international relocation · Hybrid · On-site",
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
@@ -93,10 +93,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       : ["Permanent", "Fixed-term", "Temp (agency)", "Umbrella company (portage)"],
     modeLabel:      isFr ? "Mode et secteurs" : isEs ? "Modalidad y sectores" : "Work mode and industries",
     modes:          isFr
-      ? ["Hybride · Sur site · Télétravail", "Priorité Paris / Île-de-France, puis PACA", "Relocalisation internationale envisageable", "Tous secteurs d'activité"]
+      ? ["Hybride · Sur site", "Priorité Paris / Île-de-France", "Puis relocalisation internationale", "Tous secteurs d'activité"]
       : isEs
-      ? ["Híbrido · Presencial · Remoto", "Prioridad París / Île-de-France y, después, PACA", "Abierta a traslado internacional", "Todos los sectores"]
-      : ["Hybrid · On-site · Remote", "Priority Paris / Île-de-France, then PACA", "Open to international relocation", "Any industry"],
+      ? ["Híbrido · Presencial", "Prioridad París / Île-de-France", "Después, traslado internacional", "Todos los sectores"]
+      : ["Hybrid · On-site", "Priority Paris / Île-de-France", "Then international relocation", "Any industry"],
 
     processTitle:   isFr ? "Comment se passe un recrutement avec moi" : isEs ? "Cómo es un proceso de selección conmigo" : "How hiring me works",
     steps: isFr
@@ -122,18 +122,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? [
           { q: "Quels types de contrat acceptez-vous ?",  a: "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est un poste où mon double profil Salesforce et infrastructure est utile." },
           { q: "Quand pouvez-vous commencer ?",           a: "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste sous 1 mois (durée de mon préavis)." },
-          { q: "Quelle est votre zone géographique ?",    a: "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la région Provence-Alpes-Côte d'Azur — hybride, sur site ou télétravail selon le poste. Je suis également ouverte à la relocalisation à l'international : en Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Irlande, Suède, Malte), au Royaume-Uni, au Maghreb (Tunisie, Algérie), au Canada, aux États-Unis, en Nouvelle-Zélande et en Asie." },
+          { q: "Quelle est votre zone géographique ?",    a: "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, sur site ou en hybride. Je suis ensuite ouverte à la relocalisation à l'international : en Europe (Belgique, Luxembourg, Allemagne, Italie, Espagne, Irlande, Suède, Malte), au Royaume-Uni, au Maghreb (Tunisie, Algérie), au Canada, aux États-Unis, en Nouvelle-Zélande et en Asie." },
         ]
       : isEs
       ? [
           { q: "¿Qué tipos de contrato aceptas?",           a: "Indefinido, temporal, ETT o portage salarial, en todos los sectores. Lo que me importa es un puesto donde mi doble perfil Salesforce e infraestructura sea útil." },
           { q: "¿Cuándo puedes empezar?",                   a: "Estoy disponible para entrevistas desde ya, con incorporación en 1 mes (mi preaviso)." },
-          { q: "¿Cuál es tu zona geográfica?",              a: "Estoy ubicada en Val-d'Oise (95), en Île-de-France. Mi prioridad es París y la región de Île-de-France y, después, Provenza-Alpes-Costa Azul — híbrido, presencial o remoto según el puesto. También estoy abierta a un traslado internacional: en Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Irlanda, Suecia, Malta), al Reino Unido, al Magreb (Túnez, Argelia), a Canadá, a Estados Unidos, a Nueva Zelanda y a Asia." },
+          { q: "¿Cuál es tu zona geográfica?",              a: "Estoy ubicada en Val-d'Oise (95), en Île-de-France. Mi prioridad es París y la región de Île-de-France, de forma presencial o híbrida. Después, estoy abierta a un traslado internacional: en Europa (Bélgica, Luxemburgo, Alemania, Italia, España, Irlanda, Suecia, Malta), al Reino Unido, al Magreb (Túnez, Argelia), a Canadá, a Estados Unidos, a Nueva Zelanda y a Asia." },
         ]
       : [
           { q: "Which contract types do you accept?",       a: "Permanent, fixed-term, temp (agency) or umbrella-company (portage) contracts, in any industry. What matters to me is a role where my dual Salesforce and infrastructure profile is useful." },
           { q: "When can you start?",                       a: "I'm available for interviews right away, with a start date within 1 month (my notice period)." },
-          { q: "Where are you based?",                      a: "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, then Provence-Alpes-Côte d'Azur — hybrid, on-site or remote depending on the role. I'm also open to international relocation: Europe (Belgium, Luxembourg, Germany, Italy, Spain, Ireland, Sweden, Malta), the United Kingdom, the Maghreb (Tunisia, Algeria), Canada, the United States, New Zealand and Asia." },
+          { q: "Where are you based?",                      a: "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, on-site or hybrid. Beyond that, I'm open to international relocation: Europe (Belgium, Luxembourg, Germany, Italy, Spain, Ireland, Sweden, Malta), the United Kingdom, the Maghreb (Tunisia, Algeria), Canada, the United States, New Zealand and Asia." },
         ],
 
     ctaTitle:    isFr ? "Un poste à pourvoir ?" : isEs ? "¿Tienes un puesto por cubrir?" : "Hiring for a role?",

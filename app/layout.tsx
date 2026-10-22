@@ -132,7 +132,7 @@ function buildJsonLd(locale: string) {
         name: personName,
         url: siteUrl,
         jobTitle: headline,
-        description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — hybrid, on-site or remote; priority Paris / Île-de-France, then Provence-Alpes-Côte d'Azur, open to international relocation.",
+        description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; priority Paris / Île-de-France, then international relocation.",
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
