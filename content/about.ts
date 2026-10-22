@@ -43,8 +43,6 @@ export const aboutContent = {
       paragraphs: [
         `Quand je ne code pas, vous me trouverez probablement en train de lire des blogs techniques, de contribuer à des forums d'entraide, ou de travailler sur des projets perso en Python ou TypeScript.`,
 
-        `Je suis également passionnée par la cybersécurité — une passion héritée de mes années en administration systèmes. Je m'intéresse activement aux publications MITRE ATT&CK, aux advisories et aux bonnes pratiques défensives. Je prépare un parcours structuré Blue Team que je mènerai en parallèle de mes certifications Salesforce.`,
-
         `En dehors du numérique, j'aime la mode — dessiner des silhouettes, imaginer des créations, suivre les défilés. Ce n'est pas qu'un loisir : c'est ce qui rend le secteur luxe & mode particulièrement lisible pour moi côté projet (une maison de couture nuptiale et un distributeur textile parmi mes études de cas Salesforce), où la traçabilité d'une livraison n'est jamais « à peu près juste ». Je pratique aussi les arts martiaux et la danse, deux disciplines qui m'apprennent autant sur la discipline et la précision que sur l'écoute de l'autre. Enfin, j'aime voyager et découvrir de nouvelles cultures.`
       ]
     }
@@ -93,8 +91,6 @@ export const aboutContent = {
       title: "Outside of Work",
       paragraphs: [
         `When I'm not coding, you'll likely find me reading technical blogs, contributing to help forums, or tinkering with personal projects in Python or TypeScript.`,
-
-        `I'm also passionate about cybersecurity — a passion inherited from my years in systems administration. I actively follow MITRE ATT&CK publications, advisories and defensive best practices. I'm preparing a structured Blue Team learning path that I'll run alongside my Salesforce certifications.`,
 
         `Outside of tech, I'm drawn to fashion — sketching silhouettes, imagining designs, following runway shows. It's not just a hobby: it's what makes the luxury & fashion sector especially legible to me on the project side (a bridal couture house and a clothing distributor among my Salesforce case studies), where delivery traceability is never allowed to be "roughly right". I also practice martial arts and dance, two disciplines that teach as much about discipline and precision as they do about reading the other person. I love traveling and discovering new cultures too.`
       ]
@@ -148,8 +144,6 @@ export const aboutContent = {
       title: "Fuera del trabajo",
       paragraphs: [
         `Cuando no estoy programando, es probable que me encuentres leyendo blogs técnicos (¡me encanta seguir las notas de versión de Salesforce!), colaborando en foros de ayuda, o trasteando con proyectos personales en Python o TypeScript.`,
-
-        `También me apasiona la ciberseguridad — una pasión heredada de mis años en administración de sistemas. Sigo activamente las publicaciones MITRE ATT&CK, los avisos de seguridad y las buenas prácticas defensivas. Estoy preparando un itinerario estructurado Blue Team que llevaré en paralelo a mis certificaciones Salesforce.`,
 
         `Fuera de lo digital, me atrae la moda — dibujar siluetas, imaginar creaciones, seguir los desfiles. No es solo un pasatiempo: es lo que hace que el sector del lujo y la moda me resulte especialmente legible en el lado de los proyectos (una casa de alta costura nupcial y un distribuidor textil entre mis estudios de caso Salesforce), donde la trazabilidad de una entrega nunca puede quedarse en "más o menos bien".`,
 
