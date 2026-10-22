@@ -361,7 +361,7 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Hybride · Sur site · Remote — Mobilité internationale envisageable",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis relocalisation internationale · Hybride · Sur site",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
@@ -459,8 +459,8 @@
         "a": "Pas encore : les certifications Salesforce Platform Foundations, Administrator, App Builder et Platform Developer I sont planifiées pour début 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
-        "q": "Où êtes-vous basée ? Télétravail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la région Provence-Alpes-Côte d'Azur : hybride, sur site ou télétravail selon le poste. Je suis également ouverte à la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie."
+        "q": "Où êtes-vous basée ? Quel mode de travail ?",
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
       },
       {
         "q": "Comment se passe la suite après une prise de contact ?",
@@ -486,16 +486,16 @@
     "contracts": "Contrats",
     "contractValues": "CDI · CDD · Intérim · Portage salarial",
     "workMode": "Modes de travail",
-    "workModeValues": "Hybride · Sur site · Télétravail",
+    "workModeValues": "Hybride · Sur site",
     "mobility": "Mobilité",
-    "mobilityValues": "Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Relocalisation internationale envisageable",
+    "mobilityValues": "Priorité Paris / Île-de-France, puis relocalisation internationale",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
     "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · International : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis international : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
     "cta": "Prendre contact →"
   },
   "hybrid": {
