@@ -3291,20 +3291,6 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Resultados de calidad"
           },
           {
-            "type": "resources",
-            "items": [
-              {
-                "href": "/docs/projects/parkit-java-testing/screenshots.zip",
-                "label": "Capturas de informes de pruebas (ZIP)"
-              },
-              {
-                "href": "/docs/projects/parkit-java-testing/repository-link.txt",
-                "label": "Descargar enlace del repositorio (TXT)"
-              }
-            ],
-            "title": "Entregables y evidencias"
-          },
-          {
             "code": "https://github.com/Aiyeesha/ParkingSystem.git",
             "type": "code",
             "title": "Repositorio",
@@ -3682,16 +3668,8 @@ export const projectDetails: ProjectDetails[] = [
             "type": "resources",
             "items": [
               {
-                "href": "/docs/projects/pochlib-ui/index.html",
-                "label": "Página HTML de demostración (HTML)"
-              },
-              {
                 "href": "https://github.com/Aiyeesha/PochLib",
                 "label": "Repositorio GitHub"
-              },
-              {
-                "href": "/docs/projects/pochlib-ui/repository-link.txt",
-                "label": "Descargar enlace del repositorio (TXT)"
               }
             ],
             "title": "Entregables y evidencias"
