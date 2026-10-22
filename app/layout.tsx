@@ -95,7 +95,7 @@ function buildJsonLd(locale: string) {
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const personName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps · Security";
+  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps";
 
   // Liste des profils sociaux/professionnels (LinkedIn, GitHub…) — séparés par des virgules dans l'env var
   // Note : les URLs doivent déjà être en ASCII dans l'env var (slug LinkedIn sans accents).
@@ -132,7 +132,7 @@ function buildJsonLd(locale: string) {
         name: personName,
         url: siteUrl,
         jobTitle: headline,
-        description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — hybrid, on-site or remote; priority Paris / Île-de-France, then Provence-Alpes-Côte d'Azur, open to international relocation.",
+        description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; priority Paris / Île-de-France, then international relocation.",
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
