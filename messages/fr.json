@@ -20,22 +20,22 @@
   "hero": {
     "title": "Développeuse Salesforce & Infrastructure",
     "subtitle": "Apex · LWC · Intégrations · Sysadmin",
-    "intro_salesforce": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal durci, un déploiement sans filet, un accès trop large. J'ai pratiqué les quatre — Salesforce, systèmes et réseaux, CI/CD, sécurité — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
-    "intro_itops": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal durci, un déploiement sans filet, un accès trop large. J'ai pratiqué les quatre — Salesforce, systèmes et réseaux, CI/CD, sécurité — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
+    "intro_salesforce": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal configuré, un déploiement sans filet. J'ai pratiqué les trois — Salesforce, systèmes et réseaux, CI/CD — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
+    "intro_itops": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal configuré, un déploiement sans filet. J'ai pratiqué les trois — Salesforce, systèmes et réseaux, CI/CD — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
     "avatar_alt": "Photo de profil d'Aïcha Imène DAHOUMANE, développeuse Salesforce & infrastructure",
     "title_salesforce": "Développeuse Salesforce & Infrastructure",
-    "subtitle_salesforce": "Du CRM aux serveurs, réseaux et pipelines qui l'entourent — sécurité comprise.",
+    "subtitle_salesforce": "Du CRM aux serveurs, réseaux et pipelines qui l'entourent.",
     "title_itops": "Développeuse Salesforce & Infrastructure",
     "subtitle_itops": "Des postes et serveurs aux réseaux et aux pipelines — jusqu'au CRM Salesforce qu'ils font tourner.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — pensé pour durer.",
-    "value_itops": "Infrastructure · Automatisation · Sécurité — pensé pour scaler.",
-    "proof1_salesforce": "Sécurité d'abord",
+    "value_itops": "Infrastructure · Automatisation · CI/CD — pensé pour scaler.",
+    "proof1_salesforce": "Fiable en production",
     "proof2_salesforce": "Testé & documenté",
     "proof3_salesforce": "Déployé par CI/CD",
     "proof1_itops": "Automatisé",
     "proof2_itops": "Résilient par conception",
     "proof3_itops": "Mindset ops-first",
-    "proof1": "Sécurité d'abord",
+    "proof1": "Fiable en production",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
     "availability": "CDI · CDD · Intérim · Portage salarial",
@@ -96,12 +96,9 @@
     "profile_title": "Profil",
     "profile_subtitle": "Des systèmes & réseaux au développement Salesforce",
     "bridge_title": "Où mes deux mondes se rencontrent",
-    "bridge_body": "Sur le déploiement Legarant-AXG, mon projet fil rouge du titre RNCP 6, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce, infra et sécurité ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps. Le même réflexe se retrouve, sous une forme vérifiable, dans le pipeline de validation de MediCare Solutions (projet en cours) : chaque Pull Request est validée contre l'org Salesforce par GitHub Actions, avec une authentification serveur à serveur JWT Bearer et une clé privée supprimée du runner après chaque exécution — une discipline DevOps appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
+    "bridge_body": "Sur le déploiement Legarant-AXG, mon projet fil rouge du titre RNCP 6, je n'ai pas seulement écrit les endpoints Apex REST côté Salesforce — j'ai aussi construit et déployé l'application Heroku qui les consomme : API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement. Un profil Salesforce seul se serait arrêté à la couche Apex et aurait remis la partie infrastructure à quelqu'un d'autre, avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infra seul aurait pu déployer l'application Heroku, mais pas concevoir le trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a éliminé l'aller-retour habituel entre équipes Salesforce et DevOps — l'environnement de staging existait avant que la première ligne d'Apex ne soit écrite, pas après. C'est ce projet, pas un badge, qui prouve que Salesforce et infra ne sont pas deux CV superposés, mais une seule tête qui prend les deux décisions en même temps. Le même réflexe se retrouve, sous une forme vérifiable, dans le pipeline de validation de MediCare Solutions (projet en cours) : chaque Pull Request est validée contre l'org Salesforce par GitHub Actions, avec une authentification serveur à serveur JWT Bearer et une clé privée supprimée du runner après chaque exécution — une discipline DevOps appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
     "bridge_cta": "Voir l'étude de cas Legarant-AXG",
-    "bridge_cta2": "Voir le workflow MediCare (GitHub)",
-    "security_title": "Le cluster Sécurité — {count} projets, une seule discipline",
-    "security_body": "Modélisation de menaces STRIDE, scoring CVSS, machine à états avec SLA par sévérité, triage synchronisé en temps réel avec l'API publique du NVD — ce n'est pas une ligne de plus dans une liste de compétences, c'est le sous-cluster le plus dense du portfolio : {count} projets sur {total}, à cheval sur les deux tracks.",
-    "security_cta": "Explorer le cluster Sécurité"
+    "bridge_cta2": "Voir le workflow MediCare (GitHub)"
   },
   "contact": {
     "nameLabel": "Nom",
@@ -237,7 +234,7 @@
     "readingTime": "min de lecture",
     "updatedOn": "Mis à jour le",
     "author": "À propos de l'auteure",
-    "authorRoleSalesforce": "Administratrice & Développeuse Salesforce · Consultante",
+    "authorRoleSalesforce": "Administratrice & Développeuse Salesforce",
     "authorRoleItops": "Ingénieure IT Ops · Administratrice systèmes",
     "authorBioSalesforce": "Développeuse Salesforce avec un background en infrastructures IT — je construis des solutions fiables et maintenables avec Apex, Flows, LWC et CI/CD.",
     "authorBioItops": "Ingénieure IT Ops & DevOps avec un background en administration systèmes & réseaux — monitoring, automatisation, sécurisation et infrastructure résiliente.",
@@ -286,10 +283,10 @@
     "salesforce": "Salesforce"
   },
   "metadata": {
-    "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps · Sécurité | Île-de-France",
-    "description": "Salesforce · Systèmes & Réseaux · DevOps · Sécurité (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Entretiens dès maintenant, prise de poste dès décembre 2026. CDI, CDD, intérim ou portage — tous secteurs.",
+    "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps | Île-de-France",
+    "description": "Salesforce · Systèmes & Réseaux · DevOps (Île-de-France) — Apex, LWC, CI/CD, intégrations, infrastructure. Entretiens dès maintenant, prise de poste dès décembre 2026. CDI, CDD, intérim ou portage — tous secteurs.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops | Île-de-France",
-    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, sécurité, automatisation, CI/CD, Salesforce. Entretiens dès maintenant, prise de poste dès décembre 2026. CDI, CDD, intérim ou portage — tous secteurs."
+    "descriptionItops": "Ingénieure Systèmes & IT Ops (Île-de-France) — Infrastructure, automatisation, CI/CD, Salesforce. Entretiens dès maintenant, prise de poste dès décembre 2026. CDI, CDD, intérim ou portage — tous secteurs."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -361,28 +358,28 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Hybride · Sur site · Remote — Mobilité internationale envisageable",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — priorité Paris / Île-de-France, puis relocalisation internationale · Hybride · Sur site",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
-    "rolesValue": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
-    "rolesValueSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
-    "rolesValueItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
+    "rolesValue": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValueSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "availabilityLabel": "Disponibilité",
     "availabilityValue": "Entretiens dès maintenant · Prise de poste dès décembre 2026 · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "goalLabel": "Objectif",
-    "goalValue": "Approfondir mon expertise Salesforce, préparer mes certifications et rejoindre une équipe où Salesforce, infrastructure et sécurité se croisent.",
+    "goalValue": "Approfondir mon expertise Salesforce, préparer mes certifications et rejoindre une équipe où Salesforce et l'infrastructure se croisent.",
     "focusLabel": "Focus",
-    "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Sécurité",
-    "focusValueItOps": "Supervision · Runbooks · Automatisation · Sécurité",
+    "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Documentation",
+    "focusValueItOps": "Supervision · Runbooks · Automatisation · Sauvegardes",
     "readMore": "Lire la suite",
-    "p1_salesforce": "Développeuse & consultante Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
+    "p1_salesforce": "Développeuse & administratrice Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
     "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les certifications éditeur Salesforce Platform Foundations et Administrator sont prévues à partir de décembre 2026, App Builder et Platform Developer I début 2027.",
     "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE GROUP (févr.–mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (Windows Autopilot, image Sysprep, effacement certifié NIST 800-88).",
     "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
-    "p3_itops": "Je garde une attention particulière à la sécurité et à la continuité : 85 alertes de sauvegarde Acronis triées pendant le stage, et des labs personnels (honeypot, analyse de trafic, gestion des vulnérabilités) pour entretenir ces réflexes en dehors du poste.",
+    "p3_itops": "Je garde une attention particulière à la continuité de service : 85 alertes de sauvegarde Acronis triées pendant le stage.",
     "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, acquises en stage chez MIDRANGE GROUP puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
   },
   "mdx": {
@@ -428,7 +425,7 @@
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
-    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & consultante Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène Dahoumane, développeuse & administratrice Salesforce, à titre personnel. Directrice de la publication : Aïcha Imène Dahoumane. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 340 Pine Street Suite 600, San Francisco, CA 94104, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
@@ -448,19 +445,19 @@
       },
       {
         "q": "Quels types de contrat recherchez-vous ?",
-        "a": "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce, l'infrastructure et la sécurité se croisent."
+        "a": "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce et l'infrastructure se croisent."
       },
       {
         "q": "Quels postes visez-vous ?",
-        "a": "Ingénieure Salesforce & infrastructure, développeuse Salesforce ou administratrice systèmes & réseaux. Je reste ouverte à tout poste où ce profil hybride apporte de la valeur — administration ou conseil Salesforce, DevOps, analyse SOC — dès lors que Salesforce, l'infrastructure ou la sécurité s'y croisent."
+        "a": "Trois postes, clairement définis : développeuse ou administratrice Salesforce, administratrice systèmes & réseaux, et ingénieure DevOps. Mon profil hybride prend toute sa valeur là où ces domaines se croisent — intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
       },
       {
         "q": "Avez-vous une certification Salesforce ?",
         "a": "Pas encore : les certifications Salesforce Platform Foundations et Administrator sont prévues à partir de décembre 2026, App Builder et Platform Developer I début 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
-        "q": "Où êtes-vous basée ? Télétravail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la région Provence-Alpes-Côte d'Azur : hybride, sur site ou télétravail selon le poste. Je suis également ouverte à la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie."
+        "q": "Où êtes-vous basée ? Quel mode de travail ?",
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France, puis la relocalisation à l'international — Europe, Royaume-Uni, Maghreb, Canada, États-Unis, Nouvelle-Zélande et Asie. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
       },
       {
         "q": "Comment se passe la suite après une prise de contact ?",
@@ -486,24 +483,24 @@
     "contracts": "Contrats",
     "contractValues": "CDI · CDD · Intérim · Portage salarial",
     "workMode": "Modes de travail",
-    "workModeValues": "Hybride · Sur site · Télétravail",
+    "workModeValues": "Hybride · Sur site",
     "mobility": "Mobilité",
-    "mobilityValues": "Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · Relocalisation internationale envisageable",
+    "mobilityValues": "Priorité Paris / Île-de-France, puis relocalisation internationale",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
-    "rolesValuesSalesforce": "Ingénieure Salesforce & Infrastructure · Développeuse Salesforce · Administratrice systèmes & réseaux — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : administratrice ou consultante Salesforce, ingénieure DevOps, analyste SOC N1",
-    "rolesValuesItops": "Ingénieure Salesforce & Infrastructure · Administratrice systèmes & réseaux · Développeuse Salesforce — également ouverte à tout poste où mon profil hybride apporte de la valeur, notamment : ingénieure DevOps, analyste SOC N1, administratrice ou consultante Salesforce",
+    "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis Provence-Alpes-Côte d'Azur · International : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France, puis international : Europe (BE, LU, DE, IT, ES, IE, SE, MT), Royaume-Uni, Maghreb (TN, DZ), Canada, États-Unis, Nouvelle-Zélande, Asie",
     "cta": "Prendre contact →"
   },
   "hybrid": {
     "metaTitle": "Profil hybride Salesforce + Infrastructure — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Trois cas concrets où résoudre le problème exige la combinaison Salesforce + infrastructure + sécurité — pas leur juxtaposition. Reprise de données Heroku↔Salesforce, discipline DevOps appliquée aux releases Apex, surface d'attaque d'intégration modélisée en STRIDE.",
+    "metaDescription": "Trois cas concrets où résoudre le problème exige la combinaison Salesforce + infrastructure — pas leur juxtaposition. Reprise de données Heroku↔Salesforce, discipline DevOps appliquée aux releases Apex, contrôle d'accès d'une intégration conçu côté Salesforce.",
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Profil hybride",
-    "h1": "Là où Salesforce, l'infrastructure et la sécurité ne font qu'une seule tête",
+    "h1": "Là où Salesforce et l'infrastructure ne font qu'une seule tête",
     "lead": "Je ne suis pas une développeuse Salesforce qui connaît les serveurs, ni une administratrice système qui connaît Salesforce. Je résous des problématiques transverses qu'un spécialiste seul — d'un côté ou de l'autre — traiterait plus lentement, moins bien, ou pas du tout : les décisions des deux couches sont prises en même temps, par la même personne, avant que l'aller-retour habituel entre équipes ne commence. Les preuves citées ci-dessous sont des projets de formation et des projets personnels ; chaque page indique sa nature et sa période.",
     "scenariosTitle": "Trois cas où la combinaison change le résultat",
     "scenarios": [
@@ -544,24 +541,24 @@
         "sector": "Tout secteur régulé — santé, énergie, finance : chaque changement en production doit être traçable et réversible, pas seulement fonctionnel."
       },
       {
-        "title": "Surface d'attaque d'une intégration, modélisée en STRIDE",
-        "problem": "Une intégration Salesforce expose des endpoints REST : qui les appelle, avec quel token, que se passe-t-il si le flux est rejoué ou détourné ?",
+        "title": "Contrôle d'accès d'une intégration, conçu côté Salesforce",
+        "problem": "Une intégration Salesforce expose des endpoints REST : quel utilisateur les appelle, avec quels droits, et à quelles données peut-il accéder ?",
         "soloTitle": "Un profil spécialiste seul",
-        "solo": "Un développeur Salesforce documente l'endpoint et les Permission Sets. Un pentester audite l'API — mais ne sait pas quel Permission Set, quelle vérification CRUD/FLS ou quelle Sharing Rule referme réellement le trou côté Salesforce.",
+        "solo": "Un développeur Salesforce livre l'endpoint en s'appuyant sur un profil existant trop permissif. Une équipe infra configure l'authentification côté serveur — mais ne sait pas quel Permission Set, quelle vérification CRUD/FLS ou quelle Sharing Rule limite réellement l'accès côté Salesforce.",
         "mineTitle": "Ce que je livre",
-        "mine": "Je modélise la surface d'attaque en STRIDE et je conçois le contrôle côté Salesforce — utilisateur d'intégration dédié, Permission Set explicite, vérifications CRUD/FLS, WITH SECURITY_ENFORCED — dans le même sprint. La boucle est fermée avant la mise en production, pas trois tickets plus tard.",
+        "mine": "Je conçois les droits de l'intégration côté Salesforce — utilisateur d'intégration dédié, Permission Set explicite, vérifications CRUD/FLS, WITH SECURITY_ENFORCED — en même temps que l'authentification côté serveur, dans le même sprint. Les accès sont cadrés avant la mise en production, pas trois tickets plus tard.",
         "proofs": [
           {
             "label": "Projet de formation RNCP 6 — Backend Apex iDEM Connect",
             "href": "/projects/idemconnect-apex-backend"
           },
           {
-            "label": "Projet personnel — risque360 (modélisation STRIDE)",
+            "label": "Projet personnel — risque360",
             "href": "/projects/risque360"
           }
         ],
         "sectorLabel": "Où ça compte",
-        "sector": "Santé et luxe : les intégrations qui font transiter de la donnée patient ou de la provenance produit — là où une faille n'est pas un incident technique mais une atteinte à la confiance."
+        "sector": "Santé et luxe : les intégrations qui font transiter de la donnée patient ou de la provenance produit — là où un accès mal cadré n'est pas un détail technique mais une atteinte à la confiance."
       }
     ],
     "eliminatesTitle": "Ce que la combinaison élimine",
@@ -571,7 +568,7 @@
       "Le délai entre « l'API est auditée » et « le contrôle est en place » : les deux se font dans le même sprint."
     ],
     "ctaTitle": "Un poste transverse à pourvoir ?",
-    "ctaText": "Si le poste touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en production tracée, sécurité d'API — c'est exactement le terrain où mon profil fait gagner du temps à une équipe.",
+    "ctaText": "Si le poste touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en production tracée, automatisation des déploiements — c'est exactement le terrain où mon profil fait gagner du temps à une équipe.",
     "ctaContact": "Présenter un poste",
     "ctaCv": "Télécharger le CV hybride (PDF)"
   },
@@ -580,12 +577,12 @@
     "subtitle": "Choisissez le profil qui correspond à votre besoin : le site et le CV s'adaptent.",
     "recommended": "Mon profil de référence",
     "hybridTitle": "Profil hybride Salesforce + infrastructure",
-    "hybridBody": "Un poste où Salesforce, l'infrastructure et la sécurité se croisent : intégrations, mises en production tracées, sécurité d'API. C'est là que mon parcours fait la différence.",
+    "hybridBody": "Un poste où Salesforce et l'infrastructure se croisent : intégrations, mises en production tracées, automatisation des déploiements. C'est là que mon parcours fait la différence.",
     "hybridCta": "Voir le profil hybride",
     "salesforceTitle": "Poste Salesforce",
-    "salesforceBody": "Développeuse, administratrice ou consultante Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
+    "salesforceBody": "Développeuse ou administratrice Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
     "itopsTitle": "Poste systèmes, réseaux & DevOps",
-    "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et sécurité.",
+    "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et CI/CD.",
     "showProfile": "Afficher ce profil",
     "cv": "CV (PDF)"
   }

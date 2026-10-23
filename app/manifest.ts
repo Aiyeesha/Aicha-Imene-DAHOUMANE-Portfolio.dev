@@ -24,7 +24,7 @@ export default function manifest(): MetadataRoute.Manifest {
     id:          "/",
     name:        siteName,
     short_name:  "AID",
-    description: "Salesforce · Systèmes & Réseaux · DevOps · Sécurité — Portfolio professionnel d'Aïcha Imène DAHOUMANE.",
+    description: "Salesforce · Systèmes & Réseaux · DevOps — Portfolio professionnel d'Aïcha Imène DAHOUMANE.",
 
     // ── Navigation ──────────────────────────────────────────────────────────
     start_url: "/",            // Racine — le middleware détecte la langue

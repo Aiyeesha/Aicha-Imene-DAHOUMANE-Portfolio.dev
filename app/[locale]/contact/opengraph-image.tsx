@@ -26,10 +26,10 @@ export default async function Image({ params }: Props) {
   const violet = "#a78bfa";
 
   const pills = isFr
-    ? ["CDI · CDD", "Intérim · Portage", "Hybride · Sur site · Télétravail", "Tous secteurs"]
+    ? ["CDI · CDD", "Intérim · Portage", "Hybride · Sur site", "Tous secteurs"]
     : isEs
-    ? ["Indefinido · Temporal", "ETT · Portage", "Híbrido · Presencial · Remoto", "Todos los sectores"]
-    : ["Permanent · Fixed-term", "Temp · Umbrella", "Hybrid · On-site · Remote", "Any industry"];
+    ? ["Indefinido · Temporal", "ETT · Portage", "Híbrido · Presencial", "Todos los sectores"]
+    : ["Permanent · Fixed-term", "Temp · Umbrella", "Hybrid · On-site", "Any industry"];
 
   return new ImageResponse(
     (
