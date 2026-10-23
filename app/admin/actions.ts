@@ -4,6 +4,12 @@ import { headers } from "next/headers";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
+import {
+  createTestimonialInvite,
+  normalizeInviteDays,
+  normalizeInviteLocale,
+  type TestimonialInvite,
+} from "@/lib/testimonialInvite";
 
 // Défense en profondeur : re-vérifier l'auth Basic dans l'action elle-même.
 // Le middleware proxy.ts protège déjà /admin, mais les Server Actions peuvent
@@ -62,4 +68,18 @@ export async function revalidateSite() {
   revalidatePath("/en", "layout");
   revalidatePath("/fr", "layout");
   revalidatePath("/admin");
+}
+
+// Génère un lien d'invitation témoignage depuis la page /admin (même lien que
+// POST /api/admin/testimonial-invite, sans avoir à saisir de commande).
+// Les paramètres venant du client sont re-normalisés côté serveur.
+export async function generateTestimonialInvite(
+  locale: string,
+  days: number
+): Promise<{ ok: true; invite: TestimonialInvite } | { ok: false; error: string }> {
+  await requireAdminAuth();
+
+  const invite = createTestimonialInvite(normalizeInviteLocale(locale), normalizeInviteDays(days));
+  if (!invite) return { ok: false, error: "TESTIMONIAL_SUBMIT_TOKEN n'est pas configuré sur Vercel." };
+  return { ok: true, invite };
 }

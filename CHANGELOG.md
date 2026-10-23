@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Bouton « Générer un lien d'invitation » dans `/admin`** — La section Témoignages de la page admin permet de choisir la langue (FR / EN / ES) et la validité (7, 14 ou 30 jours), puis affiche le lien signé avec un bouton Copier et sa date d'expiration. Plus besoin de commande `curl` ou PowerShell : utilisable depuis le navigateur d'un téléphone. Le lien est généré par une Server Action protégée par la même authentification Basic que `/admin` ; la logique HMAC est extraite dans `lib/testimonialInvite.ts` et partagée avec `POST /api/admin/testimonial-invite`. Tests unitaires ajoutés.
+
 ### Security
 
 - **Livrables privés retirés de l'accès public** — Les 45 fichiers de `public/docs/projects/` (cahiers des charges, rapports d'audit, exports Excel, présentations, notes d'entretien…) étaient des copies du bucket Supabase privé `deliverables` servies publiquement : ils sont supprimés, ainsi que tous les liens qui y menaient (5 `pdfUrl` des fiches projets, sections « Livrables » de 15 études de cas, ressources de `projectDetails.ts`). La route `/api/storage/redirect`, qui délivrait à tout visiteur un lien signé vers n'importe quel fichier de ce bucket, est supprimée avec son limiteur de débit ; README et SECURITY.md sont mis à jour. Le bucket `deliverables` reste privé et intact dans Supabase.
