@@ -9,6 +9,12 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Témoignages reçus par e-mail via Formhook** — Le formulaire de témoignage (`/api/testimonial-submit`) n'écrit plus dans la table Supabase `testimonial_submissions` : comme le formulaire de contact, il transmet la soumission à Formhook (même `FORMHOOK_ENDPOINT` et même `FORMHOOK_AUTH_TOKEN`, sujet « Nouveau témoignage — … », `topic: "testimonial"`). Plus aucun stockage côté serveur, ni du témoignage ni de l'empreinte de l'IP. Lien d'invitation HMAC, limitation de débit et honeypot inchangés. Tests unitaires ajoutés.
+- **Disponibilité mise à jour** — « Disponible sous 1 mois (préavis) » devient « Entretiens dès maintenant · Prise de poste dès décembre 2026 » dans la fenêtre de disponibilité, la page À propos, la FAQ, la page « Me recruter », son image de partage et les métadonnées, dans les trois langues.
+- **Calendrier des certifications Salesforce** — Platform Foundations et Platform Administrator sont prévues à partir de décembre 2026 ; App Builder, Platform Developer I et CompTIA Security+ restent prévues début 2027 (FAQ, À propos, page Certifications).
+
 ### Security
 
 - **Livrables privés retirés de l'accès public** — Les 45 fichiers de `public/docs/projects/` (cahiers des charges, rapports d'audit, exports Excel, présentations, notes d'entretien…) étaient des copies du bucket Supabase privé `deliverables` servies publiquement : ils sont supprimés, ainsi que tous les liens qui y menaient (5 `pdfUrl` des fiches projets, sections « Livrables » de 15 études de cas, ressources de `projectDetails.ts`). La route `/api/storage/redirect`, qui délivrait à tout visiteur un lien signé vers n'importe quel fichier de ce bucket, est supprimée avec son limiteur de débit ; README et SECURITY.md sont mis à jour. Le bucket `deliverables` reste privé et intact dans Supabase.

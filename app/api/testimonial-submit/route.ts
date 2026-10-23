@@ -1,29 +1,36 @@
 // app/api/testimonial-submit/route.ts
 // ------------------------------------
-// API Route POST — soumet un témoignage dans Supabase.
+// API Route POST — transmet un témoignage par e-mail via Formhook, comme le
+// formulaire de contact (app/api/contact/route.ts) : rien n'est stocké côté
+// serveur, la modération se fait à la lecture de l'e-mail.
 //
 // Sécurité :
 //   1. Token de soumission vérifié (TESTIMONIAL_SUBMIT_TOKEN)
 //   2. Rate-limit : 3 soumissions / 24 h par IP (Upstash Redis)
 //   3. Honeypot anti-spam (champ "website" doit être vide)
 //   4. Validation des champs obligatoires (full_name, role, relation_type, message, locale)
-//   5. Insertion via supabase admin (service_role) avec approved = false
+//   5. Envoi à Formhook (même endpoint et même jeton que le formulaire de contact)
 //
 // Variables d'environnement requises :
 //   TESTIMONIAL_SUBMIT_TOKEN   — token secret partagé via lien (jamais NEXT_PUBLIC_)
-//   SUPABASE_URL               — URL Supabase (non exposée côté client)
-//   SUPABASE_SERVICE_KEY       — clé service_role (jamais NEXT_PUBLIC_)
+//   FORMHOOK_ENDPOINT          — URL du formulaire Formhook (partagée avec /api/contact)
+//   FORMHOOK_AUTH_TOKEN        — jeton serveur à serveur Formhook (optionnel)
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac, createHash, timingSafeEqual } from "crypto";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { createHmac, timingSafeEqual } from "crypto";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
+import { log } from "@/lib/logger";
 import { headers } from "next/headers";
 
 // ── Champs autorisés pour relation_type ──────────────────────────────────────
 const VALID_RELATIONS = new Set([
   "colleague", "trainer", "jury", "classmate", "client", "other"
 ]);
+
+const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
+// Server-to-server submissions are rejected by Formhook unless this header is
+// present — same token as the contact form.
+const FORMHOOK_AUTH_TOKEN = process.env.FORMHOOK_AUTH_TOKEN || "";
 
 export async function POST(req: NextRequest) {
   // ── 1. Rate-limit par IP ────────────────────────────────────────────────────
@@ -124,37 +131,42 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── 6. Pseudonymisation de l'IP (RGPD) ──────────────────────────────────────
-  // L'adresse IP est une donnée personnelle au sens RGPD. On la hache avec un sel
-  // secret (IP_HASH_SALT) avant stockage pour permettre la déduplication (rate-limit
-  // manuel, détection d'abus) sans stocker la valeur brute.
-  // Si IP_HASH_SALT n'est pas défini, on utilise une chaîne vide — le hachage reste
-  // irréversible mais sans sel, ce qui est acceptable pour un cas d'usage à faible
-  // volumétrie. Ajouter IP_HASH_SALT en variable d'environnement est recommandé.
-  const ipHashSalt = process.env.IP_HASH_SALT ?? "";
-  const ipHash = createHash("sha256")
-    .update(ip + ipHashSalt)
-    .digest("hex");
+  // ── 6. Envoi par e-mail via Formhook ────────────────────────────────────────
+  // Aucune persistance : ni le témoignage ni l'IP ne sont stockés côté serveur.
+  if (FORMHOOK_ENDPOINT) {
+    const resp = await fetch(FORMHOOK_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(FORMHOOK_AUTH_TOKEN ? { "X-Auth-Token": FORMHOOK_AUTH_TOKEN } : {}),
+      },
+      body: JSON.stringify({
+        name: full_name,
+        topic: "testimonial",
+        subject: `Nouveau témoignage — ${full_name}`,
+        role,
+        company: company || "",
+        relation_type,
+        collaboration_context: collaboration_context || "",
+        message,
+        photo_url: photo_url || "",
+        locale,
+        source: "Aicha-Imene-DAHOUMANE-Portfolio.dev",
+      }),
+    });
 
-  // ── 7. Insertion Supabase (service_role — contourne le RLS) ─────────────────
-  const supabase = createAdminSupabaseClient();
-  const { error } = await supabase.from("testimonial_submissions").insert({
-    full_name,
-    role,
-    company:               company || null,
-    relation_type,
-    collaboration_context,
-    message,
-    photo_url,
-    locale,
-    approved:              false,    // toujours false — modération manuelle
-    submitted_ip:          ipHash,   // hash SHA-256 + sel — jamais l'IP brute
-  });
+    if (!resp.ok) {
+      const data = (await resp.json().catch(() => null)) as Record<string, unknown> | null;
+      log.error("testimonial/formhook-failed", { status: resp.status, body: data });
+      return NextResponse.json({ error: "Delivery failed. Please try again." }, { status: 502 });
+    }
 
-  if (error) {
-    console.error("[testimonial-submit] Supabase error:", error.message);
-    return NextResponse.json({ error: "Database error. Please try again." }, { status: 500 });
+    log.info("testimonial/sent-via-formhook", { relation_type, locale });
+    return NextResponse.json({ ok: true }, { status: 201 });
   }
 
+  // Dev fallback — log uniquement le type de relation, pas de PII
+  log.info("testimonial/received", { relation_type, locale });
   return NextResponse.json({ ok: true }, { status: 201 });
 }

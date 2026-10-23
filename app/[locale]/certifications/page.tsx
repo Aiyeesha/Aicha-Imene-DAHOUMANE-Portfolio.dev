@@ -33,10 +33,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et prochaines certifications Salesforce et CompTIA Security+ prévues début 2027."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et prochaines certifications Salesforce et CompTIA Security+ prévues entre décembre 2026 et début 2027."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y próximas certificaciones Salesforce y CompTIA Security+ previstas para principios de 2027."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and upcoming Salesforce and CompTIA Security+ certifications planned for early 2027.";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y próximas certificaciones Salesforce y CompTIA Security+ previstas entre diciembre de 2026 y principios de 2027."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and upcoming Salesforce and CompTIA Security+ certifications planned between December 2026 and early 2027.";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -168,7 +168,7 @@ export default async function CertificationsPage({ params }: PageProps) {
     sectionActive: isFr ? "Actif" : isEs ? "Activo" : "Active",
     sectionActiveSub: isFr ? "Progression continue" : isEs ? "Aprendizaje continuo" : "Continuous learning",
     sectionUpcoming: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation",
-    sectionUpcomingSub: isFr ? "Objectifs début 2027" : isEs ? "Objetivos para principios de 2027" : "Early 2027 goals",
+    sectionUpcomingSub: isFr ? "Objectifs décembre 2026 – début 2027" : isEs ? "Objetivos diciembre de 2026 – principios de 2027" : "December 2026 – early 2027 goals",
     trailheadBadges: isFr ? "badges" : isEs ? "badges" : "badges",
     trailheadPoints: isFr ? "points" : isEs ? "puntos" : "points",
     trailheadTrails: isFr ? "parcours" : isEs ? "trails" : "trails",
@@ -300,6 +300,10 @@ export default async function CertificationsPage({ params }: PageProps) {
   // retirée : une longue liste d'intentions nuisait à la crédibilité. L'INSIDE
   // LVMH Certificate n'est plus affiché avant l'obtention ; il rejoindra les
   // certifications obtenues une fois l'évaluation réussie.
+  //
+  // Recalage du 2026-10-19 : Platform Foundations et Platform Administrator
+  // sont passées à partir de décembre 2026 (date exacte non fixée) ; App
+  // Builder, Platform Developer I et Security+ restent prévues début 2027.
   type UpcomingItem = {
     id: string;
     name: string;
@@ -314,14 +318,15 @@ export default async function CertificationsPage({ params }: PageProps) {
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── Prochaines échéances — début 2027 (Salesforce, puis Security+) ───────
-    // Formulation alignée sur la FAQ et la page À propos (« planifiées pour
-    // début 2027 ») : à mettre à jour aux trois endroits après chaque résultat.
+    // ── Prochaines échéances — déc. 2026 puis début 2027 (Salesforce, puis Security+)
+    // Formulation alignée sur la FAQ et la page À propos (« à partir de
+    // décembre 2026 » / « début 2027 ») : à mettre à jour aux trois endroits
+    // après chaque résultat.
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: isFr ? "À partir de décembre 2026" : isEs ? "A partir de diciembre de 2026" : "From December 2026",
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : isEs
@@ -336,7 +341,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-administrator",
       name: "Salesforce Platform Administrator (ADM-201)",
       issuer: "Salesforce",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: isFr ? "À partir de décembre 2026" : isEs ? "A partir de diciembre de 2026" : "From December 2026",
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
@@ -631,7 +636,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {isFr ? "En cours / Prochaines échéances" : isEs ? "En curso / Próximos plazos" : "In progress / Next up"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— début 2027" : isEs ? "— principios de 2027" : "— early 2027"}
+              {isFr ? "— décembre 2026 · début 2027" : isEs ? "— diciembre de 2026 · principios de 2027" : "— December 2026 · early 2027"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

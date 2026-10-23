@@ -284,9 +284,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps | Île-de-France",
-    "description": "Salesforce · Systems & Networks · DevOps (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Available within 1 month, interviews now. Permanent, fixed-term, temp or umbrella — any industry.",
+    "description": "Salesforce · Systems & Networks · DevOps (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Interviews now, start from December 2026. Permanent, fixed-term, temp or umbrella — any industry.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Île-de-France",
-    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, automation, CI/CD, Salesforce. Available within 1 month, interviews now. Permanent, fixed-term, temp or umbrella — any industry."
+    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, automation, CI/CD, Salesforce. Interviews now, start from December 2026. Permanent, fixed-term, temp or umbrella — any industry."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -359,7 +359,7 @@
     "p1_salesforce": "Salesforce developer & administrator: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
-    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, after two years as a work-study developer at the same company: 3 years of production Salesforce experience. The Legarant-AXG project (Heroku Connect, environment management, traceable production releases) remains the clearest proof of that Salesforce/infra crossover: not an application layer sitting on infrastructure someone else manages, but the same person on both sides. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title, Salesforce specialization (OpenClassrooms, 2025), and an active Trailhead profile (Expeditioner rank, 94 badges) — the Salesforce certifications (Platform Foundations, Administrator, App Builder, Platform Developer I) are scheduled for early 2027.",
+    "p4_salesforce": "Full-time Salesforce Developer at LD Digitales since October 2025, after two years as a work-study developer at the same company: 3 years of production Salesforce experience. The Legarant-AXG project (Heroku Connect, environment management, traceable production releases) remains the clearest proof of that Salesforce/infra crossover: not an application layer sitting on infrastructure someone else manages, but the same person on both sides. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title, Salesforce specialization (OpenClassrooms, 2025), and an active Trailhead profile (Expeditioner rank, 94 badges) — the Salesforce Platform Foundations and Administrator certifications are planned from December 2026, App Builder and Platform Developer I in early 2027.",
     "p1_itops": "IT Ops & DevOps: during my two one-month internships at MIDRANGE GROUP (Feb–May 2023), I remotely monitored 550+ devices through Datto RMM, handled 316 support tickets and deployed 264 Dell workstations (Windows Autopilot, Sysprep image, NIST 800-88 certified wipe).",
     "p2_itops": "During my TAI and TSSR training (Greta du Val-d'Oise), I installed and administered Windows Server environments — AD DS, DNS, DHCP, GPO, pfSense/Squid filtering, virtualization — documenting every procedure as a runbook.",
     "p3_itops": "I pay close attention to service continuity: 85 Acronis backup alerts triaged during the internship.",
@@ -374,7 +374,7 @@
     "rolesValueSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
     "rolesValueItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Available within 1 month (notice period) · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
+    "availabilityValue": "Interviews now · Start from December 2026 · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "goalLabel": "Goal",
     "goalValue": "Deepen my Salesforce expertise, earn my certifications, and join a team where Salesforce and infrastructure meet.",
     "focusLabel": "Focus",
@@ -441,7 +441,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a start date within 1 month (my notice period). I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
+        "a": "I'm available for interviews right away (October and November 2026), with a possible start date from December 2026. I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
       },
       {
         "q": "What contract types are you looking for?",
@@ -453,7 +453,7 @@
       },
       {
         "q": "Do you have a Salesforce certification?",
-        "a": "Not yet: the Salesforce Platform Foundations, Administrator, App Builder and Platform Developer I certifications are scheduled for early 2027. Already earned and verifiable: the RNCP Level 6 'Développeur Concepteur Logiciel' diploma (Salesforce specialization, 2025) and an active Trailhead profile (Expeditioner rank, 94 badges, 59,775 points). The Legarant-AXG case study, where the Apex trigger and the Heroku deployment are built by the same person, shows concretely what I can do."
+        "a": "Not yet: the Salesforce Platform Foundations and Administrator certifications are planned from December 2026, App Builder and Platform Developer I in early 2027. Already earned and verifiable: the RNCP Level 6 'Développeur Concepteur Logiciel' diploma (Salesforce specialization, 2025) and an active Trailhead profile (Expeditioner rank, 94 badges, 59,775 points). The Legarant-AXG case study, where the Apex trigger and the Heroku deployment are built by the same person, shows concretely what I can do."
       },
       {
         "q": "Where are you based? Which work mode?",
@@ -476,10 +476,10 @@
     "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
   },
   "availModal": {
-    "badge": "Interviews now — Available within 1 month",
+    "badge": "Interviews now — Start from December 2026",
     "title": "My availability",
     "delay": "Availability",
-    "delayValue": "Interviews now · Available within 1 month (notice period)",
+    "delayValue": "Interviews now · Start from December 2026",
     "contracts": "Contracts",
     "contractValues": "Permanent · Fixed-term · Temp · Umbrella (portage)",
     "workMode": "Work modes",
