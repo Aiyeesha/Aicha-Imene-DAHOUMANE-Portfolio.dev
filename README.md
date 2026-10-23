@@ -6,7 +6,7 @@
 [![Live](https://img.shields.io/badge/live-aicha--imene--dahoumane--portfolio.vercel.app-22d3ee?style=flat)](https://aicha-imene-dahoumane-portfolio.vercel.app/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Professional portfolio of a **Salesforce Developer & Consultant** with a background in systems, networks, and DevOps.
+Professional portfolio of a **Salesforce Developer & Administrator** targeting Salesforce, systems & network administration, and DevOps roles.
 Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills, services, and projects sections.
 
 **Live → [aicha-imene-dahoumane-portfolio.vercel.app/en](https://aicha-imene-dahoumane-portfolio.vercel.app/en)**
@@ -78,7 +78,7 @@ Browser
   │
   ├─ Upstash Redis
   │     Rate-limit: portfolio:rl:{contact,blog,testimonial,admin,errors,
-  │                 revalidate,cache-invalidate,csp-report,csp-alert,storage}
+  │                 revalidate,cache-invalidate,csp-report,csp-alert}
   │                 (identifiers HMAC-pseudonymised with IP_HASH_SALT)
   │     Cache:      portfolio:uptime:* · project:* · projects_with_assets:*
   │
@@ -223,7 +223,6 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   │   ├── blog/latest/        # Latest posts API (locale whitelist)
 │   │   ├── search/             # Blog full-text search (MiniSearch, query capped at 64 chars)
 │   │   ├── revalidate/         # ISR revalidation (Supabase webhook)
-│   │   ├── storage/redirect/   # Signed URLs for private deliverables
 │   │   ├── admin/              # Admin-only APIs (testimonial invitations)
 │   │   └── testimonial-submit/ # Token-gated testimonial submission
 │   ├── error.tsx               # Root error boundary (500)
@@ -306,7 +305,7 @@ npm run test:e2e     # Playwright end-to-end tests (incl. axe accessibility chec
 |-------|---------|
 | HTTP headers | Per-request nonce CSP with `'strict-dynamic'`, no third-party script/style/frame origins, `frame-src 'none'`; Trusted Types in report-only; HSTS (2 yr + preload), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — `X-Powered-By` suppressed |
 | Database | Supabase RLS on all tables — `project_assets` restricted to published projects only; `is_admin()` REVOKE'd from PUBLIC; trigger functions have `search_path = ''` |
-| Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/blog/latest`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/revalidate`, `/api/health`, `/api/errors`, `/api/csp-report`, `/api/storage/redirect` and `/admin`; identifiers HMAC-pseudonymised (no IP in clear in Redis). Behaviour during a Redis outage is documented in SECURITY.md |
+| Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/blog/latest`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/revalidate`, `/api/health`, `/api/errors`, `/api/csp-report` and `/admin`; identifiers HMAC-pseudonymised (no IP in clear in Redis). Behaviour during a Redis outage is documented in SECURITY.md |
 | Admin panel | HTTP Basic Auth + proxy rate-limit (5 req / 15 min / IP), never cached by the service worker |
 | Contact form | Honeypot, origin check, server-side input validation, e-mail delivery via Formhook with no storage at rest |
 | Privacy | No analytics or tracking; no third-party script; CSP reports logged without query strings |
