@@ -174,7 +174,7 @@
       "startLabel": "Fecha de incorporación deseada",
       "startPlaceholder": "Seleccionar una fecha",
       "start": {
-        "asap": "Lo antes posible (en 1 mes)",
+        "asap": "Lo antes posible (a partir de diciembre de 2026)",
         "q1_2027": "Primer trimestre de 2027",
         "later": "Más adelante",
         "tbd": "Por definir"
@@ -284,9 +284,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Sistemas y Redes · DevOps | Île-de-France",
-    "description": "Salesforce · Sistemas y Redes · DevOps (Île-de-France) — Apex, LWC, CI/CD, integraciones, infraestructura. Disponible en 1 mes, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores.",
+    "description": "Salesforce · Sistemas y Redes · DevOps (Île-de-France) — Apex, LWC, CI/CD, integraciones, infraestructura. Entrevistas ya, disponible a partir de diciembre de 2026. Indefinido, temporal, ETT o portage — todos los sectores.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Île-de-France",
-    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France) — Infraestructura, automatización, CI/CD, Salesforce. Disponible en 1 mes, entrevistas ya. Indefinido, temporal, ETT o portage — todos los sectores."
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France) — Infraestructura, automatización, CI/CD, Salesforce. Entrevistas ya, disponible a partir de diciembre de 2026. Indefinido, temporal, ETT o portage — todos los sectores."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -374,7 +374,7 @@
     "rolesValueSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValueItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "availabilityLabel": "Disponibilidad",
-    "availabilityValue": "Disponible en 1 mes (preaviso) · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
+    "availabilityValue": "Disponible a partir de diciembre de 2026 · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "goalLabel": "Objetivo",
     "goalValue": "Profundizar mi experiencia en Salesforce, obtener mis certificaciones e incorporarme a un equipo donde Salesforce e infraestructura se cruzan.",
     "focusLabel": "Enfoque",
@@ -441,7 +441,7 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación en 1 mes (mi preaviso). Actualmente soy Desarrolladora Salesforce con contrato indefinido en LD Digitales."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir de diciembre de 2026. Actualmente soy Desarrolladora Salesforce con contrato indefinido en LD Digitales."
       },
       {
         "q": "¿Qué tipos de contrato buscas?",
@@ -476,10 +476,10 @@
     "lastAudit": "Última verificación: 28 de junio de 2026 — Herramientas: axe-core (CI automatizado), pruebas manuales de navegación por teclado."
   },
   "availModal": {
-    "badge": "Entrevistas ya — Disponible en 1 mes",
+    "badge": "Entrevistas ya — Disponible a partir de diciembre de 2026",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
-    "delayValue": "Entrevistas desde ya · Disponible en 1 mes (preaviso)",
+    "delayValue": "Entrevistas desde ya · Disponible a partir de diciembre de 2026",
     "contracts": "Contratos",
     "contractValues": "Indefinido · Temporal · ETT · Portage salarial",
     "workMode": "Modalidades de trabajo",

@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Disponibilité : à partir de décembre 2026** — La mention « Disponible sous 1 mois (préavis) » est remplacée par « Disponible à partir de décembre 2026 » (entretiens toujours possibles dès maintenant), sans plus aucune référence au préavis : titres et descriptions SEO, fiche profil, modale de disponibilité, FAQ, page « Me recruter » (sous-titre, étapes du recrutement, FAQ), image de partage, option « Dès que possible » du formulaire de contact et les 18 CV (PDF régénérés), en FR, EN et ES. Le sous-titre de la page « Me recruter » perd au passage sa dernière mention « et la sécurité ».
+
 ### Security
 
 - **Livrables privés retirés de l'accès public** — Les 45 fichiers de `public/docs/projects/` (cahiers des charges, rapports d'audit, exports Excel, présentations, notes d'entretien…) étaient des copies du bucket Supabase privé `deliverables` servies publiquement : ils sont supprimés, ainsi que tous les liens qui y menaient (5 `pdfUrl` des fiches projets, sections « Livrables » de 15 études de cas, ressources de `projectDetails.ts`). La route `/api/storage/redirect`, qui délivrait à tout visiteur un lien signé vers n'importe quel fichier de ce bucket, est supprimée avec son limiteur de débit ; README et SECURITY.md sont mis à jour. Le bucket `deliverables` reste privé et intact dans Supabase.
