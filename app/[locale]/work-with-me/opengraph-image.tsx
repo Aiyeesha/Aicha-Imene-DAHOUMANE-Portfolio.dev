@@ -21,7 +21,7 @@ export default async function Image({ params }: Props) {
     : isEs
     ? "Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
     : "Salesforce · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
-  const availLabel = isFr ? "Entretiens dès maintenant — Disponible sous 1 mois" : isEs ? "Entrevistas ya — Disponible en 1 mes" : "Interviews now — Available within 1 month";
+  const availLabel = isFr ? "Entretiens dès maintenant — Disponible dès décembre 2026" : isEs ? "Entrevistas ya — Disponible desde dic. 2026" : "Interviews now — Available from Dec. 2026";
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
