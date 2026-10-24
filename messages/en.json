@@ -174,7 +174,7 @@
       "startLabel": "Desired start date",
       "startPlaceholder": "Select a date",
       "start": {
-        "asap": "As soon as possible (within 1 month)",
+        "asap": "As soon as possible (from December 2026)",
         "q1_2027": "Q1 2027",
         "later": "Later",
         "tbd": "To be defined"
@@ -284,9 +284,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps | Île-de-France",
-    "description": "Salesforce · Systems & Networks · DevOps (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Available within 1 month, interviews now. Permanent, fixed-term, temp or umbrella — any industry.",
+    "description": "Salesforce · Systems & Networks · DevOps (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Interviews now, available from December 2026. Permanent, fixed-term, temp or umbrella — any industry.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Île-de-France",
-    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, automation, CI/CD, Salesforce. Available within 1 month, interviews now. Permanent, fixed-term, temp or umbrella — any industry."
+    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, automation, CI/CD, Salesforce. Interviews now, available from December 2026. Permanent, fixed-term, temp or umbrella — any industry."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -374,7 +374,7 @@
     "rolesValueSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
     "rolesValueItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Available within 1 month (notice period) · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
+    "availabilityValue": "Available from December 2026 · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "goalLabel": "Goal",
     "goalValue": "Deepen my Salesforce expertise, earn my certifications, and join a team where Salesforce and infrastructure meet.",
     "focusLabel": "Focus",
@@ -441,7 +441,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a start date within 1 month (my notice period). I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
+        "a": "I'm available for interviews right away, with a start date from December 2026. I'm currently a full-time (permanent) Salesforce Developer at LD Digitales."
       },
       {
         "q": "What contract types are you looking for?",
@@ -476,10 +476,10 @@
     "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
   },
   "availModal": {
-    "badge": "Interviews now — Available within 1 month",
+    "badge": "Interviews now — Available from December 2026",
     "title": "My availability",
     "delay": "Availability",
-    "delayValue": "Interviews now · Available within 1 month (notice period)",
+    "delayValue": "Interviews now · Available from December 2026",
     "contracts": "Contracts",
     "contractValues": "Permanent · Fixed-term · Temp · Umbrella (portage)",
     "workMode": "Work modes",
