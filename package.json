@@ -19,6 +19,7 @@
     "content:safety": "tsx scripts/check-publish-safety.ts",
     "cv:pdf": "node scripts/generate-cv-pdf.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
+    "assets:manifest": "node scripts/generate-project-assets.mjs",
     "images:upload": "node --env-file=.env.local scripts/upload-to-supabase-storage.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
