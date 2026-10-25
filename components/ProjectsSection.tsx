@@ -236,12 +236,19 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     <div>
       {/* ── Onglets IT Ops / Salesforce avec compteur ───────────────
           Rendu comme vrais onglets ARIA pour une meilleure accessibilité.
-          Le compteur (nombre de projets) est affiché dans un badge discret. */}
+          Le compteur (nombre de projets) est affiché dans un badge discret.
+          Audit 2026-10-23 (P2) : les 5 onglets ne tiennent pas sur 390 px
+          (page élargie à 588-640 px selon la langue, « IT Ops » sur deux
+          lignes). La barre défile désormais horizontalement à l'intérieur
+          du composant (max-w-full + overflow-x-auto), comme la rangée de
+          filtres plus bas, et les boutons ne se compriment ni ne passent à
+          la ligne (shrink-0 + whitespace-nowrap). La navigation clavier
+          (flèches) appelle focus(), qui fait défiler l'onglet visé à l'écran. */}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div
           role="tablist"
           aria-label={locale === "fr" ? "Filtrer par parcours" : locale === "es" ? "Filtrar por trayectoria" : "Filter by track"}
-          className="flex rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-1"
+          className="flex max-w-full overflow-x-auto no-scrollbar rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-1"
         >
           {visibleTabs.map((tab, idx) => {
             const isActive = activeTab === tab;
@@ -274,7 +281,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 onKeyDown={(e) => handleTabKeyDown(e, idx)}
                 className={[
                   "rounded-lg px-4 py-2 text-sm font-medium transition-colors soft-ring",
-                  "inline-flex items-center gap-2",
+                  "inline-flex shrink-0 items-center gap-2 whitespace-nowrap",
                   isActive
                     ? "bg-cyan-500/20 text-cyan-700 dark:text-cyan-200"
                     : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
@@ -369,8 +376,12 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
       )}
 
       {/* ── Grille de projets ──────────────────────────────────── */}
+      {/* grid-cols-1 = minmax(0, 1fr) : sans colonne explicite, la piste
+          implicite vaut minmax(auto, 1fr) et une carte ne peut pas rétrécir
+          sous la largeur minimale de son contenu — la page débordait à 320 px
+          (seuil WCAG 1.4.10 ; audit 2026-10-23, P2). */}
       {projects.length > 0 && (
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((p, idx) => (
           <Reveal key={p.slug} delayMs={Math.min(280, idx * 60)}>
             <GlowCard className="card overflow-hidden">
@@ -384,8 +395,11 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
               </div>
               <div className="p-5">
               {/* En-tête : titre + badge */}
-              <div className="flex items-start justify-between gap-3">
-                <h3 className="text-lg font-semibold">{p.title}</h3>
+              {/* max-sm:flex-wrap : sur carte étroite, le badge passe sous le
+                  titre plutôt que d'être coupé par l'overflow-hidden de la
+                  carte. Au-delà de sm, mise en page inchangée. */}
+              <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
+                <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
                 {p.badge ? (
                   <span className={getBadgeClass(p.badge.tone)}>{tBadge(p.badge.label, locale)}</span>
                 ) : null}
