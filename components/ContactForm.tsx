@@ -463,7 +463,9 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
         {/* Availability badge */}
         <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3">
           <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          <span className="text-sm text-emerald-700 dark:text-emerald-300">{t("contact.availability")}</span>
+          {/* text-emerald-800 en clair — audit 2026-10-23 (axe color-contrast) :
+              emerald-700 sur ce fond teinté donnait 4,48:1 (4,5:1 requis). */}
+          <span className="text-sm text-emerald-800 dark:text-emerald-300">{t("contact.availability")}</span>
         </div>
 
         {/* Direct contact */}
