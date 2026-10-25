@@ -21,6 +21,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { LINKEDIN_URL } from "@/lib/social";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { oneBySlug } from "@/lib/data/projectsSource";
+import { pageTitle, clampDescription } from "@/lib/seo";
 
 type Params = { locale: "en" | "fr" | "es"; slug: string };
 
@@ -49,7 +50,8 @@ export async function generateMetadata(
 
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const title = meta.title;
-  const description = meta.excerpt || meta.title;
+  // Description bornée à 160 caractères — audit 2026-10-23 (SEO-2), lib/seo.ts.
+  const description = clampDescription(meta.excerpt || meta.title);
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/blog/${slug}`;
   const cover = meta.cover || `/${locale}/blog/${slug}/opengraph-image`;
@@ -71,7 +73,8 @@ export async function generateMetadata(
   else languages["x-default"] = `${siteUrl}/en/blog`;
 
   return {
-    title: `${title} | ${siteName}`,
+    // Gabarit unique, sans suffixe de parcours — audit 2026-10-23 (SEO-1).
+    title: pageTitle(title),
     description,
     alternates: { canonical: urlPath, languages },
     openGraph: {
