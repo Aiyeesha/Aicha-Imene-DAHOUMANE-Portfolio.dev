@@ -6,9 +6,11 @@ import BookingLink from "@/components/BookingLink";
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
 
-const AVAILABILITY: { status: AvailabilityStatus; since: Record<"en" | "fr", string> } = {
+// Champ `since` supprimé — audit 2026-10-23 (I18N-4) : jamais affiché, typé
+// sans l'espagnol, et contradictoire avec la disponibilité réelle (« à partir
+// de décembre 2026 », portée par messages/*.json).
+const AVAILABILITY: { status: AvailabilityStatus } = {
   status: "open",
-  since: { en: "immediately", fr: "immédiatement" },
 };
 
 export default function WorkWithMeContent({ locale }: { locale: string }) {

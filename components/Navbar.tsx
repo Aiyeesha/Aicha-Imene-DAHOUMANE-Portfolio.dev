@@ -18,13 +18,20 @@ import { useTrack } from "@/app/[locale]/providers";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
 import { BOOKING_URL } from "@/lib/booking";
+import usePlatformShortcut from "@/lib/usePlatformShortcut";
 
-/** Petit bouton discret ⌘K pour rappeler le raccourci palette de commandes. */
+/** Petit bouton discret ⌘K / Ctrl K pour rappeler le raccourci palette de commandes. */
 function CommandPaletteTrigger() {
+  // Audit 2026-10-23 (NAV-1) : aria-label auparavant codé en anglais sur les
+  // trois langues, et symbole ⌘ affiché à tous — inconnu sous Windows/Linux,
+  // où le raccourci réel est Ctrl+K. Libellé traduit, raccourci selon la
+  // plateforme (lib/usePlatformShortcut.ts).
+  const t = useTranslations("commandPalette");
+  const shortcut = usePlatformShortcut();
   return (
     <button
       type="button"
-      aria-label="Open command palette (⌘K)"
+      aria-label={t("open", { shortcut })}
       onClick={() => {
         // Simule le raccourci clavier pour ouvrir la palette
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
@@ -33,7 +40,7 @@ function CommandPaletteTrigger() {
       // header (audit 2026-08-13, itération 4) — voir desktopLinkClass.
       className="hidden min-[1850px]:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
     >
-      <span>⌘K</span>
+      <span aria-hidden="true">{shortcut}</span>
     </button>
   );
 }
