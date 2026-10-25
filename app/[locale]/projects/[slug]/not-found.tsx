@@ -11,7 +11,9 @@ export default async function ProjectNotFound() {
   const suggested = allProjects.slice(0, 3);
 
   return (
-    <main className="py-16 md:py-24">
+    // <div> et non <main> : le layout [locale] fournit déjà <main id="main">
+    // (audit 2026-10-23, A11Y-1 — landmark-no-duplicate-main).
+    <div className="py-16 md:py-24">
       <div className="container mx-auto max-w-4xl px-4 text-center">
 
         <p className="text-8xl font-black text-cyan-500/20 dark:text-cyan-400/15 select-none leading-none">
@@ -63,6 +65,6 @@ export default async function ProjectNotFound() {
         )}
 
       </div>
-    </main>
+    </div>
   );
 }
