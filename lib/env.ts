@@ -38,7 +38,12 @@ const serverSchema = z.object({
   ADMIN_USERNAME: z.string().min(1),
   ADMIN_PASSWORD: z.string().min(8),
   CRON_SECRET:    z.string().min(32),
-  FORMHOOK_ENDPOINT: z.string().url(),
+  // Optionnel — audit 2026-10-23 (CFG-2) : app/api/contact/route.ts traite
+  // déjà l'absence de FORMHOOK_ENDPOINT (le message n'est simplement pas
+  // relayé). L'exiger ici faisait échouer la validation d'environnement
+  // (avertissement « Variables d'environnement invalides ») sans raison
+  // fonctionnelle. Reste validé comme URL lorsqu'il est défini.
+  FORMHOOK_ENDPOINT: z.string().url().optional(),
   FORMHOOK_AUTH_TOKEN: z.string().min(1).optional(),
 });
 

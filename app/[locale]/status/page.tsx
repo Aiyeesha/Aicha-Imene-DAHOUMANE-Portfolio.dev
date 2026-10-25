@@ -166,7 +166,20 @@ export default async function StatusPage({
   const global   = report?.overall ?? "operational";
   const cfg      = STATUS_CONFIG[global];
   const checkedAt = report
-    ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", { dateStyle: "medium", timeStyle: "short" })
+    // Fuseau explicite — audit 2026-10-23 (NAV-6) : la page est rendue côté
+    // serveur (UTC sur Vercel), l'heure affichée l'était donc en UTC sans le
+    // dire. Europe/Paris + nom du fuseau (« UTC+1 », « CET »…). NB : dateStyle /
+    // timeStyle ne se combinent pas avec timeZoneName (TypeError d'Intl) —
+    // d'où les champs détaillés.
+    ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Paris",
+        timeZoneName: "short",
+      })
     : "—";
 
   // Garde de fraîcheur : avertissement si les données dépassent 48 h
