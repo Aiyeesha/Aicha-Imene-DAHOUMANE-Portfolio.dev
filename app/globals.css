@@ -463,14 +463,21 @@ html.dark .mdx h3 { color: rgba(255,255,255,0.90); }
 .mdx strong { font-weight: 650; color: rgba(10,15,30,0.92); }
 html.dark .mdx strong { color: rgba(255,255,255,0.92); }
 
-/* GFM tables (remark-gfm) — used by project case studies and blog posts */
+/* GFM tables (remark-gfm) — used by project case studies and blog posts
+   Audit 2026-10-23 (P2) : le défilement horizontal est porté par le conteneur
+   .mdx-table-wrap (components/mdx/Table.server.tsx) et non plus par un
+   `display: block` sur le <table>, qui lui retirait sa sémantique de tableau
+   pour certains lecteurs d'écran. La marge verticale passe sur le conteneur. */
+.mdx .mdx-table-wrap {
+  margin: 1.25rem 0;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+}
 .mdx table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.25rem 0;
   font-size: 0.9rem;
-  display: block;
-  overflow-x: auto;
 }
 .mdx thead th {
   text-align: left;
@@ -511,10 +518,22 @@ html.dark .mdx hr { border-top-color: rgba(255,255,255,0.10); }
 
 .mdx code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Audit 2026-10-23 (P2) : un identifiant long sans espace
+     (ex. `Schema.sObjectType.Task.isAccessible()`, ~378 px) faisait déborder
+     la page sur mobile. Autorise la coupure n'importe où en dernier recours.
+     Sans effet sur les blocs <pre> : leur code ne passe pas à la ligne
+     (white-space: pre) et le <pre> défile horizontalement. */
+  overflow-wrap: anywhere;
   background: rgba(0,0,0,0.04);
   border: 1px solid rgba(0,0,0,0.10);
   border-radius: 0.5rem;
   padding: 0.1rem 0.35rem;
+}
+/* Dans un tableau, on garde les identifiants entiers : le tableau défile
+   dans son conteneur (.mdx-table-wrap) plutôt que de couper le code. */
+.mdx td code,
+.mdx th code {
+  overflow-wrap: normal;
 }
 html.dark .mdx code {
   background: rgba(255,255,255,0.06);
