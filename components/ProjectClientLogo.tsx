@@ -7,13 +7,21 @@
 // — même logique que {slug}/cover.webp pour les images de couverture.
 //
 // La majorité des projets n'a pas de logo (mission perso, lab, projet en
-// préparation) : on tente le chargement et on ne rend RIEN en cas d'échec,
-// sans placeholder — contrairement à SafeImage/CoverImage qui affichent une
-// icône de remplacement pour les images de couverture (toujours censées
-// exister). Ici, l'absence est l'état normal pour la plupart des projets.
+// préparation) : on ne rend RIEN dans ce cas, sans placeholder — contrairement
+// à SafeImage/CoverImage qui affichent une icône de remplacement pour les
+// images de couverture. Ici, l'absence est l'état normal pour la plupart des
+// projets.
+//
+// Audit 2026-10-23 (P5) : auparavant, le chargement était TENTÉ pour chaque
+// projet et l'échec masqué via onError — soit ~18 requêtes en 404 sur
+// /fr/projects, chacune servie par une page HTML 404 complète. La présence du
+// logo est désormais connue au build (lib/data/projectAssets.ts) : aucune
+// requête n'est émise pour un logo inexistant. onError reste en filet de
+// sécurité (fichier corrompu, manifeste non régénéré).
 
 import Image from "next/image";
 import { useState } from "react";
+import { hasProjectLogo } from "@/lib/data/projectAssets";
 
 const STORAGE_CDN = "/projects";
 
@@ -39,7 +47,8 @@ type Props = {
 export default function ProjectClientLogo({ slug, alt, size = "md", loading = "eager" }: Props) {
   const [failed, setFailed] = useState(false);
 
-  if (failed) return null;
+  // Pas de logo connu pour ce projet → rien à demander au réseau.
+  if (failed || !hasProjectLogo(slug)) return null;
 
   const { boxClass, imgClass, width, height } = SIZES[size];
 
