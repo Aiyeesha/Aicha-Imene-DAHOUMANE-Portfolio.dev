@@ -332,7 +332,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const isEs = locale === "es";
 
   return (
-    <main className="py-10 md:py-16">
+    // <article> et non <main> — audit 2026-10-23 (A11Y-1) : le layout
+    // [locale] fournit déjà <main id="main"> ; un second <main> imbriqué
+    // violait landmark-main-is-top-level / landmark-no-duplicate-main /
+    // landmark-unique (axe) sur les 51 fiches projet. Une fiche projet est un
+    // contenu autonome : <article> est l'élément sémantique adapté.
+    <article className="py-10 md:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(breadcrumbSchema) }}
@@ -562,6 +567,6 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </div>
 
       </div>
-    </main>
+    </article>
   );
 }

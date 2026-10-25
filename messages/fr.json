@@ -277,7 +277,9 @@
     "scrollNavRight": "Défiler le menu vers la droite",
     "scrollToTop": "Retour en haut de page",
     "opensPage": "Ouvre une page dédiée",
-    "scrollableTable": "Tableau, défilable horizontalement"
+    "scrollableTable": "Tableau, défilable horizontalement",
+    "codeBlock": "Extrait de code, défilable",
+    "codeBlockLang": "Extrait de code {language}, défilable"
   },
   "tracks": {
     "itops": "IT Ops",

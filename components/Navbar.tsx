@@ -173,6 +173,59 @@ export default function Navbar({
   // Position calculée du menu Projets — voir le useEffect plus bas pour le pourquoi
   // (portail hors de #desktop-nav, qui clippe verticalement le menu en position absolute).
   const [projectsMenuPos, setProjectsMenuPos] = useState<{ top: number; left: number } | null>(null);
+  // Navigation clavier du menu Projets (pattern WAI-ARIA « menu button ») —
+  // audit 2026-10-23 (A11Y-7) : le menu déclarait role="menu" sans gérer les
+  // flèches, et, rendu en portail en fin de <body>, il était hors de l'ordre
+  // de tabulation : à l'ouverture, Tab quittait le bouton vers le lien suivant
+  // de la barre, jamais vers les entrées du menu. On place donc le focus dans
+  // le menu à l'ouverture et on gère ↑/↓/Début/Fin/Tab (Échap : effet plus bas).
+  // "last" quand le menu est ouvert avec ↑ depuis le bouton, sinon "first".
+  const projectsFocusOnOpenRef = useRef<"first" | "last">("first");
+
+  const focusProjectsMenuItem = (target: "first" | "last" | "next" | "prev") => {
+    const items = Array.from(
+      projectsMenuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
+    );
+    if (items.length === 0) return;
+    const current = items.indexOf(document.activeElement as HTMLElement);
+    const index =
+      target === "first" ? 0
+      : target === "last" ? items.length - 1
+      : target === "next" ? (current + 1) % items.length
+      : (current - 1 + items.length) % items.length;
+    // preventScroll : le menu se ferme au moindre scroll (voir plus bas).
+    items[index].focus({ preventScroll: true });
+  };
+
+  const onProjectsTriggerKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      projectsFocusOnOpenRef.current = e.key === "ArrowUp" ? "last" : "first";
+      if (projectsDropdownOpen) focusProjectsMenuItem(projectsFocusOnOpenRef.current);
+      else setProjectsDropdownOpen(true);
+    } else if (e.key === "Enter" || e.key === " ") {
+      // Le clic natif (Enter/Espace sur un <button>) bascule l'ouverture ;
+      // on indique seulement où placer le focus.
+      projectsFocusOnOpenRef.current = "first";
+    }
+  };
+
+  const onProjectsMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.key) {
+      case "ArrowDown": e.preventDefault(); focusProjectsMenuItem("next"); break;
+      case "ArrowUp":   e.preventDefault(); focusProjectsMenuItem("prev"); break;
+      case "Home":      e.preventDefault(); focusProjectsMenuItem("first"); break;
+      case "End":       e.preventDefault(); focusProjectsMenuItem("last"); break;
+      case "Tab":
+        // Le menu est en portail (fin du document) : laisser Tab suivre l'ordre
+        // du DOM enverrait le focus hors de la barre de navigation. On ferme et
+        // on rend le focus au bouton, d'où la tabulation reprend normalement.
+        e.preventDefault();
+        setProjectsDropdownOpen(false);
+        projectsTriggerRef.current?.focus();
+        break;
+    }
+  };
 
   // Débordement du nav desktop — voir audit 2026-08-13 : #desktop-nav est
   // overflow-x-auto avec scrollbar masquée ([scrollbar-width:none]), ce qui
@@ -382,6 +435,15 @@ useEffect(() => {
     };
   }, [projectsDropdownOpen]);
 
+  // Focus dans le menu Projets dès qu'il est rendu (position calculée) —
+  // audit 2026-10-23 (A11Y-7). Réinitialisé à "first" pour l'ouverture suivante.
+  useEffect(() => {
+    if (!projectsDropdownOpen || !projectsMenuPos) return;
+    focusProjectsMenuItem(projectsFocusOnOpenRef.current);
+    projectsFocusOnOpenRef.current = "first";
+    // focusProjectsMenuItem ne lit que des refs : inutile dans les dépendances.
+  }, [projectsDropdownOpen, projectsMenuPos]);
+
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
   const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "blog", "projects"]);
@@ -545,8 +607,10 @@ useEffect(() => {
                         type="button"
                         data-section="projects"
                         aria-expanded={projectsDropdownOpen}
-                        aria-haspopup="true"
+                        aria-haspopup="menu"
+                        aria-controls={projectsDropdownOpen ? "projects-menu" : undefined}
                         onClick={() => setProjectsDropdownOpen((v) => !v)}
+                        onKeyDown={onProjectsTriggerKeyDown}
                         className={`${desktopLinkClass("projects")} whitespace-nowrap inline-flex items-center gap-1`}
                       >
                         {s.label}
@@ -559,7 +623,10 @@ useEffect(() => {
                       {projectsDropdownOpen && projectsMenuPos && createPortal(
                         <div
                           ref={projectsMenuRef}
+                          id="projects-menu"
                           role="menu"
+                          aria-label={s.label}
+                          onKeyDown={onProjectsMenuKeyDown}
                           style={{ top: projectsMenuPos.top, left: projectsMenuPos.left }}
                           className="fixed w-72 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0D1426] shadow-xl py-2 z-60"
                         >
@@ -570,6 +637,7 @@ useEffect(() => {
                                   key={p.slug}
                                   href={`/${locale}/projects/${p.slug}`}
                                   role="menuitem"
+                                  tabIndex={-1}
                                   className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-700 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                                   onClick={() => setProjectsDropdownOpen(false)}
                                 >
@@ -582,6 +650,7 @@ useEffect(() => {
                           <Link
                             href={`/${locale}/projects?tab=security`}
                             role="menuitem"
+                            tabIndex={-1}
                             className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-amber-700 dark:text-amber-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                             onClick={() => setProjectsDropdownOpen(false)}
                           >
@@ -591,6 +660,7 @@ useEffect(() => {
                           <Link
                             href={`/${locale}/projects`}
                             role="menuitem"
+                            tabIndex={-1}
                             className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-cyan-700 dark:text-cyan-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                             onClick={() => setProjectsDropdownOpen(false)}
                           >

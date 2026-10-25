@@ -118,7 +118,10 @@ export default async function HybrideContent({ locale }: { locale: string }) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/[0.07] px-3 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-emerald-500/15 soft-ring transition-colors"
                       >
-                        <span className="rounded-full bg-emerald-600/15 px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                        {/* text-emerald-800 (et non 700) — audit 2026-10-23 (A11Y-5) :
+                            en mode clair, 700 sur ce fond donnait 4,2:1 pour un
+                            texte de 10 px (4,5:1 requis, WCAG 1.4.3). */}
+                        <span className="rounded-full bg-emerald-600/15 px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
                           {labels.verifiable}
                         </span>
                         {p.label} ↗
