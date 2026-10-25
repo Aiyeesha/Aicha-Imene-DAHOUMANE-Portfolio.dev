@@ -9,6 +9,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { getBadgeClass, tBadge } from "@/i18n/projectTaxonomy";
 import { resolveProjectMdxLocale } from "@/lib/data/projectMdx";
+import { pageTitle, clampDescription } from "@/lib/seo";
 
 // ISR : revalide les pages projet toutes les 5 minutes
 export const revalidate = 300;
@@ -197,8 +198,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const siteUrl = getSiteUrl();
 
-  const title = `${project.title} | ${siteName}`;
-  const description = project.hero_subtitle ?? project.summary ?? project.title;
+  // Gabarit unique et description bornée — audit 2026-10-23 (SEO-1, SEO-2),
+  // voir lib/seo.ts.
+  const title = pageTitle(project.title);
+  const description = clampDescription(project.hero_subtitle ?? project.summary ?? project.title);
   const canonical = `${siteUrl}/${locale}/projects/${slug}`;
 
   const firstGalleryImg = project.gallery?.[0]?.src;
