@@ -1,7 +1,8 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 import { ReactNode, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 // next-themes intentionally renders an inline <script> (via React.createElement)
@@ -59,14 +60,30 @@ export default function Providers({
   // toggle in an interview would see everything else switch except the tab —
   // audit 2026-08-16. Skipped on the very first render since the server
   // title already matches initialTrack; only client-side changes need this.
+  //
+  // Restreint à l'accueil — audit 2026-10-23 (P1) : l'effet remplaçait le
+  // titre de N'IMPORTE QUELLE page par le titre générique de l'accueil
+  // (ex. « À propos — … » devenait « … — Ingénieure Systèmes & IT Ops » sur
+  // /fr/about). Seul l'accueil a un titre qui dépend du parcours
+  // (metadata.title / metadata.titleItops dans le generateMetadata du
+  // layout) ; les autres pages ont leur propre titre, indépendant du
+  // parcours, qu'il ne faut jamais écraser.
+  // Option A du brief retenue plutôt que l'option B (router.refresh() après
+  // setTrack) : pas de rendu serveur supplémentaire à chaque bascule.
+  const pathname = usePathname();
+  const locale = useLocale();
+  // localePrefix: "always" (proxy.ts) → l'accueil est toujours /{locale},
+  // avec ou sans barre oblique finale selon la façon dont l'URL a été saisie.
+  const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const isFirstRender = useRef(true);
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
+    if (!isHome) return;
     document.title = t(track === "itops" ? "metadata.titleItops" : "metadata.title");
-  }, [track, t]);
+  }, [track, t, isHome]);
 
   // Fallback only: the layout now reads the `track` cookie server-side and
   // passes the correct value as `initialTrack` (see app/[locale]/layout.tsx),
