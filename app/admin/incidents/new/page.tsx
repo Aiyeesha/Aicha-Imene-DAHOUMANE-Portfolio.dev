@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { createIncidentAction } from "../actions";
 import { INCIDENT_TYPE_LABELS } from "@/lib/incidentPlaybooks";
+import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
 
 const SEVERITIES = ["S1", "S2", "S3", "S4"] as const;
 const SEVERITY_HINTS: Record<string, string> = {
@@ -15,7 +16,11 @@ const SEVERITY_HINTS: Record<string, string> = {
   S4: "Faible — réponse < 24h",
 };
 
-export default function NewIncidentPage() {
+export default async function NewIncidentPage() {
+  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
+  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  await assertAdminOrNotFound();
+
   return (
     <div className="max-w-xl space-y-6">
       <div>

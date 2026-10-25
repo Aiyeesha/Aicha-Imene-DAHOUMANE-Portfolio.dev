@@ -1,45 +1,19 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
-import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
+import { requireAdminAuth } from "@/lib/security/adminAuth";
 
 // Défense en profondeur : re-vérifier l'auth Basic dans l'action elle-même.
 // Le middleware proxy.ts protège déjà /admin, mais les Server Actions peuvent
 // en théorie être invoquées directement via un POST forgé. Ce guard garantit
 // que même hors contexte middleware, l'action rejette les appelants non authentifiés.
-export async function requireAdminAuth(): Promise<void> {
-  const expectedUser = process.env.ADMIN_USERNAME ?? "";
-  const expectedPass = process.env.ADMIN_PASSWORD ?? "";
-
-  if (!expectedUser || !expectedPass) throw new Error("Unauthorized");
-
-  const headersList = await headers();
-  const authHeader = headersList.get("authorization") ?? "";
-
-  if (!authHeader.startsWith("Basic ")) throw new Error("Unauthorized");
-
-  try {
-    const decoded = atob(authHeader.slice(6));
-    const colonIdx = decoded.indexOf(":");
-    if (colonIdx === -1) throw new Error("Unauthorized");
-
-    const user = decoded.slice(0, colonIdx);
-    const pass = decoded.slice(colonIdx + 1);
-
-    const [userMatch, passMatch] = await Promise.all([
-      timingSafeStringEqual(user, expectedUser),
-      timingSafeStringEqual(pass, expectedPass),
-    ]);
-
-    if (!userMatch || !passMatch) throw new Error("Unauthorized");
-  } catch (e) {
-    if (e instanceof Error && e.message === "Unauthorized") throw e;
-    // Base64 invalide ou autre erreur de décodage
-    throw new Error("Unauthorized");
-  }
-}
+//
+// Audit 2026-10-23 (P3) : la logique vit désormais dans lib/security/adminAuth.ts,
+// partagée avec le layout et les pages de /admin. Elle n'est plus définie ni
+// exportée ici : dans un fichier "use server", toute fonction async exportée
+// devient une Server Action appelable par POST — requireAdminAuth n'a pas à
+// être un point d'entrée public.
 
 export async function toggleTestimonialPublished(id: string, currentValue: boolean) {
   await requireAdminAuth();
