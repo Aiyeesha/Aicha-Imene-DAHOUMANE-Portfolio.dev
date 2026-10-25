@@ -277,7 +277,9 @@
     "scrollNavRight": "Desplazar el menú a la derecha",
     "scrollToTop": "Volver arriba",
     "opensPage": "Abre una página dedicada",
-    "scrollableTable": "Tabla, desplazable horizontalmente"
+    "scrollableTable": "Tabla, desplazable horizontalmente",
+    "codeBlock": "Fragmento de código, desplazable",
+    "codeBlockLang": "Fragmento de código {language}, desplazable"
   },
   "tracks": {
     "itops": "IT Ops",
