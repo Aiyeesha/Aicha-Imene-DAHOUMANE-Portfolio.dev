@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { listIncidents, getIncidentWithChecklist, computeChecklistProgress } from "@/lib/supabase/incidents";
 import { INCIDENT_TYPE_LABELS } from "@/lib/incidentPlaybooks";
+import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
 
 const SEVERITY_BADGE: Record<string, string> = {
   S1: "bg-rose-500/15 text-rose-400",
@@ -38,6 +39,10 @@ function fmtDate(iso: string) {
 }
 
 export default async function IncidentsPage() {
+  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
+  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  await assertAdminOrNotFound();
+
   const incidents = await listIncidents();
 
   const progressByIncident = await Promise.all(

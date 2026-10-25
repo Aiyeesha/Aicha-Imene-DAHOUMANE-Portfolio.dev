@@ -230,8 +230,19 @@ export async function proxy(request: NextRequest) {
   // On extrait la locale depuis le pathname (ex: /fr/about → "fr")
   // car intlHandler communique la locale via ses request headers internes
   // que NextResponse.next() ne reçoit pas automatiquement.
+  //
+  // Audit 2026-10-23 (CFG-4) : la regex accepte n'importe quel couple de
+  // lettres (/xx/…). Le segment n'est retenu que s'il appartient à
+  // routing.locales ; sinon on retombe sur la locale par défaut. Sans impact
+  // fonctionnel jusqu'ici (i18n/request.ts revalide en aval), mais aucune
+  // valeur arbitraire issue de l'URL n'est plus transmise aux Server Components
+  // (défense en profondeur).
   const localeMatch = pathname.match(/^\/([a-z]{2})(?:\/|$)/);
-  const detectedLocale = localeMatch ? localeMatch[1] : routing.defaultLocale;
+  const candidateLocale = localeMatch?.[1];
+  const detectedLocale =
+    candidateLocale && (routing.locales as readonly string[]).includes(candidateLocale)
+      ? candidateLocale
+      : routing.defaultLocale;
   requestHeaders.set("x-next-intl-locale", detectedLocale);
 
   const response = NextResponse.next({

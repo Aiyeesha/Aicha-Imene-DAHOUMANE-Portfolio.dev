@@ -12,6 +12,7 @@ import {
 import { INCIDENT_TYPE_LABELS, CHECKLIST_PHASE_LABELS, type ChecklistPhase } from "@/lib/incidentPlaybooks";
 import ChecklistItem from "../ChecklistItem";
 import StatusSelect from "../StatusSelect";
+import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
 
 const SEVERITY_BADGE: Record<string, string> = {
   S1: "bg-rose-500/15 text-rose-400",
@@ -41,6 +42,10 @@ export default async function IncidentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
+  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  await assertAdminOrNotFound();
+
   const { id } = await params;
   const { incident, checklist } = await getIncidentWithChecklist(id);
 
