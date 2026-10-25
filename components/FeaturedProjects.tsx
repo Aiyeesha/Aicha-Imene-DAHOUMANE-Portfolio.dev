@@ -107,7 +107,11 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    // grid-cols-1 = minmax(0, 1fr) : sans colonne explicite, la piste implicite
+    // vaut minmax(auto, 1fr) et une carte ne rétrécit pas sous la largeur
+    // minimale de son contenu — l'accueil débordait à 320 px (seuil WCAG
+    // 1.4.10 ; audit 2026-10-23, P2). Même correctif que ProjectsSection.
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {featured.map((p, i) => (
         <Reveal key={p.slug} delayMs={i * 80}>
           <GlowCard className="card overflow-hidden">
@@ -121,8 +125,10 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               />
             </div>
             <div className="p-6">
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="text-lg font-semibold">{p.title}</h3>
+            {/* max-sm:flex-wrap : sur carte étroite, le badge passe sous le
+                titre au lieu d'être coupé par l'overflow-hidden de la carte. */}
+            <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
+              <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
               {p.badge ? (
                 <span className={getBadgeClass(p.badge.tone)}>
                   {tBadge(p.badge.label, locale)}

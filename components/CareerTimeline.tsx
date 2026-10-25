@@ -243,19 +243,35 @@ function TimelineItem({
   const cfg  = TYPE_CONFIG[milestone.type];
   const show = shouldReduce || inView;
 
+  // Période localisée — affichée dans la colonne gauche (sm et +) ou dans
+  // l'en-tête de la carte (mobile), voir les deux emplacements ci-dessous.
+  const periodLabel =
+    typeof milestone.period === "string"
+      ? milestone.period
+      : isFr ? milestone.period.fr : isEs ? milestone.period.es : milestone.period.en;
+
   return (
     <li ref={ref} className="flex gap-4 md:gap-6">
 
       {/* ── Colonne gauche : point + ligne ──────────────────────────────── */}
-      <div className="flex flex-col items-center shrink-0 pt-1">
-        {/* Badge année */}
+      {/* max-sm:pt-5 : sans le badge année, aligne le point sur le badge de
+          type de la carte. */}
+      <div className="flex flex-col items-center shrink-0 pt-1 max-sm:pt-5">
+        {/* Badge année — masqué sous sm (max-sm:hidden).
+            Audit 2026-10-23 (P2) : sur mobile, la période dans cette colonne
+            réduisait d'autant la carte. La période longue « 2023 – sept. 2025 »
+            (whitespace-nowrap) élargissait même la colonne à ~138 px et
+            poussait la carte hors de l'écran (/about à 403-420 px pour 390 px).
+            Sous sm, la période est donc affichée dans l'en-tête de la carte
+            (voir plus bas) et la colonne ne garde que le point et la ligne.
+            display: none → jamais lue deux fois par un lecteur d'écran. */}
         <motion.div
           initial={shouldReduce ? false : { opacity: 0, scale: 0.7 }}
           animate={show ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="mb-1.5 rounded-full bg-black/5 dark:bg-white/8 px-2 py-0.5 text-xs font-mono font-medium text-muted-2 whitespace-nowrap"
+          className="mb-1.5 rounded-full bg-black/5 dark:bg-white/8 px-2 py-0.5 text-xs font-mono font-medium text-muted-2 whitespace-nowrap max-sm:hidden"
         >
-          {typeof milestone.period === "string" ? milestone.period : (isFr ? milestone.period.fr : isEs ? milestone.period.es : milestone.period.en)}
+          {periodLabel}
         </motion.div>
 
         {/* Point coloré */}
@@ -285,7 +301,10 @@ function TimelineItem({
         initial={shouldReduce ? false : { opacity: 0, x: 16 }}
         animate={show ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.08 }}
-        className={`flex-1 rounded-2xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/2 p-4 md:p-5 ${isLast ? "mb-0" : "mb-6"}`}
+        // min-w-0 : sans lui, un élément flex ne rétrécit pas sous la largeur
+        // de son contenu le plus long et déborde du viewport sur mobile ;
+        // break-words coupe les mots/identifiants trop longs (audit 2026-10-23, P2).
+        className={`min-w-0 flex-1 break-words rounded-2xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/2 p-4 md:p-5 ${isLast ? "mb-0" : "mb-6"}`}
         style={cfg.borderStyle}
       >
         {/* En-tête : type + titre */}
@@ -293,9 +312,17 @@ function TimelineItem({
           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${cfg.badgeClass}`}>
             {isFr ? cfg.badgeFr : isEs ? cfg.badgeEs : cfg.badge}
           </span>
+          {/* Période — mobile uniquement (sm:hidden), en remplacement du
+              badge de la colonne gauche (audit 2026-10-23, P2). */}
+          <span className="rounded-full bg-black/5 dark:bg-white/8 px-2 py-0.5 text-xs font-mono font-medium text-muted-2 whitespace-nowrap sm:hidden">
+            {periodLabel}
+          </span>
         </div>
 
-        <div className="flex items-start justify-between gap-3">
+        {/* max-sm:flex-wrap : sur très petit écran (320 px, seuil WCAG 1.4.10),
+            les logos (shrink-0) passent sous le titre au lieu de déborder
+            (audit 2026-10-23, P2). Au-delà de sm, mise en page inchangée. */}
+        <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
           <div className="min-w-0">
             <h3 className="text-sm font-semibold leading-snug">
               {isFr ? milestone.title.fr : isEs ? milestone.title.es : milestone.title.en}
@@ -305,7 +332,7 @@ function TimelineItem({
 
           {/* Logos des organismes */}
           {milestone.logos && milestone.logos.length > 0 && (
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 max-sm:flex-wrap max-sm:shrink">
               {milestone.logos.map((logo) => (
                 <div
                   key={logo.src}

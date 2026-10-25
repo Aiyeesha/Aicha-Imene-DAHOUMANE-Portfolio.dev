@@ -276,7 +276,8 @@
     "scrollNavLeft": "Défiler le menu vers la gauche",
     "scrollNavRight": "Défiler le menu vers la droite",
     "scrollToTop": "Retour en haut de page",
-    "opensPage": "Ouvre une page dédiée"
+    "opensPage": "Ouvre une page dédiée",
+    "scrollableTable": "Tableau, défilable horizontalement"
   },
   "tracks": {
     "itops": "IT Ops",
