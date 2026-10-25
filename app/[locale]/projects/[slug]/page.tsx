@@ -98,7 +98,10 @@ function renderSection(section: ProjectSection, idx: number) {
           <div className="grid gap-3 sm:grid-cols-2">
             {section.items.map((item, i) => (
               <div key={i} className="rounded-xl border border-black/8 dark:border-white/8 bg-black/2 dark:bg-white/2 p-4">
-                <div className="text-2xl font-bold text-cyan-500 tabular-nums">{item.value}</div>
+                {/* text-cyan-700 en clair — audit 2026-10-23 (A11Y, axe color-contrast) :
+                    cyan-500 sur fond clair donnait 2,02:1 (3:1 requis pour un
+                    texte de 24 px gras). Thème sombre inchangé (cyan-500). */}
+                <div className="text-2xl font-bold text-cyan-700 dark:text-cyan-500 tabular-nums">{item.value}</div>
                 <div className="mt-1 text-sm font-medium text-strong">{item.label}</div>
                 {item.note ? <div className="mt-1 text-xs text-muted-2">{item.note}</div> : null}
               </div>
@@ -111,7 +114,11 @@ function renderSection(section: ProjectSection, idx: number) {
                 <dt className="font-medium text-strong self-start pt-0.5 shrink-0">{item.label}</dt>
                 <dd className="text-muted leading-relaxed">
                   {item.value}
-                  {item.note ? <span className="ml-2 text-xs opacity-60">({item.note})</span> : null}
+                  {/* text-muted-2 plutôt que opacity-60 — audit 2026-10-23 (axe
+                      color-contrast) : l'opacité donnait 2,91:1 en clair et
+                      4,46:1 en sombre (4,5:1 requis) ; même jeton que les notes
+                      de la présentation en cartes ci-dessus. */}
+                  {item.note ? <span className="ml-2 text-xs text-muted-2">({item.note})</span> : null}
                 </dd>
               </div>
             ))}
@@ -335,7 +342,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const isEs = locale === "es";
 
   return (
-    <main className="py-10 md:py-16">
+    // <article> et non <main> — audit 2026-10-23 (A11Y-1) : le layout
+    // [locale] fournit déjà <main id="main"> ; un second <main> imbriqué
+    // violait landmark-main-is-top-level / landmark-no-duplicate-main /
+    // landmark-unique (axe) sur les 51 fiches projet. Une fiche projet est un
+    // contenu autonome : <article> est l'élément sémantique adapté.
+    <article className="py-10 md:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(breadcrumbSchema) }}
@@ -565,6 +577,6 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </div>
 
       </div>
-    </main>
+    </article>
   );
 }
