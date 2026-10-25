@@ -18,9 +18,10 @@ import { Command } from "cmdk";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 import { LINKEDIN_URL } from "@/lib/social";
+import usePlatformShortcut from "@/lib/usePlatformShortcut";
 
 // ── Styles injectés une seule fois via <style> ────────────────────────────────
 // L'overlay et le panel sont stylés ici car cmdk accepte seulement des classNames.
@@ -163,42 +164,55 @@ export default function CommandPalette() {
   const linkedInUrl = LINKEDIN_URL || "https://www.linkedin.com";
 
   // ── Labels i18n ──────────────────────────────────────────────────────────────
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  // Audit 2026-10-23 (NAV-2, NAV-3, I18N-3) : les libellés étaient codés en
+  // dur (ternaires isFr ? … : isEs ? … : …) et divergeaient de la navigation
+  // (« Services » ici, « Expertises » dans le menu). Ils viennent désormais de
+  // messages/{fr,en,es}.json : namespace `commandPalette` pour les libellés
+  // propres à la palette, namespace `nav` pour les sections et pages déjà
+  // nommées dans la navigation — un seul libellé par entrée, partout.
+  const t = useTranslations("commandPalette");
+  const tNav = useTranslations("nav");
+  const shortcut = usePlatformShortcut();
   const L = {
-    placeholder: isFr ? "Rechercher une action…" : isEs ? "Buscar una acción…" : "Search or run a command…",
-    sections:    isFr ? "Sections" : isEs ? "Secciones" : "Sections",
-    pages:       isFr ? "Pages" : isEs ? "Páginas" : "Pages",
-    actions:     isFr ? "Actions" : isEs ? "Acciones" : "Actions",
-    links:       isFr ? "Liens" : isEs ? "Enlaces" : "Links",
-    skills:      isFr ? "Compétences" : isEs ? "Habilidades" : "Skills",
-    experience:  isFr ? "Expérience" : isEs ? "Experiencia" : "Experience",
-    services:    isFr ? "Services" : isEs ? "Servicios" : "Services",
-    projects:    isFr ? "Projets" : isEs ? "Proyectos" : "Projects",
-    blog:        "Blog",
-    contact:     "Contact",
-    about:       isFr ? "À propos" : isEs ? "Sobre mí" : "About",
-    certifications: "Certifications",
-    resources:   isFr ? "Ressources" : isEs ? "Recursos" : "Resources",
-    allProjects: isFr ? "Tous les projets" : isEs ? "Todos los proyectos" : "All projects",
-    workWithMe:  isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
-    hybride:     isFr ? "Profil hybride Salesforce × IT Ops" : isEs ? "Perfil híbrido Salesforce × IT Ops" : "Hybrid Salesforce × IT Ops profile",
-    blogAll:     isFr ? "Tous les articles" : isEs ? "Todos los artículos" : "All articles",
-    colophon:    "Colophon",
-    legal:       isFr ? "Mentions légales" : isEs ? "Aviso legal" : "Legal",
-    privacy:     isFr ? "Politique de confidentialité" : isEs ? "Política de privacidad" : "Privacy",
-    accessibility: isFr ? "Accessibilité" : isEs ? "Accesibilidad" : "Accessibility",
-    status:      isFr ? "Statut du site" : isEs ? "Estado del sitio" : "Site status",
-    info:        isFr ? "Info" : isEs ? "Info" : "Info",
-    switchToSf:  isFr ? "Voir le profil Salesforce →" : isEs ? "Ver el perfil Salesforce →" : "View Salesforce profile →",
-    switchToOps: isFr ? "Voir le profil IT Ops →" : isEs ? "Ver el perfil IT Ops →" : "View IT Ops profile →",
-    lightMode:   isFr ? "Passer en mode clair" : isEs ? "Cambiar a modo claro" : "Switch to light mode",
-    darkMode:    isFr ? "Passer en mode sombre" : isEs ? "Cambiar a modo oscuro" : "Switch to dark mode",
-    downloadCv:  isFr ? "Télécharger le CV" : isEs ? "Descargar el CV" : "Download CV",
-    linkedin:    "LinkedIn",
-    noResults:   isFr ? "Aucun résultat." : isEs ? "Sin resultados." : "No results.",
-    switchLang:  locale === "fr" ? "Switch to English" : locale === "en" ? "Cambiar a español" : "Passer en français",
-    shortcut:    isFr ? "Fermer" : isEs ? "Cerrar" : "Close",
+    title:       t("title"),
+    placeholder: t("placeholder"),
+    sections:    t("sections"),
+    pages:       t("pages"),
+    actions:     t("actions"),
+    links:       t("links"),
+    skills:      tNav("skills"),
+    experience:  tNav("experience"),
+    services:    tNav("services"),
+    testimonials: tNav("testimonials"),
+    projects:    tNav("projects"),
+    blog:        tNav("blog"),
+    contact:     tNav("contact"),
+    about:       tNav("about"),
+    certifications: tNav("certifications"),
+    resources:   tNav("resources"),
+    allProjects: t("allProjects"),
+    workWithMe:  t("workWithMe"),
+    hybride:     t("hybride"),
+    blogAll:     t("blogAll"),
+    uses:        t("uses"),
+    colophon:    t("colophon"),
+    legal:       t("legal"),
+    privacy:     t("privacy"),
+    accessibility: t("accessibility"),
+    status:      t("status"),
+    info:        t("info"),
+    switchToSf:  t("switchToSf"),
+    switchToOps: t("switchToOps"),
+    lightMode:   t("lightMode"),
+    darkMode:    t("darkMode"),
+    downloadCv:  t("downloadCv"),
+    linkedin:    t("linkedin"),
+    noResults:   t("noResults"),
+    switchLang:  t("switchLang"),
+    shortcut:    t("close"),
+    navigate:    t("navigate"),
+    select:      t("select"),
+    alsoShortcut: t("alsoShortcut", { shortcut }),
   };
 
   // ── Classe partagée pour les items (répétée inline car CSS injecté globalement) ──
@@ -214,14 +228,14 @@ export default function CommandPalette() {
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}
-        label={isFr ? "Palette de commandes" : isEs ? "Paleta de comandos" : "Command palette"}
+        label={L.title}
       >
         {/* Panel principal */}
         <div className="bg-white dark:bg-[#0f1929] text-slate-900 dark:text-white">
 
           {/* DialogTitle requis par Radix UI pour l'accessibilité — visuellement masqué */}
           <RadixDialog.Title className="sr-only">
-            {isFr ? "Palette de commandes" : isEs ? "Paleta de comandos" : "Command palette"}
+            {L.title}
           </RadixDialog.Title>
 
           {/* Champ de recherche */}
@@ -241,7 +255,7 @@ export default function CommandPalette() {
                 { id: "experience",  label: L.experience,  icon: "M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" },
                 { id: "services",    label: L.services,    icon: "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" },
                 ...(process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true"
-                  ? [{ id: "testimonials", label: isFr ? "Témoignages" : isEs ? "Testimonios" : "Testimonials", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" }]
+                  ? [{ id: "testimonials", label: L.testimonials, icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" }]
                   : []),
                 { id: "projects",    label: L.projects,    icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
                 { id: "blog",        label: L.blog,        icon: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" },
@@ -268,7 +282,7 @@ export default function CommandPalette() {
                 { href: `/${locale}/projects`,        label: L.allProjects,     icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
                 { href: `/${locale}/resources`,       label: L.resources,        icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
                 { href: `/${locale}/blog`,            label: L.blogAll,          icon: "M4 6h16M4 12h8m-8 6h16" },
-                { href: `/${locale}/uses`,            label: isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },
+                { href: `/${locale}/uses`,            label: L.uses, icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" },
                 { href: `/${locale}/hybride`,         label: L.hybride,          icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" },
                 { href: `/${locale}/work-with-me`,   label: L.workWithMe,       icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
                 { href: `/${locale}/colophon`,        label: L.colophon,         icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" },
@@ -375,10 +389,10 @@ export default function CommandPalette() {
 
           {/* Pied de page — légende clavier */}
           <div className="border-t border-black/10 dark:border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-slate-500 dark:text-white/40">
-            <span><kbd className="font-mono">↑↓</kbd> {isFr ? "naviguer" : isEs ? "navegar" : "navigate"}</span>
-            <span><kbd className="font-mono">↵</kbd> {isFr ? "sélectionner" : isEs ? "seleccionar" : "select"}</span>
+            <span><kbd className="font-mono">↑↓</kbd> {L.navigate}</span>
+            <span><kbd className="font-mono">↵</kbd> {L.select}</span>
             <span><kbd className="font-mono">Esc</kbd> {L.shortcut}</span>
-            <span className="ml-auto opacity-60">{isFr ? "Aussi ⌘K" : isEs ? "También ⌘K" : "Also ⌘K"}</span>
+            <span className="ml-auto opacity-60">{L.alsoShortcut}</span>
           </div>
         </div>
       </Command.Dialog>
