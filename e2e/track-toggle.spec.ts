@@ -105,4 +105,41 @@ test.describe("Track toggle", () => {
     await expect(h1).toContainText(itopsTitle);
     await expect(h1).not.toContainText(salesforceTitle);
   });
+  // Régression — audit 2026-10-23 (P1) : la bascule remplaçait le titre de
+  // l'onglet de N'IMPORTE QUELLE page par le titre générique de l'accueil.
+  // Seul l'accueil a un titre qui dépend du parcours (app/[locale]/providers.tsx).
+  for (const path of ["/en/about", "/en/projects", "/en/projects/idemconnect-apex-backend"]) {
+    test(`la bascule ne modifie pas le titre de l'onglet sur ${path}`, async ({
+      page,
+    }) => {
+      await gotoHydrated(page, path);
+      const initialTitle = await page.title();
+
+      await page.getByRole("button", { name: /switch to it ops/i }).first().click();
+      // Le bouton inverse visible prouve que la bascule a bien eu lieu.
+      await expect(
+        page.getByRole("button", { name: /switch to salesforce/i }).first()
+      ).toBeVisible();
+      await expect(page).toHaveTitle(initialTitle);
+
+      await page.getByRole("button", { name: /switch to salesforce/i }).first().click();
+      await expect(
+        page.getByRole("button", { name: /switch to it ops/i }).first()
+      ).toBeVisible();
+      await expect(page).toHaveTitle(initialTitle);
+    });
+  }
+
+  test("sur l'accueil, le titre de l'onglet suit le parcours actif", async ({
+    page,
+  }) => {
+    await gotoHydrated(page, "/en");
+    const salesforceTitle = await page.title();
+
+    await page.getByRole("button", { name: /switch to it ops/i }).first().click();
+    await expect(page).not.toHaveTitle(salesforceTitle);
+
+    await page.getByRole("button", { name: /switch to salesforce/i }).first().click();
+    await expect(page).toHaveTitle(salesforceTitle);
+  });
 });

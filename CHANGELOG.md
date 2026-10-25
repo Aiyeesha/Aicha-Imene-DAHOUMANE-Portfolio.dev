@@ -19,6 +19,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **La bascule de parcours n'écrase plus le titre des pages internes** — Basculer entre Salesforce et IT Ops remplaçait le titre de l'onglet de n'importe quelle page (« À propos », « Projets », fiches projet…) par le titre générique de l'accueil. Le titre dépendant du parcours n'est désormais appliqué que sur l'accueil (`app/[locale]/providers.tsx`). Couvert par un test Jest et des scénarios Playwright (audit du 23/10/2026, P1).
 - **Lien mort retiré sur le projet Python Network Scanner** — Le projet publié `python-network-scanner` renvoyait vers le dépôt GitHub `Python-network-scanner-project`, qui est privé : les visiteurs obtenaient une erreur 404. Le lien « Voir le dépôt » est supprimé de `content/projects.ts` ; la fiche projet reste publiée, sans lien vers le code.
 
 ### Security
