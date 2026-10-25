@@ -10,6 +10,7 @@
 //     au <pre> pour que les CSS vars shiki fonctionnent (--shiki-light / --shiki-dark)
 
 import CopyButton from "./CopyButton";
+import { getTranslations } from "next-intl/server";
 
 // ── Extraction récursive du texte brut (pour le bouton copier) ─────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,7 +67,7 @@ type CodeBlockServerProps = {
   [key: string]: any;
 };
 
-export default function CodeBlockServer({
+export default async function CodeBlockServer({
   children,
   "data-language": dataLanguage,
   ...rest
@@ -78,6 +79,12 @@ export default function CodeBlockServer({
   const langLabel = dataLanguage
     ? (LANG_LABELS[dataLanguage.toLowerCase()] ?? dataLanguage.toUpperCase())
     : null;
+
+  // Nom accessible du bloc défilable, traduit (locale résolue par next-intl).
+  const t = await getTranslations("a11y");
+  const regionLabel = langLabel
+    ? t("codeBlockLang", { language: langLabel })
+    : t("codeBlock");
 
   return (
     <div className="mdx-code">
@@ -93,10 +100,22 @@ export default function CodeBlockServer({
 
       {/* <pre> — data-language et les autres attrs shiki sont transmis
           pour que les variables CSS --shiki-light / --shiki-dark fonctionnent */}
+      {/* Accessibilité clavier — audit 2026-10-23 (A11Y-2, axe
+          scrollable-region-focusable, gravité « serious ») : un bloc de code
+          plus large que l'écran défile horizontalement ; sans tabIndex, un
+          utilisateur clavier ne pouvait pas l'atteindre ni le faire défiler
+          (WCAG 2.1.1). tabIndex={0} le rend focalisable (flèches pour
+          défiler) ; role="region" + aria-label annoncent ce qu'il contient —
+          un aria-label n'est pas autorisé sur un <pre> sans rôle explicite.
+          {...rest} reste avant ces attributs : rehype-pretty-code ne doit pas
+          pouvoir les écraser. */}
       <pre
-        className="mdx-code__pre"
+        className="mdx-code__pre soft-ring"
         data-language={dataLanguage}
         {...rest}
+        tabIndex={0}
+        role="region"
+        aria-label={regionLabel}
       >
         {children}
       </pre>
