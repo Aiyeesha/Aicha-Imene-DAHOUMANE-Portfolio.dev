@@ -65,6 +65,22 @@ export default function Modal({
     };
   }, [open, onClose]);
 
+  // Verrouillage du défilement de l'arrière-plan — audit 2026-10-23 (A11Y-6).
+  // Sans lui, la molette ou le glissé tactile faisaient défiler la page derrière
+  // la modale (aria-modal) : le contexte visuel changeait sous l'utilisateur.
+  // Même technique que le menu mobile (components/Navbar.tsx) : on mémorise la
+  // valeur d'origine pour la restaurer à la fermeture.
+  // Effet séparé, dépendant de `open` seul : l'effet ci-dessus dépend aussi de
+  // `onClose`, dont l'identité peut changer à chaque rendu du parent.
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
