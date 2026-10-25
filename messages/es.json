@@ -276,7 +276,8 @@
     "scrollNavLeft": "Desplazar el menú a la izquierda",
     "scrollNavRight": "Desplazar el menú a la derecha",
     "scrollToTop": "Volver arriba",
-    "opensPage": "Abre una página dedicada"
+    "opensPage": "Abre una página dedicada",
+    "scrollableTable": "Tabla, desplazable horizontalmente"
   },
   "tracks": {
     "itops": "IT Ops",

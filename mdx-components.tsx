@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import CodeBlockServer from "@/components/mdx/CodeBlock.server";
 import { H2, H3 } from "@/components/mdx/Headings.server";
+import TableServer from "@/components/mdx/Table.server";
 
 /**
  * Global MDX components for @next/mdx (App Router).
@@ -14,6 +15,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h2: (props: any) => <H2>{props.children}</H2>,
     h3: (props: any) => <H3>{props.children}</H3>,
     a: (props: any) => <a {...props} className={["mdx-link", props.className || ""].join(" ")} />,
+    // Tableaux GFM : conteneur défilable accessible, pour qu'un tableau large
+    // ne fasse jamais déborder la page sur mobile (audit 2026-10-23, P2).
+    table: (props: any) => <TableServer {...props} />,
     // remark-gfm renders `- [ ] …` task lists as a disabled <input type="checkbox">.
     // These are decorative, read-only markers — the list item text carries the
     // meaning — so hide them from the accessibility tree. Without this, axe flags

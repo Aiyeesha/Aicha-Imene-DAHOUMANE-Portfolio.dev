@@ -276,7 +276,8 @@
     "scrollNavLeft": "Scroll menu left",
     "scrollNavRight": "Scroll menu right",
     "scrollToTop": "Back to top",
-    "opensPage": "Opens a dedicated page"
+    "opensPage": "Opens a dedicated page",
+    "scrollableTable": "Table, scrolls horizontally"
   },
   "tracks": {
     "itops": "IT Ops",

@@ -52,8 +52,50 @@ function LevelDots({ level }: { level: TechLevel }) {
   );
 }
 
+// ── Alignement du tooltip selon la colonne ────────────────────────────────
+// Audit 2026-10-23 (P2) : le tooltip (w-52, soit 208 px) était toujours centré
+// sur sa carte. Sur mobile, les cartes font ~100 px de large : celui des
+// cartes de la dernière colonne dépassait à droite et, même invisible
+// (opacity-0 — il reste dans le flux de mise en page), élargissait la page
+// (/about mesuré à 403-420 px de large pour un viewport de 390 px). Celui des
+// cartes de la première colonne dépassait à gauche et était coupé à l'affichage.
+// Correctif : aligner le tooltip sur le bord gauche de la carte en première
+// colonne, sur le bord droit en dernière colonne, centré ailleurs. Le nombre
+// de colonnes suit les breakpoints de la grille (3 / sm:4 / md:5) ; à partir
+// de lg (6 colonnes, cartes larges) le centrage ne déborde plus et est rétabli.
+// Les classes sont écrites en toutes lettres (pas de concaténation) pour que
+// Tailwind les détecte à la compilation.
+const ALIGN_LEFT = {
+  base: "left-0 translate-x-0 after:left-1/4",
+  sm: "sm:left-0 sm:right-auto sm:translate-x-0 sm:after:left-1/4",
+  md: "md:left-0 md:right-auto md:translate-x-0 md:after:left-1/4",
+} as const;
+const ALIGN_RIGHT = {
+  base: "left-auto right-0 translate-x-0 after:left-3/4",
+  sm: "sm:left-auto sm:right-0 sm:translate-x-0 sm:after:left-3/4",
+  md: "md:left-auto md:right-0 md:translate-x-0 md:after:left-3/4",
+} as const;
+const ALIGN_CENTER = {
+  base: "left-1/2 -translate-x-1/2 after:left-1/2",
+  sm: "sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:after:left-1/2",
+  md: "md:left-1/2 md:right-auto md:-translate-x-1/2 md:after:left-1/2",
+} as const;
+const COLUMNS = { base: 3, sm: 4, md: 5 } as const;
+
+function tooltipAlignClasses(index: number): string {
+  const parts: string[] = (Object.keys(COLUMNS) as (keyof typeof COLUMNS)[]).map((bp) => {
+    const col = index % COLUMNS[bp];
+    if (col === 0) return ALIGN_LEFT[bp];
+    if (col === COLUMNS[bp] - 1) return ALIGN_RIGHT[bp];
+    return ALIGN_CENTER[bp];
+  });
+  // lg et au-delà : centrage d'origine.
+  parts.push("lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:after:left-1/2");
+  return parts.join(" ");
+}
+
 // ── Sous-composant : badge individuel + tooltip ───────────────────────────
-function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
+function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; index: number }) {
   const safeLocale = toLocale(locale);
   const colors  = CATEGORY_COLORS[tech.category];
   const label   = LEVEL_LABELS[tech.level][safeLocale];
@@ -111,15 +153,17 @@ function TechCard({ tech, locale }: { tech: TechItem; locale: string }) {
         id={tooltipId}
         role="tooltip"
         className={[
-          // Positionnement
-          "absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50",
+          // Positionnement — horizontal selon la colonne (voir tooltipAlignClasses)
+          "absolute bottom-full mb-2 z-50",
+          tooltipAlignClasses(index),
           "w-52",
           // Apparence
           "rounded-xl border border-black/10 dark:border-white/10",
           "bg-white/95 dark:bg-[#0d1b2e]/95 backdrop-blur-xs",
           "p-3 shadow-xl shadow-black/10 dark:shadow-black/30",
           // Flèche pointant vers le bas
-          "after:absolute after:top-full after:left-1/2 after:-translate-x-1/2",
+          // (position horizontale de la flèche : after:left-* dans tooltipAlignClasses)
+          "after:absolute after:top-full after:-translate-x-1/2",
           "after:border-4 after:border-transparent",
           "after:border-t-white/95 dark:after:border-t-[#0d1b2e]/95",
           // Transition
@@ -179,7 +223,7 @@ export default function TechStackGrid() {
         {items.map((tech, i) => (
           <Reveal key={tech.id} delayMs={i * 30}>
             <div role="listitem">
-              <TechCard tech={tech} locale={locale} />
+              <TechCard tech={tech} locale={locale} index={i} />
             </div>
           </Reveal>
         ))}
