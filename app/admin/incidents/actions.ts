@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdminAuth } from "@/app/admin/actions";
+import { requireAdminAuth } from "@/lib/security/adminAuth";
 import {
   createIncident,
   toggleChecklistItem,
