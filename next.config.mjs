@@ -215,6 +215,26 @@ const nextConfig = {
     ];
   },
 
+  // ── 404 légère pour les fichiers statiques absents — audit 2026-10-23 (P5) ──
+  // Une image inexistante (ex. /projects/risque360/cover.webp) tombait sur la
+  // route attrape-tout app/[locale]/[...rest] et recevait une page HTML 404
+  // complète, rendue dynamiquement (~70 Ko) — pour une balise <img> qui ne
+  // l'affichera jamais.
+  // Les réécritures `afterFiles` ne s'appliquent qu'APRÈS la recherche dans
+  // public/ et les routes statiques, mais AVANT les routes dynamiques : un
+  // fichier existant est donc toujours servi normalement ; seul un fichier
+  // absent est redirigé vers app/api/asset-not-found (404 en texte brut).
+  async rewrites() {
+    return {
+      afterFiles: [
+        {
+          source: "/:asset(.*\\.(?:webp|png|jpe?g|gif|svg|avif|ico|pdf))",
+          destination: "/api/asset-not-found",
+        },
+      ],
+    };
+  },
+
   async headers() {
     return [
       // ── Assets statiques publics (logo, avatar, CV PDF…) ──────────────────────

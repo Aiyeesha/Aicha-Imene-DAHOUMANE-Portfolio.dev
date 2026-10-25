@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 // Project images are committed to the repo under /public/projects/<slug>/
-// and served by Vercel's CDN (see lib/data/projectsSource.ts).
-const STORAGE_CDN = "/projects";
+// and served by Vercel's CDN (see lib/data/projectsSource.ts). Which image a
+// card shows is resolved by projectCardImage() (lib/data/projectAssets.ts).
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getBadgeClass, tBadge, tTag } from "@/i18n/projectTaxonomy";
@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import Reveal from "./Reveal";
 import { GlowCard } from "./GlowCard";
 import ProjectClientLogo from "./ProjectClientLogo";
+import { projectCardImage } from "@/lib/data/projectAssets";
 import { useTrack } from "@/app/[locale]/providers";
 import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 
@@ -21,9 +22,12 @@ type FeaturedProjectsProps = {
 };
 
 // Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
-function CoverImage({ src, fallback, alt, loading }: { src: string; fallback?: string; alt: string; loading?: "lazy" | "eager" }) {
-  const [imgSrc, setImgSrc] = useState(src);
-  const [failed, setFailed] = useState(false);
+// Audit 2026-10-23 (P5) : `src` vaut null quand le projet n'a ni image de
+// galerie ni couverture (lib/data/projectAssets.ts) — le visuel de
+// remplacement est alors affiché d'emblée, sans requête vouée au 404.
+function CoverImage({ src, fallback, alt, loading }: { src: string | null; fallback?: string; alt: string; loading?: "lazy" | "eager" }) {
+  const [imgSrc, setImgSrc] = useState(src ?? "");
+  const [failed, setFailed] = useState(src === null);
 
   if (failed) return (
     <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800/50" aria-hidden="true">
@@ -118,8 +122,8 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             {/* Image de couverture */}
             <div className="relative h-40 w-full bg-black/5 dark:bg-white/5">
               <CoverImage
-                src={p.gallery?.[0]?.src || `${STORAGE_CDN}/${p.slug}/cover.webp`}
-                fallback={`${STORAGE_CDN}/${p.slug}/cover.webp`}
+                src={projectCardImage(p.slug, p.gallery)?.src ?? null}
+                fallback={projectCardImage(p.slug, p.gallery)?.fallback ?? undefined}
                 alt={p.title}
                 loading={i === 0 ? "eager" : "lazy"}
               />
