@@ -209,8 +209,14 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       <ScrollProgress />
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+          {/* Audit 2026-10-23 (P2) : à 360 px, un mot long du titre en text-4xl
+              (« administration » ≈ 280 px) ne tenait pas à côté du bouton
+              « ← Retour » et élargissait la page. flex-wrap + basis-64 : titre
+              et bouton partagent la ligne quand la place le permet (desktop,
+              inchangé), sinon le bouton passe sous le bloc de titre — l'ordre
+              du DOM, donc de lecture et de tabulation, reste identique. */}
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0 flex-1 basis-64">
               {/* Date + reading time */}
               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-2">
                 <span>{formatDate(meta.date, locale)}</span>
@@ -228,7 +234,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
                 <span>{meta.readingTime} {t("readingTime")}</span>
               </div>
 
-              <h1 className="mt-2 text-4xl font-semibold leading-tight">{meta.title}</h1>
+              <h1 className="mt-2 text-4xl font-semibold leading-tight break-words">{meta.title}</h1>
               {meta.excerpt ? <p className="mt-4 text-muted">{meta.excerpt}</p> : null}
 
               <div className="mt-4 flex flex-wrap gap-2">
