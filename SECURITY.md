@@ -155,8 +155,8 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 
 | Route | Protection mechanism |
 |-------|---------------------|
-| `GET /admin/*` | HTTP Basic Auth + rate-limit (middleware) |
-| `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET` |
+| `GET /admin/*` | HTTP Basic Auth + rate-limit (middleware), re-checked in the admin layout and in every admin page (`lib/security/adminAuth.ts` — 404 when unauthenticated, independent of the middleware matcher) |
+| `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET`; body validated with zod (`locale` ∈ supported locales, `slug` kebab-case, no unknown keys, ≤ 1 KiB) |
 | `POST /api/revalidate` | `?secret=` query param compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
 | `POST /api/testimonial-submit` | `token` field in body compared to `TESTIMONIAL_SUBMIT_TOKEN` |

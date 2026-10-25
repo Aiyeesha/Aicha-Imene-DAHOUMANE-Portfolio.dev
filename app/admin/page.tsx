@@ -18,6 +18,7 @@ import { join } from "path";
 import Link from "next/link";
 import TogglePublished from "./TogglePublished";
 import RevalidateButton from "./RevalidateButton";
+import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -218,6 +219,10 @@ function SectionHeader({ title, count, right }: { title: string; count?: number;
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AdminPage() {
+  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
+  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  await assertAdminOrNotFound();
+
   const { projects, projectTranslations, messages, testimonials, blog, errors } =
     await fetchDashboardData();
 
