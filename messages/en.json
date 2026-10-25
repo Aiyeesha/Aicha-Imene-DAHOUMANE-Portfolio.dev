@@ -277,7 +277,9 @@
     "scrollNavRight": "Scroll menu right",
     "scrollToTop": "Back to top",
     "opensPage": "Opens a dedicated page",
-    "scrollableTable": "Table, scrolls horizontally"
+    "scrollableTable": "Table, scrolls horizontally",
+    "codeBlock": "Code sample, scrollable",
+    "codeBlockLang": "{language} code sample, scrollable"
   },
   "tracks": {
     "itops": "IT Ops",

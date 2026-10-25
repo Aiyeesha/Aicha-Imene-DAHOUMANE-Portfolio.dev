@@ -544,8 +544,23 @@ html.dark .mdx code {
   margin-top: 0.8rem;
   border-radius: 1rem;
   border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(0,0,0,0.04);
+  /* Fond blanc opaque en thème clair — audit 2026-10-23 (axe color-contrast,
+     ~4 000 nœuds sur 24 articles et études de cas) : le thème Shiki
+     « github-light » est calibré pour un fond blanc. Sur l'ancien fond gris
+     translucide (≈ #e9e9e9), les mots-clés (#D73A49) tombaient à 3,77:1, les
+     commentaires (#6A737D) à 3,97:1 et les balises (#22863A) à 3,81:1 —
+     4,5:1 requis. Sur blanc : 4,57 / 4,82 / 4,63:1. La bordure garde le bloc
+     distinct du fond de page. */
+  background: #ffffff;
   overflow-x: auto;
+}
+/* Seule couleur de « github-light » sous 4,5:1 même sur blanc : l'orange des
+   variables (#E36209, 3,49:1). Remplacé en thème clair par la même teinte
+   assombrie (#C15308, 4,66:1). !important est nécessaire : la variable est
+   posée en style inline par rehype-pretty-code ; une déclaration !important
+   de feuille de style l'emporte sur un style inline normal. */
+.mdx code span[style*="--shiki-light:#E36209"] {
+  --shiki-light: #C15308 !important;
 }
 html.dark .mdx pre {
   border: 1px solid rgba(255,255,255,0.10);
