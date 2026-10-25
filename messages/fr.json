@@ -252,7 +252,7 @@
   },
   "blogTags": {
     "meta": {
-      "title": "Blog — Tags | Aïcha Imène DAHOUMANE",
+      "title": "Blog — Étiquettes | Aïcha Imène DAHOUMANE",
       "description": "Parcourir tous les thèmes du blog — Salesforce, IT Ops, développement web et plus. Filtrer les articles par tag."
     },
     "kicker": "Thèmes",
@@ -588,5 +588,37 @@
     "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et CI/CD.",
     "showProfile": "Afficher ce profil",
     "cv": "CV (PDF)"
+  },
+  "commandPalette": {
+    "title": "Palette de commandes",
+    "open": "Ouvrir la palette de commandes ({shortcut})",
+    "placeholder": "Rechercher une action…",
+    "sections": "Sections",
+    "pages": "Pages",
+    "actions": "Actions",
+    "links": "Liens",
+    "info": "Info",
+    "allProjects": "Tous les projets",
+    "workWithMe": "Me recruter",
+    "hybride": "Profil hybride Salesforce × IT Ops",
+    "blogAll": "Tous les articles",
+    "uses": "Setup & Outils",
+    "colophon": "Colophon",
+    "legal": "Mentions légales",
+    "privacy": "Politique de confidentialité",
+    "accessibility": "Accessibilité",
+    "status": "Statut du site",
+    "switchToSf": "Voir le profil Salesforce →",
+    "switchToOps": "Voir le profil IT Ops →",
+    "lightMode": "Passer en mode clair",
+    "darkMode": "Passer en mode sombre",
+    "downloadCv": "Télécharger le CV",
+    "linkedin": "LinkedIn",
+    "noResults": "Aucun résultat.",
+    "switchLang": "Switch to English",
+    "close": "Fermer",
+    "navigate": "naviguer",
+    "select": "sélectionner",
+    "alsoShortcut": "Aussi {shortcut}"
   }
 }
