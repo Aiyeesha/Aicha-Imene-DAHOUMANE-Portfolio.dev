@@ -1,36 +1,31 @@
 name: Content Publish Safety
 
-# ── Objectif ──────────────────────────────────────────────────────────────────
-# Vérifie quotidiennement que `public.projects` (Supabase) ne viole aucune des
-# deux règles de publication trouvées lors de l'audit du 2026-08-13 :
-#   1. Aucun projet publié dans une locale sans l'être dans les 3 (en/fr/es
-#      ou 'multi') — sinon le site ES diverge silencieusement de EN/FR.
-#   2. Aucun projet SaaS de l'auteure (orgdocs-saas, sfrelease-saas, et tout
-#      futur produit ajouté à SAAS_EMBARGO_SLUGS dans le script) ne doit
-#      jamais être `published` ou porter de `live_url` avant 2027 — une
-#      contrainte de stratégie de carrière, pas une règle que le schéma
-#      applique tout seul.
+# ── Purpose ───────────────────────────────────────────────────────────────────
+# Checks daily that `public.projects` (Supabase) breaks neither publication
+# rule:
+#   1. No project published in one locale without the other two (en/fr/es,
+#      or 'multi'), otherwise the ES site silently diverges.
+#   2. No SaaS product of the author (orgdocs-saas, sfrelease-saas, and any
+#      product added to SAAS_EMBARGO_SLUGS in the script) is `published` or
+#      has a `live_url` before 2027; the schema does not enforce this.
 #
-# Contrairement à drift-check.yml, ce check ne "skip" pas silencieusement si
-# le secret manque : son unique rôle est la sécurité de contenu, un skip
-# silencieux masquerait exactement le risque qu'il existe pour attraper.
+# Unlike drift-check.yml, this check never skips when the secret is missing:
+# content safety is its only purpose, so a silent skip would hide exactly
+# what it exists to catch.
 #
-# Secret requis dans les paramètres du dépôt (Settings → Secrets and
-# variables → Actions) :
-#   SUPABASE_SERVICE_ROLE_KEY   — clé service_role (lecture seule utilisée ici,
-#                                  mais la clé elle-même a des droits d'écriture,
-#                                  donc à traiter comme un secret sensible)
-# Réutilise le secret existant NEXT_PUBLIC_SUPABASE_URL (déjà configuré pour
-# le job build-test de ci.yml).
+# Repository secret (Settings → Secrets and variables → Actions):
+#   SUPABASE_SERVICE_ROLE_KEY — read-only use here, but the key itself can
+#                               write: treat it as sensitive
+# Also uses the existing NEXT_PUBLIC_SUPABASE_URL secret (ci.yml build-test).
 
 on:
   schedule:
-    # Quotidien à 05:00 UTC — avant drift-check.yml (06:00 UTC).
+    # Daily at 05:00 UTC, before drift-check.yml (06:00 UTC).
     - cron: "0 5 * * *"
   workflow_dispatch: {}
 
-# Permissions minimales — principe du moindre privilège (Scorecard).
-# Ce workflow n'écrit rien dans le dépôt ni dans Supabase (script read-only).
+# Least privilege (Scorecard): the workflow writes nothing to the repo or to
+# Supabase (read-only script).
 permissions: read-all
 
 jobs:
@@ -40,10 +35,9 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
-    # Audit 2026-10-25 : la clé service_role était déclarée au niveau du job,
-    # donc visible des scripts postinstall de toutes les dépendances pendant
-    # `npm ci`. Elle n'est plus exposée qu'aux deux étapes qui la lisent, et
-    # l'installation se fait sans scripts de cycle de vie.
+    # The service_role key is only exposed to the two steps that read it (not
+    # the whole job, where dependency postinstall scripts would see it during
+    # `npm ci`), and installation runs without lifecycle scripts.
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -60,8 +54,8 @@ jobs:
       - name: Install
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-        # --ignore-scripts : aucun postinstall de dépendance n'est exécuté.
-        # Le script de contrôle (tsx + supabase-js) n'en a pas besoin.
+        # --ignore-scripts: no dependency postinstall runs; the check script
+        # (tsx + supabase-js) does not need any.
         run: npm ci --ignore-scripts
 
       - name: Check secret is configured

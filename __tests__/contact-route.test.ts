@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 // __tests__/contact-route.test.ts
-// Audit 2026-10-25 : /api/contact renvoyait 500 sur un champ non textuel,
-// n'imposait aucune forme au corps et attendait Formhook sans délai maximal.
+// /api/contact: body shape validation (no 500 on a non-string field) and the
+// Formhook call timeout.
 
 jest.mock("@/lib/ratelimit", () => ({
   contactRatelimit: {},
@@ -69,7 +69,7 @@ describe("POST /api/contact — délai Formhook", () => {
 
     const res = await POST(post(valid));
     expect(res.status).toBe(502);
-    // Le signal de délai est bien transmis à fetch.
+    // The timeout signal is passed to fetch.
     expect(fetchMock.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal);
   });
 });

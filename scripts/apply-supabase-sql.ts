@@ -1,35 +1,32 @@
 /**
  * apply-supabase-sql.ts
  * ---------------------
- * Applique les fichiers SQL de /supabase/ sur la base Supabase distante
- * via l'API Management Supabase (aucune dépendance supplémentaire, fetch natif Node 18+).
- *
- * Fichiers exécutés dans l'ordre (supabase/migrations/) :
- *   1. 001_testimonials.sql         — table testimonials
- *   2. 002_policies.sql             — RLS toutes tables
- *   3. 003_uptime.sql               — table uptime_pings
- *   4. 004_testimonial_submissions  — table testimonial_submissions
- *   5. 005_goals_2026.sql           — table goals_2026
- *   6. 006_security_hardening.sql               — durcissement sécurité (audit 2026-06-04)
- *   7. 007_projects_schema.sql                  — schéma complet projects + project_assets
+ * Applies the SQL files of supabase/migrations/ to the remote Supabase
+ * database through the Supabase Management API (native fetch, no extra
+ * dependency), in order:
+ *   1. 001_testimonials.sql         — testimonials table
+ *   2. 002_policies.sql             — RLS on every table
+ *   3. 003_uptime.sql               — uptime_pings table
+ *   4. 004_testimonial_submissions  — testimonial_submissions table
+ *   5. 005_goals_2026.sql           — goals_2026 table
+ *   6. 006_security_hardening.sql               — security hardening
+ *   7. 007_projects_schema.sql                  — projects + project_assets schema
  *   8. 008_about_goals_certifications_schema.sql — about_pages, goals_2026, certifications
  *
- * Variables d'environnement requises (dans .env.local) :
- *   SUPABASE_PROJECT_REF    — ID du projet (Settings > General > Reference ID)
- *   SUPABASE_ACCESS_TOKEN   — Token personnel (https://supabase.com/dashboard/account/tokens)
+ * Required in .env.local:
+ *   SUPABASE_PROJECT_REF    — project id (Settings > General > Reference ID)
+ *   SUPABASE_ACCESS_TOKEN   — personal token (https://supabase.com/dashboard/account/tokens)
  *
- * Usage :
  *   npx tsx scripts/apply-supabase-sql.ts
  *
- * Idempotent : les instructions utilisent IF NOT EXISTS / DROP IF EXISTS.
- * Peut être relancé sans danger.
+ * Idempotent (IF NOT EXISTS / DROP IF EXISTS): safe to re-run.
  */
 
 import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
 
-// ── 0. Charger l'environnement ────────────────────────────────────────────────
+// ── 0. Load the environment ───────────────────────────────────────────────────
 const envLocalPath = path.resolve(process.cwd(), ".env.local");
 const envPath      = path.resolve(process.cwd(), ".env");
 
@@ -43,7 +40,7 @@ if (fs.existsSync(envLocalPath)) {
   console.warn("⚠️  Aucun fichier .env.local ou .env trouvé.");
 }
 
-// ── 1. Vérifier les variables requises ────────────────────────────────────────
+// ── 1. Check required variables ───────────────────────────────────────────────
 const PROJECT_REF    = process.env.SUPABASE_PROJECT_REF;
 const ACCESS_TOKEN   = process.env.SUPABASE_ACCESS_TOKEN;
 
@@ -62,50 +59,48 @@ if (!PROJECT_REF || !ACCESS_TOKEN) {
 
 const API_URL = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query`;
 
-// ── 2. Utilitaires ────────────────────────────────────────────────────────────
+// ── 2. Utilities ──────────────────────────────────────────────────────────────
 
 /**
- * Découpe un fichier SQL en instructions individuelles.
- * Ignore les lignes de commentaires purs (-- ...).
- * Gère les chaînes dollar-quotées PostgreSQL ($$...$$, $tag$...$tag$)
- * pour ne pas couper une instruction au milieu d'un corps de fonction.
- * Filtre les instructions vides.
+ * Splits a SQL file into statements. Skips pure comment lines (-- ...),
+ * handles PostgreSQL dollar-quoted strings ($$...$$, $tag$...$tag$) so a
+ * function body is never cut, and drops empty statements.
  */
 function splitSqlStatements(sql: string): string[] {
   const statements: string[] = [];
   let current = "";
-  // Tag dollar-quote actif, ou null si on n'est pas dans un bloc dollar-quoted
+  // Active dollar-quote tag, or null outside a dollar-quoted block
   let dollarTag: string | null = null;
 
   for (const line of sql.split("\n")) {
     const trimmed = line.trim();
     current += line + "\n";
 
-    // ── Gestion des blocs dollar-quotés ─────────────────────────────────────
-    // Un tag dollar-quote ressemble à $$ ou $identifiant$.
-    // On cherche toutes les occurrences sur cette ligne pour ouvrir/fermer le bloc.
+    // ── Dollar-quoted blocks ────────────────────────────────────────────────
+    // A tag looks like $$ or $identifier$; every occurrence on the line opens
+    // or closes the block.
     const dollarMatches = [...line.matchAll(/\$([A-Za-z_]*)\$/g)];
 
     for (const match of dollarMatches) {
-      const tag = match[0]; // ex. "$$" ou "$body$"
+      const tag = match[0]; // e.g. "$$" or "$body$"
       if (dollarTag === null) {
-        // Pas encore dans un bloc → on ouvre
+        // Not in a block yet → open
         dollarTag = tag;
       } else if (tag === dollarTag) {
-        // Tag correspondant → on ferme
+        // Matching tag → close
         dollarTag = null;
       }
-      // Un tag différent à l'intérieur d'un bloc est ignoré (non imbriqué)
+      // A different tag inside a block is ignored (no nesting)
     }
 
-    // ── Détection de fin de statement ────────────────────────────────────────
-    // On ne coupe que si on n'est PAS à l'intérieur d'un bloc dollar-quoté.
+    // ── End of statement ─────────────────────────────────────────────────────
+    // Only split outside a dollar-quoted block.
     if (dollarTag === null) {
-      // Lignes de commentaires/vides seules → on les accumule mais ne coupe pas
+      // Comment-only or blank lines are accumulated, never split on
       if (trimmed.startsWith("--") || trimmed === "") {
         continue;
       }
-      // Si la ligne (hors commentaire inline) se termine par ; → fin du statement
+      // A line ending with ; (outside an inline comment) ends the statement
       const lineWithoutComment = trimmed.replace(/--[^\n]*$/, "").trim();
       if (lineWithoutComment.endsWith(";")) {
         const cleaned = current.trim();
@@ -118,7 +113,7 @@ function splitSqlStatements(sql: string): string[] {
     }
   }
 
-  // Dernier statement sans ; terminal (sécurité)
+  // Last statement without a trailing ; (safety)
   const remaining = current.trim();
   if (remaining) {
     const withoutComments = remaining.replace(/--[^\n]*/g, "").trim();
@@ -131,8 +126,8 @@ function splitSqlStatements(sql: string): string[] {
 }
 
 /**
- * Exécute une instruction SQL via l'API Management Supabase.
- * Retourne le résultat ou lève une erreur.
+ * Runs a SQL statement through the Supabase Management API; returns the
+ * result or throws.
  */
 async function execSql(sql: string): Promise<void> {
   const res = await fetch(API_URL, {
@@ -150,7 +145,7 @@ async function execSql(sql: string): Promise<void> {
     throw new Error(`HTTP ${res.status}: ${body}`);
   }
 
-  // L'API renvoie { data, error } — vérifier le champ error
+  // The API returns { data, error }: check error
   const json = await res.json().catch(() => null);
   if (json?.error) {
     throw new Error(json.error);
@@ -158,9 +153,8 @@ async function execSql(sql: string): Promise<void> {
 }
 
 /**
- * Applique un fichier SQL complet, instruction par instruction.
- * Affiche la progression et continue même si une instruction échoue
- * (pratique pour les DROP IF EXISTS sur des tables qui n'existent pas encore).
+ * Applies a whole SQL file statement by statement, showing progress and
+ * continuing past failures (useful for DROP IF EXISTS on missing tables).
  */
 async function applyFile(filePath: string): Promise<{ ok: number; skipped: number; failed: number }> {
   const sql = fs.readFileSync(filePath, "utf-8");
@@ -172,7 +166,7 @@ async function applyFile(filePath: string): Promise<{ ok: number; skipped: numbe
 
   for (let i = 0; i < statements.length; i++) {
     const stmt = statements[i];
-    // Afficher un résumé de l'instruction (première ligne non-commentaire)
+    // Summary of the statement (first non-comment line)
     const preview = stmt
       .split("\n")
       .find((l) => l.trim() && !l.trim().startsWith("--"))
@@ -188,8 +182,8 @@ async function applyFile(filePath: string): Promise<{ ok: number; skipped: numbe
     } catch (err: any) {
       const msg: string = err?.message ?? String(err);
 
-      // Certaines erreurs sont attendues (ex : DROP IF EXISTS sur table inexistante)
-      // → on les considère comme "skipped" plutôt que "failed"
+      // Some errors are expected (e.g. DROP IF EXISTS on a missing table):
+      // counted as "skipped" rather than "failed"
       if (
         msg.includes("does not exist") ||
         msg.includes("already exists") ||
@@ -214,7 +208,7 @@ async function main() {
   console.log(`\n🚀 apply-supabase-sql — projet : ${PROJECT_REF}`);
   console.log("──────────────────────────────────────────────────────────");
 
-  // Fichiers à appliquer dans l'ordre (supabase/migrations/)
+  // Files to apply, in order (supabase/migrations/)
   const SQL_FILES = [
     path.resolve(process.cwd(), "supabase/migrations/001_testimonials.sql"),
     path.resolve(process.cwd(), "supabase/migrations/002_policies.sql"),
@@ -240,7 +234,7 @@ async function main() {
     totalFailed  += failed;
   }
 
-  // Rapport final
+  // Final report
   console.log("\n──────────────────────────────────────────────────────────");
   console.log(`📊 Résultat : ✅ ${totalOk} ok  ⏭  ${totalSkipped} ignorées  ❌ ${totalFailed} erreurs`);
 

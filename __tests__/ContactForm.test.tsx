@@ -4,7 +4,7 @@ jest.mock("next-intl", () => ({
   useLocale: () => "en",
 }));
 
-// ContactForm utilise useTrack() → mock du contexte Track
+// ContactForm uses useTrack() → mock the Track context
 jest.mock("@/app/[locale]/providers", () => ({
   useTrack: () => ({ track: "salesforce", setTrack: jest.fn() }),
 }));
@@ -25,7 +25,7 @@ describe("ContactForm", () => {
     expect(honeypot).toBeTruthy();
   });
 
-  // ── Validation HTML5 ajoutée dans cette session ────────────────────────────
+  // ── HTML5 validation ─────────────────────────────────────────────────────────
 
   it("le champ name a minLength=2", () => {
     render(<ContactForm />);

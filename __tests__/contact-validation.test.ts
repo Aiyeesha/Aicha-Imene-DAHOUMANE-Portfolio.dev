@@ -1,8 +1,7 @@
 // __tests__/contact-validation.test.ts
-// Couvre lib/contactValidation.ts (extrait de app/api/contact/route.ts pour être
-// testable sans next/server), un module 0% testé jusqu'ici malgré son rôle de
-// garde-fou anti-spam/qualité des données (cf. audit : cibler les modules
-// critiques plutôt qu'un chiffre global).
+// Covers lib/contactValidation.ts (extracted from app/api/contact/route.ts to
+// be testable without next/server), a critical anti-spam and data quality
+// guard.
 
 import { validate, getClientIp, isAllowedOrigin } from "@/lib/contactValidation";
 

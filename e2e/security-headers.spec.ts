@@ -1,10 +1,8 @@
 // e2e/security-headers.spec.ts
 // ----------------------------
-// Vérifie que les en-têtes de sécurité sont bien présents sur les pages HTML.
-// Ces tests protègent les invariants CSP, HSTS et COOP contre toute régression.
-//
-// En-têtes vérifiés :
-//   - Content-Security-Policy  (ajouté par proxy.ts)
+// Checks the security headers on HTML pages, guarding the CSP, HSTS and COOP
+// invariants against regressions:
+//   - Content-Security-Policy  (set by proxy.ts)
 //   - Strict-Transport-Security (next.config.mjs)
 //   - Cross-Origin-Opener-Policy (next.config.mjs)
 

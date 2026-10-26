@@ -1,9 +1,9 @@
 // __tests__/Testimonials.test.tsx
-// Composant Testimonials — garde-fou contre la publication de gabarits
-// [PLACEHOLDER] non attribués (voir content/testimonials.ts).
+// Testimonials: guard against publishing unattributed [PLACEHOLDER]
+// templates (see content/testimonials.ts).
 
-// matchMedia n'existe pas dans jsdom (requis par next-themes, chargé
-// transitivement via des composants voisins dans certains environnements)
+// matchMedia does not exist in jsdom (needed by next-themes, loaded
+// transitively through neighbouring components in some environments)
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
@@ -41,9 +41,8 @@ const PLACEHOLDER: Testimonial = {
 };
 
 describe("Testimonials", () => {
-  // Le composant enveloppe la citation de guillemets typographiques dans le
-  // même nœud texte ("“{quote}”") — on matche donc sur un sous-texte, pas
-  // une égalité stricte.
+  // The component wraps the quote in typographic quotes in the same text node
+  // ("“{quote}”"), so match a substring, not strict equality.
   const byQuoteText = (quote: string) =>
     screen.queryByText((content) => content.includes(quote));
 
@@ -64,8 +63,8 @@ describe("Testimonials", () => {
   });
 
   it("le contenu réel de content/testimonials.ts ne peut pas fuiter un placeholder même sans filtre appelant", () => {
-    // Régression directe du bug corrigé le 2026-08-12 : avant le filtre interne,
-    // NEXT_PUBLIC_SHOW_TESTIMONIALS=true suffisait à publier les 4 gabarits.
+    // Without the internal filter, NEXT_PUBLIC_SHOW_TESTIMONIALS=true alone
+    // would publish the 4 templates.
     render(<Testimonials items={realTestimonials} />);
     for (const item of realTestimonials.filter((t) => t.isPlaceholder)) {
       expect(byQuoteText(item.quote)).not.toBeInTheDocument();
