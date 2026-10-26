@@ -18,6 +18,11 @@ export function TypingText({ text, speed = 32, className }: TypingTextProps) {
   const done = count >= text.length;
 
   useEffect(() => {
+    // Mouvement réduit (audit 2026-10-25) : texte affiché d'un coup.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const id = setTimeout(() => setProgress({ text, count: text.length }), 0);
+      return () => clearTimeout(id);
+    }
     let i = 0;
     const id = setInterval(() => {
       i++;
