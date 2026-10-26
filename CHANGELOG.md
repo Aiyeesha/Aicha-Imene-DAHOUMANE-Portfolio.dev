@@ -24,6 +24,13 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Accessibilité et performance (lot 3 de l'audit du 25/10/2026)** :
+  - la palette de commandes s'ouvre sans clavier (bouton sous 1 280 px et dès 1 850 px, entrée dans le menu mobile) et n'est chargée qu'à la première demande ; son action « langue » conserve la page courante ;
+  - sous 1 280 px, le focus n'est plus placé sur le bouton du menu au chargement (il contournait le lien d'évitement) ;
+  - le héro n'utilise plus framer-motion : JavaScript de l'accueil de 783 à 670 Kio (non compressé, build local) ;
+  - `prefers-reduced-motion` respecté par le dégradé du titre, l'effet machine à écrire et le halo du curseur, dont la boucle d'animation s'arrête quand la souris est immobile ;
+  - galeries de projets : images optimisées (vignettes de 128 px au lieu de l'image entière) et textes alternatifs localisés nommant le projet au lieu de « Screenshot N » ;
+  - balisage : ordre des titres de `/about`, listes de définitions de la modale de disponibilité et des chiffres clés, contraste de la frise et des titres de la palette, page d'erreur 500 en espagnol ; préchargement inutile de `/avatar.webp` retiré.
 - **Accueil : logos lisibles, articles triés** — Les logos « Formation & parcours » étaient délavés (opacité 50 %) et, en thème sombre, les textes sombres d'OpenClassrooms et du GRETA disparaissaient : opacité relevée et pastille claire en thème sombre. Les trois articles de l'accueil s'affichent du plus récent au plus ancien, avec des dates localisées (« 17 février 2026 ») ; le sous-titre ne parle plus de « guides courts » (audit du 25/10/2026, Contenu).
 - **Les ancres #contact atterrissent sur le formulaire** — Depuis une autre page, « Contact » et « Me recruter » arrivaient 1 500 à 4 000 px trop haut, dans la section Projets, et l'URL devenait `#projects` : le défilement démarrait avant le montage des sections dynamiques situées au-dessus de la cible. Le nouveau `lib/anchorScroll.ts` saute sur l'ancre puis se recale jusqu'à stabilisation de la mise en page, sans contrarier un défilement de l'utilisateur ; `useHashSync` attend la fin de ce recalage. Test Playwright à 1440 et 390 px (audit du 25/10/2026, constat 3).
 - **Recherche du blog lisible** — La liste de résultats et le message « Aucun résultat » n'avaient pas de fond (variable CSS inexistante) et se superposaient aux cartes (audit du 25/10/2026, constat 2).
