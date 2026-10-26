@@ -857,3 +857,8 @@ html.dark .section-stripe {
     transition: none;
   }
 }
+
+/* Sections focalisées par script après un saut d'ancre (lib/anchorScroll.ts) :
+   pas de contour autour de toute la section — le focus sert à placer le
+   point de départ de la tabulation, pas à signaler un élément interactif. */
+section[tabindex="-1"]:focus { outline: none; }

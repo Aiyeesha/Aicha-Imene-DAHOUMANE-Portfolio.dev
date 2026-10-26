@@ -149,6 +149,8 @@ test.describe("Navigation de base", () => {
 
       await expect(page.locator("#contact h2")).toBeInViewport();
       expect(new URL(page.url()).hash).toBe("#contact");
+      // Le focus suit l'ancre : la tabulation repart de la section atteinte.
+      await expect(page.locator("#contact")).toBeFocused();
     });
   }
 });
