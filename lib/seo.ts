@@ -39,3 +39,20 @@ export function clampDescription(text: string, max = DESCRIPTION_MAX): string {
   const base = lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut;
   return `${base.replace(/[\s,;:.\-—–]+$/u, "")}…`;
 }
+
+// ── Flux RSS découvrables ──────────────────────────────────────────────────
+// Audit 2026-10-25 (constat 12) : le layout racine annonce les flux RSS, mais
+// chaque page qui définit ses propres `alternates` (canonical, hreflang)
+// remplace l'objet entier — l'accueil, /blog et les articles n'exposaient donc
+// aucun <link rel="alternate" type="application/rss+xml">. À répandre dans
+// `alternates` : `alternates: { canonical, languages, ...rssAlternates(locale) }`.
+const FEEDS: Record<string, { url: string; title: string }> = {
+  en: { url: "/feed.xml", title: "RSS Feed (EN)" },
+  fr: { url: "/feed-fr.xml", title: "Flux RSS (FR)" },
+  es: { url: "/feed-es.xml", title: "Feed RSS (ES)" },
+};
+
+export function rssAlternates(locale: string) {
+  const feed = FEEDS[locale] ?? FEEDS.en;
+  return { types: { "application/rss+xml": [feed] } };
+}
