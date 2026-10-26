@@ -1,6 +1,7 @@
 // app/[locale]/work-with-me/page.tsx — server component (metadata only)
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { getTranslations } from "next-intl/server";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import WorkWithMeContent from "./work-with-me-content";
 
@@ -66,9 +67,23 @@ export default async function WorkWithMePage({ params }: PageProps) {
       { "@type": "ListItem", position: 2, name: isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me", item: `${siteUrl}/${locale}/work-with-me` },
     ],
   };
+  // FAQPage JSON-LD — déplacé depuis l'accueil avec la FAQ (2026-10-26).
+  // Même source que la FAQ affichée (namespace `faq`).
+  const tFaq = await getTranslations({ locale, namespace: "faq" });
+  const faqItems = tFaq.raw("items") as { q: string; a: string }[];
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(faqJsonLd) }} />
       <WorkWithMeContent locale={locale} />
     </>
   );
