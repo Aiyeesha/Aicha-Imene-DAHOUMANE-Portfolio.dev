@@ -65,15 +65,20 @@ const companies: {
   }
 ];
 
-// Bloc logo individuel — réutilisé dans les deux passes du marquee
+// Bloc logo individuel — réutilisé dans les deux passes du marquee.
+// Lisibilité (audit 2026-10-25) : à opacity-50, les logos étaient délavés en
+// thème clair et les textes sombres (OpenClassrooms, « du Val d'Oise »)
+// disparaissaient sur le fond sombre. Opacité relevée à 80 % et, en thème
+// sombre, pastille claire derrière chaque logo pour garder ses couleurs d'origine.
 function LogoItem({ company }: { company: (typeof companies)[0] }) {
   return (
     <div
       className="
         shrink-0
         relative flex items-center justify-center
-        opacity-50 grayscale transition-all duration-300
-        group-hover:opacity-90 group-hover:grayscale-0
+        opacity-80 grayscale transition-all duration-300
+        group-hover:opacity-100 group-hover:grayscale-0
+        dark:rounded-lg dark:bg-white/90 dark:p-2
       "
       title={company.name}
     >
