@@ -107,3 +107,24 @@ test.describe("A11Y-6 — modale de disponibilité", () => {
     await expect(badge).toBeFocused();
   });
 });
+
+test.describe("Audit 2026-10-25 — focus au chargement et palette sans clavier", () => {
+  // Sous xl : barre réduite au bouton du menu, bouton de la palette visible.
+  test.use({ viewport: { width: 1024, height: 800 } });
+
+  test("constat 6 : le focus n'est pas placé sur le bouton du menu au chargement", async ({ page }) => {
+    await gotoHydrated(page, "/fr");
+    expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+    // Le lien d'évitement reste la première étape de tabulation.
+    await page.keyboard.press("Tab");
+    await expect(page.locator(":focus")).toHaveAttribute("href", /#main/);
+  });
+
+  test("constat 7 : la palette s'ouvre au clic, chargée à la demande", async ({ page }) => {
+    await gotoHydrated(page, "/fr/about");
+    // Pas de palette montée avant la première demande.
+    await expect(page.locator("[cmdk-root]")).toHaveCount(0);
+    await page.getByRole("button", { name: /palette de commandes/i }).click();
+    await expect(page.locator("[cmdk-root]")).toBeVisible();
+  });
+});
