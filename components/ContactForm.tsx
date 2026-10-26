@@ -59,7 +59,7 @@ function errorToKey(code: string) {
   }
 }
 
-export default function ContactForm({ extended = false }: { extended?: boolean }) {
+export default function ContactForm() {
   const t = useTranslations();
   const locale = useLocale();
   const { track } = useTrack();
@@ -71,9 +71,10 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
   const [msgLen,  setMsgLen]  = useState(0);
   const MSG_MAX_HARD = 2000; // doit rester égal à MAX_MESSAGE_LEN (lib/contactValidation.ts)
 
-  // ── Champs « recruteur », uniquement rendus quand extended=true (page
-  // /contact) — le formulaire rapide de la home (ancre #contact, prérempli
-  // par TrackAwareServices via contact:prefill) reste inchangé, sans ces champs.
+  // ── Champs « recruteur » — formulaire unique depuis l'audit du 2026-10-25 :
+  // la page /contact (qui seule les affichait) redirige vers l'ancre #contact
+  // de la home, où ils sont regroupés dans un <details> replié par défaut
+  // pour ne pas allonger le formulaire rapide (prérempli via contact:prefill).
   // Depuis l'audit de contenu du 2026-09-25, ils remplacent les anciens champs
   // de prestation (secteur / délai / enveloppe budgétaire) : poste, type de
   // contrat, lieu et date de prise de poste — ce qu'un recruteur a réellement
@@ -254,13 +255,15 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
           </select>
         </div>
 
-        {extended && (
-          <div className="rounded-xl border border-black/10 dark:border-white/10 p-4 space-y-3">
-            <div>
-              <p className="text-sm font-semibold">{t("contact.intake.title")}</p>
-              <p className="mt-0.5 text-xs text-muted-2">{t("contact.intake.subtitle")}</p>
-            </div>
-
+        <details className="group rounded-xl border border-black/10 dark:border-white/10 p-4">
+          <summary className="cursor-pointer list-none rounded-sm soft-ring [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center justify-between gap-3">
+              <span className="text-sm font-semibold">{t("contact.intake.title")}</span>
+              <span aria-hidden="true" className="text-muted-2 transition-transform group-open:rotate-180">▾</span>
+            </span>
+            <span className="mt-0.5 block text-xs text-muted-2">{t("contact.intake.subtitle")}</span>
+          </summary>
+          <div className="mt-3 space-y-3">
             <div>
               <label htmlFor="contact-role" className="text-xs text-muted-2">{t("contact.intake.roleLabel")}</label>
               <input
@@ -319,7 +322,7 @@ export default function ContactForm({ extended = false }: { extended?: boolean }
               </select>
             </div>
           </div>
-        )}
+        </details>
 
         {/* Honeypot (hidden for humans) */}
         <input name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />

@@ -134,4 +134,21 @@ test.describe("Navigation de base", () => {
     await contactLink.scrollIntoViewIfNeeded();
     await expect(contactLink).toBeInViewport();
   });
+
+  // Audit 2026-10-25, constat 3 : depuis une autre page, « Contact » / « Me
+  // recruter » atterrissaient dans la section Projets (sections dynamiques
+  // montées après le défilement) et useHashSync réécrivait le hash en #projects.
+  for (const width of [1440, 390]) {
+    test(`l'ancre #contact atterrit sur le formulaire (accès direct, ${width}px)`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/en/about");
+      await page.goto("/en#contact");
+      await page.waitForLoadState("networkidle");
+      // Laisse lib/anchorScroll.ts conclure (stabilisation 600 ms).
+      await page.waitForTimeout(1500);
+
+      await expect(page.locator("#contact h2")).toBeInViewport();
+      expect(new URL(page.url()).hash).toBe("#contact");
+    });
+  }
 });
