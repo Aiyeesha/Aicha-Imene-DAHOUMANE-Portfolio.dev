@@ -1,19 +1,21 @@
-"use client";
+// Server Component — audit 2026-10-23 (PERF-3) : le composant n'était client
+// que pour lire le parcours (useTrack) et choisir deux couleurs d'accent ; tout
+// son contenu trilingue partait dans le bundle JavaScript. Les accents passent
+// par la variante CSS `itops:` (globals.css), qui suit aussi une bascule en
+// cours de session.
 
 import Link from "next/link";
-import { useTrack } from "@/app/[locale]/providers";
 
 type StackItem = { name: string; role: string; link?: string };
 type StackSection = { title: string; items: StackItem[] };
 
 export default function ColophonContent({ locale }: { locale: string }) {
-  const { track } = useTrack();
   const isFr = locale === "fr";
   const isEs = locale === "es";
-  const isSf = track === "salesforce";
 
-  const arrowClass  = isSf ? "text-cyan-500 dark:text-cyan-400" : "text-violet-500 dark:text-violet-400";
-  const ctaBtnClass = isSf ? "bg-cyan-500 text-black hover:opacity-90" : "bg-violet-600 text-white hover:opacity-90";
+  // Salesforce par défaut, IT Ops via la variante `itops:`.
+  const arrowClass  = "text-cyan-500 dark:text-cyan-400 itops:text-violet-500 itops:dark:text-violet-400";
+  const ctaBtnClass = "bg-cyan-500 text-black hover:opacity-90 itops:bg-violet-600 itops:text-white";
 
   const labels = {
     breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
