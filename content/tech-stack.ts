@@ -251,8 +251,8 @@ const TECH_STACK: TechItem[] = [
     level: 3,
     years: 3,
     context: {
-      en: "AD DS, DNS, DHCP, GPO — internship at MIDRANGE GROUP.",
-      fr: "AD DS, DNS, DHCP, GPO — stage chez MIDRANGE GROUP.",
+      en: "AD DS, DNS, DHCP, GPO — internships at MIDRANGE GROUP.",
+      fr: "AD DS, DNS, DHCP, GPO — stages chez MIDRANGE GROUP.",
       es: "AD DS, DNS, DHCP, GPO — prácticas en MIDRANGE GROUP.",
     },
     track: "itops",
