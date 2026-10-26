@@ -25,6 +25,26 @@ const MAX_MS = 4000;
 let activeId: string | null = null;
 let stopActive: (() => void) | null = null;
 
+/**
+ * Place le focus sur la section atteinte (audit 2026-10-25, Accessibilité) :
+ * sans cela, un utilisateur clavier restait dans l'en-tête après avoir suivi
+ * une ancre, et la tabulation suivante repartait du haut de la page.
+ * tabindex="-1" rend la section focalisable par script sans l'ajouter à
+ * l'ordre de tabulation ; preventScroll évite de contrarier le défilement.
+ */
+export function focusSection(el: HTMLElement): void {
+  if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
+}
+
+/** Défilement doux vers une section de la page courante, focus compris. */
+export function scrollToSection(id: string): void {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  focusSection(el);
+}
+
 /** Vrai pendant un recalage programmatique vers une ancre. */
 export function isAnchorScrollActive(): boolean {
   return activeId !== null;
@@ -53,7 +73,11 @@ export function scrollToAnchorWhenStable(id: string): () => void {
     clearTimeout(settleTimer);
     settleTimer = setTimeout(() => {
       // Ne conclure que si la cible existe : sinon on attend MAX_MS.
-      if (document.getElementById(id)) stop();
+      const target = document.getElementById(id);
+      if (target) {
+        stop();
+        focusSection(target);
+      }
     }, SETTLE_MS);
   };
 
