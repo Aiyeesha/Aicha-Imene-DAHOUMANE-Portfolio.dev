@@ -130,7 +130,7 @@ export default function NotFound() {
             {c.cta}
           </a>
           <a
-            href={`/${locale}/contact`}
+            href={`/${locale}#contact`}
             className="rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-6 py-2.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
           >
             {c.contact}

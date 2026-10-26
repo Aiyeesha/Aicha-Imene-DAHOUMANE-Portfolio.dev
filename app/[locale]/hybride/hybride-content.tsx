@@ -178,7 +178,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
         <p className="mt-2 text-sm text-muted">{t("ctaText")}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
-            href={`/${locale}/contact`}
+            href={`/${locale}#contact`}
             className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-cyan-600 to-violet-600 px-6 py-2.5 text-sm font-medium text-white hover:opacity-90 soft-ring transition-opacity"
           >
             {t("ctaContact")}
