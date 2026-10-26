@@ -55,7 +55,7 @@ export default function ExperienceTimeline({ items }: { items: ExperienceItem[] 
 
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted">
             {item.note ? (
-              <li className="italic text-sm text-slate-500 dark:text-slate-400">{item.note}</li>
+              <li className="italic text-sm text-slate-600 dark:text-slate-400">{item.note}</li>
             ) : null}
             {item.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
