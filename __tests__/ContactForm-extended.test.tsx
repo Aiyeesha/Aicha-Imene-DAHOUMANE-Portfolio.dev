@@ -1,7 +1,8 @@
 // __tests__/ContactForm-extended.test.tsx
-// ContactForm extended=true — les champs « recruteur » (poste, contrat, lieu,
-// date de prise de poste) de la page /contact, distincts du formulaire rapide
-// de la home. Ils remplacent depuis l'audit de contenu du 2026-09-25 les
+// Champs « recruteur » (poste, contrat, lieu, date de prise de poste) du
+// formulaire unique de la home. Depuis l'audit du 2026-10-25, la page /contact
+// redirige vers #contact : ces champs y sont regroupés dans un <details> replié
+// par défaut. Ils remplacent depuis l'audit de contenu du 2026-09-25 les
 // anciens champs de prestation (secteur / délai / enveloppe budgétaire).
 
 jest.mock("next-intl", () => ({
@@ -19,18 +20,20 @@ import ContactForm from "@/components/ContactForm";
 
 const RECRUITER_FIELD_IDS = ["contact-role", "contact-contract", "contact-workplace", "contact-start"];
 
-describe("ContactForm extended=false (default, home anchor)", () => {
-  it("ne rend aucun des 4 champs recruteur", () => {
+describe("ContactForm — bloc recruteur replié", () => {
+  it("regroupe les 4 champs recruteur dans un <details> fermé par défaut", () => {
     render(<ContactForm />);
     for (const id of RECRUITER_FIELD_IDS) {
-      expect(document.getElementById(id)).toBeNull();
+      const details = document.getElementById(id)?.closest("details");
+      expect(details).not.toBeNull();
+      expect(details).not.toHaveAttribute("open");
     }
   });
 });
 
-describe("ContactForm extended=true (page /contact)", () => {
+describe("ContactForm — champs recruteur", () => {
   it("rend les 4 champs recruteur, tous facultatifs", () => {
-    render(<ContactForm extended />);
+    render(<ContactForm />);
     for (const id of RECRUITER_FIELD_IDS) {
       const el = document.getElementById(id);
       expect(el).toBeInTheDocument();
@@ -39,14 +42,14 @@ describe("ContactForm extended=true (page /contact)", () => {
   });
 
   it("ne rend plus les anciens champs de prestation (secteur, délai, budget)", () => {
-    render(<ContactForm extended />);
+    render(<ContactForm />);
     expect(document.getElementById("contact-sector")).toBeNull();
     expect(document.getElementById("contact-timeline")).toBeNull();
     expect(document.getElementById("contact-budget")).toBeNull();
   });
 
   it("propose CDI, CDD, intérim et portage comme types de contrat", () => {
-    render(<ContactForm extended />);
+    render(<ContactForm />);
     const contract = document.getElementById("contact-contract") as HTMLSelectElement;
     const values = Array.from(contract.options).map((o) => o.value);
     expect(values).toEqual(["", "permanent", "fixedTerm", "temp", "portage", "other"]);
@@ -58,7 +61,7 @@ describe("ContactForm extended=true (page /contact)", () => {
     // serveur (MAX_MESSAGE_LEN, lib/contactValidation.ts) une fois le préfixe
     // ajouté, et échouer à l'envoi malgré une saisie valide à l'écran.
     const user = userEvent.setup();
-    render(<ContactForm extended />);
+    render(<ContactForm />);
 
     const textareaBefore = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
     expect(textareaBefore.maxLength).toBe(2000);
