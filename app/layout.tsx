@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { getLocale } from "next-intl/server";
+import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -192,9 +193,16 @@ function buildJsonLd(locale: string) {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale(); // "en" | "fr" — lit x-next-intl-locale via headers()
   const jsonLd = buildJsonLd(locale);
+  // data-track rendu côté serveur — audit 2026-10-23 (PERF-3) : il n'était posé
+  // qu'après hydratation (effet de Providers), d'où un dégradé Salesforce affiché
+  // un instant aux visiteurs IT Ops. Même cookie et même repli que l'initialTrack
+  // du layout de langue ; la variante CSS `itops:` (globals.css) s'appuie dessus.
+  // Ce layout lit déjà headers() (getLocale) : son mode de rendu ne change pas.
+  const track = (await cookies()).get("track")?.value === "itops" ? "itops" : "salesforce";
   return (
     <html
       lang={locale}
+      data-track={track}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
       className={`${spaceGrotesk.variable} ${inter.variable}`}
@@ -226,7 +234,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLd) }}
         />
       </head>
