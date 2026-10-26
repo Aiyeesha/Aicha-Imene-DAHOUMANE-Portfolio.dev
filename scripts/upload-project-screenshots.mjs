@@ -1,6 +1,6 @@
-// Upload les screenshots de public/projects/<slug>/ vers le bucket Supabase Storage "projects".
+// Uploads the screenshots of public/projects/<slug>/ to the Supabase Storage "projects" bucket.
 // Usage: node scripts/upload-project-screenshots.mjs <slug1> [slug2] [...]
-// Nécessite .env.local avec NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.
+// Needs .env.local with NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
 
 import { createClient } from "@supabase/supabase-js";
 import fs from "node:fs";

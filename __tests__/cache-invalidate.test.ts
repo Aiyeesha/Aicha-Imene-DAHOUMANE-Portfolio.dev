@@ -2,11 +2,10 @@
  * @jest-environment node
  */
 // __tests__/cache-invalidate.test.ts
-// Tests unitaires — POST /api/cache/invalidate (audit 2026-10-23, P7).
-// Couvre : locale invalide, slug invalide, corps vide (vidage complet via SCAN),
-// cas nominal, et les garde-fous ajoutés (JSON invalide, slug sans locale,
-// clé inconnue, taille du corps, secret).
-// Env node : next/server requiert les Web Fetch globals de Node.js.
+// Unit tests: POST /api/cache/invalidate. Covers invalid locale, invalid slug,
+// empty body (full flush through SCAN), the nominal case, and the guards
+// (invalid JSON, slug without locale, unknown key, body size, secret).
+// Node environment: next/server needs Node's Web Fetch globals.
 
 jest.mock("next/headers", () => ({
   headers: async () => new Headers({ "x-real-ip": "1.2.3.4" }),
@@ -19,8 +18,8 @@ jest.mock("@/lib/ratelimit", () => ({
   safeLimit: async () => ({ success: true, reset: Date.now() + 60_000 }),
 }));
 
-// Client Redis simulé : del enregistre les clés, scan renvoie deux pages pour
-// vérifier que l'itération suit bien le curseur jusqu'à "0".
+// Mock Redis client: del records keys, scan returns two pages to check the
+// iteration follows the cursor until "0".
 const mockDel = jest.fn(async (..._keys: string[]) => _keys.length);
 const mockScan = jest.fn();
 const mockKeys = jest.fn();
@@ -133,7 +132,7 @@ describe("POST /api/cache/invalidate", () => {
     const res = await POST(makeRequest(body));
     expect(res.status).toBe(200);
 
-    // SCAN suit le curseur : 2 appels ("0" puis "42"), motif project:*.
+    // SCAN follows the cursor: 2 calls ("0" then "42"), pattern project:*.
     expect(mockScan).toHaveBeenCalledTimes(2);
     expect(mockScan.mock.calls[0][0]).toBe("0");
     expect(mockScan.mock.calls[1][0]).toBe("42");
@@ -142,7 +141,7 @@ describe("POST /api/cache/invalidate", () => {
 
     const { deleted } = await res.json();
     expect(deleted).toEqual(expect.arrayContaining(["about:es", "portfolio:uptime:latest"]));
-    // Clés projet dédoublonnées (project:fr:a renvoyée deux fois par SCAN).
+    // Project keys deduplicated (project:fr:a returned twice by SCAN).
     const projectKeys = deleted.filter((k: string) => k.startsWith("project:"));
     expect(projectKeys.sort()).toEqual(["project:en:b", "project:es:c", "project:fr:a"]);
   });

@@ -1,11 +1,8 @@
 name: CodeQL
 
-# ── Objectif ──────────────────────────────────────────────────────────────────
-# SAST réel sur chaque push/PR vers main, plus un scan hebdomadaire de fond.
-# Remplace le "default setup" GitHub qui s'était tu silencieusement (dernier
-# run réel : 2026-06-17, sur une branche depuis supprimée) alors qu'OpenSSF
-# Scorecard continuait de publier "SAST tool is not run on all commits" avec
-# un score de 0/10 — audit du 2026-09-26.
+# ── Purpose ───────────────────────────────────────────────────────────────────
+# SAST on every push/PR to main, plus a weekly background scan. Replaces
+# GitHub's "default setup", which had silently stopped running.
 
 on:
   push:
@@ -13,11 +10,11 @@ on:
   pull_request:
     branches: ["main"]
   schedule:
-    - cron: "30 4 * * 1" # lundi 04:30 UTC
+    - cron: "30 4 * * 1" # Mondays 04:30 UTC
 
-# Permissions par défaut en lecture seule au niveau workflow (Scorecard
-# Token-Permissions) ; seul le job d'analyse reçoit security-events: write,
-# nécessaire à l'upload SARIF vers Code Scanning.
+# Read-only default permissions (Scorecard Token-Permissions); only the
+# analysis job gets security-events: write, needed to upload SARIF to Code
+# Scanning.
 permissions: read-all
 
 jobs:
@@ -29,8 +26,8 @@ jobs:
       contents: read
       security-events: write
     steps:
-      # Actions épinglées par SHA complet (Scorecard Pinned-Dependencies),
-      # mêmes versions que ci.yml et scorecard.yml ; Dependabot les tient à jour.
+      # Actions pinned by full SHA (Scorecard Pinned-Dependencies), same
+      # versions as ci.yml and scorecard.yml; Dependabot keeps them current.
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:

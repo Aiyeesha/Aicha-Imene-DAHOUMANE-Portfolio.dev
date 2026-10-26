@@ -1,21 +1,18 @@
 # .github/workflows/scorecard.yml
 # --------------------------------
-# OSSF Scorecard — évalue automatiquement le niveau de sécurité supply chain.
-# Publie les résultats dans GitHub Security → Code Scanning (onglet Security).
-#
-# Score public visible sur : https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev
-#
-# Critères analysés : branch protection, code review, signed commits, CI tests,
+# OSSF Scorecard: automatic supply-chain security assessment, published to
+# GitHub Security → Code Scanning and publicly at
+# https://scorecard.dev/viewer/?uri=github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev
+# Checks branch protection, code review, signed commits, CI tests,
 # dependency pinning, vulnerability disclosure, token permissions, SAST…
-#
-# Requis : GitHub Advanced Security activé sur le repo (gratuit pour les repos publics).
-# Déclenché : chaque semaine + à chaque push sur main.
+# Requires GitHub Advanced Security (free for public repos). Runs weekly and
+# on every push to main.
 
 name: OSSF Scorecard
 
 on:
   schedule:
-    # Chaque lundi à 07h00 UTC
+    # Mondays at 07:00 UTC
     - cron: "0 7 * * 1"
   push:
     branches:
@@ -29,11 +26,11 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      # Requis pour uploader les résultats SARIF vers Code Scanning
+      # Needed to upload SARIF results to Code Scanning
       security-events: write
-      # Requis pour les repos publics via OIDC
+      # Needed for public repos (OIDC)
       id-token: write
-      # Requis pour checkout
+      # Needed for checkout
       contents: read
       actions: read
 
@@ -48,9 +45,9 @@ jobs:
         with:
           results_file: scorecard-results.sarif
           results_format: sarif
-          # Token requis pour accéder au repo et uploader les résultats
+          # Token to read the repo and upload results
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          # Publie le score publiquement sur scorecard.dev
+          # Publish the score on scorecard.dev
           publish_results: true
 
       - name: Upload Scorecard results to Code Scanning

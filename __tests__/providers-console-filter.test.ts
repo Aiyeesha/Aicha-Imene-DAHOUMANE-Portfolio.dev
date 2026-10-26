@@ -1,10 +1,9 @@
 // __tests__/providers-console-filter.test.ts
-// Vérifie le filtre console.error de app/[locale]/providers.tsx qui masque le
-// faux positif React 19 "Encountered a script tag while rendering React
-// component." déclenché par next-themes (voir commentaire dans providers.tsx).
-// Le filtre s'installe une seule fois, au chargement du module — chaque test
-// réinitialise le registre de modules pour ré-exécuter ce code d'installation
-// sous un NODE_ENV différent.
+// Checks the console.error filter in app/[locale]/providers.tsx that hides
+// React 19's false positive "Encountered a script tag while rendering React
+// component." triggered by next-themes (see the comment in providers.tsx).
+// The filter installs once, on module load: each test resets the module
+// registry to re-run that code under a different NODE_ENV.
 
 describe("providers.tsx console.error filter", () => {
   const originalNodeEnv = process.env.NODE_ENV;

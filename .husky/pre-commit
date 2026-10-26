@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
-# Pre-commit hook — scan des changements stagés pour détecter des secrets.
-# Nécessite gitleaks (https://github.com/gitleaks/gitleaks).
+# Pre-commit hook: scans staged changes for secrets with gitleaks
+# (https://github.com/gitleaks/gitleaks).
 #
-# Installation :
+# Install:
 #   macOS  : brew install gitleaks
-#   Linux  : voir https://github.com/gitleaks/gitleaks#installing
+#   Linux  : see https://github.com/gitleaks/gitleaks#installing
 #
-# Pour bypasser temporairement (déconseillé) : SKIP=gitleaks git commit ...
+# Temporary bypass (not recommended): SKIP=gitleaks git commit ...
 
 if command -v gitleaks >/dev/null 2>&1; then
   gitleaks protect --staged --redact --no-banner
@@ -15,10 +15,9 @@ else
   echo "   Installez-le pour activer la protection : https://github.com/gitleaks/gitleaks"
 fi
 
-# Rappel changelog — avertit (ne bloque pas) si des fichiers de contenu/code
-# sont stagés sans que CHANGELOG.md le soit. Volontairement un warning, pas
-# un blocage : certains commits (typo, refactor pur, resync de fichier généré
-# déjà documenté ailleurs) n'ont légitimement rien à ajouter au changelog.
+# Changelog reminder: warns (without blocking) when code or content files are
+# staged without CHANGELOG.md. Only a warning: some commits (typo, pure
+# refactor, regenerated file) legitimately have nothing to add.
 STAGED=$(git diff --cached --name-only)
 if echo "$STAGED" | grep -qE '^(app|components|content|i18n|lib|messages)/' \
   && ! echo "$STAGED" | grep -q '^CHANGELOG.md$'; then

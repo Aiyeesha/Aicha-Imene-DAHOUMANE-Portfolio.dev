@@ -1,38 +1,36 @@
 # .github/dependabot.yml
 # -----------------------
-# Dependabot — mise à jour automatique des dépendances.
+# Automatic dependency updates:
+#   - npm: weekly PRs (Monday morning), grouped by category
+#   - github-actions: monthly PRs for CI actions
 #
-# Stratégie :
-#   - npm        : PRs hebdomadaires (lundi matin), groupées par catégorie
-#   - github-actions : PRs mensuelles pour les actions CI
-#
-# Groupes npm :
-#   - "next-ecosystem"  : Next.js + React + TypeScript (core — tester avant merge)
+# npm groups:
+#   - "next-ecosystem"  : Next.js + React + TypeScript (core, test before merging)
 #   - "tailwind"        : Tailwind CSS + plugins
 #   - "dev-tooling"     : ESLint, Jest, ts-jest, testing-library (dev only)
-#   - "supabase-upstash": Backend (Supabase, Upstash Redis)
-#   - toutes les autres deps sont mises à jour individuellement
+#   - "supabase-upstash": backend (Supabase, Upstash Redis)
+#   - every other dependency is updated on its own
 #
-# Chaque PR Dependabot déclenche le workflow CI (lint + typecheck + tests + build).
-# Ne jamais activer `auto-merge` sans que le CI soit vert.
+# Every Dependabot PR runs the CI workflow (lint, typecheck, tests, build).
+# Never enable auto-merge without green CI.
 
 version: 2
 
 updates:
   # ── npm ────────────────────────────────────────────────────────────────────
   - package-ecosystem: "npm"
-    directory: "/"                # package.json est à la racine du repo
+    directory: "/"                # package.json is at the repo root
     schedule:
       interval: "weekly"
       day: "monday"
       time: "07:00"
       timezone: "Europe/Paris"
     open-pull-requests-limit: 8
-    # Ignorer les majors automatiques — trop risqué sans review manuelle
+    # No automatic majors: too risky without a manual review
     versioning-strategy: increase
 
     groups:
-      # Core Next.js + React — tester soigneusement avant merge
+      # Core Next.js + React: test carefully before merging
       next-ecosystem:
         patterns:
           - "next"
@@ -51,7 +49,7 @@ updates:
           - "postcss"
           - "autoprefixer"
 
-      # Outils de développement (ESLint, Jest, testing-library…)
+      # Development tools (ESLint, Jest, testing-library…)
       dev-tooling:
         dependency-type: "development"
         patterns:
@@ -63,7 +61,7 @@ updates:
           - "@types/jest"
           - "typescript-eslint"
 
-      # Backend Supabase + Upstash Redis
+      # Supabase + Upstash Redis backend
       supabase-upstash:
         patterns:
           - "@supabase/*"
@@ -77,35 +75,34 @@ updates:
           - "remark*"
           - "rehype*"
 
-    # Ne pas ouvrir de PR pour les packages marqués comme ignorés
+    # No PRs for ignored packages
     ignore:
-      # next-intl : les majors peuvent casser l'API i18n — upgrade manuel
+      # next-intl: majors can break the i18n API, upgrade by hand
       - dependency-name: "next-intl"
         update-types: ["version-update:semver-major"]
-      # framer-motion : les majors peuvent casser les animations — upgrade manuel
+      # framer-motion: majors can break animations, upgrade by hand
       - dependency-name: "framer-motion"
         update-types: ["version-update:semver-major"]
-      # tailwindcss : la v4 change le plugin PostCSS (@tailwindcss/postcss) et
-      # le format de config — migration manuelle requise, pas un simple bump
+      # tailwindcss: a major changes the PostCSS plugin and config format,
+      # which needs a manual migration
       - dependency-name: "tailwindcss"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@tailwindcss/*"
         update-types: ["version-update:semver-major"]
-      # eslint 10 : eslint-config-next@16.2.x embarque une version d'eslint-plugin-react
-      # incompatible avec la nouvelle API de contexte des règles ESLint 10
-      # (`react/display-name` casse avec `contextOrFilename.getFilename is not a function`).
-      # À retirer quand eslint-config-next publiera une version stable pour ESLint 10.
+      # eslint 10: eslint-config-next@16.2.x ships an eslint-plugin-react
+      # incompatible with ESLint 10's rule context API (`react/display-name`
+      # fails with `contextOrFilename.getFilename is not a function`). Remove
+      # once eslint-config-next supports ESLint 10.
       - dependency-name: "eslint"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@eslint/*"
         update-types: ["version-update:semver-major"]
-      # typescript 7 : ts-jest@29.4.11 déclare un peer-dependency `typescript@">=4.3 <7"`,
-      # ce qui fait échouer `npm install` (ERESOLVE). À retirer quand ts-jest supportera TS 7.
+      # typescript 7: ts-jest@29.4.11 has a `typescript@">=4.3 <7"` peer
+      # dependency, so `npm install` fails (ERESOLVE). Remove once ts-jest supports TS 7.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-      # @types/node : doit rester aligné sur le pin Node "engines": "24.x" du package.json
-      # (voir commit "Add homelab network sniffing project"). Les versions 25+ tracent
-      # Node 25/26 et casseraient cet alignement.
+      # @types/node: must stay aligned with the Node "engines": "24.x" pin in
+      # package.json; 25+ tracks Node 25/26.
       - dependency-name: "@types/node"
         versions: [">=25.0.0"]
 
@@ -121,11 +118,10 @@ updates:
     commit-message:
       prefix: "chore(ci)"
     groups:
-      # Les sous-actions de CodeQL (init, analyze, upload-sarif) doivent être
-      # à la même version : init écrit un fichier de configuration que analyze
-      # refuse s'il provient d'une autre version (« Loaded a configuration file
-      # for version 'X', but running version 'Y' »). Une PR par sous-action
-      # casse donc le job CodeQL — on les regroupe en une seule PR.
+      # CodeQL sub-actions (init, analyze, upload-sarif) must share a version:
+      # analyze rejects a config file written by another version of init
+      # ("Loaded a configuration file for version 'X', but running version
+      # 'Y'"), so one PR per sub-action breaks CodeQL. They are grouped.
       codeql-action:
         patterns:
           - "github/codeql-action*"

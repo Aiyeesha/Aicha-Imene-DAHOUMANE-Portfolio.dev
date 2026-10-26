@@ -1,9 +1,6 @@
 // __tests__/ContactForm-extended.test.tsx
-// Champs « recruteur » (poste, contrat, lieu, date de prise de poste) du
-// formulaire unique de la home. Depuis l'audit du 2026-10-25, la page /contact
-// redirige vers #contact : ces champs y sont regroupés dans un <details> replié
-// par défaut. Ils remplacent depuis l'audit de contenu du 2026-09-25 les
-// anciens champs de prestation (secteur / délai / enveloppe budgétaire).
+// Recruiter fields (role, contract, location, start date) of the single home
+// page contact form, grouped in a <details> collapsed by default.
 
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
@@ -56,10 +53,10 @@ describe("ContactForm — champs recruteur", () => {
   });
 
   it("réserve l'espace du préfixe de contexte dans le maximum du message (régression message_too_long)", async () => {
-    // Le contexte du poste est composé en préfixe du message : sans ce garde-fou,
-    // un message déjà proche de 2000 caractères pouvait dépasser la limite
-    // serveur (MAX_MESSAGE_LEN, lib/contactValidation.ts) une fois le préfixe
-    // ajouté, et échouer à l'envoi malgré une saisie valide à l'écran.
+    // The role context is prepended to the message: without this guard, a
+    // message close to 2000 characters could exceed the server limit
+    // (MAX_MESSAGE_LEN, lib/contactValidation.ts) once prefixed, and fail to
+    // send despite valid input on screen.
     const user = userEvent.setup();
     render(<ContactForm />);
 

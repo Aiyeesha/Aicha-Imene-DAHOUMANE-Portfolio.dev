@@ -2,17 +2,15 @@
  * @jest-environment node
  */
 // __tests__/projectAssets.test.ts
-// Tests — présence des logos/couvertures de projet et 404 légère des assets
-// (audit 2026-10-23, P5).
+// Project logo/cover presence and the lightweight asset 404.
 //
-// 1. content/project-assets.json doit refléter public/projects : sinon un logo
-//    ajouté ne s'afficherait pas, ou un logo supprimé repartirait en 404.
-//    → en cas d'échec : `npm run assets:manifest`.
-// 2. Toute image de galerie référencée par content/projectDetails.ts doit
-//    exister sur le disque : une galerie vers un fichier absent recréerait les
-//    requêtes 404 que ce correctif supprime.
-// 3. projectCardImage() ne propose jamais d'URL inexistante.
-// 4. La route /api/asset-not-found renvoie une 404 en texte brut.
+// 1. content/project-assets.json must match public/projects, otherwise an
+//    added logo would not show, or a removed one would 404 again.
+//    → on failure: `npm run assets:manifest`.
+// 2. Every gallery image referenced by content/projectDetails.ts must exist
+//    on disk, or it would bring back the 404 requests.
+// 3. projectCardImage() never offers a missing URL.
+// 4. /api/asset-not-found returns a plain-text 404.
 
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -24,7 +22,7 @@ import { GET, HEAD } from "@/app/api/asset-not-found/route";
 const PUBLIC_DIR = join(process.cwd(), "public");
 const PROJECTS_DIR = join(PUBLIC_DIR, "projects");
 
-// Chemin d'URL (/projects/x/a%20b.webp) → fichier sur le disque.
+// URL path (/projects/x/a%20b.webp) → file on disk.
 const existsOnDisk = (urlPath: string) =>
   existsSync(join(PUBLIC_DIR, decodeURIComponent(urlPath)));
 

@@ -1,7 +1,7 @@
 // __tests__/TrackToggle.test.tsx
-// Composant TrackToggle — tests du switch Salesforce ↔ IT Ops.
+// TrackToggle: Salesforce ↔ IT Ops switch tests.
 
-// Mocks déclarés avant tout import (requis par Jest)
+// Mocks declared before any import (required by Jest)
 const mockSetTrack = jest.fn();
 let mockTrack = "salesforce";
 

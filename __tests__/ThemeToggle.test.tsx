@@ -1,5 +1,5 @@
 // __tests__/ThemeToggle.test.tsx
-// Composant ThemeToggle — tests du switch dark/light mode.
+// ThemeToggle: dark/light switch tests.
 
 const mockSetTheme = jest.fn();
 let mockTheme = "dark";
@@ -32,11 +32,9 @@ describe("ThemeToggle", () => {
   });
 
   it("ne rend rien avant le montage (SSR-safe)", () => {
-    // ThemeToggle retourne null tant que mounted=false (premier rendu)
-    // Note : avec jsdom, useEffect se déclenche immédiatement,
-    //        donc le composant sera déjà monté après render()
+    // ThemeToggle renders null until mounted; with jsdom it is already
+    // mounted after render(), so it must render something.
     const { container } = render(<ThemeToggle />);
-    // Le composant doit au moins rendre quelque chose après montage
     expect(container).toBeDefined();
   });
 
@@ -74,7 +72,7 @@ describe("ThemeToggle", () => {
     mockTheme = "system";
     mockSystemTheme = "light";
     render(<ThemeToggle />);
-    // system + systemTheme=light → affiche ☀️
+    // system + systemTheme=light → shows ☀️
     expect(screen.getByText("☀️")).toBeInTheDocument();
   });
 

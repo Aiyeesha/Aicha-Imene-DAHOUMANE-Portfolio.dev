@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 // __tests__/csp-report-alert.test.ts
-// Tests unitaires — SEC-02 : alerting webhook sur violations CSP critiques.
-// Env node (pas jsdom) : next/server requiert les Web Fetch globals de Node.js.
+// Unit tests: webhook alerts on critical CSP violations.
+// Node environment (not jsdom): next/server needs Node's Web Fetch globals.
 
 jest.mock("@/lib/ratelimit", () => ({
   cspReportRatelimit: { limit: async () => ({ success: true, reset: Date.now() + 60_000 }) },

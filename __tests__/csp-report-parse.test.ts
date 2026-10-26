@@ -2,9 +2,8 @@
  * @jest-environment node
  */
 // __tests__/csp-report-parse.test.ts
-// Audit 2026-10-25, constat 11 : les rapports Reporting API (Chrome/Edge,
-// tableau [{ type, body }]) étaient ignorés. Un test par format, plus le
-// passage dans la route.
+// CSP report parsing: one test per format (CSP Level 2 object and Reporting
+// API array [{ type, body }]), plus a pass through the route.
 
 jest.mock("@/lib/ratelimit", () => ({
   cspReportRatelimit: { limit: async () => ({ success: true }) },
@@ -94,7 +93,7 @@ describe("POST /api/csp-report — Reporting API", () => {
     expect(prefix).toBe("[CSP-VIOLATION]");
     const logged = JSON.parse(payload);
     expect(logged.blocked_uri).toBe("https://evil.example/x.js");
-    // La requête est toujours retirée avant journalisation.
+    // The query string is always stripped before logging.
     expect(logged.document_uri).toBe("https://example.com/fr");
   });
 

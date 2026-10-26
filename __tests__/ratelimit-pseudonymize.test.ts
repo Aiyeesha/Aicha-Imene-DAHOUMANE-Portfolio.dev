@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 // __tests__/ratelimit-pseudonymize.test.ts
-// Couvre pseudonymizeKey() (lib/ratelimit.ts) : aucune IP ne doit atteindre
-// Upstash en clair dès que IP_HASH_SALT est défini — audit du 2026-10-14, S11.
-// Environnement « node » : Web Crypto (crypto.subtle) y est disponible.
+// Covers pseudonymizeKey() (lib/ratelimit.ts): no IP reaches Upstash in
+// clear once IP_HASH_SALT is set. Node environment: Web Crypto
+// (crypto.subtle) is available.
 
 jest.mock("@upstash/redis", () => ({ Redis: jest.fn() }));
 jest.mock("@upstash/ratelimit", () => ({
