@@ -1,9 +1,7 @@
 // __tests__/ratelimit.test.ts
-// Couvre lib/ratelimit.ts, un module 0% testé jusqu'ici malgré son rôle de
-// protection anti-abus (cf. audit : cibler les modules critiques plutôt qu'un
-// chiffre global). Aucune variable Upstash n'est configurée en environnement
-// de test, donc chaque limiteur exporté utilise la voie "no-op" — exactement
-// la branche fail-closed/fail-open qu'on veut vérifier explicitement.
+// Covers lib/ratelimit.ts, a critical anti-abuse module. No Upstash variable
+// is set in tests, so every exported limiter takes the no-op path: exactly
+// the fail-closed / fail-open branch to check explicitly.
 //
 // @upstash/redis pulls in `uncrypto`, an ESM-only package Jest can't parse
 // without extending transformIgnorePatterns. Mocked instead — the no-op path

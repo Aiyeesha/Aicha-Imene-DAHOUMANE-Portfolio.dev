@@ -1,5 +1,5 @@
 // __tests__/toc.test.ts
-// Utilitaire TOC (Table of Contents) — tests unitaires (fonctions pures).
+// TOC (table of contents) utilities: unit tests (pure functions).
 
 import { slugify, extractToc } from "@/content/blog/toc";
 
@@ -27,10 +27,10 @@ describe("slugify", () => {
   });
 
   it("gère les caractères accentués en les supprimant", () => {
-    // Les accents non-ASCII sont supprimés par le replace [^a-z0-9\s-]
     const result = slugify("Sécurité");
-    // "sécurité" → "scurit" (non-ASCII supprimés) ou "securite"
-    // On vérifie juste que le résultat est un slug valide (pas d'espace, minuscule)
+    // Non-ASCII accents are removed by the [^a-z0-9\s-] replace
+    // ("sécurité" → "scurit" or "securite"); only check the result is a valid
+    // slug (no space, lowercase)
     expect(result).not.toContain(" ");
     expect(result).toBe(result.toLowerCase());
   });

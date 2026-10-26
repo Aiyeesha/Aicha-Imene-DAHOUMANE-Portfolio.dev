@@ -2,10 +2,9 @@
  * @jest-environment node
  */
 // __tests__/proxy-admin-ratelimit.test.ts
-// Audit 2026-10-25, constat 10 : le rate-limit de /admin (5 / 15 min)
-// consommait un jeton par requête, y compris authentifiée — l'administratrice
-// se verrouillait en quelques navigations. Seuls les échecs d'authentification
-// comptent désormais, et un quota épuisé bloque avant toute vérification.
+// /admin rate limit (5 / 15 min): only failed authentications consume a token,
+// so normal admin browsing never locks itself out, and an exhausted quota
+// blocks before any credential check.
 
 const limiter = { remaining: 5, limit: jest.fn(), getRemaining: jest.fn() };
 
@@ -55,7 +54,7 @@ describe("proxy /admin — rate-limit sur les seuls échecs", () => {
       expect((await proxy(req(basic("admin-test", "wrong")))).status).toBe(401);
     }
     expect(limiter.limit).toHaveBeenCalledTimes(5);
-    // Quota épuisé : même de bons identifiants sont refusés jusqu'à la fin de la fenêtre.
+    // Quota exhausted: even valid credentials are refused until the window ends.
     expect((await proxy(req(basic("admin-test", "correct-horse-battery")))).status).toBe(429);
     expect(limiter.limit).toHaveBeenCalledTimes(5);
   });

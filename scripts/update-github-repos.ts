@@ -1,10 +1,10 @@
 /**
  * update-github-repos.ts
  * ----------------------
- * Met à jour uniquement le champ repo_url dans la table projects.
- * Ne supprime ni ne réinitialise aucune table.
+ * Updates only the repo_url field of the projects table; never deletes or
+ * resets a table.
  *
- * Usage :
+ * Usage:
  *   npx tsx scripts/update-github-repos.ts
  */
 
@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
 
-// Charger .env.local
+// Load .env.local
 const envLocalPath = path.resolve(process.cwd(), ".env.local");
 const envPath = path.resolve(process.cwd(), ".env");
 
@@ -48,7 +48,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   let errors = 0;
 
   for (const [slug, repoUrl] of Object.entries(GITHUB_REPOS)) {
-    // Met à jour toutes les lignes avec ce slug (EN + FR)
+    // Update every row with this slug (EN + FR)
     const { error } = await supabase
       .from("projects")
       .update({ repo_url: repoUrl })

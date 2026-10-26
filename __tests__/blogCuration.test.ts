@@ -1,9 +1,9 @@
 // __tests__/blogCuration.test.ts
-// Règles du blog élagué (audit de contenu 2026-09-25, lot 4) :
-//   - chaque article publié renvoie vers au moins une étude de cas publiée
-//     (frontmatter `projects`, affiché en « Mis en pratique dans ») ;
-//   - aucun script ne contient de mot de passe en clair ;
-//   - les trois langues publient exactement les mêmes articles.
+// Blog curation rules:
+//   - every published post links to at least one published case study
+//     (frontmatter `projects`, shown as "Applied in");
+//   - no script contains a plain-text password;
+//   - the three languages publish exactly the same posts.
 
 import fs from "node:fs";
 import path from "node:path";

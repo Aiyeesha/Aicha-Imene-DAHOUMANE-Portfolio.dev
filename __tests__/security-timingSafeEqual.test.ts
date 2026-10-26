@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 // __tests__/security-timingSafeEqual.test.ts
-// Tests unitaires — lib/security/timingSafeEqual.ts
-// Vérifie les invariants de sécurité : longueurs différentes → false, égalité stricte → true.
-// @jest-environment node requis : crypto.subtle n'est pas disponible dans jsdom.
+// Unit tests: lib/security/timingSafeEqual.ts. Security invariants: different
+// lengths → false, strict equality → true. Node environment required:
+// crypto.subtle is missing from jsdom.
 
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 

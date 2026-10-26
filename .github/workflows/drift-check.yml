@@ -1,22 +1,19 @@
 name: Drift Check
 
-# ── Objectif ──────────────────────────────────────────────────────────────────
-# Vérifie quotidiennement que la production Vercel est bien déployée sur le
-# commit HEAD de main (pas de dérive). Alerte aussi si les données de monitoring
-# (cron uptime) sont obsolètes (> 48 h).
+# ── Purpose ───────────────────────────────────────────────────────────────────
+# Checks daily that Vercel production runs the HEAD commit of main (no drift),
+# and warns when monitoring data (uptime cron) is older than 48h.
 #
-# Secrets requis dans les paramètres du dépôt :
-#   VERCEL_TOKEN           — token Vercel (scope : read deployments)
-#   NEXT_PUBLIC_SITE_URL   — URL du site (ex: https://aicha-imene-dahoumane-portfolio.vercel.app)
+# Repository secrets:
+#   VERCEL_TOKEN           — Vercel token (scope: read deployments)
+#   NEXT_PUBLIC_SITE_URL   — site URL (e.g. https://aicha-imene-dahoumane-portfolio.vercel.app)
 #
-# Le check monitoring (step 3) consomme le champ `lastStoredCheckAt` exposé
-# par GET /api/health — ajouté par T2. Si NEXT_PUBLIC_SITE_URL n'est pas
-# configuré, le step est ignoré silencieusement.
+# The monitoring check (step 4) reads `lastStoredCheckAt` from GET /api/health;
+# it is skipped when NEXT_PUBLIC_SITE_URL is not set.
 
 on:
   schedule:
-    # Quotidien à 06:00 UTC — après le cron uptime (08:00 UTC) décalé de 2 h.
-    # Change to 0 8 * * * if the uptime cron runs at 06:00 UTC.
+    # Daily at 06:00 UTC.
     - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
@@ -25,8 +22,7 @@ on:
         type: boolean
         default: false
 
-# Permissions minimales — principe du moindre privilège (Scorecard).
-# Ce workflow n'écrit rien dans le dépôt — read-all suffit.
+# Least privilege (Scorecard): writes nothing to the repo, read-all is enough.
 permissions: read-all
 
 jobs:
@@ -38,11 +34,11 @@ jobs:
       contents: read
 
     steps:
-      # ── 1. Récupération du SHA HEAD de main ──────────────────────────────
+      # ── 1. HEAD SHA of main ───────────────────────────────────────────────
       - name: Get main HEAD SHA
         id: main
-        # API authentifiée via GITHUB_TOKEN : un `git ls-remote` anonyme échoue
-        # dès que le dépôt est privé.
+        # Authenticated API through GITHUB_TOKEN: an anonymous `git ls-remote`
+        # fails once the repository is private.
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -54,12 +50,12 @@ jobs:
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           echo "main HEAD: $SHA"
 
-      # ── 2. Récupération du SHA du dernier déploiement de production ───────
+      # ── 2. SHA of the latest production deployment ─────────────────────
       - name: Get prod deployment SHA (Vercel)
         id: prod
         env:
-          # Entrée passée par env plutôt qu'interpolée dans le script (bonne pratique
-          # contre l'injection de commande, signalée par OpenSSF Scorecard).
+          # Input passed through env rather than interpolated into the script
+          # (command injection hardening, flagged by OpenSSF Scorecard).
           DEBUG_OUTPUT: ${{ inputs.debug }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -69,7 +65,7 @@ jobs:
             exit 0
           fi
 
-          # Identifiants du projet Vercel (non sensibles — visibles dans l'API Vercel).
+          # Vercel project ids (not sensitive, visible through the Vercel API).
           PROJECT_ID="prj_tIRHa7TOHDBWWgyfnmLvBbBL3afG"
           TEAM_ID="team_ZSG4hmgl8QcadBdckxlLi7ls"
 
@@ -90,7 +86,7 @@ jobs:
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           echo "prod SHA: $SHA"
 
-      # ── 3. Comparaison prod ↔ main ────────────────────────────────────────
+      # ── 3. Compare production ↔ main ──────────────────────────────────────
       - name: Compare prod ↔ main
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -116,13 +112,13 @@ jobs:
 
           echo "OK: prod == main ($MAIN)"
 
-      # ── 4. Contrôle fraîcheur du monitoring (uptime cron) ─────────────────
-      # Consomme le champ lastStoredCheckAt de GET /api/health (ajouté par T2).
-      # Si les données sont > 48 h, émet un avertissement (pas d'échec bloquant).
+      # ── 4. Monitoring freshness (uptime cron) ─────────────────────────────
+      # Reads lastStoredCheckAt from GET /api/health; data older than 48h only
+      # raises a warning (not a failure).
       - name: Check monitoring freshness
         env:
-          # Entrée passée par env plutôt qu'interpolée dans le script (bonne pratique
-          # contre l'injection de commande, signalée par OpenSSF Scorecard).
+          # Input passed through env rather than interpolated into the script
+          # (command injection hardening, flagged by OpenSSF Scorecard).
           DEBUG_OUTPUT: ${{ inputs.debug }}
           SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
         run: |
@@ -144,7 +140,7 @@ jobs:
             exit 0
           fi
 
-          # Calcul de l'âge en heures (Linux date)
+          # Age in hours (Linux date)
           LAST_CHECK_SEC=$(date -d "$LAST_CHECK" +%s 2>/dev/null || echo "0")
           NOW_SEC=$(date +%s)
           AGE_HOURS=$(( (NOW_SEC - LAST_CHECK_SEC) / 3600 ))

@@ -1,10 +1,10 @@
 // scripts/optimize-images.mjs
 // ---------------------------
-// Optimise toutes les images de public/projects/ vers public/projects-optimized/
-// - PNG/JPG/JPEG → WebP (qualité 82, max 1920px)
-// - WebP existant → recompressé (qualité 82, max 1920px)
-// - SVG → copié tel quel
-// Usage : node scripts/optimize-images.mjs
+// Optimises every image of public/projects/ into public/projects-optimized/:
+// - PNG/JPG/JPEG → WebP (quality 82, max 1920px)
+// - existing WebP → recompressed (quality 82, max 1920px)
+// - SVG → copied as is
+// Usage: node scripts/optimize-images.mjs
 
 import sharp from "sharp";
 import { readdir, stat, mkdir, copyFile, writeFile } from "fs/promises";
@@ -54,7 +54,7 @@ async function main() {
     totalBefore += sizeBefore;
 
     if (ext === ".svg") {
-      // SVG : copie directe
+      // SVG: plain copy
       const outPath = join(OUTPUT_DIR, rel);
       await mkdir(dirname(outPath), { recursive: true });
       await copyFile(src, outPath);
@@ -87,7 +87,7 @@ async function main() {
     }
   }
 
-  // Rapport final
+  // Final report
   const totalSaved = totalBefore - totalAfter;
   console.log(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -98,7 +98,7 @@ async function main() {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `);
 
-  // Fichier de mapping pour la mise à jour Supabase
+  // Mapping file for the Supabase update
   await writeFile(
     join(__dirname, "../public/projects-optimized/_mapping.json"),
     JSON.stringify(mapping, null, 2)
