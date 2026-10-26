@@ -1,16 +1,13 @@
 // lib/security/timingSafeEqual.ts
 // --------------------------------
-// Comparaison de chaînes en temps constant — compatible Edge Runtime et Node.js.
-//
-// Implémentation via HMAC-SHA256 éphémère (Web Crypto API standard) :
-//   1. Génère une clé HMAC aléatoire par appel (non extractible)
-//   2. Signe les deux buffers (padded à la même longueur) avec cette clé
-//   3. XOR les deux signatures de taille fixe (32 octets) — temps constant
-//   4. Vérifie aussi l'égalité des longueurs originales
-//
-// Cette approche évite crypto.subtle.timingSafeEqual qui n'est pas standard
-// W3C et absent de certains environnements Node.js (auto-hébergement local).
-// HMAC + generateKey sont disponibles dans Edge Runtime et Node.js ≥ 15.
+// Constant-time string comparison for the Edge runtime and Node.js, through
+// an ephemeral HMAC-SHA256 (standard Web Crypto):
+//   1. a random, non-extractable HMAC key per call;
+//   2. both buffers (padded to the same length) signed with it;
+//   3. the two fixed-size (32-byte) signatures XOR-compared in constant time;
+//   4. original lengths compared too.
+// crypto.subtle.timingSafeEqual is not a W3C standard and is missing from some
+// Node.js environments; HMAC + generateKey exist in Edge and Node.js ≥ 15.
 
 export async function timingSafeStringEqual(a: string, b: string): Promise<boolean> {
   try {
@@ -19,7 +16,7 @@ export async function timingSafeStringEqual(a: string, b: string): Promise<boole
     const aBuf = enc.encode(a.padEnd(maxLen, "\0"));
     const bBuf = enc.encode(b.padEnd(maxLen, "\0"));
 
-    // Clé HMAC éphémère par appel — empêche tout oracle de timing sur les données
+    // Ephemeral per-call HMAC key: no timing oracle on the data
     const key = await crypto.subtle.generateKey(
       { name: "HMAC", hash: "SHA-256" },
       false,
@@ -31,7 +28,7 @@ export async function timingSafeStringEqual(a: string, b: string): Promise<boole
       crypto.subtle.sign("HMAC", key, bBuf),
     ]);
 
-    // Comparaison XOR sur des tableaux de taille fixe (32 octets) — temps constant
+    // XOR comparison over fixed-size (32-byte) arrays: constant time
     const va = new Uint8Array(sigA);
     const vb = new Uint8Array(sigB);
     let diff = 0;

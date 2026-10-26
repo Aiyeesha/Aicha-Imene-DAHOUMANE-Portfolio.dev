@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
 /**
- * Client Supabase côté serveur (Server Components / Route Handlers).
- * Ici on utilise la clé anon : vos policies RLS gèrent l'accès public (published/public).
+ * Server-side Supabase client (server components / route handlers), with the
+ * anon key: RLS policies control public access.
  */
 export function createServerSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

@@ -1,8 +1,8 @@
 // lib/incidentProgress.ts
 // -------------------------
-// Fonctions pures de calcul sur les checklists d'incidents — séparées de
-// lib/supabase/incidents.ts (qui importe "server-only") pour rester testables
-// directement en Jest, sans mock (voir CONTRIBUTING.md → Testing).
+// Pure computations on incident checklists, kept apart from
+// lib/supabase/incidents.ts (which imports "server-only") so Jest can test
+// them directly without mocks (see CONTRIBUTING.md → Testing).
 import type { ChecklistPhase } from "@/lib/incidentPlaybooks";
 
 export type ChecklistProgressItem = { is_done: boolean };

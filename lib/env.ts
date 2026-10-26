@@ -1,13 +1,12 @@
 // lib/env.ts
-// Validation des variables d'environnement au démarrage du serveur.
-// Appelé depuis instrumentation.ts — s'exécute une seule fois à la montée.
-// Signale les problèmes de configuration tôt, fort et explicitement,
-// au lieu de laisser des erreurs silencieuses se propager au runtime
-// (ex : token Upstash avec espace → WRONGPASS à chaque requête Redis).
+// Environment variable validation at server start (called once from
+// instrumentation.ts). Reports configuration problems early and loudly
+// instead of letting them fail silently at runtime (e.g. an Upstash token
+// with a trailing space → WRONGPASS on every Redis call).
 import "server-only";
 import { z } from "zod";
 
-// ── Schémas ───────────────────────────────────────────────────────────────────
+// ── Schemas ───────────────────────────────────────────────────────────────────
 
 const publicSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL:    z.string().url(),
@@ -38,27 +37,23 @@ const serverSchema = z.object({
   ADMIN_USERNAME: z.string().min(1),
   ADMIN_PASSWORD: z.string().min(8),
   CRON_SECRET:    z.string().min(32),
-  // Optionnel — audit 2026-10-23 (CFG-2) : app/api/contact/route.ts traite
-  // déjà l'absence de FORMHOOK_ENDPOINT (le message n'est simplement pas
-  // relayé). L'exiger ici faisait échouer la validation d'environnement
-  // (avertissement « Variables d'environnement invalides ») sans raison
-  // fonctionnelle. Reste validé comme URL lorsqu'il est défini.
+  // Optional: app/api/contact/route.ts handles a missing FORMHOOK_ENDPOINT
+  // (the message is simply not forwarded). Validated as a URL when set.
   FORMHOOK_ENDPOINT: z.string().url().optional(),
   FORMHOOK_AUTH_TOKEN: z.string().min(1).optional(),
-  // Requis depuis la confirmation de leur présence en production (2026-10-26) :
-  // sel de pseudonymisation des IP (lib/ratelimit.ts), secrets de
-  // revalidation et d'invalidation du cache, jeton des invitations témoignage.
-  // Seule la présence est exigée ici ; la longueur minimale est contrôlée
-  // plus bas, en simple avertissement.
+  // App secrets, required (confirmed present in production): IP
+  // pseudonymisation salt (lib/ratelimit.ts), revalidation and cache
+  // invalidation secrets, testimonial invitation token. Only presence is
+  // required here; minimum length is checked below as a warning.
   IP_HASH_SALT:             z.string().min(1),
   REVALIDATE_SECRET:        z.string().min(1),
   CACHE_INVALIDATE_SECRET:  z.string().min(1),
   TESTIMONIAL_SUBMIT_TOKEN: z.string().min(1),
 });
 
-// Longueurs minimales recommandées pour les secrets ci-dessus. Une valeur
-// existante plus courte ne doit pas empêcher la production de démarrer :
-// on avertit seulement, pour inviter à la régénérer.
+// Recommended minimum lengths for the secrets above. A shorter existing value
+// must not stop production from starting: it only triggers a warning to
+// regenerate it.
 const secretStrengthSchema = z.object({
   IP_HASH_SALT:             z.string().min(16).optional(),
   REVALIDATE_SECRET:        z.string().min(32).optional(),
@@ -69,7 +64,7 @@ const secretStrengthSchema = z.object({
 // ── Validation ────────────────────────────────────────────────────────────────
 
 export function validateEnv(): void {
-  // Pas de validation en CI ni en test (valeurs de substitution intentionnelles)
+  // No validation in CI or tests (placeholder values on purpose)
   if (process.env.CI === "true" || process.env.NODE_ENV === "test") return;
 
   const issues: string[] = [];
@@ -88,7 +83,7 @@ export function validateEnv(): void {
     }
   }
 
-  // Robustesse des secrets : jamais bloquante (voir secretStrengthSchema).
+  // Secret strength: never blocking (see secretStrengthSchema).
   const strength = secretStrengthSchema.safeParse(process.env);
   if (!strength.success) {
     const lines = strength.error.issues.map((e) => `  • ${e.path.join(".")}: ${e.message}`);
@@ -102,10 +97,8 @@ export function validateEnv(): void {
   const block = issues.map((l) => `  • ${l}`).join("\n");
   const message = `[env] ⚠ Variables d'environnement invalides :\n${block}`;
 
-  // Audit 2026-10-25 : en production, une configuration invalide arrête le
-  // démarrage au lieu d'un simple console.error ignoré. Les prévisualisations
-  // (souvent sans clés Supabase) et le développement local gardent un
-  // avertissement.
+  // In production an invalid configuration stops the start-up. Previews
+  // (often without Supabase keys) and local development only warn.
   if (isProductionDeployment) throw new Error(message);
   console.error(message);
 }
