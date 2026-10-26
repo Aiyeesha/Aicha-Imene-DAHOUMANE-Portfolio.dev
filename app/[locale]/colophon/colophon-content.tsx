@@ -1,8 +1,5 @@
-// Server Component — audit 2026-10-23 (PERF-3) : le composant n'était client
-// que pour lire le parcours (useTrack) et choisir deux couleurs d'accent ; tout
-// son contenu trilingue partait dans le bundle JavaScript. Les accents passent
-// par la variante CSS `itops:` (globals.css), qui suit aussi une bascule en
-// cours de session.
+// Server component: accents use the `itops:` CSS variant (globals.css), which
+// also follows a track switch, so no client JavaScript is needed.
 
 import Link from "next/link";
 
@@ -13,7 +10,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
   const isFr = locale === "fr";
   const isEs = locale === "es";
 
-  // Salesforce par défaut, IT Ops via la variante `itops:`.
+  // Salesforce by default, IT Ops through the `itops:` variant.
   const arrowClass  = "text-cyan-500 dark:text-cyan-400 itops:text-violet-500 itops:dark:text-violet-400";
   const ctaBtnClass = "bg-cyan-500 text-black hover:opacity-90 itops:bg-violet-600 itops:text-white";
 
@@ -31,9 +28,6 @@ export default function ColophonContent({ locale }: { locale: string }) {
     cacheTitle:     isFr ? "Stratégie de cache" : isEs ? "Estrategia de caché" : "Caching strategy",
     secTitle:       isFr ? "Sécurité" : isEs ? "Seguridad" : "Security",
     openSourceTitle:isFr ? "Code source" : isEs ? "Código fuente" : "Source code",
-    // Le dépôt GitHub est public depuis le 2026-09-26 (repassé en public après
-    // l'audit du 2026-09-25 qui avait constaté qu'il cassait OSSF Scorecard,
-    // Drift Check et CodeQL — tous conçus pour un dépôt public).
     sourceNote:     isFr
       ? "Le dépôt de ce site est public — architecture, CI/CD, tests et sécurité consultables directement sur GitHub."
       : isEs
@@ -56,9 +50,6 @@ export default function ColophonContent({ locale }: { locale: string }) {
     },
     {
       title: "i18n",
-      // EN/FR (sans ES) sur les libellés FR et EN — trace d'avant l'ajout de
-      // l'espagnol, jamais mis à jour ici alors que la version ES, elle,
-      // était déjà correcte (audit 2026-08-13).
       items: [{ name: "next-intl", role: isFr ? "Internationalisation EN/FR/ES (App Router, middleware)" : isEs ? "Internacionalización EN/FR/ES (App Router, middleware)" : "EN/FR/ES internationalisation (App Router, middleware)", link: "https://next-intl-docs.vercel.app" }],
     },
     {
@@ -275,7 +266,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         </ul>
       </section>
 
-      {/* Sécurité */}
+      {/* Security */}
       <section aria-labelledby="section-sec" className="mt-14">
         <h2 id="section-sec" className="text-xl font-semibold">{labels.secTitle}</h2>
         <ul className="mt-5 space-y-3">
@@ -288,7 +279,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         </ul>
       </section>
 
-      {/* Code source — dépôt privé, accès sur demande */}
+      {/* Source code */}
       <section aria-labelledby="section-oss" className="mt-14">
         <h2 id="section-oss" className="text-xl font-semibold">{labels.openSourceTitle}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">{labels.sourceNote}</p>
@@ -302,7 +293,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         </div>
       </section>
 
-      {/* Retour */}
+      {/* Back */}
       <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
         <Link href={`/${locale}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
           ← {labels.backHome}

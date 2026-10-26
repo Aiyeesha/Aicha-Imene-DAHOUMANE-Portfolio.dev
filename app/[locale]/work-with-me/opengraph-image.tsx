@@ -49,7 +49,7 @@ export default async function Image({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Halos décoratifs */}
+        {/* Decorative glows */}
         <div
           style={{
             position: "absolute",
@@ -75,9 +75,9 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* HAUT — Badge disponibilité + Titre */}
+        {/* TOP: availability badge + title */}
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Badge disponibilité */}
+          {/* Availability badge */}
           <div
             style={{
               display: "inline-flex",
@@ -113,7 +113,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* MILIEU — Domaines */}
+        {/* MIDDLE: domains */}
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
           {domains.map((d, i) => (
             <div
@@ -134,7 +134,7 @@ export default async function Image({ params }: Props) {
           ))}
         </div>
 
-        {/* BAS — Nom + URL */}
+        {/* BOTTOM: name + URL */}
         <div
           style={{
             display: "flex",

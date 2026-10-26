@@ -71,7 +71,7 @@ export default async function PrivacyPage({
 
       <div className="mt-8 grid gap-6">
 
-        {/* Responsable du traitement */}
+        {/* Data controller */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("controllerTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">
@@ -91,26 +91,26 @@ export default async function PrivacyPage({
           <p className="mt-2 text-sm text-muted-2">{t("cookiesBody")}</p>
         </section>
 
-        {/* Formulaire de contact */}
+        {/* Contact form */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("formTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("formBody")}</p>
           <p className="mt-3 text-sm text-muted-2">{t("retention")}</p>
         </section>
 
-        {/* Sous-traitants — Art. 28 RGPD */}
+        {/* Processors (GDPR art. 28) */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("processorsTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("processorsBody")}</p>
         </section>
 
-        {/* Violation de données — Art. 33 RGPD */}
+        {/* Data breach (GDPR art. 33) */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("breachTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("breachBody")}</p>
         </section>
 
-        {/* Vos droits */}
+        {/* Your rights */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("rightsTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("rightsBody")}</p>

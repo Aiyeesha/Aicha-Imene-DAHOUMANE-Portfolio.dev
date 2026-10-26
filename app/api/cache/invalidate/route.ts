@@ -8,19 +8,15 @@ import { isValidSlug } from "@/lib/security/slug";
 import { routing } from "@/i18n/routing";
 import { z } from "zod";
 
-// ── Validation du corps — audit 2026-10-23 (P7) ─────────────────────────────
-// Avant : `locale` et `slug` étaient lus sans contrôle puis concaténés dans des
-// clés Redis ; un JSON invalide ou un `slug` sans `locale` retombaient
-// silencieusement sur le vidage COMPLET du cache (l'action la plus large).
-// Désormais :
-//   - `locale` doit appartenir à routing.locales (en, fr, es) ;
-//   - `slug` doit être un slug kebab-case valide (lib/security/slug.ts) et
-//     n'est accepté qu'accompagné d'une `locale` ;
-//   - toute clé inconnue est refusée (.strict()) ;
-//   - corps vide → vidage complet (comportement documenté conservé) ;
-//   - JSON invalide → 400, jamais un vidage complet par défaut.
-// L'endpoint reste protégé par un secret comparé à temps constant : ces
-// contrôles sont de la défense en profondeur.
+// ── Body validation ─────────────────────────────────────────────────────────
+//   - `locale` must be one of routing.locales (en, fr, es);
+//   - `slug` must be a valid kebab-case slug (lib/security/slug.ts) and is only
+//     accepted with a `locale`;
+//   - unknown keys are rejected (.strict());
+//   - empty body → full flush (documented behaviour);
+//   - invalid JSON → 400, never a full flush by default.
+// The endpoint is already protected by a constant-time secret check; this is
+// defence in depth.
 const InvalidateBodySchema = z
   .object({
     locale: z.enum(routing.locales).optional(),
@@ -34,13 +30,12 @@ const InvalidateBodySchema = z
     message: "slug requires locale",
   });
 
-// Borne de taille du corps : un corps légitime fait quelques dizaines
-// d'octets ({"locale":"fr","slug":"…"}). 1 Kio laisse une large marge.
+// Body size limit: a legitimate body is a few dozen bytes
+// ({"locale":"fr","slug":"…"}); 1 KiB leaves plenty of room.
 const MAX_BODY_BYTES = 1024;
 
-// SCAN : nombre de clés demandées par itération (indicatif côté Redis) et
-// nombre maximal d'itérations — borne de sécurité contre une boucle infinie
-// si le curseur ne revenait jamais à "0".
+// SCAN: keys requested per iteration (a hint for Redis) and a maximum number
+// of iterations, as a guard against a cursor that never returns to "0".
 const SCAN_COUNT = 100;
 const SCAN_MAX_ITERATIONS = 1000;
 
@@ -48,14 +43,14 @@ const SCAN_MAX_ITERATIONS = 1000;
  * POST /api/cache/invalidate
  * Header: x-cache-secret: <CACHE_INVALIDATE_SECRET>
  * Body examples:
- *   {} (ou corps vide)              -> flush ALL cache keys (projects, about, certifications)
+ *   {} (or empty body)              -> flush ALL cache keys (projects, about, certifications)
  *   { "locale": "fr" }              -> flush all keys for that locale
  *   { "locale": "fr", "slug": "…" } -> flush list + detail for that slug only
- * Réponses d'erreur : 400 (JSON invalide, locale/slug invalides, clé inconnue,
- * slug sans locale), 401 (secret), 413 (corps > 1 Kio), 429, 503 (Redis absent).
+ * Errors: 400 (invalid JSON, locale or slug, unknown key, slug without
+ * locale), 401 (secret), 413 (body > 1 KiB), 429, 503 (no Redis).
  */
 export async function POST(req: Request) {
-  // ── 1. Rate-limit par IP ────────────────────────────────────────────────────
+  // ── 1. Per-IP rate limit ────────────────────────────────────────────────────
   const headersList = await headers();
   const ip =
     headersList.get("x-real-ip") ||
@@ -70,7 +65,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // ── 2. Vérification du secret (comparaison timing-safe) ─────────────────────
+  // ── 2. Secret check (timing-safe) ───────────────────────────────────────────
   const secret = req.headers.get("x-cache-secret");
   const expected = process.env.CACHE_INVALIDATE_SECRET;
 
@@ -81,14 +76,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  // ── 3. Redis disponible ? ───────────────────────────────────────────────────
+  // ── 3. Redis available? ─────────────────────────────────────────────────────
   if (!redis) {
     return NextResponse.json({ ok: false, error: "Cache not available" }, { status: 503 });
   }
 
-  // ── 4. Lecture et validation du corps ───────────────────────────────────────
-  // Pré-contrôle sur Content-Length (rejet sans lire le corps), puis contrôle
-  // de la taille réellement lue : l'en-tête peut être absent (chunked) ou faux.
+  // ── 4. Read and validate the body ───────────────────────────────────────────
+  // Check Content-Length first (reject without reading), then the actual size:
+  // the header may be missing (chunked) or wrong.
   const declaredLength = Number(req.headers.get("content-length") ?? "0");
   if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
     return NextResponse.json({ ok: false, error: "Payload too large" }, { status: 413 });
@@ -109,13 +104,12 @@ export async function POST(req: Request) {
 
   const parsed = InvalidateBodySchema.safeParse(json);
   if (!parsed.success) {
-    // Message générique : pas d'écho de l'entrée (ni dans la réponse, ni dans
-    // les logs) — évite toute injection de log ou réflexion de contenu.
+    // Generic message: the input is never echoed (response or logs).
     return NextResponse.json({ ok: false, error: "Invalid body" }, { status: 400 });
   }
   const { locale, slug } = parsed.data;
 
-  // ── 5. Invalidation ciblée ──────────────────────────────────────────────────
+  // ── 5. Targeted invalidation ────────────────────────────────────────────────
   const deleted: string[] = [];
 
   if (locale && slug) {
@@ -134,9 +128,8 @@ export async function POST(req: Request) {
     await redis.del(...keys);
     deleted.push(...keys);
   } else {
-    // Les 3 locales actives (en/fr/es) doivent toutes être listées ici — un flush-all
-    // qui en oublie une laisse du contenu obsolète en cache jusqu'à expiration du TTL
-    // (constaté lors de l'audit 2026-07 : "es" manquait, ajouté avec l'activation ES).
+    // All three locales (en/fr/es) must be listed: a flush that misses one
+    // leaves stale content until the TTL expires.
     const staticKeys = [
       "projects_with_assets:fr",
       "projects_with_assets:en",
@@ -154,10 +147,8 @@ export async function POST(req: Request) {
     await redis.del(...staticKeys);
     deleted.push(...staticKeys);
 
-    // Supprimer aussi toutes les clés de détail projet (project:{locale}:{slug}).
-    // SCAN itératif plutôt que KEYS (audit 2026-10-23, P7) : KEYS est O(N) et
-    // bloque Redis le temps de parcourir tout l'espace de clés ; SCAN parcourt
-    // par lots, sans bloquer, jusqu'au retour du curseur à "0".
+    // Also delete every project detail key (project:{locale}:{slug}). SCAN in
+    // batches rather than KEYS, which is O(N) and blocks Redis.
     const projectKeys: string[] = [];
     let cursor = "0";
     for (let i = 0; i < SCAN_MAX_ITERATIONS; i++) {
@@ -169,22 +160,21 @@ export async function POST(req: Request) {
       cursor = String(nextCursor);
       if (cursor === "0") break;
     }
-    // SCAN peut renvoyer une même clé plusieurs fois : dédoublonnage.
+    // SCAN may return a key more than once: dedupe.
     const uniqueProjectKeys = [...new Set(projectKeys)];
     if (uniqueProjectKeys.length > 0) {
       await redis.del(...uniqueProjectKeys);
       deleted.push(...uniqueProjectKeys);
     }
 
-    // Invalider le cache ISR Next.js pour toutes les pages projet
+    // Invalidate the Next.js cache for every project page
     revalidatePath("/[locale]/projects/[slug]", "page");
     revalidatePath("/en", "page");
     revalidatePath("/fr", "page");
     revalidatePath("/es", "page");
   }
 
-  // ── 6. Log de l'opération ───────────────────────────────────────────────────
-  // IP volontairement absente du journal (audit du 2026-10-14, S11).
+  // ── 6. Log (no IP) ──────────────────────────────────────────────────────────
   console.info(`[cache/invalidate] deleted=${deleted.join(", ")}`);
 
   return NextResponse.json({ ok: true, deleted });

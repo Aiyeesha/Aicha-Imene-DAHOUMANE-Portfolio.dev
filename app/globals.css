@@ -1,7 +1,7 @@
-/* Détection automatique désactivée : on scanne exactement les mêmes fichiers
-   que l'ancienne option `content` de Tailwind 3. Sans cela, Tailwind 4 lit tout
-   le dépôt (CV HTML, scripts SQL, Markdown…) et en extrait des classes
-   parasites, dont un sélecteur que le minifieur CSS de Next.js ne sait pas lire. */
+/* Automatic source detection is off: only the files below are scanned.
+   Otherwise Tailwind 4 reads the whole repository (HTML CVs, SQL, Markdown…)
+   and extracts stray classes, including a selector the Next.js CSS minifier
+   cannot parse. */
 @import 'tailwindcss' source(none);
 @source "../app/**/*.{js,ts,jsx,tsx,mdx}";
 @source "../components/**/*.{js,ts,jsx,tsx,mdx}";
@@ -10,16 +10,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Parcours IT Ops — audit 2026-10-23 (PERF-3) : `itops:` applique une classe
-   quand <html data-track="itops">. L'attribut est rendu côté serveur depuis le
-   cookie (app/layout.tsx) puis tenu à jour par Providers lors d'une bascule :
-   les accents de couleur liés au parcours n'exigent plus de Client Component.
-   Les classes sans variante correspondent au parcours Salesforce (défaut). */
+/* IT Ops track: `itops:` applies a class when <html data-track="itops">.
+   The attribute is rendered on the server from the cookie (app/layout.tsx)
+   and kept up to date by Providers. Unprefixed classes are the Salesforce
+   (default) track. */
 @custom-variant itops (&:where(html[data-track="itops"] *));
 
 @theme {
-  /* Familles injectées par next/font/local (app/layout.tsx) sous un nom distinct :
-     une variable de thème qui se référencerait elle-même serait invalide. */
+  /* Font families injected by next/font/local (app/layout.tsx) under a
+     different name: a theme variable referencing itself would be invalid. */
   --font-display: var(--font-space-grotesk), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
 
@@ -103,23 +102,19 @@ html.dark select option {
   color: #ffffff;
 }
 
-/**
- * THEME STRATEGY
- * - `next-themes` toggles `class="dark"` or `class="light"` on <html>.
- * - Tailwind is configured with `darkMode: ["class"]`.
- * - We define neutral base styles that adapt in light/dark.
- */
+/* Theme: next-themes sets class="dark" or "light" on <html>; base styles
+   below adapt to both. */
 
 body {
   @apply bg-white text-slate-900;
-  /* Police de corps — Inter (lisible, neutre) */
+  /* Body font: Inter */
   font-family: var(--font-body, system-ui, sans-serif);
 }
 html.dark body {
   @apply bg-[#070B1A] text-white;
 }
 
-/* Titres h1–h3 : Space Grotesk (distinctive, premium) */
+/* h1–h3: Space Grotesk */
 h1, h2, h3 {
   font-family: var(--font-display, system-ui, sans-serif);
   letter-spacing: -0.02em;
@@ -167,47 +162,38 @@ html.dark .card:hover {
   @apply border-sky-300 bg-sky-50 text-sky-800;
   @apply dark:border-sky-400/30 dark:bg-sky-500/15 dark:text-sky-200;
 }
-/* Badge "projet pont" — signale un projet qui croise Salesforce et Infra/DevOps,
-   indépendamment du track actif. Dégradé cyan→violet pour ne pas se confondre
-   avec les tons mono-track existants (client/personal/training). */
+/* "Bridge" badge: a project combining Salesforce and infrastructure/DevOps,
+   whatever the active track. Cyan→violet gradient, distinct from the
+   single-track tones. */
 .badge-bridge {
   @apply border-transparent bg-linear-to-r from-cyan-500/15 to-violet-500/15 text-slate-800;
   @apply dark:from-cyan-400/20 dark:to-violet-400/20 dark:text-white;
   border-image: linear-gradient(to right, rgb(34 211 238 / 0.5), rgb(167 139 250 / 0.5)) 1;
 }
-/* Badge "sécurité" — signale un projet cybersécurité/Blue Team, transversal
-   aux tracks (voir is_security en base : couvre des projets IT Ops dédiés
-   ET la dimension sécurité de Legarant-AXG côté Salesforce). Ambre pour ne
-   pas se confondre avec le rouge/rose déjà utilisé pour les statuts "outage". */
+/* "Security" badge: cybersecurity / Blue Team project, across tracks
+   (is_security). Amber, distinct from the red used for outages. */
 .badge-security {
   @apply border-amber-300 bg-amber-50 text-amber-800;
   @apply dark:border-amber-400/30 dark:bg-amber-500/15 dark:text-amber-200;
 }
-/* Badge "simulation professionnelle" — projets construits dans une org DE
-   personnelle pour reproduire un cas d'usage métier réaliste (secret
-   professionnel oblige côté clients réels), avec la même rigueur qu'une
-   livraison en production. Indigo pour rester distinct des tons mono-track
-   (client/personal/training) et du dégradé bridge. */
+/* "Professional simulation" badge: built in a personal Developer Edition
+   org to reproduce a realistic business case (client work is confidential),
+   with production-level rigour. Indigo. */
 .badge-simulation {
   @apply border-indigo-300 bg-indigo-50 text-indigo-800;
   @apply dark:border-indigo-400/30 dark:bg-indigo-500/15 dark:text-indigo-200;
 }
-/* Badge "mission anonymisée" — projet inspiré d'une mission réelle en
-   environnement professionnel, mais dont noms/données/éléments spécifiques
-   ont été modifiés pour respecter la confidentialité client. Distinct de
-   badge-simulation (aucune mission réelle sous-jacente) et de badge-client
-   (contexte client nommé/traçable, ex. stages) : ici la mission est réelle,
-   la restitution est anonymisée. Teal pour rester hors des tons déjà pris. */
+/* "Anonymised engagement" badge: based on real client work, with names,
+   data and specifics changed for confidentiality. Unlike badge-simulation
+   (no real engagement) and badge-client (named client). Teal. */
 .badge-anonymized {
   @apply border-teal-300 bg-teal-50 text-teal-800;
   @apply dark:border-teal-400/30 dark:bg-teal-500/15 dark:text-teal-200;
 }
-/* Badge "projet fil rouge — Titre RNCP 6" — projet du cursus certifiant
-   (OpenClassrooms, RNCP niveau 6), périmètre et jeu de données imposés,
-   livrable soutenu devant un jury. Approfondi ici avec la couche
-   architecture / sécurité / exploitation attendue en contexte professionnel.
-   Ardoise (slate) volontairement sobre : un livrable diplômant évalué, pas
-   un exercice — distinct du ton "training" (bleu ciel) réservé aux labs. */
+/* "Capstone — RNCP 6" badge: certification programme project
+   (OpenClassrooms, RNCP level 6) with imposed scope and data, defended before
+   a jury, extended here with architecture, security and operations. Sober
+   slate, distinct from the sky-blue "training" tone used for labs. */
 .badge-capstone {
   @apply border-slate-300 bg-slate-50 text-slate-700;
   @apply dark:border-slate-400/30 dark:bg-slate-500/15 dark:text-slate-200;
@@ -224,11 +210,8 @@ html.dark .chip:hover { @apply bg-white/10; }
 }
 
 /* ── Interactive feedback ─────────────────────────────────────────────────────
-   Press scale : feedback tactile au clic sur tous les boutons interactifs.
-   La durée courte (100ms) donne une sensation de réactivité immédiate.
-   Les boutons désactivés restent à 100% pour indiquer qu'ils ne répondent pas.
-   disabled:cursor-not-allowed est géré en Tailwind sur chaque composant — on le
-   centralise ici pour ne pas l'oublier sur un nouveau bouton. */
+   Short (100ms) press scale on enabled buttons; disabled buttons do not move
+   and get cursor: not-allowed, centralised here. */
 button:not([disabled]):active {
   transform: scale(0.97);
   transition-duration: 100ms;
@@ -238,12 +221,9 @@ button[aria-disabled="true"] {
   cursor: not-allowed;
 }
 
-/* ── Dark / Light mode — transition globale ───────────────────────────────────
-   Quand next-themes change la classe .dark sur <html>, tous les éléments
-   qui utilisent des valeurs dark: recalculent leurs couleurs CSS.
-   Cette transition évite le flash brutal light→dark ou dark→light.
-   Limitée aux propriétés de couleur — ne ralentit pas les autres animations.
-   Exclue en prefers-reduced-motion pour ne pas retarder l'affichage. */
+/* ── Light / dark transition ──────────────────────────────────────────────────
+   Smooths the colour change when next-themes toggles .dark. Colour properties
+   only; disabled with reduced motion. */
 body,
 header,
 nav,
@@ -255,22 +235,22 @@ footer,
   transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-/* ── Fade-in générique (ContactForm success, toasts, messages status) ─────────
-   Utilisé via `animate-[fadeIn_0.35s_ease_forwards]` (Tailwind JIT arbitrary). */
+/* ── Generic fade-in (ContactForm success, status messages) ─────────────────
+   Used as `animate-[fadeIn_0.35s_ease_forwards]`. */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 
-/* ── Cursor blink — utilisé par TypingText ───────────────────────────────────*/
+/* ── Cursor blink (TypingText) ───────────────────────────────────────────────*/
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
 
-/* ── Animated gradient text — utilisé sur le h1 hero ────────────────────────
-   background-size: 200% auto + animation sur background-position → shimmer.
-   Appliquer avec bg-clip-text text-transparent + la classe .animate-gradient-x */
+/* ── Animated gradient text (hero h1) ──────────────────────────────────────
+   200% background animated along its position; use with bg-clip-text
+   text-transparent + .animate-gradient-x. */
 @keyframes gradient-x {
   0%,100% { background-position: 0% 50%;   }
   50%     { background-position: 100% 50%; }
@@ -280,12 +260,10 @@ footer,
   animation: gradient-x 5s ease infinite;
 }
 
-/* ── Card contextual glow — utilisé par GlowCard ────────────────────────────
-   Le ::after suit la souris via les custom properties --glow-x / --glow-y
-   positionnées depuis GlowCard.tsx onMouseMove.
-   z-index: 0 sur ::after + z-index: 1 sur les enfants → le glow passe
-   derrière le contenu mais reste visible à travers l'arrière-plan semi-transparent.
-   overflow:hidden sur .card clip le glow aux bords arrondis de la carte. */
+/* ── Card glow (GlowCard) ──────────────────────────────────────────────────
+   ::after follows the mouse through --glow-x / --glow-y (set in GlowCard.tsx).
+   It sits behind the content (z-index 0 vs 1) and is clipped to the card's
+   rounded corners by overflow: hidden. */
 .glow-card {
   position: relative;
 }
@@ -312,10 +290,7 @@ footer,
   z-index: 1;
 }
 
-/* ── ThemeToggle — animation de rotation lors du changement de thème ─────────
-   Utilisé via la classe .theme-icon-spin ajoutée/retirée depuis ThemeToggle.tsx.
-   La rotation 0→360 est imperceptible sur mobile mais donne un retour visuel
-   satisfaisant sur desktop. */
+/* ── ThemeToggle icon spin on theme change (.theme-icon-spin) ───────────── */
 @keyframes theme-spin {
   from { transform: rotate(0deg) scale(1); }
   50%  { transform: rotate(180deg) scale(1.15); }
@@ -326,11 +301,8 @@ footer,
   animation: theme-spin 350ms ease-out;
 }
 
-/* ── CommandPalette — animations d'entrée ────────────────────────────────────
-   L'overlay et le panel s'animent à l'ouverture pour éviter l'effet "pop"
-   abrupt de la dialog Radix UI. Pas d'animation de fermeture (la dialog est
-   détruite immédiatement par cmdk — les exit animations nécessiteraient
-   AnimatePresence et ajouteraient de la complexité). */
+/* ── CommandPalette entry animations ─────────────────────────────────────────
+   No exit animation: cmdk unmounts the dialog immediately. */
 @keyframes cmdk-overlay-in {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -340,15 +312,13 @@ footer,
   to   { opacity: 1; transform: translateX(-50%) scale(1)    translateY(0);    }
 }
 
-/* ── Skeleton stagger — animation-delay par index ────────────────────────────
-   Utilisé dans loading.tsx pour créer un effet de cascade ondulant
-   plutôt que la pulsation synchrone de toutes les cartes. */
+/* ── Skeleton stagger: animation-delay per index (loading.tsx) ───────────── */
 .skeleton-delay-1 { animation-delay: 120ms; }
 .skeleton-delay-2 { animation-delay: 240ms; }
 .skeleton-delay-3 { animation-delay: 360ms; }
 
-/* Entrée du héro (track-aware-hero.tsx) — remplace les variants framer-motion
-   (audit 2026-10-25). opacity reste à 1 : avatar = candidat LCP, H1 indexable. */
+/* Hero entry (track-aware-hero.tsx). Opacity stays at 1: the avatar is the
+   LCP candidate and the H1 must stay indexable. */
 @keyframes hero-avatar-in {
   from { transform: scale(0.93); }
   to   { transform: scale(1); }
@@ -366,36 +336,26 @@ footer,
   .hero-text-in { animation: none; }
   .card { transition: none !important; }
   .card:hover { transform: none !important; }
-  /* Dégradé du H1 figé (audit 2026-10-25) : boucle infinie sinon. */
+  /* Static H1 gradient (otherwise an infinite loop). */
   .animate-gradient-x { animation: none; }
 }
 
 /* ============================================================
    WINDOWS HIGH CONTRAST MODE (forced-colors)
    ============================================================
-   En mode Contraste Élevé Windows (HCM), le navigateur remplace les
-   couleurs personnalisées par une palette système limitée. Sans ces règles,
-   les éléments avec des backgrounds/borders CSS personnalisés deviennent
-   invisibles ou indiscernables.
-
-   Conventions forced-colors :
-     ButtonText     : texte des boutons (noir/blanc selon theme HCM)
-     ButtonBorder   : bordure des boutons
-     LinkText       : couleur des liens
-     HighlightText  : texte sélectionné / actif
-     Highlight      : fond de sélection
-     GrayText       : texte désactivé
-     Canvas         : fond de page
-     CanvasText     : texte de page
+   The browser replaces custom colours with a system palette; without these
+   rules, elements drawn with custom backgrounds or borders disappear.
+   System colours: ButtonText, ButtonBorder, LinkText, HighlightText,
+   Highlight, GrayText, Canvas, CanvasText.
    ============================================================ */
 @media (forced-colors: active) {
-  /* Cartes — rétablir bordure visible en HCM */
+  /* Cards: restore a visible border */
   .card {
     border: 1px solid ButtonBorder;
     background: Canvas;
   }
 
-  /* Chips / badges — fond transparent, bordure forcée */
+  /* Chips / badges: transparent background, forced border */
   .chip,
   .badge {
     background: Canvas;
@@ -403,24 +363,24 @@ footer,
     color: CanvasText;
   }
 
-  /* Bouton de focus — l'outline currentColor peut disparaître en HCM */
+  /* Focus: the currentColor outline can vanish */
   .soft-ring:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 3px;
   }
 
-  /* Section stripe — supprimer le fond custom, invisible en HCM */
+  /* Section stripe: drop the custom background */
   .section-stripe {
     background: Canvas;
     border: 1px solid ButtonBorder;
   }
 
-  /* Page gradient — décoratif, masquer en HCM */
+  /* Page gradient: decorative, hide it */
   .page-gradient {
     display: none;
   }
 
-  /* Nav pill — invisible en HCM sans ces règles */
+  /* Nav pill: invisible without these rules */
   .nav-pill {
     border: 2px solid Highlight;
     background: transparent;
@@ -435,7 +395,7 @@ footer,
   opacity: 1;
   z-index: 0;
   transition: background 0.6s ease;
-  /* Salesforce (défaut) : cyan dominant */
+  /* Salesforce (default): cyan */
   background:
     radial-gradient(900px 500px at 10% 10%, rgba(34,211,238,0.10), transparent 60%),
     radial-gradient(700px 450px at 90% 20%, rgba(168,85,247,0.05), transparent 60%);
@@ -446,7 +406,7 @@ html.dark .page-gradient {
     radial-gradient(700px 450px at 90% 20%, rgba(168,85,247,0.06), transparent 60%);
 }
 
-/* IT Ops : violet dominant */
+/* IT Ops: violet */
 html[data-track="itops"] .page-gradient {
   background:
     radial-gradient(900px 500px at 10% 10%, rgba(139,92,246,0.10), transparent 60%),
@@ -487,11 +447,9 @@ html.dark .mdx h3 { color: rgba(255,255,255,0.90); }
 .mdx strong { font-weight: 650; color: rgba(10,15,30,0.92); }
 html.dark .mdx strong { color: rgba(255,255,255,0.92); }
 
-/* GFM tables (remark-gfm) — used by project case studies and blog posts
-   Audit 2026-10-23 (P2) : le défilement horizontal est porté par le conteneur
-   .mdx-table-wrap (components/mdx/Table.server.tsx) et non plus par un
-   `display: block` sur le <table>, qui lui retirait sa sémantique de tableau
-   pour certains lecteurs d'écran. La marge verticale passe sur le conteneur. */
+/* GFM tables (remark-gfm), used in case studies and blog posts. Horizontal
+   scrolling lives on .mdx-table-wrap (components/mdx/Table.server.tsx), so the
+   <table> keeps its table semantics; vertical margin is on the wrapper. */
 .mdx .mdx-table-wrap {
   margin: 1.25rem 0;
   max-width: 100%;
@@ -542,19 +500,16 @@ html.dark .mdx hr { border-top-color: rgba(255,255,255,0.10); }
 
 .mdx code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  /* Audit 2026-10-23 (P2) : un identifiant long sans espace
-     (ex. `Schema.sObjectType.Task.isAccessible()`, ~378 px) faisait déborder
-     la page sur mobile. Autorise la coupure n'importe où en dernier recours.
-     Sans effet sur les blocs <pre> : leur code ne passe pas à la ligne
-     (white-space: pre) et le <pre> défile horizontalement. */
+  /* Long identifiers without spaces would overflow on mobile: allow a break
+     anywhere as a last resort. No effect in <pre> (white-space: pre, the
+     block scrolls). */
   overflow-wrap: anywhere;
   background: rgba(0,0,0,0.04);
   border: 1px solid rgba(0,0,0,0.10);
   border-radius: 0.5rem;
   padding: 0.1rem 0.35rem;
 }
-/* Dans un tableau, on garde les identifiants entiers : le tableau défile
-   dans son conteneur (.mdx-table-wrap) plutôt que de couper le code. */
+/* Inside tables, identifiers stay whole: the table scrolls in its wrapper. */
 .mdx td code,
 .mdx th code {
   overflow-wrap: normal;
@@ -568,21 +523,15 @@ html.dark .mdx code {
   margin-top: 0.8rem;
   border-radius: 1rem;
   border: 1px solid rgba(0,0,0,0.10);
-  /* Fond blanc opaque en thème clair — audit 2026-10-23 (axe color-contrast,
-     ~4 000 nœuds sur 24 articles et études de cas) : le thème Shiki
-     « github-light » est calibré pour un fond blanc. Sur l'ancien fond gris
-     translucide (≈ #e9e9e9), les mots-clés (#D73A49) tombaient à 3,77:1, les
-     commentaires (#6A737D) à 3,97:1 et les balises (#22863A) à 3,81:1 —
-     4,5:1 requis. Sur blanc : 4,57 / 4,82 / 4,63:1. La bordure garde le bloc
-     distinct du fond de page. */
+  /* Opaque white in light mode: Shiki's github-light theme is calibrated for
+     white. On a translucent grey, keywords, comments and tags fell below
+     4.5:1. The border keeps the block distinct from the page. */
   background: #ffffff;
   overflow-x: auto;
 }
-/* Seule couleur de « github-light » sous 4,5:1 même sur blanc : l'orange des
-   variables (#E36209, 3,49:1). Remplacé en thème clair par la même teinte
-   assombrie (#C15308, 4,66:1). !important est nécessaire : la variable est
-   posée en style inline par rehype-pretty-code ; une déclaration !important
-   de feuille de style l'emporte sur un style inline normal. */
+/* The one github-light colour under 4.5:1 even on white: variable orange
+   (#E36209, 3.49:1), darkened to #C15308 (4.66:1) in light mode. !important
+   is needed to beat the inline style set by rehype-pretty-code. */
 .mdx code span[style*="--shiki-light:#E36209"] {
   --shiki-light: #C15308 !important;
 }
@@ -592,7 +541,6 @@ html.dark .mdx pre {
 
 }
 
-/* MDX code blocks with toolbar (copy button) */
 /* MDX code blocks with toolbar (copy button) */
 .mdx-code {
   margin-top: 0.9rem;
@@ -614,12 +562,12 @@ html.dark .mdx-code__toolbar {
   border-bottom: 0;
   background: rgba(255,255,255,0.05);
 }
-/* Badge de langage dans la toolbar */
+/* Language badge in the toolbar */
 .mdx-code__lang {
   margin-right: auto;
   font-size: 0.7rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  /* rgba(0,0,0,0.65) ≈ #595959 sur fond blanc → 6.25:1 ✓ WCAG AA */
+  /* ≈ #595959 on white → 6.25:1 (WCAG AA) */
   color: rgba(0,0,0,0.65);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -627,7 +575,7 @@ html.dark .mdx-code__toolbar {
   user-select: none;
 }
 html.dark .mdx-code__lang {
-  /* rgba(255,255,255,0.60) ≈ #a5a7ac sur fond sombre → 6.11:1 ✓ WCAG AA */
+  /* ≈ #a5a7ac on dark → 6.11:1 (WCAG AA) */
   color: rgba(255,255,255,0.60);
 }
 .mdx-code__pre {
@@ -647,16 +595,13 @@ html.dark .mdx-code__copy {
   background: rgba(255,255,255,0.06);
 }
 
-/* ─── rehype-pretty-code — Shiki dual-theme (light/dark) ────────────────────
-   rehype-pretty-code génère des variables CSS inline :
-     --shiki-light : couleur token en mode clair
-     --shiki-dark  : couleur token en mode sombre
-   On affiche la variante correcte selon la classe .dark sur <html>.
-   keepBackground: false → fond géré par .mdx pre ci-dessus.
-   Sélecteur [data-theme~='github-light'] (et non [data-theme*=' ']) : en
-   production, l'optimiseur de Tailwind 4 réécrit ' ' en `\ ` sans guillemets,
-   forme que le minifieur CSS de Next.js ne sait pas analyser. Équivalent ici :
-   le thème double vaut toujours « github-light github-dark-default ».
+/* ─── rehype-pretty-code: Shiki dual theme ─────────────────────────────────
+   Tokens carry --shiki-light / --shiki-dark inline; the right one is shown
+   depending on .dark. keepBackground: false, so .mdx pre sets the background.
+   [data-theme~='github-light'] rather than [data-theme*=' ']: in production
+   Tailwind 4 rewrites ' ' to an unquoted `\ ` that the Next.js minifier
+   cannot parse. Equivalent here, as the theme is always
+   "github-light github-dark-default".
    ──────────────────────────────────────────────────────────────────────── */
 code[data-theme~='github-light'],
 code[data-theme~='github-light'] span {
@@ -668,7 +613,7 @@ html.dark code[data-theme~='github-light'] span {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
 }
-/* Numéros de ligne (optionnel — activables via lineNumbers: true) */
+/* Line numbers (enabled with lineNumbers: true) */
 code[data-line-numbers] {
   counter-reset: line;
 }
@@ -686,7 +631,7 @@ code[data-line-numbers] > [data-line]::before {
 html.dark code[data-line-numbers] > [data-line]::before {
   color: rgba(255,255,255,0.20);
 }
-/* Ligne surlignée (```ts {2-4}) */
+/* Highlighted line (```ts {2-4}) */
 [data-line][data-highlighted-line] {
   background: rgba(14,116,144,0.08);
   border-left: 2px solid rgb(14,116,144);
@@ -710,8 +655,7 @@ html.dark .mdx-link { color: rgb(165 243 252); }
 /* Text helpers for light/dark consistency */
 .text-strong { @apply text-slate-900 dark:text-white/90; }
 .text-muted { @apply text-slate-600 dark:text-white/70; }
-/* text-slate-500 (#64748b) = 4.34:1 sur blanc — ÉCHOUE WCAG AA (seuil 4.5:1).
-   text-slate-600 (#475569) = 5.74:1 sur blanc — PASSE WCAG AA ✓ */
+/* slate-600 (5.74:1 on white) rather than slate-500 (4.34:1, below AA) */
 .text-muted-2 { @apply text-slate-600 dark:text-white/65; }
 
 html select option {
@@ -722,7 +666,7 @@ html.dark select option {
   background-color: #070B1A;
   color: #ffffff;
 }
-/* ProfileNarrative details polish */
+/* <details> polish */
 details[open] > summary {
   opacity: 0.95;
 }
@@ -734,14 +678,11 @@ details > summary {
 }
 
 /* ============================================================
-   ALTERNANCE DE FONDS (sections paires)
+   ALTERNATING SECTION BACKGROUNDS
    ============================================================
-   Crée un rythme visuel subtil entre les sections de la landing page.
-   Fond légèrement différent sur les sections "section-stripe".
-   -  Mode clair  : slate-50/55 (très léger gris-bleu)
-   -  Mode sombre : white/2.5 (relief quasi-invisible)
-   Appliqué avec border-radius pour adoucir l'effet dans le container max-w-6xl.
-   Le margin négatif compense le px-6 du container parent pour remplir la largeur.
+   Subtle rhythm between home page sections (.section-stripe): slate-50/55
+   in light mode, white/2.5 in dark mode. Rounded corners; the negative
+   margin offsets the container's px-6 to fill the width.
    ============================================================ */
 .section-stripe {
   border-radius: 1.5rem;
@@ -758,14 +699,11 @@ html.dark .section-stripe {
 /* ============================================================
    PRINT STYLESHEET
    ============================================================
-   Appliqué uniquement quand l'utilisateur imprime la page (Ctrl+P).
-   Objectif : rendu propre, économie d'encre, aucun élément interactif.
-   - Masquer : navbar, footer, bouton scroll-to-top, animations
-   - Afficher : contenu principal en noir sur blanc
-   - Police serif pour une meilleure lisibilité à l'impression
+   Clean, ink-saving output: no nav, footer, buttons or animations; black
+   on white, serif body text.
    ============================================================ */
 @media print {
-  /* Fond blanc, texte noir — économie d'encre */
+  /* White background, black text */
   *,
   *::before,
   *::after {
@@ -775,64 +713,62 @@ html.dark .section-stripe {
     text-shadow: none !important;
   }
 
-  /* Masquer les éléments non pertinents à l'impression */
-  header,          /* Navbar fixe */
-  footer,          /* Footer */
-  nav,             /* Navigations secondaires */
-  button,          /* Boutons interactifs */
-  .page-gradient,  /* Dégradé décoratif */
+  /* Hide what is irrelevant on paper: nav, footer, buttons, decoration,
+     scroll-to-top button */
+  header,
+  footer,
+  nav,
+  button,
+  .page-gradient,
   [aria-hidden="true"],
-  /* Bouton scroll-to-top */
   .fixed.bottom-6 {
     display: none !important;
   }
 
-  /* Contenu principal : pleine largeur, sans padding excessif */
+  /* Main content: full width */
   main {
     padding-top: 0 !important;
     max-width: 100% !important;
   }
 
-  /* Police serif pour l'impression (plus lisible sur papier) */
+  /* Serif body text on paper */
   body {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 11pt;
     line-height: 1.5;
   }
 
-  /* Les liens affichent leur URL entre parenthèses */
+  /* Links show their URL in parentheses */
   a[href]::after {
     content: " (" attr(href) ")";
     font-size: 9pt;
     color: #555 !important;
   }
 
-  /* Sauf les liens internes (ancres) et les liens de mail */
+  /* Except anchors and mail links */
   a[href^="#"]::after,
   a[href^="mailto:"]::after {
     content: "";
   }
 
-  /* Éviter les coupures de page dans les sections importantes */
+  /* Avoid page breaks inside key sections */
   section,
   article {
     break-inside: avoid;
   }
 
-  /* Titres : pas de coupure après */
+  /* No break right after headings */
   h1, h2, h3 {
     break-after: avoid;
   }
 }
 
-/* ── Reveal — animation scroll-triggered (CSS + IntersectionObserver) ─────────
-   Remplace l'ancienne implémentation Framer Motion (inutile pour fade+translate).
-   Contrôlé par data-attributes depuis Reveal.tsx :
-     data-animating  : JS a pris le contrôle, l'élément est sous la ligne de flottaison
-     data-visible    : l'élément est entré dans le viewport → joue la transition
-     data-from       : direction d'entrée (bottom | left | right)
-   La variable CSS --reveal-delay est passée via style={{ "--reveal-delay": "…ms" }}
-   (propriété personnalisée CSS — seul cas légitime d'inline style dans ce projet). */
+/* ── Reveal: scroll-triggered animation (CSS + IntersectionObserver) ────────
+   Driven by data attributes set in Reveal.tsx:
+     data-animating : JS took over, the element is below the fold
+     data-visible   : the element entered the viewport → transition plays
+     data-from      : entry direction (bottom | left | right)
+   --reveal-delay is set by Reveal.tsx with style.setProperty(). */
 
 [data-animating] {
   opacity: 0;
@@ -849,7 +785,7 @@ html.dark .section-stripe {
   transform: none;
 }
 
-/* Pas d'animation pour prefers-reduced-motion (géré aussi côté JS) */
+/* No animation with reduced motion (also handled in JS) */
 @media (prefers-reduced-motion: reduce) {
   [data-animating] {
     opacity: 1;
@@ -858,7 +794,6 @@ html.dark .section-stripe {
   }
 }
 
-/* Sections focalisées par script après un saut d'ancre (lib/anchorScroll.ts) :
-   pas de contour autour de toute la section — le focus sert à placer le
-   point de départ de la tabulation, pas à signaler un élément interactif. */
+/* Sections focused by script after an anchor jump (lib/anchorScroll.ts): no
+   outline around the whole section; focus only sets the tab starting point. */
 section[tabindex="-1"]:focus { outline: none; }

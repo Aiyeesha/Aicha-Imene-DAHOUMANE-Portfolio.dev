@@ -1,13 +1,8 @@
 // app/feed/[tag]/route.ts
 // -----------------------
-// Flux RSS 2.0 filtré par tag. Accessible via GET /feed/{tag}
-// Ex: /feed/Salesforce  /feed/IT%20Ops  /feed/Security
-//
-// Le paramètre `locale` (query string) permet de choisir la langue du flux.
-// Ex: /feed/Salesforce?locale=fr  → articles FR tagués "Salesforce"
-//
-// Les balises <link rel="alternate" type="application/rss+xml"> sont ajoutées
-// sur les pages de tag (/[locale]/blog/tags) pour la découverte automatique.
+// RSS 2.0 feed filtered by tag: GET /feed/{tag} (e.g. /feed/Salesforce,
+// /feed/IT%20Ops); ?locale=fr selects the language. Tag pages
+// (/[locale]/blog/tags) announce these feeds with <link rel="alternate">.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { buildRssFeed } from "@/lib/rss";

@@ -1,15 +1,14 @@
 // app/twitter-image.tsx
 // ----------------------
-// Twitter/X Card image — partagée également par Slack, iMessage, WhatsApp.
-// Format 1200×630 (summary_large_image) — cohérent avec l'image OG principale.
-// revalidate = 86400 : recalculée au maximum 1×/jour, mise en cache par Next.js CDN.
+// Twitter/X card image (also used by Slack, iMessage, WhatsApp), 1200×630
+// summary_large_image, consistent with the main OG image.
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 export const size        = { width: 1200, height: 630 };
 export const contentType = "image/png";
-// Cache l'image 24h — sans revalidate elle est recalculée à chaque crawl Twitter/X.
+// Cached 24h; without revalidate it would be rendered on every crawl.
 export const revalidate  = 86400;
 
 export default function Image() {
@@ -35,7 +34,7 @@ export default function Image() {
           position: "relative",
         }}
       >
-        {/* Halo décoratif */}
+        {/* Decorative glow */}
         <div style={{
           position: "absolute", top: -100, right: -60,
           width: 380, height: 380, borderRadius: "50%",
@@ -43,7 +42,7 @@ export default function Image() {
           display: "flex",
         }} />
 
-        {/* Haut — Avatar initiales + Nom + Rôle */}
+        {/* Top: initials + name + role */}
         <div style={{ display: "flex", alignItems: "center", gap: 30 }}>
           <div style={{
             width: 88, height: 88, borderRadius: 18,
@@ -63,12 +62,12 @@ export default function Image() {
           </div>
         </div>
 
-        {/* Milieu — Tagline */}
+        {/* Middle: tagline */}
         <div style={{ display: "flex", fontSize: 20, color: "rgba(255,255,255,0.6)", lineHeight: 1.5, maxWidth: 680 }}>
           Salesforce · Apex · LWC · CI/CD · IT Ops · DevOps — Paris · Île-de-France
         </div>
 
-        {/* Bas — URL */}
+        {/* Bottom: URL */}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <div style={{ fontSize: 16, color: "rgba(255,255,255,0.35)" }}>{siteUrl}</div>
         </div>

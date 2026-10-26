@@ -1,8 +1,7 @@
 // app/[locale]/about/opengraph-image.tsx
 // ---------------------------------------
-// Image OpenGraph dédiée à la page À propos / About.
-// Palette alignée avec le reste du site : cyan (Salesforce) + violet (IT Ops).
-// Design dual-track cohérent avec l'OG de la homepage.
+// OpenGraph image for the About page, with the cyan (Salesforce) + violet
+// (IT Ops) palette of the home page image.
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -30,7 +29,7 @@ export default async function Image({ params }: Props) {
     ? "De la administración de sistemas y redes al desarrollo Salesforce"
     : "From systems & network administration to Salesforce development";
 
-  // Cyan (Salesforce) + Violet (IT Ops) — palette cohérente avec l'OG homepage
+  // Cyan (Salesforce) + violet (IT Ops)
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
@@ -56,7 +55,7 @@ export default async function Image({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Halo cyan — haut droite */}
+        {/* Cyan glow, top right */}
         <div
           style={{
             position: "absolute",
@@ -69,7 +68,7 @@ export default async function Image({ params }: Props) {
             display: "flex",
           }}
         />
-        {/* Halo violet — bas gauche */}
+        {/* Violet glow, bottom left */}
         <div
           style={{
             position: "absolute",
@@ -83,7 +82,7 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* HAUT — Initiales + Nom + Titre */}
+        {/* TOP: initials + name + title */}
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{
@@ -121,7 +120,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* MILIEU — Subtitle */}
+        {/* MIDDLE: subtitle */}
         <div
           style={{
             display: "flex",
@@ -135,7 +134,7 @@ export default async function Image({ params }: Props) {
           {subtitle}
         </div>
 
-        {/* BAS — Tags + URL */}
+        {/* BOTTOM: tags + URL */}
         <div
           style={{
             display: "flex",
@@ -152,7 +151,7 @@ export default async function Image({ params }: Props) {
                 style={{
                   padding: "8px 18px",
                   borderRadius: 999,
-                  // Alterne cyan/violet pour les 4 tags
+                  // Alternate cyan/violet across the 4 tags
                   background: i % 2 === 0
                     ? "rgba(34,211,238,0.12)"
                     : "rgba(167,139,250,0.12)",

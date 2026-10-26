@@ -1,8 +1,7 @@
 // resources/page.tsx
 // -------------------
-// Page statique "Ressources & Boîte à outils".
-// Présente les outils, stacks et références utilisés au quotidien.
-// Aucune dépendance Supabase — données dans content/resources.ts.
+// Static "Resources & toolbox" page: tools, stacks and references used daily.
+// Data in content/resources.ts.
 
 import Link from "next/link";
 import type { Metadata } from "next";

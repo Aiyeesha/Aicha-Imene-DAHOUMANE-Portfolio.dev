@@ -22,30 +22,18 @@ import { getFeaturedProjectsForNav, getSecurityClusterCount } from "@/lib/data/p
  *
  * IMPORTANT: Do NOT render <html>/<body> here (only in app/layout.tsx), otherwise hydration breaks.
  *
- * TICKET-03 SPIKE — setRequestLocale :
- * setRequestLocale(locale) est appelé en premier dans ce layout. Cela permet à next-intl
- * d'utiliser le segment d'URL comme source de vérité (pas les headers()) pour tous les
- * composants enfants qui appelleront getLocale()/getTranslations(). Cela active aussi
- * generateStaticParams pour la pré-génération statique des deux locales.
- *
- * CONCLUSION DU SPIKE : ISR reste inopérant malgré ce changement. Le root layout
- * (app/layout.tsx) appelle toujours getLocale() pour <html lang> — seul endroit où
- * les headers() sont lus. Déplacer <html> dans ce layout provoquerait une hydration
- * break (deux balises <html> imbriquées). De plus, même si getLocale() était supprimé,
- * le nonce CSP par requête de proxy.ts reste incompatible avec le cache HTML CDN.
- * Résolution : reverse-proxy homelab (fin 2026). Voir app/layout.tsx.
+ * setRequestLocale(locale) is called first so child components get the
+ * locale from the URL segment rather than headers(), and it enables
+ * generateStaticParams. Routes stay dynamic anyway (see app/layout.tsx).
  */
 
 export function generateStaticParams() {
   return [{ locale: "fr" }, { locale: "en" }, { locale: "es" }];
 }
 
-// Métadonnées de l'accueil (titre, description, canonical, hreflang, Open
-// Graph) déplacées dans app/[locale]/page.tsx — audit 2026-10-23 (SEO-2,
-// SEO-3). Déclarées ici, elles s'appliquaient par héritage à toute page qui
-// n'en définit pas : la 404 recevait la description de l'accueil et un
-// canonical vers /{locale}, et les pages noindex (testimonial-submit,
-// security/acknowledgments) la même description que l'accueil.
+// Home page metadata lives in app/[locale]/page.tsx: declared here it would
+// be inherited by the 404 and every page without its own (canonical to
+// /{locale}, home description).
 
 export default async function LocaleLayout({
   children,
@@ -56,8 +44,8 @@ export default async function LocaleLayout({
 }) {
   const { locale: rawLocale } = await params;
   const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
-  // Stocker la locale dans l'AsyncLocalStorage de next-intl AVANT tout appel async.
-  // Permet aux composants enfants d'appeler getLocale()/getTranslations() sans lire headers().
+  // Store the locale in next-intl's AsyncLocalStorage before any async call,
+  // so children can call getLocale()/getTranslations() without headers().
   setRequestLocale(locale);
   const messages = await getMessages({ locale: locale });
   const t = await getTranslations({ locale });
@@ -65,26 +53,22 @@ export default async function LocaleLayout({
     getFeaturedProjectsForNav(locale),
     getSecurityClusterCount(locale),
   ]);
-  // Nonce CSP posé par proxy.ts — transmis à ThemeProvider pour que son script
-  // inline de détection de thème soit autorisé par la CSP strict-dynamic.
-  // Résout aussi le warning React 19 "Encountered a script tag while rendering".
+  // CSP nonce from proxy.ts, passed to ThemeProvider so its inline theme
+  // script is allowed (strict-dynamic). Also avoids React 19's "Encountered a
+  // script tag while rendering" warning.
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
-  // Lu côté serveur pour éviter le flash "Salesforce" au premier paint SSR chez
-  // un visiteur déjà passé sur IT Ops (cookie posé par providers.tsx setTrack()).
-  // Sans danger pour le cache : le nonce CSP ci-dessus force déjà Cache-Control:
-  // no-store / rendu dynamique sur toute cette route (voir commentaire au-dessus
-  // et app/[locale]/status/page.tsx) — lire ce cookie ne dégrade donc rien qui
-  // ne soit pas déjà non mis en cache.
+  // Read on the server so returning IT Ops visitors never see the Salesforce
+  // variant first (cookie set by setTrack() in providers.tsx). The route is
+  // already dynamic because of the nonce, so this costs no caching.
   const trackCookie = (await cookies()).get("track")?.value;
   const initialTrack = trackCookie === "itops" ? "itops" : "salesforce";
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      {/* initialTrack vient du cookie côté serveur (fallback "salesforce" si absent).
-          Providers resynchronise depuis localStorage au montage (providers.tsx
-          useEffect) uniquement comme filet pour le tout premier visiteur avant
-          que le cookie n'existe. */}
+      {/* initialTrack comes from the cookie ("salesforce" when missing).
+          Providers falls back to localStorage on mount only for first-time
+          visitors without a cookie. */}
       <Providers initialTrack={initialTrack} nonce={nonce}>
         <CursorSpotlight />
         <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070B1A] dark:text-white">
@@ -93,7 +77,7 @@ export default async function LocaleLayout({
           <div className="relative z-10">
             <SkipToContent targetId="main" label={t("a11y.skip")} />
             <Navbar featuredProjects={featuredProjectsForNav} securityClusterCount={securityClusterCount} />
-            {/* Palette de commandes globale — ⌘K / Ctrl+K */}
+            {/* Global command palette (⌘K / Ctrl+K) */}
             <CommandPaletteLoader />
 
             {/*
@@ -105,7 +89,7 @@ export default async function LocaleLayout({
               {children}
             </main>
 
-            {/* Bouton "Retour en haut" — apparaît après 300px de scroll */}
+            {/* "Back to top" button, after 300px of scroll */}
             <ScrollToTop />
 
             <footer className="border-t border-black/10 dark:border-white/10 py-10 mt-14">
@@ -114,13 +98,10 @@ export default async function LocaleLayout({
                   <span>
                     © 2025–{new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
                   </span>
-                  {/* Link (Next.js) pour la navigation SPA — évite le rechargement de page
-                      complet que <a href> provoque sur les routes locales. */}
+                  {/* Next.js Link for client-side navigation */}
                   <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-4">
-                    {/* Certifications — page primaire (diplôme RNCP 6, Trailhead,
-                        certif éditeur en préparation) : c'est la contre-preuve de
-                        l'objection « pas de certif » et elle n'était reliée qu'au
-                        header, jamais au footer. Voir audit P5. */}
+                    {/* Certifications (RNCP 6 diploma, Trailhead, upcoming
+                        vendor certification) */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/certifications`}
@@ -133,18 +114,16 @@ export default async function LocaleLayout({
                     >
                       {t("footer.workWithMe")}
                     </Link>
-                    {/* Page « Profil hybride » — trois cas où la combinaison
-                        Salesforce + infra + sécurité est nécessaire. Point d'entrée
-                        neutre (hors toggle), voir audit P2. */}
+                    {/* "Hybrid profile": three cases where Salesforce +
+                        infrastructure + security are needed together */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/hybride`}
                     >
                       {t("footer.hybrid")}
                     </Link>
-                    {/* « Me recruter » → formulaire unique de l'accueil (champs
-                        recruteur repliés), comme le héro et le menu mobile — un
-                        même libellé, une même destination (audit 2026-10-25). */}
+                    {/* "Hire me" → the home page contact form, same label and
+                        destination as in the hero and mobile menu */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}#contact`}
@@ -187,8 +166,7 @@ export default async function LocaleLayout({
                     >
                       {t("footer.uses")}
                     </Link>
-                    {/* /resources a quitté le menu desktop au profit de /hybride
-                        (audit de contenu 2026-09-25) : lien conservé ici. */}
+                    {/* /resources is not in the desktop nav, so it is linked here. */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/resources`}

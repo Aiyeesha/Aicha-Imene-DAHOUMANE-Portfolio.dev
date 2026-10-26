@@ -1,10 +1,8 @@
 // app/[locale]/hybride/opengraph-image.tsx
 // -----------------------------------------
-// Image OpenGraph dédiée à la page Profil hybride (aperçu LinkedIn, etc.).
-// Reprend la maquette de app/[locale]/about/opengraph-image.tsx — audit du
-// 2026-10-14, constat 7 : la page n'exposait aucune og:image.
-// Palette alignée avec le reste du site : cyan (Salesforce) + violet (IT Ops).
-// Design dual-track cohérent avec l'OG de la homepage.
+// OpenGraph image for the Hybrid profile page (LinkedIn previews…), based on
+// the About page's layout, with the cyan (Salesforce) + violet (IT Ops)
+// palette of the home page image.
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -32,7 +30,7 @@ export default async function Image({ params }: Props) {
     ? "Salesforce + infraestructura + seguridad: la combinación, no la yuxtaposición"
     : "Salesforce + infrastructure + security: combined, not side by side";
 
-  // Cyan (Salesforce) + Violet (IT Ops) — palette cohérente avec l'OG homepage
+  // Cyan (Salesforce) + violet (IT Ops)
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
@@ -58,7 +56,7 @@ export default async function Image({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Halo cyan — haut droite */}
+        {/* Cyan glow, top right */}
         <div
           style={{
             position: "absolute",
@@ -71,7 +69,7 @@ export default async function Image({ params }: Props) {
             display: "flex",
           }}
         />
-        {/* Halo violet — bas gauche */}
+        {/* Violet glow, bottom left */}
         <div
           style={{
             position: "absolute",
@@ -85,7 +83,7 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* HAUT — Initiales + Nom + Titre */}
+        {/* TOP: initials + name + title */}
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{
@@ -123,7 +121,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* MILIEU — Subtitle */}
+        {/* MIDDLE: subtitle */}
         <div
           style={{
             display: "flex",
@@ -137,7 +135,7 @@ export default async function Image({ params }: Props) {
           {subtitle}
         </div>
 
-        {/* BAS — Tags + URL */}
+        {/* BOTTOM: tags + URL */}
         <div
           style={{
             display: "flex",
@@ -154,7 +152,7 @@ export default async function Image({ params }: Props) {
                 style={{
                   padding: "8px 18px",
                   borderRadius: 999,
-                  // Alterne cyan/violet pour les 4 tags
+                  // Alternate cyan/violet across the 4 tags
                   background: i % 2 === 0
                     ? "rgba(34,211,238,0.12)"
                     : "rgba(167,139,250,0.12)",

@@ -1,6 +1,6 @@
 // app/[locale]/resources/opengraph-image.tsx
 // -------------------------------------------
-// Image OpenGraph dédiée à la page Ressources & Boîte à outils.
+// OpenGraph image for the Resources page.
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -52,7 +52,7 @@ export default async function Image({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Halo cyan — haut droite */}
+        {/* Cyan glow, top right */}
         <div
           style={{
             position: "absolute",
@@ -65,7 +65,7 @@ export default async function Image({ params }: Props) {
             display: "flex",
           }}
         />
-        {/* Halo violet — bas gauche */}
+        {/* Violet glow, bottom left */}
         <div
           style={{
             position: "absolute",
@@ -79,7 +79,7 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* HAUT — Nom + Titre */}
+        {/* TOP: name + title */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div style={{ fontSize: 20, color: "rgba(255,255,255,0.45)" }}>{name}</div>
           <div
@@ -97,7 +97,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* MILIEU — Sous-titre */}
+        {/* MIDDLE: subtitle */}
         <div
           style={{
             display: "flex",
@@ -111,7 +111,7 @@ export default async function Image({ params }: Props) {
           {subtitle}
         </div>
 
-        {/* BAS — Tags + URL */}
+        {/* BOTTOM: tags + URL */}
         <div
           style={{
             display: "flex",

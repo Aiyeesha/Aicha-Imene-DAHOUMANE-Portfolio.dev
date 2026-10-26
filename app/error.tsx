@@ -1,17 +1,14 @@
 // app/error.tsx
 // -------------
-// Error boundary racine — intercepte les crashs hors app/[locale]/ (ex: /admin).
-// "use client" requis par Next.js App Router.
-//
-// Props injectés par Next.js :
-//   error  — instance Error (+ .digest pour les erreurs serveur)
-//   reset  — re-rend le segment crashé (sans rechargement complet)
+// Root error boundary, for crashes outside app/[locale]/ (e.g. /admin).
+// Props from Next.js: error (with .digest for server errors) and reset
+// (re-renders the crashed segment without a full reload).
 
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
 
-// La langue du navigateur ne change pas pendant la vie de la page.
+// The browser language does not change during the page's life.
 const subscribeNoop = () => () => {};
 
 function getPreferredLocale(): "fr" | "en" {
@@ -44,7 +41,7 @@ const content = {
   },
 } as const;
 
-// ── Icône : éclair (erreur serveur) ────────────────────────────────────────
+// ── Icon: lightning bolt (server error) ────────────────────────────────────
 function Icon500() {
   return (
     <svg
@@ -55,9 +52,9 @@ function Icon500() {
       fill="none"
       className="mx-auto text-rose-500/50 dark:text-rose-400/40"
     >
-      {/* Cercle extérieur */}
+      {/* Outer circle */}
       <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="2" />
-      {/* Éclair */}
+      {/* Bolt */}
       <path
         d="M27 10 L18 26 H24 L21 38 L32 22 H26 L27 10Z"
         stroke="currentColor"
@@ -77,8 +74,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  // Langue du navigateur lue après hydratation sans setState dans un effet —
-  // audit 2026-10-23 (PERF-5). "en" côté serveur et pendant l'hydratation.
+  // Browser language read after hydration; "en" on the server and during
+  // hydration.
   const locale = useSyncExternalStore(subscribeNoop, getPreferredLocale, () => "en" as const);
 
   useEffect(() => {
@@ -103,7 +100,7 @@ export default function GlobalError({
         <p className="mt-3 text-sm text-slate-500 dark:text-white/60">{c.description}</p>
         <p className="mt-2 text-sm text-slate-400 dark:text-white/40">{c.hint}</p>
 
-        {/* Digest — dev uniquement */}
+        {/* Digest: development only */}
         {error.digest && process.env.NODE_ENV !== "production" && (
           <p className="mt-4 font-mono text-xs text-slate-300 dark:text-white/20">
             digest: {error.digest}

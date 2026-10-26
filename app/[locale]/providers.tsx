@@ -53,27 +53,16 @@ export default function Providers({
   const [track, setTrackState] = useState<Track>(initialTrack);
   const t = useTranslations();
 
-  // The <title>/<meta description> are computed server-side from the track
-  // cookie (generateMetadata in app/[locale]/page.tsx) — correct on first
-  // load, but a same-session toggle only updates the DOM (data-track, cookie),
-  // never the tab title, until the next full navigation. A CTO watching the
-  // toggle in an interview would see everything else switch except the tab —
-  // audit 2026-08-16. Skipped on the very first render since the server
-  // title already matches initialTrack; only client-side changes need this.
-  //
-  // Restreint à l'accueil — audit 2026-10-23 (P1) : l'effet remplaçait le
-  // titre de N'IMPORTE QUELLE page par le titre générique de l'accueil
-  // (ex. « À propos — … » devenait « … — Ingénieure Systèmes & IT Ops » sur
-  // /fr/about). Seul l'accueil a un titre qui dépend du parcours
-  // (metadata.title / metadata.titleItops dans le generateMetadata de
-  // l'accueil) ; les autres pages ont leur propre titre, indépendant du
-  // parcours, qu'il ne faut jamais écraser.
-  // Option A du brief retenue plutôt que l'option B (router.refresh() après
-  // setTrack) : pas de rendu serveur supplémentaire à chaque bascule.
+  // The <title> is computed on the server from the track cookie
+  // (generateMetadata in app/[locale]/page.tsx); a toggle in the same session
+  // only updates the DOM, so the tab title is updated here. Home page only:
+  // it is the only page whose title depends on the track, and other pages'
+  // titles must never be overwritten. Skipped on first render, where the
+  // server title already matches initialTrack. Cheaper than router.refresh().
   const pathname = usePathname();
   const locale = useLocale();
-  // localePrefix: "always" (proxy.ts) → l'accueil est toujours /{locale},
-  // avec ou sans barre oblique finale selon la façon dont l'URL a été saisie.
+  // localePrefix: "always" (proxy.ts): the home page is always /{locale},
+  // with or without a trailing slash.
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const isFirstRender = useRef(true);
   useEffect(() => {
@@ -85,20 +74,17 @@ export default function Providers({
     document.title = t(track === "itops" ? "metadata.titleItops" : "metadata.title");
   }, [track, t, isHome]);
 
-  // Fallback only: the layout now reads the `track` cookie server-side and
-  // passes the correct value as `initialTrack` (see app/[locale]/layout.tsx),
-  // so this should be a no-op for any returning visitor. Kept for the one
-  // edge case that still needs it: cookies blocked/cleared while localStorage
-  // persists (e.g. some privacy extensions), or the brief window on a
-  // visitor's very first ever page load before setTrack() has posted a cookie.
+  // Fallback only: the layout reads the `track` cookie on the server and
+  // passes it as `initialTrack`. Still needed when cookies are blocked or
+  // cleared while localStorage persists, or on a very first visit before
+  // setTrack() has set the cookie.
   useEffect(() => {
     const saved = localStorage.getItem("track");
     if (saved === "itops" || saved === "salesforce") {
-      // Repli unique au montage sur un état que l'utilisateur modifie ensuite
-      // (setTrack) : useSyncExternalStore ne convient pas, et lire localStorage
-      // dans l'initialiseur de useState casserait l'hydratation. Audit
-      // 2026-10-23 (PERF-5) : avertissement examiné et conservé.
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- repli localStorage au montage
+      // One-off fallback on mount for state the user then changes (setTrack):
+      // useSyncExternalStore does not fit, and reading localStorage in the
+      // useState initialiser would break hydration.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage fallback on mount
       setTrackState(saved);
     }
   }, []);
