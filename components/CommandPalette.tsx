@@ -22,6 +22,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 import { LINKEDIN_URL } from "@/lib/social";
 import usePlatformShortcut from "@/lib/usePlatformShortcut";
+import { OPEN_COMMAND_PALETTE_EVENT } from "@/lib/commandPaletteEvents";
 
 // ── Styles injectés une seule fois via <style> ────────────────────────────────
 // L'overlay et le panel sont stylés ici car cmdk accepte seulement des classNames.
@@ -75,7 +76,8 @@ const PALETTE_STYLES = `
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    opacity: 0.45;
+    /* 0.45 descendait sous 4,5:1 (audit 2026-10-25) */
+    opacity: 0.75;
     margin-top: 0.25rem;
   }
   [cmdk-item] {
@@ -116,8 +118,10 @@ const Icon = ({ d }: { d: string }) => (
   </svg>
 );
 
-export default function CommandPalette() {
-  const [open, setOpen] = useState(false);
+export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: boolean }) {
+  // defaultOpen : la palette est chargée à la demande (CommandPaletteLoader),
+  // au premier ⌘K / Ctrl K ou clic sur le bouton — elle s'ouvre donc montée.
+  const [open, setOpen] = useState(defaultOpen);
   const { track, setTrack } = useTrack();
   const { setTheme, resolvedTheme } = useTheme();
   const locale = useLocale();
@@ -132,8 +136,14 @@ export default function CommandPalette() {
         setOpen((o) => !o);
       }
     };
+    // Bouton de la barre et entrée du menu mobile (accès sans clavier).
+    const onOpenRequest = () => setOpen(true);
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    window.addEventListener(OPEN_COMMAND_PALETTE_EVENT, onOpenRequest);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener(OPEN_COMMAND_PALETTE_EVENT, onOpenRequest);
+    };
   }, []);
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -351,7 +361,11 @@ export default function CommandPalette() {
 
               {/* Langue */}
               <Command.Item
-                onSelect={() => navigate(`/${locale === "fr" ? "en" : locale === "en" ? "es" : "fr"}`)}
+                // Conserve la page courante (audit 2026-10-25) : renvoyait à l'accueil.
+                onSelect={() => {
+                  const next = locale === "fr" ? "en" : locale === "en" ? "es" : "fr";
+                  navigate(`/${next}${pathname.replace(/^\/(en|fr|es)(?=\/|$)/, "")}`);
+                }}
                 className={itemCls}
               >
                 <Icon d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-2.333A17.9 17.9 0 0 1 8.027 13H4.062a8.008 8.008 0 0 0 5.648 6.667zM10.03 13c.151 2.439.848 4.73 1.97 6.752A15.905 15.905 0 0 0 13.97 13h-3.94zm9.908 0h-3.965a17.9 17.9 0 0 1-1.683 6.667A8.008 8.008 0 0 0 19.938 13z" />
