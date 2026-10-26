@@ -2,21 +2,15 @@
 
 // lib/usePlatformShortcut.ts
 // --------------------------
-// Libellé du raccourci de la palette de commandes selon la plateforme :
-// « ⌘K » sur macOS / iOS, « Ctrl K » ailleurs.
-//
-// Audit 2026-10-23 (NAV-1) : le bouton affichait « ⌘K » pour tout le monde,
-// symbole qui ne parle pas aux utilisateurs Windows et Linux (le raccourci
-// réel y est Ctrl+K, voir CommandPalette.tsx).
-//
-// useSyncExternalStore plutôt que useState + useEffect : le rendu serveur (et
-// l'hydratation) utilise getServerSnapshot (« Ctrl K », valeur neutre), puis
-// React relit la valeur client sans erreur d'hydratation ni setState dans un
-// effet (règle react-hooks/set-state-in-effect).
+// Command palette shortcut label for the platform: "⌘K" on macOS / iOS,
+// "Ctrl K" elsewhere (the actual shortcut there, see CommandPalette.tsx).
+// useSyncExternalStore: server render and hydration use getServerSnapshot
+// ("Ctrl K", neutral), then React reads the client value with no hydration
+// error and no setState in an effect.
 
 import { useSyncExternalStore } from "react";
 
-// La plateforme ne change pas pendant la vie de la page : rien à écouter.
+// The platform never changes during the page's life: nothing to subscribe to.
 const subscribe = () => () => {};
 
 function isApplePlatform(): boolean {

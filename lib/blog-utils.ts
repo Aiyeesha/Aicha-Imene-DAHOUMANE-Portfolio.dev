@@ -18,8 +18,8 @@ export function detectTrack(tags: string[]): "salesforce" | "itops" | null {
 }
 
 /**
- * Traductions FR des tags anglais présents dans les frontmatters MDX.
- * Permet d'afficher les tags en français sans modifier les fichiers source.
+ * Translations of the English tags used in MDX frontmatter, so tags display in
+ * the reader's language without editing the source files.
  */
 const TAG_FR: Record<string, string> = {
   "Security":         "Sécurité",

@@ -97,10 +97,6 @@ export const aboutContent = {
     }
   },
 
-  // Reconciliado le 2026-09-26 (audit) : cette section avait dérivé de la
-  // trame FR/EN (intro, détails du stage, affirmation CTF contredisant "je
-  // prépare un parcours Blue Team" en FR/EN) depuis sa reconstruction à partir
-  // de Supabase — jamais réconciliée depuis, cf. commentaire précédent.
   es: {
     headline: "Sobre mí",
     introduction: `Apasionada por la tecnología desde siempre, construí una base sólida en soporte informático, sistemas y redes antes de especializarme en el desarrollo Salesforce. Este recorrido anclado en el terreno me enseñó el rigor, la importancia de los fundamentos técnicos y el sentido del servicio.`,

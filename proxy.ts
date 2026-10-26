@@ -1,32 +1,20 @@
 // proxy.ts
 // ---------
-// Next.js 16 middleware (convention : proxy.ts remplace middleware.ts).
-// Trois responsabilités par ordre d'exécution :
+// Next.js 16 middleware (proxy.ts replaces middleware.ts). In order:
 //
-// 1. Nonce CSP — génère un UUID aléatoire base64 par requête.
-//    Injecté dans le header Content-Security-Policy (réponse) ET dans
-//    x-nonce (requête) pour que les Server Components puissent le lire
-//    via `headers().get('x-nonce')` et l'appliquer aux scripts inline.
-//    → remplace le 'unsafe-inline' statique de next.config.mjs.
+// 1. CSP nonce: a random base64 UUID per request, set in the response's
+//    Content-Security-Policy and in the request's x-nonce header so server
+//    components can read it with headers().get('x-nonce').
+// 2. /admin protection: HTTP Basic auth (ADMIN_USERNAME + ADMIN_PASSWORD)
+//    with brute-force rate limiting.
+// 3. i18n routing with next-intl (/ → /en/, locale prefix).
 //
-// 2. Protection /admin — HTTP Basic Auth + rate-limit anti brute-force.
-//    Variables d'env requises : ADMIN_USERNAME + ADMIN_PASSWORD
+// Edge runtime: Web APIs only (no Buffer, no Node.js); crypto.randomUUID()
+// and btoa() are available.
 //
-// 3. Routing i18n — next-intl (redirections /→/en/, préfix de locale).
-//
-// Edge Runtime — pas de Buffer, pas de Node.js. API Web uniquement.
-// crypto.randomUUID() et btoa() sont disponibles dans l'Edge Runtime.
-//
-// ── NOTE ARCHITECTURALE : nonce CSP vs cache CDN ─────────────────────────────
-// Le nonce généré ici est lu par app/layout.tsx via headers().get("x-nonce").
-// Cet appel à headers() en Server Component opt TOUTE la route en rendu
-// dynamique (Next.js App Router), ce qui interdit la mise en cache CDN Vercel
-// (Cache-Control: no-store automatique) et rend l'ISR inopérant.
-//
-// Ce comportement est VOULU : la sécurité (nonce unique + strict-dynamic) prime
-// sur le cache CDN. La résolution est prévue au homelab via reverse proxy cache
-// (Nginx proxy_cache_bypass / Caddy cache directive) — voir app/layout.tsx.
-// ─────────────────────────────────────────────────────────────────────────────
+// Note: reading the nonce through headers() makes every route dynamic
+// (Cache-Control: no-store, no ISR). This is deliberate: a unique nonce with
+// strict-dynamic takes priority over CDN caching (see app/layout.tsx).
 
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
@@ -40,50 +28,38 @@ const intlHandler = createMiddleware({
   localePrefix: "always",
 });
 
-// ── CSP dynamique avec nonce ──────────────────────────────────────────────────
-// La CSP est construite à chaque requête car elle contient un nonce unique.
-// 'unsafe-inline' est remplacé par 'nonce-{nonce}' dans script-src.
-// 'unsafe-eval' est conservé uniquement en développement (webpack HMR).
-// Aucune origine externe dans script-src, style-src ni frame-src : la prise de
-// rendez-vous passe par un simple lien vers Proton Calendar (lib/booking.ts),
-// sans script ni iframe tiers — Calendly retiré (audit du 2026-10-14, S4).
+// ── Per-request CSP with nonce ────────────────────────────────────────────────
+// script-src uses 'nonce-{nonce}'; 'unsafe-eval' only in development (webpack
+// HMR). No external origin in script-src, style-src or frame-src: booking is
+// a plain link to Proton Calendar (lib/booking.ts), no third-party script.
 function buildCSP(nonce: string, isDev: boolean): string {
   return [
     "default-src 'self'",
-    // Dev : 'unsafe-inline' + 'unsafe-eval' nécessaires — webpack HMR injecte de nombreux
-    // inline scripts sans nonce (hot-update chunks, error overlay, source maps).
-    // Ces directives ne s'appliquent JAMAIS en production (isDev = false → branche else).
-    // Prod : nonce uniquement — Next.js lit le header CSP de la requête (pas x-nonce)
-    // pour injecter nonce= sur ses propres <script> (chunks d'hydratation, bootstrap webpack).
+    // Dev: 'unsafe-inline' + 'unsafe-eval' are needed, as webpack HMR injects
+    // many inline scripts without a nonce. Never used in production.
+    // Prod: nonce only. Next.js reads the request's CSP header (not x-nonce)
+    // to add nonce= to its own <script> tags (hydration chunks, bootstrap).
     isDev
       ? `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval'`
-      // 'strict-dynamic' (CSP3) : seuls les scripts chargés par un script noncé
-      // héritent de la confiance — la whitelist de domaines est ignorée par les
-      // navigateurs qui supportent strict-dynamic, mais reste en fallback pour les autres.
+      // 'strict-dynamic' (CSP3): only scripts loaded by a nonced script are
+      // trusted.
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https://*.supabase.co",
     "font-src 'self'",
-    // Aucune iframe sur le site : tout cadre est refusé.
+    // No iframes on the site: every frame is refused.
     "frame-src 'none'",
-    // Hôtes réduits à ceux que le navigateur contacte réellement (audit du
-    // 2026-10-14, S10) : Formhook n'est appelé que côté serveur (/api/contact),
-    // l'API de contributions GitHub n'est plus utilisée, *.supabase.in est un
-    // ancien domaine Supabase.
-    // Upstash Redis intentionnellement absent de connect-src :
-    // les appels Redis sont exclusivement server-side (API routes, middleware).
-    // Aucun script client ne contacte Upstash directement — l'autoriser dans
-    // la CSP du navigateur serait une permission inutile (overpermission).
+    // Only hosts the browser actually contacts: Formhook and Upstash Redis
+    // are called server-side only, so they are not allowed here.
     isDev
       ? "connect-src 'self' data: https://*.supabase.co"
       : "connect-src 'self' https://*.supabase.co",
     "object-src 'none'",
     "base-uri 'self'",
-    // Empêche les <form action="..."> de soumettre vers une URL externe.
-    // Ne bloque pas fetch()/XHR — cible uniquement les soumissions HTML classiques.
-    // Protection supplémentaire contre le détournement de formulaire (CSRF via HTML).
+    // <form action="..."> cannot submit to an external URL (classic HTML
+    // submissions only; fetch()/XHR are unaffected).
     "form-action 'self'",
-    // Autorise le Service Worker (PWA) à s'enregistrer depuis la même origine.
+    // Lets the service worker register from the same origin.
     "worker-src 'self'",
     "frame-ancestors 'none'",
     "report-uri /api/csp-report",
@@ -91,31 +67,24 @@ function buildCSP(nonce: string, isDev: boolean): string {
   ].join("; ");
 }
 
-// ── CSP Report-Only : Trusted Types ──────────────────────────────────────────
-// En mode report-only, la politique N'EST PAS appliquée — les violations sont
-// seulement signalées à /api/csp-report?ro=1.
-//
-// Objectif ici : détecter toute utilisation de sink DOM dangereux (innerHTML,
-// eval, document.write…) via require-trusted-types-for 'script'.
-// React 19 est compatible Trusted Types (il ne passe par ces sinks), mais
-// des bibliothèques tierces ou des patterns hérités pourraient en avoir besoin.
-// Le paramètre ?ro=1 distingue les rapports report-only des violations actives
-// dans les Vercel Runtime Logs, pour faciliter le tri.
+// ── Report-only CSP: Trusted Types ───────────────────────────────────────────
+// Not enforced: violations are only reported to /api/csp-report?ro=1. Detects
+// any use of dangerous DOM sinks (innerHTML, eval, document.write…) through
+// require-trusted-types-for 'script'. React 19 does not use them, but a
+// third-party library might. ?ro=1 separates these reports in the logs.
 function buildCSPReportOnly(): string {
   return [
-    // Détecte tout usage de sink DOM non-noncé (innerHTML, eval, etc.)
-    // Sans bloquer — le site reste fonctionnel même si des violations sont trouvées.
+    // Report non-Trusted-Types sink usage without blocking anything
     "require-trusted-types-for 'script'",
-    // Endpoint dédié report-only (distingué par ?ro=1 dans les logs)
+    // Dedicated report-only endpoint (?ro=1)
     "report-uri /api/csp-report?ro=1",
     "report-to csp-endpoint",
   ].join("; ");
 }
 
-
-// ── HTTP Basic Auth pour /admin ───────────────────────────────────────────────
-// Retourne null si les credentials sont valides, NextResponse sinon.
-// Edge Runtime : utilise atob() (pas Buffer.from()).
+// ── HTTP Basic auth for /admin ────────────────────────────────────────────────
+// Returns null when the credentials are valid, a NextResponse otherwise.
+// Edge runtime: atob(), not Buffer.from().
 async function adminAuth(request: NextRequest): Promise<NextResponse | null> {
   const expectedUser = process.env.ADMIN_USERNAME;
   const expectedPass = process.env.ADMIN_PASSWORD;
@@ -132,15 +101,15 @@ async function adminAuth(request: NextRequest): Promise<NextResponse | null> {
       if (colonIdx !== -1) {
         const user = decoded.slice(0, colonIdx);
         const pass = decoded.slice(colonIdx + 1);
-        // Comparaison en temps constant — évite le timing oracle
+        // Constant-time comparison (no timing oracle)
         const userMatch = await timingSafeStringEqual(user, expectedUser);
         const passMatch = await timingSafeStringEqual(pass, expectedPass);
         if (userMatch && passMatch) {
-          return null; // autorisé
+          return null; // authorised
         }
       }
     } catch {
-      // base64 invalide → rejeter
+      // Invalid base64 → reject
     }
   }
 
@@ -156,28 +125,23 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isDev = process.env.NODE_ENV === "development";
 
-  // ── 1. Nonce par requête (Edge-compatible) ────────────────────────────────
-  // crypto.randomUUID() retourne un UUID v4 aléatoire (CSPRNG).
-  // btoa() encode en base64 — le nonce dans la CSP doit être base64.
+  // ── 1. Per-request nonce (Edge-compatible) ────────────────────────────────
+  // crypto.randomUUID() is a CSPRNG v4 UUID; the CSP nonce must be base64.
   const nonce = btoa(crypto.randomUUID());
   const csp = buildCSP(nonce, isDev);
   const cspRO = buildCSPReportOnly();
 
-  // ── 2. Protection /admin ──────────────────────────────────────────────────
+  // ── 2. /admin protection ──────────────────────────────────────────────────
   if (pathname.startsWith("/admin")) {
-    // Rate-limit anti brute-force.
-    // Priorité à x-real-ip (injecté par Vercel, non spoofable).
+    // Brute-force rate limit. x-real-ip first (set by Vercel, not spoofable).
     const ip =
       request.headers.get("x-real-ip") ??
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
 
-    // Audit 2026-10-25 (constat 10) : chaque requête consommait un jeton, y
-    // compris authentifiée — l'administratrice se verrouillait après 2 ou 3
-    // navigations (5 requêtes / 15 min, sous-ressources RSC comprises).
-    // Désormais : on refuse d'emblée si le quota d'échecs est épuisé (sans
-    // même évaluer les identifiants), et seul un échec d'authentification
-    // consomme un jeton.
+    // Refuse right away once the failure quota is used up (without checking
+    // credentials); only a failed authentication consumes a token, so normal
+    // admin browsing never locks itself out.
     const rlKey = await pseudonymizeKey(ip);
     const tooManyRequests = () =>
       new NextResponse("Too many requests.", {
@@ -189,7 +153,7 @@ export async function proxy(request: NextRequest) {
     try {
       ({ remaining } = await adminRatelimit.getRemaining(rlKey));
     } catch (err) {
-      // Panne Redis : fail-closed volontaire sur /admin (endpoint sensible).
+      // Redis outage: deliberately fail closed on /admin (sensitive endpoint).
       console.error("[admin] rate-limit error → fail-closed", err);
     }
     if (remaining <= 0) return tooManyRequests();
@@ -206,11 +170,10 @@ export async function proxy(request: NextRequest) {
       return deny;
     }
 
-    // Injecter le nonce dans les headers de requête :
-    //   - x-nonce         → lu par les Server Components via headers().get('x-nonce')
-    //   - Content-Security-Policy → lu par Next.js pour injecter nonce= sur ses propres
-    //     <script> (chunks d'hydratation, bootstrap webpack). Sans ce header REQUEST,
-    //     Next.js ne tague pas ses scripts et strict-dynamic les bloque.
+    // Nonce in the request headers:
+    //   - x-nonce → read by server components through headers().get('x-nonce');
+    //   - Content-Security-Policy → read by Next.js to add nonce= to its own
+    //     <script> tags; without it, strict-dynamic would block them.
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-nonce", nonce);
     requestHeaders.set("Content-Security-Policy", csp);
@@ -223,37 +186,25 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // ── 3. Routing i18n ───────────────────────────────────────────────────────
+  // ── 3. i18n routing ───────────────────────────────────────────────────────
   const intlResponse = intlHandler(request);
 
-  // Redirections (ex: / → /en/) : pas de rendu de page, pas de nonce nécessaire.
+  // Redirects (e.g. / → /en/): no page render, no nonce needed.
   if (intlResponse.status >= 300 && intlResponse.status < 400) {
     return intlResponse;
   }
 
-  // Pass-through : la page va être rendue — injecter le nonce.
-  // On crée un nouveau NextResponse.next() avec x-nonce dans les headers de
-  // requête, puis on copie les headers de intlHandler (cookies de locale, etc.).
-  //   - x-nonce         → lu par les Server Components via headers().get('x-nonce')
-  //   - Content-Security-Policy → lu par Next.js pour injecter nonce= sur ses propres
-  //     <script> (chunks d'hydratation, bootstrap webpack). Sans ce header REQUEST,
-  //     Next.js ne tague pas ses scripts et strict-dynamic les bloque.
+  // Pass-through: the page will render, so inject the nonce (same two
+  // request headers as above), then copy intlHandler's headers.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", csp);
 
-  // Transmettre la locale détectée par next-intl aux Server Components.
-  // getLocale() lit x-next-intl-locale depuis les request headers.
-  // On extrait la locale depuis le pathname (ex: /fr/about → "fr")
-  // car intlHandler communique la locale via ses request headers internes
-  // que NextResponse.next() ne reçoit pas automatiquement.
-  //
-  // Audit 2026-10-23 (CFG-4) : la regex accepte n'importe quel couple de
-  // lettres (/xx/…). Le segment n'est retenu que s'il appartient à
-  // routing.locales ; sinon on retombe sur la locale par défaut. Sans impact
-  // fonctionnel jusqu'ici (i18n/request.ts revalide en aval), mais aucune
-  // valeur arbitraire issue de l'URL n'est plus transmise aux Server Components
-  // (défense en profondeur).
+  // Pass the locale to server components: getLocale() reads
+  // x-next-intl-locale from the request headers, which NextResponse.next()
+  // does not receive from intlHandler, so it is taken from the pathname
+  // (e.g. /fr/about → "fr"). Only values in routing.locales are kept;
+  // anything else falls back to the default locale.
   const localeMatch = pathname.match(/^\/([a-z]{2})(?:\/|$)/);
   const candidateLocale = localeMatch?.[1];
   const detectedLocale =
@@ -268,27 +219,21 @@ export async function proxy(request: NextRequest) {
   response.headers.set("Content-Security-Policy", csp);
   response.headers.set("Content-Security-Policy-Report-Only", cspRO);
 
-  // Préserver les headers de intlHandler (x-next-intl-*, etc.)
-  // ⚠️ NEXT_LOCALE cookie intentionnellement filtré :
-  //    Quand Set-Cookie est présent dans la réponse, Vercel CDN force
-  //    Cache-Control: private/no-cache et ne met jamais la page en cache,
-  //    ce qui désactive complètement l'ISR (revalidate: 3600) — chaque
-  //    visiteur paye un cold start serverless (~1.5–2s TTFB).
-  //    Le cookie est redondant : la locale est déjà dans l'URL
-  //    (localePrefix: "always"). Seule perte : '/' redirige vers la locale
-  //    par défaut (/en/) au lieu de la préférence précédente — acceptable
-  //    pour un portfolio.
+  // Keep intlHandler's headers (x-next-intl-*…), except the NEXT_LOCALE
+  // cookie: any Set-Cookie makes the Vercel CDN mark the page private and
+  // never cache it. The cookie is redundant with localePrefix: "always"; the
+  // only loss is that / redirects to the default locale rather than the last
+  // one used.
   intlResponse.headers.forEach((value, key) => {
     if (key === "set-cookie") {
-      // Transmettre tous les cookies SAUF NEXT_LOCALE
+      // Every cookie except NEXT_LOCALE
       if (!value.startsWith("NEXT_LOCALE=")) {
         response.headers.append(key, value);
       }
     } else if (key === "link") {
-      // Le Link header hreflang généré par next-intl contient un x-default sans préfixe
-      // de locale (ex: /legal au lieu de /en/legal), incohérent avec les balises <link>
-      // dans <head> HTML (qui sont correctes). On filtre ce header ; Google utilise les
-      // balises HTML en priorité — elles font autorité.
+      // next-intl's hreflang Link header has an x-default without a locale
+      // prefix, inconsistent with the (correct) <link> tags in <head>, which
+      // Google prefers anyway: drop it.
     } else if (!response.headers.has(key)) {
       response.headers.set(key, value);
     }
@@ -298,15 +243,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // feed/* : flux RSS par tag — routes API sans locale, exclues de l'i18n.
-  //
-  // Audit 2026-10-25 (constat 9) : l'ancienne exclusion `.*\..*` laissait
-  // passer sans CSP ni rate-limit tout chemin contenant un point
-  // (/fr/audit.test, /admin/incidents/new.rsc…). Seules les extensions
-  // réellement servies depuis public/ ou par une route de fichier sont
-  // exclues ; les CV HTML (public/cv/) et offline.html le sont par chemin.
-  // /admin est en plus listé explicitement : il passe toujours par le proxy,
-  // quel que soit le suffixe.
+  // feed/*: per-tag RSS feeds, outside i18n.
+  // Only extensions actually served from public/ or by a file route are
+  // excluded (a blanket `.*\\..*` exclusion let any dotted path skip the CSP
+  // and rate limit); HTML CVs (public/cv/) and offline.html by path. /admin is
+  // listed explicitly so it always goes through the proxy.
   matcher: [
     "/((?!api|_next|opengraph-image|twitter-image|feed|cv/|offline\\.html|.*\\.(?:png|jpe?g|gif|webp|avif|svg|ico|txt|xml|js|css|map|pdf|webmanifest|woff2?)$).*)",
     "/admin",

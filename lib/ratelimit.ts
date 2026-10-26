@@ -1,44 +1,34 @@
 // lib/ratelimit.ts
 // -----------------
-// Limiteurs de débit (rate-limiting) centralisés via Upstash Redis.
-// Utilise l'algorithme sliding window pour une protection fluide sans pics.
+// Centralised rate limiters on Upstash Redis (sliding window).
+// Without the Upstash variables (local dev, CI) a no-op limiter is returned.
 //
-// Stratégie par route :
-//   - /api/contact      : 5 req / 10 min par IP (protection anti-spam)
-//   - /api/blog/latest  : 30 req / 60 s par IP (route publique, plus permissive)
-//
-// Si les variables Upstash ne sont pas configurées (env local ou CI),
-// un limiteur "no-op" (success=true toujours) est retourné silencieusement.
-//
-// Variables d'environnement :
-//   UPSTASH_REDIS_REST_URL    — URL de l'instance Upstash Redis
-//   UPSTASH_REDIS_REST_TOKEN  — Token d'authentification Upstash
-//   CONTACT_RATE_LIMIT_MAX_REQUESTS   — max requêtes contact (défaut : 5)
-//   CONTACT_RATE_LIMIT_WINDOW_SECONDS — fenêtre contact en secondes (défaut : 600)
+// Environment:
+//   UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN
+//   CONTACT_RATE_LIMIT_MAX_REQUESTS   — contact max requests (default 5)
+//   CONTACT_RATE_LIMIT_WINDOW_SECONDS — contact window in seconds (default 600)
 
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 
-// ── Configuration Upstash ─────────────────────────────────────────────
+// ── Upstash configuration ─────────────────────────────────────────────
 const url   = process.env.UPSTASH_REDIS_REST_URL;
 const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-// ── Factory : crée un limiteur no-op si Redis n'est pas disponible ────
-// En développement local et CI : success=true (pas de friction sans Redis).
-// En production  : success=false (fail-closed) pour éviter qu'une panne
-// Upstash désactive silencieusement toutes les protections anti-flood.
-// Un attaquant qui surveille le statut Upstash pourrait sinon déclencher
-// une attaque pendant une fenêtre de dégradation Redis.
+// ── No-op limiter when Redis is not available ─────────────────────────
+// Local dev and CI: success=true (no friction without Redis). Production:
+// success=false (fail closed), so an Upstash outage never silently disables
+// flood protection.
 const isProd = process.env.NODE_ENV === "production";
 function createNoOpRatelimit(maxReq: number, windowMs: number) {
   return {
     limit: async () => ({
-      success: !isProd, // fail-closed en production, permissif en dev/CI
+      success: !isProd, // fail closed in production, permissive in dev/CI
       limit: maxReq,
       remaining: isProd ? 0 : maxReq,
       reset: Date.now() + windowMs
     }),
-    // Lecture sans consommation (utilisée par /admin, voir proxy.ts).
+    // Read without consuming (used by /admin, see proxy.ts).
     getRemaining: async () => ({
       remaining: isProd ? 0 : maxReq,
       reset: Date.now() + windowMs
@@ -46,27 +36,27 @@ function createNoOpRatelimit(maxReq: number, windowMs: number) {
   } as unknown as Ratelimit;
 }
 
-// ── Factory : crée un vrai limiteur Redis sliding window ──────────────
+// ── Real Redis sliding-window limiter ─────────────────────────────────
 function createRatelimit(redis: Redis, maxReq: number, windowSec: number, prefix: string) {
   return new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(maxReq, `${windowSec} s`),
     prefix,
-    // timeout : si Redis ne répond pas en 500 ms, la requête passe
-    // (fail-open sur les lenteurs réseau).
+    // If Redis does not answer within 500ms, the request goes through
+    // (fail open on network slowness).
     timeout: 500,
   });
 }
 
-// Instance Redis partagée (créée une seule fois si la config est disponible)
+// Shared Redis instance (created once when configured)
 const redis = url && token ? new Redis({ url, token }) : null;
 
 if (!redis) {
   console.warn("[ratelimit] Upstash env vars missing — rate limiting disabled.");
 }
 
-// ── Limiteur pour /api/contact ─────────────────────────────────────────
-// 5 requêtes par 10 minutes par IP (configurable via env vars)
+// ── /api/contact ───────────────────────────────────────────────────────
+// 5 requests / 10 minutes / IP (configurable through env vars)
 const contactMax = Number(process.env.CONTACT_RATE_LIMIT_MAX_REQUESTS || "5");
 const contactWindowSec = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_SECONDS || "600");
 
@@ -74,81 +64,67 @@ export const contactRatelimit = redis
   ? createRatelimit(redis, contactMax, contactWindowSec, "portfolio:rl:contact")
   : createNoOpRatelimit(contactMax, contactWindowSec * 1000);
 
-// ── Limiteur pour /api/blog/latest ────────────────────────────────────
-// 30 requêtes par 60 secondes par IP
-// Plus permissif que le contact (route de lecture, pas de risque de spam)
+// ── /api/blog/latest ──────────────────────────────────────────────────
+// 30 requests / 60s / IP: a read-only route with no spam risk
 export const blogRatelimit = redis
   ? createRatelimit(redis, 30, 60, "portfolio:rl:blog")
   : createNoOpRatelimit(30, 60_000);
 
-// ── Limiteur pour /api/testimonial-submit ─────────────────────────────
-// 3 soumissions par 24 heures par IP — les témoignages sont rares et
-// intentionnels ; une limite stricte protège contre l'abus et le spam.
+// ── /api/testimonial-submit ───────────────────────────────────────────
+// 3 submissions / 24h / IP: testimonials are rare and deliberate
 export const testimonialRatelimit = redis
   ? createRatelimit(redis, 3, 86_400, "portfolio:rl:testimonial")
   : createNoOpRatelimit(3, 86_400_000);
 
-// ── Limiteur pour /api/cache/invalidate ───────────────────────────────
-// 10 requêtes par 60 secondes — route admin uniquement, mais on la
-// protège contre un abus de type DoS (vidage en boucle du cache).
+// ── /api/cache/invalidate ─────────────────────────────────────────────
+// 10 requests / 60s: admin-only route, protected against flush loops
 export const cacheInvalidateRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:cache-invalidate")
   : createNoOpRatelimit(10, 60_000);
 
-// ── Limiteur pour /admin (HTTP Basic Auth brute force) ────────────────
-// 5 tentatives par 15 minutes par IP (réduit de 10/5min).
-// Valeur précédente (10/5min) permettait ~100 tentatives/heure avec des
-// proxies rotatifs — trop permissif pour un endpoint d'authentification.
-// Avec 5/15min : ~20 tentatives/heure par IP → brute force distribué
-// nettement plus coûteux en ressources pour l'attaquant.
+// ── /admin (HTTP Basic auth brute force) ──────────────────────────────
+// 5 failed attempts / 15 minutes / IP, about 20 per hour: distributed
+// brute force becomes costly.
 export const adminRatelimit = redis
   ? createRatelimit(redis, 5, 900, "portfolio:rl:admin")
   : createNoOpRatelimit(5, 900_000);
 
-// ── Limiteur pour /api/csp-report ─────────────────────────────────────
-// 20 rapports par 60 secondes par IP.
-// Remplace l'ancien compteur in-memory qui était réinitialisé à chaque
-// cold-start Vercel — inefficace sur une architecture serverless.
-// Un attaquant pouvait flooder /api/csp-report sans friction, épuisant
-// les function invocations Vercel Hobby (100 000/mois).
+// ── /api/csp-report ───────────────────────────────────────────────────
+// 20 reports / 60s / IP. Redis-backed, unlike an in-memory counter reset on
+// every serverless cold start, so the endpoint cannot be flooded to exhaust
+// function invocations.
 export const cspReportRatelimit = redis
   ? createRatelimit(redis, 20, 60, "portfolio:rl:csp-report")
   : createNoOpRatelimit(20, 60_000);
 
-// ── Limiteur pour /api/errors (client error reporting) ───────────────
-// 10 rapports par 60 secondes par IP.
-// Généreux pour ne pas bloquer un client en crash-loop (erreur JS qui
-// se rejoue), mais suffisant pour absorber un flush d'erreurs groupées.
-// La dedup côté client (GlobalErrorHandler) réduit déjà le bruit.
+// ── /api/errors (client error reporting) ──────────────────────────────
+// 10 reports / 60s / IP: room for a client in a crash loop, with the
+// client-side dedup (GlobalErrorHandler) already reducing noise.
 export const errorRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:errors")
   : createNoOpRatelimit(10, 60_000);
 
-// ── Limiteur pour /api/revalidate ─────────────────────────────────────
-// 10 requêtes par 60 secondes par IP.
-// Protège contre le flood de l'endpoint ISR en cas de fuite/bruteforce du
-// REVALIDATE_SECRET — épuisement des invocations Vercel Hobby (1M/mois).
-// Suffisamment permissif pour les webhooks Supabase légitimes.
+// ── /api/revalidate ───────────────────────────────────────────────────
+// 10 requests / 60s / IP: guards against flooding if REVALIDATE_SECRET leaks,
+// while leaving room for legitimate Supabase webhooks.
 export const revalidateRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:revalidate")
   : createNoOpRatelimit(10, 60_000);
 
-// ── Limiteur global pour les alertes CSP critiques ────────────────────
-// 5 alertes par 10 minutes — clé GLOBALE (non par IP) pour éviter le spam
-// du webhook quand plusieurs origines différentes génèrent la même violation.
+// ── Global limiter for critical CSP alerts ────────────────────────────
+// 5 alerts / 10 minutes with a GLOBAL key (not per IP), so the same violation
+// from many origins does not spam the webhook.
 export const cspAlertRatelimit = redis
   ? createRatelimit(redis, 5, 600, "portfolio:rl:csp-alert")
   : createNoOpRatelimit(5, 600_000);
 
-// ── Pseudonymisation des identifiants ─────────────────────────────────
-// Les identifiants passés aux limiteurs contiennent l'IP du visiteur
-// (« contact:ip:1.2.3.4 »). Ils sont remplacés par un HMAC-SHA-256 tronqué,
-// clé = IP_HASH_SALT, avant d'atteindre Upstash : aucune IP en clair dans
-// Redis, et un hachage simple (non salé) serait réversible par force brute
-// sur l'espace IPv4 — audit du 2026-10-14, S11.
-// Sans IP_HASH_SALT (dev local, CI), l'identifiant reste lisible : pratique
-// pour déboguer, et aucune donnée réelle n'y transite.
-// Web Crypto (crypto.subtle) : disponible dans le runtime Node comme dans proxy.ts.
+// ── Identifier pseudonymisation ───────────────────────────────────────
+// Limiter identifiers contain the visitor's IP ("contact:ip:1.2.3.4"). They
+// are replaced by a truncated HMAC-SHA-256 keyed with IP_HASH_SALT before
+// reaching Upstash: no clear IP in Redis, and an unsalted hash would be
+// brute-forceable over the IPv4 space. Without IP_HASH_SALT (local dev, CI)
+// the identifier stays readable. Web Crypto (crypto.subtle) works in the
+// Node runtime and in proxy.ts.
 let hmacKey: Promise<CryptoKey> | null = null;
 let hmacSalt = "";
 
@@ -166,14 +142,14 @@ export async function pseudonymizeKey(key: string): Promise<string> {
     );
   }
   const sig = await crypto.subtle.sign("HMAC", await hmacKey, new TextEncoder().encode(key));
-  // 16 octets (128 bits) suffisent pour éviter toute collision entre visiteurs.
+  // 16 bytes (128 bits) is plenty to avoid collisions between visitors.
   return Array.from(new Uint8Array(sig).slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// ── Helper fail-open pour les erreurs Redis immédiates ────────────────
-// Quand Redis est KO (quota épuisé, connexion refusée, token expiré),
-// `.limit()` peut throw même avec timeout. Ce wrapper retourne
-// `success: true` dans ce cas pour ne pas bloquer les utilisateurs légitimes.
+// ── Fail-open helper for immediate Redis errors ───────────────────────
+// When Redis is down (quota, refused connection, expired token), `.limit()`
+// may throw despite the timeout; this returns `success: true` so legitimate
+// users are not blocked.
 export async function safeLimit(
   limiter: { limit: (key: string) => Promise<{ success: boolean; reset?: number }> },
   key: string

@@ -1,23 +1,12 @@
 // next.config.mjs
 // ----------------
-// Configuration Next.js principale.
-// Inclut :
-// 1. Pipeline MDX (articles de blog)
-// 2. Plugin next-intl (internationalisation FR/EN)
-// 3. En-têtes de sécurité HTTP (BLOC 10)
-//    - X-Frame-Options : protection contre le clickjacking
-//    - X-Content-Type-Options : prévention du sniffing de type MIME
-//    - Referrer-Policy : contrôle des informations de référent
-//    - Permissions-Policy : désactivation des APIs sensibles non utilisées
-//    - Content-Security-Policy : liste blanche des sources autorisées
-//    - Strict-Transport-Security : forçage HTTPS (HSTS)
-//
-// IMPORTANT CSP :
-//   - 'unsafe-inline' et 'unsafe-eval' sont nécessaires pour next-intl et Tailwind en développement.
-//   - Prise de rendez-vous : simple lien vers Proton Calendar, aucune origine tierce dans la CSP.
-//   - Supabase requiert connect-src *.supabase.co (Upstash est server-side uniquement — absent de connect-src).
-//   - Formhook est appelé côté serveur uniquement (/api/contact) : absent de la CSP.
-//   - Si vous ajoutez Google Analytics / Plausible / autres, mettez à jour script-src et connect-src.
+// Main Next.js configuration: MDX pipeline (blog and case studies), next-intl
+// plugin, redirects, and HTTP security headers (X-Frame-Options,
+// X-Content-Type-Options, Referrer-Policy, Permissions-Policy, HSTS…).
+// The CSP itself is built per request in proxy.ts (nonce). Booking is a plain
+// link to Proton Calendar and Formhook/Upstash are server-side only, so none
+// of them appears in the CSP; adding analytics would require updating
+// script-src and connect-src there.
 
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
@@ -26,33 +15,31 @@ import rehypePrettyCode from "rehype-pretty-code";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 
-// Bundle analyzer — activé uniquement si ANALYZE=true (jamais en production)
-// Usage : ANALYZE=true npm run build
-// Ouvre deux rapports HTML : client bundle + server bundle
+// Bundle analyzer, only with ANALYZE=true (ANALYZE=true npm run build):
+// opens client and server bundle reports.
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
   openAnalyzer: true,
 });
 
-// URL absolue requise par la spec W3C Reporting API (Report-To + Reporting-Endpoints).
-// Les URLs relatives sont ignorées silencieusement par Firefox et Safari.
+// Absolute URL required by the Reporting API (Report-To, Reporting-Endpoints);
+// Firefox and Safari silently ignore relative URLs.
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://aicha-imene-dahoumane-portfolio.vercel.app";
 
-// Hôte du projet Supabase du site (images distantes, voir images.remotePatterns).
+// The site's Supabase project host (remote images, see images.remotePatterns).
 const SUPABASE_HOST = (() => {
   try { return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname; } catch { return ""; }
 })();
 
-// Ancien alias Vercel du projet, qui sert toujours la production (audit
-// 2026-10-25) : redirigé en 308 vers le domaine principal pour que les liens
-// partagés ne circulent plus sous l'ancien nom.
+// Former Vercel alias still serving production: 308 to the main domain so
+// shared links stop circulating under the old name.
 const LEGACY_HOSTS = ["portfolio-next-one-gold.vercel.app"].filter(
   (host) => host !== new URL(SITE_URL).hostname,
 );
 
 /** @type {import('next').NextConfig} */
-// Articles de blog dépubliés (audit de contenu 2026-09-25, lot 4).
+// Unpublished blog posts.
 const MSP_REX_SLUG = "msp-internship-lessons";
 const UNPUBLISHED_RUNBOOKS = [
   "acronis-backup-recovery-ops",
@@ -112,9 +99,9 @@ const UNPUBLISHED_BLOG_REDIRECTS = [
   })),
 ];
 
-// Projets retirés de la galerie (audit de contenu 2026-09-25, lot 4) : passés
-// en status "draft" dans content/projects.ts. Un doublon redirige vers le
-// projet qui le contient ; les autres vers la galerie.
+// Projects removed from the gallery (status "draft" in content/projects.ts):
+// a duplicate redirects to the project that contains it, the others to the
+// gallery.
 const UNPUBLISHED_PROJECTS = [
   ["it-ops-email-config", null],
   ["it-ops-wifi-config", null],
@@ -138,38 +125,33 @@ const UNPUBLISHED_PROJECT_REDIRECTS = UNPUBLISHED_PROJECTS.map(([slug, target]) 
 }));
 
 const nextConfig = {
-  // Supprime le header X-Powered-By: Next.js — évite le fingerprinting du framework
+  // Drop X-Powered-By: Next.js (framework fingerprinting)
   poweredByHeader: false,
 
-  // Désactive explicitement les source maps en production.
-  // Par défaut Next.js ne les génère pas, mais on le force pour satisfaire
-  // les scanners de sécurité et éviter toute régression de configuration.
+  // No production source maps (the default, made explicit for security
+  // scanners and against config regressions).
   productionBrowserSourceMaps: false,
 
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
-  // Date du build, figée dans le bundle serveur — audit 2026-10-23 (SEO-4) :
-  // le sitemap (force-dynamic) prenait `new Date()` au démarrage de chaque
-  // instance, d'où un lastmod qui changeait sans modification de contenu.
+  // Build date, frozen into the server bundle so the sitemap's lastmod does
+  // not change on every instance start.
   env: {
     SITE_BUILD_DATE: new Date().toISOString(),
   },
 
   images: {
-    // Servir AVIF en priorité (25-50 % plus léger que WebP), fallback WebP.
-    // Next.js teste le support navigateur via Accept et sert le bon format.
+    // AVIF first (25-50% lighter than WebP), WebP fallback, negotiated
+    // through Accept.
     formats: ["image/avif", "image/webp"],
-    // Cache CDN/navigateur des images optimisées : 30 jours.
-    // Par défaut Next.js utilise 60 s — très court, force des re-optimisations fréquentes.
-    minimumCacheTTL: 2592000, // 30 jours
-    // Tailles d'image générées pour les usages fill/responsive.
-    // On conserve les valeurs par défaut mais on ajoute 480px (courant sur mobile).
+    // 30-day cache for optimised images (the default is 60s, which forces
+    // frequent re-optimisation).
+    minimumCacheTTL: 2592000, // 30 days
+    // Default sizes plus 480px (common on mobile).
     deviceSizes: [480, 640, 750, 828, 1080, 1200, 1920],
-    // Autoriser l'optimisation des images provenant de Supabase Storage.
-    // Sans cette liste, <Image src="https://*.supabase.co/..."> lève une erreur.
-    // Audit 2026-10-25 : limité au projet Supabase du site (« **.supabase.co »
-    // autorisait n'importe quel projet, donc l'optimiseur d'images servait de
-    // relais vers des contenus tiers). Sans URL configurée, aucun hôte distant.
+    // Remote image optimisation is limited to the site's own Supabase project
+    // (a wildcard would turn the optimiser into a relay for third-party
+    // content). No remote host when the URL is not configured.
     remotePatterns: SUPABASE_HOST
       ? [{ protocol: "https", hostname: SUPABASE_HOST }]
       : [],
@@ -183,28 +165,25 @@ const nextConfig = {
         destination: `${SITE_URL}/:path*`,
         permanent: true,
       })),
-      // Blog élagué à l'audit de contenu du 2026-09-25 (lot 4) : 41 articles
-      // déplacés dans content/blog/unpublished/. Les 4 runbooks du stage
-      // MIDRANGE GROUP pointent vers le retour d'expérience qui les remplace ;
-      // les autres vers l'index du blog. Redirections temporaires (307) pour
-      // pouvoir republier un article sans cache de redirection permanente.
+      // Unpublished blog posts: the four MIDRANGE GROUP runbooks point to the
+      // write-up that replaces them, the others to the blog index. Temporary
+      // (307) so a post can be republished without a cached permanent redirect.
       ...UNPUBLISHED_BLOG_REDIRECTS,
       ...UNPUBLISHED_PROJECT_REDIRECTS,
-      // Formulaire unique (audit 2026-10-25) : l'ancienne page /contact et ses
-      // champs recruteur sont fusionnés dans le formulaire #contact de l'accueil.
-      // Temporaire (307) pour pouvoir rétablir une page dédiée sans cache navigateur.
+      // Single contact form: the old /contact page now lives in the home
+      // page's #contact form. Temporary (307) so a dedicated page can return.
       {
         source: "/:locale(en|fr|es)/contact",
         destination: "/:locale#contact",
         permanent: false,
       },
-      // Ancien slug blog iDEM Connect — URL incorrecte référencée dans l'audit (2026-06-29)
+      // Old iDEM Connect project slug
       {
         source: "/:locale(en|fr|es)/projects/apex-backend-idem-connect",
         destination: "/:locale/projects/idemconnect-apex-backend",
         permanent: true,
       },
-      // Mentions légales — ancienne URL → nouvelle URL (audit BUG-1)
+      // Legal notice: old URL → new URL
       {
         source: "/:locale(en|fr|es)/mentions-legales",
         destination: "/:locale/legal",
@@ -215,15 +194,14 @@ const nextConfig = {
         destination: "/fr/legal",
         permanent: true,
       },
-      // Ancien slug blog migration-visualforce-to-lwc : l'article cible a été
-      // dépublié à l'audit de contenu du 2026-09-25 (lot 4) → index du blog.
+      // Old migration-visualforce-to-lwc slug: the post is unpublished → blog index.
       {
         source: "/:locale(en|fr|es)/blog/migration-visualforce-to-lwc",
         destination: "/:locale/blog",
         permanent: false,
       },
-      // Articles dépubliés (audit de contenu 2026-09-25) — contenu trop court et
-      // non relu ; redirection temporaire pour ne pas casser les liens existants.
+      // Unpublished posts (too short, not reviewed); temporary redirects so
+      // existing links keep working.
       {
         source: "/:locale(en|fr|es)/blog/next-intl-app-router",
         destination: "/:locale/blog",
@@ -234,15 +212,14 @@ const nextConfig = {
         destination: "/:locale/projects/cicd-pipeline-setup",
         permanent: false,
       },
-      // Changelog public retiré (audit de contenu 2026-09-25) : l'historique
-      // détaillé reste dans CHANGELOG.md du dépôt ; la preuve DevSecOps lisible
-      // pour un visiteur est le colophon.
+      // The public changelog page is gone (history stays in CHANGELOG.md); the
+      // colophon is the visitor-facing DevSecOps page.
       {
         source: "/:locale(en|fr|es)/changelog",
         destination: "/:locale/colophon",
         permanent: false,
       },
-      // /rss.xml retournait 404 — le feed est servi sous /feed.xml
+      // The feed is served at /feed.xml
       {
         source: "/rss.xml",
         destination: "/feed.xml",
@@ -251,15 +228,12 @@ const nextConfig = {
     ];
   },
 
-  // ── 404 légère pour les fichiers statiques absents — audit 2026-10-23 (P5) ──
-  // Une image inexistante (ex. /projects/risque360/cover.webp) tombait sur la
-  // route attrape-tout app/[locale]/[...rest] et recevait une page HTML 404
-  // complète, rendue dynamiquement (~70 Ko) — pour une balise <img> qui ne
-  // l'affichera jamais.
-  // Les réécritures `afterFiles` ne s'appliquent qu'APRÈS la recherche dans
-  // public/ et les routes statiques, mais AVANT les routes dynamiques : un
-  // fichier existant est donc toujours servi normalement ; seul un fichier
-  // absent est redirigé vers app/api/asset-not-found (404 en texte brut).
+  // ── Lightweight 404 for missing static files ─────────────────────────────
+  // A missing image would otherwise hit the app/[locale]/[...rest] catch-all
+  // and get a full, dynamically rendered HTML 404. `afterFiles` rewrites run
+  // after public/ and static routes but before dynamic routes, so existing
+  // files are served normally and only missing ones reach
+  // app/api/asset-not-found (plain-text 404).
   async rewrites() {
     return {
       afterFiles: [
@@ -273,11 +247,10 @@ const nextConfig = {
 
   async headers() {
     return [
-      // ── Assets statiques publics (logo, avatar, CV PDF…) ──────────────────────
-      // Vercel cache déjà /_next/static/ avec immutable.
-      // Les fichiers dans /public/ n'ont pas de Cache-Control par défaut → on fixe 1 jour (86400 s).
-      // Ils n'ont pas de hash dans leur URL, donc on ne met pas "immutable"
-      // (sinon une mise à jour de /avatar.webp ne serait pas récupérée avant expiration).
+      // ── Public static assets (logo, avatar, CV PDF…) ──────────────────────
+      // Vercel already caches /_next/static/ as immutable. Files in /public/
+      // have no Cache-Control by default: 1 day here, not immutable (no hash
+      // in their URL, so an updated /avatar.webp must be picked up).
       {
         source: "/(:path*\\.(?:webp|png|jpg|jpeg|svg|ico|gif|avif|woff2|woff|ttf|otf|pdf))",
         headers: [
@@ -288,27 +261,26 @@ const nextConfig = {
         ],
       },
       {
-        // Appliquer les headers de sécurité à toutes les routes
+        // Security headers on every route
         source: "/(.*)",
         headers: [
-          // Interdit l'affichage du site dans un <iframe> externe → protection clickjacking
+          // No framing by other sites (clickjacking)
           {
             key: "X-Frame-Options",
             value: "DENY"
           },
-          // Empêche les navigateurs de deviner (sniffer) le type MIME des fichiers
+          // No MIME type sniffing
           {
             key: "X-Content-Type-Options",
             value: "nosniff"
           },
-          // N'envoie l'URL de référence qu'à la même origine, sinon uniquement l'origine
+          // Full URL to the same origin only, otherwise just the origin
           {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin"
           },
-          // Désactive les APIs sensibles non utilisées dans ce portfolio.
-          // Liste étendue pour couvrir les APIs modernes (payment, USB, bluetooth…)
-          // qui pourraient être exploitées par un script tiers ou injecté.
+          // Disable sensitive APIs the site does not use (payment, USB,
+          // Bluetooth…), so an injected or third-party script cannot use them.
           {
             key: "Permissions-Policy",
             value: [
@@ -336,45 +308,38 @@ const nextConfig = {
             ].join(", ")
           },
           
-          // Bloque le chargement cross-domain de ressources via Flash/PDF/Silverlight legacy.
-          // Cosmétique aujourd'hui (ces plugins sont éteints), mais attendu par les scanners
-          // de sécurité professionnels (Qualys, SecurityHeaders.com).
+          // Blocks cross-domain loading through legacy Flash/PDF plugins;
+          // cosmetic today, but expected by security scanners.
           {
             key: "X-Permitted-Cross-Domain-Policies",
             value: "none"
           },
-          // Content-Security-Policy : DYNAMIQUE via proxy.ts (middleware Edge).
-          // La CSP est générée par requête dans proxy.ts avec un nonce unique
-          // (btoa(crypto.randomUUID())) — ce nonce remplace 'unsafe-inline' dans
-          // script-src. Ne pas remettre de CSP statique ici, cela écraserait la
-          // CSP dynamique du middleware sur les routes HTML.
-          // Voir proxy.ts > buildCSP() pour le détail des directives.
-          // Force HTTPS pendant 2 ans (includeSubDomains + preload)
-          // À activer uniquement si le domaine est toujours servi en HTTPS
+          // The Content-Security-Policy is built per request in proxy.ts (with
+          // a nonce): never add a static CSP here, it would override it on
+          // HTML routes. See buildCSP() in proxy.ts.
+          // HSTS for 2 years (includeSubDomains + preload): only valid while
+          // the domain is always served over HTTPS.
           {
             key: "Strict-Transport-Security",
-            // max-age=63072000 = 2 ans (minimum pour preload)
+            // 63072000 s = 2 years (preload minimum)
   value: 'max-age=63072000; includeSubDomains; preload'
           },
-          // Empêche les attaques cross-origin de type Spectre et les fuites mémoire
-          // entre onglets/fenêtres (ex : window.opener exploit).
-          // same-origin : seules les pages de la même origine peuvent partager un contexte.
+          // Isolates the browsing context from cross-origin windows
+          // (Spectre-style attacks, window.opener abuse).
           {
             key: "Cross-Origin-Opener-Policy",
             value: "same-origin"
           },
-          // Empêche d'autres origines de charger nos ressources (images, fonts, JSON)
-          // dans leur propre contexte, sauf via CORS explicite.
+          // Other origins cannot load our resources (images, fonts, JSON)
+          // without explicit CORS.
           {
             key: "Cross-Origin-Resource-Policy",
             value: "same-origin"
           },
-          // ── Reporting API — complément moderne à report-uri ───────────────
-          // report-uri (CSP Level 2) est déprécié en CSP Level 3 mais reste
-          // le seul mécanisme universellement supporté. On ajoute les deux :
-          //   - Report-To      : Reporting API v0 (Chrome, Edge)
-          //   - Reporting-Endpoints : Reporting API v1 (Chrome 96+)
-          // Ils réutilisent le même endpoint /api/csp-report.
+          // ── Reporting API, alongside report-uri ───────────────────────────
+          // report-uri (CSP Level 2) is deprecated but still the only
+          // universally supported mechanism, so both are sent: Report-To
+          // (Reporting API v0) and Reporting-Endpoints (v1), same endpoint.
           {
             key: "Report-To",
             value: JSON.stringify({
@@ -393,17 +358,15 @@ const nextConfig = {
   }
 };
 
-// Pipeline MDX pour les articles de blog
-// rehype-pretty-code (shiki) : coloration syntaxique build-time
-//   - thème "github-light" en mode clair, "github-dark-dimmed" en mode sombre
-//   - dual-theme via variables CSS --shiki-light / --shiki-dark
-//   - bypassInlineCode : laisse le code inline sans coloration (stylee via .mdx code)
-//   - keepBackground: false → les couleurs de fond sont gérées par globals.css
+// MDX pipeline (blog posts and case studies). rehype-pretty-code (shiki)
+// highlights at build time with two themes exposed as --shiki-light /
+// --shiki-dark CSS variables; inline code is not highlighted
+// (bypassInlineCode) and backgrounds come from globals.css
+// (keepBackground: false).
 const withMDX = createMDX({
   options: {
-    // remark-gfm : tables, listes de tâches, autolinks, ~~barré~~ (utilisé par
-    // les études de cas projets sous content/projects/ et par les articles de
-    // blog qui contiennent déjà des tableaux Markdown).
+    // remark-gfm: tables, task lists, autolinks, strikethrough (used by case
+    // studies under content/projects/ and blog posts).
     remarkPlugins: [remarkFrontmatter, remarkGfm],
     rehypePlugins: [
       [
@@ -411,9 +374,8 @@ const withMDX = createMDX({
         {
           theme: {
             light: "github-light",
-            // github-dark        : commentaires #6a737d → 3.14:1 sur #0d1117 ✗ WCAG AA
-            // github-dark-dimmed : commentaires #768390 → 3.92:1 ✗
-            // github-dark-default: commentaires #8b949e → 6.15:1 ✓ ← sélectionné
+            // Comment contrast on the dark background: github-dark 3.14:1 and
+            // github-dark-dimmed 3.92:1 fail WCAG AA; github-dark-default 6.15:1.
             dark: "github-dark-default",
           },
           bypassInlineCode: true,
@@ -424,8 +386,7 @@ const withMDX = createMDX({
   }
 });
 
-// Plugin next-intl — génère la config next-intl/config au build
-// Pointe explicitement vers le fichier de config App Router
+// next-intl plugin, pointing to the App Router request config
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 export default withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));

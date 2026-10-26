@@ -1,25 +1,19 @@
 // lib/security/testimonialInvite.ts
 // ---------------------------------
-// Invitations à témoigner : vérification du lien, clé de session liée à
-// l'invitation, usage unique.
-//
-// Audit du 2026-10-25 (à traiter avant de réactiver la section) :
-//   - le lien restait valable 30 jours et réutilisable à volonté ;
-//   - la clé de session ne dépendait que d'un créneau de 30 min : identique
-//     pour tous les visiteurs, elle n'était liée à aucune invitation ;
-//   - aucun moyen de révoquer un lien précis.
-// Désormais :
-//   - durée maximale de 14 jours (route d'administration) ;
-//   - clé de session = HMAC(secret, invitation + créneau), donc propre à un lien ;
-//   - une invitation utilisée (ou révoquée) est marquée dans Redis jusqu'à
-//     son expiration : `SET portfolio:testimonial:used:<invite> 1` révoque un
-//     lien à la main ; changer TESTIMONIAL_SUBMIT_TOKEN les révoque tous.
+// Testimonial invitations: link verification, session key bound to the
+// invitation, single use.
+//   - at most 14 days (admin route);
+//   - session key = HMAC(secret, invitation + 30-minute slot), so it is
+//     specific to one link;
+//   - a used (or revoked) invitation is marked in Redis until it expires:
+//     `SET portfolio:testimonial:used:<invite> 1` revokes one link by hand;
+//     changing TESTIMONIAL_SUBMIT_TOKEN revokes them all.
 
 import "server-only";
 import { createHmac, timingSafeEqual } from "crypto";
 import { redis } from "@/lib/redis";
 
-const HMAC_HEX_LENGTH = 64; // SHA-256 = 32 octets = 64 caractères hex
+const HMAC_HEX_LENGTH = 64; // SHA-256 = 32 bytes = 64 hex characters
 const SESSION_BUCKET_MS = 30 * 60 * 1000;
 export const MAX_INVITE_DAYS = 14;
 
@@ -30,7 +24,7 @@ function safeHexEqual(a: Buffer, hex: string): boolean {
   return timingSafeEqual(a, Buffer.from(hex, "hex"));
 }
 
-/** Lien d'invitation valide (signature correcte et non expiré). */
+/** Valid invitation link (correct signature, not expired). */
 export function isInviteValid(secret: string, invite: string, expUnix: number, nowMs = Date.now()): boolean {
   if (!secret || !Number.isFinite(expUnix) || expUnix <= Math.floor(nowMs / 1000)) return false;
   return safeHexEqual(hmac(secret, `testimonial-invite:${expUnix}`), invite);
@@ -40,16 +34,16 @@ export function signInvite(secret: string, expUnix: number): string {
   return hmac(secret, `testimonial-invite:${expUnix}`).toString("hex");
 }
 
-/** Clé de session propre à une invitation, pour le créneau de 30 min courant. */
+/** Session key specific to an invitation, for the current 30-minute slot. */
 export function sessionKeyFor(secret: string, invite: string, nowMs = Date.now()): string {
   const bucket = Math.floor(nowMs / SESSION_BUCKET_MS);
   return hmac(secret, `testimonial-session:${invite}:${bucket}`).toString("hex");
 }
 
-/** Accepte le créneau courant et le précédent (requête à cheval sur une frontière). */
+/** Accepts the current and previous slot (request straddling a boundary). */
 export function isSessionKeyValid(secret: string, invite: string, sessionKey: string, nowMs = Date.now()): boolean {
   const bucket = Math.floor(nowMs / SESSION_BUCKET_MS);
-  // Les deux comparaisons sont toujours évaluées (pas de court-circuit).
+  // Both comparisons always run (no short circuit).
   const results = [bucket, bucket - 1].map((b) =>
     safeHexEqual(hmac(secret, `testimonial-session:${invite}:${b}`), sessionKey),
   );
@@ -58,9 +52,9 @@ export function isSessionKeyValid(secret: string, invite: string, sessionKey: st
 
 export const usedInviteKey = (invite: string) => `portfolio:testimonial:used:${invite}`;
 
-// ── Usage unique (Redis) ────────────────────────────────────────────────────
-// Sans Redis joignable, l'usage unique ne peut pas être garanti : fail-closed
-// en production (lien refusé), permissif en développement.
+// ── Single use (Redis) ──────────────────────────────────────────────────────
+// Without Redis, single use cannot be guaranteed: fail closed in production
+// (link refused), permissive in development.
 const failClosed = () => process.env.NODE_ENV === "production";
 
 export async function isInviteUsed(invite: string): Promise<boolean> {
@@ -72,7 +66,7 @@ export async function isInviteUsed(invite: string): Promise<boolean> {
   }
 }
 
-/** Marque l'invitation comme utilisée jusqu'à son expiration. */
+/** Marks the invitation as used until it expires. */
 export async function markInviteUsed(invite: string, expUnix: number, nowMs = Date.now()): Promise<void> {
   if (!redis) return;
   const ttl = Math.max(60, expUnix - Math.floor(nowMs / 1000));

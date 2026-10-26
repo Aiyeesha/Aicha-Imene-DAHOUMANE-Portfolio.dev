@@ -1,23 +1,23 @@
 /**
- * sw.js — Service Worker (PWA offline)
- * =====================================
- * Stratégie de cache :
- *   - Statiques Next.js (_next/static) : Cache First (immutable — hash dans l'URL)
- *   - Assets (images, icônes, CV PDF)  : Cache First
- *   - Pages HTML                       : Network First → Cache → Offline fallback
- *   - Routes API (/api/*)              : Network Only (jamais mis en cache)
- *   - /admin et /<locale>/testimonial-submit : Network Only (données personnelles :
- *     messages de contact, lien d'invitation signé — audit du 2026-10-14, S3)
+ * sw.js — service worker (offline support)
+ * =========================================
+ * Caching strategy:
+ *   - Next.js static files (_next/static)  : cache first (hashed URLs)
+ *   - Assets (images, icons, CV PDF)       : cache first
+ *   - HTML pages                           : network first → cache → offline page
+ *   - API routes (/api/*)                  : network only (never cached)
+ *   - /admin and /<locale>/testimonial-submit : network only (personal data:
+ *     contact messages, signed invitation link)
  *
- * CACHE_VERSION est injecté au runtime par app/sw.js/route.ts, avec le hash
- * court du commit Git (VERCEL_GIT_COMMIT_SHA) — ne pas modifier manuellement.
- * L'ancienne version est supprimée automatiquement à l'activation.
+ * CACHE_VERSION is injected at runtime by app/sw.js/route.ts with the short
+ * commit hash (VERCEL_GIT_COMMIT_SHA); do not edit it by hand. The previous
+ * version's cache is deleted on activation.
  */
 
 const CACHE_VERSION = "v1";
 const CACHE_NAME = `portfolio-pwa-${CACHE_VERSION}`;
 
-// Assets à pré-cacher à l'installation (shell minimal)
+// Assets precached on install (minimal shell)
 const PRECACHE_URLS = [
   "/offline.html",
   "/avatar.webp",
@@ -25,28 +25,26 @@ const PRECACHE_URLS = [
   "/icon-512.png",
 ];
 
-// Pages jamais mises en cache : elles affichent des données personnelles
-// (messages de contact dans /admin) ou portent un jeton d'invitation signé
-// (testimonial-submit). Exclusion par chemin plutôt que par en-tête : toutes les
-// pages HTML du site sont servies en « private, no-store » (rendu dynamique
-// imposé par le nonce CSP), donc un filtre sur Cache-Control supprimerait
-// tout le mode hors-ligne.
+// Never cached: these pages show personal data (contact messages in /admin)
+// or carry a signed invitation token (testimonial-submit). Excluded by path:
+// every HTML page is served "private, no-store" (dynamic rendering because of
+// the CSP nonce), so filtering on Cache-Control would disable offline mode.
 const NETWORK_ONLY_PATHS = [
   /^\/admin(\/|$)/,
   /^\/(fr|en|es)\/testimonial-submit(\/|$)/,
 ];
 
-// ── Install : précache du shell ───────────────────────────────────────────────
+// ── Install: precache the shell ───────────────────────────────────────────────
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting()) // active le SW immédiatement sans attendre
+      .then(() => self.skipWaiting()) // activate right away
   );
 });
 
-// ── Activate : nettoyage des anciens caches ───────────────────────────────────
+// ── Activate: delete old caches ───────────────────────────────────────────────
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -58,31 +56,31 @@ self.addEventListener("activate", (event) => {
             .map((key) => caches.delete(key))
         )
       )
-      .then(() => self.clients.claim()) // prend le contrôle de toutes les pages ouvertes
+      .then(() => self.clients.claim()) // take control of every open page
   );
 });
 
-// ── Fetch : logique de cache par type de ressource ───────────────────────────
+// ── Fetch: caching per resource type ─────────────────────────────────────────
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // On ne gère que les requêtes GET du même origin
+  // Same-origin GET requests only
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
 
-  // Routes API → Network Only (données dynamiques, rate-limiting, etc.)
+  // API routes → network only
   if (url.pathname.startsWith("/api/")) return;
 
-  // Pages sensibles → Network Only (voir NETWORK_ONLY_PATHS)
+  // Sensitive pages → network only (see NETWORK_ONLY_PATHS)
   if (NETWORK_ONLY_PATHS.some((re) => re.test(url.pathname))) return;
 
-  // Chunks Next.js statiques → Cache First (hash dans l'URL = immuable)
+  // Next.js static chunks → cache first (hashed, immutable)
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(cacheFirst(request));
     return;
   }
 
-  // Assets statiques (images, icônes, PDF, fonts) → Cache First
+  // Static assets (images, icons, PDF, fonts) → cache first
   if (
     STATIC_ASSET_RE.test(url.pathname)
   ) {
@@ -90,15 +88,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Pages HTML → Network First (contenu frais si connecté, cache sinon)
+  // HTML pages → network first (fresh when online, cache otherwise)
   event.respondWith(networkFirst(request));
 });
 
-// ── Borne du cache des pages ─────────────────────────────────────────────────
-// Les pages HTML sont conservées pour la consultation hors ligne : au-delà de
-// MAX_CACHED_PAGES, les plus anciennes entrées sont supprimées (ordre
-// d'insertion de cache.keys()). Les ressources statiques ne sont pas
-// concernées (URL hachées ou fichiers de public/, en nombre fini).
+// ── Page cache limit ──────────────────────────────────────────────────────────
+// HTML pages are kept for offline reading; beyond MAX_CACHED_PAGES the oldest
+// entries are deleted (cache.keys() insertion order). Static resources are not
+// concerned (hashed URLs or a finite set of public/ files).
 const MAX_CACHED_PAGES = 50;
 const STATIC_ASSET_RE = /\.(png|jpg|jpeg|webp|svg|gif|ico|woff2?|ttf|pdf)$/i;
 async function trimPages(cache) {
@@ -110,9 +107,8 @@ async function trimPages(cache) {
   for (let i = 0; i < excess; i++) await cache.delete(pages[i]);
 }
 
-// ── Stratégie Cache First ─────────────────────────────────────────────────────
-// 1. Chercher dans le cache
-// 2. Si absent : fetch réseau + stocker dans le cache
+// ── Cache first ───────────────────────────────────────────────────────────────
+// Look in the cache; otherwise fetch and store.
 async function cacheFirst(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
@@ -121,67 +117,57 @@ async function cacheFirst(request) {
     const response = await fetch(request);
     if (response.ok) {
       const cache = await caches.open(CACHE_NAME);
-      cache.put(request, response.clone()); // stocker une copie sans bloquer
+      cache.put(request, response.clone()); // store a copy without blocking
     }
     return response;
   } catch {
-    // Ressource non cachée et hors ligne → rien à faire, le navigateur gèrera l'erreur
+    // Not cached and offline: let the browser handle the error
     return new Response("Network error", { status: 503 });
   }
 }
 
-// ── Stratégie Network First (sans timeout) ───────────────────────────────────
+// ── Network first (no timeout) ───────────────────────────────────────────────
+// No timeout on purpose: with one, a slow but online visitor would silently
+// get stale content.
 //
-// "Sans timeout" = décision intentionnelle :
-//   - Avec timeout : on servirait du contenu obsolète même quand l'utilisateur
-//     est en ligne mais sur une connexion lente → expérience dégradée silencieuse.
-//   - Sans timeout : l'utilisateur attend le réseau aussi longtemps qu'il le faut.
-//     La page est toujours fraîche si le serveur répond.
+//   1. fetch(request), no timeout
+//   2. 2xx → store in the cache, return the fresh response
+//   3. 5xx → try the cache, otherwise return the error response
+//   4. any other response (redirect, 404, 410…) → return it as is, so an
+//      unpublished, redirected or deleted page is never served from cache
+//   5. fetch throws (offline, DNS failure) → cache, otherwise offline.html
 //
-// Flux :
-//   1. fetch(request)                               — réseau, pas de timeout
-//   2. response.ok (2xx)  → stocker dans le cache, retourner la réponse fraîche
-//   3. réponse 5xx (serveur en erreur) → essayer le cache
-//      → si absent du cache → retourner la réponse d'erreur telle quelle
-//   4. toute autre réponse (redirection, 404, 410…) → la retourner telle quelle
-//   5. fetch throw (offline, DNS fail) → essayer le cache
-//      → si absent → offline.html
-//
-// Audit 2026-10-25 : le cache était aussi consulté sur les 4xx et sur les
-// redirections (réponse opaqueredirect, ok=false) — une page dépubliée,
-// redirigée ou supprimée continuait d'être servie depuis le cache. Seule une
-// erreur serveur (5xx) ou l'absence de réseau justifient désormais le repli.
-// Les charges utiles RSC (?_rsc=…) ne sont plus mises en cache : une entrée
-// par navigation faisait grossir le cache sans limite.
+// RSC payloads (?_rsc=…) are not cached: one entry per navigation would grow
+// the cache without bound.
 async function networkFirst(request) {
   try {
     const response = await fetch(request);
 
     if (response.ok) {
-      // Réseau OK : mettre en cache pour les visites hors ligne futures
+      // Network OK: cache for future offline visits
       if (!new URL(request.url).searchParams.has("_rsc")) {
         const cache = await caches.open(CACHE_NAME);
-        // non bloquant (pas de await) ; borne le nombre de pages conservées
+        // non-blocking (no await); caps the number of stored pages
         cache.put(request, response.clone()).then(() => trimPages(cache));
       }
       return response;
     }
 
-    // Erreur serveur (5xx) : tenter le cache avant de montrer l'erreur.
+    // Server error (5xx): try the cache before showing the error.
     if (response.status >= 500) {
       const cached = await caches.match(request);
       if (cached) return cached;
     }
 
-    // Redirection, 404, 410… ou pas de cache : réponse telle quelle
-    // (les error boundaries React prendront le relais côté client)
+    // Redirect, 404, 410… or nothing cached: return as is (React error
+    // boundaries take over on the client)
     return response;
   } catch {
-    // Réseau injoignable (offline, timeout DNS, etc.)
+    // Network unreachable (offline, DNS timeout…)
     const cached = await caches.match(request);
     if (cached) return cached;
 
-    // Fallback ultime : page offline précachée à l'installation
+    // Last resort: offline page precached on install
     const offline = await caches.match("/offline.html");
     return (
       offline ||
