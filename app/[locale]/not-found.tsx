@@ -14,6 +14,7 @@ const content = {
     code: "404",
     title: "Page introuvable",
     description: "Cette page n'existe pas ou a été déplacée.",
+    metaDescription: "Cette page n'existe pas ou a été déplacée. Retrouvez les projets, l'expérience Salesforce et IT Ops et les articles d'Aïcha Imène DAHOUMANE depuis l'accueil.",
     hint: "Essayez de revenir à l'accueil ou utilisez le menu de navigation.",
     cta: "Retour à l'accueil",
     contact: "Contact",
@@ -23,6 +24,7 @@ const content = {
     code: "404",
     title: "Page not found",
     description: "This page doesn't exist or may have been moved.",
+    metaDescription: "This page doesn't exist or has been moved. Find Aïcha Imène DAHOUMANE's projects, Salesforce and IT Ops experience and articles from the home page.",
     hint: "Try going back to the home page or use the navigation menu.",
     cta: "Back to home",
     contact: "Contact",
@@ -32,6 +34,7 @@ const content = {
     code: "404",
     title: "Página no encontrada",
     description: "Esta página no existe o ha sido movida.",
+    metaDescription: "Esta página no existe o ha sido movida. Encuentra los proyectos, la experiencia Salesforce e IT Ops y los artículos de Aïcha Imène DAHOUMANE desde el inicio.",
     hint: "Vuelve al inicio o usa el menú de navegación.",
     cta: "Volver al inicio",
     contact: "Contacto",
@@ -83,6 +86,10 @@ export default function LocaleNotFound() {
         {/* React 19 remonte <title> dans <head> : un composant client ne peut pas
             exporter de metadata, et axe exige un titre (règle document-title). */}
         <title>{`${c.title} — 404`}</title>
+        {/* Description propre, remontée dans <head> par React 19 comme <title> —
+            audit 2026-10-23 (SEO-2) : la 404 reprenait celle de l'accueil,
+            héritée du layout (déplacée depuis dans app/[locale]/page.tsx). */}
+        <meta name="description" content={c.metaDescription} />
 
         <Icon404 />
 

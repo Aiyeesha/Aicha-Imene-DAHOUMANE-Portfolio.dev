@@ -38,6 +38,13 @@ export async function generateMetadata({
       : isEs
       ? "Comparte tu testimonio — Aïcha Imène DAHOUMANE"
       : "Share your testimonial — Aïcha Imène DAHOUMANE",
+    // Description propre — audit 2026-10-23 (SEO-2) : la page héritait de
+    // celle de l'accueil.
+    description: isFr
+      ? "Formulaire privé réservé aux anciens collègues, jurys et mentors d'Aïcha Imène DAHOUMANE pour partager un témoignage sur leur collaboration."
+      : isEs
+      ? "Formulario privado para antiguos compañeros, miembros de tribunal y mentores de Aïcha Imène DAHOUMANE para compartir un testimonio de colaboración."
+      : "Private form for former colleagues, jury members and mentors of Aïcha Imène DAHOUMANE to share a testimonial about working together.",
     // Exclure des moteurs de recherche et de l'indexation
     robots: { index: false, follow: false },
     // Canonical propre pour ne pas hériter celui du layout (qui pointe vers la homepage)

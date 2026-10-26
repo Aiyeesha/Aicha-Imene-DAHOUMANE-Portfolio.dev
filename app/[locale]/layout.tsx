@@ -40,71 +40,12 @@ export function generateStaticParams() {
   return [{ locale: "fr" }, { locale: "en" }, { locale: "es" }];
 }
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale: rawLocale } = await params;
-  const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
-  const t = await getTranslations({ locale: locale });
-
-  // Track a le même problème que le flash "Salesforce" résolu plus bas pour le
-  // rendu de page (cookie posé par providers.tsx setTrack()) : sans lecture ici,
-  // un lien partagé par un visiteur de retour en IT Ops affiche toujours un
-  // <title>/description Salesforce dans l'aperçu (réseaux sociaux, onglet
-  // navigateur), quel que soit le contenu réellement affiché — voir audit
-  // 2026-08-13. Ne change rien pour un tout premier visiteur (pas de cookie) :
-  // le titre générique reste le même qu'avant, pas de régression SEO.
-  const trackCookie = (await cookies()).get("track")?.value;
-  const isItops = trackCookie === "itops";
-
-  const title = t(isItops ? "metadata.titleItops" : "metadata.title");
-  const description = t(isItops ? "metadata.descriptionItops" : "metadata.description");
-
-  const siteUrl = getSiteUrl();
-
-  const canonical = `${siteUrl}/${locale}`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        en: `${siteUrl}/en`,
-        fr: `${siteUrl}/fr`,
-        es: `${siteUrl}/es`,
-        "x-default": `${siteUrl}/en`,
-      }
-    },
-    openGraph: {
-      type: "website",
-      url: canonical,
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
-      title,
-      description,
-      siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
-      images: [
-        {
-          // URL absolue requise : certains crawlers OG (LinkedIn, Slack, WhatsApp)
-          // n'utilisent pas metadataBase et échouent sur les URLs relatives.
-          url: `${siteUrl}/opengraph-image`,
-          width: 1200,
-          height: 630,
-          alt: title
-        }
-      ]
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [`${siteUrl}/twitter-image`]
-    }
-  };
-}
+// Métadonnées de l'accueil (titre, description, canonical, hreflang, Open
+// Graph) déplacées dans app/[locale]/page.tsx — audit 2026-10-23 (SEO-2,
+// SEO-3). Déclarées ici, elles s'appliquaient par héritage à toute page qui
+// n'en définit pas : la 404 recevait la description de l'accueil et un
+// canonical vers /{locale}, et les pages noindex (testimonial-submit,
+// security/acknowledgments) la même description que l'accueil.
 
 export default async function LocaleLayout({
   children,
