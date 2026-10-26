@@ -165,15 +165,15 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `NEXT_PUBLIC_CV_PDF_URL` | Optional | CV PDF URL (fallback: `/cv/Aicha-Imene-DAHOUMANE-CV-{locale}-{track}.pdf`) |
 | `NEXT_PUBLIC_AVATAR_URL` | Optional | Avatar image URL (fallback: `/avatar.webp`) |
 | `NEXT_PUBLIC_SAME_AS` | Optional | Comma-separated social profile URLs (JSON-LD sameAs) |
-| `CACHE_INVALIDATE_SECRET` | Optional | Secret for `/api/cache/invalidate` endpoint |
+| `CACHE_INVALIDATE_SECRET` | Required in production | Secret for `/api/cache/invalidate` endpoint |
 | `CONTACT_RATE_LIMIT_WINDOW_SECONDS` | Optional | Rate-limit window in seconds (default: 600) |
 | `CONTACT_RATE_LIMIT_MAX_REQUESTS` | Optional | Max requests per window (default: 5) |
-| `TESTIMONIAL_SUBMIT_TOKEN` | Optional | Token for `/[locale]/testimonial-submit?token=...` (generate with `openssl rand -base64 32`) |
+| `TESTIMONIAL_SUBMIT_TOKEN` | Required in production | Token for `/[locale]/testimonial-submit?token=...` (generate with `openssl rand -base64 32`) |
 | `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
 | `ADMIN_USERNAME` | Optional | Username for `/admin` HTTP Basic Auth |
 | `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
-| `REVALIDATE_SECRET` | Optional | Shared secret for `/api/revalidate` (header `x-revalidate-secret`, Supabase webhook) |
-| `IP_HASH_SALT` | Recommended | HMAC key that pseudonymises IP-based rate-limit identifiers before they reach Redis (generate with `openssl rand -hex 32`) |
+| `REVALIDATE_SECRET` | Required in production | Shared secret for `/api/revalidate` (header `x-revalidate-secret`, Supabase webhook) |
+| `IP_HASH_SALT` | Required in production | HMAC key that pseudonymises IP-based rate-limit identifiers before they reach Redis (generate with `openssl rand -hex 32`) |
 | `HEALTHCHECK_URL` | Optional | Dead-man's switch URL pinged after each successful `/api/cron/ping` run |
 | `ALERT_WEBHOOK_URL` | Optional | Discord/Slack/ntfy webhook alerted when global status != operational |
 | `CSP_ALERT_WEBHOOK_URL` | Optional | Discord/Slack/ntfy webhook alerted on CSP violation reports (rate-limited) |
