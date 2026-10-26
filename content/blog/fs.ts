@@ -9,11 +9,11 @@ export type BlogFrontmatter = {
   title?: string;
   excerpt?: string;
   date?: string; // YYYY-MM-DD
-  /** Date de dernière mise à jour du fond (YYYY-MM-DD), distincte de la date de publication. */
+  /** Date of the last content update (YYYY-MM-DD), distinct from the publication date. */
   updatedDate?: string;
   tags?: string[];
   cover?: string; // /blog/<slug>/cover.jpg (optional)
-  /** Études de cas où la technique de l'article est mise en pratique (slugs de projets, ou "colophon"). */
+  /** Case studies applying the post's technique (project slugs, or "colophon"). */
   projects?: string[];
 };
 
@@ -23,19 +23,19 @@ export type BlogPostMeta = {
   title: string;
   excerpt: string;
   date: string;
-  /** Voir BlogFrontmatter.updatedDate — affichée « Mis à jour le … » et reprise en dateModified. */
+  /** See BlogFrontmatter.updatedDate: shown as "Updated on …" and used as dateModified. */
   updatedDate?: string;
   tags: string[];
   cover?: string;
-  /** Voir BlogFrontmatter.projects — affiché en « Mis en pratique dans ». */
+  /** See BlogFrontmatter.projects: shown as "Applied in". */
   projects: string[];
   readingTime: number; // estimated minutes
   file: string; // absolute path (server-only)
 };
 
 /**
- * gray-matter (via js-yaml) convertit « YYYY-MM-DD » en objet Date à l'exécution,
- * même si le type annonce une chaîne : on renormalise en « YYYY-MM-DD ».
+ * gray-matter (via js-yaml) turns "YYYY-MM-DD" into a Date at runtime even
+ * though the type says string: normalise back to "YYYY-MM-DD".
  */
 function normalizeDate(raw: unknown): string | undefined {
   if (raw instanceof Date) return raw.toISOString().slice(0, 10);
@@ -76,8 +76,8 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
 
   for (const file of files) {
     const slug = file.replace(/\.mdx$/, "");
-    // Un nom de fichier hors kebab-case est ignoré : le slug finit dans des
-    // href et des chemins, il ne doit jamais contenir de caractère spécial.
+    // A file name that is not kebab-case is skipped: the slug ends up in hrefs
+    // and paths and must never contain special characters.
     if (!isValidSlug(slug)) continue;
     const abs = path.join(dir, file);
     const raw = fs.readFileSync(abs, "utf-8");
@@ -121,8 +121,8 @@ export function readAllPosts(locale: BlogLocale): BlogPostMeta[] {
 }
 
 export function readPostMeta(locale: BlogLocale, slug: string): BlogPostMeta | null {
-  // Le slug vient de l'URL : refus immédiat de tout ce qui n'est pas un slug
-  // kebab-case (bloque notamment « ../ » avant path.join).
+  // The slug comes from the URL: reject anything that is not a kebab-case
+  // slug (in particular "../") before path.join.
   if (!isValidSlug(slug)) return null;
   const dir = postsDir(locale);
   const abs = path.join(dir, `${slug}.mdx`);

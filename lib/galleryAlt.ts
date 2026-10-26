@@ -1,10 +1,9 @@
 // lib/galleryAlt.ts
 // -----------------
-// Les galeries de content/projectDetails.ts portent des textes alternatifs
-// génériques (« Cover », « Screenshot 3 »), en anglais dans les trois langues :
-// 158 images sur 200 au moment de l'audit du 2026-10-25. Ils sont remplacés à
-// l'affichage par une description localisée qui nomme le projet. Un texte
-// alternatif rédigé à la main dans le contenu reste prioritaire.
+// Galleries in content/projectDetails.ts often carry generic alt texts
+// ("Cover", "Screenshot 3"), in English for every language. They are replaced
+// at render time by a localised description naming the project; a
+// hand-written alt text in the content always wins.
 
 const GENERIC_ALT = /^(cover|screenshot\s*\d*)$/i;
 

@@ -4,9 +4,6 @@
 // Per-locale title/heroSubtitle/sections + gallery live in content/projectDetails.ts.
 // Deep case studies live in content/projects/<slug>/<locale>.mdx.
 // Images: public/projects/<slug>/. Read path: lib/data/projectsSource.ts.
-//
-// (Was previously exported from Supabase; the project data left Supabase in the
-//  de-Supabase refactor — these files are now the only source.)
 
 import type { ProjectNature, ProjectPeriod } from "@/lib/projectNature";
 
@@ -29,9 +26,9 @@ export type Project = {
   status: string;
   isBridge?: boolean;
   isSecurity?: boolean;
-  /** Nature du projet (formation, stage, personnel, reconstitué) — voir lib/projectNature.ts. */
+  /** Project nature (training, internship, personal, reconstructed); see lib/projectNature.ts. */
   nature: ProjectNature;
-  /** Période propre au projet, si elle diffère de celle de sa nature et qu'elle est connue. */
+  /** Project-specific period, when known and different from its nature's. */
   period?: ProjectPeriod;
 };
 

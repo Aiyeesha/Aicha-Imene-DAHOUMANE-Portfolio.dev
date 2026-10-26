@@ -1,8 +1,7 @@
 // content/resources.ts
 // ---------------------
-// Données statiques pour la page Ressources / Boîte à outils.
-// Les noms d'outils et URLs sont invariants par langue.
-// Les descriptions sont trilingues (en / fr / es).
+// Static data for the Resources / toolbox page. Tool names and URLs are the
+// same in every language; descriptions are in en / fr / es.
 
 export type Locale = "en" | "fr" | "es";
 
@@ -10,7 +9,7 @@ export type Resource = {
   name: string;
   url: string;
   description: Record<Locale, string>;
-  /** Petit badge affiché à côté du nom (ex: "free", "open-source") */
+  /** Small badge next to the name (e.g. "free", "open-source") */
   tag?: string;
 };
 

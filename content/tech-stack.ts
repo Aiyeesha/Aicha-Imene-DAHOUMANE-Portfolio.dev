@@ -1,17 +1,14 @@
 // content/tech-stack.ts
 // ---------------------
-// Données de la grille de stack technique (TechStackGrid).
-//
-// Chaque technologie expose :
-//   id       — identifiant unique (slug)
-//   name     — nom affiché
-//   abbr     — 2-3 lettres pour le badge icône (si pas de SVG dédié)
-//   category — regroupe visuellement par couleur de badge
-//   level    — maîtrise de 1 (Débutant) à 4 (Expert). Aucun item n'est au
-//              niveau 4 depuis l'audit de contenu du 2026-09-25 : « Expert »
-//              après 2 à 3 ans d'expérience n'était pas défendable en entretien.
-//   years    — années d'expérience (nombre décimal)
-//   context  — phrase courte de contexte (EN, traduite en FR ci-dessous)
+// Data for the tech stack grid (TechStackGrid). Each technology has:
+//   id       — unique slug
+//   name     — display name
+//   abbr     — 2-3 letters for the badge
+//   category — groups badges by colour
+//   level    — 1 (beginner) to 4 (expert); nothing is rated 4: "expert" after
+//              2-3 years of experience would not hold up in an interview
+//   years    — years of experience (decimal)
+//   context  — short context sentence (EN, with FR/ES translations)
 //   track    — "salesforce" | "itops" | "both"
 
 export type Locale = "en" | "fr" | "es";
@@ -20,11 +17,11 @@ export type TechLevel = 1 | 2 | 3 | 4;
 
 export type TechCategory =
   | "salesforce"  // Salesforce platform — cyan
-  | "code"        // Programmation — violet
+  | "code"        // Programming — violet
   | "devops"      // CI/CD, pipelines — orange
-  | "systems"     // Systèmes, réseaux — emerald
-  | "data"        // Base de données, intégrations — amber
-  | "tools";      // Outils transverses — slate
+  | "systems"     // Systems, networks — emerald
+  | "data"        // Databases, integrations — amber
+  | "tools";      // Cross-cutting tools — slate
 
 export type TechItem = {
   id: string;
@@ -37,7 +34,7 @@ export type TechItem = {
   track: "salesforce" | "itops" | "both";
 };
 
-// ── Données ────────────────────────────────────────────────────────────────
+// ── Data ───────────────────────────────────────────────────────────────────
 
 const TECH_STACK: TechItem[] = [
   // ── Salesforce platform ────────────────────────────────────────────────
@@ -112,7 +109,7 @@ const TECH_STACK: TechItem[] = [
     track: "salesforce",
   },
 
-  // ── Programmation ──────────────────────────────────────────────────────
+  // ── Programming ────────────────────────────────────────────────────────
   {
     id: "javascript",
     name: "JavaScript",
@@ -228,7 +225,7 @@ const TECH_STACK: TechItem[] = [
     track: "salesforce",
   },
 
-  // ── Systèmes & réseaux ─────────────────────────────────────────────────
+  // ── Systems & networks ─────────────────────────────────────────────────
   {
     id: "linux",
     name: "Linux",
@@ -286,7 +283,7 @@ const TECH_STACK: TechItem[] = [
     track: "itops",
   },
 
-  // ── Données & intégrations ─────────────────────────────────────────────
+  // ── Data & integrations ────────────────────────────────────────────────
   {
     id: "supabase",
     name: "Supabase",
@@ -330,7 +327,7 @@ const TECH_STACK: TechItem[] = [
     track: "salesforce",
   },
 
-  // ── Outils transverses ─────────────────────────────────────────────────
+  // ── Cross-cutting tools ────────────────────────────────────────────────
   {
     id: "vscode",
     name: "VS Code",
@@ -378,15 +375,14 @@ const TECH_STACK: TechItem[] = [
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 /**
- * Retourne les technologies à afficher selon le track actif.
- * "both" est inclus dans les deux tracks.
+ * Technologies for the active track ("both" is in both).
  */
 export function getTechStack(track: "salesforce" | "itops"): TechItem[] {
   return TECH_STACK.filter((t) => t.track === track || t.track === "both");
 }
 
 /**
- * Labels de niveau selon la locale.
+ * Level labels per locale.
  */
 export const LEVEL_LABELS: Record<TechLevel, Record<Locale, string>> = {
   1: { en: "Beginner",     fr: "Débutant",      es: "Principiante" },
@@ -396,7 +392,7 @@ export const LEVEL_LABELS: Record<TechLevel, Record<Locale, string>> = {
 };
 
 /**
- * Couleurs de badge par catégorie (classes Tailwind).
+ * Badge colours per category (Tailwind classes).
  */
 export const CATEGORY_COLORS: Record<TechCategory, {
   bg: string;

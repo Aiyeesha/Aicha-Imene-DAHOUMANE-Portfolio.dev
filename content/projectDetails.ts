@@ -6,8 +6,6 @@
 // once the MDX existed.
 // Gallery `src` values are repo-local paths under public/projects/<slug>/.
 // Read path: lib/data/projectsSource.ts.
-//
-// (Left Supabase in the de-Supabase refactor — this is now the only source.)
 
 import type { GalleryImage } from "@/components/ImageGallery";
 

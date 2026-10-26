@@ -1,16 +1,11 @@
 // lib/security/jsonLdSafe.ts
 // --------------------------
-// Sérialise un objet JSON-LD en échappant les caractères dangereux pour
-// une insertion dans dangerouslySetInnerHTML.
-//
-// Sans cet échappement, une donnée contenant "</script>" (ex. un titre de
-// projet issu de Supabase) pourrait rompre la balise inline et permettre
-// une injection XSS (script breakout).
-//
-// On échappe les séquences qui terminent ou ouvrent des balises HTML :
-//   <  → <   (empêche </script> et <!-- dans le JSON)
-//   >  → >   (défense en profondeur)
-//   &  → &   (empêche &amp; et les entités HTML)
+// Serialises a JSON-LD object for dangerouslySetInnerHTML, escaping
+// characters that could break out of the inline <script> (e.g. a project
+// title containing "</script>", a script breakout XSS):
+//   <  → \u003c   (blocks </script> and <!-- inside the JSON)
+//   >  → \u003e   (defence in depth)
+//   &  → \u0026   (blocks HTML entities)
 
 export function jsonLdStringify(schema: unknown): string {
   return JSON.stringify(schema)

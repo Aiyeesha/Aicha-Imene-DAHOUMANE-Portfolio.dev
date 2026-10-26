@@ -1,8 +1,7 @@
 /**
  * Static mapping of project slug → GitHub repository URL.
  *
- * Used as a fallback when repo_url is not set in Supabase.
- * This also serves as a source of truth when re-running the seed script.
+ * Used as a fallback when a project has no repo URL.
  */
 export const GITHUB_REPOS: Record<string, string> = {
   "idemconnect-apex-backend":

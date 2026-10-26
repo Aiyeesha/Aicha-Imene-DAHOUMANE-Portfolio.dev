@@ -1,20 +1,16 @@
 // lib/health.ts
 // -------------
-// Fonctions de vérification de l'état opérationnel de chaque service.
-// Utilisé par :
-//   - app/api/health/route.ts  (endpoint JSON public)
-//   - app/[locale]/status/page.tsx (rendu serveur direct, sans HTTP roundtrip)
-//
-// Chaque check retourne : status + latenceMs + message optionnel.
-// Timeout : 4 secondes par vérification.
+// Per-service health checks, used by app/api/health/route.ts (public JSON)
+// and app/[locale]/status/page.tsx (direct server render). Each check returns
+// a status, a latency and an optional message; 4-second timeout per check.
 
 export type ServiceStatus = "operational" | "degraded" | "outage";
 
 export type ServiceHealth = {
   name:      string;
   status:    ServiceStatus;
-  latencyMs: number | null;   // null si le check n'a pas pu mesurer
-  message?:  string;          // détail d'erreur (non affiché en prod, pour debug)
+  latencyMs: number | null;   // null when the check could not measure it
+  message?:  string;          // error detail (debugging, not shown in production)
 };
 
 export type HealthReport = {
@@ -34,7 +30,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-// ── Vérification Supabase ─────────────────────────────────────────────────────
+// ── Supabase ──────────────────────────────────────────────────────────────────
 
 async function checkSupabase(): Promise<ServiceHealth> {
   const start = Date.now();
@@ -43,7 +39,7 @@ async function checkSupabase(): Promise<ServiceHealth> {
     const anon  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!url || !anon) throw new Error("Supabase env vars not set");
 
-    // Requête REST légère : 1 ligne de la table projects (toujours publique)
+    // Light REST query: one row of projects (always public)
     const res = await withTimeout(
       fetch(`${url}/rest/v1/projects?select=id&limit=1`, {
         headers: {
@@ -63,7 +59,7 @@ async function checkSupabase(): Promise<ServiceHealth> {
   }
 }
 
-// ── Vérification Upstash Redis ────────────────────────────────────────────────
+// ── Upstash Redis ─────────────────────────────────────────────────────────────
 
 async function checkRedis(): Promise<ServiceHealth> {
   const start = Date.now();
@@ -71,11 +67,11 @@ async function checkRedis(): Promise<ServiceHealth> {
     const url   = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
     if (!url || !token) {
-      // Non configuré → pas un outage, service optionnel
+      // Not configured: optional service, not an outage
       return { name: "Cache (Upstash Redis)", status: "operational", latencyMs: null, message: "Not configured — no-op mode" };
     }
 
-    // Commande PING via REST API Upstash
+    // PING through the Upstash REST API
     const res = await withTimeout(
       fetch(`${url}/ping`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -92,23 +88,22 @@ async function checkRedis(): Promise<ServiceHealth> {
   }
 }
 
-// ── Vérification formulaire de contact ───────────────────────────────────────
-// Le formulaire dépend de Supabase (messages) + Formhook.
-// On vérifie Formhook via un HEAD sur son endpoint (pas d'envoi de données).
+// ── Contact form ─────────────────────────────────────────────────────────────
+// Checks Formhook with a HEAD on its endpoint (no data sent).
 
 async function checkContactForm(): Promise<ServiceHealth> {
   const start = Date.now();
   try {
-    // Utilise FORMHOOK_ENDPOINT (même variable que app/api/contact/route.ts).
-    // Si non configuré → Supabase seul gère les messages, ce n'est pas une dégradation.
+    // FORMHOOK_ENDPOINT, as in app/api/contact/route.ts. Not configured is not
+    // a degradation.
     const endpoint = process.env.FORMHOOK_ENDPOINT;
     if (!endpoint) {
       return { name: "Contact form", status: "operational", latencyMs: null, message: "Formhook not configured" };
     }
 
-    // X-Auth-Token requis par Formhook pour les requêtes serveur-à-serveur (même
-    // sans lui un HEAD reste < 500, donc le check resterait "operational" — envoyé
-    // quand même pour vérifier l'accès réel, pas juste la joignabilité réseau.
+    // X-Auth-Token is required by Formhook for server-to-server requests. A
+    // HEAD without it is still < 500, but sending it checks real access, not
+    // just network reachability.
     const authToken = process.env.FORMHOOK_AUTH_TOKEN;
     const res = await withTimeout(
       fetch(endpoint, {
@@ -116,12 +111,12 @@ async function checkContactForm(): Promise<ServiceHealth> {
         cache: "no-store",
         headers: authToken ? { "X-Auth-Token": authToken } : undefined,
       }),
-      2000 // 2 s max — Formhook ne doit pas retarder le cron au-delà de 2 s
+      2000 // 2s max: Formhook must not delay the cron
     );
 
     const latencyMs = Date.now() - start;
-    // Tout code < 500 = Formhook est joignable (400 = HEAD non supporté, 405 = méthode refusée, etc.)
-    // Seul un 5xx ou un timeout indique une vraie indisponibilité du service.
+    // Any status < 500 means Formhook is reachable (400/405 for an unsupported
+    // HEAD…); only a 5xx or a timeout means it is down.
     const ok = res.status < 500;
     return {
       name: "Contact form",
@@ -134,12 +129,11 @@ async function checkContactForm(): Promise<ServiceHealth> {
   }
 }
 
-// ── Vérification intégrité du contenu ─────────────────────────────────────────
-// Backstop applicatif à la contrainte SQL `featured_published_requires_sections`
-// (migration prevent_empty_featured_published_sections) : un projet publié ET mis
-// en avant ne doit jamais avoir un corps (`sections`) vide, quelle que soit la
-// locale. La contrainte empêche la régression en base ; ce check la rend visible
-// ici plutôt que seulement au moment (rare) d'une tentative d'écriture invalide.
+// ── Content integrity ─────────────────────────────────────────────────────────
+// Application-level backstop for the SQL constraint
+// `featured_published_requires_sections`: a published, featured project must
+// never have empty `sections`, in any locale. The constraint prevents the
+// regression in the database; this check makes it visible.
 
 type ContentGap = { slug: string; locale: string };
 
@@ -181,15 +175,11 @@ async function checkContentIntegrity(): Promise<ServiceHealth> {
   }
 }
 
-// ── Intégrité du flag is_security ──────────────────────────────────────────────
-// Backstop applicatif pour un bug corrigé le 2026-08-12 : `is_security` n'était
-// round-tripé ni par scripts/export-projects-from-supabase.ts ni par
-// scripts/seed.ts — un reseed depuis content/projects.ts effaçait silencieusement
-// le flag sur les 49 projets d'un coup (régression totale, pas partielle).
-// On vérifie donc juste qu'au moins un projet publié porte encore is_security
-// = true, plutôt qu'un nombre figé (16 aujourd'hui) : le cluster Security a
-// vocation à grandir, un seuil exact se serait remis à sonner l'alarme au
-// premier nouveau projet ajouté sans être le signe d'une vraie régression.
+// ── is_security flag integrity ───────────────────────────────────────────────
+// A reseed that drops the flag would clear it on every project at once, so
+// this only checks that at least one published project still has
+// is_security = true (a fixed count would raise false alarms as the security
+// cluster grows).
 async function checkSecurityClusterIntegrity(): Promise<ServiceHealth> {
   const start = Date.now();
   try {
@@ -226,14 +216,14 @@ async function checkSecurityClusterIntegrity(): Promise<ServiceHealth> {
   }
 }
 
-// ── Services statiques (toujours opérationnels si le serveur répond) ──────────
+// ── Static services (operational whenever the server responds) ────────────────
 
 function checkWebsite(): ServiceHealth {
   return { name: "Website", status: "operational", latencyMs: 0 };
 }
 
 function checkBlog(): ServiceHealth {
-  // Le blog MDX est compilé au build — si le serveur répond, le blog est opérationnel
+  // MDX is compiled at build time: if the server responds, the blog works
   return { name: "Blog & MDX", status: "operational", latencyMs: 0 };
 }
 
@@ -241,7 +231,7 @@ function checkPwa(): ServiceHealth {
   return { name: "PWA / Service Worker", status: "operational", latencyMs: 0 };
 }
 
-// ── Agrégation ────────────────────────────────────────────────────────────────
+// ── Aggregation ───────────────────────────────────────────────────────────────
 
 function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
   if (services.some((s) => s.status === "outage"))   return "outage";
@@ -249,10 +239,10 @@ function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
   return "operational";
 }
 
-// ── Point d'entrée principal ──────────────────────────────────────────────────
+// ── Entry point ───────────────────────────────────────────────────────────────
 
 export async function runHealthChecks(): Promise<HealthReport> {
-  // Checks réseau en parallèle — les checks statiques sont instantanés
+  // Network checks in parallel; static checks are instant
   const [supabase, redis, contact, contentIntegrity, securityCluster] = await Promise.all([
     checkSupabase(),
     checkRedis(),
