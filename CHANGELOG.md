@@ -17,6 +17,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
+- **Invitations à témoigner durcies** (avant toute réactivation de la section) — Les liens restaient valables 30 jours et réutilisables, et la clé de session était commune à tous les visiteurs. Désormais : 14 jours au plus, usage unique (marqué dans Redis jusqu'à l'expiration, 410 en cas de réutilisation), clé de session liée à l'invitation, champs bornés et photo en `https:` uniquement (audit du 25/10/2026).
 - **Sécurité et hygiène (lot 4 de l'audit du 25/10/2026)** :
   - le proxy s'applique à tout chemin, même contenant un point (CSP et rate-limit de `/admin` étaient contournés), et `/admin/:path*` y est listé explicitement ;
   - le rate-limit de `/admin` ne compte plus que les échecs d'authentification (l'administratrice se verrouillait en quelques navigations) ;
@@ -33,6 +34,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Recherche du blog et ancres utilisables au clavier** — La recherche suit le motif combobox (↑/↓, Entrée, Échap, nombre de résultats annoncé). Après un saut d'ancre (barre, menu mobile, palette, URL avec `#section`), le focus est placé sur la section atteinte au lieu de rester dans l'en-tête (audit du 25/10/2026).
 - **Accessibilité et performance (lot 3 de l'audit du 25/10/2026)** :
   - la palette de commandes s'ouvre sans clavier (bouton sous 1 280 px et dès 1 850 px, entrée dans le menu mobile) et n'est chargée qu'à la première demande ; son action « langue » conserve la page courante ;
   - sous 1 280 px, le focus n'est plus placé sur le bouton du menu au chargement (il contournait le lien d'évitement) ;

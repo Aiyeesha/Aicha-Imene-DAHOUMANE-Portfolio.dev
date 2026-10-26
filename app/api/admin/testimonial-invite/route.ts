@@ -18,14 +18,15 @@
 //     -d '{"locale":"fr","days":7}'
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 import { adminRatelimit, safeLimit } from "@/lib/ratelimit";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { MAX_INVITE_DAYS, signInvite } from "@/lib/security/testimonialInvite";
 
 export const runtime = "nodejs";
 
-const MAX_DAYS = 30;
+// 14 jours au plus (30 avant l'audit du 2026-10-25), voir lib/security/testimonialInvite.ts.
+const MAX_DAYS = MAX_INVITE_DAYS;
 const DEFAULT_DAYS = 7;
 
 export async function POST(req: NextRequest) {
@@ -79,9 +80,7 @@ export async function POST(req: NextRequest) {
   const expUnix = Math.floor(Date.now() / 1000) + days * 86_400;
 
   // HMAC-SHA256(secret, "testimonial-invite:" + exp) — préfixe domain-separation
-  const invite = createHmac("sha256", secret)
-    .update(`testimonial-invite:${expUnix}`)
-    .digest("hex");
+  const invite = signInvite(secret, expUnix);
 
   // ── 6. Construction de l'URL d'invitation ──────────────────────────────────
   const siteUrl = getSiteUrl();

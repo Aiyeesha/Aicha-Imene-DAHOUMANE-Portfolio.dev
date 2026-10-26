@@ -112,4 +112,19 @@ test.describe("Blog", () => {
     });
     await expect(links.first()).toBeVisible();
   });
+
+  // Audit 2026-10-25 : la recherche suit le motif combobox (WAI-ARIA 1.2).
+  test("la recherche se pilote au clavier (↓, Entrée, Échap)", async ({ page }) => {
+    await page.goto("/en/blog");
+    const input = page.getByRole("combobox");
+    await input.fill("apex");
+    await expect(input).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("ArrowDown");
+    await expect(page.locator('[role="option"][aria-selected="true"]')).toHaveCount(1);
+    await page.keyboard.press("Escape");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/en\/blog\/.+/);
+  });
 });

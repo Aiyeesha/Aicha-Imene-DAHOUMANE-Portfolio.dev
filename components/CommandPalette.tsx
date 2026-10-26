@@ -23,6 +23,7 @@ import { useTrack } from "@/app/[locale]/providers";
 import { LINKEDIN_URL } from "@/lib/social";
 import usePlatformShortcut from "@/lib/usePlatformShortcut";
 import { OPEN_COMMAND_PALETTE_EVENT } from "@/lib/commandPaletteEvents";
+import { scrollToSection } from "@/lib/anchorScroll";
 
 // ── Styles injectés une seule fois via <style> ────────────────────────────────
 // L'overlay et le panel sont stylés ici car cmdk accepte seulement des classNames.
@@ -157,7 +158,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
   const scrollTo = (id: string) => {
     if (onHome) {
-      run(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }));
+      run(() => scrollToSection(id));
     } else {
       run(() => router.push(`/${locale}/#${id}`));
     }
