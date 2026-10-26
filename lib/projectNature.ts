@@ -1,41 +1,36 @@
 // lib/projectNature.ts
 // ---------------------
-// Nature et période de chaque projet, affichées dans un bandeau en tête de la
-// page projet et sur les cartes (audit de contenu du 2026-09-25, lot 3).
+// Nature and period of each project, shown in a banner on project pages and
+// on cards, so real work, training and reconstructions are clearly told
+// apart. Each project declares its nature in content/projects.ts; this module
+// provides the label, period and explanatory note in the three languages.
 //
-// Pourquoi : la frontière entre travail réel, formation et reconstitution
-// était floue (projets de formation décrits « en production », stage Midrange
-// jamais nommé comme tel, projets non datés). Chaque projet déclare donc sa
-// nature dans content/projects.ts, et ce module fournit le libellé, la période
-// et la note explicative à afficher, dans les trois langues.
-//
-// Règle : une période n'est affichée que si elle est connue et vérifiable
-// (dates de formation et de stage publiées sur /certifications et /about).
-// Aucune date n'est inventée : un projet sans période connue n'affiche que sa
-// nature, jusqu'à ce que sa date soit renseignée dans content/projects.ts.
+// A period is only shown when known and verifiable (training and internship
+// dates published on /certifications and /about). No date is invented: a
+// project without a known period only shows its nature.
 
 export type ProjectNature =
-  | "rncp_capstone"   // projet fil rouge du titre RNCP 6 (Legarant-AXG uniquement)
-  | "rncp"            // autres projets du titre RNCP 6 (OpenClassrooms, alternance)
-  | "openclassrooms"  // autres projets de formation OpenClassrooms
-  | "greta_tai"       // exercices de la formation TAI (Greta du Val d'Oise)
-  | "greta_tssr"      // exercices de la formation TSSR (Greta du Val d'Oise)
-  | "internship"      // stage chez MIDRANGE GROUP
-  | "personal"        // projet personnel
-  | "reconstructed";  // étude de cas reconstituée (scénario fictif)
+  | "rncp_capstone"   // RNCP 6 capstone project (Legarant-AXG only)
+  | "rncp"            // other RNCP 6 projects (OpenClassrooms, work-study)
+  | "openclassrooms"  // other OpenClassrooms training projects
+  | "greta_tai"       // TAI programme exercises (Greta du Val d'Oise)
+  | "greta_tssr"      // TSSR programme exercises (Greta du Val d'Oise)
+  | "internship"      // MIDRANGE GROUP internships
+  | "personal"        // personal project
+  | "reconstructed";  // reconstructed case study (fictional scenario)
 
 type Locale = "fr" | "en" | "es";
 type Localized = Record<Locale, string>;
 
-/** Période localisée propre à un projet (surcharge la période par défaut). */
+/** Project-specific localised period (overrides the nature's default). */
 export type ProjectPeriod = Localized;
 
 type NatureInfo = {
-  /** Libellé long affiché dans le bandeau. */
+  /** Long label shown in the banner. */
   label: Localized;
-  /** Période par défaut de la nature (formation, stage), si elle est connue. */
+  /** Default period of the nature (training, internship), when known. */
   period?: Localized;
-  /** Phrase qui explique le cadre du projet. */
+  /** Sentence explaining the project's setting. */
   note: Localized;
 };
 
@@ -149,9 +144,9 @@ export type ResolvedNature = {
 };
 
 /**
- * Résout le libellé, la période et la note d'un projet pour une locale.
- * La période propre au projet (content/projects.ts) prime sur celle de la
- * nature ; sans l'une ni l'autre, `period` vaut null (rien n'est inventé).
+ * Label, period and note of a project for a locale. The project's own period
+ * (content/projects.ts) wins over the nature's; with neither, `period` is
+ * null (nothing is invented).
  */
 export function resolveNature(
   nature: ProjectNature | null | undefined,

@@ -1,13 +1,9 @@
 // content/projectHighlights.ts
 // ------------------------------
-// Traductions FR et ES des puces (« highlights ») des cartes projet.
-//
-// Les puces de content/projects.ts sont rédigées en anglais ; jusqu'à l'audit
-// de contenu du 2026-09-25, elles s'affichaient telles quelles sur les pages
-// FR et ES de /projects. Ce fichier fournit leur traduction, dans le même
-// ordre et en même nombre que la version anglaise (vérifié par
-// __tests__/projectHighlights.test.ts). Un projet absent de ce fichier, ou
-// une locale manquante, retombe sur les puces anglaises.
+// FR and ES translations of the project card highlights. content/projects.ts
+// has them in English; this file provides the translations in the same order
+// and number (checked by __tests__/projectHighlights.test.ts). A project
+// missing here, or a missing locale, falls back to English.
 
 export type LocalizedHighlights = { fr: string[]; es: string[] };
 

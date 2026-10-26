@@ -1,30 +1,24 @@
 // content/services.ts
 // --------------------
-// Cartes de la section « Ce que j'apporte à une équipe » de l'accueil
-// (ex-section « Services »), une liste par locale et par track.
-//
-// Réécrites à l'audit de contenu du 2026-09-25 (lot 3, option a) : les cartes
-// étaient rédigées comme une offre de prestation adressée à un client
-// (« En 3 à 5 jours, je pose le diagnostic… », « pas les ressources en
-// interne ? Je prends en charge… », livrable, durée typique). Elles décrivent
-// désormais ce que j'apporte à une équipe qui me recrute, où je l'ai
-// réellement pratiqué (poste, stage, formation, projets personnels — sans
-// sur-déclaration) et où en trouver la preuve dans le portfolio.
+// Cards of the home page "What I bring to a team" section, one list per
+// locale and track. They describe what I bring to a hiring team, where I
+// actually practised it (job, internship, training, personal projects, no
+// overstatement) and where to find the evidence in the portfolio.
 
 export type Locale = "en" | "fr" | "es";
 export type Track = "salesforce" | "itops";
 
 export type ServiceCard = {
-  /** Domaine de compétence, formulé du point de vue de l'équipe qui recrute. */
+  /** Skill area, from the hiring team's point of view. */
   title: string;
-  /** Ce que j'apporte, en une ou deux phrases. */
+  /** What I bring, in one or two sentences. */
   pitch: string;
-  /** Détail technique court. */
+  /** Short technical detail. */
   description: string;
   bullets: string[];
-  /** Où je l'ai pratiqué : poste, stage, formation ou projets personnels. */
+  /** Where I practised it: job, internship, training or personal projects. */
   experience: string;
-  /** Où le vérifier dans le portfolio (études de cas, pages du site). */
+  /** Where to check it in the portfolio (case studies, site pages). */
   proof: string;
 };
 

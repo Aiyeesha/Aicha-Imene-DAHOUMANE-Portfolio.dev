@@ -61,7 +61,7 @@ export type ProjectWithAssets = {
   updated_at?: string | null;
   /** Always empty — retained so existing consumers keep type-checking. */
   project_assets: ProjectAsset[];
-  /** Nature (formation, stage, personnel, reconstitué), période et note, déjà localisées. */
+  /** Nature (training, internship, personal, reconstructed), period and note, already localised. */
   nature?: ResolvedNature | null;
 };
 
@@ -106,7 +106,7 @@ function merge(card: Project, requested: ProjectLocale): ProjectWithAssets {
     badge: card.badge
       ? { label: card.badge.label, tone: (card.badge.tone ?? "personal") as ProjectBadge["tone"] }
       : null,
-    // Puces traduites (content/projectHighlights.ts) ; repli sur l'anglais.
+    // Translated highlights (content/projectHighlights.ts), English fallback.
     highlights:
       (requested !== "en" ? PROJECT_HIGHLIGHTS[card.slug]?.[requested] : undefined) ??
       card.highlights ??

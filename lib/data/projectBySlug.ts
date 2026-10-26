@@ -1,7 +1,6 @@
 // lib/data/projectBySlug.ts
 // -------------------------
 // Single-project accessor, backed by file content (see lib/data/projectsSource.ts).
-// Supabase read path removed in the de-Supabase refactor.
 //
 // The types below are re-exported from projectsSource so existing imports
 // (`import type { ProjectWithAssets } from "@/lib/data/projectBySlug"`) keep

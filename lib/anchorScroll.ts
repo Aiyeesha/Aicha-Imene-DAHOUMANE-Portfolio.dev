@@ -1,23 +1,18 @@
 // lib/anchorScroll.ts
 // -------------------
-// Défilement fiable vers une ancre (#contact, #projects…) de l'accueil lors
-// d'une navigation depuis une autre page ou d'un accès direct.
+// Reliable scrolling to a home page anchor (#contact, #projects…) after a
+// navigation from another page or a direct visit. Sections above the target
+// mount late (TrackAwareServices with ssr: false, FeaturedProjects,
+// LatestPosts…) and push it down by thousands of pixels, so a single scroll
+// lands in the wrong section.
 //
-// Pourquoi (audit 2026-10-25, constat 3) : le défilement était lancé dès que
-// l'élément existait, en `behavior: "smooth"`, alors que plusieurs sections
-// au-dessus (TrackAwareServices en ssr:false, FeaturedProjects, LatestPosts,
-// GlobalMetrics…) se montaient ensuite et repoussaient la cible de 1 500 à
-// 4 000 px. On atterrissait dans la section Projets, puis useHashSync
-// réécrivait le hash en #projects.
-//
-// Principe :
-// 1. saut immédiat (`instant`, pas `auto` : html a `scroll-behavior: smooth`,
-//    que `auto` respecterait) ;
-// 2. tant que la hauteur du document change, on se recale sur la cible ;
-// 3. on s'arrête quand la mise en page est stable (SETTLE_MS sans changement),
-//    après MAX_MS, ou dès que l'utilisateur fait défiler lui-même ;
-// 4. pendant toute la durée, isAnchorScrollActive() renvoie true pour que
-//    useHashSync ne réécrive pas le hash avec une section traversée.
+// 1. Jump immediately (`instant`, not `auto`: html has scroll-behavior:
+//    smooth, which `auto` would honour).
+// 2. Re-snap to the target while the document height keeps changing.
+// 3. Stop once the layout is stable (SETTLE_MS without change), after MAX_MS,
+//    or as soon as the user scrolls.
+// 4. Meanwhile isAnchorScrollActive() returns true, so useHashSync does not
+//    overwrite the hash with a section scrolled past.
 
 const SETTLE_MS = 600;
 const MAX_MS = 4000;
@@ -26,18 +21,17 @@ let activeId: string | null = null;
 let stopActive: (() => void) | null = null;
 
 /**
- * Place le focus sur la section atteinte (audit 2026-10-25, Accessibilité) :
- * sans cela, un utilisateur clavier restait dans l'en-tête après avoir suivi
- * une ancre, et la tabulation suivante repartait du haut de la page.
- * tabindex="-1" rend la section focalisable par script sans l'ajouter à
- * l'ordre de tabulation ; preventScroll évite de contrarier le défilement.
+ * Moves focus to the reached section, so keyboard users continue from there
+ * instead of from the header. tabindex="-1" makes the section focusable by
+ * script without adding it to the tab order; preventScroll avoids fighting
+ * the scroll.
  */
 export function focusSection(el: HTMLElement): void {
   if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
   el.focus({ preventScroll: true });
 }
 
-/** Défilement doux vers une section de la page courante, focus compris. */
+/** Smooth scroll to a section of the current page, moving focus too. */
 export function scrollToSection(id: string): void {
   const el = document.getElementById(id);
   if (!el) return;
@@ -45,15 +39,15 @@ export function scrollToSection(id: string): void {
   focusSection(el);
 }
 
-/** Vrai pendant un recalage programmatique vers une ancre. */
+/** True while snapping to an anchor programmatically. */
 export function isAnchorScrollActive(): boolean {
   return activeId !== null;
 }
 
 /**
- * Fait défiler jusqu'à l'élément `id` et l'y maintient jusqu'à stabilisation
- * de la mise en page. Renvoie une fonction d'annulation (pour un useEffect).
- * Un second appel pour la même ancre pendant un recalage en cours est ignoré.
+ * Scrolls to element `id` and keeps it there until the layout settles.
+ * Returns a cancel function (for a useEffect). A second call for the same
+ * anchor while one is running is ignored.
  */
 export function scrollToAnchorWhenStable(id: string): () => void {
   if (typeof window === "undefined" || !id) return () => {};
@@ -64,7 +58,7 @@ export function scrollToAnchorWhenStable(id: string): () => void {
 
   const snap = () => {
     const el = document.getElementById(id);
-    // scroll-padding-top (globals.css) compense déjà la barre fixe.
+    // scroll-padding-top (globals.css) already offsets the fixed navbar.
     el?.scrollIntoView({ behavior: "instant", block: "start" });
   };
 
@@ -72,7 +66,7 @@ export function scrollToAnchorWhenStable(id: string): () => void {
   const armSettle = () => {
     clearTimeout(settleTimer);
     settleTimer = setTimeout(() => {
-      // Ne conclure que si la cible existe : sinon on attend MAX_MS.
+      // Only settle once the target exists; otherwise wait for MAX_MS.
       const target = document.getElementById(id);
       if (target) {
         stop();
@@ -81,14 +75,14 @@ export function scrollToAnchorWhenStable(id: string): () => void {
     }, SETTLE_MS);
   };
 
-  // Toute variation de hauteur (section montée, image chargée…) déclenche un
-  // recalage ; ResizeObserver couvre aussi l'apparition tardive de la cible.
+  // Any height change (section mounted, image loaded…) triggers a re-snap;
+  // ResizeObserver also catches the target appearing late.
   const ro = typeof ResizeObserver !== "undefined"
     ? new ResizeObserver(() => { snap(); armSettle(); })
     : null;
   ro?.observe(document.body);
 
-  // L'utilisateur reprend la main : on cesse immédiatement de le contrarier.
+  // The user takes over: stop immediately.
   const userEvents = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
   const onUser = () => stop();
   userEvents.forEach((type) => window.addEventListener(type, onUser, { passive: true, once: true }));
