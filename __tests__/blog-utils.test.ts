@@ -1,5 +1,5 @@
 // __tests__/blog-utils.test.ts
-// Fonctions utilitaires du blog — tests unitaires (fonctions pures, aucun mock).
+// Blog utility functions: unit tests (pure functions, no mocks).
 
 import { formatDate, detectTrack, getTopTags } from "@/lib/blog-utils";
 
@@ -8,7 +8,7 @@ import { formatDate, detectTrack, getTopTags } from "@/lib/blog-utils";
 describe("formatDate", () => {
   it("formate une date en anglais", () => {
     const result = formatDate("2024-03-15", "en");
-    // Intl.DateTimeFormat peut varier selon le runtime — on vérifie les éléments essentiels
+    // Intl.DateTimeFormat output can vary by runtime: check the essentials
     expect(result).toMatch(/March/i);
     expect(result).toMatch(/2024/);
     expect(result).toMatch(/15/);
@@ -90,7 +90,7 @@ describe("getTopTags", () => {
 
   it("ne dépasse pas le nombre de tags disponibles", () => {
     const top = getTopTags(posts, 100);
-    // 6 tags uniques au total
+    // 6 unique tags in total
     expect(top.length).toBeLessThanOrEqual(6);
   });
 });

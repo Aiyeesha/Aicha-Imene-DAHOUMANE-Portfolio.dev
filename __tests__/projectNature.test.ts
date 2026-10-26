@@ -1,7 +1,6 @@
 // __tests__/projectNature.test.ts
-// Bandeau « nature du projet » (audit de contenu 2026-09-25, lot 3) :
-// chaque projet déclare sa nature, le « fil rouge » est réservé à
-// Legarant-AXG et aucune période n'est inventée.
+// "Project nature" banner: every project declares its nature, "capstone" is
+// reserved for Legarant-AXG and no period is invented.
 
 import { projects } from "@/content/projects";
 import { resolveNature } from "@/lib/projectNature";

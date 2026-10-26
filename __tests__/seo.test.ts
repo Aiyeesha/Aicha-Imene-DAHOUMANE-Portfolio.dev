@@ -1,7 +1,6 @@
 // __tests__/seo.test.ts
 // ---------------------
-// Gabarit des titres et borne des meta descriptions (lib/seo.ts) —
-// audit 2026-10-23 (SEO-1, SEO-2).
+// Title template and meta description cap (lib/seo.ts).
 
 import { clampDescription, pageTitle, TITLE_SUFFIX } from "@/lib/seo";
 
@@ -27,7 +26,7 @@ describe("clampDescription", () => {
     expect([...out].length).toBeLessThanOrEqual(160);
     expect(out.endsWith("…")).toBe(true);
     expect(out).not.toMatch(/[\s,;:.]…$/);
-    // Le dernier mot conservé est entier.
+    // The last kept word is whole.
     expect(text.startsWith(out.slice(0, -1))).toBe(true);
     expect(text.charAt(out.length - 1)).toMatch(/[\s,]/);
   });

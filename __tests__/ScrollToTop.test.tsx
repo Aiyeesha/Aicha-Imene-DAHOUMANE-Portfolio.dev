@@ -1,5 +1,5 @@
 // __tests__/ScrollToTop.test.tsx
-// Composant ScrollToTop — apparition/disparition selon la position de scroll.
+// ScrollToTop: shows and hides with the scroll position.
 
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -11,7 +11,7 @@ const renderWithProviders = (ui: React.ReactElement) =>
 
 // ── Setup window mocks ────────────────────────────────────────────────────────
 
-// matchMedia n'existe pas dans jsdom (requis par next-themes)
+// matchMedia does not exist in jsdom (needed by next-themes)
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
@@ -26,11 +26,11 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
-// scrollTo n'est pas implémenté dans jsdom — on le mocke
+// scrollTo is not implemented in jsdom: mock it
 const mockScrollTo = jest.fn();
 Object.defineProperty(window, "scrollTo", { value: mockScrollTo, writable: true });
 
-// Helper : simuler un scroll à une position donnée
+// Helper: simulate scrolling to a position
 function simulateScroll(y: number) {
   Object.defineProperty(window, "scrollY", { value: y, writable: true, configurable: true });
   window.dispatchEvent(new Event("scroll"));
@@ -41,7 +41,7 @@ function simulateScroll(y: number) {
 describe("ScrollToTop", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Réinitialiser scrollY à 0 avant chaque test
+    // Reset scrollY to 0 before each test
     Object.defineProperty(window, "scrollY", { value: 0, writable: true, configurable: true });
   });
 
@@ -53,7 +53,7 @@ describe("ScrollToTop", () => {
   it("le bouton est initialement invisible (opacity-0) avant 300px de scroll", () => {
     renderWithProviders(<ScrollToTop />);
     const btn = screen.getByRole("button");
-    // La classe CSS opacity-0 est appliquée quand visible=false
+    // opacity-0 is applied when visible=false
     expect(btn.className).toContain("opacity-0");
   });
 

@@ -1,12 +1,12 @@
 // scripts/redact-screenshots.mjs
 // --------------------------------
-// Détecte par OCR les zones sensibles (IP, emails, noms de domaine, URLs d'org,
-// numéros de téléphone, identifiants Salesforce) dans les screenshots du portfolio
-// et les floute avec sharp.
+// Finds sensitive areas with OCR (IPs, emails, domain names, org URLs, phone
+// numbers, Salesforce ids) in the portfolio screenshots and blurs them with
+// sharp.
 //
-// Usage : node scripts/redact-screenshots.mjs [--dry-run] [--folder <nom>]
-//   --dry-run   : affiche ce qui serait flouté sans modifier les fichiers
-//   --folder    : traite uniquement un sous-dossier spécifique
+// Usage: node scripts/redact-screenshots.mjs [--dry-run] [--folder <name>]
+//   --dry-run : show what would be blurred without changing files
+//   --folder  : only process one sub-folder
 
 import { createWorker } from "tesseract.js";
 import sharp from "sharp";
@@ -22,35 +22,35 @@ const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
 const folderIdx = args.indexOf("--folder");
 const ONLY_FOLDER = folderIdx !== -1 ? args[folderIdx + 1] : null;
-// --start-from permet de reprendre à partir d'un index donné (reprise après interruption)
+// --start-from resumes from a given index (after an interruption)
 const startFromIdx = args.indexOf("--start-from");
 const START_FROM = startFromIdx !== -1 ? parseInt(args[startFromIdx + 1], 10) : 0;
 
-// ── Patterns sensibles ────────────────────────────────────────────────────────
-// Volontairement ciblés pour éviter les faux positifs sur le code source
-// (noms de classes Apex, méthodes Java, etc.)
+// ── Sensitive patterns ────────────────────────────────────────────────────────
+// Deliberately narrow to avoid false positives on source code (Apex class
+// names, Java methods…).
 const SENSITIVE_PATTERNS = [
-  // Adresses IP (IPv4) — ex: 192.168.1.1
+  // IPv4 addresses, e.g. 192.168.1.1
   /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
-  // Adresses email
+  // Email addresses
   /\b[a-zA-Z0-9._%+\-]{2,}@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}\b/,
-  // URLs complètes avec schéma http(s)
+  // Full URLs with an http(s) scheme
   /https?:\/\/[a-zA-Z0-9.\-/?=#&%_+]+/,
-  // Domaines Salesforce spécifiques (org URL, lightning, etc.)
+  // Salesforce-specific domains (org URL, lightning…)
   /[a-zA-Z0-9\-]+\.(my\.salesforce|salesforce|lightning\.force|visual\.force)\.com/,
-  // Numéros de téléphone FR format international : +33XXXXXXXXX ou 06/07 XX XX XX
+  // French phone numbers: +33XXXXXXXXX or 06/07 XX XX XX
   /(?:\+33|0033)[\s.\-]?[1-9](?:[\s.\-]?\d{2}){4}/,
   /\b0[67]\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\b/,
-  // Suites de chiffres ressemblant à un numéro de téléphone (8+ chiffres consécutifs)
+  // Digit runs that look like a phone number (8+ consecutive digits)
   /\b\+?33\d{9,10}\b/,
   /\b\d{8,15}\b/,
-  // IDs Salesforce (commencent par 00, 15-18 chars alphanumériques)
+  // Salesforce ids (start with 00, 15-18 alphanumeric characters)
   /\b00[A-Za-z0-9]{13,16}\b/,
-  // Noms de domaine réels (avec TLD connu) — exclut les .cls, .new, .old qui sont du code
+  // Real domain names (known TLD); excludes .cls, .new, .old, which are code
   /\b[a-zA-Z0-9\-]{3,}\.(com|fr|net|org|io|co\.uk|eu|info|biz)\b/,
 ];
 
-// ── Collecte des images ───────────────────────────────────────────────────────
+// ── Collect images ────────────────────────────────────────────────────────────
 function collectImages(dir) {
   const images = [];
   const EXTS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
@@ -68,19 +68,19 @@ function collectImages(dir) {
   return images;
 }
 
-// ── Vérifie si un mot OCR est sensible ───────────────────────────────────────
+// ── Is an OCR word sensitive? ────────────────────────────────────────────────
 function isSensitive(text) {
   return SENSITIVE_PATTERNS.some((p) => p.test(text));
 }
 
-// ── Floutage d'une région (x, y, w, h) dans une image sharp ──────────────────
-// Stratégie : extraire la région, la flouter fortement, la réinsérer.
+// ── Blur a region (x, y, w, h) of a sharp image ──────────────────────────────
+// Extract the region, blur it heavily, composite it back.
 async function blurRegion(image, { left, top, width, height }) {
-  if (width < 4 || height < 4) return image; // trop petit, ignorer
+  if (width < 4 || height < 4) return image; // too small, skip
 
   const blurred = await sharp(await image.toBuffer())
     .extract({ left, top, width, height })
-    .blur(12) // sigma 12 — flou visible mais pas trop destructeur
+    .blur(12) // sigma 12: clearly blurred without being too destructive
     .toBuffer();
 
   return sharp(await image.toBuffer()).composite([
@@ -88,11 +88,11 @@ async function blurRegion(image, { left, top, width, height }) {
   ]);
 }
 
-// ── Parse le HOCR pour extraire les mots avec bbox ───────────────────────────
+// ── Parse HOCR into words with bounding boxes ────────────────────────────────
 // HOCR word : <span class='ocrx_word' title='bbox x0 y0 x1 y1; x_wconf N'>text</span>
 function parseHocrWords(hocr) {
   const words = [];
-  // Regex pour chaque span de mot OCR
+  // Regex for each OCR word span
   const re = /class='ocrx_word'[^>]*title='bbox (\d+) (\d+) (\d+) (\d+)[^']*x_wconf (\d+)'[^>]*>([^<]+)</g;
   let m;
   while ((m = re.exec(hocr)) !== null) {
@@ -108,23 +108,23 @@ function parseHocrWords(hocr) {
   return words;
 }
 
-// ── Traitement d'une image ────────────────────────────────────────────────────
+// ── Process one image ─────────────────────────────────────────────────────────
 async function processImage(filePath, worker) {
-  // Lire en buffer pour ne pas laisser tesseract garder le fichier ouvert
+  // Read into a buffer so tesseract does not keep the file open
   const fileBuffer = readFileSync(filePath);
   const result = await worker.recognize(fileBuffer, {}, { hocr: true });
   const hocr = result.data?.hocr ?? "";
 
   const allWords = parseHocrWords(hocr);
 
-  // Regrouper les mots sensibles en "blocs" adjacents pour éviter trop de micro-zones
+  // Group adjacent sensitive words into blocks to avoid many tiny areas
   const sensitiveWords = allWords.filter(
     (w) => w.confidence > 30 && isSensitive(w.text)
   );
 
   if (sensitiveWords.length === 0) return { path: filePath, redacted: 0 };
 
-  // Fusionner les mots proches sur la même ligne (même bbox y ± 5px)
+  // Merge nearby words on the same line (same bbox y ± 5px)
   const regions = mergeNearbyWords(sensitiveWords);
 
   if (DRY_RUN) {
@@ -135,12 +135,12 @@ async function processImage(filePath, worker) {
     return { path: filePath, redacted: regions.length };
   }
 
-  // Appliquer le floutage séquentiellement (depuis le buffer déjà chargé)
+  // Apply the blurs one after another (from the loaded buffer)
   let img = sharp(fileBuffer);
   const meta = await img.metadata();
 
   for (const region of regions) {
-    // Sécuriser les bornes pour ne pas dépasser l'image
+    // Clamp to the image bounds
     const left   = Math.max(0, region.left - 2);
     const top    = Math.max(0, region.top - 2);
     const width  = Math.min(region.width + 4, meta.width - left);
@@ -150,7 +150,7 @@ async function processImage(filePath, worker) {
     }
   }
 
-  // Écrire directement dans le fichier (tesseract n'a plus de handle dessus car on a lu en buffer)
+  // Write the file directly (tesseract has no handle on it, as it was read into a buffer)
   const ext = extname(filePath).toLowerCase();
   const buf = ext === ".webp"
     ? await img.webp({ quality: 88 }).toBuffer()
@@ -161,7 +161,7 @@ async function processImage(filePath, worker) {
   return { path: filePath, redacted: regions.length };
 }
 
-// ── Fusionne les mots proches sur la même ligne ───────────────────────────────
+// ── Merge nearby words on the same line ───────────────────────────────────────
 function mergeNearbyWords(words) {
   if (words.length === 0) return [];
   const sorted = [...words].sort((a, b) => a.bbox.y0 - b.bbox.y0 || a.bbox.x0 - b.bbox.x0);
@@ -174,7 +174,7 @@ function mergeNearbyWords(words) {
       width: w.bbox.x1 - w.bbox.x0,
       height: w.bbox.y1 - w.bbox.y0,
     };
-    // Cherche un groupe existant proche (même ligne ± 8px, adjacent en x ± 80px)
+    // Look for a nearby group (same line ± 8px, adjacent in x ± 80px)
     const existing = merged.find(
       (m) =>
         Math.abs(m.top - r.top) < 8 &&
@@ -204,7 +204,7 @@ async function main() {
   if (DRY_RUN) console.log("   Mode DRY RUN — aucune modification\n");
 
   const worker = await createWorker("eng+fra", 1, {
-    logger: () => {}, // silencieux
+    logger: () => {}, // silent
   });
 
   let totalRedacted = 0;
@@ -238,7 +238,7 @@ async function main() {
     errors.forEach((e) => console.log(`  - ${basename(e.file)}: ${e.error}`));
   }
 
-  // Indique l'index de reprise en cas de besoin
+  // Show the resume index if needed
   console.log(`\n💡 Pour reprendre à partir du prochain lot : --start-from ${START_FROM + processed}`);
 }
 

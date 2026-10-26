@@ -1,16 +1,12 @@
 /**
  * Pre-publish safety check for `public.projects`.
  *
- * Origin: portfolio audit, 2026-08-13. Two real risks were found by querying
- * Supabase directly (not hypothetical):
- *   1. 9 draft projects (4 itops + 5 salesforce) existed in en/fr with zero
- *      matching es row — if published as-is, the ES site would silently
- *      diverge from EN/FR (missing card, or a wrong total on /projects).
- *   2. Two of those drafts (orgdocs-saas, sfrelease-saas) are this author's
- *      own SaaS products, which must never go `live_url`/`published` before
- *      2027 regardless of who flips the status — a career-strategy
- *      constraint, not a code bug, so nothing in the schema enforces it on
- *      its own.
+ * Two risks:
+ *   1. a project published in en/fr without a matching es row would make the
+ *      ES site silently diverge (missing card, wrong total on /projects);
+ *   2. the author's own SaaS products (orgdocs-saas, sfrelease-saas) must
+ *      never be `published` or have a `live_url` before 2027, whoever flips
+ *      the status; the schema does not enforce this.
  *
  * This script re-checks both conditions against the live table. Read-only —
  * it never mutates `public.projects`. Run it before flipping any project's

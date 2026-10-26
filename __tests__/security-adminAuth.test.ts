@@ -2,21 +2,20 @@
  * @jest-environment node
  */
 // __tests__/security-adminAuth.test.ts
-// Tests unitaires — lib/security/adminAuth.ts (audit 2026-10-23, P3).
-// Env node : crypto.subtle (comparaison à temps constant) et atob natifs.
+// Unit tests: lib/security/adminAuth.ts.
+// Node environment: native crypto.subtle (constant-time comparison) and atob.
 
-// `server-only` est fourni par Next.js (alias de build), pas par node_modules :
-// module virtuel neutre pour Jest.
+// `server-only` comes from Next.js (build alias), not node_modules: a neutral
+// virtual module for Jest.
 jest.mock("server-only", () => ({}), { virtual: true });
 
-// En-tête Authorization de la « requête courante », modifiable par test.
+// Authorization header of the "current request", set per test.
 let mockAuthHeader: string | null = null;
 jest.mock("next/headers", () => ({
   headers: async () => new Headers(mockAuthHeader ? { authorization: mockAuthHeader } : {}),
 }));
 
-// notFound() de Next.js lève une erreur spéciale : on la simule pour pouvoir
-// vérifier qu'elle est bien appelée.
+// Next.js notFound() throws a special error: mocked to check it is called.
 const mockNotFound = jest.fn(() => {
   throw new Error("NEXT_NOT_FOUND");
 });
@@ -70,8 +69,7 @@ describe("adminAuth", () => {
     it("refuse tout si l'admin n'est pas configuré (fail-closed)", async () => {
       delete process.env.ADMIN_USERNAME;
       delete process.env.ADMIN_PASSWORD;
-      // Même des identifiants vides ne doivent pas « correspondre » à une
-      // configuration vide.
+      // Even empty credentials must not "match" an empty configuration.
       await expect(isAdminAuthorizationValid(basic("", ""))).resolves.toBe(false);
     });
   });

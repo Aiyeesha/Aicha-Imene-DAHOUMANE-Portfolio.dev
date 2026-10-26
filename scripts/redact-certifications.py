@@ -1,36 +1,34 @@
 #!/usr/bin/env python3
 # scripts/redact-certifications.py
 # --------------------------------
-# Produit les versions publiables des diplômes (public/certifications/) en
-# floutant de façon irréversible les données personnelles : date et lieu de
-# naissance, numéros de titre et identifiants de diplôme, QR code, signatures,
-# adresse e-mail (Linguaskill).
+# Produces the publishable versions of the diplomas (public/certifications/)
+# by irreversibly blurring personal data: date and place of birth, title
+# numbers and diploma ids, QR code, signatures, email address (Linguaskill).
 #
-# Chaque zone est d'abord réduite à quelques pixels (l'information est
-# détruite), puis agrandie et adoucie : l'effet est un flou, mais aucun
-# caractère n'est récupérable — contrairement à un simple flou gaussien.
+# Each area is first shrunk to a few pixels (the information is destroyed),
+# then enlarged and smoothed: it looks blurred, but unlike a plain Gaussian
+# blur no character can be recovered.
 #
-# Les ORIGINAUX ne doivent jamais être versionnés : les garder hors du dépôt.
+# The ORIGINALS must never be committed: keep them outside the repository.
 #
-# Usage :
+# Usage:
 #   pip install pypdfium2 pillow
-#   python3 scripts/redact-certifications.py <dossier-des-originaux> public/certifications
+#   python3 scripts/redact-certifications.py <originals-folder> public/certifications
 #
-# Le dossier des originaux doit contenir :
+# The originals folder must contain:
 #   tssr-greta-diploma.pdf, tai-greta-diploma.pdf, openclassrooms-dcl-diploma.pdf,
 #   Certification_LINGUASKILL_Page_1.png
-# Sorties : <nom>.png / .webp / .pdf (PDF image seule, sans couche texte),
-#   Certification_LINGUASKILL_Page_1.png / .webp, et les vignettes *-badge.png
-#   affichées sur la page Certifications.
+# Outputs: <name>.png / .webp / .pdf (image-only PDF, no text layer),
+#   Certification_LINGUASKILL_Page_1.png / .webp, and the *-badge.png
+#   thumbnails shown on the Certifications page.
 #
-# Les zones sont exprimées en pixels sur un rendu de référence (ref), puis
-# converties en fractions : elles restent valables quelle que soit la
-# résolution du rendu.
+# Areas are given in pixels on a reference render (ref), then converted to
+# fractions, so they hold at any render resolution.
 import sys, pypdfium2 as pdfium
 from PIL import Image, ImageFilter
 
-CERT = sys.argv[1]   # dossier des originaux
-OUT  = sys.argv[2]   # dossier de sortie (public/certifications)
+CERT = sys.argv[1]   # originals folder
+OUT  = sys.argv[2]   # output folder (public/certifications)
 
 def blur(im, box_frac):
     W, H = im.size
@@ -46,21 +44,21 @@ def frac(box, size):
     W, H = size
     return (box[0]/W, box[1]/H, box[2]/W, box[3]/H)
 
-# Zones mesurées sur les rendus de relecture (pixels) → fractions
+# Areas measured on the review renders (pixels) → fractions
 DOCS = {
   "tssr-greta-diploma": dict(src="pdf", page=0, ref=(735, 511), boxes=[
-      (222, 158, 441, 181),   # date et lieu de naissance
-      (16, 394, 92, 416),     # numéro du titre
+      (222, 158, 441, 181),   # date and place of birth
+      (16, 394, 92, 416),     # title number
       (0, 482, 30, 511),      # QR code
       (648, 392, 700, 434),   # signature
   ]),
   "tai-greta-diploma": dict(src="pdf", page=0, ref=(735, 561), boxes=[
-      (313, 178, 582, 200),   # date et lieu de naissance
-      (80, 459, 148, 481),    # numéro du titre
+      (313, 178, 582, 200),   # date and place of birth
+      (80, 459, 148, 481),    # title number
       (540, 476, 596, 517),   # signature
   ]),
   "openclassrooms-dcl-diploma": dict(src="pdf", page=0, ref=(1011, 715), boxes=[
-      (26, 645, 176, 670),    # identifiant du diplôme
+      (26, 645, 176, 670),    # diploma id
       (422, 535, 592, 594),   # signature
   ]),
 }
@@ -72,19 +70,19 @@ for name, d in DOCS.items():
         im = blur(im, frac(b, d["ref"]))
     im.save(f"{OUT}/{name}.png", optimize=True)
     w = im.copy(); w.thumbnail((1920, 1920)); w.save(f"{OUT}/{name}.webp", quality=88)
-    # PDF image seule : aucune couche texte, aucune métadonnée d'origine
+    # Image-only PDF: no text layer, no original metadata
     w2 = im.copy(); w2.thumbnail((2400, 2400))
     w2.save(f"{OUT}/{name}.pdf", "PDF", resolution=200.0)
 
-# Linguaskill : source PNG haute définition (page 1 seulement contient des données personnelles)
+# Linguaskill: high-resolution PNG source (only page 1 holds personal data)
 ling = Image.open(f"{CERT}/Certification_LINGUASKILL_Page_1.png").convert("RGB")
-for b in [(468, 47, 698, 86),    # identifiant de connexion et référence (adresse e-mail)
-          (74, 230, 222, 258)]:  # date de naissance
+for b in [(468, 47, 698, 86),    # login id and reference (email address)
+          (74, 230, 222, 258)]:  # date of birth
     ling = blur(ling, frac(b, (778, 1100)))
 ling.save(f"{OUT}/Certification_LINGUASKILL_Page_1.png", optimize=True)
 w = ling.copy(); w.thumbnail((2716, 2716)); w.save(f"{OUT}/Certification_LINGUASKILL_Page_1.webp", quality=88)
-# Vignettes de la page Certifications (affichées en 40 px, object-contain) :
-# dérivées des versions floutées, jamais des originaux.
+# Certifications page thumbnails (shown at 40px, object-contain): derived
+# from the blurred versions, never from the originals.
 BADGES = {
   "dev-concepteur-badge": "openclassrooms-dcl-diploma.png",
   "systems-networks-badge": "tssr-greta-diploma.png",

@@ -1,20 +1,18 @@
 // __tests__/providers-track-title.test.tsx
-// Vérifie l'effet de app/[locale]/providers.tsx qui met à jour document.title
-// lors d'une bascule de parcours (Salesforce ↔ IT Ops).
-// Régression couverte — audit 2026-10-23 (P1) : la bascule écrasait le titre
-// de N'IMPORTE QUELLE page (ex. /fr/about) par le titre générique de
-// l'accueil. Le titre de parcours ne doit s'appliquer que sur l'accueil.
+// Checks the app/[locale]/providers.tsx effect that updates document.title
+// on a track switch (Salesforce ↔ IT Ops): the track title must only apply
+// on the home page, never overwrite another page's title (e.g. /fr/about).
 
-// Mocks déclarés avant tout import (requis par Jest).
-// Chemin courant simulé, modifiable test par test.
+// Mocks declared before any import (required by Jest).
+// Simulated current path, set per test.
 let mockPathname = "/fr";
 
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
 }));
 
-// Traductions simulées : on renvoie des titres distincts et reconnaissables
-// pour les deux clés utilisées par l'effet, la clé brute sinon.
+// Mock translations: distinct, recognisable titles for the two keys used by
+// the effect, the raw key otherwise.
 jest.mock("next-intl", () => ({
   useLocale: () => "fr",
   useTranslations: () => (key: string) =>
@@ -24,8 +22,8 @@ jest.mock("next-intl", () => ({
     })[key] ?? key,
 }));
 
-// next-themes rend un <script> inline et lit matchMedia, absent de jsdom :
-// on le remplace par un simple passe-plat, sans rapport avec ce test.
+// next-themes renders an inline <script> and reads matchMedia (missing from
+// jsdom): replaced by a plain pass-through, unrelated to this test.
 jest.mock("next-themes", () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
@@ -35,7 +33,7 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Providers, { useTrack } from "@/app/[locale]/providers";
 
-// Composant de test minimal : un bouton par parcours, branché sur setTrack.
+// Minimal test component: one button per track, wired to setTrack.
 function Toggle() {
   const { setTrack } = useTrack();
   return (
@@ -61,7 +59,7 @@ describe("Providers — titre de l'onglet lors d'une bascule de parcours", () =>
 
   it("met à jour le titre sur l'accueil (/fr)", async () => {
     mockPathname = "/fr";
-    // Titre initial produit par le serveur (non modifié au premier rendu).
+    // Initial title from the server (untouched on first render).
     document.title = "TITRE ACCUEIL SALESFORCE";
     renderWithProviders();
     expect(document.title).toBe("TITRE ACCUEIL SALESFORCE");

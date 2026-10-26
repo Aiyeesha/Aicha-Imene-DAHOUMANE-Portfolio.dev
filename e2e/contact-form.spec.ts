@@ -1,15 +1,15 @@
 // e2e/contact-form.spec.ts
 // ------------------------
-// Tests E2E — Formulaire de contact
+// E2E tests: contact form
 
 import { test, expect } from "@playwright/test";
 
 test.describe("Formulaire de contact", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/en");
-    // S'assurer que la section contact est chargée avant chaque test.
-    // .first() évite la violation de strict mode : Next.js streaming peut créer
-    // brièvement 2 éléments #contact pendant l'hydratation (fallback + contenu réel).
+    // Make sure the contact section is loaded before each test. .first()
+    // avoids a strict-mode violation: streaming can briefly create two
+    // #contact elements during hydration (fallback + real content).
     await page.locator("#contact").first().waitFor({ state: "visible" });
   });
 
@@ -45,7 +45,7 @@ test.describe("Formulaire de contact", () => {
       await submitBtn.click();
     }
 
-    // La validation HTML5 empêche la soumission — aucun POST envoyé
+    // HTML5 validation blocks the submission: no POST sent
     expect(formSubmitted).toBe(false);
   });
 
@@ -70,10 +70,10 @@ test.describe("Formulaire de contact", () => {
   }) => {
     const topicSelect = page.locator("#contact-topic");
     await topicSelect.waitFor({ state: "visible" });
-    // Délai court pour laisser les useEffect React se monter (hydration → effects)
+    // Short delay so React effects mount (hydration → effects)
     await page.waitForTimeout(500);
 
-    // Déclencher l'événement custom (comme le ferait un bouton de service)
+    // Dispatch the custom event (as a service card button would)
     await page.evaluate(() => {
       window.dispatchEvent(
         new CustomEvent("contact:prefill", {
@@ -82,7 +82,7 @@ test.describe("Formulaire de contact", () => {
       );
     });
 
-    // Le select topic doit être pré-rempli avec la valeur passée
+    // The topic select is prefilled with the given value
     await expect(topicSelect).toHaveValue("salesforce");
   });
 });

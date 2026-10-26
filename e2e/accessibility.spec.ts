@@ -1,21 +1,10 @@
 // e2e/accessibility.spec.ts
 // -------------------------
-// Audit WCAG 2.2 AA automatisé via @axe-core/playwright.
-//
-// Pages testées :
-//   - Accueil /en
-//   - About /en/about
-//   - Blog (liste) /en/blog
-//   - Blog (article) /en/blog/apex-triggers-best-practices
-//   - Certifications /en/certifications
-//   - Contact /en/contact (redirigé vers /en#contact, bloc recruteur déplié)
-//   - Work with me /en/work-with-me
-//   - Accueil FR /fr (vérification locale)
-//   - Accueil ES /es (vérification locale)
-//
-// Tags couverts : wcag2a, wcag2aa, wcag21aa, wcag22aa
-//
-// Violations connues et acceptées (si applicable) documentées inline.
+// Automated WCAG 2.2 AA checks with @axe-core/playwright on: /en, /en/about,
+// /en/blog, a blog post, /en/certifications, /en/contact (redirected to
+// /en#contact, recruiter fields expanded), /en/work-with-me, /fr and /es.
+// Tags: wcag2a, wcag2aa, wcag21aa, wcag22aa. Known, accepted violations (if
+// any) are documented inline.
 
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -26,7 +15,7 @@ import type { Result } from "axe-core";
 async function runAxe(page: Page) {
   return new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    // Exclure les iframes tiers potentiels (aucun aujourd'hui ; garde-fou si un contenu intégré est ajouté)
+    // Exclude potential third-party iframes (none today; a guard for embedded content)
     .exclude("iframe")
     .analyze();
 }
@@ -41,19 +30,17 @@ function formatViolations(violations: Result[]) {
   }));
 }
 
-// ── Helper d'attente robuste ──────────────────────────────────────────────
-// networkidle est préférable (hydration React complète) mais peut ne jamais
-// se résoudre en CI : un script d'analytics en production peut faire des requêtes
-// continues qui empêchent l'idle. On tente networkidle 8s max, puis on continue.
+// ── Robust wait ───────────────────────────────────────────────────────────
+// networkidle (full hydration) may never resolve in CI if some script keeps
+// making requests, so it is tried for 8s at most.
 async function waitForReady(page: Page) {
-  // Émule prefers-reduced-motion: reduce — les composants Framer Motion (useReducedMotion())
-  // basculent directement à l'état final (opacity: 1), éliminant la race condition entre
-  // le scan axe-core et les animations d'entrée du Hero (fade-in 690ms).
-  // Contraste réel de la CTA "Work with me" à l'état stable : 8,65:1 (AA conforme).
-  // Réf. : run CI #473 (28155979835) — faux-positif color-contrast.
+  // Emulate prefers-reduced-motion: reduce, so entrance animations jump to
+  // their final state and axe never scans mid-animation (which produced a
+  // false color-contrast positive on the "Work with me" CTA, 8.65:1 once
+  // stable).
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForLoadState("networkidle", { timeout: 8_000 }).catch(() => {});
-  // Laisser les transitions CSS color/background (200-250ms) se terminer avant l'audit
+  // Let CSS colour/background transitions (200-250ms) finish before the scan
   await page.waitForTimeout(350);
 }
 
@@ -70,11 +57,11 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
       console.log("Violations /en :", JSON.stringify(formatViolations(results.violations), null, 2));
     }
 
-    // Les violations critiques (critical) ne sont pas tolérées
+    // No critical violations allowed
     const critical = results.violations.filter((v) => v.impact === "critical");
     expect(critical, `Violations critiques : ${JSON.stringify(formatViolations(critical))}`).toHaveLength(0);
 
-    // Les violations sérieuses (serious) ne sont pas tolérées non plus
+    // No serious violations allowed either
     const serious = results.violations.filter((v) => v.impact === "serious");
     expect(serious, `Violations sérieuses : ${JSON.stringify(formatViolations(serious))}`).toHaveLength(0);
   });
@@ -147,8 +134,8 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
   });
 
   test("Contact /en/contact → /en#contact — aucune violation critique/sérieuse", async ({ page }) => {
-    // Formulaire unique (audit 2026-10-25) : /contact redirige vers l'ancre de
-    // la home ; on déplie le bloc recruteur pour auditer aussi ses champs.
+    // /contact redirects to the home anchor; expand the recruiter block so
+    // its fields are scanned too.
     await page.goto("/en/contact");
     await expect(page).toHaveURL(/\/en#contact$/);
     await waitForReady(page);
@@ -201,18 +188,18 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
     expect(serious, `Violations sérieuses : ${JSON.stringify(formatViolations(serious))}`).toHaveLength(0);
   });
 
-  // ── Tests de structure (sans axe) ───────────────────────────────────────
+  // ── Structure tests (no axe) ────────────────────────────────────────────
 
   test("Skip link 'Skip to main content' est présent et fonctionnel", async ({
     page,
   }) => {
     await page.goto("/en");
 
-    // Le skip link est dans le DOM (visible au focus, caché visuellement)
+    // The skip link is in the DOM (visually hidden until focused)
     const skipLink = page.locator("a[href='#main']").first();
     await expect(skipLink).toBeAttached();
 
-    // Il devient visible au focus clavier
+    // It becomes visible on keyboard focus
     await skipLink.focus();
     await expect(skipLink).toBeVisible();
   });
@@ -236,7 +223,7 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
     await waitForReady(page);
     await page.locator("section#contact").waitFor({ state: "visible" });
 
-    // Vérifier que chaque input (sauf honeypot) a un label avec htmlFor correspondant
+    // Every input (except the honeypot) has a label with a matching htmlFor
     const inputs = ["contact-name", "contact-email", "contact-topic", "contact-message"];
 
     for (const id of inputs) {
@@ -248,8 +235,8 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
   test("Les images de contenu ont un texte alternatif non vide", async ({ page }) => {
     await page.goto("/en");
 
-    // Vérifier qu'il n'y a pas d'images sans alt ou avec alt vide
-    // (les icônes SVG décoratifs ont aria-hidden="true" et sont exemptés)
+    // No images without alt or with an empty alt (decorative SVG icons have
+    // aria-hidden="true" and are exempt)
     const imgWithoutAlt = page.locator("img:not([alt]):not([aria-hidden='true'])");
     await expect(imgWithoutAlt).toHaveCount(0);
 

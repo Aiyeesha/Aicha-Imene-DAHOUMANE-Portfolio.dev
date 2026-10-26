@@ -1,6 +1,6 @@
 // __tests__/security-jsonLdSafe.test.ts
-// Tests unitaires — lib/security/jsonLdSafe.ts
-// Vérifie que < > & sont bien échappés et qu'une séquence </script> ne survit pas.
+// Unit tests: lib/security/jsonLdSafe.ts. < > & are escaped and a </script>
+// sequence never survives.
 
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 

@@ -1,7 +1,7 @@
 # .github/CODEOWNERS
 # -------------------
-# Tout changement sur les fichiers critiques de sécurité requiert
-# une review de @Aiyeesha avant merge.
+# Any change to security-critical files requires a review by @Aiyeesha
+# before merging.
 
 /proxy.ts                    @Aiyeesha
 /next.config.mjs             @Aiyeesha

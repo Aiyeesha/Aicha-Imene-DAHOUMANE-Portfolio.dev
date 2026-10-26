@@ -1,10 +1,8 @@
 // __tests__/projectTaxonomy-getBadgeClass.test.ts
-// getBadgeClass — source unique tone → classe CSS (voir i18n/projectTaxonomy.ts).
-// Régression directe du bug corrigé le 2026-08-12 : 3 implémentations
-// divergentes (ProjectsSection.tsx, FeaturedProjects.tsx, projects/[slug]/page.tsx)
-// géraient une tone inconnue de 3 façons différentes — dont un repli silencieux
-// de FeaturedProjects.tsx sur "badge-training", qui affichait un projet client
-// comme un exercice de formation.
+// getBadgeClass: single tone → CSS class mapping (i18n/projectTaxonomy.ts).
+// Guards against an unknown tone being handled inconsistently, e.g. silently
+// falling back to "badge-training" and showing a client project as a
+// training exercise.
 
 import { getBadgeClass } from "@/i18n/projectTaxonomy";
 
@@ -30,9 +28,8 @@ describe("getBadgeClass", () => {
   });
 
   it("ne mal-étiquette jamais une tone inconnue comme 'training'", () => {
-    // C'était exactement le bug de FeaturedProjects.tsx : un badge.tone
-    // manquant/typo tombait silencieusement sur "badge badge-training",
-    // faisant passer un projet client pour un exercice de formation.
+    // A missing or misspelled badge.tone must not silently become
+    // "badge badge-training" (a client project shown as a training exercise).
     expect(getBadgeClass("client-typo")).not.toContain("training");
   });
 });

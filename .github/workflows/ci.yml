@@ -5,10 +5,9 @@ name: CI
 # Mutable tags (v4, v6) can be silently redirected by a compromised maintainer;
 # a SHA cannot be forged or reused for different content.
 #
-# Les versions épinglées sont indiquées en commentaire à côté de chaque `uses:`
-# (vérifiées le 2026-10-18 contre les tags amont avec `git ls-remote`).
-# Les outils téléchargés ou lancés via npx sont eux aussi épinglés à une version
-# exacte, et le binaire gitleaks est vérifié par son empreinte SHA-256.
+# The pinned version is noted next to each `uses:`. Tools downloaded or run
+# through npx are pinned to an exact version too, and the gitleaks binary is
+# checked against its SHA-256.
 #
 # Dependabot (.github/dependabot.yml) opens monthly PRs to keep SHAs current.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -18,25 +17,22 @@ on:
     branches: [main, master]
   pull_request:
 
-# ── Annulation automatique des runs obsolètes ────────────────────────────────
-# Sans ce groupe, chaque push sur une PR crée un nouveau run en queue pendant
-# que le précédent tourne encore — les runners s'accumulent et le dernier run
-# attend parfois 5+ h. Avec cancel-in-progress: true, seul le run le plus
-# récent continue ; les précédents sont annulés immédiatement.
+# ── Cancel superseded runs ───────────────────────────────────────────────────
+# Each push to a PR would otherwise queue a new run while the previous one is
+# still going; only the latest run continues.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# Permissions par défaut restrictives au niveau workflow (recommandation Scorecard).
-# Chaque job redéfinit uniquement ce dont il a besoin (contents: read).
+# Restrictive default permissions (Scorecard recommendation); each job only
+# asks for what it needs (contents: read).
 permissions: read-all
 
 jobs:
-  # ── SEC-01 — Scan de secrets (gitleaks) ─────────────────────────────────────
-  # Détecte les secrets committés par erreur (tokens Upstash, clés Supabase, etc.)
-  # avant qu'ils n'atteignent main ou une branche déployée.
-  # Exécuté en parallèle de build-test pour ne pas allonger le chemin critique.
-  # Fetch-depth 0 requis pour scanner l'historique complet de la PR.
+  # ── Secret scan (gitleaks) ──────────────────────────────────────────────────
+  # Catches committed secrets (Upstash tokens, Supabase keys…) before they reach
+  # main or a deployed branch. Runs alongside build-test; fetch-depth 0 to scan
+  # the whole PR history.
   secret-scan:
     name: Secret Scan (gitleaks)
     runs-on: ubuntu-latest
@@ -52,14 +48,12 @@ jobs:
       - name: Install gitleaks
         env:
           GITLEAKS_VERSION: "8.22.1"
-          # Empreinte officielle (gitleaks_8.22.1_checksums.txt de la release) :
-          # à mettre à jour avec la version. Un binaire altéré fait échouer l'étape.
+          # Official checksum (gitleaks_8.22.1_checksums.txt from the release):
+          # update it with the version. A tampered binary fails the step.
           GITLEAKS_SHA256: "2f92ab3b8e08319ac30836c32b90818e01519c3a4982771e4f45a7f5607872f7"
-        # --retry-all-errors : la CDN des releases GitHub renvoie parfois des
-        # 503/connexions coupées transitoires (observé 2 fois de suite le
-        # 2026-08-12) ; -sSfL seul ne retente jamais. 5 tentatives, backoff
-        # démarrant à 2s, sans quoi cette étape fait échouer tout le check
-        # secret-scan sur un incident réseau sans rapport avec le contenu scanné.
+        # --retry-all-errors: the GitHub releases CDN sometimes returns transient
+        # 503s or dropped connections, and -sSfL alone never retries. 5 attempts,
+        # backoff from 2s, so a network blip does not fail the secret scan.
         run: |
           curl -sSfL --retry 5 --retry-all-errors --retry-delay 2 \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
@@ -74,21 +68,18 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Permissions minimales — principe du moindre privilège.
-    # contents:read : checkout du code uniquement.
-    # Sans cette restriction, le GITHUB_TOKEN par défaut a des droits write
-    # sur le repo (création de releases, push de code, etc.), ce qui élargit
-    # la surface d'attaque en cas de compromission d'une action tierce.
+    # Least privilege: contents: read for the checkout only. The default
+    # GITHUB_TOKEN can write to the repo, widening the impact of a compromised
+    # third-party action.
     permissions:
       contents: read
     env:
-      # Force les actions GitHub (checkout, upload-artifact) à utiliser Node 24
-      # au lieu de Node 20 (déprécié depuis juin 2026).
+      # Run GitHub actions (checkout, upload-artifact) on Node 24 (Node 20 is
+      # deprecated).
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      # Les secrets ne sont pas transmis aux PRs Dependabot par GitHub (sécurité).
-      # On fournit des valeurs de fallback pour les variables publiques (NEXT_PUBLIC_*)
-      # afin que `next build` n'échoue pas sur new URL('') au build statique.
-      # Ces fallbacks sont de fausses URLs — aucune donnée sensible n'est exposée.
+      # GitHub does not pass secrets to Dependabot PRs: fake fallback URLs for
+      # the public variables (NEXT_PUBLIC_*) keep `next build` from failing on
+      # new URL(''). No sensitive data involved.
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
       NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000' }}
@@ -105,16 +96,15 @@ jobs:
           cache: npm
 
       - name: Install
-        # PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD : évite que le postinstall de @playwright/test
-        # télécharge/extrait partiellement le navigateur dans ~/.cache/ms-playwright.
+        # PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: keeps @playwright/test's postinstall
+        # from downloading or partially extracting a browser into ~/.cache.
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         run: npm ci
 
-      # Détection des dépendances fantômes : imports directs dans le code source
-      # non déclarés dans package.json, résolus uniquement en transitif.
-      # Uniquement "missing" (pas "unused") pour éviter les faux positifs sur les
-      # packages de config (tailwind, eslint…). Exemple détecté : @radix-ui/react-dialog.
+      # Phantom dependencies: direct imports missing from package.json and only
+      # resolved transitively. "missing" only (not "unused"), to avoid false
+      # positives on config packages (tailwind, eslint…).
       - name: Ghost dependency check (depcheck)
         run: |
           npx --yes depcheck@1.4.7 --ignores="server-only,playwright,mdx" --json 2>/dev/null > /tmp/depcheck.json || true
@@ -129,20 +119,12 @@ jobs:
             console.log('Aucune dépendance fantôme.');
           "
 
-      # Audit de sécurité des dépendances npm.
-      # --audit-level=high : échoue uniquement sur les vulnérabilités HIGH et CRITICAL.
-      # --omit=dev : ignore les devDependencies (non déployées sur Vercel).
-      # --omit=optional : ignore les optionalDependencies. Nécessaire car next
-      # embarque sharp en optionalDependency figée à ^0.34.5 (vulnérable, voir
-      # scripts/fix-nested-sharp.mjs) ; npm n'applique pas nos overrides à une
-      # optionalDependency imbriquée (limitation npm connue), donc cette entrée
-      # reste dans package-lock.json quoi qu'on fasse. Le projet dépend déjà
-      # directement d'une version corrigée de sharp (^0.35.3) au niveau racine,
-      # et scripts/fix-nested-sharp.mjs supprime la copie imbriquée après install
-      # pour que la résolution runtime utilise la version corrigée. --omit=optional
-      # ne masque donc pas un vrai risque : il évite juste de bloquer la CI sur une
-      # optionalDependency qu'on neutralise déjà autrement.
-      # Sans cette étape, des CVE connues peuvent être mergées sans alerte.
+      # npm dependency audit: fails on HIGH and CRITICAL only, ignoring
+      # devDependencies (not deployed) and optionalDependencies. The latter is
+      # needed because next pins sharp as a vulnerable optionalDependency that
+      # npm overrides cannot reach; the project depends directly on a fixed
+      # sharp and scripts/fix-nested-sharp.mjs removes the nested copy after
+      # install, so no real risk is hidden.
       - name: Security audit
         run: npm audit --audit-level=high --omit=dev --omit=optional
 
@@ -172,7 +154,7 @@ jobs:
     permissions:
       contents: read
     env:
-      # Force les actions GitHub (checkout, upload-artifact) à utiliser Node 24
+      # Run GitHub actions (checkout, upload-artifact) on Node 24
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
@@ -194,20 +176,18 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         run: npm ci
 
-      # Build requis par `npm run start` (next start cherche .next/BUILD_ID).
-      # Le job build-test ne partage pas son build via artifact (l'extraction de
-      # download-artifact@v8 dans path:. crée un sous-répertoire ./next-build/
-      # au lieu de ./ — comportement v8 non rétrocompatible).
+      # `npm run start` needs a build (.next/BUILD_ID). build-test does not share
+      # its build as an artifact: download-artifact v8 extracts into a
+      # ./next-build/ sub-directory instead of ./.
       - name: Build
         run: npm run build
 
-      # CI : channel:'chrome' dans playwright.config.ts — Google Chrome pré-installé sur
-      # ubuntu-latest (/usr/bin/google-chrome). Plus besoin de télécharger le Chromium
-      # de Playwright (le CDN causait un gel systématique sur l'extraction).
+      # playwright.config.ts uses channel 'chrome' in CI (Google Chrome is
+      # preinstalled on ubuntu-latest), so no Playwright browser download.
       - name: Run E2E tests
         run: npm run test:e2e
 
-      # Conserver les rapports d'échec pour debug
+      # Keep failure reports for debugging
       - name: Upload Playwright report
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         if: failure()
