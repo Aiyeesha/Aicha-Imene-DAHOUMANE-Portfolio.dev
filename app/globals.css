@@ -347,10 +347,27 @@ footer,
 .skeleton-delay-2 { animation-delay: 240ms; }
 .skeleton-delay-3 { animation-delay: 360ms; }
 
+/* Entrée du héro (track-aware-hero.tsx) — remplace les variants framer-motion
+   (audit 2026-10-25). opacity reste à 1 : avatar = candidat LCP, H1 indexable. */
+@keyframes hero-avatar-in {
+  from { transform: scale(0.93); }
+  to   { transform: scale(1); }
+}
+@keyframes hero-text-in {
+  from { transform: translateY(18px); }
+  to   { transform: translateY(0); }
+}
+.hero-avatar-in { animation: hero-avatar-in 0.6s ease-out 0.05s both; }
+.hero-text-in   { animation: hero-text-in 0.55s ease-out 0.14s both; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .hero-avatar-in,
+  .hero-text-in { animation: none; }
   .card { transition: none !important; }
   .card:hover { transform: none !important; }
+  /* Dégradé du H1 figé (audit 2026-10-25) : boucle infinie sinon. */
+  .animate-gradient-x { animation: none; }
 }
 
 /* ============================================================
