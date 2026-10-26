@@ -117,17 +117,20 @@ export default function AvailabilityModal() {
       <Modal open={open} title={t("title")} onClose={() => setOpen(false)}>
         <div className="grid gap-4">
           {/* Lignes d'information */}
+          {/* dl > div > dt + dd uniquement (audit 2026-10-25) : le dt et le dd
+              étaient imbriqués un niveau trop bas. L'icône, décorative, passe
+              dans le dt ; la grille garde la valeur alignée sous le libellé. */}
           <dl className="grid gap-3">
             {rows.map(({ icon, label, value }) => (
-              <div key={label} className="flex items-start gap-3">
-                {/* Icône dans un cercle coloré selon le track */}
-                <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
-                  {icon}
-                </span>
-                <div className="min-w-0">
-                  <dt className="text-xs text-muted">{label}</dt>
-                  <dd className="mt-0.5 text-sm font-medium leading-snug">{value}</dd>
-                </div>
+              <div key={label} className="grid grid-cols-[1.75rem_1fr] gap-x-3">
+                <dt className="col-span-2 flex items-center gap-3 text-xs text-muted">
+                  {/* Icône dans un cercle coloré selon le track */}
+                  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
+                    {icon}
+                  </span>
+                  {label}
+                </dt>
+                <dd className="col-start-2 -mt-1.5 min-w-0 text-sm font-medium leading-snug">{value}</dd>
               </div>
             ))}
           </dl>

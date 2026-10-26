@@ -275,6 +275,7 @@
     "closeModal": "Close modal",
     "toggleTheme": "Toggle theme",
     "showImage": "Show image {index}",
+    "galleryImageAlt": "{title} — screenshot {index} of {total}",
     "chooseTrack": "Choose a track",
     "chooseItOps": "Switch to IT Ops track",
     "chooseSalesforce": "Switch to Salesforce track",
