@@ -10,6 +10,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Parcours IT Ops — audit 2026-10-23 (PERF-3) : `itops:` applique une classe
+   quand <html data-track="itops">. L'attribut est rendu côté serveur depuis le
+   cookie (app/layout.tsx) puis tenu à jour par Providers lors d'une bascule :
+   les accents de couleur liés au parcours n'exigent plus de Client Component.
+   Les classes sans variante correspondent au parcours Salesforce (défaut). */
+@custom-variant itops (&:where(html[data-track="itops"] *));
+
 @theme {
   /* Familles injectées par next/font/local (app/layout.tsx) sous un nom distinct :
      une variable de thème qui se référencerait elle-même serait invalide. */

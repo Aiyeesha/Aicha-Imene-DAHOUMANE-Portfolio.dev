@@ -27,7 +27,6 @@ import RecruiterPaths from "@/components/RecruiterPaths";
 // réconcilier pour ce sous-arbre, donc plus de tentative d'hydratation qui
 // peut échouer silencieusement.
 import TrackAwareServices from "@/components/TrackAwareServicesLoader";
-const ServicesFaq        = dynamic(() => import("@/components/ServicesFaq"));
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
 const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
 const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"), {
@@ -41,11 +40,85 @@ const Testimonials       = dynamic(() => import("@/components/Testimonials"));
 import { getExperienceItems } from "@/content/experience";
 import { testimonials } from "@/content/testimonials";
 import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { getSiteUrl } from "@/lib/siteUrl";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
-import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
 type Props = { params: Promise<{ locale: "en" | "fr" | "es" }> };
+
+// ── Métadonnées de l'accueil ────────────────────────────────────────────────
+// Déplacées depuis app/[locale]/layout.tsx — audit 2026-10-23 (SEO-2, SEO-3) :
+// au niveau du layout, ce canonical vers /{locale} et cette description
+// étaient hérités par la page 404 et par les pages qui n'en déclarent pas.
+// Contenu inchangé.
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
+  const t = await getTranslations({ locale: locale });
+
+  // Track a le même problème que le flash "Salesforce" résolu plus bas pour le
+  // rendu de page (cookie posé par providers.tsx setTrack()) : sans lecture ici,
+  // un lien partagé par un visiteur de retour en IT Ops affiche toujours un
+  // <title>/description Salesforce dans l'aperçu (réseaux sociaux, onglet
+  // navigateur), quel que soit le contenu réellement affiché — voir audit
+  // 2026-08-13. Ne change rien pour un tout premier visiteur (pas de cookie) :
+  // le titre générique reste le même qu'avant, pas de régression SEO.
+  const trackCookie = (await cookies()).get("track")?.value;
+  const isItops = trackCookie === "itops";
+
+  const title = t(isItops ? "metadata.titleItops" : "metadata.title");
+  const description = t(isItops ? "metadata.descriptionItops" : "metadata.description");
+
+  const siteUrl = getSiteUrl();
+
+  const canonical = `${siteUrl}/${locale}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        en: `${siteUrl}/en`,
+        fr: `${siteUrl}/fr`,
+        es: `${siteUrl}/es`,
+        "x-default": `${siteUrl}/en`,
+      }
+    },
+    openGraph: {
+      type: "website",
+      url: canonical,
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      title,
+      description,
+      siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
+      images: [
+        {
+          // URL absolue requise : certains crawlers OG (LinkedIn, Slack, WhatsApp)
+          // n'utilisent pas metadataBase et échouent sur les URLs relatives.
+          url: `${siteUrl}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: title
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/twitter-image`]
+    }
+  };
+}
+
 
 // ISR — revalidation toutes les heures.
 // ⚠️ Ce paramètre est actuellement sans effet sur le cache CDN Vercel :
@@ -62,27 +135,9 @@ export default async function Home({ params }: Props) {
   const experienceItems = getExperienceItems(locale);
   const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
 
-  // FAQPage JSON-LD — généré côté serveur depuis les traductions i18n (même source que ServicesFaq).
-  // Pattern identique à app/[locale]/blog/[slug]/page.tsx:138-181.
-  const tFaq = await getTranslations({ locale, namespace: "faq" });
-  const faqItems = tFaq.raw("items") as { q: string; a: string }[];
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
 
   return (
     <>
-      {/* FAQPage JSON-LD — potentiel rich result FAQ dans les SERP Google */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdStringify(faqJsonLd) }}
-      />
       {/* Scroll vers ancre (#hash) : géré une seule fois par Navbar via
           lib/anchorScroll.ts (ScrollToHash supprimé, il faisait doublon). */}
 
@@ -107,6 +162,29 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
+      {/* PROJETS — remontés juste sous le hero (2026-10-26) : les réalisations
+          sont la première preuve qu'un recruteur cherche ; elles passaient
+          après six sections. section-stripe (fond alterné). */}
+      <section id="projects" className="section-stripe py-14">
+        <div>
+          <Reveal>
+            <h2 className="text-xl font-semibold">{t("projects.featured")}</h2>
+          </Reveal>
+          <div className="mt-5">
+            <FeaturedProjects projects={supabaseProjects} />
+          </div>
+          <div className="mt-6 flex justify-end">
+            <Link
+              href={`/${locale}/projects`}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
+              aria-label={locale === "fr" ? "Voir tous les projets" : locale === "es" ? "Ver todos los proyectos" : "View all projects"}
+            >
+              {locale === "fr" ? "Voir tous les projets →" : locale === "es" ? "Ver todos los proyectos →" : "View all projects →"}
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* VOUS RECRUTEZ POUR QUEL POSTE ? — point d'entrée recruteur (audit de
           contenu 2026-09-25, lot 2) : oriente vers le profil hybride ou bascule
           le track Salesforce / IT Ops, avec le CV correspondant. */}
@@ -125,7 +203,13 @@ export default async function Home({ params }: Props) {
             style={{ borderImage: "linear-gradient(to right, rgb(34 211 238 / 0.4), rgb(167 139 250 / 0.4)) 1", borderWidth: "1px", borderStyle: "solid" }}
           >
             <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
-            <p className="mt-4 text-muted leading-[1.8]">{t("sections.bridge_body")}</p>
+            {/* Trois puces au lieu d'un paragraphe de ~1 900 caractères
+                (2026-10-26) : lisible en quelques secondes. */}
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-muted leading-[1.8] marker:text-cyan-500 dark:marker:text-cyan-400">
+              {(t.raw("sections.bridge_points") as string[]).map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href={`/${locale}/projects/legarant-axg-salesforce-deployment`}
@@ -199,7 +283,7 @@ export default async function Home({ params }: Props) {
           <p className="mt-3 text-muted">{t("sections.services_subtitle")}</p>
         </Reveal>
         <TrackAwareServices locale={locale} />
-        <ServicesFaq />
+        {/* FAQ déplacée vers /work-with-me (2026-10-26), avec son JSON-LD FAQPage. */}
       </section>
 
       {/* TÉMOIGNAGES / LOGOS ENTREPRISES — fond par défaut
@@ -227,29 +311,8 @@ export default async function Home({ params }: Props) {
         )}
       </section>
 
-      {/* PROJETS — section-stripe (fond alterné) */}
-      <section id="projects" className="section-stripe py-14">
-        <div>
-          <Reveal>
-            <h2 className="text-xl font-semibold">{t("projects.featured")}</h2>
-          </Reveal>
-          <div className="mt-5">
-            <FeaturedProjects projects={supabaseProjects} />
-          </div>
-          <div className="mt-6 flex justify-end">
-            <Link
-              href={`/${locale}/projects`}
-              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-              aria-label={locale === "fr" ? "Voir tous les projets" : locale === "es" ? "Ver todos los proyectos" : "View all projects"}
-            >
-              {locale === "fr" ? "Voir tous les projets →" : locale === "es" ? "Ver todos los proyectos →" : "View all projects →"}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* BLOG — fond par défaut */}
-      <section id="blog" className="py-14">
+      {/* BLOG — section-stripe (fond alterné, inversé depuis le déplacement des projets) */}
+      <section id="blog" className="section-stripe py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.blog_title")}</h2>
         </Reveal>
@@ -263,8 +326,8 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      {/* CONTACT — section-stripe (fond alterné) */}
-      <section id="contact" className="section-stripe py-14">
+      {/* CONTACT — fond par défaut (alternance inversée depuis le déplacement des projets) */}
+      <section id="contact" className="py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.contact_title")}</h2>
         </Reveal>
