@@ -64,7 +64,8 @@ describe("ExperienceTimeline", () => {
 
     const note = screen.getByText(first.note!);
     expect(note.tagName).toBe("LI");
-    expect(note).toHaveClass("italic", "text-slate-500");
+    // slate-600 et non plus slate-500 (4,34:1, sous le seuil AA) — audit 2026-10-25
+    expect(note).toHaveClass("italic", "text-slate-600");
     expect(note.parentElement?.firstElementChild).toBe(note);
   });
 

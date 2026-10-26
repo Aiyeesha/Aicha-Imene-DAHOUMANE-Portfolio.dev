@@ -1,6 +1,7 @@
 import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectBySlug.cached";
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
+import { isGenericAlt } from "@/lib/galleryAlt";
 import Image from "next/image";
 import ProjectClientLogo from "@/components/ProjectClientLogo";
 import Link from "next/link";
@@ -372,12 +373,15 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             <div className="relative aspect-video w-full">
               <Image
                 src={coverImage.src}
-                alt={coverImage.alt}
+                alt={isGenericAlt(coverImage.alt)
+                  ? `${project.title} — ${isFr ? "image de couverture" : isEs ? "imagen de portada" : "cover image"}`
+                  : coverImage.alt}
                 fill
                 sizes="(max-width: 768px) 100vw, 1200px"
                 className="object-contain bg-white/90 dark:bg-white/5"
                 priority
-                unoptimized
+                // Optimisée par next/image (audit 2026-10-25), sauf SVG.
+                unoptimized={coverImage.src.endsWith(".svg")}
               />
             </div>
           </div>
@@ -467,7 +471,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                     {isFr ? "Captures d'écran" : isEs ? "Capturas de pantalla" : "Screenshots"}
                   </h2>
                 </div>
-                <ImageGallery images={galleryRest} />
+                <ImageGallery images={galleryRest} title={project.title} />
               </div>
             )}
           </div>
