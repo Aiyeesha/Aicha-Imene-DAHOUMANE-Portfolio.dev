@@ -290,7 +290,6 @@ export default function Navbar({
       el.removeEventListener("scroll", updateNavOverflow);
       window.removeEventListener("resize", updateNavOverflow);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale, securityClusterCount, featuredProjects]);
 
   const scrollNavBy = (delta: number) => {

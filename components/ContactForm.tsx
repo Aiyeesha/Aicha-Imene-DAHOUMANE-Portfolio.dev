@@ -116,15 +116,14 @@ export default function ContactForm() {
 
   // Countdown live : décrémente retryAfterSeconds chaque seconde jusqu'à 0,
   // puis remet le formulaire en état idle (bouton réactivé automatiquement).
+  // Le retour à idle se fait dans le minuteur (après la dernière seconde) et
+  // non par un setState synchrone dans l'effet — audit 2026-10-23 (PERF-5).
   useEffect(() => {
     if (status.kind !== "rate_limited") return;
-    if (status.retryAfterSeconds <= 0) {
-      setStatus({ kind: "idle" });
-      return;
-    }
     const timer = setTimeout(() => {
-      setStatus({ kind: "rate_limited", retryAfterSeconds: status.retryAfterSeconds - 1 });
-    }, 1000);
+      const next = status.retryAfterSeconds - 1;
+      setStatus(next > 0 ? { kind: "rate_limited", retryAfterSeconds: next } : { kind: "idle" });
+    }, status.retryAfterSeconds > 0 ? 1000 : 0);
     return () => clearTimeout(timer);
   }, [status]);
 
