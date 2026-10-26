@@ -58,15 +58,17 @@ export default function GlobalMetrics() {
         {/* dl > div(Reveal) > dt + dd — structure valide WCAG (dl > div wrapping dt/dd) */}
         <dl className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {METRICS.map(({ value, suffix, labelKey }, i) => (
-            // Reveal rend un <div> — doit contenir dt/dd directement pour un <dl> valide
-            <Reveal key={labelKey} delayMs={i * 60} className="flex flex-col items-center text-center gap-1">
-              {/* Nombre animé — grand et accentué */}
-              <dt className="text-3xl font-display font-bold text-cyan-600 dark:text-cyan-400 tabular-nums">
-                <AnimatedCounter value={value} suffix={suffix} />
-              </dt>
+            // Reveal rend un <div> — doit contenir dt/dd directement pour un <dl> valide.
+            // dt = libellé, dd = valeur (audit 2026-10-25 : c'était l'inverse) ;
+            // flex-col-reverse garde le chiffre au-dessus à l'écran.
+            <Reveal key={labelKey} delayMs={i * 60} className="flex flex-col-reverse items-center text-center gap-1">
               {/* Label descriptif */}
-              <dd className="text-xs font-medium text-muted-2 uppercase tracking-wider">
+              <dt className="text-xs font-medium text-muted-2 uppercase tracking-wider">
                 {t(labelKey)}
+              </dt>
+              {/* Nombre animé — grand et accentué */}
+              <dd className="text-3xl font-display font-bold text-cyan-600 dark:text-cyan-400 tabular-nums">
+                <AnimatedCounter value={value} suffix={suffix} />
               </dd>
             </Reveal>
           ))}
