@@ -95,7 +95,7 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "Virtualisation (VMware, VirtualBox)",
           "pfSense & proxy Squid"
         ],
-        experience: "Stage chez MIDRANGE GROUP (févr.–mai 2023) ; titres TAI et TSSR (Greta du Val d'Oise).",
+        experience: "Deux stages d'un mois chez MIDRANGE GROUP (entre février et mai 2023) ; titres TAI et TSSR (Greta du Val d'Oise).",
         proof: "Études de cas déploiement de postes en masse et lab de virtualisation."
       },
       {
@@ -108,7 +108,7 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "Ticketing Autotask & prise en main à distance",
           "Diagnostic & résolution d'incidents"
         ],
-        experience: "Stage chez MIDRANGE GROUP (févr.–mai 2023).",
+        experience: "Deux stages d'un mois chez MIDRANGE GROUP (entre février et mai 2023).",
         proof: "Études de cas supervision RMM, sauvegardes Acronis et gestion d'incidents."
       },
       {
@@ -193,7 +193,7 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "Virtualization (VMware, VirtualBox)",
           "pfSense & Squid proxy"
         ],
-        experience: "Internship at MIDRANGE GROUP (Feb–May 2023); TAI and TSSR diplomas (Greta du Val d'Oise).",
+        experience: "Two one-month internships at MIDRANGE GROUP (between February and May 2023); TAI and TSSR diplomas (Greta du Val d'Oise).",
         proof: "Mass workstation deployment and virtualization lab case studies."
       },
       {
@@ -206,7 +206,7 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "Autotask ticketing & remote support",
           "Incident diagnosis & resolution"
         ],
-        experience: "Internship at MIDRANGE GROUP (Feb–May 2023).",
+        experience: "Two one-month internships at MIDRANGE GROUP (between February and May 2023).",
         proof: "RMM monitoring, Acronis backup and incident management case studies."
       },
       {
@@ -291,7 +291,7 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "Virtualización (VMware, VirtualBox)",
           "pfSense y proxy Squid"
         ],
-        experience: "Prácticas en MIDRANGE GROUP (feb.–may. 2023); títulos TAI y TSSR (Greta du Val d'Oise).",
+        experience: "Dos prácticas de un mes en MIDRANGE GROUP (entre febrero y mayo de 2023); títulos TAI y TSSR (Greta du Val d'Oise).",
         proof: "Casos de estudio de despliegue masivo de equipos y laboratorio de virtualización."
       },
       {
@@ -304,7 +304,7 @@ const CARDS: Record<Locale, Record<Track, ServiceCard[]>> = {
           "Ticketing Autotask y asistencia remota",
           "Diagnóstico y resolución de incidencias"
         ],
-        experience: "Prácticas en MIDRANGE GROUP (feb.–may. 2023).",
+        experience: "Dos prácticas de un mes en MIDRANGE GROUP (entre febrero y mayo de 2023).",
         proof: "Casos de estudio de supervisión RMM, copias de seguridad Acronis y gestión de incidencias."
       },
       {
