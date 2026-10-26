@@ -12,7 +12,7 @@ import { getBadgeClass, tBadge } from "@/i18n/projectTaxonomy";
 import { resolveProjectMdxLocale } from "@/lib/data/projectMdx";
 import { pageTitle, clampDescription } from "@/lib/seo";
 
-// ISR : revalide les pages projet toutes les 5 minutes
+// Revalidate project pages every 5 minutes
 export const revalidate = 300;
 
 // ── URL safety helper ─────────────────────────────────────────────────────────
@@ -99,9 +99,7 @@ function renderSection(section: ProjectSection, idx: number) {
           <div className="grid gap-3 sm:grid-cols-2">
             {section.items.map((item, i) => (
               <div key={i} className="rounded-xl border border-black/8 dark:border-white/8 bg-black/2 dark:bg-white/2 p-4">
-                {/* text-cyan-700 en clair — audit 2026-10-23 (A11Y, axe color-contrast) :
-                    cyan-500 sur fond clair donnait 2,02:1 (3:1 requis pour un
-                    texte de 24 px gras). Thème sombre inchangé (cyan-500). */}
+                {/* cyan-700 in light mode for 3:1 contrast (large bold text) */}
                 <div className="text-2xl font-bold text-cyan-700 dark:text-cyan-500 tabular-nums">{item.value}</div>
                 <div className="mt-1 text-sm font-medium text-strong">{item.label}</div>
                 {item.note ? <div className="mt-1 text-xs text-muted-2">{item.note}</div> : null}
@@ -115,10 +113,7 @@ function renderSection(section: ProjectSection, idx: number) {
                 <dt className="font-medium text-strong self-start pt-0.5 shrink-0">{item.label}</dt>
                 <dd className="text-muted leading-relaxed">
                   {item.value}
-                  {/* text-muted-2 plutôt que opacity-60 — audit 2026-10-23 (axe
-                      color-contrast) : l'opacité donnait 2,91:1 en clair et
-                      4,46:1 en sombre (4,5:1 requis) ; même jeton que les notes
-                      de la présentation en cartes ci-dessus. */}
+                  {/* text-muted-2 rather than opacity: 4.5:1 contrast in both themes */}
                   {item.note ? <span className="ml-2 text-xs text-muted-2">({item.note})</span> : null}
                 </dd>
               </div>
@@ -206,8 +201,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const siteUrl = getSiteUrl();
 
-  // Gabarit unique et description bornée — audit 2026-10-23 (SEO-1, SEO-2),
-  // voir lib/seo.ts.
+  // Shared title template and bounded description (lib/seo.ts).
   const title = pageTitle(project.title);
   const description = clampDescription(project.hero_subtitle ?? project.summary ?? project.title);
   const canonical = `${siteUrl}/${locale}/projects/${slug}`;
@@ -215,8 +209,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const firstGalleryImg = project.gallery?.[0]?.src;
   const ogImage = firstGalleryImg
     ? firstGalleryImg.startsWith("http")
-      ? firstGalleryImg                      // URL CDN Supabase — déjà absolue
-      : `${siteUrl}${firstGalleryImg}`       // chemin local — préfixer avec siteUrl
+      ? firstGalleryImg                      // already an absolute URL
+      : `${siteUrl}${firstGalleryImg}`       // local path: prefix with siteUrl
     : `${siteUrl}/opengraph-image`;
 
   const languages: Record<string, string> = {
@@ -343,11 +337,8 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const isEs = locale === "es";
 
   return (
-    // <article> et non <main> — audit 2026-10-23 (A11Y-1) : le layout
-    // [locale] fournit déjà <main id="main"> ; un second <main> imbriqué
-    // violait landmark-main-is-top-level / landmark-no-duplicate-main /
-    // landmark-unique (axe) sur les 51 fiches projet. Une fiche projet est un
-    // contenu autonome : <article> est l'élément sémantique adapté.
+    // <article>, not <main>: the [locale] layout already renders
+    // <main id="main">, and a project page is standalone content.
     <article className="py-10 md:py-16">
       <script
         type="application/ld+json"
@@ -380,7 +371,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 sizes="(max-width: 768px) 100vw, 1200px"
                 className="object-contain bg-white/90 dark:bg-white/5"
                 priority
-                // Optimisée par next/image (audit 2026-10-25), sauf SVG.
+                // Optimised by next/image, except SVG
                 unoptimized={coverImage.src.endsWith(".svg")}
               />
             </div>
@@ -419,7 +410,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             <h1 className="text-3xl md:text-4xl font-bold text-strong leading-tight tracking-tight">
               {project.title}
             </h1>
-            {/* Logo du client — silencieux si absent (la plupart des projets n'en ont pas) */}
+            {/* Client logo: nothing if missing (most projects have none) */}
             <ProjectClientLogo slug={project.slug} alt={project.title} />
           </div>
           {heroSubtitle && (
@@ -427,11 +418,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               {heroSubtitle}
             </p>
           )}
-          {/* ── NATURE DU PROJET ──────────────────────────────────────────────
-              Bandeau obligatoire depuis l'audit de contenu du 2026-09-25 :
-              dit en une ligne si le projet relève d'une formation, d'un stage,
-              d'un projet personnel ou d'une reconstitution, avec sa période
-              quand elle est connue (lib/projectNature.ts). */}
+          {/* ── PROJECT NATURE ────────────────────────────────────────────────
+              One line saying whether this is a training, internship, personal
+              or reconstructed project, with its period when known
+              (lib/projectNature.ts). */}
           {nature && (
             <aside
               aria-label={isFr ? "Nature du projet" : isEs ? "Naturaleza del proyecto" : "Project type"}

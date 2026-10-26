@@ -1,7 +1,7 @@
 // app/admin/incidents/new/page.tsx
 // ----------------------------------
-// Formulaire de création d'incident — pré-remplit la checklist depuis
-// lib/incidentPlaybooks.ts selon le type sélectionné (voir actions.ts).
+// New incident form: prefills the checklist from lib/incidentPlaybooks.ts
+// for the selected type (see actions.ts).
 
 import Link from "next/link";
 import { createIncidentAction } from "../actions";
@@ -17,8 +17,8 @@ const SEVERITY_HINTS: Record<string, string> = {
 };
 
 export default async function NewIncidentPage() {
-  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
-  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
+  // why it runs in each page as well as in the layout.
   await assertAdminOrNotFound();
 
   return (

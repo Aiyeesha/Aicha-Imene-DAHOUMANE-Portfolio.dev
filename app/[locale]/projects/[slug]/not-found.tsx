@@ -11,8 +11,7 @@ export default async function ProjectNotFound() {
   const suggested = allProjects.slice(0, 3);
 
   return (
-    // <div> et non <main> : le layout [locale] fournit déjà <main id="main">
-    // (audit 2026-10-23, A11Y-1 — landmark-no-duplicate-main).
+    // <div>, not <main>: the [locale] layout already renders <main id="main">.
     <div className="py-16 md:py-24">
       <div className="container mx-auto max-w-4xl px-4 text-center">
 

@@ -1,16 +1,14 @@
 // app/api/blog/latest/route.ts
 // -----------------------------
-// GET /api/blog/latest?locale=fr&limit=2
-//
-// Retourne les N derniers articles du blog (lecture du système de fichiers).
-// Protégé par un rate limiter Upstash Redis (30 req / 60 s par IP).
-// En l'absence de Redis configuré, le limiteur no-op laisse tout passer.
+// GET /api/blog/latest?locale=fr&limit=2: the latest N blog posts (read from
+// the file system). Rate limited with Upstash (30 requests / 60s / IP); the
+// no-op limiter lets everything through when Redis is not configured.
 
 import { NextResponse } from "next/server";
 import { blogRatelimit, safeLimit } from "@/lib/ratelimit";
 import { readAllPosts } from "@/content/blog/fs";
 
-// Extrait l'IP réelle du client depuis les headers Vercel / proxy standard.
+// Client IP from Vercel / standard proxy headers.
 function getClientIp(req: Request): string {
   return (
     req.headers.get("x-real-ip") ||
@@ -34,12 +32,10 @@ export async function GET(req: Request) {
       { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
     );
   }
-  // ── End Rate limiting ─────────────────────────────────────────────────
 
   const { searchParams } = new URL(req.url);
-  // Liste blanche : le paramètre sert à construire un chemin de fichiers dans
-  // readAllPosts() — jamais de valeur libre (ex. « ../unpublished/fr »), audit du
-  // 2026-10-14, S8. Même règle que /api/search.
+  // Allow-list: the value builds a file path in readAllPosts(), so free values
+  // (e.g. "../unpublished/fr") are never accepted. Same rule as /api/search.
   const rawLocale = searchParams.get("locale");
   const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   const limit = Math.min(6, Math.max(1, Number(searchParams.get("limit") || "2")));

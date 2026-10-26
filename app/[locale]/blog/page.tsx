@@ -10,9 +10,7 @@ import BlogSearchBar from "@/components/blog/BlogSearchBar";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 
-// ISR : revalide la liste des articles toutes les heures.
-// Permet d'intégrer de nouveaux posts sans rebuild complet
-// une fois le blog migré vers une source externe (CMS, Supabase).
+// Hourly ISR for the post list.
 export const revalidate = 3600;
 
 type Params = { locale: "en" | "fr" | "es" };
@@ -31,8 +29,8 @@ export async function generateMetadata(
   return {
     title,
     description,
-    // URLs absolues requises pour hreflang — Next.js combine metadataBase + relative
-    // uniquement pour le canonical HTML, pas pour les balises <link rel="alternate">.
+    // Absolute URLs for hreflang: metadataBase only applies to the canonical,
+    // not to <link rel="alternate">.
     alternates: {
       canonical: urlPath,
       languages: {
@@ -80,11 +78,11 @@ export default async function BlogIndexPage({
 
   const allRaw = readAllPosts(locale);
 
-  // Top 8 tags calculé sur TOUS les articles — cohérent quelle que soit la page ou le tag actif
+  // Top 8 tags across all posts, the same whatever the page or active tag
   const topTags = getTopTags(allRaw.map((p) => p.tags), 8);
 
-  // Filtrage par tag server-side avant pagination — garantit que tous les articles
-  // correspondant au tag sont accessibles quelle que soit la page courante
+  // Filter by tag on the server before pagination, so every matching post is
+  // reachable
   const tagFiltered = selectedTag
     ? allRaw.filter((p) => p.tags.includes(selectedTag))
     : allRaw;
@@ -97,7 +95,7 @@ export default async function BlogIndexPage({
 
   const start = (currentPage - 1) * POSTS_PER_PAGE;
 
-  // Sérialisation : on exclut `file` (chemin absolu serveur) avant de passer au Client Component
+  // Drop `file` (absolute server path) before passing posts to the client component
   const posts: PostCard[] = tagFiltered.slice(start, start + POSTS_PER_PAGE).map(({ slug, locale: l, title, excerpt, date, tags, readingTime }) => ({
     slug, locale: l, title, excerpt, date, tags, readingTime
   }));
@@ -123,7 +121,7 @@ export default async function BlogIndexPage({
         <BlogSearchBar />
       </div>
 
-      {/* Barre de tags (filtrage URL) */}
+      {/* Tag bar (URL filter) */}
       <div className="mt-10 flex flex-wrap gap-2">
         <Link
           href={`/${locale}/blog`}
@@ -155,7 +153,7 @@ export default async function BlogIndexPage({
         </Link>
       </div>
 
-      {/* Onglets track + grille d'articles (Client Component) */}
+      {/* Track tabs + post grid (client component) */}
       <BlogTrackFilter
         posts={posts}
         locale={locale}
@@ -165,7 +163,7 @@ export default async function BlogIndexPage({
         totalPages={totalPages}
       />
 
-      {/* Bouton retour accueil */}
+      {/* Back to home */}
       <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${locale}`}

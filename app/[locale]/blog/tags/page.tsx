@@ -93,7 +93,7 @@ export default async function BlogTagsPage({ params }: { params: Promise<Params>
         </div>
       </div>
 
-      {/* Bouton retour accueil */}
+      {/* Back to home */}
       <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${locale}`}

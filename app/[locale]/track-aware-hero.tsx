@@ -2,21 +2,15 @@
 
 // track-aware-hero.tsx
 // --------------------
-// Hero section : photo + titre + tagline percutante + proof tags + CTAs.
-// Deux variantes selon le track toggle (Salesforce / IT Ops).
+// Hero: photo, title, tagline, proof tags and CTAs, in two variants
+// (Salesforce / IT Ops).
 //
-// Animations (CSS — framer-motion retiré du héro à l'audit du 2026-10-25 : tout
-// le bundle motion était chargé au premier écran pour une entrée et 28 px de
-// parallaxe) :
-//   - Entrance stagger : avatar + bloc texte s'animent en séquence au chargement
-//                        (@keyframes hero-avatar-in / hero-text-in, globals.css)
-//   - Track switch     : fondu CSS (@keyframes fadeIn, déjà utilisé ailleurs sur
-//                        le site) sur le contenu dynamique — pas de Framer Motion
-//                        ici : voir la note plus bas sur pourquoi AnimatePresence
-//                        a été retiré de ce bloc précis.
-//   - Parallaxe avatar : léger décalage vertical de l'avatar au scroll (écouteur
-//                        passif + requestAnimationFrame, limité aux 400 premiers px)
-//   - Reduced motion   : toutes les animations sont désactivées si prefers-reduced-motion
+// Animations are plain CSS:
+//   - entrance: avatar then text (hero-avatar-in / hero-text-in, globals.css);
+//   - track switch: CSS fade on the dynamic content;
+//   - avatar parallax: small vertical shift over the first 400px of scroll
+//     (passive listener + requestAnimationFrame);
+//   - all disabled with prefers-reduced-motion.
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
@@ -27,28 +21,25 @@ import { useTrack } from "./providers";
 import { TypingText } from "@/components/TypingText";
 import BookingLink from "@/components/BookingLink";
 
-// AvailabilityModal n'est utile qu'au clic (modale fermée par défaut) : chargée
-// en dynamic import (ssr: false) pour ne pas alourdir le JS exécuté au premier
-// rendu du hero (above the fold).
+// AvailabilityModal is only needed on click: loaded with a dynamic import
+// (ssr: false) to keep it out of the hero's initial JS.
 const AvailabilityModal = dynamic(() => import("@/components/AvailabilityModal"), {
   ssr: false,
 });
 
-// ── Entrée animée ───────────────────────────────────────────────────────────
-// Reprend les anciens variants : l'avatar garde opacity 1 (candidat LCP, rendu
-// dès le premier paint) et ne fait qu'un léger zoom ; le bloc texte monte de
-// 18 px sans fondu pour que le H1 reste visible dans le HTML SSR.
-// Classes .hero-avatar-in / .hero-text-in : app/globals.css.
+// ── Entrance ────────────────────────────────────────────────────────────────
+// The avatar keeps opacity 1 (LCP candidate, painted immediately) and only
+// zooms slightly; the text block rises 18px without fading, so the H1 stays
+// visible in the SSR HTML. Classes in app/globals.css.
 
 export default function TrackAwareHero() {
   const t = useTranslations();
   const { track, setTrack } = useTrack();
   const locale = useLocale();
 
-  // ── Parallaxe avatar ───────────────────────────────────────────────────────
-  // 0 → 400px de scroll → l'avatar remonte de 0 → -28px (subtil). Écrit
-  // directement dans le style (pas de re-render) ; désactivé si
-  // prefers-reduced-motion.
+  // ── Avatar parallax ────────────────────────────────────────────────────────
+  // 0 → 400px of scroll moves the avatar 0 → -28px. Written straight to the
+  // style (no re-render); off with prefers-reduced-motion.
   const parallaxRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = parallaxRef.current;
@@ -68,18 +59,14 @@ export default function TrackAwareHero() {
     };
   }, []);
 
-  // Les téléchargements de CV ne sont plus dans le hero : les trois CV
-  // (hybride, Salesforce, IT Ops) sont proposés dans le bloc RecruiterPaths
-  // juste en dessous — les répéter ici multipliait les choix au premier écran.
-
-  // Avatar : env var ou image locale
+  // Avatar: env var or local image
   const avatarUrl = useMemo(
     () => process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp",
     []
   );
   const [src, setSrc] = useState<string>(avatarUrl);
 
-  // Proof tags différenciés par track.
+  // Proof tags per track.
   const proofTags: { label: string; href?: string }[] =
     track === "salesforce"
       ? [
@@ -95,9 +82,9 @@ export default function TrackAwareHero() {
 
   return (
     <div className="grid items-center gap-8 lg:grid-cols-[260px_1fr]">
-      {/* ── Colonne 1 — Avatar avec bordure gradient cyan→bleu ─────────────── */}
-      {/* Parallaxe sur ce conteneur, zoom d'entrée sur l'enfant : deux
-          transform distincts qui ne s'écrasent pas. */}
+      {/* ── Column 1: avatar with gradient border ──────────────────────────── */}
+      {/* Parallax on this container, entrance zoom on the child: two separate
+          transforms that do not override each other. */}
       <div ref={parallaxRef} className="mx-auto lg:mx-0">
        <div className="hero-avatar-in">
         <div className={`rounded-2xl p-[3px] shadow-xl ${track === "salesforce" ? "bg-linear-to-br from-cyan-400 via-cyan-500 to-blue-600 shadow-cyan-500/20 dark:shadow-cyan-400/15" : "bg-linear-to-br from-violet-400 via-violet-500 to-purple-700 shadow-violet-500/20 dark:shadow-violet-400/15"}`}>
@@ -116,21 +103,16 @@ export default function TrackAwareHero() {
        </div>
       </div>
 
-      {/* ── Colonne 2 — Texte ────────────────────────────────────────────────── */}
+      {/* ── Column 2: text ───────────────────────────────────────────────────── */}
       <div className="hero-text-in">
 
-        {/* Badge de disponibilité — cliquable → ouvre la modale de détails */}
+        {/* Availability badge: opens the details modal */}
         <div className="mb-2">
           <AvailabilityModal />
         </div>
 
-        {/* Repère certifications/diplômes — visible sans clic, contrairement à la
-            réponse FAQ "Do you have a Salesforce certification?" qui répond déjà
-            bien à cette question mais reste cachée derrière un accordéon. L'absence
-            de certification éditeur est précisément l'objection qui a coûté 3
-            entretiens malgré un CDI sans période d'essai — la contre-preuve
-            (diplôme RNCP6, Trailhead actif, certification en préparation datée)
-            doit être visible dans les 30 premières secondes, pas après un clic. */}
+        {/* Certifications and diplomas, visible without a click (RNCP 6
+            diploma, active Trailhead, dated upcoming certification). */}
         <div className="mb-4 flex flex-wrap gap-2">
           <Link
             href={`/${locale}/certifications`}
@@ -138,9 +120,8 @@ export default function TrackAwareHero() {
           >
             🎓 {t("hero.credentialsSummary")}
           </Link>
-          {/* Profil hybride — point d'entrée neutre vers la page qui prouve la
-              combinaison Salesforce + infra + sécurité (audit P2). Visible quel
-              que soit le track actif : c'est justement le sujet. */}
+          {/* Hybrid profile: neutral entry point to the page showing
+              Salesforce + infrastructure + security combined, on both tracks. */}
           <Link
             href={`/${locale}/hybride`}
             className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 dark:border-cyan-400/20 bg-linear-to-r from-cyan-500/10 to-violet-500/10 px-3 py-1 text-xs text-muted hover:from-cyan-500/20 hover:to-violet-500/20 transition-colors soft-ring"
@@ -149,26 +130,17 @@ export default function TrackAwareHero() {
           </Link>
         </div>
 
-        {/* Contenu dynamique (track-dépendant).
-            Ancienne version : <AnimatePresence mode="wait"><motion.div key={track}>...
-            Retiré entièrement (pas seulement mode="wait") : sur un second toggle, le
-            callback de fin d'animation de sortie de Framer Motion ne se déclenchait pas
-            de façon fiable (React 19 + framer-motion 12) — AnimatePresence restait bloqué
-            à mi-transition. Sans mode="wait" seul, le symptôme changeait de forme mais ne
-            disparaissait pas : l'ancien ET le nouveau contenu restaient tous les deux montés
-            indéfiniment (texte dupliqué, superposé), preuve que c'est bien le signal de fin
-            de sortie qui est en cause, pas mode="wait" en particulier.
-            Un <div> simple, sans montage/démontage, élimine complètement la dépendance à ce
-            callback : le contenu reflète toujours `track` immédiatement au re-render, sans
-            jamais pouvoir rester bloqué entre deux états. Transition CSS légère (classe
-            Tailwind) en remplacement du crossfade Framer Motion. */}
+        {/* Track-dependent content. A plain <div> (no mount/unmount) with a
+            CSS fade: AnimatePresence got stuck mid-transition on repeated
+            toggles (exit-complete callback not firing reliably with React 19
+            + framer-motion 12), leaving old and new content both mounted. */}
         <div
           key={track}
-          // motion-safe : pas de fondu si prefers-reduced-motion
+          // motion-safe: no fade with prefers-reduced-motion
           className="motion-safe:animate-[fadeIn_0.3s_ease_forwards]"
           suppressHydrationWarning
         >
-            {/* Accroche courte — typing effect */}
+            {/* Short hook, typing effect */}
             <p className={`text-sm font-medium ${track === "salesforce" ? "text-cyan-800 dark:text-cyan-300" : "text-violet-800 dark:text-violet-300"}`}>
               <TypingText
                 text={track === "salesforce" ? t("hero.value_salesforce") : t("hero.value_itops")}
@@ -176,24 +148,23 @@ export default function TrackAwareHero() {
               />
             </p>
 
-            {/* Titre H1 — gradient animé */}
+            {/* H1 with animated gradient */}
             <h1 className="mt-2 font-display text-3xl sm:text-5xl font-semibold leading-tight tracking-tight">
               <span className={`block animate-gradient-x bg-clip-text text-transparent bg-linear-to-r ${track === "salesforce" ? "from-slate-900 via-cyan-600 to-slate-900 dark:from-white dark:via-cyan-300 dark:to-white" : "from-slate-900 via-violet-600 to-slate-900 dark:from-white dark:via-violet-300 dark:to-white"}`}>
                 {track === "salesforce" ? t("hero.title_salesforce") : t("hero.title_itops")}
               </span>
-              {/* Séparateur invisible pour les lecteurs d'écran et les moteurs de recherche
-                  — évite la concaténation des deux spans en un seul texte sans espace */}
+              {/* Hidden separator so screen readers and search engines do not
+                  read the two spans as one word */}
               <span className="sr-only"> — </span>
               <span className={`mt-1 block text-xl sm:text-2xl font-medium ${track === "salesforce" ? "text-cyan-700 dark:text-cyan-300" : "text-violet-700 dark:text-violet-300"}`}>
                 {track === "salesforce" ? t("hero.subtitle_salesforce") : t("hero.subtitle_itops")}
               </span>
             </h1>
 
-            {/* CTA mobile (< 640 px) — audit 2026-10-01 : sur un écran de 390 × 844,
-                l'avatar, les badges et le titre repoussaient tous les boutons sous le
-                pli. Ce bouton placé juste sous le H1 rend « Me recruter » visible dès
-                l'arrivée ; la rangée complète de CTA reste plus bas, où son propre
-                « Me recruter » est masqué sur mobile pour éviter le doublon. */}
+            {/* Mobile CTA (< 640px): on small screens the avatar, badges and
+                title push every button below the fold, so "Hire me" also sits
+                right under the H1; the one in the CTA row below is hidden on
+                mobile to avoid a duplicate. */}
             <div className="mt-4 sm:hidden">
               <a
                 className={`inline-flex rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
@@ -203,12 +174,12 @@ export default function TrackAwareHero() {
               </a>
             </div>
 
-            {/* Tagline percutante — répond à "pourquoi travailler avec moi ?" */}
+            {/* Tagline: why work with me */}
             <p className="mt-3 max-w-2xl text-muted text-base sm:text-lg leading-relaxed">
               {track === "salesforce" ? t("hero.intro_salesforce") : t("hero.intro_itops")}
             </p>
 
-            {/* Proof tags — différents selon le track */}
+            {/* Proof tags, per track */}
             <div className="mt-4 flex flex-wrap gap-2">
               {proofTags.map((tag) =>
                 tag.href ? (
@@ -226,9 +197,9 @@ export default function TrackAwareHero() {
             </div>
         </div>
 
-        {/* CTAs — statiques, ne réaniment pas au changement de track */}
+        {/* CTAs: static, not re-animated on track change */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          {/* CTA primaire : scroll vers la section contact */}
+          {/* Primary CTA: scroll to the contact section */}
           <a
             className={`hidden sm:inline-block rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring transition-opacity ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
             href="#contact"
@@ -236,12 +207,12 @@ export default function TrackAwareHero() {
             {t("cta.workWithMe")}
           </a>
 
-          {/* CTA secondaire 1 : page de réservation Proton Calendar, nouvel onglet
-              (disparaît si NEXT_PUBLIC_BOOKING_URL n'est pas configurée) */}
+          {/* Secondary CTA: Proton Calendar booking page in a new tab (hidden
+              when NEXT_PUBLIC_BOOKING_URL is not set) */}
           <BookingLink variant="hero" />
         </div>
 
-        {/* Hint de switch de profil */}
+        {/* Profile switch hint */}
         <p className="mt-4 text-xs text-muted-2">
           <button
             type="button"

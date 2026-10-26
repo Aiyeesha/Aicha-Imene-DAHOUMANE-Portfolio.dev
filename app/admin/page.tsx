@@ -1,15 +1,9 @@
 // app/admin/page.tsx
 // ------------------
-// Dashboard admin — visualisation + actions sur les données Supabase.
-// Accès protégé par HTTP Basic Auth (middleware.ts).
-//
-// Fonctionnalités :
-//   - Stats : projets, blog, certifications, messages, témoignages
-//   - Projets : table avec liens directs vers les pages publiques
-//   - Messages : 20 derniers avec mailto
-//   - Témoignages : liste complète avec toggle publish/unpublish inline
-//   - Blog : compteur par catégorie (lecture filesystem)
-//   - Revalidation de cache ISR
+// Admin dashboard over the Supabase data, behind HTTP Basic Auth (proxy.ts
+// and lib/security/adminAuth.ts): stats, projects with links to the public
+// pages, latest 20 messages, testimonials with inline publish toggle, blog
+// counts per category, cache revalidation.
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { certifications as staticCertifications } from "@/content/certifications";
@@ -123,12 +117,10 @@ async function fetchDashboardData() {
 
 // ── Translation-completeness check (published projects only) ──────────────────
 //
-// Heuristic, not a hard schema check: a locale row "exists" in Supabase even
-// when its title/summary was never actually translated — the FR/ES text just
-// silently equals the EN source (this is exactly how the ES gap on the two
-// Salesforce⇄Infra bridge projects went unnoticed, see audit 2026-08-13).
-// Flags any fr/es title or summary that's byte-identical (case/space-insensitive)
-// to its en counterpart, or missing outright.
+// Heuristic: a locale row can exist while its title/summary was never
+// translated and silently equals the EN source. Flags any fr/es title or
+// summary identical (case/space-insensitive) to its en counterpart, or
+// missing.
 type TranslationGap = { slug: string; locale: "fr" | "es"; field: "title" | "summary"; reason: "missing" | "matches_en" };
 
 function findProjectTranslationGaps(rows: ProjectTranslationRow[]): TranslationGap[] {
@@ -219,8 +211,8 @@ function SectionHeader({ title, count, right }: { title: string; count?: number;
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AdminPage() {
-  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
-  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
+  // why it runs in each page as well as in the layout.
   await assertAdminOrNotFound();
 
   const { projects, projectTranslations, messages, testimonials, blog, errors } =
@@ -228,7 +220,7 @@ export default async function AdminPage() {
 
   const projectTranslationGaps = findProjectTranslationGaps(projectTranslations);
 
-  // Stats projets
+  // Project stats
   const enProjects = projects.filter((p) => p.locale === "en");
   const projectsPublished  = enProjects.filter((p) => p.status === "published").length;
   const projectsDraft      = enProjects.filter((p) => p.status === "draft").length;
@@ -236,7 +228,7 @@ export default async function AdminPage() {
   const projectsSalesforce = enProjects.filter((p) => p.track === "salesforce").length;
   const projectsItops      = enProjects.filter((p) => p.track === "itops").length;
 
-  // Stats témoignages
+  // Testimonial stats
   const testimonialsPublished = testimonials.filter((t) => t.is_published).length;
   const testimonialsDraft     = testimonials.filter((t) => !t.is_published).length;
 
@@ -272,12 +264,12 @@ export default async function AdminPage() {
   return (
     <div className="space-y-10">
 
-      {/* Erreurs */}
+      {/* Errors */}
       {Object.entries(errors).map(([key, msg]) =>
         msg ? <ErrorBanner key={key} message={`${key}: ${msg}`} /> : null
       )}
 
-      {/* ── Vue d'ensemble ────────────────────────────────────────────────────── */}
+      {/* ── Overview ──────────────────────────────────────────────────────────── */}
       <section>
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-xl font-semibold text-slate-100">Vue d&apos;ensemble</h1>
@@ -330,7 +322,7 @@ export default async function AdminPage() {
           />
         </div>
 
-        {/* Tracks répartition */}
+        {/* Track breakdown */}
         <div className="mt-4 flex gap-4 text-sm text-slate-400">
           <span className="text-cyan-400">Salesforce : {projectsSalesforce}</span>
           <span className="text-slate-600">·</span>
@@ -340,7 +332,7 @@ export default async function AdminPage() {
         </div>
       </section>
 
-      {/* ── Blog — traductions manquantes ─────────────────────────────────────── */}
+      {/* ── Blog: missing translations ────────────────────────────────────────── */}
       {blog.missingFr.length > 0 && (
         <section>
           <SectionHeader
@@ -357,11 +349,9 @@ export default async function AdminPage() {
         </section>
       )}
 
-      {/* ── Projets — traductions à vérifier ──────────────────────────────────── */}
-      {/* Un slug "present" en FR/ES ne veut pas dire "traduit" — voir le gap ES
-          trouvé sur les 2 projets pont (audit 2026-08-13) : titre/description
-          identiques à l'EN, jamais rédigés en espagnol. Cette section rend ce
-          genre d'écart visible avant qu'un visiteur ne le découvre. */}
+      {/* ── Projects: translations to check ───────────────────────────────────── */}
+      {/* A slug present in FR/ES is not necessarily translated: this section
+          shows such gaps before a visitor finds them. */}
       {projectTranslationGaps.length > 0 && (
         <section>
           <SectionHeader
@@ -405,7 +395,7 @@ export default async function AdminPage() {
         </section>
       )}
 
-      {/* ── Projets ───────────────────────────────────────────────────────────── */}
+      {/* ── Projects ──────────────────────────────────────────────────────────── */}
       <section>
         <SectionHeader title="Projets" count={enProjectRows.length} />
         <div className="overflow-x-auto rounded-xl border border-white/10">
@@ -455,7 +445,7 @@ export default async function AdminPage() {
         </div>
       </section>
 
-      {/* ── Témoignages ───────────────────────────────────────────────────────── */}
+      {/* ── Testimonials ──────────────────────────────────────────────────────── */}
       <section>
         <SectionHeader
           title="Témoignages"
@@ -501,7 +491,7 @@ export default async function AdminPage() {
         )}
       </section>
 
-      {/* ── Messages de contact ───────────────────────────────────────────────── */}
+      {/* ── Contact messages ──────────────────────────────────────────────────── */}
       <section>
         <SectionHeader title="Messages de contact" count={messages.length} />
         {messages.length === 0 ? (
