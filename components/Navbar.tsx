@@ -14,6 +14,7 @@ import ThemeToggle from "./ThemeToggle";
 import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
+import { scrollToAnchorWhenStable } from "@/lib/anchorScroll";
 import { useTrack } from "@/app/[locale]/providers";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
@@ -144,32 +145,14 @@ export default function Navbar({
   // Hash sync actif sur la home uniquement — l'URL reflète la section visible au scroll.
   useHashSync(isHome ? spyActiveId : "");
 
-  // Scroll vers l'ancre après navigation cross-page (ex: /about → /#projects).
-  // router.push avec scroll:false ne déclenche pas le scroll natif du navigateur
-  // dans les SPAs — on le fait manuellement après que la page est rendue.
-  // Retry toutes les 150 ms (max 20 tentatives ≈ 3 s) pour attendre que les
-  // sections dynamiques (Supabase / Suspense) soient montées dans le DOM.
+  // Scroll vers l'ancre après navigation cross-page (ex: /about → /#contact)
+  // ou accès direct. Seul point d'entrée (ScrollToHash faisait doublon) :
+  // voir lib/anchorScroll.ts — saut instantané puis recalage tant que les
+  // sections dynamiques au-dessus de la cible se montent (audit 2026-10-25).
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-
-    let attempts = 0;
-    const MAX = 20;
-    let timer: ReturnType<typeof setTimeout>;
-
-    const tryScroll = () => {
-      const el = document.getElementById(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (attempts < MAX) {
-        attempts++;
-        timer = setTimeout(tryScroll, 150);
-      }
-    };
-
-    // Premier essai après 100 ms (laisse le temps au premier render)
-    timer = setTimeout(tryScroll, 100);
-    return () => clearTimeout(timer);
+    return scrollToAnchorWhenStable(decodeURIComponent(hash));
   }, [pathname]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
