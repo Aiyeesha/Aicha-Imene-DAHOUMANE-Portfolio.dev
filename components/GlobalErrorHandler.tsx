@@ -2,54 +2,41 @@
 
 // GlobalErrorHandler.tsx
 // ----------------------
-// Composant client monté une seule fois dans le root layout.
-// Intercepte les erreurs JS non-gérées et les envoie à /api/errors.
+// Client component mounted once in the root layout. Reports uncaught errors
+// to /api/errors: window error events (code outside React rendering) and
+// unhandled promise rejections. Error boundaries cover render crashes.
 //
-// Capture :
-//   - window.onerror         : erreurs JS hors React (setTimeout, event handlers…)
-//   - unhandledrejection     : Promises rejetées sans .catch()
-//
-// Complément aux error boundaries (qui catchent le crash du rendu React) :
-// ce handler couvre tout ce qui échappe à React.
-//
-// Filtres :
-//   - "Script error." (cross-origin, pas de détails utiles)
-//   - Extensions navigateur (chrome-extension://, moz-extension://…)
-//   - Dedup par session (Set d'empreintes — évite de flooder la même erreur)
-//
-// Transport :
-//   - navigator.sendBeacon  (non bloquant, survit au déchargement de page)
-//   - fetch keepalive       (fallback si sendBeacon absent)
-//
-// En développement : log console uniquement, pas d'appel API.
+// Ignored: "Script error." (cross-origin, no details), browser extensions,
+// and errors already reported in this session.
+// Sent with navigator.sendBeacon, falling back to fetch keepalive.
+// In development: console only, no API call.
 
 import { useEffect } from "react";
 
-// ── Limites de taille (caractères) ──────────────────────────────────────────
+// ── Size limits (characters) ──────────────────────────────────────────────
 const MAX_MSG   = 200;
 const MAX_STACK = 1_500;
 const MAX_URL   = 300;
 
-// ── Dedup par session ────────────────────────────────────────────────────────
-// Module-level Set : persiste pendant toute la session (pas réinitialisé
-// entre les re-renders React). Un même crash React peut se rejouer
-// plusieurs fois si reset() est appelé — la dedup l'absorbe.
+// ── Per-session dedup ───────────────────────────────────────────────────────
+// Module-level, so it survives re-renders; the same React crash can replay
+// when reset() is called.
 const seen = new Set<string>();
 
 function makeFingerprint(message: string, source: string, line?: number): string {
   return `${message.slice(0, 80)}|${source.slice(0, 80)}|${line ?? 0}`;
 }
 
-// ── Filtres ──────────────────────────────────────────────────────────────────
+// ── Filters ──────────────────────────────────────────────────────────────────
 function shouldIgnore(message: string, source: string): boolean {
-  // "Script error." = erreur cross-origin sans détail — inutile
+  // Cross-origin error without details
   if (!message || message === "Script error.") return true;
-  // Extensions navigateur — bruits parasites
+  // Browser extension noise
   return /^(?:chrome|moz|safari|safari-web|ms-browser)-extension:\/\//.test(source);
 }
 
-// ── Nettoyage URL ─────────────────────────────────────────────────────────────
-// Supprime query string et hash pour éviter de logger des données sensibles.
+// ── URL cleanup ───────────────────────────────────────────────────────────────
+// Drops query string and hash so no sensitive data is logged.
 function cleanUrl(raw: string): string {
   try {
     const u = new URL(raw);
@@ -60,12 +47,12 @@ function cleanUrl(raw: string): string {
 }
 
 // ── Transport ─────────────────────────────────────────────────────────────────
-// sendBeacon est préféré : asynchrone, non bloquant, survit au beforeunload.
-// Fallback fetch keepalive pour Safari < 11.1 (sendBeacon + JSON non supporté).
+// sendBeacon is non-blocking and survives page unload; fetch keepalive is the
+// fallback where sendBeacon with JSON is unsupported.
 function send(payload: Record<string, unknown>): void {
   const body = JSON.stringify(payload);
   if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-    // sendBeacon accepte un Blob pour forcer le Content-Type application/json
+    // A Blob forces the application/json Content-Type
     navigator.sendBeacon("/api/errors", new Blob([body], { type: "application/json" }));
   } else {
     fetch("/api/errors", {
@@ -77,7 +64,7 @@ function send(payload: Record<string, unknown>): void {
   }
 }
 
-// ── Composant ─────────────────────────────────────────────────────────────────
+// ── Component ─────────────────────────────────────────────────────────────────
 export default function GlobalErrorHandler() {
   useEffect(() => {
     // ── window.onerror ───────────────────────────────────────────────────────
@@ -101,7 +88,7 @@ export default function GlobalErrorHandler() {
       };
 
       if (process.env.NODE_ENV !== "production") {
-        // Dev : log console uniquement (pas d'appel API pour éviter le bruit)
+        // Dev: console only, no API call
         console.error("[GlobalErrorHandler:uncaught]", payload);
         return;
       }
@@ -147,6 +134,6 @@ export default function GlobalErrorHandler() {
     };
   }, []);
 
-  // Rendu nul — ce composant est purement comportemental
+  // Renders nothing: behaviour only
   return null;
 }

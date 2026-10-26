@@ -22,12 +22,10 @@ import { BOOKING_URL } from "@/lib/booking";
 import usePlatformShortcut from "@/lib/usePlatformShortcut";
 import { openCommandPalette } from "@/lib/commandPaletteEvents";
 
-/** Petit bouton discret ⌘K / Ctrl K pour rappeler le raccourci palette de commandes. */
+/** Small ⌘K / Ctrl K button that opens the command palette. */
 function CommandPaletteTrigger() {
-  // Audit 2026-10-23 (NAV-1) : aria-label auparavant codé en anglais sur les
-  // trois langues, et symbole ⌘ affiché à tous — inconnu sous Windows/Linux,
-  // où le raccourci réel est Ctrl+K. Libellé traduit, raccourci selon la
-  // plateforme (lib/usePlatformShortcut.ts).
+  // Translated label; the shortcut shown matches the platform (⌘K on Apple,
+  // Ctrl K elsewhere — see lib/usePlatformShortcut.ts).
   const t = useTranslations("commandPalette");
   const shortcut = usePlatformShortcut();
   return (
@@ -35,11 +33,9 @@ function CommandPaletteTrigger() {
       type="button"
       aria-label={t("open", { shortcut })}
       onClick={openCommandPalette}
-      // Visible là où il y a de la place : sous xl (barre réduite au menu
-      // hamburger, écrans tactiles) et à partir de 1850px. Masqué entre les
-      // deux, où la barre desktop n'a aucune marge (audit 2026-08-13) — ces
-      // écrans ont un clavier, et le menu mobile n'y est pas affiché.
-      // Audit 2026-10-25 (constat 7) : auparavant masqué sous 1850px partout.
+      // Shown where there is room: below xl (hamburger layout, touch screens)
+      // and from 1850px. Hidden in between, where the desktop nav has no spare
+      // width; those screens have a keyboard anyway.
       className="inline-flex xl:hidden min-[1850px]:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
     >
       <span aria-hidden="true">{shortcut}</span>
@@ -48,28 +44,20 @@ function CommandPaletteTrigger() {
 }
 
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
-// workWithMe : menu mobile uniquement (absent de DESKTOP_IDS_STATIC) — page
-// « L'essentiel recruteur », audit 2026-10-25.
+// workWithMe (recruiter summary page) is listed in the mobile menu only.
 const PAGE_IDS = ["about","hybrid","certifications","resources","workWithMe"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
 const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-// IDs visibles dans le desktop nav — défini au niveau module pour être accessible
-// depuis le mapToDesktopId et depuis DESKTOP_IDS dans le composant.
-// "hybrid" (page /hybride) REMPLACE "resources" depuis l'audit de contenu du
-// 2026-09-25 : /hybride est la page la plus différenciante pour un recruteur,
-// /resources la moins utile. Les AJOUTER toutes les deux recréait un débordement
-// du nav scrollable (+111px à 1280px, +137px à 1920px) ; l'échange à nombre
-// d'items constant n'ajoute que l'écart de longueur des libellés. /resources
-// reste accessible via le menu mobile, la palette ⌘K et le pied de page.
+// Items shown in the desktop nav. "hybrid" takes the slot of "resources":
+// showing both overflows the nav. /resources stays reachable from the mobile
+// menu, the command palette and the footer.
 const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "certifications", "services", "testimonials", "projects", "blog", "contact"]);
 
-// Accent visuel du lien « Profil hybride » (audit 2026-10-01) : c'est le profil
-// de référence déclaré sur l'accueil, il doit être l'entrée la plus saillante du
-// menu — devant le lien « Cluster Sécurité », dont l'ambre est désormais atténué.
-// Dégradé repris de la page /hybride (cyan→violet = la combinaison des deux tracks).
+// Accent for the "Hybrid profile" link, the most prominent nav entry. Same
+// cyan→violet gradient as the /hybride page (the two tracks combined).
 const HYBRID_ACCENT =
   "font-semibold bg-linear-to-r from-cyan-600 to-violet-600 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent";
 
@@ -85,24 +73,15 @@ export default function Navbar({
   const t = useTranslations();
   const { track } = useTrack();
 
-  // Filtered by the active track, not the raw fetch order — otherwise the dropdown
-  // mixes Salesforce/IT Ops items regardless of the toggle, which is the exact
-  // inconsistency flagged in the audit (a toggle that only affects the hero, not
-  // the one nav element that already carries per-project track data). Capped at 6,
-  // matching the original dropdown size before this became track-aware.
+  // Projects dropdown follows the active track, capped at 6 entries.
   const trackFeaturedProjects = useMemo(
     () => featuredProjects.filter((p) => p.track === track).slice(0, 6),
     [featuredProjects, track]
   );
 
   const pathname = usePathname();
-  // Was cast to "en" | "fr" only, missing "es" — i18n/routing.ts has supported
-  // 3 locales all along, so the runtime value could already be "es" here
-  // (harmless in template strings, but the type lied about it). AppLocale is
-  // the single source of truth for the locale union, shared with routing/middleware.
   const locale = (pathname.split("/")[1] || routing.defaultLocale) as AppLocale;
   const [avatarSrc, setAvatarSrc] = useState<string | null>(process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp");
-
 
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
@@ -110,8 +89,8 @@ export default function Navbar({
     isHome ? SECTION_IDS.filter((id) => id !== "testimonials" || showTestimonials) : []
   );
 
-  // null pour les pages non mappées dans la nav (status, colophon, legal, uses…)
-  // Évite un faux aria-current="page" sur "Compétences" par défaut.
+  // null on pages without a nav entry (status, colophon, legal…), so no item
+  // gets a wrong aria-current="page".
   const routeActiveId: NavId | null = pathname.startsWith(`/${locale}/blog`)
     ? "blog"
     : pathname.startsWith(`/${locale}/projects`)
@@ -130,10 +109,8 @@ export default function Navbar({
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
-  // Desktop nav : mappe les sections non affichées (experience, services, blog…)
-  // vers la section desktop précédente la plus proche, pour que la pill reste
-  // toujours ancrée sur un item visible. Sur les pages non mappées (activeId null),
-  // aucun item n'est mis en évidence.
+  // Sections missing from the desktop nav map to the closest preceding visible
+  // item, so the pill always sits on something visible.
   const SECTION_ORDER = [...SECTION_IDS] as string[];
   const desktopActiveId: string = (() => {
     if (activeId === null) return "";
@@ -147,13 +124,11 @@ export default function Navbar({
     return "";
   })();
 
-  // Hash sync actif sur la home uniquement — l'URL reflète la section visible au scroll.
+  // Home only: keep the URL hash in sync with the visible section.
   useHashSync(isHome ? spyActiveId : "");
 
-  // Scroll vers l'ancre après navigation cross-page (ex: /about → /#contact)
-  // ou accès direct. Seul point d'entrée (ScrollToHash faisait doublon) :
-  // voir lib/anchorScroll.ts — saut instantané puis recalage tant que les
-  // sections dynamiques au-dessus de la cible se montent (audit 2026-10-25).
+  // Scroll to the hash target after a cross-page navigation (e.g. /about →
+  // /#contact) or a direct visit. See lib/anchorScroll.ts.
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
@@ -165,16 +140,12 @@ export default function Navbar({
   const projectsDropdownRef = useRef<HTMLDivElement | null>(null);
   const projectsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const projectsMenuRef = useRef<HTMLDivElement | null>(null);
-  // Position calculée du menu Projets — voir le useEffect plus bas pour le pourquoi
-  // (portail hors de #desktop-nav, qui clippe verticalement le menu en position absolute).
+  // Fixed position of the portalled Projects menu (see the effect below).
   const [projectsMenuPos, setProjectsMenuPos] = useState<{ top: number; left: number } | null>(null);
-  // Navigation clavier du menu Projets (pattern WAI-ARIA « menu button ») —
-  // audit 2026-10-23 (A11Y-7) : le menu déclarait role="menu" sans gérer les
-  // flèches, et, rendu en portail en fin de <body>, il était hors de l'ordre
-  // de tabulation : à l'ouverture, Tab quittait le bouton vers le lien suivant
-  // de la barre, jamais vers les entrées du menu. On place donc le focus dans
-  // le menu à l'ouverture et on gère ↑/↓/Début/Fin/Tab (Échap : effet plus bas).
-  // "last" quand le menu est ouvert avec ↑ depuis le bouton, sinon "first".
+  // Keyboard support for the Projects menu (WAI-ARIA menu button pattern).
+  // The menu is portalled to the end of <body>, outside the tab order, so
+  // focus moves into it on open and ↑/↓/Home/End/Tab are handled here
+  // (Escape in the effect below). "last" when opened with ↑, else "first".
   const projectsFocusOnOpenRef = useRef<"first" | "last">("first");
 
   const focusProjectsMenuItem = (target: "first" | "last" | "next" | "prev") => {
@@ -188,7 +159,7 @@ export default function Navbar({
       : target === "last" ? items.length - 1
       : target === "next" ? (current + 1) % items.length
       : (current - 1 + items.length) % items.length;
-    // preventScroll : le menu se ferme au moindre scroll (voir plus bas).
+    // preventScroll: any scroll closes the menu (see below).
     items[index].focus({ preventScroll: true });
   };
 
@@ -199,8 +170,7 @@ export default function Navbar({
       if (projectsDropdownOpen) focusProjectsMenuItem(projectsFocusOnOpenRef.current);
       else setProjectsDropdownOpen(true);
     } else if (e.key === "Enter" || e.key === " ") {
-      // Le clic natif (Enter/Espace sur un <button>) bascule l'ouverture ;
-      // on indique seulement où placer le focus.
+      // The native click toggles the menu; only set where focus goes.
       projectsFocusOnOpenRef.current = "first";
     }
   };
@@ -212,9 +182,8 @@ export default function Navbar({
       case "Home":      e.preventDefault(); focusProjectsMenuItem("first"); break;
       case "End":       e.preventDefault(); focusProjectsMenuItem("last"); break;
       case "Tab":
-        // Le menu est en portail (fin du document) : laisser Tab suivre l'ordre
-        // du DOM enverrait le focus hors de la barre de navigation. On ferme et
-        // on rend le focus au bouton, d'où la tabulation reprend normalement.
+        // The menu lives at the end of the document: close it and return
+        // focus to the trigger so tabbing continues from the nav.
         e.preventDefault();
         setProjectsDropdownOpen(false);
         projectsTriggerRef.current?.focus();
@@ -222,17 +191,9 @@ export default function Navbar({
     }
   };
 
-  // Débordement du nav desktop — voir audit 2026-08-13 : #desktop-nav est
-  // overflow-x-auto avec scrollbar masquée ([scrollbar-width:none]), ce qui
-  // veut dire qu'un contenu débordant (mesuré : ~1011px de contenu pour
-  // ~512px de large sur un des viewports testés, autour du seuil xl=1280px)
-  // était invisible ET indétectable — pas de scrollbar, pas de dégradé, pas
-  // de molette (le scroll vertical natif ne redirige pas vers le scroll
-  // horizontal d'un conteneur overflow-x-auto). Résultat : Projets/Blog/
-  // Contact/Cluster Sécurité pouvaient être hors champ sans aucun indice.
-  // Fix : boutons chevron visibles uniquement quand il y a réellement du
-  // contenu cliqué hors champ de ce côté, + molette redirigée en scroll
-  // horizontal pendant le survol.
+  // #desktop-nav scrolls horizontally with a hidden scrollbar, so overflowing
+  // items would be invisible. Chevrons (plus a fade) appear on the side that
+  // has hidden content, and the mouse wheel scrolls horizontally on hover.
   const desktopNavRef = useRef<HTMLDivElement | null>(null);
   const [navOverflow, setNavOverflow] = useState({ left: false, right: false });
 
@@ -251,27 +212,15 @@ export default function Navbar({
 
     updateNavOverflow();
 
-    // Débordement non détecté au premier rendu (audit 2026-08-13, itération 3) :
-    // vérifié en prod par instrumentation directe — au tout premier paint,
-    // #desktop-nav mesure clientWidth === scrollWidth (pas de débordement),
-    // puis clientWidth rétrécit de plusieurs dizaines de px dans les instants
-    // qui suivent pendant que les autres contrôles du header (toggle track,
-    // thème, sélecteur de langue — plusieurs ont leurs propres gardes
-    // `mounted` post-hydratation pour éviter un mismatch SSR/client) montent
-    // et réclament leur espace flex. Un simple `window.dispatchEvent(new
-    // Event("resize"))` recalcule correctement et fait apparaître le chevron
-    // — la logique elle-même est juste, seul le calcul initial est pris trop
-    // tôt. `ResizeObserver` sur #desktop-nav n'a pas suffi à rattraper ce cas
-    // en pratique ; on ajoute donc des recalculs différés (charge des polices
-    // + deux délais courts) en filet de sécurité pendant que le reste du
-    // header finit de se stabiliser après hydratation.
+    // The first measurement is taken before the other header controls mount
+    // and claim their width, and ResizeObserver alone misses it. Re-measure
+    // once fonts load and after two short delays.
     document.fonts?.ready?.then(updateNavOverflow);
     const t1 = setTimeout(updateNavOverflow, 150);
     const t2 = setTimeout(updateNavOverflow, 600);
 
     const onWheel = (e: WheelEvent) => {
-      // Ne redirige que si le conteneur a réellement quelque chose à défiler
-      // horizontalement — sinon on casse le scroll vertical de la page pour rien.
+      // Only hijack the wheel when there is something to scroll horizontally.
       if (el.scrollWidth <= el.clientWidth) return;
       e.preventDefault();
       el.scrollLeft += e.deltaY;
@@ -294,18 +243,14 @@ export default function Navbar({
   }, [locale, securityClusterCount, featuredProjects]);
 
   const scrollNavBy = (delta: number) => {
-    // Pas de behavior:"smooth" — sur certains environnements (navigateurs
-    // automatisés/CI notamment) l'animation ne se termine jamais et scrollLeft
-    // reste bloqué à 0, ce qui a rendu le bouton silencieusement inopérant
-    // pendant la vérification de ce correctif. Un scroll instantané est fiable
-    // partout et reste un pattern courant pour ce type de chevrons de nav.
+    // Instant scroll: smooth scrolling never completes in some automated
+    // browsers, leaving the button inert.
     desktopNavRef.current?.scrollBy({ left: delta });
   };
 
   const menuRef = useRef<HTMLDivElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
-// Single keydown handler: Escape closes menu + Tab focus-trap + scroll-lock.
-  // Fusionné depuis deux useEffect distincts pour éviter le double listener keydown.
+  // Mobile menu: Escape closes it, Tab is trapped inside, page scroll is locked.
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -356,40 +301,33 @@ export default function Navbar({
     };
   }, [mobileOpen]);
 
-// Vrai uniquement après une ouverture : sans ce garde-fou, l'effet rendait le
-// focus au bouton du menu dès le premier rendu, sous 1280px, ce qui
-// contournait le lien d'évitement (audit 2026-10-25, constat 6).
-const mobileWasOpenRef = useRef(false);
-// Vrai quand la fermeture vient d'un lien de section : le focus est alors
-// placé sur la section atteinte et ne doit pas revenir au bouton du menu.
-const mobileSkipFocusRestoreRef = useRef(false);
-useEffect(() => {
-  if (mobileOpen) {
-    mobileWasOpenRef.current = true;
-    // Focus first focusable element inside menu on open.
-    setTimeout(() => {
-      const container = menuRef.current;
-      const first = container?.querySelector<HTMLElement>('a[href], button:not([disabled])');
-      first?.focus();
-    }, 0);
-  } else if (mobileWasOpenRef.current) {
-    // Restore focus to menu button on close.
-    mobileWasOpenRef.current = false;
-    if (mobileSkipFocusRestoreRef.current) mobileSkipFocusRestoreRef.current = false;
-    else menuButtonRef.current?.focus();
-  }
-}, [mobileOpen]);
+  // Set once the menu has been opened, so focus is not pulled to the menu
+  // button on first render (which would bypass the skip link).
+  const mobileWasOpenRef = useRef(false);
+  // Set when a section link closes the menu: focus goes to that section
+  // instead of back to the menu button.
+  const mobileSkipFocusRestoreRef = useRef(false);
+  useEffect(() => {
+    if (mobileOpen) {
+      mobileWasOpenRef.current = true;
+      // Focus the first focusable element inside the menu.
+      setTimeout(() => {
+        const container = menuRef.current;
+        const first = container?.querySelector<HTMLElement>('a[href], button:not([disabled])');
+        first?.focus();
+      }, 0);
+    } else if (mobileWasOpenRef.current) {
+      // Return focus to the menu button on close.
+      mobileWasOpenRef.current = false;
+      if (mobileSkipFocusRestoreRef.current) mobileSkipFocusRestoreRef.current = false;
+      else menuButtonRef.current?.focus();
+    }
+  }, [mobileOpen]);
 
-  // Menu Projets rendu en portail (voir plus bas) : #desktop-nav a overflow-x-auto,
-  // ce qui force le navigateur à traiter overflow-y comme "auto" aussi (règle CSS
-  // implicite — un seul axe ne peut pas rester "visible" si l'autre ne l'est pas).
-  // Résultat en prod (audit temps réel 2026-08-13) : le menu déroulant "Projets"
-  // s'ouvrait bien côté React (chevron, aria-expanded, items dans le DOM) mais
-  // restait totalement invisible — entièrement clippé par la boîte de #desktop-nav
-  // (h-11) puisqu'il dépasse en position absolute/top-full. Un simple overflow-y
-  // explicite ne suffit pas à contourner cette règle CSS. Fix : sortir le menu de
-  // l'arbre DOM de #desktop-nav via un portail vers document.body, positionné en
-  // fixed à partir du rect du bouton déclencheur.
+  // The Projects menu is portalled to document.body: #desktop-nav has
+  // overflow-x: auto, which forces overflow-y to clip too, so an absolutely
+  // positioned menu inside it would be invisible. It is placed with `fixed`
+  // from the trigger's bounding rect.
   useEffect(() => {
     if (!projectsDropdownOpen) return;
 
@@ -422,9 +360,8 @@ useEffect(() => {
         setProjectsDropdownOpen(false);
       }
     };
-    // Le menu est positionné en fixed à partir du rect du déclencheur — un scroll
-    // ou un resize le désynchroniserait visuellement de son bouton. Le fermer est
-    // plus simple et plus sûr qu'un recalcul en continu pour un menu de nav.
+    // A scroll or resize would detach the fixed menu from its trigger; closing
+    // it is simpler than tracking the position.
     const onScrollOrResize = () => setProjectsDropdownOpen(false);
 
     document.addEventListener("keydown", onKeyDown);
@@ -439,29 +376,21 @@ useEffect(() => {
     };
   }, [projectsDropdownOpen]);
 
-  // Focus dans le menu Projets dès qu'il est rendu (position calculée) —
-  // audit 2026-10-23 (A11Y-7). Réinitialisé à "first" pour l'ouverture suivante.
+  // Move focus into the Projects menu once it is positioned, then reset the
+  // target to "first" for the next opening.
   useEffect(() => {
     if (!projectsDropdownOpen || !projectsMenuPos) return;
     focusProjectsMenuItem(projectsFocusOnOpenRef.current);
     projectsFocusOnOpenRef.current = "first";
-    // focusProjectsMenuItem ne lit que des refs : inutile dans les dépendances.
+    // focusProjectsMenuItem only reads refs, so it is not a dependency.
   }, [projectsDropdownOpen, projectsMenuPos]);
 
-// Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
-  // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
+  // Entries that open a separate page (not a home anchor) get a ↗ badge.
   const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "workWithMe", "blog", "projects"]);
 
-  // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
-  // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
-  // FR/ES sont plus longs qu'en anglais et débordaient le conteneur scrollable à 1280px
-  // (ex: "Contact"/"Contacto" tronqué, ~32-48px de débordement mesuré) — voir audit.
-  // Seuil d'élargissement repoussé de 2xl (1536px) à 1850px (itération 4) : le
-  // relâchement pile à 2xl (padding + taille de texte qui grossissent en même
-  // temps que ⌘K et le tagline de marque réapparaissent) recréait un pic de
-  // débordement à 1536-1849px (jusqu'à 244px mesuré à 1536px pile) — pire que
-  // sans aucun relâchement. Vérifié empiriquement : 0 débordement de 1280 à
-  // 1849px avec ce seuil, ≤5px à 1920px une fois tout relâché ensemble.
+  // Compact padding and font size up to 1850px: French and Spanish labels are
+  // longer and would overflow. 1850px is where everything fits once the
+  // brand tagline and the ⌘K button reappear.
   const desktopLinkClass = (id: string) =>
     `relative z-10 rounded-full px-1 min-[1850px]:px-3 py-2 text-[13px] min-[1850px]:text-sm leading-none transition-colors soft-ring ${
       desktopActiveId === id
@@ -503,8 +432,6 @@ useEffect(() => {
     { id: "contact", label: t("nav.contact") }
   ];
 
-  // Desktop nav : 9 items à xl (1280px) — About, Profil hybride, Compétences, Expérience, Certifications, Services, Projets, Blog, Contact.
-  // Le conteneur est scrollable (overflow-x-auto) pour les écrans compacts.
   const DESKTOP_IDS = DESKTOP_IDS_STATIC;
   const desktopSections = sections.filter((s) => DESKTOP_IDS.has(s.id));
 
@@ -516,22 +443,10 @@ useEffect(() => {
         className="fixed inset-x-0 top-0 z-50 h-(--nav-h) border-b border-black/10 bg-white/70 backdrop-blur-sm dark:border-white/10 dark:bg-[#070B1A]/70"
       >
         {/*
-          Desktop layout (robust against truncation):
-          - Left: brand
-          - Center: menu (flex-1, min-w-0)
-          - Right: toggles + CTA
-
-          max-w élargi de 7xl (1280px) à 1600px (audit 2026-08-13, itération 4) :
-          au-delà de 1280px de viewport, ce conteneur restait plafonné à 1280px
-          quelle que soit la largeur d'écran réelle — un moniteur large n'apportait
-          donc AUCUNE marge supplémentaire au nav, alors que ⌘K (dès 2xl=1536px) et
-          le tagline de marque (masqué à xl, réaffiché à 2xl) réclament tous deux
-          plus d'espace pile à ce seuil. Résultat mesuré en prod : le débordement
-          était pire à 1920px (1011px de contenu pour 526px de large) qu'à 1280px,
-          alors qu'un écran plus large devrait justement donner plus de place.
-          `main` reste à max-w-6xl (1152px) — un header plus large que le corps de
-          page est déjà le pattern existant du site (7xl vs 6xl), donc pas un
-          changement visuel nouveau, juste un plafond relevé. */}
+          Brand on the left, nav in the middle (flex-1, min-w-0), controls on
+          the right. The header is wider than <main> so large screens give the
+          nav more room.
+        */}
         <div className="mx-auto flex h-full max-w-[1780px] items-center gap-3 px-4 lg:px-4 min-[1850px]:px-6">
           <Link
             href={`/${locale}`}
@@ -557,26 +472,19 @@ useEffect(() => {
                 BRAND_INITIALS
               )}
             </div>
-            {/* Texte du brand — masqué à xl pour libérer de l'espace au desktop nav.
-                Réapparaît à 1850px plutôt que 2xl (1536px), même seuil que le
-                reste du relâchement d'espacement du header — voir desktopLinkClass. */}
+            {/* Brand text: hidden from xl to 1850px to leave room for the nav. */}
             <div className="hidden sm:block xl:hidden min-[1850px]:block leading-tight">
               <div className="text-sm font-semibold">Aïcha Imène DAHOUMANE</div>
               <div className="text-xs text-muted-2">{t("nav.tagline")}</div>
             </div>
           </Link>
 
-          {/* Desktop nav — visible seulement à xl (≥1280px) pour éviter le débordement.
-              En dessous de xl, le menu hamburger prend le relais.
-              `relative` ajouté pour ancrer les boutons chevron de scroll (voir plus bas). */}
+          {/* Desktop nav from xl; the hamburger menu takes over below.
+              `relative` anchors the scroll chevrons. */}
           <div className="hidden xl:flex relative flex-1 min-w-0 items-center justify-center">
-            {/* Chevron gauche — visible seulement s'il y a du contenu défilé hors champ à gauche.
-                Dégradé de fondu (audit 2026-08-13, itération 2) : le chevron seul, à 8x8px,
-                s'est révélé trop discret en usage réel (repéré par l'utilisatrice elle-même
-                sur le site de prod) — la moitié des items de nav (Services/Projets/Blog/
-                Contact/Cluster Sécurité) pouvait rester hors champ sans qu'un visiteur ne le
-                remarque. Le dégradé rend le "il y a plus de contenu ici" perceptible même
-                sans regarder le petit bouton rond. z-10, sous le chevron (z-20). */}
+            {/* Left fade + chevron, shown only when items are hidden on the left.
+                The fade makes the hidden content noticeable; it sits under the
+                chevron (z-10 vs z-20). */}
             {navOverflow.left && (
               <div
                 aria-hidden="true"
@@ -696,7 +604,7 @@ useEffect(() => {
                   </svg>
                 ) : null;
 
-                // Page links (About, Certifications) — navigation complète via Link
+                // Links to separate pages
                 if (isPageLink) {
                   return (
                     <Link key={s.id} className={cls} data-section={s.id} href={href}
@@ -706,8 +614,7 @@ useEffect(() => {
                   );
                 }
 
-                // Section links — <a> natif + scrollIntoView sur la home pour
-                // garantir le smooth scroll même si le navigateur l'ignore sur les ancres.
+                // Section links: on the home page, scroll in place (and move focus).
                 return (
                   <a key={s.id} className={cls} data-section={s.id}
                     href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
@@ -723,9 +630,7 @@ useEffect(() => {
                 );
               })}
             </div>
-            {/* Chevron droit — visible seulement s'il reste du contenu hors champ à droite.
-                Voir le commentaire du chevron gauche : dégradé ajouté en itération 2 de
-                l'audit 2026-08-13, le chevron seul ne suffisait pas comme affordance. */}
+            {/* Right fade + chevron, same as on the left. */}
             {navOverflow.right && (
               <div
                 aria-hidden="true"
@@ -749,24 +654,17 @@ useEffect(() => {
 
           <div className="flex shrink-0 items-center gap-2 min-[1850px]:gap-3">
             {/*
-              Desktop / tablet controls. On very small screens we move these into the mobile drawer
-              to prevent them from being pushed out of view by the brand.
-              gap resserré à xl (audit 2026-08-13, itération 4) : quelques px de
-              marge en plus pour le nav central pile là où l'espace est le plus
-              contraint (voir aussi LocaleSwitcher et le max-w du header).
+              Desktop / tablet controls. On very small screens they move into the
+              mobile drawer. Tighter gap up to 1850px to leave room for the nav.
             */}
             <div className="hidden sm:flex items-center gap-2 min-[1850px]:gap-3">
               <TrackToggle />
               <ThemeToggle />
               <LocaleSwitcher current={locale} />
-              {/* Bouton ⌘K — ouvre la palette de commandes */}
               <CommandPaletteTrigger />
             </div>
-            {/* CTA retiré de la navbar — présent dans le hero et le menu mobile.
-                Évite le débordement des liens nav sur les écrans ≤1440px. */}
 
-
-            {/* Bouton hamburger — visible jusqu'à xl, remplacé par le desktop nav à xl */}
+            {/* Hamburger button, below xl */}
             <button
               type="button"
               className="inline-flex xl:hidden rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 soft-ring"
@@ -782,11 +680,9 @@ useEffect(() => {
         </div>
       </header>
 
-      {/* Mobile drawer — toujours dans le DOM, affiché/masqué par CSS.
-          pointer-events-none + aria-hidden quand fermé pour bloquer interaction
-          et navigation clavier. Le panel slide depuis la droite (translate-x),
-          le backdrop fade en opacity — aucune dépendance Framer Motion pour
-          ne pas charger ~25 KB gzip sur toutes les pages. */}
+      {/* Mobile drawer: always in the DOM, shown and hidden with CSS
+          transitions (no animation library). When closed it is inert and
+          aria-hidden. */}
       <div
         className={`fixed inset-0 z-80 xl:hidden transition-opacity duration-200 ease-out ${
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -809,7 +705,7 @@ useEffect(() => {
             aria-modal="true"
             aria-label={t("nav.menu")}
             ref={menuRef}>
-            {/* En-tête fixe — toujours visible en haut du drawer */}
+            {/* Drawer header, always visible */}
             <div className="flex shrink-0 items-center justify-between px-5 pt-5 pb-0">
               <div className="text-sm font-semibold">{t("nav.menu")}</div>
               <button
@@ -822,7 +718,7 @@ useEffect(() => {
               </button>
             </div>
 
-            {/* Zone défilable — contient les contrôles, les liens et les CTAs */}
+            {/* Scrollable area: controls, links and CTAs */}
             <div className="flex-1 overflow-y-auto px-5 pb-5 pt-5">
 
             {/* Controls on mobile (track / theme / language) */}
@@ -832,7 +728,7 @@ useEffect(() => {
                 <ThemeToggle />
                 <LocaleSwitcher current={locale} />
               </div>
-              {/* Palette de commandes sans clavier (audit 2026-10-25, constat 7) */}
+              {/* Command palette entry for touch devices */}
               <button
                 type="button"
                 onClick={() => { setMobileOpen(false); openCommandPalette(); }}
@@ -854,7 +750,7 @@ useEffect(() => {
                   </svg>
                 ) : null;
 
-                // Page links — navigation via Link
+                // Links to separate pages
                 if (isPageLink) {
                   return (
                     <Link key={s.id} href={hrefFor(s.id)} data-section={s.id}
@@ -865,14 +761,14 @@ useEffect(() => {
                   );
                 }
 
-                // Section links — <a> natif + fermeture du menu mobile + scrollIntoView
+                // Section links: close the drawer and scroll in place on the home page
                 return (
                   <a key={s.id} data-section={s.id} className={cls}
                     href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
                     onClick={(e) => {
                       if (isHome) {
                         e.preventDefault();
-                        // Le focus va à la section, pas au bouton du menu.
+                        // Focus goes to the section, not back to the menu button.
                         mobileSkipFocusRestoreRef.current = true;
                         scrollToSection(s.id);
                       }
@@ -895,7 +791,7 @@ useEffect(() => {
                   {t("cta.workWithMe")}
                 </Link>
 
-                {/* Réservation Proton Calendar (lib/booking.ts) — masquée si non configurée */}
+                {/* Booking link (lib/booking.ts), hidden when not configured */}
                 {BOOKING_URL && (
                   <a
                     href={BOOKING_URL}
@@ -922,7 +818,7 @@ useEffect(() => {
                 )}
               </div>
             </div>
-            </div>{/* fin zone défilable */}
+            </div>{/* end scrollable area */}
           </div>
       </div>
     </>

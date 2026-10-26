@@ -9,16 +9,15 @@ interface TypingTextProps {
 }
 
 export function TypingText({ text, speed = 32, className }: TypingTextProps) {
-  // Progression rattachée au texte animé : quand `text` change, le compteur
-  // repart de 0 par dérivation, sans setState synchrone dans l'effet —
-  // audit 2026-10-23 (PERF-5).
+  // Progress is tied to the animated text, so it restarts from 0 when
+  // `text` changes, without a synchronous setState in the effect.
   const [progress, setProgress] = useState({ text, count: 0 });
   const count = progress.text === text ? progress.count : 0;
   const displayed = text.slice(0, count);
   const done = count >= text.length;
 
   useEffect(() => {
-    // Mouvement réduit (audit 2026-10-25) : texte affiché d'un coup.
+    // Reduced motion: show the whole text at once.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const id = setTimeout(() => setProgress({ text, count: text.length }), 0);
       return () => clearTimeout(id);
@@ -34,9 +33,9 @@ export function TypingText({ text, speed = 32, className }: TypingTextProps) {
 
   return (
     <span className={className}>
-      {/* Texte complet pour les lecteurs d'écran — invisible visuellement */}
+      {/* Full text for screen readers, visually hidden */}
       <span className="sr-only">{text}</span>
-      {/* Animation visible — masquée aux lecteurs d'écran */}
+      {/* Visible animation, hidden from screen readers */}
       <span aria-hidden="true">
         {displayed}
         {!done && (

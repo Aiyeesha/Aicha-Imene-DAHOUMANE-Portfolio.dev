@@ -2,17 +2,16 @@
 
 // TrackAwareSkills.tsx
 // --------------------
-// Affiche les groupes de compétences adaptés au parcours actif (Salesforce / IT Ops).
-// Chaque groupe de compétences est enrichi d'une icône SVG pour le scanning visuel.
-// Icônes : SVG inline (aucune dépendance externe).
+// Skill groups for the active track (Salesforce / IT Ops), each with an
+// inline SVG icon.
 
 import { useTrack } from "@/app/[locale]/providers";
 import Reveal from "@/components/Reveal";
 import { getSkillGroups, type Locale } from "@/content/skills";
 
-// ── Icônes SVG inline (20×20, stroke-based) ──────────────────────────
+// ── Inline SVG icons (20×20, stroke-based) ──────────────────────────
 
-/** Icône nuage éclair — Salesforce (Lightning) */
+/** Cloud with bolt — Salesforce (Lightning) */
 const IconCloud = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -20,7 +19,7 @@ const IconCloud = () => (
   </svg>
 );
 
-/** Icône accolades — Programmation / code */
+/** Braces — programming */
 const IconCode = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -29,7 +28,7 @@ const IconCode = () => (
   </svg>
 );
 
-/** Icône terminal — Systèmes / DevOps */
+/** Terminal — systems / DevOps */
 const IconTerminal = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -38,7 +37,7 @@ const IconTerminal = () => (
   </svg>
 );
 
-/** Icône utilisateurs — Soft skills */
+/** People — soft skills */
 const IconUsers = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -49,7 +48,7 @@ const IconUsers = () => (
   </svg>
 );
 
-/** Icône engrenage — Pipelines & automatisation */
+/** Gear — pipelines & automation */
 const IconGear = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -58,7 +57,7 @@ const IconGear = () => (
   </svg>
 );
 
-/** Icône casque — Support & exploitation */
+/** Headset — support & operations */
 const IconHeadset = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -67,7 +66,7 @@ const IconHeadset = () => (
   </svg>
 );
 
-/** Icône serveur — Administration systèmes */
+/** Server — systems administration */
 const IconServer = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -78,8 +77,8 @@ const IconServer = () => (
   </svg>
 );
 
-// Jeux d'icônes par parcours — ordre = ordre des groupes dans content/skills.ts
-// Salesforce : 4 groupes (Salesforce, Programmation, Systèmes, Soft skills)
+// Icons per track, in the order of the groups in content/skills.ts.
+// Salesforce: Salesforce, programming, systems, soft skills
 const SALESFORCE_ICONS = [
   <IconCloud key="sf" />,
   <IconCode key="prog" />,
@@ -87,7 +86,7 @@ const SALESFORCE_ICONS = [
   <IconUsers key="soft" />
 ];
 
-// IT Ops : 4 groupes (Systèmes, Pipelines, Support, Soft skills)
+// IT Ops: systems, pipelines, support, soft skills
 const ITOPS_ICONS = [
   <IconServer key="sys" />,
   <IconGear key="pipe" />,
@@ -100,16 +99,16 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
   const dataLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const groups = getSkillGroups(dataLocale, track);
 
-  // Sélectionner le jeu d'icônes selon le parcours actif
+  // Icon set for the active track
   const icons = track === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
   return (
     <div className="mt-6 grid gap-4 md:grid-cols-2">
       {groups.map((g, idx) => (
-        // Alternance : colonne gauche (pair) ← , colonne droite (impair) →
+        // Even columns slide in from the left, odd ones from the right
         <Reveal key={g.title} delayMs={110 + idx * 60} from={idx % 2 === 0 ? "left" : "right"}>
           <div className="card p-6">
-            {/* En-tête : icône + titre du groupe */}
+            {/* Header: icon + group title */}
             <div className="flex items-center gap-2.5 mb-3">
               <div
                 className={`grid h-8 w-8 place-items-center rounded-lg shrink-0 ${
@@ -122,12 +121,11 @@ export default function TrackAwareSkills({ locale }: { locale: Locale }) {
               >
                 {icons[idx]}
               </div>
-              {/* Explicit dark:text-white avoids inheriting body color mid-transition */}
+              {/* Explicit dark:text-white avoids inheriting the body colour mid-transition */}
               <h3 className="font-semibold text-sm leading-tight text-slate-900 dark:text-white">{g.title}</h3>
             </div>
 
-            {/* Liste des compétences */}
-            {/* dark:text-slate-400 : explicit color breaks inheritance from transitioning body */}
+            {/* Skills list; explicit dark colour avoids inheriting a transitioning body colour */}
             <ul className="list-disc space-y-1 pl-5 text-sm text-muted dark:text-slate-400">
               {g.items.map((it) => (
                 <li key={it}>{it}</li>

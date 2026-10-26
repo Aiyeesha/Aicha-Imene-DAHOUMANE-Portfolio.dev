@@ -2,15 +2,14 @@
 
 // DevConsoleMessage.tsx
 // ---------------------
-// Affiche un message stylisé dans la console du navigateur quand les DevTools sont ouverts.
-// Utile pour les développeurs curieux qui inspectent le code source.
-// Chargé une seule fois dans le RootLayout.
+// Styled message in the browser console for curious developers who open the
+// DevTools. Loaded once in the root layout.
 
 import { useEffect } from "react";
 
 export default function DevConsoleMessage() {
   useEffect(() => {
-    // Message principal stylisé (CSS dans console.log)
+    // Main styled message (CSS in console.log)
     console.log(
       "%c👋 Hey there, curious developer!",
       "font-size:18px; font-weight:bold; color:#22d3ee;"
@@ -30,12 +29,12 @@ export default function DevConsoleMessage() {
       process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact via the form on the site"
     );
     console.log(
-      // Dépôt privé : pas de lien direct (il menait à une 404).
+      // Private repository: no direct link.
       "%c💼 Source code: private repository — access on request via the contact form",
       "font-size:13px; color:#94a3b8;"
     );
   }, []);
 
-  // Ce composant ne rend rien dans le DOM.
+  // Renders nothing.
   return null;
 }

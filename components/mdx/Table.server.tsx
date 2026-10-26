@@ -1,27 +1,21 @@
 // Table.server.tsx
 // ----------------
-// Server Component : enveloppe des tableaux GFM (remark-gfm) des contenus MDX.
-// Utilisé par mdx-components.tsx (mapping `table`).
+// Server component wrapping GFM tables (remark-gfm) in MDX content; mapped to
+// `table` in mdx-components.tsx.
 //
-// Audit 2026-10-23 (P2) : les tableaux larges des études de cas (ex. colonne
-// « Déclencheur technique » d'idemconnect-apex-backend) ne doivent jamais
-// élargir la page sur mobile. Jusqu'ici, le défilement horizontal reposait sur
-// `display: block` appliqué au <table> lui-même (globals.css) ; ce hack retire
-// au tableau sa sémantique de tableau pour certains lecteurs d'écran
-// (VoiceOver/Safari notamment). Le défilement est désormais porté par un
-// conteneur dédié, et le <table> garde son affichage natif.
+// Wide tables scroll inside a dedicated container so they never widen the
+// page on mobile, and the <table> keeps its native display (display: block on
+// the table would drop its table semantics in some screen readers).
 //
-// Accessibilité du conteneur défilable :
-//   - tabIndex={0}  : atteignable au clavier, donc défilable aux flèches
-//                     (règle axe `scrollable-region-focusable`, WCAG 2.1.1) ;
-//   - role="region" + aria-label traduit : un élément focalisable doit avoir
-//                     un rôle et un nom accessibles annoncés au lecteur d'écran.
+// The scrollable container has tabIndex={0} (reachable and scrollable from
+// the keyboard, WCAG 2.1.1) and role="region" with a translated aria-label
+// (a focusable element needs a role and an accessible name).
 
 import type { ComponentPropsWithoutRef } from "react";
 import { getTranslations } from "next-intl/server";
 
 export default async function TableServer(props: ComponentPropsWithoutRef<"table">) {
-  // Locale résolue par next-intl à partir de la requête (segment [locale]).
+  // Locale resolved by next-intl from the request ([locale] segment).
   const t = await getTranslations("a11y");
   return (
     <div

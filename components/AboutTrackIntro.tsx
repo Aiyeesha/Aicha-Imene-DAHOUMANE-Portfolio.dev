@@ -2,16 +2,9 @@
 
 // AboutTrackIntro.tsx
 // -------------------
-// Encart d'introduction de la page About, adapté au track actif.
-//
-// Remplace ProfileNarrative sur la page About :
-//   - Plus structuré (badge track + 3 paragraphes ciblés)
-//   - Sans redondance avec le contenu Supabase (journey)
-//   - p1 = positionnement, p2 = compétences/méthodes, p3 = différenciant
-//
-// Couleur :
-//   - Salesforce → cyan
-//   - IT Ops     → violet
+// About page introduction for the active track: track badge, then
+// positioning (p1), skills and methods (p2), cross-domain edge (p3) and
+// concrete proof (p4). Cyan for Salesforce, violet for IT Ops.
 
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -23,16 +16,15 @@ export default function AboutTrackIntro() {
   const { track } = useTrack();
   const isSalesforce = track === "salesforce";
 
-  // Paragraphes track-spécifiques depuis les traductions i18n
+  // Track-specific paragraphs from i18n
   const p1 = isSalesforce ? t("profile.p1_salesforce") : t("profile.p1_itops");
   const p2 = isSalesforce ? t("profile.p2_salesforce") : t("profile.p2_itops");
   const p3 = isSalesforce ? t("profile.p3_salesforce") : t("profile.p3_itops");
-  // p4 — clôt la promesse du hero par une preuve concrète (Legarant-AXG côté Salesforce,
-  // mobilité des compétences IT Ops côté itops) au lieu de laisser le fil hybride
-  // s'arrêter au badge de track. Clés déjà traduites en fr/en/es, jamais rendues jusqu'ici.
+  // p4 backs the hero's promise with concrete proof (Legarant-AXG for
+  // Salesforce, transferable IT Ops skills for itops).
   const p4 = isSalesforce ? t("profile.p4_salesforce") : t("profile.p4_itops");
 
-  // Styles adaptés au track
+  // Track-dependent styles
   const badgeClass = isSalesforce
     ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300"
     : "border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-300";
@@ -45,26 +37,25 @@ export default function AboutTrackIntro() {
 
   return (
     <div className={`rounded-2xl border p-6 space-y-4 ${borderClass}`}>
-      {/* Badge track — indique visuellement le profil actif */}
+      {/* Track badge */}
       <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${badgeClass}`}>
         {trackLabel}
       </span>
 
-      {/* p1 — déclaration de positionnement (visible immédiatement) */}
+      {/* p1: positioning */}
       <p className="text-base leading-relaxed text-muted font-medium">{p1}</p>
 
-      {/* p2 — compétences et méthodes concrètes */}
+      {/* p2: concrete skills and methods */}
       <p className="text-sm leading-relaxed text-muted">{p2}</p>
 
-      {/* p3 — différenciant (background cross-domain) */}
+      {/* p3: cross-domain background */}
       <p className="text-sm leading-relaxed text-muted">{p3}</p>
 
-      {/* p4 — preuve concrète et statut actuel */}
+      {/* p4: concrete proof and current status */}
       <p className="text-sm leading-relaxed text-muted">{p4}</p>
 
-      {/* Lien vers la page « Profil hybride » — le fil hybride du positionnement
-          ne s'arrête plus au badge de track : trois cas concrets où la
-          combinaison Salesforce + infra + sécurité est nécessaire (audit P2). */}
+      {/* Link to the "Hybrid profile" page: three concrete cases where
+          Salesforce, infrastructure and security combine. */}
       <p className="pt-1 text-sm">
         <Link
           href={`/${locale}/hybride`}

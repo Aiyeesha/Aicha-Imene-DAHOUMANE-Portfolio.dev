@@ -2,29 +2,21 @@
 
 // GlobalMetrics.tsx
 // -----------------
-// Bande de compteurs animés — preuve sociale chiffrée.
-// Chiffres issus du profil réel d'Aïcha Imène DAHOUMANE (messages/en.json#profile.p3).
-//
-// Comportement :
-// - AnimatedCounter (Framer Motion useSpring) : animation 0 → N au scroll
-// - prefers-reduced-motion : valeur finale affichée directement (via AnimatedCounter)
-// - 4 métriques par track — avant ce changement, le jeu Salesforce s'affichait
-//   aussi sur le track IT Ops (copié-collé non contextualisé, cf. audit).
-//
-// Pour modifier les chiffres : éditer les tableaux ci-dessous. Chaque valeur
-// est tirée d'une fiche projet déjà publiée (voir highlights des projets
+// Animated counter strip, with 4 metrics per track. Counters animate from 0
+// on scroll (AnimatedCounter), or show the final value with reduced motion.
+// Every figure comes from a published project page (highlights of
 // it-ops-rmm-supervision, it-ops-incident-management, it-ops-acronis-backup,
-// workstation-mass-deployment) — aucun chiffre inventé.
+// workstation-mass-deployment): edit the arrays below to change them.
 
 import AnimatedCounter from "@/components/AnimatedCounter";
 import Reveal from "@/components/Reveal";
 import { useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 
-// ── Données métriques ──────────────────────────────────────────────────────
-// value     : valeur cible de l'AnimatedCounter
-// suffix    : affiché après le nombre ("+", "%", etc.)
-// labelKey  : clé de traduction dans messages/{locale}.json#metrics
+// ── Metrics ────────────────────────────────────────────────────────────────
+// value    : AnimatedCounter target
+// suffix   : shown after the number ("+", "%", …)
+// labelKey : translation key in messages/{locale}.json#metrics
 const SALESFORCE_METRICS = [
   { value: 10, suffix: "+", labelKey: "metrics.apex"      },
   { value: 20, suffix: "+", labelKey: "metrics.flows"     },
@@ -43,30 +35,25 @@ export default function GlobalMetrics() {
   const t = useTranslations();
   const { track } = useTrack();
   const METRICS = track === "salesforce" ? SALESFORCE_METRICS : ITOPS_METRICS;
-  // Repère temporel — sans lui, les 4 chiffres IT Ops (tous issus d'un stage de
-  // 3 mois terminé en 2023) peuvent se lire comme une activité actuelle. Un
-  // recruteur qui creuse et découvre l'écart de date après coup lit ça comme
-  // une tentative de gonfler la fraîcheur de l'expérience — la datation
-  // explicite évite ce malentendu, quelle que soit la période réelle.
+  // Time reference: the IT Ops figures come from internships that ended in
+  // 2023 and must not read as current activity.
   const periodKey = track === "salesforce" ? "metrics.periodSalesforce" : "metrics.periodItops";
 
   return (
     <Reveal delayMs={80}>
-      {/* Séparateur visuel discret au-dessus */}
+      {/* Subtle separator above */}
       <div className="mt-10 border-t border-black/8 dark:border-white/8 pt-10">
-        {/* Grille 4 colonnes (2 sur mobile) */}
-        {/* dl > div(Reveal) > dt + dd — structure valide WCAG (dl > div wrapping dt/dd) */}
+        {/* 4 columns (2 on mobile); dl > div > dt + dd is valid markup */}
         <dl className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {METRICS.map(({ value, suffix, labelKey }, i) => (
-            // Reveal rend un <div> — doit contenir dt/dd directement pour un <dl> valide.
-            // dt = libellé, dd = valeur (audit 2026-10-25 : c'était l'inverse) ;
-            // flex-col-reverse garde le chiffre au-dessus à l'écran.
+            // Reveal renders a <div> holding dt (label) and dd (value);
+            // flex-col-reverse shows the number above the label.
             <Reveal key={labelKey} delayMs={i * 60} className="flex flex-col-reverse items-center text-center gap-1">
-              {/* Label descriptif */}
+              {/* Label */}
               <dt className="text-xs font-medium text-muted-2 uppercase tracking-wider">
                 {t(labelKey)}
               </dt>
-              {/* Nombre animé — grand et accentué */}
+              {/* Animated number */}
               <dd className="text-3xl font-display font-bold text-cyan-600 dark:text-cyan-400 tabular-nums">
                 <AnimatedCounter value={value} suffix={suffix} />
               </dd>

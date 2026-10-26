@@ -1,24 +1,17 @@
 // components/ExperienceTimeline.tsx
 // ---------------------------------
-// Frise chronologique verticale des expériences (section « Expérience » de la
-// page d'accueil), toujours dépliée : toutes les informations sont visibles
-// sans clic, ce qui remplace l'ancien accordéon (components/Accordion.tsx).
+// Vertical timeline of the home page "Experience" section, always expanded.
 //
-// Structure :
-//   <ol>  liste ordonnée, bordure verticale à gauche (de la plus récente à la
-//         plus ancienne, dans l'ordre de content/experience.tsx)
-//   <li>  une expérience, précédée d'une pastille ronde (pseudo-élément ::before)
-//   <h3>  « Poste · Entreprise », l'entreprise en couleur d'accent — sous le
-//         <h2> de la section
-//   <p>   « Contrat · Période · Lieu », en texte atténué
-//   <ul>  note éventuelle (italique atténué) puis réalisations
+//   <ol>  newest first, in the order of content/experience.tsx
+//   <li>  one experience, with a dot (::before)
+//   <h3>  "Role · Company", the company in the accent colour
+//   <p>   "Contract · Period · Location", muted
+//   <ul>  optional note (muted italics), then achievements
 //
-// Composant serveur, sans état ni JavaScript côté client. Styles en classes
-// Tailwind uniquement (pas d'attribut style : la CSP à nonce l'interdit).
-// Couleur d'accent : cyan, avec des nuances lisibles en thème clair et sombre
-// (texte cyan-700 / cyan-300, contraste AA ; pastille cyan-600 / cyan-400).
-// Les séparateurs « · » sont décoratifs : masqués aux lecteurs d'écran et
-// remplacés par une virgule lue à voix haute.
+// Server component, no client JavaScript. Tailwind classes only (the nonce
+// CSP forbids style attributes). Cyan accent with AA contrast in both themes.
+// The "·" separators are decorative: hidden from screen readers and replaced
+// by a spoken comma.
 
 import type { ExperienceItem } from "@/content/experience";
 
