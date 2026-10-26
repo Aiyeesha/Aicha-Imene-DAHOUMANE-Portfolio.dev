@@ -2,13 +2,9 @@
 
 // ProjectsSection.tsx
 // -------------------
-// Section "Tous les projets" de la landing page.
-// Améliorations BLOC 4 :
-// - Onglets IT Ops / Salesforce avec compteur de projets par track
-//   (plus visible qu'un simple toggle de texte)
-// - Protection des liens "Voir le détail" :
-//   si p.published === false, le lien est masqué (pas de page 404 en production)
-// - Réinitialisation auto du filtre catégorie et de la recherche au changement de track
+// "All projects" section: Salesforce / IT Ops / cross-domain / security tabs
+// with per-tab counts, category filters and full-text search. Category and
+// search reset when the track changes.
 
 import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -21,11 +17,9 @@ import { projectCardImage } from "@/lib/data/projectAssets";
 // and served by Vercel's CDN (see lib/data/projectsSource.ts). Which image a
 // card shows is resolved by projectCardImage() (lib/data/projectAssets.ts).
 
-// Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
-// Nécessaire car les gallery JSON en base peuvent référencer d'anciens noms de fichiers
-// Audit 2026-10-23 (P5) : `src` vaut null quand le projet n'a ni image de
-// galerie ni couverture (lib/data/projectAssets.ts) — le visuel de
-// remplacement est alors affiché d'emblée, sans requête vouée au 404.
+// Image with fallback: gallery src → cover.webp → empty background. Gallery
+// entries stored in the database may point to renamed files. `src` is null
+// when the project has neither, and the placeholder is shown directly.
 function CoverImage({ src, fallback, alt }: { src: string | null; fallback?: string; alt: string }) {
   const [imgSrc, setImgSrc] = useState(src ?? "");
   const [failed, setFailed] = useState(src === null);
@@ -69,7 +63,7 @@ import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
 type ProjectsSectionProps = {
   locale?: "en" | "fr" | "es";
   projects: ProjectWithAssets[];
-  /** Sur la page /projects, afficher aussi les projets featured (pas de FeaturedProjects au-dessus) */
+  /** On /projects, also list featured projects (no FeaturedProjects block above). */
   includeFeatured?: boolean;
 };
 
@@ -84,7 +78,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
   const [q, setQ] = useState("");
   const [active, setActive] = useState<string>("All");
 
-  // ── Compteur de projets par track ────────────────────────────────
+  // ── Project count per track ───────────────────────────────────
   const trackCounts = useMemo(() => ({
     salesforce: projects.filter((p) => p.track === "salesforce" && (includeFeatured || !p.featured)).length,
     itops:      projects.filter((p) => p.track === "itops"       && (includeFeatured || !p.featured)).length
@@ -92,38 +86,28 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
 
   type ActiveTab = "all" | "salesforce" | "itops" | "bridge" | "security";
 
-  // Onglet "Cross-domain" — projets is_bridge=true, indépendamment du track.
-  // Sans lui, la seule façon de trouver ces projets était de connaître
-  // l'existence du badge "Salesforce ⇄ Infra bridge" et de tomber dessus par
-  // hasard dans l'onglet Salesforce ou IT Ops — pas de vitrine dédiée pour la
-  // catégorie de preuve la plus rare du portfolio (voir FeaturedProjects.tsx
-  // pour le même contournement sur la home).
+  // "Cross-domain" tab: projects with is_bridge=true, whatever their track,
+  // so the rarest kind of evidence has its own entry point.
   const bridgeCount = useMemo(
     () => projects.filter((p) => p.is_bridge && (includeFeatured || !p.featured)).length,
     [projects, includeFeatured]
   );
 
-  // Onglet "Sécurité" — projets is_security=true, indépendamment du track
-  // (même patron que "bridge" ci-dessus). Volontairement transversal plutôt
-  // que rattaché au seul track IT Ops : Legarant-AXG (côté Salesforce) porte
-  // aussi le flag, pour que ce filtre reste une preuve de croisement plutôt
-  // qu'un 3e bucket isolé du narratif hybride.
+  // "Security" tab: projects with is_security=true, whatever their track (a
+  // Salesforce project carries the flag too).
   const securityCount = useMemo(
     () => projects.filter((p) => p.is_security && (includeFeatured || !p.featured)).length,
     [projects, includeFeatured]
   );
 
-  // Ordre des onglets visibles — utilisé pour la navigation clavier (flèches/Home/End).
+  // Visible tabs in order, for arrow/Home/End keyboard navigation.
   const visibleTabs = useMemo<ActiveTab[]>(
     () => (includeFeatured ? ["all", "salesforce", "itops", "bridge", "security"] : ["salesforce", "itops"]),
     [includeFeatured]
   );
 
-  // Onglet initial : un deep-link `?tab=…` gagne toujours (ex. /projects?tab=security
-  // depuis la home ou la nav). Sinon, la page /projects s'aligne sur le track global
-  // (cookie) au lieu d'ouvrir « Tous » — c'était l'incohérence relevée à l'audit :
-  // le toggle du header ne pilotait ni cette page ni ses onglets. « Tous » reste à
-  // un clic. Sur la home, même logique (track global).
+  // Initial tab: a `?tab=…` deep link wins (e.g. /projects?tab=security);
+  // otherwise follow the global track instead of opening "All".
   const tabParam = includeFeatured ? searchParams.get("tab") : null;
   const initialTab: ActiveTab =
     tabParam === "security" || tabParam === "bridge" || tabParam === "salesforce" || tabParam === "itops"
@@ -131,14 +115,11 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
       : (track as ActiveTab);
   const [activeTab, setActiveTab] = useState<ActiveTab>(initialTab);
 
-  // Sync onglet ↔ track global : quand le visiteur bascule le toggle du header
-  // (contexte `track`) alors qu'il est sur /projects, l'onglet suit — mais
-  // uniquement s'il est sur un onglet de parcours (salesforce/itops/all). Un
-  // choix délibéré « Croisés » ou « Sécurité » n'est pas écrasé. Ne s'applique
-  // que sur la page complète (includeFeatured) ; la home a déjà son propre
-  // `handleTrackChange`. Suspendu quand un `?tab=` pilote l'onglet initial.
-  // Pattern « ajuster un état quand une prop change » (React docs) plutôt qu'un
-  // useEffect : réconciliation pendant le rendu via un state précédent.
+  // Keep the tab in sync with the header track toggle on /projects, but only
+  // when a track tab (salesforce/itops/all) is selected: an explicit
+  // "Cross-domain" or "Security" choice is kept. Skipped when `?tab=` drives the
+  // tab. Done during render from the previous value (React's "adjusting state
+  // when a prop changes" pattern) rather than in an effect.
   const trackSyncSuspended = Boolean(tabParam);
   const [prevTrack, setPrevTrack] = useState(track);
   if (track !== prevTrack) {
@@ -152,7 +133,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     }
   }
 
-  // ── Catégories disponibles pour l'onglet actif ───────────────────
+  // ── Categories available in the active tab ───────────────────
   const categories = useMemo(() => {
     const set = new Set<string>();
     projects
@@ -172,10 +153,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     [projects, includeFeatured]
   );
 
-  // Refs pour les boutons d'onglets (navigation au clavier ← →)
+  // Tab button refs (← → keyboard navigation)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Changer de track en réinitialisant les filtres
+  // Switch track and reset filters
   const handleTrackChange = (newTrack: "salesforce" | "itops") => {
     setTrack(newTrack);
     setActiveTab(newTrack);
@@ -183,24 +164,22 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     setQ("");
   };
 
-  // Sélectionner l'onglet "Cross-domain" (ne touche pas au track global —
-  // contrairement aux onglets Salesforce/IT Ops, celui-ci ne représente pas
-  // une préférence de profil, juste un filtre d'affichage ponctuel).
+  // "Cross-domain" is a display filter, not a profile preference: it leaves
+  // the global track unchanged.
   const handleBridgeTabSelect = () => {
     setActiveTab("bridge");
     setActive("All");
     setQ("");
   };
 
-  // Sélectionner l'onglet "Sécurité" — même logique que "Cross-domain".
+  // "Security" tab: same as "Cross-domain".
   const handleSecurityTabSelect = () => {
     setActiveTab("security");
     setActive("All");
     setQ("");
   };
 
-  // Navigation clavier dans le tablist (APG pattern) — flèches, Home, End,
-  // sur la liste ordonnée des onglets réellement affichés.
+  // Tablist keyboard navigation (APG pattern) over the visible tabs.
   const handleTabKeyDown = (e: React.KeyboardEvent, idx: number) => {
     let target = -1;
     if (e.key === "ArrowRight") target = (idx + 1) % visibleTabs.length;
@@ -217,7 +196,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
     tabRefs.current[target]?.focus();
   };
 
-  // ── Filtrage : onglet + catégorie + recherche texte ───────────────
+  // ── Filtering: tab + category + text search ───────────────────
   const filtered = useMemo(() => {
     const base = includeFeatured
       ? activeTab === "all"
@@ -238,16 +217,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
 
   return (
     <div>
-      {/* ── Onglets IT Ops / Salesforce avec compteur ───────────────
-          Rendu comme vrais onglets ARIA pour une meilleure accessibilité.
-          Le compteur (nombre de projets) est affiché dans un badge discret.
-          Audit 2026-10-23 (P2) : les 5 onglets ne tiennent pas sur 390 px
-          (page élargie à 588-640 px selon la langue, « IT Ops » sur deux
-          lignes). La barre défile désormais horizontalement à l'intérieur
-          du composant (max-w-full + overflow-x-auto), comme la rangée de
-          filtres plus bas, et les boutons ne se compriment ni ne passent à
-          la ligne (shrink-0 + whitespace-nowrap). La navigation clavier
-          (flèches) appelle focus(), qui fait défiler l'onglet visé à l'écran. */}
+      {/* ── Track tabs with counts (ARIA tabs) ───────────────────────
+          The bar scrolls horizontally inside the component on narrow screens;
+          buttons neither shrink nor wrap. Arrow-key focus() scrolls the
+          target tab into view. */}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div
           role="tablist"
@@ -292,7 +265,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 ].join(" ")}
               >
                 {label}
-                {/* Badge compteur */}
+                {/* Count badge */}
                 <span className={[
                   "rounded-full px-1.5 py-0.5 text-xs leading-none",
                   isActive
@@ -307,9 +280,8 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         </div>
       </div>
 
-      {/* ── Note de cadrage — pourquoi IT Ops (30) dépasse largement Salesforce (9) ──
-          Sans contexte, le ratio brut raconte l'histoire inverse du positionnement.
-          Uniquement sur la page /projects complète (ce composant n'est monté que là). */}
+      {/* ── Context note: why IT Ops has far more projects than Salesforce ──
+          Without it, the raw ratio contradicts the positioning. */}
       <div className="mb-6 rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/3 px-4 py-3 text-sm text-muted">
         {locale === "fr"
           ? `Pourquoi ${trackCounts.itops} projets IT Ops pour ${trackCounts.salesforce} projets Salesforce ? Mon travail Salesforce en poste est confidentiel et ne peut pas être publié : les projets Salesforce présentés ici sont des projets de formation et une étude de cas reconstituée. Les projets IT Ops, surtout personnels, n'ont pas cette contrainte. Chaque page indique la nature du projet et sa période.`
@@ -318,7 +290,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
           : `Why ${trackCounts.itops} IT Ops projects for ${trackCounts.salesforce} Salesforce projects? My Salesforce work in my role is confidential and can't be published: the Salesforce projects shown here are training projects and one reconstructed case study. The IT Ops projects, mostly personal, don't carry that constraint. Each page states the project's type and period.`}
       </div>
 
-      {/* ── Recherche full-text ─────────────────────────────────── */}
+      {/* ── Full-text search ─────────────────────────────────────── */}
       <div className="mb-5">
         <label htmlFor="projects-search" className="sr-only">{t("search")}</label>
         <input
@@ -335,7 +307,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         />
       </div>
 
-      {/* ── Filtres par catégorie ───────────────────────────────── */}
+      {/* ── Category filters ─────────────────────────────────────── */}
       {categories.length > 1 && (
         <div className="mb-8 flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar">
           {categories.map((c) => (
@@ -355,9 +327,8 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         </div>
       )}
 
-      {/* ── Empty state : Supabase indisponible ou aucun projet publié ──────────
-          Cas distinct de "aucun résultat de recherche" (projects.length === 0).
-          Affiché avant la grille pour ne pas rendre une grille vide. */}
+      {/* ── Empty state: data source unavailable or nothing published ──
+          Not the same as "no search results" (projects.length === 0 here). */}
       {projects.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-16 px-6 text-center">
           <svg
@@ -379,17 +350,16 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         </div>
       )}
 
-      {/* ── Grille de projets ──────────────────────────────────── */}
-      {/* grid-cols-1 = minmax(0, 1fr) : sans colonne explicite, la piste
-          implicite vaut minmax(auto, 1fr) et une carte ne peut pas rétrécir
-          sous la largeur minimale de son contenu — la page débordait à 320 px
-          (seuil WCAG 1.4.10 ; audit 2026-10-23, P2). */}
+      {/* ── Project grid ───────────────────────────────────────── */}
+      {/* grid-cols-1 is minmax(0, 1fr): the implicit track would be
+          minmax(auto, 1fr), and cards could not shrink below their content
+          width, overflowing at 320px. */}
       {projects.length > 0 && (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((p, idx) => (
           <Reveal key={p.slug} delayMs={Math.min(280, idx * 60)}>
             <GlowCard className="card overflow-hidden">
-              {/* Image de couverture */}
+              {/* Cover image */}
               <div className="relative h-36 w-full bg-black/5 dark:bg-white/5">
                 <CoverImage
                   src={projectCardImage(p.slug, p.gallery)?.src ?? null}
@@ -398,10 +368,8 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 />
               </div>
               <div className="p-5">
-              {/* En-tête : titre + badge */}
-              {/* max-sm:flex-wrap : sur carte étroite, le badge passe sous le
-                  titre plutôt que d'être coupé par l'overflow-hidden de la
-                  carte. Au-delà de sm, mise en page inchangée. */}
+              {/* Header: title + badge. On narrow cards the badge wraps below
+                  the title instead of being clipped. */}
               <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
                 <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
                 {p.badge ? (
@@ -409,12 +377,12 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 ) : null}
               </div>
 
-              {/* Période du projet (audit de contenu 2026-09-25) — affichée seulement si connue */}
+              {/* Project period, when known */}
               {p.nature?.period && (
                 <p className="mt-1 text-xs text-muted-2">{p.nature.period}</p>
               )}
 
-              {/* Logo client — silencieux si absent, lazy (grille jusqu'à ~39 cartes) */}
+              {/* Client logo: nothing if missing, lazy-loaded */}
               <div className="mt-1">
                 <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
               </div>
@@ -430,17 +398,17 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 </div>
               )}
 
-              {/* Résumé */}
+              {/* Summary */}
               <p className="mt-3 text-sm text-muted line-clamp-2">{p.summary}</p>
 
-              {/* Tags techniques */}
+              {/* Tech tags */}
               <div className="mt-4 flex flex-wrap gap-2">
                 {(p.tags ?? []).map((tag) => (
                   <span key={tag} className="chip">{tTag(tag, locale)}</span>
                 ))}
               </div>
 
-              {/* Points clés (max 3) */}
+              {/* Highlights (max 3) */}
               {p.highlights && p.highlights.length > 0 && (
                 <ul className="mt-3 space-y-1 text-xs text-muted">
                   {p.highlights.slice(0, 3).map((h, i) => (
@@ -449,10 +417,8 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 </ul>
               )}
 
-              {/* CTAs
-                  Le lien "Voir le détail" est affiché pour tous les projets récupérés.
-                  La couche data filtre déjà sur status = "published", donc tous les
-                  projets présents ici ont une page de détail accessible. */}
+              {/* CTAs. The data layer only returns published projects, so
+                  every card has a detail page. */}
               <div className="mt-5 flex items-center gap-2 flex-wrap">
                 {p.status === "published" && (
                   <Link
@@ -481,11 +447,10 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
         ))}
       </div>
       )}
-      {/* ── Empty state : aucun résultat pour la recherche / les filtres ──────────
-          Cas distinct de "Supabase indisponible" (projects.length > 0 ici). */}
+      {/* ── Empty state: no match for the search / filters ──────────── */}
       {projects.length > 0 && filtered.length === 0 && (
         <div className="mt-8 flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-12 px-6 text-center">
-          {/* Icône loupe */}
+          {/* Magnifier icon */}
           <svg
             className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-white/20"
             fill="none"

@@ -2,14 +2,9 @@
 
 // AnimatedCounter.tsx
 // -------------------
-// Compteur animé (0 → valeur cible) déclenché à l'entrée dans le viewport.
-// Utilise Framer Motion useSpring pour un effet fluide et naturel.
+// Counter that animates from 0 to its value when it enters the viewport
+// (Framer Motion useSpring). With reduced motion, the final value is shown.
 //
-// Accessibilité : si l'utilisateur préfère prefers-reduced-motion,
-// la valeur finale est affichée directement sans animation.
-//
-// Usage :
-//   <AnimatedCounter value={90} />           → "90"
 //   <AnimatedCounter value={57375} />        → "57 375" (locale formatting)
 //   <AnimatedCounter value={30} suffix="%" /> → "30%"
 
@@ -18,9 +13,9 @@ import { useMotionValue, useSpring, useInView, useReducedMotion } from "framer-m
 import { useLocale } from "next-intl";
 
 type Props = {
-  /** Valeur cible à atteindre */
+  /** Target value */
   value: number;
-  /** Suffixe affiché après le nombre (ex: "%", "+") */
+  /** Suffix shown after the number (e.g. "%", "+") */
   suffix?: string;
   className?: string;
 };
@@ -31,52 +26,46 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   const locale = useLocale();
   const intlLocale = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US";
 
-  // Déclenchement unique quand le composant entre dans le viewport
+  // Fire once when the component enters the viewport
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
 
-  // Valeur de mouvement + spring physique (stiffness/damping pour naturel)
+  // Motion value + spring
   const mv = useMotionValue(0);
   const spring = useSpring(mv, { stiffness: 60, damping: 18 });
 
-  // SSR émet la valeur finale → Google indexe les vrais chiffres, pas "0".
-  // L'animation repart de 0 → value quand l'élément entre dans le viewport.
+  // SSR renders the final value, so crawlers index the real figure, not "0";
+  // the animation restarts from 0 when the element comes into view.
   const [display, setDisplay] = useState(value);
-  // Ref plutôt qu'état : sert seulement à ne lancer l'animation qu'une fois —
-  // audit 2026-10-23 (PERF-5).
+  // A ref, not state: it only ensures the animation runs once.
   const hasAnimated = useRef(false);
 
-  // Synchronisation spring → display (actif dès le premier rendu client)
+  // Spring → display sync
   useEffect(() => {
     return spring.on("change", (v) => setDisplay(Math.round(v)));
   }, [spring]);
 
-  // Démarrage de l'animation quand le composant est visible (une seule fois)
-  // Mouvement réduit : valeur finale affichée directement (dérivée au rendu,
-  // sans setState dans l'effet — audit 2026-10-23, PERF-5).
+  // Start the animation once, when visible. With reduced motion the final
+  // value is derived during render instead.
   useEffect(() => {
     if (shouldReduce) return;
     if (inView && !hasAnimated.current) {
       hasAnimated.current = true;
-      spring.jump(0); // place le spring (et, via "change", display) à 0
-      mv.set(0);      // s'assure que mv est à 0 (valeur initiale)
-      mv.set(value);  // spring anime 0 → value
+      spring.jump(0); // reset the spring (and display) to 0
+      mv.set(0);
+      mv.set(value);  // animate 0 → value
     }
   }, [inView, shouldReduce, value, mv, spring]);
 
   const shown = shouldReduce ? value : display;
 
-  // aria-label expose la valeur finale statique aux lecteurs d'écran.
-  // Sans cela, le SR lirait "0" au chargement (valeur initiale de l'animation)
-  // ou annoncerait chaque nombre intermédiaire pendant l'animation spring.
-  //
-  // role="img" is required because aria-label is prohibited on generic <span>
-  // elements (no implicit ARIA role) per ARIA 1.2 — axe rule aria-prohibited-attr.
-  // role="img" provides a valid landmark for the aria-label to describe.
+  // Screen readers get the final value through aria-label instead of "0" or
+  // every intermediate number. role="img" is needed: aria-label is not
+  // allowed on a generic <span> (ARIA 1.2).
   const ariaLabel = `${value.toLocaleString(intlLocale)}${suffix}`;
 
   return (
     <span ref={ref} className={className} role="img" aria-label={ariaLabel}>
-      {/* aria-hidden masque les valeurs intermédiaires — le SR utilise aria-label */}
+      {/* Intermediate values are hidden from screen readers */}
       <span aria-hidden="true">{shown.toLocaleString(intlLocale)}{suffix}</span>
     </span>
   );

@@ -2,9 +2,8 @@
 
 // TrackAwareServices.tsx
 // ----------------------
-// Affiche les cartes de services adaptées au parcours actif (Salesforce / IT Ops).
-// Chaque carte est enrichie d'une icône SVG distinctive pour faciliter le scanning.
-// Icônes : SVG inline pour éviter toute dépendance externe (tree-shakeable, 0 KB réseau).
+// Service cards for the active track (Salesforce / IT Ops), each with an
+// inline SVG icon.
 
 import { useTrack } from "@/app/[locale]/providers";
 import Reveal from "@/components/Reveal";
@@ -13,10 +12,9 @@ import { useTranslations } from "next-intl";
 import useHydrated from "@/lib/useHydrated";
 import Link from "next/link";
 
-// ── Icônes SVG inline (24×24, stroke-based) ──────────────────────────
-// Chaque icône représente visuellement le type de service.
+// ── Inline SVG icons (24×24, stroke-based) ──────────────────────────
 
-/** Icône loupe — Audit */
+/** Magnifier — audit */
 const IconAudit = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -25,7 +23,7 @@ const IconAudit = () => (
   </svg>
 );
 
-/** Icône accolades — Développement */
+/** Braces — development */
 const IconCode = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -34,7 +32,7 @@ const IconCode = () => (
   </svg>
 );
 
-/** Icône chaîne — Intégrations & APIs */
+/** Chain — integrations & APIs */
 const IconLink = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -43,7 +41,7 @@ const IconLink = () => (
   </svg>
 );
 
-/** Icône chapeau — Formation */
+/** Mortarboard — training */
 const IconGraduation = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -52,7 +50,7 @@ const IconGraduation = () => (
   </svg>
 );
 
-/** Icône bouclier — Audit & durcissement sécurité */
+/** Shield — security audit & hardening */
 const IconShield = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -60,7 +58,7 @@ const IconShield = () => (
   </svg>
 );
 
-/** Icône serveur — Administration systèmes */
+/** Server — systems administration */
 const IconServer = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -71,7 +69,7 @@ const IconServer = () => (
   </svg>
 );
 
-/** Icône engrenages — CI/CD & automatisation */
+/** Gears — CI/CD & automation */
 const IconGear = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -81,7 +79,7 @@ const IconGear = () => (
   </svg>
 );
 
-/** Icône fichier — Support & documentation */
+/** File — support & documentation */
 const IconFile = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -92,7 +90,7 @@ const IconFile = () => (
   </svg>
 );
 
-// Jeux d'icônes par parcours — ordre = ordre des cartes dans content/services.ts
+// Icons per track, in the same order as the cards in content/services.ts
 const SALESFORCE_ICONS = [<IconAudit key="a" />, <IconCode key="b" />, <IconLink key="c" />, <IconGraduation key="d" />];
 const ITOPS_ICONS      = [<IconShield key="a" />, <IconServer key="b" />, <IconGear key="c" />, <IconFile key="d" />];
 
@@ -101,40 +99,31 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   const t = useTranslations();
   const dataLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
-  // Defer all track-dependent rendering until after mount.
-  // The server always renders with "salesforce" (initialTrack); Providers then
-  // reads localStorage on mount and may switch to "itops", causing a hydration
-  // mismatch for both card data and CSS classes. Using the SSR default until
-  // mounted keeps server and first-client render identical.
-  // useHydrated plutôt que useState + useEffect — audit 2026-10-23 (PERF-5).
+  // Render track-dependent content only after hydration: the server renders
+  // the default track, and the client may switch on mount, which would cause
+  // a hydration mismatch.
   const mounted = useHydrated();
 
   const effectiveTrack = mounted ? track : "salesforce";
   const cards = getServices(dataLocale, effectiveTrack);
   const icons = effectiveTrack === "salesforce" ? SALESFORCE_ICONS : ITOPS_ICONS;
 
-  // Bande « Secteurs » — track-neutre (les contraintes métier ne changent pas
-  // selon le parcours), pilotée par l'i18n. Rend le focus Luxe & Mode visible
-  // sur la page la plus scannée par un recruteur, au lieu de le laisser enfoui
-  // dans une catégorie de /projects (audit P4).
+  // "Sectors" strip: the same on both tracks, driven by i18n.
   const sectors = t.raw("services.sectors") as { label: string; note: string }[];
 
   /**
-   * handleDiscuss — bouton « En parler pour un poste »
-   *
-   * 1. Dispatche un custom event `contact:prefill` avec topic + subject.
-   *    ContactForm écoute cet événement et pré-remplit ses champs.
-   * 2. Fait défiler jusqu'à la section #contact.
+   * "Discuss this for a role" button: dispatches `contact:prefill` (handled by
+   * ContactForm) and scrolls to #contact.
    */
   function handleDiscuss(title: string) {
     const topic = track === "salesforce" ? "salesforce" : "itops";
 
-    // Notifier ContactForm via un event DOM (pas de state global nécessaire)
+    // Notify ContactForm through a DOM event (no global state needed)
     window.dispatchEvent(
       new CustomEvent("contact:prefill", { detail: { topic } })
     );
 
-    // Scroll vers la section contact avec smooth
+    // Smooth scroll to the contact section
     const section = document.getElementById("contact");
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -147,7 +136,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       {cards.map((c, idx) => (
         <Reveal key={c.title} delayMs={110 + idx * 60}>
           <div className="card p-6 flex flex-col">
-            {/* En-tête : icône dans un badge coloré + titre */}
+            {/* Header: icon badge + title */}
             <div className="flex items-start gap-3">
               <div
                 className={`shrink-0 grid h-10 w-10 place-items-center rounded-xl ${
@@ -159,32 +148,29 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               >
                 {mounted && icons[idx]}
               </div>
-              {/* Explicit dark:text-white avoids inheriting body color mid-transition */}
+              {/* Explicit dark:text-white avoids inheriting the body colour mid-transition */}
               <h3 className="font-semibold leading-snug pt-1.5 text-slate-900 dark:text-white">{c.title}</h3>
             </div>
 
-            {/* Ce que j'apporte à l'équipe — 1 à 2 phrases */}
+            {/* What I bring to the team (1-2 sentences) */}
             <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{c.pitch}</p>
 
-            {/* Détail technique — repliable visuellement par un séparateur discret */}
+            {/* Technical details */}
             <div className="mt-3 border-t border-black/8 dark:border-white/8 pt-3">
 
-            {/* Description courte */}
-            {/* dark:text-slate-400 : explicit color breaks inheritance from transitioning body */}
+            {/* Short description; explicit dark colour avoids inheriting a transitioning body colour */}
             <p className="text-sm text-muted dark:text-slate-400">{c.description}</p>
 
-            {/* Compétences concrètes */}
+            {/* Concrete skills */}
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted dark:text-slate-400">
               {c.bullets.map((b) => (
                 <li key={b}>{b}</li>
               ))}
             </ul>
 
-            </div>{/* fin du bloc technique */}
+            </div>{/* end technical details */}
 
-            {/* Où je l'ai pratiqué + où le vérifier — remplacent « Livrable » et
-                « Durée typique » (vocabulaire de devis) depuis l'audit de contenu
-                du 2026-09-25. */}
+            {/* Where I practised it + where to check it */}
             <div className="mt-4 rounded-xl bg-black/3 dark:bg-white/4 px-4 py-3 space-y-1.5 text-sm">
               <p className="text-muted dark:text-slate-400">
                 <span className="font-medium text-slate-700 dark:text-slate-200">
@@ -200,7 +186,7 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
               </p>
             </div>
 
-            {/* CTA — pré-remplit le sujet du formulaire de contact (poste Salesforce / IT Ops) */}
+            {/* CTA: prefills the contact form subject */}
             <div className="mt-4 pt-4 border-t border-black/8 dark:border-white/8">
               <button
                 type="button"
@@ -215,11 +201,9 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       ))}
     </div>
 
-    {/* SECTEURS — ancre chaque étude de cas dans un secteur avec ses propres
-        contraintes de conformité/traçabilité. Volontairement track-neutre et
-        rendu inconditionnellement (contenu i18n statique, pas de dépendance au
-        toggle → aucun risque d'hydration mismatch). Luxe & Mode en tête : c'est
-        le lot P4 (LTP couture nuptiale + FASHA distribution textile). */}
+    {/* SECTORS: ties each case study to a sector and its compliance and
+        traceability constraints. Static i18n content, rendered on both tracks
+        (no hydration risk). */}
     <Reveal delayMs={110 + cards.length * 60}>
       <div className="mt-4 rounded-2xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/3 p-6 md:p-7">
         <h3 className="font-semibold text-slate-900 dark:text-white">{t("services.sectorsTitle")}</h3>
@@ -247,21 +231,9 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
       </div>
     </Reveal>
 
-    {/* MATURITÉ D'EXPLOITATION — /status et /colophon présentés comme preuve
-        DevSecOps (observabilité réelle, sécurité documentée), pas comme
-        de simples liens de pied de page. Le /changelog public a été retiré
-        lors de l'audit de contenu du 2026-09-25 (il exposait des notes
-        internes) : la clé i18n maturityChangelogCta pointe désormais vers
-        le colophon. Affiché sur les deux tracks depuis
-        l'audit 2026-08-13 : c'était auparavant IT Ops uniquement au motif que
-        /status et /changelog sont des artefacts d'exploitation, pas un argument
-        de vente Salesforce — mais la discipline qu'ils prouvent (rigueur,
-        traçabilité, incidents documentés plutôt que cachés) est exactement le
-        même argument que le pont Salesforce ⇄ Infra fait déjà sur cette page,
-        donc la cacher côté Salesforce affaiblissait le positionnement hybride
-        plus qu'elle ne le servait. Le texte (maturityBodySalesforce) recadre
-        l'exemple sur le pipeline CI/CD Salesforce plutôt que de dupliquer le
-        texte IT Ops tel quel. */}
+    {/* OPERATIONAL MATURITY: /status and /colophon presented as DevSecOps
+        evidence (real monitoring, documented security), on both tracks. The
+        Salesforce text frames it around the Salesforce CI/CD pipeline. */}
     {mounted && (
       <Reveal delayMs={110 + (cards.length + 1) * 60}>
         <div className={`mt-4 rounded-2xl border p-6 md:p-7 ${

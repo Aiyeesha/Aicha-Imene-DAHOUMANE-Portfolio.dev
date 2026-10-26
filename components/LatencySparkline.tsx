@@ -1,15 +1,10 @@
 // components/LatencySparkline.tsx
 // --------------------------------
-// Sparkline SVG de la latence sur 7 jours — composant serveur pur.
-// Aucune dépendance externe : SVG natif uniquement.
-//
-// Couleur adaptative :
-//   vert   (emerald-400) → latence max ≤ 200 ms  (bonne)
-//   ambre  (amber-400)   → latence max ≤ 500 ms  (acceptable)
-//   rouge  (rose-400)    → latence max  > 500 ms  (dégradée)
+// 7-day latency sparkline: server component, plain SVG.
+// Colour by peak latency: green ≤ 200ms, amber ≤ 500ms, red above.
 
 type Props = {
-  /** Tableau de latences moyennes par heure (ordre chronologique). */
+  /** Average latency per hour, oldest first. */
   data: number[];
   width?: number;
   height?: number;
@@ -22,15 +17,15 @@ export default function LatencySparkline({
   height  = 24,
   className = "",
 }: Props) {
-  // Pas assez de points pour tracer une courbe
+  // Not enough points to draw a line
   if (data.length < 2) return null;
 
   const min   = Math.min(...data);
   const max   = Math.max(...data);
-  const range = max - min || 1;   // éviter la division par zéro
-  const pad   = 2;                // marge interne en px
+  const range = max - min || 1;   // avoid division by zero
+  const pad   = 2;                // inner margin in px
 
-  // Coordonnées SVG de chaque point
+  // SVG coordinates of each point
   const points = data
     .map((v, i) => {
       const x = pad + (i / (data.length - 1)) * (width  - pad * 2);
@@ -39,7 +34,7 @@ export default function LatencySparkline({
     })
     .join(" ");
 
-  // Couleur selon la latence maximale observée
+  // Colour from the peak latency
   const stroke =
     max > 500 ? "#fb7185"   // rose-400
   : max > 200 ? "#fbbf24"   // amber-400

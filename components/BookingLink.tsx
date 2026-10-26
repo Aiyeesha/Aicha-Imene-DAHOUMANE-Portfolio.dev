@@ -1,20 +1,19 @@
 // components/BookingLink.tsx
 // --------------------------
-// Bouton « Réserver un appel » : lien vers la page de réservation Proton
-// Calendar, ouvert dans un nouvel onglet (voir lib/booking.ts).
-// Ne rend rien si NEXT_PUBLIC_BOOKING_URL n'est pas configurée.
+// "Book a call" button: Proton Calendar booking page in a new tab (see
+// lib/booking.ts). Renders nothing when NEXT_PUBLIC_BOOKING_URL is not set.
 //
-// Variantes :
-//   "contact" (défaut) : bouton pleine largeur de la section contact
-//   "hero"             : pastille compacte alignée avec les CTA du hero
-//   "plain"            : lien nu, classes fournies par l'appelant
+// Variants:
+//   "contact" (default): full-width button in the contact section
+//   "hero"             : compact pill next to the hero CTAs
+//   "plain"            : bare link, classes from the caller
 
 import { useTranslations } from "next-intl";
 import { BOOKING_URL } from "@/lib/booking";
 
 type Props = {
   variant?: "contact" | "hero" | "plain";
-  /** Libellé personnalisé (sinon : traduction selon la variante). */
+  /** Custom label (otherwise translated per variant). */
   label?: string;
   className?: string;
 };
@@ -23,8 +22,8 @@ export default function BookingLink({ variant = "contact", label, className }: P
   const t = useTranslations();
   if (!BOOKING_URL) return null;
 
-  // noopener : la page ouverte n'accède pas à window.opener ;
-  // noreferrer : aucune URL du portfolio transmise à Proton.
+  // noopener: the new page gets no window.opener;
+  // noreferrer: no portfolio URL is sent to Proton.
   const common = { href: BOOKING_URL, target: "_blank", rel: "noopener noreferrer" } as const;
   const newTab = t("contact.opensInNewTab");
 

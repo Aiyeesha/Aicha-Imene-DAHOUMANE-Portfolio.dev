@@ -2,17 +2,16 @@
 
 // AvailabilityModal.tsx
 // --------------------
-// Petite modale "open to work" accessible depuis le badge du hero.
-// Affiche les conditions de disponibilité : disponibilité, contrats,
-// modes de travail, secteurs, postes ciblés, localisation.
+// Small "open to work" modal opened from the hero badge: availability,
+// contract types, work modes, sectors, target roles, location.
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Modal from "./Modal";
 import { useTrack } from "@/app/[locale]/providers";
 
-// ── Icônes inline légères (SVG 16×16) ────────────────────────────────────
-// Couleur héritée du parent via currentColor — ne pas mettre de text-* ici.
+// ── Lightweight inline icons (16×16 SVG) ─────────────────────────────────
+// Colour comes from the parent (currentColor): no text-* classes here.
 
 function IconClock() {
   return (
@@ -60,7 +59,7 @@ function IconLocation() {
   );
 }
 
-// ── Composant principal ───────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────
 export default function AvailabilityModal() {
   const t = useTranslations("availModal");
   const locale = useLocale();
@@ -73,8 +72,6 @@ export default function AvailabilityModal() {
 
   const rows = [
     { icon: <IconClock />,    label: t("delay"),    value: t("delayValue")     },
-    // Ligne « Contrats » ajoutée à l'audit de contenu du 2026-09-25 : CDI, CDD,
-    // intérim et portage n'étaient nommés nulle part sur le site.
     { icon: <IconTarget />,   label: t("contracts"), value: t("contractValues") },
     { icon: <IconMonitor />,  label: t("workMode"), value: t("workModeValues") },
     { icon: <IconLocation />, label: t("mobility"), value: t("mobilityValues") },
@@ -85,7 +82,7 @@ export default function AvailabilityModal() {
 
   return (
     <>
-      {/* ── Trigger : badge pulsant cliquable ─────────────────────────────── */}
+      {/* ── Trigger: pulsing badge ──────────────────────────────────────── */}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -94,7 +91,7 @@ export default function AvailabilityModal() {
           focus-visible:ring-emerald-400/60 transition-colors soft-ring"
         aria-haspopup="dialog"
       >
-        {/* Point vert pulsant */}
+        {/* Pulsing green dot */}
         <span className="relative flex h-2.5 w-2.5 shrink-0">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
@@ -103,7 +100,7 @@ export default function AvailabilityModal() {
           group-hover:underline group-hover:underline-offset-2 transition-all">
           {t("badge")}
         </span>
-        {/* Indicateur visuel "cliquable" */}
+        {/* "Clickable" hint */}
         <span
           aria-hidden="true"
           className="text-[10px] text-emerald-600/60 dark:text-emerald-400/50
@@ -113,18 +110,16 @@ export default function AvailabilityModal() {
         </span>
       </button>
 
-      {/* ── Modale ────────────────────────────────────────────────────────── */}
+      {/* ── Modal ─────────────────────────────────────────────────────────── */}
       <Modal open={open} title={t("title")} onClose={() => setOpen(false)}>
         <div className="grid gap-4">
-          {/* Lignes d'information */}
-          {/* dl > div > dt + dd uniquement (audit 2026-10-25) : le dt et le dd
-              étaient imbriqués un niveau trop bas. L'icône, décorative, passe
-              dans le dt ; la grille garde la valeur alignée sous le libellé. */}
+          {/* Information rows: dl > div > dt + dd; the decorative icon sits
+              in the dt and the grid aligns the value under the label. */}
           <dl className="grid gap-3">
             {rows.map(({ icon, label, value }) => (
               <div key={label} className="grid grid-cols-[1.75rem_1fr] gap-x-3">
                 <dt className="col-span-2 flex items-center gap-3 text-xs text-muted">
-                  {/* Icône dans un cercle coloré selon le track */}
+                  {/* Icon in a track-coloured circle */}
                   <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
                     {icon}
                   </span>
@@ -135,10 +130,10 @@ export default function AvailabilityModal() {
             ))}
           </dl>
 
-          {/* Séparateur */}
+          {/* Separator */}
           <div className="border-t border-black/10 dark:border-white/10" />
 
-          {/* CTA vers la section contact */}
+          {/* CTA to the contact section */}
           <a
             href="#contact"
             onClick={() => setOpen(false)}

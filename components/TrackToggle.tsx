@@ -7,19 +7,15 @@ export default function TrackToggle() {
   const { track, setTrack } = useTrack();
   const t = useTranslations();
 
-  // Pas de bascule si on clique le track déjà actif
+  // Clicking the active track does nothing
   const handleSwitch = (to: "itops" | "salesforce") => {
     if (to === track) return;
     setTrack(to);
   };
 
-  // Lisibilité du toggle (audit P5) : l'état actif passait par un simple lavis à
-  // 20 % d'opacité sur un header déjà translucide — sur certains fonds, difficile
-  // de dire quel parcours est sélectionné. L'actif porte désormais un fond opaque
-  // (surface `bg-white` / `dark:bg-white/10`), un anneau de la couleur du parcours,
-  // une pastille colorée et `font-semibold` ; l'inactif garde un contraste AA
-  // (`text-slate-700`). La structure (2 boutons, role=group, aria-pressed,
-  // aria-label) est inchangée.
+  // The active button has an opaque background, a ring in the track colour,
+  // a coloured dot and semibold text, so the selection reads on any
+  // background; the inactive one keeps AA contrast (text-slate-700).
   const btnBase =
     "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors soft-ring";
   const activeItops =

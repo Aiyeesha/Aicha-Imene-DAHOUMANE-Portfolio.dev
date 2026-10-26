@@ -14,9 +14,8 @@ import useHydrated from "@/lib/useHydrated";
 export default function ThemeToggle() {
   const t = useTranslations();
   const { theme, setTheme, systemTheme } = useTheme();
-  // useHydrated plutôt que useState + useEffect — audit 2026-10-23 (PERF-5).
   const mounted = useHydrated();
-  // `spinKey` change à chaque toggle → force le re-mount du <span> → rejoue l'animation CSS
+  // Changes on every toggle to remount the <span> and replay the CSS animation
   const [spinKey, setSpinKey] = useState(0);
 
   if (!mounted) return null;
@@ -36,7 +35,7 @@ export default function ThemeToggle() {
       aria-label={t("a11y.toggleTheme")}
       type="button"
     >
-      {/* key force le re-mount → rejoue l'animation theme-spin à chaque changement */}
+      {/* The key remounts the icon to replay the theme-spin animation */}
       <span key={spinKey} className="theme-icon-spin">
         {current === "dark" ? "🌙" : "☀️"}
       </span>
