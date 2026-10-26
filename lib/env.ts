@@ -45,14 +45,21 @@ const serverSchema = z.object({
   // fonctionnelle. Reste validé comme URL lorsqu'il est défini.
   FORMHOOK_ENDPOINT: z.string().url().optional(),
   FORMHOOK_AUTH_TOKEN: z.string().min(1).optional(),
+  // Requis depuis la confirmation de leur présence en production (2026-10-26) :
+  // sel de pseudonymisation des IP (lib/ratelimit.ts), secrets de
+  // revalidation et d'invalidation du cache, jeton des invitations témoignage.
+  // Seule la présence est exigée ici ; la longueur minimale est contrôlée
+  // plus bas, en simple avertissement.
+  IP_HASH_SALT:             z.string().min(1),
+  REVALIDATE_SECRET:        z.string().min(1),
+  CACHE_INVALIDATE_SECRET:  z.string().min(1),
+  TESTIMONIAL_SUBMIT_TOKEN: z.string().min(1),
 });
 
-// Secrets lus par le code mais jamais validés jusqu'à l'audit du 2026-10-25 :
-// sel de pseudonymisation des IP (lib/ratelimit.ts), secrets de
-// revalidation et d'invalidation du cache, jeton des invitations témoignage.
-// Validés quand ils sont définis ; leur absence n'est qu'un avertissement,
-// leur présence en production n'ayant pas pu être vérifiée.
-const recommendedSchema = z.object({
+// Longueurs minimales recommandées pour les secrets ci-dessus. Une valeur
+// existante plus courte ne doit pas empêcher la production de démarrer :
+// on avertit seulement, pour inviter à la régénérer.
+const secretStrengthSchema = z.object({
   IP_HASH_SALT:             z.string().min(16).optional(),
   REVALIDATE_SECRET:        z.string().min(32).optional(),
   CACHE_INVALIDATE_SECRET:  z.string().min(32).optional(),
@@ -81,18 +88,11 @@ export function validateEnv(): void {
     }
   }
 
-  // Secrets recommandés : jamais bloquants, même mal formés — une valeur
-  // existante plus courte que le minimum ne doit pas empêcher la production
-  // de démarrer.
-  const recWarnings: string[] = [];
-  const rec = recommendedSchema.safeParse(process.env);
-  if (!rec.success) {
-    for (const e of rec.error.issues) recWarnings.push(`${e.path.join(".")}: ${e.message}`);
-  }
-  const missing = Object.keys(recommendedSchema.shape).filter((k) => !process.env[k]);
-  if (missing.length > 0) recWarnings.push(`absents : ${missing.join(", ")}`);
-  if (recWarnings.length > 0) {
-    console.warn(`[env] Secrets recommandés :\n${recWarnings.map((l) => `  • ${l}`).join("\n")}`);
+  // Robustesse des secrets : jamais bloquante (voir secretStrengthSchema).
+  const strength = secretStrengthSchema.safeParse(process.env);
+  if (!strength.success) {
+    const lines = strength.error.issues.map((e) => `  • ${e.path.join(".")}: ${e.message}`);
+    console.warn(`[env] Secrets trop courts (à régénérer) :\n${lines.join("\n")}`);
   }
 
   const isProductionDeployment = process.env.VERCEL_ENV === "production";
