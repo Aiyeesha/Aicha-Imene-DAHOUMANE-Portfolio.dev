@@ -1,20 +1,15 @@
 // app/api/csp-report/route.ts
 // ---------------------------
-// Récepteur de rapports de violation CSP (actifs) et CSPO (report-only).
-// Les navigateurs envoient un POST JSON quand une ressource est bloquée (CSP)
-// ou détectée (CSPO) par la Content-Security-Policy.
+// Receives CSP violation reports, both enforced and report-only:
+//   - POST /api/csp-report       → enforced CSP (blocked)
+//   - POST /api/csp-report?ro=1  → report-only (Trusted Types)
 //
-// Deux modes :
-//   - POST /api/csp-report       → violation CSP active (bloquée)
-//   - POST /api/csp-report?ro=1  → violation CSPO Trusted Types (report-only)
+// Accepted formats (lib/security/cspReport.ts):
+//   - CSP Level 2: { "csp-report": { "violated-directive": "…", "blocked-uri": "…", … } }
+//   - Reporting API (Chrome/Edge): [{ "type": "csp-violation", "body": { "blockedURL": "…", … } }]
 //
-// Formats acceptés (lib/security/cspReport.ts) :
-//   - CSP Level 2 : { "csp-report": { "violated-directive": "…", "blocked-uri": "…", … } }
-//   - Reporting API (Chrome/Edge) : [{ "type": "csp-violation", "body": { "blockedURL": "…", … } }]
-//
-// SÉCURITÉ (rate-limiting) :
-//   Upstash Redis sliding window (20 req/60 s / IP) — robuste aux cold-starts
-//   serverless (contrairement à un compteur in-memory).
+// Rate limited with an Upstash sliding window (20 requests / 60s / IP), which
+// survives serverless cold starts unlike an in-memory counter.
 
 import { type NextRequest, NextResponse } from "next/server";
 import { cspAlertRatelimit, cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
@@ -22,10 +17,9 @@ import { parseCspReports } from "@/lib/security/cspReport";
 
 export const dynamic = "force-dynamic";
 
-// ── Faux positifs connus ─────────────────────────────────────────────────────
-// Les extensions navigateur génèrent des violations CSP légitimes dans leur
-// propre contexte. Ces rapports ne reflètent PAS une vulnérabilité du site —
-// les ignorer évite le bruit dans les logs et préserve les invocations Vercel.
+// ── Known false positives ────────────────────────────────────────────────────
+// Browser extensions trigger violations in their own context; these are not
+// site vulnerabilities and are dropped to keep the logs clean.
 const FALSE_POSITIVE_PREFIXES = [
   "chrome-extension://",
   "moz-extension://",
@@ -35,8 +29,8 @@ const FALSE_POSITIVE_PREFIXES = [
   "edge-extension://",
 ];
 
-// URI "vide" renvoyée par certains navigateurs pour les inline scripts bloqués.
-// "(null)" est l'encodage textuel de l'URI null dans les rapports CSP Level 2.
+// "Empty" URIs some browsers send for blocked inline scripts; "(null)" is the
+// textual null URI in CSP Level 2 reports.
 const FALSE_POSITIVE_EXACT = new Set(["", "(null)", "about:blank", "data:"]);
 
 function isFalsePositive(blockedUri: string | undefined): boolean {
@@ -45,21 +39,21 @@ function isFalsePositive(blockedUri: string | undefined): boolean {
   return FALSE_POSITIVE_PREFIXES.some((prefix) => blockedUri.startsWith(prefix));
 }
 
-// ── Classification par sévérité ───────────────────────────────────────────────
-// Les violations script-src sont les plus critiques (exécution de code).
-// Les violations img-src ou font-src sont bénignes (chargement de ressource).
+// ── Severity ──────────────────────────────────────────────────────────────────
+// script-src violations are the most critical (code execution); img-src or
+// font-src ones are benign.
 function getSeverity(violatedDirective: string | undefined): "critical" | "high" | "medium" | "low" {
   if (!violatedDirective) return "low";
-  const directive = violatedDirective.split(" ")[0]; // ex: "script-src-elem" → "script-src-elem"
+  const directive = violatedDirective.split(" ")[0]; // e.g. "script-src-elem"
   if (directive.startsWith("script-src") || directive === "require-trusted-types-for") return "critical";
   if (directive === "object-src" || directive === "base-uri" || directive === "form-action") return "high";
   if (directive.startsWith("connect-src") || directive.startsWith("frame-src")) return "medium";
   return "low";
 }
 
-// ── Alerte webhook sur violation critique ─────────────────────────────────
-// Non bloquant — une erreur ici ne doit jamais faire échouer la réponse 204.
-// Rate-limité globalement (5/10 min) pour éviter le spam du webhook.
+// ── Webhook alert on critical violations ──────────────────────────────────
+// Non-blocking: an error here never fails the 204. Globally rate limited
+// (5 / 10 min) to avoid webhook spam.
 async function sendCriticalAlert(data: {
   violatedDirective: string;
   blockedUri: string;
@@ -79,14 +73,14 @@ async function sendCriticalAlert(data: {
   }).catch((e) => console.warn("[CSP-VIOLATION] Alert webhook failed:", String(e)));
 }
 
-/** Coupe une URL avant « ? » ou « # » (valeurs spéciales comme « inline » inchangées). */
+/** Cuts a URL before "?" or "#" (special values such as "inline" unchanged). */
 function stripQuery(uri: string): string {
   const cut = uri.search(/[?#]/);
   return cut === -1 ? uri : uri.slice(0, cut);
 }
 
 export async function POST(req: NextRequest) {
-  // ── Déterminer si c'est un rapport report-only (CSPO) ────────────────────
+  // ── Report-only (CSPO) report? ───────────────────────────────────────────
   const { searchParams } = new URL(req.url);
   const isReportOnly = searchParams.get("ro") === "1";
 
@@ -97,7 +91,7 @@ export async function POST(req: NextRequest) {
 
   const { success: rateLimitOk } = await safeLimit(cspReportRatelimit, ip);
   if (!rateLimitOk) {
-    // 204 plutôt que 429 — le navigateur n'a pas besoin de savoir qu'il est limité
+    // 204 rather than 429: the browser does not need to know
     return new NextResponse(null, { status: 204 });
   }
 
@@ -105,27 +99,23 @@ export async function POST(req: NextRequest) {
     const reports = parseCspReports(await req.json());
 
     for (const report of reports) {
-      // Requête et fragment retirés des URL avant journalisation : ils peuvent
-      // porter un jeton (lien d'invitation signé) ou des données de formulaire —
-      // audit du 2026-10-14, S11.
+      // Query string and fragment stripped before logging: they may carry a
+      // token (signed invitation link) or form data.
       const blockedUri        = stripQuery(report.blockedUri);
       const violatedDirective = report.violatedDirective;
       const documentUri       = stripQuery(report.documentUri);
       const referrer          = stripQuery(report.referrer);
-      // La Reporting API ne passe pas par ?ro=1 : elle indique la politique
-      // report-only dans le champ disposition.
+      // The Reporting API does not use ?ro=1: it marks report-only in the
+      // disposition field.
       const reportOnly = isReportOnly || report.disposition === "report";
 
-      // ── Filtrer les faux positifs silencieusement ───────────────────────
-      // Pas de log pour éviter le bruit — les extensions navigateur génèrent
-      // de nombreux rapports sans rapport avec une vulnérabilité du site.
+      // ── Drop false positives silently ───────────────────────────────────
       if (isFalsePositive(blockedUri)) continue;
 
       const severity = getSeverity(violatedDirective);
 
-      // ── Log structuré → Vercel Runtime Logs ────────────────────────────
-      // Préfixe [CSP-VIOLATION] ou [CSPO-VIOLATION] pour filtrer facilement
-      // dans Vercel Runtime Logs / un outil d'observabilité (Axiom, etc.)
+      // ── Structured log → Vercel runtime logs ───────────────────────────
+      // [CSP-VIOLATION] / [CSPO-VIOLATION] prefixes make filtering easy.
       const prefix = reportOnly ? "[CSPO-VIOLATION]" : "[CSP-VIOLATION]";
 
       console.warn(prefix, JSON.stringify({
@@ -138,18 +128,18 @@ export async function POST(req: NextRequest) {
         original_policy:    report.originalPolicy,
       }));
 
-      // ── Alerte webhook pour les violations critiques (hors report-only) ─
-      // Les violations report-only ne sont pas bloquées — pas encore actives.
-      // Les violations actives sur script-src ou require-trusted-types-for
-      // signalent une injection potentielle ou une régression CSP.
+      // ── Webhook alert for critical enforced violations ─────────────────
+      // Report-only violations are not blocked yet. Enforced script-src or
+      // require-trusted-types-for violations point to an injection attempt or
+      // a CSP regression.
       if (severity === "critical" && !reportOnly) {
         await sendCriticalAlert({ violatedDirective, blockedUri, documentUri });
       }
     }
   } catch {
-    // Corps mal formé — ignorer silencieusement
+    // Malformed body: ignore
   }
 
-  // 204 No Content — le navigateur n'attend pas de corps
+  // 204 No Content: the browser expects no body
   return new NextResponse(null, { status: 204 });
 }

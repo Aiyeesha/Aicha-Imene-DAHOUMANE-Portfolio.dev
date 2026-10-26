@@ -1,8 +1,6 @@
-// page.tsx — Page d'accueil (one-page landing)
-// ---------------------------------------------
-// Architecture : chaque section est un composant indépendant.
-// ProfileNarrative et ProfileFactsCard ont été déplacés vers la page About
-// pour alléger le hero et améliorer la lisibilité.
+// page.tsx — home page (one-page landing)
+// ---------------------------------------
+// Each section is an independent component.
 
 import { rssAlternates } from "@/lib/seo";
 import dynamic from "next/dynamic";
@@ -10,23 +8,17 @@ import TrackAwareHero from "./track-aware-hero";
 import Reveal from "@/components/Reveal";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import SkeletonCard from "@/components/SkeletonCard";
-// Above-the-fold — chargés immédiatement
+// Above the fold: loaded immediately
 import TrackAwareSkills from "@/components/TrackAwareSkills";
 import RecruiterPaths from "@/components/RecruiterPaths";
-// Below-the-fold — lazy-loadés pour réduire le JS initial
+// Below the fold: lazy-loaded to reduce initial JS.
 //
-// TrackAwareServices : importé via TrackAwareServicesLoader plutôt qu'un
-// dynamic() direct ici — ssr:false délibéré (audit 2026-08-16), mais
-// `next/dynamic(..., { ssr: false })` n'est pas autorisé directement dans un
-// Server Component, d'où le wrapper Client Component. Le composant a
-// toujours son propre garde-fou `mounted` pour éviter un flash de mauvais
-// contenu, mais avec ssr:true la chaîne dynamic() + Reveal produisait parfois
-// un DOM serveur non réconcilié (icônes et bloc "Maturité d'exploitation"
-// absents, cookie de track ignoré) qui restait figé tant qu'aucun re-render
-// externe (ex: bascule du toggle) ne forçait React à rejouer l'hydratation.
-// ssr:false supprime la source du mismatch : plus de HTML serveur à
-// réconcilier pour ce sous-arbre, donc plus de tentative d'hydratation qui
-// peut échouer silencieusement.
+// TrackAwareServices goes through TrackAwareServicesLoader because
+// dynamic(..., { ssr: false }) is not allowed in a server component.
+// ssr: false is deliberate: with server rendering, the dynamic() + Reveal
+// chain sometimes left an unreconciled server DOM (missing icons and
+// "operational maturity" block, track cookie ignored) until something forced
+// a re-render.
 import TrackAwareServices from "@/components/TrackAwareServicesLoader";
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
 const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
@@ -49,11 +41,9 @@ import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached
 
 type Props = { params: Promise<{ locale: "en" | "fr" | "es" }> };
 
-// ── Métadonnées de l'accueil ────────────────────────────────────────────────
-// Déplacées depuis app/[locale]/layout.tsx — audit 2026-10-23 (SEO-2, SEO-3) :
-// au niveau du layout, ce canonical vers /{locale} et cette description
-// étaient hérités par la page 404 et par les pages qui n'en déclarent pas.
-// Contenu inchangé.
+// ── Home metadata ───────────────────────────────────────────────────────────
+// Defined on the page, not the layout, so the 404 page and pages without
+// their own metadata do not inherit this canonical and description.
 export async function generateMetadata({
   params
 }: {
@@ -63,13 +53,9 @@ export async function generateMetadata({
   const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
   const t = await getTranslations({ locale: locale });
 
-  // Track a le même problème que le flash "Salesforce" résolu plus bas pour le
-  // rendu de page (cookie posé par providers.tsx setTrack()) : sans lecture ici,
-  // un lien partagé par un visiteur de retour en IT Ops affiche toujours un
-  // <title>/description Salesforce dans l'aperçu (réseaux sociaux, onglet
-  // navigateur), quel que soit le contenu réellement affiché — voir audit
-  // 2026-08-13. Ne change rien pour un tout premier visiteur (pas de cookie) :
-  // le titre générique reste le même qu'avant, pas de régression SEO.
+  // Read the track cookie so a link shared by a returning IT Ops visitor gets
+  // an IT Ops title and description in its preview. First-time visitors (no
+  // cookie) get the generic title.
   const trackCookie = (await cookies()).get("track")?.value;
   const isItops = trackCookie === "itops";
 
@@ -103,8 +89,8 @@ export async function generateMetadata({
       siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [
         {
-          // URL absolue requise : certains crawlers OG (LinkedIn, Slack, WhatsApp)
-          // n'utilisent pas metadataBase et échouent sur les URLs relatives.
+          // Absolute URL: some OG crawlers (LinkedIn, Slack, WhatsApp) ignore
+          // metadataBase and fail on relative URLs.
           url: `${siteUrl}/opengraph-image`,
           width: 1200,
           height: 630,
@@ -122,13 +108,9 @@ export async function generateMetadata({
 }
 
 
-// ISR — revalidation toutes les heures.
-// ⚠️ Ce paramètre est actuellement sans effet sur le cache CDN Vercel :
-// app/layout.tsx appelle headers() (pour le nonce CSP et getLocale()),
-// ce qui opt toute la route en rendu dynamique et force Cache-Control: no-store.
-// L'ISR redevient opérationnel lorsque le cache sera géré par le reverse proxy
-// homelab (Nginx/Caddy) indépendamment du Cache-Control applicatif.
-// Conserver cette valeur : elle sera utile dès la migration homelab.
+// Hourly ISR. Currently no effect on the Vercel CDN: app/layout.tsx reads
+// headers(), which makes the route dynamic (Cache-Control: no-store). Kept for
+// when HTML caching moves to a reverse proxy.
 export const revalidate = 3600;
 
 export default async function Home({ params }: Props) {
@@ -140,33 +122,25 @@ export default async function Home({ params }: Props) {
 
   return (
     <>
-      {/* Scroll vers ancre (#hash) : géré une seule fois par Navbar via
-          lib/anchorScroll.ts (ScrollToHash supprimé, il faisait doublon). */}
+      {/* Hash scrolling (#anchor) is handled once, by Navbar (lib/anchorScroll.ts). */}
 
-      {/* HERO — simplifié (photo + titre + badges + 2 CTAs)
-          ProfileNarrative et ProfileFactsCard ont été déplacés vers /about
-          pour que le hero tienne en un seul écran sur desktop 1440px et mobile 375px.
-          BAIL-OUT NOTE : TrackAwareHero est "use client" — il lit le cookie `track`
-          via useTrack() (Providers) et s'anime avec Framer Motion. Ce composant
-          client à la racine de la page fait apparaître BAILOUT_TO_CLIENT_SIDE_RENDERING
-          dans le HTML streamé ; c'est intentionnel : le contenu du hero dépend d'un
-          état cookie côté client (Salesforce / IT Ops) qui n'est pas disponible en SSR.
-          Si TICKET-03 réactive l'ISR, cette section restera hydratée côté client. */}
-      {/* min-h prevents height collapse during Framer Motion opacity:0 entrance */}
+      {/* HERO: photo, title, badges, two CTAs. TrackAwareHero is a client
+          component (the track comes from a cookie read on the client), so
+          BAILOUT_TO_CLIENT_SIDE_RENDERING in the streamed HTML is expected.
+          min-h prevents a height collapse during the entrance animation. */}
       <section id="hero" className="py-8 md:py-10 min-h-[320px] sm:min-h-[400px]">
         <div className="pt-4 md:pt-6">
           <TrackAwareHero />
         </div>
 
-        {/* Séparateur visuel discret */}
+        {/* Subtle separator */}
         <div className="mt-12">
           <div className="h-px w-full bg-black/10 dark:bg-white/10" />
         </div>
       </section>
 
-      {/* PROJETS — remontés juste sous le hero (2026-10-26) : les réalisations
-          sont la première preuve qu'un recruteur cherche ; elles passaient
-          après six sections. section-stripe (fond alterné). */}
+      {/* PROJECTS: right below the hero, as the first evidence a recruiter
+          looks for. section-stripe (alternate background). */}
       <section id="projects" className="section-stripe py-14">
         <div>
           <Reveal>
@@ -187,17 +161,14 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      {/* VOUS RECRUTEZ POUR QUEL POSTE ? — point d'entrée recruteur (audit de
-          contenu 2026-09-25, lot 2) : oriente vers le profil hybride ou bascule
-          le track Salesforce / IT Ops, avec le CV correspondant. */}
+      {/* WHAT ROLE ARE YOU HIRING FOR? Recruiter entry point: hybrid profile
+          or Salesforce / IT Ops track, with the matching CV. */}
       <RecruiterPaths />
 
-      {/* PONT SALESFORCE ⇄ INFRA — remonté juste sous « Vous recrutez pour quel
-          poste ? » (audit 2026-10-01) : c'est la preuve la plus directe du profil
-          hybride, elle doit être lue dans les 30 premières secondes et non après
-          sept blocs. Le seul projet réellement croisé (Legarant-AXG, badge-bridge)
-          y est expliqué en clair, avec en seconde preuve le workflow public de
-          MediCare Solutions. Dégradé cyan→violet repris de .badge-bridge (globals.css). */}
+      {/* SALESFORCE ⇄ INFRA BRIDGE: the most direct evidence of the hybrid
+          profile, placed early. Explains the one truly cross-domain project
+          (Legarant-AXG, badge-bridge), with MediCare Solutions' public workflow
+          as second evidence. Cyan→violet gradient as in .badge-bridge. */}
       <section id="bridge" className="py-14">
         <Reveal>
           <div
@@ -205,8 +176,7 @@ export default async function Home({ params }: Props) {
             style={{ borderImage: "linear-gradient(to right, rgb(34 211 238 / 0.4), rgb(167 139 250 / 0.4)) 1", borderWidth: "1px", borderStyle: "solid" }}
           >
             <h2 className="text-2xl font-semibold">{t("sections.bridge_title")}</h2>
-            {/* Trois puces au lieu d'un paragraphe de ~1 900 caractères
-                (2026-10-26) : lisible en quelques secondes. */}
+            {/* Three bullets, readable in a few seconds. */}
             <ul className="mt-4 list-disc space-y-2 pl-5 text-muted leading-[1.8] marker:text-cyan-500 dark:marker:text-cyan-400">
               {(t.raw("sections.bridge_points") as string[]).map((point) => (
                 <li key={point}>{point}</li>
@@ -220,9 +190,8 @@ export default async function Home({ params }: Props) {
                 {t("sections.bridge_cta")}
                 <span aria-hidden="true"> →</span>
               </Link>
-              {/* Seconde preuve : artefact public vérifiable (workflow GitHub
-                  Actions de MediCare Solutions, projet en cours) plutôt qu'une
-                  page descriptive — d'où un lien externe et non un <Link>. */}
+              {/* Second evidence: a public, verifiable artefact (MediCare
+                  Solutions' GitHub Actions workflow), hence an external link. */}
               <a
                 href="https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
                 target="_blank"
@@ -237,7 +206,7 @@ export default async function Home({ params }: Props) {
         </Reveal>
       </section>
 
-      {/* COMPÉTENCES — section-stripe (fond alterné) */}
+      {/* SKILLS — section-stripe */}
       <section id="skills" className="section-stripe py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.skills_title")}</h2>
@@ -249,20 +218,19 @@ export default async function Home({ params }: Props) {
         <TrackAwareSkills locale={locale} />
       </section>
 
-      {/* EXPÉRIENCE — fond par défaut */}
+      {/* EXPERIENCE — default background */}
       <section id="experience" className="py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.experience_title")}</h2>
         </Reveal>
-        {/* Frise chronologique toujours dépliée — pleine largeur.
-            Les certifications ont été déplacées vers /certifications (page dédiée). */}
+        {/* Always-expanded timeline, full width. */}
         <div className="mt-8">
           <Reveal delayMs={110}>
             <ExperienceTimeline items={experienceItems} />
           </Reveal>
         </div>
 
-        {/* Lien vers la page Certifications dédiée */}
+        {/* Link to the Certifications page */}
         <Reveal delayMs={150}>
           <div className="mt-8 flex items-center gap-4">
             <Link
@@ -276,7 +244,7 @@ export default async function Home({ params }: Props) {
         </Reveal>
       </section>
 
-      {/* SERVICES — section-stripe (fond alterné) */}
+      {/* SERVICES — section-stripe */}
       <section id="services" className="section-stripe py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.services_title")}</h2>
@@ -285,12 +253,12 @@ export default async function Home({ params }: Props) {
           <p className="mt-3 text-muted">{t("sections.services_subtitle")}</p>
         </Reveal>
         <TrackAwareServices locale={locale} />
-        {/* FAQ déplacée vers /work-with-me (2026-10-26), avec son JSON-LD FAQPage. */}
+        {/* The FAQ lives on /work-with-me, with its FAQPage JSON-LD. */}
       </section>
 
-      {/* TÉMOIGNAGES / LOGOS ENTREPRISES — fond par défaut
-          Feature flag : NEXT_PUBLIC_SHOW_TESTIMONIALS=true pour activer les témoignages réels.
-          Par défaut : section "Ils m'ont fait confiance" (logos uniquement, aucun placeholder). */}
+      {/* TESTIMONIALS / COMPANY LOGOS — default background.
+          NEXT_PUBLIC_SHOW_TESTIMONIALS=true shows real testimonials; otherwise
+          the "They trusted me" logo strip (no placeholders). */}
       <section id={process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true" ? "testimonials" : "trusted-by"} className="py-14">
         {process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true" ? (
           <>
@@ -307,13 +275,13 @@ export default async function Home({ params }: Props) {
         ) : (
           <>
             <TrustedBy />
-            {/* Compteurs animés — métriques clés chiffrées (Apex, Flows, gain, projets) */}
+            {/* Animated key metrics */}
             <GlobalMetrics />
           </>
         )}
       </section>
 
-      {/* BLOG — section-stripe (fond alterné, inversé depuis le déplacement des projets) */}
+      {/* BLOG — section-stripe */}
       <section id="blog" className="section-stripe py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.blog_title")}</h2>
@@ -322,13 +290,13 @@ export default async function Home({ params }: Props) {
           <p className="mt-3 text-muted">{t("sections.blog_subtitle")}</p>
         </Reveal>
         <div className="mt-8">
-          {/* track omis — LatestPosts affiche les 2 derniers posts (tous tracks).
-              La personnalisation par track était bloquante pour le SSR. */}
+          {/* No track: the latest posts across tracks (a per-track choice
+              would block SSR). */}
           <LatestPosts locale={locale} />
         </div>
       </section>
 
-      {/* CONTACT — fond par défaut (alternance inversée depuis le déplacement des projets) */}
+      {/* CONTACT — default background */}
       <section id="contact" className="py-14">
         <Reveal>
           <h2 className="text-3xl font-semibold">{t("sections.contact_title")}</h2>
@@ -341,9 +309,8 @@ export default async function Home({ params }: Props) {
             <ContactForm />
           </Reveal>
         </div>
-        {/* T1 — lien d'invitation témoignage retiré du HTML public.
-             Utiliser POST /api/admin/testimonial-invite (Bearer ADMIN_PASSWORD)
-             pour générer un lien HMAC signé à durée limitée. */}
+        {/* Testimonial invitation links are generated with
+            POST /api/admin/testimonial-invite (signed, time-limited). */}
       </section>
     </>
   );

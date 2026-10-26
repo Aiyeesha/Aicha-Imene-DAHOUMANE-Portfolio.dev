@@ -4,16 +4,11 @@ import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { requireAdminAuth } from "@/lib/security/adminAuth";
 
-// Défense en profondeur : re-vérifier l'auth Basic dans l'action elle-même.
-// Le middleware proxy.ts protège déjà /admin, mais les Server Actions peuvent
-// en théorie être invoquées directement via un POST forgé. Ce guard garantit
-// que même hors contexte middleware, l'action rejette les appelants non authentifiés.
-//
-// Audit 2026-10-23 (P3) : la logique vit désormais dans lib/security/adminAuth.ts,
-// partagée avec le layout et les pages de /admin. Elle n'est plus définie ni
-// exportée ici : dans un fichier "use server", toute fonction async exportée
-// devient une Server Action appelable par POST — requireAdminAuth n'a pas à
-// être un point d'entrée public.
+// Defence in depth: server actions can be called with a forged POST, so the
+// action re-checks Basic auth itself (lib/security/adminAuth.ts, shared with
+// the /admin layout and pages). The check is not exported from here: in a
+// "use server" file, every exported async function becomes a callable
+// server action.
 
 export async function toggleTestimonialPublished(id: string, currentValue: boolean) {
   await requireAdminAuth();

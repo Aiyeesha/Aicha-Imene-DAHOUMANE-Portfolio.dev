@@ -25,9 +25,8 @@ import { pageTitle, clampDescription, rssAlternates } from "@/lib/seo";
 
 type Params = { locale: "en" | "fr" | "es"; slug: string };
 
-// ISR : les articles pré-générés sont revalidés toutes les 24 h.
-// dynamicParams = true → un nouvel article se génère à la première visite
-// sans déclencher un rebuild complet (utile à 50+ articles).
+// ISR: pre-generated posts revalidate every 24h; with dynamicParams a new
+// post is generated on first visit, without a full rebuild.
 export const revalidate    = 86400;
 export const dynamicParams = true;
 
@@ -50,7 +49,7 @@ export async function generateMetadata(
 
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const title = meta.title;
-  // Description bornée à 160 caractères — audit 2026-10-23 (SEO-2), lib/seo.ts.
+  // Description capped at 160 characters (lib/seo.ts).
   const description = clampDescription(meta.excerpt || meta.title);
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/blog/${slug}`;
@@ -62,9 +61,9 @@ export async function generateMetadata(
   const frExists = locale === "fr" ? meta : readPostMeta("fr", slug);
   const esExists = locale === "es" ? meta : readPostMeta("es", slug);
 
-  // Hreflang symétrique : si un article n'existe que dans une seule langue,
-  // pointer l'alternate manquant vers l'index blog plutôt que de l'omettre.
-  // Google exige des paires symétriques — une entrée orpheline génère un avertissement GSC.
+  // Symmetric hreflang: when a post exists in one language only, the missing
+  // alternate points to the blog index instead of being omitted (Google
+  // expects symmetric pairs).
   languages.en = enExists ? `${siteUrl}/en/blog/${slug}` : `${siteUrl}/en/blog`;
   languages.fr = frExists ? `${siteUrl}/fr/blog/${slug}` : `${siteUrl}/fr/blog`;
   languages.es = esExists ? `${siteUrl}/es/blog/${slug}` : `${siteUrl}/es/blog`;
@@ -73,7 +72,7 @@ export async function generateMetadata(
   else languages["x-default"] = `${siteUrl}/en/blog`;
 
   return {
-    // Gabarit unique, sans suffixe de parcours — audit 2026-10-23 (SEO-1).
+    // Shared title template, no track suffix.
     title: pageTitle(title),
     description,
     alternates: { canonical: urlPath, languages, ...rssAlternates(locale) },
@@ -111,12 +110,11 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const toc = extractToc(content);
   const nav = getPrevNext(locale, slug);
 
-  // Série d'articles — null si l'article n'appartient à aucune série
+  // Article series; null when the post is not part of one
   const seriePosition = getSeriePosition(slug);
 
-  // « Mis en pratique dans » (audit de contenu 2026-09-25, lot 4) : chaque
-  // article renvoie vers les études de cas où sa technique est appliquée.
-  // "colophon" désigne ce site lui-même ; les slugs inconnus sont ignorés.
+  // "Applied in": links to the case studies using the technique. "colophon"
+  // means this site itself; unknown slugs are ignored.
   const practiceLinks = meta.projects
     .map((p) => {
       if (p === "colophon") {
@@ -156,8 +154,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const postUrl  = `${siteUrl}/${locale}/blog/${slug}`;
   const blogUrl  = `${siteUrl}/${locale}/blog`;
 
-  // BlogPosting — indexé par Google (rich snippets pour les articles)
-  // Le champ `image` est requis pour les Google Rich Results (article featured snippet).
+  // BlogPosting for Google rich results (`image` is required).
   const coverImageUrl = meta.cover
     ? meta.cover.startsWith("http")
       ? meta.cover
@@ -190,7 +187,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     isPartOf: { "@type": "Blog", "@id": blogUrl },
   };
 
-  // BreadcrumbList — Home → Blog → Article
+  // BreadcrumbList: Home → Blog → Article
   const jsonLdBreadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -203,7 +200,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
   return (
     <section className="py-12">
-      {/* Données structurées — BlogPosting + BreadcrumbList */}
+      {/* Structured data: BlogPosting + BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify([jsonLdBlogPosting, jsonLdBreadcrumb]) }}
@@ -211,18 +208,16 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       <ScrollProgress />
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0">
-          {/* Audit 2026-10-23 (P2) : à 360 px, un mot long du titre en text-4xl
-              (« administration » ≈ 280 px) ne tenait pas à côté du bouton
-              « ← Retour » et élargissait la page. flex-wrap + basis-64 : titre
-              et bouton partagent la ligne quand la place le permet (desktop,
-              inchangé), sinon le bouton passe sous le bloc de titre — l'ordre
-              du DOM, donc de lecture et de tabulation, reste identique. */}
+          {/* flex-wrap + basis-64: title and back button share the line when
+              there is room; otherwise the button wraps below (long words in
+              text-4xl would widen the page at 360px). DOM order, hence reading
+              and tab order, is unchanged. */}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 flex-1 basis-64">
               {/* Date + reading time */}
               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-2">
                 <span>{formatDate(meta.date, locale)}</span>
-                {/* Date de mise à jour du fond — n'apparaît que si le frontmatter la définit */}
+                {/* Content update date, only when set in the frontmatter */}
                 {meta.updatedDate ? (
                   <>
                     <span>·</span>
@@ -251,7 +246,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
                 ))}
               </div>
 
-              {/* Bandeau de série — affiché uniquement si l'article appartient à une série */}
+              {/* Series banner, only for posts in a series */}
               {seriePosition && (
                 <SeriesBanner position={seriePosition} locale={locale} />
               )}
@@ -300,7 +295,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
             articleTrack={detectTrack(meta.tags) ?? "salesforce"}
           />
 
-          {/* Share buttons — LinkedIn + copier le lien */}
+          {/* Share buttons: LinkedIn + copy link */}
           <ShareButtons
             url={postUrl}
             title={meta.title}
@@ -351,7 +346,6 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       {/* Back to top (client) */}
       <BackToTop label={t("backToTop")} />
 
-      {/* JSON-LD supprimé ici — BlogPosting complet déjà injecté en tête de composant (lignes ~158-163). */}
     </section>
   );
 }

@@ -1,17 +1,11 @@
 // app/not-found.tsx
 // -----------------
-// Page 404 racine — c'est en réalité CETTE page qui s'affiche pour toute URL
-// qui ne correspond à aucune route existante (ex: /fr/lien-casse), et non
-// app/[locale]/not-found.tsx : Next.js App Router ne déclenche un not-found.tsx
-// imbriqué que via un appel explicite à notFound() depuis une page de ce
-// segment (ex: app/[locale]/projects/[slug]/not-found.tsx) — jamais pour une
-// route simplement absente. Ce fichier doit donc rester autonome (pas de
-// Navbar/Footer partagés : app/layout.tsx ne les fournit pas) mais offrir au
-// minimum un lien de contact et un sélecteur de langue complet (EN/FR/ES).
-//
-// Détection de langue via navigator.language (client only) — flash acceptable
-// sur ce fallback rare. La version locale (app/[locale]/not-found.tsx) utilise
-// useParams() et n'a pas ce flash.
+// Root 404, for URLs outside the locale segments (unknown URLs under a locale
+// go to app/[locale]/not-found.tsx through the [...rest] catch-all). It must
+// be self-contained (app/layout.tsx provides no Navbar/Footer) but still
+// offers a contact link and a full language switcher (EN/FR/ES). Language
+// comes from navigator.language on the client; a brief flash is acceptable
+// on this rare fallback.
 
 "use client";
 
@@ -19,7 +13,7 @@ import { useSyncExternalStore } from "react";
 
 type Locale = "fr" | "en" | "es";
 
-// La langue du navigateur ne change pas pendant la vie de la page.
+// The browser language does not change during the page's life.
 const subscribeNoop = () => () => {};
 
 function getPreferredLocale(): Locale {
@@ -66,7 +60,7 @@ const LANGUAGES: { code: Locale; label: string }[] = [
   { code: "es", label: "ES" },
 ];
 
-// ── Icône : boussole / lien brisé ──────────────────────────────────────────
+// ── Icon: compass ──────────────────────────────────────────────────────────
 function Icon404() {
   return (
     <svg
@@ -77,15 +71,15 @@ function Icon404() {
       fill="none"
       className="mx-auto text-cyan-500/50 dark:text-cyan-400/40"
     >
-      {/* Cercle extérieur */}
+      {/* Outer circle */}
       <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="2" />
-      {/* Aiguille boussole haut-droite */}
+      {/* Needle, top right */}
       <path d="M24 24 L32 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      {/* Aiguille boussole bas-gauche */}
+      {/* Needle, bottom left */}
       <path d="M24 24 L16 34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.4" />
       {/* Centre */}
       <circle cx="24" cy="24" r="2.5" fill="currentColor" />
-      {/* Points cardinaux */}
+      {/* Cardinal points */}
       <circle cx="24" cy="6"  r="1.5" fill="currentColor" fillOpacity="0.3" />
       <circle cx="42" cy="24" r="1.5" fill="currentColor" fillOpacity="0.3" />
       <circle cx="24" cy="42" r="1.5" fill="currentColor" fillOpacity="0.3" />
@@ -95,8 +89,8 @@ function Icon404() {
 }
 
 export default function NotFound() {
-  // Langue du navigateur lue après hydratation sans setState dans un effet —
-  // audit 2026-10-23 (PERF-5). "en" côté serveur et pendant l'hydratation.
+  // Browser language read after hydration; "en" on the server and during
+  // hydration.
   const locale = useSyncExternalStore<Locale>(subscribeNoop, getPreferredLocale, () => "en");
 
   const c = content[locale];
@@ -105,23 +99,23 @@ export default function NotFound() {
     <div className="min-h-screen grid place-items-center px-6 bg-white dark:bg-[#070B1A] text-slate-900 dark:text-white">
       <div className="w-full max-w-md text-center animate-[fadeIn_0.4s_ease_forwards]">
 
-        {/* React 19 remonte <title> dans <head> : un composant client ne peut pas
-            exporter de metadata, et axe exige un titre (règle document-title). */}
+        {/* React 19 hoists <title> into <head>: a client component cannot
+            export metadata, and axe requires a title (document-title). */}
         <title>{`${c.title} — 404`}</title>
 
         <Icon404 />
 
-        {/* Code d'erreur */}
+        {/* Error code */}
         <p className="mt-4 text-8xl font-black text-cyan-700 dark:text-cyan-300 select-none leading-none">
           {c.code}
         </p>
 
-        {/* Titre + description */}
+        {/* Title + description */}
         <h1 className="mt-4 text-2xl font-semibold">{c.title}</h1>
         <p className="mt-3 text-sm text-slate-600 dark:text-white/75">{c.description}</p>
         <p className="mt-2 text-sm text-slate-600 dark:text-white/70">{c.hint}</p>
 
-        {/* CTAs — accueil + contact (minimum requis même sur ce fallback autonome) */}
+        {/* CTAs: home + contact */}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <a
             href={`/${locale}`}
@@ -137,7 +131,7 @@ export default function NotFound() {
           </a>
         </div>
 
-        {/* Sélecteur de langue complet — EN/FR/ES, cohérent avec le reste du site */}
+        {/* Full language switcher (EN/FR/ES) */}
         <div className="mt-8 flex flex-col items-center gap-2">
           <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-white/70">
             {c.langLabel}

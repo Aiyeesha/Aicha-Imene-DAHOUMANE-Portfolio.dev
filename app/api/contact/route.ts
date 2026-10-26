@@ -4,13 +4,11 @@ import { contactRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
 import { validate, getClientIp, isAllowedOrigin } from "@/lib/contactValidation";
 
-// Forme du corps (audit 2026-10-25) : un champ non textuel (nombre, objet)
-// provoquait une erreur 500 sur .trim(), et subject n'était pas borné. Types
-// et longueurs maximales sont vérifiés ici ; les règles métier (e-mail,
-// liens, longueur minimale) restent dans lib/contactValidation.ts. Les bornes
-// dépassent volontairement celles de validate() pour lui laisser renvoyer
-// ses codes d'erreur précis (name_too_long, message_too_long…).
-// .strict() : toute clé inconnue est refusée.
+// Body shape: types and maximum lengths are checked here (a non-string field
+// used to cause a 500 on .trim()); business rules (email, links, minimum
+// length) stay in lib/contactValidation.ts. Limits are deliberately above
+// validate()'s so it can return its precise error codes (name_too_long,
+// message_too_long…). .strict() rejects unknown keys.
 const payloadSchema = z
   .object({
     name: z.string().max(500).optional(),
@@ -19,8 +17,7 @@ const payloadSchema = z
     subject: z.string().max(200).optional(),
     message: z.string().max(5000).optional(),
     /**
-     * RGPD / privacy consent.
-     * We require explicit consent before storing/forwarding the message.
+     * GDPR / privacy consent: required before forwarding the message.
      */
     acceptedPolicy: z.boolean().optional(),
     // Honeypot: should remain empty
@@ -30,8 +27,8 @@ const payloadSchema = z
   })
   .strict();
 
-// Délai maximal de l'appel à Formhook : sans lui, une lenteur amont gardait
-// la fonction ouverte jusqu'au timeout de la plateforme.
+// Formhook call timeout, so a slow upstream cannot keep the function open
+// until the platform timeout.
 const FORMHOOK_TIMEOUT_MS = 5000;
 
 const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
@@ -40,8 +37,8 @@ const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
 const FORMHOOK_AUTH_TOKEN = process.env.FORMHOOK_AUTH_TOKEN || "";
 
 /**
- * Contact API (Stage 7)
- * ---------------------
+ * Contact API
+ * -----------
  * - Validates input
  * - Honeypot field ("company") anti-spam
  * - Rate limit (Upstash Redis, multi-instance safe)
@@ -49,11 +46,10 @@ const FORMHOOK_AUTH_TOKEN = process.env.FORMHOOK_AUTH_TOKEN || "";
  *   messages are received by email via Formhook, nothing is stored at rest.
  */
 export async function POST(req: Request) {
-  // Origin guard : en production, exiger un en-tête Origin qui corresponde soit à
-  // l'origine configurée du site, soit à l'hôte qui sert réellement cette route
-  // (voir isAllowedOrigin). Les navigateurs envoient toujours Origin sur les
-  // POST cross-site ; les bots/scripts directs l'omettent souvent. Preview Vercel
-  // exempté (URLs éphémères).
+  // Origin guard: in production, require an Origin header matching the
+  // configured site origin or the host serving this route (see
+  // isAllowedOrigin). Browsers always send Origin on cross-site POSTs; scripts
+  // often omit it. Vercel previews are exempt (ephemeral URLs).
   const isPreview = process.env.VERCEL_ENV === "preview";
   if (!isPreview && process.env.NODE_ENV === "production" && !isAllowedOrigin(req)) {
     return NextResponse.json({ ok: false, error: "forbidden_origin" }, { status: 403 });
@@ -117,7 +113,7 @@ export async function POST(req: Request) {
         signal: AbortSignal.timeout(FORMHOOK_TIMEOUT_MS),
       });
     } catch (err) {
-      // Délai dépassé ou erreur réseau : même réponse qu'un échec amont.
+      // Timeout or network error: same response as an upstream failure.
       log.error("contact/formhook-unreachable", { error: err instanceof Error ? err.name : "unknown" });
       return NextResponse.json({ ok: false, error: "upstream_failed" }, { status: 502 });
     }
@@ -132,7 +128,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true }, { status: 200 });
   }
 
-  // Dev fallback — log uniquement le topic, pas de PII
+  // Dev fallback: log the topic only, no personal data
   log.info("contact/received", { topic, locale: clientLocale });
   return NextResponse.json({ ok: true }, { status: 200 });
 }
