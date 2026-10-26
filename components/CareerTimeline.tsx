@@ -2,16 +2,11 @@
 
 // CareerTimeline.tsx
 // ------------------
-// Frise chronologique visuelle du parcours professionnel d'Aïcha Imène DAHOUMANE.
-// Données statiques (bilingues EN/FR) — milestones stables et vérifiables.
-//
-// Design :
-//   - Colonne gauche : badge année + icône + ligne verticale de connexion
-//   - Colonne droite : carte (type coloré, titre, organisation, description, tags)
-//   - Types : "formation" (violet), "stage" (amber), "alternance" (cyan), "emploi" (emerald)
-//   - Animation : entrée au scroll via Framer Motion (useInView), disabled si reduced motion
-//
-// Bilingue : chaque milestone a un champ `label` { en, fr }.
+// Career timeline with static, verifiable milestones (EN/FR/ES).
+// Left column: year badge, dot and connecting line. Right column: card with
+// type, title, organisation, description and tags. Types are colour-coded:
+// training (violet), internship (amber), work-study (cyan), job (emerald).
+// Entries animate in on scroll (Framer Motion), except with reduced motion.
 
 import { useRef } from "react";
 import Image from "next/image";
@@ -22,22 +17,22 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 type MilestoneType = "formation" | "stage" | "alternance" | "emploi";
 
 type Milestone = {
-  /** Période affichée (ex: "2022", "2023 – 2025"). Peut être trilingue { en, fr, es }. */
+  /** Displayed period (e.g. "2022", "2023 – 2025"), optionally per locale. */
   period: string | { en: string; fr: string; es: string };
   type: MilestoneType;
-  /** Titre du poste ou de la formation */
+  /** Job or programme title */
   title: { en: string; fr: string; es: string };
-  /** Organisme / entreprise */
+  /** Organisation / company */
   org: string;
-  /** Description courte */
+  /** Short description */
   description: { en: string; fr: string; es: string };
-  /** Tags compétences ou diplômes */
+  /** Skill or diploma tags */
   tags: string[];
-  /** Logos des organismes (chemins dans /public/) */
+  /** Organisation logos (paths under /public/) */
   logos?: { src: string; alt: string }[];
 };
 
-// ── Données du parcours ────────────────────────────────────────────────────────
+// ── Career data ────────────────────────────────────────────────────────────────
 
 const MILESTONES: Milestone[] = [
   {
@@ -174,16 +169,16 @@ const MILESTONES: Milestone[] = [
   },
 ];
 
-// ── Couleurs par type ─────────────────────────────────────────────────────────
+// ── Colours per type ──────────────────────────────────────────────────────────
 
 const TYPE_CONFIG: Record<MilestoneType, {
-  badge: string;        // label EN
-  badgeFr: string;      // label FR
-  badgeEs: string;      // label ES
+  badge: string;        // EN label
+  badgeFr: string;      // FR label
+  badgeEs: string;      // ES label
   badgeClass: string;   // pill badge classes
-  dotClass: string;     // cercle indicateur
-  lineClass: string;    // ligne de connexion
-  borderStyle: React.CSSProperties; // bordure gauche de la carte (inline — cf. LatestPosts)
+  dotClass: string;     // dot
+  lineClass: string;    // connecting line
+  borderStyle: React.CSSProperties; // card left border (inline, as in LatestPosts)
 }> = {
   formation: {
     badge: "Training",
@@ -223,7 +218,7 @@ const TYPE_CONFIG: Record<MilestoneType, {
   },
 };
 
-// ── Étape individuelle ────────────────────────────────────────────────────────
+// ── Single milestone ──────────────────────────────────────────────────────────
 
 function TimelineItem({
   milestone,
@@ -243,8 +238,8 @@ function TimelineItem({
   const cfg  = TYPE_CONFIG[milestone.type];
   const show = shouldReduce || inView;
 
-  // Période localisée — affichée dans la colonne gauche (sm et +) ou dans
-  // l'en-tête de la carte (mobile), voir les deux emplacements ci-dessous.
+  // Localised period: shown in the left column from sm, in the card header
+  // on mobile.
   const periodLabel =
     typeof milestone.period === "string"
       ? milestone.period
@@ -253,18 +248,13 @@ function TimelineItem({
   return (
     <li ref={ref} className="flex gap-4 md:gap-6">
 
-      {/* ── Colonne gauche : point + ligne ──────────────────────────────── */}
-      {/* max-sm:pt-5 : sans le badge année, aligne le point sur le badge de
-          type de la carte. */}
+      {/* ── Left column: dot + line ─────────────────────────────────────── */}
+      {/* max-sm:pt-5 aligns the dot with the card's type badge when the
+          year badge is hidden. */}
       <div className="flex flex-col items-center shrink-0 pt-1 max-sm:pt-5">
-        {/* Badge année — masqué sous sm (max-sm:hidden).
-            Audit 2026-10-23 (P2) : sur mobile, la période dans cette colonne
-            réduisait d'autant la carte. La période longue « 2023 – sept. 2025 »
-            (whitespace-nowrap) élargissait même la colonne à ~138 px et
-            poussait la carte hors de l'écran (/about à 403-420 px pour 390 px).
-            Sous sm, la période est donc affichée dans l'en-tête de la carte
-            (voir plus bas) et la colonne ne garde que le point et la ligne.
-            display: none → jamais lue deux fois par un lecteur d'écran. */}
+        {/* Year badge, hidden below sm: on mobile the column would squeeze
+            (or push off-screen) the card, so the period moves to the card
+            header. display: none means it is never read twice. */}
         <motion.div
           initial={shouldReduce ? false : { opacity: 0, scale: 0.7 }}
           animate={show ? { opacity: 1, scale: 1 } : {}}
@@ -274,7 +264,7 @@ function TimelineItem({
           {periodLabel}
         </motion.div>
 
-        {/* Point coloré */}
+        {/* Coloured dot */}
         <motion.div
           initial={shouldReduce ? false : { opacity: 0, scale: 0.5 }}
           animate={show ? { opacity: 1, scale: 1 } : {}}
@@ -283,7 +273,7 @@ function TimelineItem({
           aria-hidden="true"
         />
 
-        {/* Ligne de connexion */}
+        {/* Connecting line */}
         {!isLast && (
           <motion.div
             initial={shouldReduce ? false : { scaleY: 0 }}
@@ -296,32 +286,29 @@ function TimelineItem({
         )}
       </div>
 
-      {/* ── Colonne droite : carte ───────────────────────────────────────── */}
+      {/* ── Right column: card ──────────────────────────────────────────── */}
       <motion.div
         initial={shouldReduce ? false : { opacity: 0, x: 16 }}
         animate={show ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.08 }}
-        // min-w-0 : sans lui, un élément flex ne rétrécit pas sous la largeur
-        // de son contenu le plus long et déborde du viewport sur mobile ;
-        // break-words coupe les mots/identifiants trop longs (audit 2026-10-23, P2).
+        // min-w-0 lets the flex item shrink below its longest content;
+        // break-words wraps long words and identifiers on mobile.
         className={`min-w-0 flex-1 break-words rounded-2xl border border-black/8 dark:border-white/8 bg-white dark:bg-white/2 p-4 md:p-5 ${isLast ? "mb-0" : "mb-6"}`}
         style={cfg.borderStyle}
       >
-        {/* En-tête : type + titre */}
+        {/* Header: type + title */}
         <div className="flex flex-wrap items-start gap-2 mb-2">
           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${cfg.badgeClass}`}>
             {isFr ? cfg.badgeFr : isEs ? cfg.badgeEs : cfg.badge}
           </span>
-          {/* Période — mobile uniquement (sm:hidden), en remplacement du
-              badge de la colonne gauche (audit 2026-10-23, P2). */}
+          {/* Period, mobile only (replaces the left-column badge). */}
           <span className="rounded-full bg-black/5 dark:bg-white/8 px-2 py-0.5 text-xs font-mono font-medium text-muted-2 whitespace-nowrap sm:hidden">
             {periodLabel}
           </span>
         </div>
 
-        {/* max-sm:flex-wrap : sur très petit écran (320 px, seuil WCAG 1.4.10),
-            les logos (shrink-0) passent sous le titre au lieu de déborder
-            (audit 2026-10-23, P2). Au-delà de sm, mise en page inchangée. */}
+        {/* On very small screens (320px) the logos wrap below the title
+            instead of overflowing. */}
         <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
           <div className="min-w-0">
             <h3 className="text-sm font-semibold leading-snug">
@@ -330,7 +317,7 @@ function TimelineItem({
             <p className="mt-0.5 text-xs font-medium text-muted-2">{milestone.org}</p>
           </div>
 
-          {/* Logos des organismes */}
+          {/* Organisation logos */}
           {milestone.logos && milestone.logos.length > 0 && (
             <div className="flex items-center gap-2 shrink-0 max-sm:flex-wrap max-sm:shrink">
               {milestone.logos.map((logo) => (
@@ -374,7 +361,7 @@ function TimelineItem({
   );
 }
 
-// ── Composant principal ───────────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────────
 
 export default function CareerTimeline({ locale }: { locale: string }) {
   const shouldReduce = useReducedMotion();

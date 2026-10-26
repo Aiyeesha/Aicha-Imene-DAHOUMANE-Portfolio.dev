@@ -1,20 +1,18 @@
 // SkeletonCard.tsx
 // ----------------
-// Carte squelette animée (animate-pulse) pour les états de chargement.
-// Pure Tailwind, aucune dépendance externe.
+// Pulsing skeleton card for loading states (Tailwind only).
 //
-// Usage :
-//   <SkeletonCard />            — taille par défaut (card projet)
-//   <SkeletonCard lines={2} />  — moins de lignes de texte
+//   <SkeletonCard />            — default size (project card)
+//   <SkeletonCard lines={2} />  — fewer text lines
 
 type Props = {
-  /** Nombre de lignes de texte de description (1–4, défaut : 3) */
+  /** Number of description lines (1–4, default 3) */
   lines?: number;
   className?: string;
   /**
-   * Index de stagger (0-3) — applique un `animation-delay` CSS via la classe
-   * `.skeleton-delay-{n}` définie dans globals.css, pour créer un effet
-   * de cascade ondulant plutôt qu'une pulsation synchrone de toutes les cartes.
+   * Stagger index (0-3): adds an animation-delay through the
+   * `.skeleton-delay-{n}` classes in globals.css, so cards pulse in a wave
+   * rather than all at once.
    */
   staggerIndex?: 0 | 1 | 2 | 3;
 };
@@ -30,25 +28,25 @@ export default function SkeletonCard({ lines = 3, className = "", staggerIndex }
       ].join(" ").trim()}
       aria-hidden="true"
     >
-      {/* En-tête : titre + badge placeholder */}
+      {/* Header: title + badge placeholders */}
       <div className="flex items-start justify-between gap-3">
         <div className="h-5 w-2/3 rounded-full bg-slate-200 dark:bg-white/10" />
         <div className="h-5 w-14 rounded-full bg-slate-200 dark:bg-white/10" />
       </div>
 
-      {/* Lignes de description */}
+      {/* Description lines */}
       <div className="mt-4 space-y-2">
         {Array.from({ length: lines }).map((_, i) => (
           <div
             key={i}
             className="h-3.5 rounded-full bg-slate-200 dark:bg-white/10"
-            // Dernière ligne plus courte pour un rendu naturel
+            // Shorter last line
             style={{ width: i === lines - 1 ? "60%" : "100%" }}
           />
         ))}
       </div>
 
-      {/* Tags placeholder */}
+      {/* Tag placeholders */}
       <div className="mt-5 flex gap-2">
         {[48, 64, 56].map((w) => (
           <div

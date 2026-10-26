@@ -56,12 +56,12 @@ function pageHref(page: number, locale: string, tag?: string): string {
 export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts, currentPage, totalPages }: Props) {
   const t = useTranslations("blogIndex");
 
-  // Locale validé à "en" | "fr" | "es" ; slug restreint à [a-z0-9-_] pour éliminer
-  // les alertes CodeQL js/stored-xss
+  // Locale restricted to "en" | "fr" | "es" and slug to [a-z0-9-_], which
+  // clears CodeQL js/stored-xss alerts
   const safeLocale: "en" | "fr" | "es" = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const safeSlug = (slug: string) => slug.replace(/[^a-z0-9-_]/gi, "");
 
-  // Filtrage par tag URL uniquement (le toggle global de la navbar gère le track)
+  // Filter by URL tag only (the global nav toggle handles the track)
   const filtered = posts.filter((p) =>
     !selectedTag || p.tags.includes(selectedTag)
   );
@@ -71,7 +71,7 @@ export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts
 
   return (
     <>
-      {/* Article mis en avant — premier de la liste filtrée, page sans tag */}
+      {/* Featured post: first of the filtered list, on the untagged page */}
       {featuredPost && (
         <Link
           href={`/${safeLocale}/blog/${safeSlug(featuredPost.slug)}`}
@@ -101,7 +101,7 @@ export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts
         </Link>
       )}
 
-      {/* Grille d'articles */}
+      {/* Post grid */}
       {gridItems.length > 0 ? (
         <div className="mt-6 grid gap-5 md:grid-cols-2">
           {gridItems.map((p) => {
@@ -145,7 +145,7 @@ export default function BlogTrackFilter({ posts, locale, selectedTag, totalPosts
         </div>
       )}
 
-      {/* Compteur + pagination */}
+      {/* Count + pagination */}
       <div className="mt-8 flex flex-col items-center gap-4">
         <p className="text-sm text-muted-2">
           {totalPosts} {t("articleCount")}

@@ -2,9 +2,9 @@
 
 // BlogAuthorCard.tsx
 // ------------------
-// Carte "À propos de l'auteure" affichée en bas de chaque article.
-// Track-aware : contenu, couleur d'accent et badge s'adaptent au track actif
-// (Salesforce → cyan / IT Ops → violet), exactement comme AboutTrackIntro.
+// "About the author" card at the end of each article. Content, accent colour
+// and badge follow the active track (Salesforce → cyan, IT Ops → violet),
+// like AboutTrackIntro.
 
 import Image from "next/image";
 import Link from "next/link";
@@ -43,7 +43,7 @@ export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedIn
   return (
     <div className={`rounded-2xl border p-6 space-y-4 ${borderClass}`}>
 
-      {/* Ligne haute — avatar + identité + badge track */}
+      {/* Top row: avatar + identity + track badge */}
       <div className="flex items-center gap-4">
         <div className={`shrink-0 rounded-full p-[2.5px] ${isSalesforce ? "bg-linear-to-br from-cyan-400 via-sky-500 to-blue-600" : "bg-linear-to-br from-violet-400 via-purple-500 to-violet-600"}`}>
           <Image
@@ -65,18 +65,18 @@ export default function BlogAuthorCard({ authorName, avatarUrl, locale, linkedIn
           </div>
         </div>
 
-        {/* Badge track — même style qu'AboutTrackIntro */}
+        {/* Track badge, same style as AboutTrackIntro */}
         <span className={`hidden sm:inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold shrink-0 ${badgeClass}`}>
           {trackLabel}
         </span>
       </div>
 
-      {/* Bio track-aware */}
+      {/* Track-aware bio */}
       <p className="text-sm leading-relaxed text-muted">
         {isSalesforce ? t("authorBioSalesforce") : t("authorBioItops")}
       </p>
 
-      {/* Liens */}
+      {/* Links */}
       <div className="flex flex-wrap items-center gap-2 pt-1">
         <Link
           href={`/${locale}/about`}

@@ -2,16 +2,9 @@
 
 // CommandPalette.tsx
 // ------------------
-// Palette de commandes ⌘K accessible depuis n'importe quelle page.
-// Raccourcis : ⌘K (Mac) / Ctrl+K (Windows/Linux) pour ouvrir/fermer.
-//
-// Actions disponibles :
-//   - Scroll vers une section (Skills, Experience, Services, Projects, Blog, Contact)
-//   - Navigation vers les pages dédiées (About, Certifications, Blog)
-//   - Changer de track (Salesforce ↔ IT Ops)
-//   - Changer de thème (clair ↔ sombre)
-//   - Changer de langue (EN ↔ FR)
-//   - Télécharger le CV / ouvrir LinkedIn
+// ⌘K / Ctrl+K command palette, available on every page: jump to a section,
+// open a page, switch track, theme or language, download the CV, open
+// LinkedIn.
 
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
@@ -25,8 +18,8 @@ import usePlatformShortcut from "@/lib/usePlatformShortcut";
 import { OPEN_COMMAND_PALETTE_EVENT } from "@/lib/commandPaletteEvents";
 import { scrollToSection } from "@/lib/anchorScroll";
 
-// ── Styles injectés une seule fois via <style> ────────────────────────────────
-// L'overlay et le panel sont stylés ici car cmdk accepte seulement des classNames.
+// ── Styles injected once via <style> ─────────────────────────────────────────
+// cmdk only accepts class names, so the overlay and panel are styled here.
 const PALETTE_STYLES = `
   @keyframes cmdk-overlay-in {
     from { opacity: 0; }
@@ -77,7 +70,7 @@ const PALETTE_STYLES = `
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    /* 0.45 descendait sous 4,5:1 (audit 2026-10-25) */
+    /* Keeps 4.5:1 contrast */
     opacity: 0.75;
     margin-top: 0.25rem;
   }
@@ -110,7 +103,7 @@ const PALETTE_STYLES = `
   }
 `;
 
-// ── Icônes inline légères ─────────────────────────────────────────────────────
+// ── Lightweight inline icons ──────────────────────────────────────────────────
 const Icon = ({ d }: { d: string }) => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
@@ -120,8 +113,8 @@ const Icon = ({ d }: { d: string }) => (
 );
 
 export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: boolean }) {
-  // defaultOpen : la palette est chargée à la demande (CommandPaletteLoader),
-  // au premier ⌘K / Ctrl K ou clic sur le bouton — elle s'ouvre donc montée.
+  // defaultOpen: the palette is loaded on demand (CommandPaletteLoader) on the
+  // first ⌘K / Ctrl K or button click, so it mounts already open.
   const [open, setOpen] = useState(defaultOpen);
   const { track, setTrack } = useTrack();
   const { setTheme, resolvedTheme } = useTheme();
@@ -129,7 +122,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
   const router = useRouter();
   const pathname = usePathname();
 
-  // ── Raccourci clavier ⌘K / Ctrl+K ──────────────────────────────────────────
+  // ── ⌘K / Ctrl+K shortcut ──────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -137,7 +130,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
         setOpen((o) => !o);
       }
     };
-    // Bouton de la barre et entrée du menu mobile (accès sans clavier).
+    // Nav button and mobile menu entry (no keyboard needed).
     const onOpenRequest = () => setOpen(true);
     document.addEventListener("keydown", onKey);
     window.addEventListener(OPEN_COMMAND_PALETTE_EVENT, onOpenRequest);
@@ -150,7 +143,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   const run = (fn: () => void) => {
     setOpen(false);
-    // Léger délai pour que la fermeture soit visible avant l'action
+    // Short delay so the palette visibly closes before the action
     setTimeout(fn, 60);
   };
 
@@ -174,13 +167,9 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
   const linkedInUrl = LINKEDIN_URL || "https://www.linkedin.com";
 
-  // ── Labels i18n ──────────────────────────────────────────────────────────────
-  // Audit 2026-10-23 (NAV-2, NAV-3, I18N-3) : les libellés étaient codés en
-  // dur (ternaires isFr ? … : isEs ? … : …) et divergeaient de la navigation
-  // (« Services » ici, « Expertises » dans le menu). Ils viennent désormais de
-  // messages/{fr,en,es}.json : namespace `commandPalette` pour les libellés
-  // propres à la palette, namespace `nav` pour les sections et pages déjà
-  // nommées dans la navigation — un seul libellé par entrée, partout.
+  // ── i18n labels ──────────────────────────────────────────────────────────────
+  // `commandPalette` for palette-specific labels, `nav` for sections and pages,
+  // so each entry has the same name everywhere.
   const t = useTranslations("commandPalette");
   const tNav = useTranslations("nav");
   const shortcut = usePlatformShortcut();
@@ -226,40 +215,38 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
     alsoShortcut: t("alsoShortcut", { shortcut }),
   };
 
-  // ── Classe partagée pour les items (répétée inline car CSS injecté globalement) ──
+  // ── Shared item class ────────────────────────────────────────────────────────
   const itemCls = "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm cursor-pointer outline-hidden";
 
   return (
     <>
-      {/* Injection des styles cmdk une seule fois */}
+      {/* cmdk styles, injected once */}
       <style>{PALETTE_STYLES}</style>
-
-      {/* Trigger visible dans la navbar (optionnel) — géré via shortcut uniquement */}
 
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}
         label={L.title}
       >
-        {/* Panel principal */}
+        {/* Main panel */}
         <div className="bg-white dark:bg-[#0f1929] text-slate-900 dark:text-white">
 
-          {/* DialogTitle requis par Radix UI pour l'accessibilité — visuellement masqué */}
+          {/* Radix requires a DialogTitle for accessibility (visually hidden) */}
           <RadixDialog.Title className="sr-only">
             {L.title}
           </RadixDialog.Title>
 
-          {/* Champ de recherche */}
+          {/* Search input */}
           <Command.Input
             placeholder={L.placeholder}
             className="dark:placeholder:text-white/40 placeholder:text-slate-400 dark:text-white text-slate-900 border-b border-black/10 dark:border-white/10"
           />
 
-          {/* Liste des commandes */}
+          {/* Command list */}
           <Command.List>
             <Command.Empty>{L.noResults}</Command.Empty>
 
-            {/* ── Sections (scroll vers ancre) ─────────────────────────── */}
+            {/* ── Sections (scroll to anchor) ─────────────────────────── */}
             <Command.Group heading={L.sections}>
               {[
                 { id: "skills",      label: L.skills,      icon: "M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" },
@@ -311,7 +298,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
             <Command.Separator />
 
-            {/* ── Pages légales & info ────────────────────────────────── */}
+            {/* ── Legal & info pages ──────────────────────────────────── */}
             <Command.Group heading={L.info}>
               {[
                 { href: `/${locale}/status`,        label: L.status,        icon: "M22 12h-4l-3 9L9 3l-3 9H2" },
@@ -334,7 +321,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
             {/* ── Actions ────────────────────────────────────────────── */}
             <Command.Group heading={L.actions}>
-              {/* Track switch — affiche seulement l'autre track */}
+              {/* Track switch: only the other track is offered */}
               {track !== "salesforce" && (
                 <Command.Item onSelect={() => run(() => setTrack("salesforce"))} className={itemCls}>
                   <Icon d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -348,7 +335,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
                 </Command.Item>
               )}
 
-              {/* Thème */}
+              {/* Theme */}
               <Command.Item
                 onSelect={() => run(() => setTheme(resolvedTheme === "dark" ? "light" : "dark"))}
                 className={itemCls}
@@ -360,9 +347,9 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
                 {resolvedTheme === "dark" ? L.lightMode : L.darkMode}
               </Command.Item>
 
-              {/* Langue */}
+              {/* Language */}
               <Command.Item
-                // Conserve la page courante (audit 2026-10-25) : renvoyait à l'accueil.
+                // Stays on the current page
                 onSelect={() => {
                   const next = locale === "fr" ? "en" : locale === "en" ? "es" : "fr";
                   navigate(`/${next}${pathname.replace(/^\/(en|fr|es)(?=\/|$)/, "")}`);
@@ -376,7 +363,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
             <Command.Separator />
 
-            {/* ── Liens externes ──────────────────────────────────────── */}
+            {/* ── External links ──────────────────────────────────────── */}
             <Command.Group heading={L.links}>
               <Command.Item
                 onSelect={() => run(() => {
@@ -402,7 +389,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
             </Command.Group>
           </Command.List>
 
-          {/* Pied de page — légende clavier */}
+          {/* Footer: keyboard legend */}
           <div className="border-t border-black/10 dark:border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-slate-500 dark:text-white/40">
             <span><kbd className="font-mono">↑↓</kbd> {L.navigate}</span>
             <span><kbd className="font-mono">↵</kbd> {L.select}</span>

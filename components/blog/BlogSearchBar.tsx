@@ -21,9 +21,7 @@ export default function BlogSearchBar() {
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen]       = useState(false);
-  // Option active du motif combobox (WAI-ARIA 1.2) — audit 2026-10-25 : la
-  // liste déclarait listbox/option sans aria-expanded, sans flèches ni Échap,
-  // et le nombre de résultats n'était pas annoncé. -1 = aucune.
+  // Active option of the combobox pattern (WAI-ARIA 1.2); -1 = none.
   const [active, setActive]   = useState(-1);
   const router                = useRouter();
   const listboxId             = useId();
@@ -53,9 +51,7 @@ export default function BlogSearchBar() {
     }
   }, [locale]);
 
-  // Debounce : la recherche part du minuteur (250 ms après la dernière frappe),
-  // et non d'un effet sur une valeur « debouncée » qui appelait des setState
-  // de façon synchrone — audit 2026-10-23 (PERF-5). Comportement identique.
+  // Debounce: the search runs from a timer 250ms after the last keystroke.
   useEffect(() => {
     const t = setTimeout(() => { search(query); }, 250);
     return () => clearTimeout(t);
@@ -78,7 +74,7 @@ export default function BlogSearchBar() {
 
   const expanded = open && results.length > 0;
 
-  // Annonce lue par les lecteurs d'écran (région aria-live ci-dessous).
+  // Message for screen readers (aria-live region below).
   const status = !open || query.length < 2 || loading
     ? ""
     : results.length === 0
@@ -109,7 +105,7 @@ export default function BlogSearchBar() {
         router.push(`/${locale}/blog/${target.slug}`);
       }
     } else if (e.key === "Escape") {
-      // 1re pression : ferme la liste ; 2e : vide le champ (comportement natif).
+      // First press closes the list; the second clears the field (native).
       if (open) {
         e.preventDefault();
         setOpen(false);
@@ -118,11 +114,11 @@ export default function BlogSearchBar() {
     }
   };
 
-  // Garde l'option active visible quand la liste défile.
+  // Keep the active option in view when the list scrolls.
   useEffect(() => {
     if (active < 0) return;
     document.getElementById(optionId(active))?.scrollIntoView({ block: "nearest" });
-    // optionId dérive de listboxId, stable pour la durée du composant.
+    // optionId derives from listboxId, stable for the component's lifetime.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
@@ -179,8 +175,8 @@ export default function BlogSearchBar() {
               href={`/${locale}/blog/${r.slug}`}
               role="option"
               aria-selected={i === active}
-              // Le focus reste dans le champ (aria-activedescendant) : les
-              // options ne sont pas des arrêts de tabulation.
+              // Focus stays in the input (aria-activedescendant): options
+              // are not tab stops.
               tabIndex={-1}
               onClick={() => { setOpen(false); setQuery(""); }}
               onMouseEnter={() => setActive(i)}
@@ -206,7 +202,7 @@ export default function BlogSearchBar() {
         </div>
       )}
 
-      {/* Nombre de résultats annoncé aux lecteurs d'écran */}
+      {/* Result count announced to screen readers */}
       <p className="sr-only" role="status" aria-live="polite">{status}</p>
 
       {open && results.length === 0 && query.length >= 2 && !loading && (
