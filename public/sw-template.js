@@ -84,7 +84,7 @@ self.addEventListener("fetch", (event) => {
 
   // Assets statiques (images, icônes, PDF, fonts) → Cache First
   if (
-    url.pathname.match(/\.(png|jpg|jpeg|webp|svg|gif|ico|woff2?|ttf|pdf)$/i)
+    STATIC_ASSET_RE.test(url.pathname)
   ) {
     event.respondWith(cacheFirst(request));
     return;
@@ -93,6 +93,22 @@ self.addEventListener("fetch", (event) => {
   // Pages HTML → Network First (contenu frais si connecté, cache sinon)
   event.respondWith(networkFirst(request));
 });
+
+// ── Borne du cache des pages ─────────────────────────────────────────────────
+// Les pages HTML sont conservées pour la consultation hors ligne : au-delà de
+// MAX_CACHED_PAGES, les plus anciennes entrées sont supprimées (ordre
+// d'insertion de cache.keys()). Les ressources statiques ne sont pas
+// concernées (URL hachées ou fichiers de public/, en nombre fini).
+const MAX_CACHED_PAGES = 50;
+const STATIC_ASSET_RE = /\.(png|jpg|jpeg|webp|svg|gif|ico|woff2?|ttf|pdf)$/i;
+async function trimPages(cache) {
+  const pages = (await cache.keys()).filter((req) => {
+    const { pathname } = new URL(req.url);
+    return !pathname.startsWith("/_next/static/") && !STATIC_ASSET_RE.test(pathname) && pathname !== "/offline.html";
+  });
+  const excess = pages.length - MAX_CACHED_PAGES;
+  for (let i = 0; i < excess; i++) await cache.delete(pages[i]);
+}
 
 // ── Stratégie Cache First ─────────────────────────────────────────────────────
 // 1. Chercher dans le cache
@@ -125,31 +141,39 @@ async function cacheFirst(request) {
 // Flux :
 //   1. fetch(request)                               — réseau, pas de timeout
 //   2. response.ok (2xx)  → stocker dans le cache, retourner la réponse fraîche
-//   3. response non-ok (4xx/5xx) → essayer le cache (ex: Supabase 500 temporaire)
+//   3. réponse 5xx (serveur en erreur) → essayer le cache
 //      → si absent du cache → retourner la réponse d'erreur telle quelle
-//   4. fetch throw (offline, DNS fail) → essayer le cache
+//   4. toute autre réponse (redirection, 404, 410…) → la retourner telle quelle
+//   5. fetch throw (offline, DNS fail) → essayer le cache
 //      → si absent → offline.html
 //
-// Correction vs v1 : le cas "response non-ok" ne tombait PAS dans le catch,
-// donc le cache n'était jamais consulté sur une erreur 500 — l'utilisateur
-// voyait l'erreur serveur sans fallback cache disponible.
+// Audit 2026-10-25 : le cache était aussi consulté sur les 4xx et sur les
+// redirections (réponse opaqueredirect, ok=false) — une page dépubliée,
+// redirigée ou supprimée continuait d'être servie depuis le cache. Seule une
+// erreur serveur (5xx) ou l'absence de réseau justifient désormais le repli.
+// Les charges utiles RSC (?_rsc=…) ne sont plus mises en cache : une entrée
+// par navigation faisait grossir le cache sans limite.
 async function networkFirst(request) {
   try {
     const response = await fetch(request);
 
     if (response.ok) {
       // Réseau OK : mettre en cache pour les visites hors ligne futures
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, response.clone()); // non bloquant (pas de await)
+      if (!new URL(request.url).searchParams.has("_rsc")) {
+        const cache = await caches.open(CACHE_NAME);
+        // non bloquant (pas de await) ; borne le nombre de pages conservées
+        cache.put(request, response.clone()).then(() => trimPages(cache));
+      }
       return response;
     }
 
-    // Serveur joignable mais réponse d'erreur (4xx / 5xx) :
-    // tenter le cache avant de montrer l'erreur.
-    const cached = await caches.match(request);
-    if (cached) return cached;
+    // Erreur serveur (5xx) : tenter le cache avant de montrer l'erreur.
+    if (response.status >= 500) {
+      const cached = await caches.match(request);
+      if (cached) return cached;
+    }
 
-    // Pas de cache disponible → retourner la réponse d'erreur telle quelle
+    // Redirection, 404, 410… ou pas de cache : réponse telle quelle
     // (les error boundaries React prendront le relais côté client)
     return response;
   } catch {

@@ -39,6 +39,18 @@ const withBundleAnalyzer = bundleAnalyzer({
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://aicha-imene-dahoumane-portfolio.vercel.app";
 
+// Hôte du projet Supabase du site (images distantes, voir images.remotePatterns).
+const SUPABASE_HOST = (() => {
+  try { return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname; } catch { return ""; }
+})();
+
+// Ancien alias Vercel du projet, qui sert toujours la production (audit
+// 2026-10-25) : redirigé en 308 vers le domaine principal pour que les liens
+// partagés ne circulent plus sous l'ancien nom.
+const LEGACY_HOSTS = ["portfolio-next-one-gold.vercel.app"].filter(
+  (host) => host !== new URL(SITE_URL).hostname,
+);
+
 /** @type {import('next').NextConfig} */
 // Articles de blog dépubliés (audit de contenu 2026-09-25, lot 4).
 const MSP_REX_SLUG = "msp-internship-lessons";
@@ -155,13 +167,22 @@ const nextConfig = {
     deviceSizes: [480, 640, 750, 828, 1080, 1200, 1920],
     // Autoriser l'optimisation des images provenant de Supabase Storage.
     // Sans cette liste, <Image src="https://*.supabase.co/..."> lève une erreur.
-    remotePatterns: [
-      { protocol: "https", hostname: "**.supabase.co" },
-    ],
+    // Audit 2026-10-25 : limité au projet Supabase du site (« **.supabase.co »
+    // autorisait n'importe quel projet, donc l'optimiseur d'images servait de
+    // relais vers des contenus tiers). Sans URL configurée, aucun hôte distant.
+    remotePatterns: SUPABASE_HOST
+      ? [{ protocol: "https", hostname: SUPABASE_HOST }]
+      : [],
   },
 
   async redirects() {
     return [
+      ...LEGACY_HOSTS.map((host) => ({
+        source: "/:path*",
+        has: [{ type: "host", value: host }],
+        destination: `${SITE_URL}/:path*`,
+        permanent: true,
+      })),
       // Blog élagué à l'audit de contenu du 2026-09-25 (lot 4) : 41 articles
       // déplacés dans content/blog/unpublished/. Les 4 runbooks du stage
       // MIDRANGE GROUP pointent vers le retour d'expérience qui les remplace ;
