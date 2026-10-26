@@ -201,12 +201,12 @@ export default async function LocaleLayout({
                     >
                       {t("footer.hybrid")}
                     </Link>
-                    {/* Formulaire recruteur (poste, contrat, lieu, date de prise de
-                        poste) — remplace le formulaire « Qualifier une mission »
-                        (secteur/délai/budget) depuis l'audit de contenu du 2026-09-25. */}
+                    {/* « Me recruter » → formulaire unique de l'accueil (champs
+                        recruteur repliés), comme le héro et le menu mobile — un
+                        même libellé, une même destination (audit 2026-10-25). */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
-                      href={`/${locale}/contact`}
+                      href={`/${locale}#contact`}
                     >
                       {t("footer.qualifyMission")}
                     </Link>

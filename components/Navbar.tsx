@@ -47,7 +47,9 @@ function CommandPaletteTrigger() {
 }
 
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
-const PAGE_IDS = ["about","hybrid","certifications","resources"] as const;
+// workWithMe : menu mobile uniquement (absent de DESKTOP_IDS_STATIC) — page
+// « L'essentiel recruteur », audit 2026-10-25.
+const PAGE_IDS = ["about","hybrid","certifications","resources","workWithMe"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
@@ -121,7 +123,9 @@ export default function Navbar({
             ? "certifications"
             : pathname.startsWith(`/${locale}/resources`)
               ? "resources"
-              : null;
+              : pathname.startsWith(`/${locale}/work-with-me`)
+                ? "workWithMe"
+                : null;
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
@@ -436,7 +440,7 @@ useEffect(() => {
 
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "blog", "projects"]);
+  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "workWithMe", "blog", "projects"]);
 
   // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
   // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
@@ -467,6 +471,7 @@ useEffect(() => {
     if (id === "hybrid") return `/${locale}/hybride`;
     if (id === "certifications") return `/${locale}/certifications`;
     if (id === "resources") return `/${locale}/resources`;
+    if (id === "workWithMe") return `/${locale}/work-with-me`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
     if (id === "projects") return `/${locale}/projects`;
@@ -480,6 +485,7 @@ useEffect(() => {
     { id: "experience", label: t("nav.experience") },
     { id: "certifications", label: t("nav.certifications") },
     { id: "resources", label: t("nav.resources") },
+    { id: "workWithMe", label: t("nav.workWithMe") },
     { id: "services", label: t("nav.services") },
     ...(showTestimonials ? [{ id: "testimonials" as NavId, label: t("nav.testimonials") }] : []),
     { id: "projects", label: t("nav.projects") },
