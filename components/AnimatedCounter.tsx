@@ -41,7 +41,9 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   // SSR émet la valeur finale → Google indexe les vrais chiffres, pas "0".
   // L'animation repart de 0 → value quand l'élément entre dans le viewport.
   const [display, setDisplay] = useState(value);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  // Ref plutôt qu'état : sert seulement à ne lancer l'animation qu'une fois —
+  // audit 2026-10-23 (PERF-5).
+  const hasAnimated = useRef(false);
 
   // Synchronisation spring → display (actif dès le premier rendu client)
   useEffect(() => {
@@ -49,18 +51,19 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   }, [spring]);
 
   // Démarrage de l'animation quand le composant est visible (une seule fois)
+  // Mouvement réduit : valeur finale affichée directement (dérivée au rendu,
+  // sans setState dans l'effet — audit 2026-10-23, PERF-5).
   useEffect(() => {
-    if (shouldReduce) {
-      setDisplay(value);
-      return;
+    if (shouldReduce) return;
+    if (inView && !hasAnimated.current) {
+      hasAnimated.current = true;
+      spring.jump(0); // place le spring (et, via "change", display) à 0
+      mv.set(0);      // s'assure que mv est à 0 (valeur initiale)
+      mv.set(value);  // spring anime 0 → value
     }
-    if (inView && !hasAnimated) {
-      setHasAnimated(true);
-      setDisplay(0); // remet display à 0 avant que le spring prenne la main
-      mv.set(0);     // s'assure que mv est à 0 (valeur initiale)
-      mv.set(value); // spring anime 0 → value
-    }
-  }, [inView, shouldReduce, value, mv, hasAnimated]);
+  }, [inView, shouldReduce, value, mv, spring]);
+
+  const shown = shouldReduce ? value : display;
 
   // aria-label expose la valeur finale statique aux lecteurs d'écran.
   // Sans cela, le SR lirait "0" au chargement (valeur initiale de l'animation)
@@ -74,7 +77,7 @@ export default function AnimatedCounter({ value, suffix = "", className = "" }: 
   return (
     <span ref={ref} className={className} role="img" aria-label={ariaLabel}>
       {/* aria-hidden masque les valeurs intermédiaires — le SR utilise aria-label */}
-      <span aria-hidden="true">{display.toLocaleString(intlLocale)}{suffix}</span>
+      <span aria-hidden="true">{shown.toLocaleString(intlLocale)}{suffix}</span>
     </span>
   );
 }

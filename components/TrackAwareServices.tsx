@@ -10,7 +10,7 @@ import { useTrack } from "@/app/[locale]/providers";
 import Reveal from "@/components/Reveal";
 import { getServices, type Locale } from "@/content/services";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import useHydrated from "@/lib/useHydrated";
 import Link from "next/link";
 
 // ── Icônes SVG inline (24×24, stroke-based) ──────────────────────────
@@ -106,8 +106,8 @@ export default function TrackAwareServices({ locale }: { locale: Locale }) {
   // reads localStorage on mount and may switch to "itops", causing a hydration
   // mismatch for both card data and CSS classes. Using the SSR default until
   // mounted keeps server and first-client render identical.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  // useHydrated plutôt que useState + useEffect — audit 2026-10-23 (PERF-5).
+  const mounted = useHydrated();
 
   const effectiveTrack = mounted ? track : "salesforce";
   const cards = getServices(dataLocale, effectiveTrack);

@@ -1,4 +1,6 @@
-"use client";
+// Server Component — audit 2026-10-23 (PERF-4) : simple lien d'évitement, sans
+// état ni gestionnaire d'événement ; la directive "use client" l'envoyait
+// inutilement dans le bundle JavaScript de chaque page.
 
 export default function SkipToContent({
   targetId = "main",

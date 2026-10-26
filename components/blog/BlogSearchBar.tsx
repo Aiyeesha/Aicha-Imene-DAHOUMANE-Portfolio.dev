@@ -13,15 +13,6 @@ type Result = {
   readingTime: number;
 };
 
-function useDebounce<T>(value: T, delay: number): T {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debounced;
-}
-
 export default function BlogSearchBar() {
   const params = useParams();
   const locale = (params?.locale as string) ?? "en";
@@ -33,8 +24,6 @@ export default function BlogSearchBar() {
   const containerRef          = useRef<HTMLDivElement>(null);
   const inputRef              = useRef<HTMLInputElement>(null);
   const abortRef              = useRef<AbortController | null>(null);
-
-  const debouncedQuery = useDebounce(query, 250);
 
   const search = useCallback(async (q: string) => {
     if (q.length < 2) { setResults([]); setOpen(false); return; }
@@ -56,7 +45,13 @@ export default function BlogSearchBar() {
     }
   }, [locale]);
 
-  useEffect(() => { search(debouncedQuery); }, [debouncedQuery, search]);
+  // Debounce : la recherche part du minuteur (250 ms après la dernière frappe),
+  // et non d'un effet sur une valeur « debouncée » qui appelait des setState
+  // de façon synchrone — audit 2026-10-23 (PERF-5). Comportement identique.
+  useEffect(() => {
+    const t = setTimeout(() => { search(query); }, 250);
+    return () => clearTimeout(t);
+  }, [query, search]);
 
   // Close on outside click
   useEffect(() => {
