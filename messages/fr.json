@@ -274,6 +274,7 @@
     "closeModal": "Fermer la fenêtre",
     "toggleTheme": "Changer le thème",
     "showImage": "Afficher l'image {index}",
+    "galleryImageAlt": "{title} — capture d'écran {index} sur {total}",
     "chooseTrack": "Choisir un parcours",
     "chooseItOps": "Passer sur le parcours IT Ops",
     "chooseSalesforce": "Passer sur le parcours Salesforce",

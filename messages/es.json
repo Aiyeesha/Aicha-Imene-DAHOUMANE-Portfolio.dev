@@ -274,6 +274,7 @@
     "closeModal": "Cerrar ventana",
     "toggleTheme": "Cambiar tema",
     "showImage": "Mostrar imagen {index}",
+    "galleryImageAlt": "{title} — captura de pantalla {index} de {total}",
     "chooseTrack": "Elegir un área",
     "chooseItOps": "Cambiar al área IT Ops",
     "chooseSalesforce": "Cambiar al área Salesforce",

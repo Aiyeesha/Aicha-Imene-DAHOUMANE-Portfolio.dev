@@ -218,17 +218,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             qu'une seule URL (audit du 2026-10-14, constat 8). */}
         {LINKEDIN_URL && <link rel="me" href={LINKEDIN_URL} />}
         <link rel="me" href="https://github.com/Aiyeesha" />
-        {/* Preload avatar — candidat LCP (Largest Contentful Paint) sur le hero.
-            fetchpriority="high" priorise le téléchargement avant le parsing du Hero.
-            Gain LCP typique : ~200–400ms sur Chrome/Edge.
-            Dégradation gracieuse : ignoré silencieusement sur Firefox et Safari < 17.2
-            (pas de régression, juste pas de gain de priorité sur ces navigateurs). */}
-        <link
-          rel="preload"
-          as="image"
-          href={process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp"}
-          fetchPriority="high"
-        />
+        {/* Pas de preload manuel de l'avatar (audit 2026-10-25) : le héro
+            l'affiche via next/image avec priority, qui précharge déjà la
+            variante optimisée (/_next/image). Le preload de /avatar.webp
+            téléchargeait en priorité un fichier que la page n'utilisait pas. */}
         {/* type="application/ld+json" est une donnée, pas un script exécutable —
             pas besoin de nonce (CSP script-src ne s'applique pas à ce type). */}
         <script
