@@ -20,16 +20,18 @@ export default async function Image({ params }: Props) {
     .replace(/^https?:\/\//, "");
 
   const title    = isFr ? "Certifications & Diplômes"  : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas";
+  // Admin et Platform Developer I ne sont pas encore obtenues : l'image de
+  // partage doit les annoncer « en préparation », sans ambiguïté sur LinkedIn.
   const subtitle = isFr
-    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I"
+    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin & Platform Developer I en préparation (début 2027)"
     : isEs
-    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I"
-    : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin · Platform Developer I";
+    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin y Platform Developer I en preparación (principios de 2027)"
+    : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin & Platform Developer I in preparation (early 2027)";
 
   const badges = [
     { label: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",         color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
     { label: isFr ? "Actif"  : isEs ? "Activo" : "Active",             color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
-    { label: isFr ? "En preparation" : isEs ? "En preparación" : "2026",       color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
+    { label: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation", color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
   ];
 
   return new ImageResponse(

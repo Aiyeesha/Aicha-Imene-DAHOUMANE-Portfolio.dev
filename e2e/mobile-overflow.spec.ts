@@ -31,7 +31,6 @@ const ROUTES = [
   "/resources",
   "/uses",
   "/colophon",
-  "/contact",
   "/status",
   "/legal",
   "/privacy",
