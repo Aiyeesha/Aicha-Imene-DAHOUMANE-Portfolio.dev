@@ -14,7 +14,7 @@ import ThemeToggle from "./ThemeToggle";
 import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
-import { scrollToAnchorWhenStable } from "@/lib/anchorScroll";
+import { scrollToAnchorWhenStable, scrollToSection } from "@/lib/anchorScroll";
 import { useTrack } from "@/app/[locale]/providers";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
@@ -360,6 +360,9 @@ export default function Navbar({
 // focus au bouton du menu dès le premier rendu, sous 1280px, ce qui
 // contournait le lien d'évitement (audit 2026-10-25, constat 6).
 const mobileWasOpenRef = useRef(false);
+// Vrai quand la fermeture vient d'un lien de section : le focus est alors
+// placé sur la section atteinte et ne doit pas revenir au bouton du menu.
+const mobileSkipFocusRestoreRef = useRef(false);
 useEffect(() => {
   if (mobileOpen) {
     mobileWasOpenRef.current = true;
@@ -372,7 +375,8 @@ useEffect(() => {
   } else if (mobileWasOpenRef.current) {
     // Restore focus to menu button on close.
     mobileWasOpenRef.current = false;
-    menuButtonRef.current?.focus();
+    if (mobileSkipFocusRestoreRef.current) mobileSkipFocusRestoreRef.current = false;
+    else menuButtonRef.current?.focus();
   }
 }, [mobileOpen]);
 
@@ -711,7 +715,7 @@ useEffect(() => {
                     onClick={(e) => {
                       if (isHome) {
                         e.preventDefault();
-                        document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        scrollToSection(s.id);
                       }
                     }}>
                     {s.label}
@@ -866,11 +870,13 @@ useEffect(() => {
                   <a key={s.id} data-section={s.id} className={cls}
                     href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
                     onClick={(e) => {
-                      setMobileOpen(false);
                       if (isHome) {
                         e.preventDefault();
-                        document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        // Le focus va à la section, pas au bouton du menu.
+                        mobileSkipFocusRestoreRef.current = true;
+                        scrollToSection(s.id);
                       }
+                      setMobileOpen(false);
                     }}
                     aria-current={activeId === s.id ? "page" : undefined}>
                     {s.label}

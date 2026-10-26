@@ -159,7 +159,7 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 | `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET`; body validated with zod (`locale` ∈ supported locales, `slug` kebab-case, no unknown keys, ≤ 1 KiB) |
 | `POST /api/revalidate` | `x-revalidate-secret` header compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
-| `POST /api/testimonial-submit` | `token` field in body compared to `TESTIMONIAL_SUBMIT_TOKEN` |
+| `POST /api/testimonial-submit` | Signed invitation link (HMAC of `TESTIMONIAL_SUBMIT_TOKEN`, 14 days max), **single use** (marked in Redis until expiry; reuse → 410), plus a 30-minute session key bound to that invitation (`lib/security/testimonialInvite.ts`) |
 | `POST /api/errors` | Public (client reports) — rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
 | `GET /api/health` | Public — CORS restricted to `NEXT_PUBLIC_SITE_URL` (no wildcard `*`) |
 

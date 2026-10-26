@@ -3,7 +3,8 @@
 // API Route POST — soumet un témoignage dans Supabase.
 //
 // Sécurité :
-//   1. Token de soumission vérifié (TESTIMONIAL_SUBMIT_TOKEN)
+//   1. Invitation signée, non expirée, non utilisée, et clé de session liée à
+//      cette invitation (lib/security/testimonialInvite.ts, audit 2026-10-25)
 //   2. Rate-limit : 3 soumissions / 24 h par IP (Upstash Redis)
 //   3. Honeypot anti-spam (champ "website" doit être vide)
 //   4. Validation des champs obligatoires (full_name, role, relation_type, message, locale)
@@ -15,10 +16,16 @@
 //   SUPABASE_SERVICE_KEY       — clé service_role (jamais NEXT_PUBLIC_)
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac, createHash, timingSafeEqual } from "crypto";
+import { createHash } from "crypto";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
+import {
+  isInviteUsed,
+  isInviteValid,
+  isSessionKeyValid,
+  markInviteUsed,
+} from "@/lib/security/testimonialInvite";
 
 // ── Champs autorisés pour relation_type ──────────────────────────────────────
 const VALID_RELATIONS = new Set([
@@ -55,39 +62,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  // ── 4. Validation de la clé de session HMAC ─────────────────────────────────
-  // La page serveur génère un HMAC(token, bucket_30min) et le passe au client.
-  // On revalide ici en recalculant le HMAC pour le bucket courant ET le précédent
-  // (pour absorber les requêtes à cheval sur une frontière de 30 min).
-  // Le token brut n'est jamais exposé côté client.
-  const expectedToken = process.env.TESTIMONIAL_SUBMIT_TOKEN;
-  const submittedKey  = typeof body.sessionKey === "string" ? body.sessionKey.trim() : "";
+  // ── 4. Invitation et clé de session ─────────────────────────────────────────
+  // L'invitation (lien signé) doit être valide, non expirée et pas encore
+  // utilisée ; la clé de session est un HMAC de l'invitation et du créneau de
+  // 30 min, émis par la page serveur. Le token brut n'est jamais exposé.
+  const secret     = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
+  const invite     = typeof body.invite === "string" ? body.invite.trim() : "";
+  const expUnix    = typeof body.exp === "number" ? body.exp : NaN;
+  const sessionKey = typeof body.sessionKey === "string" ? body.sessionKey.trim() : "";
 
-  if (!expectedToken || !submittedKey) {
+  if (!isInviteValid(secret, invite, expUnix) || !isSessionKeyValid(secret, invite, sessionKey)) {
     return NextResponse.json(
       { error: "Invalid or missing access token." },
       { status: 403 }
     );
   }
-
-  const now        = Math.floor(Date.now() / (30 * 60 * 1000));
-  const validKeys  = [now, now - 1].map((bucket) =>
-    createHmac("sha256", expectedToken).update(bucket.toString()).digest("hex")
-  );
-
-  // Comparaison timing-safe — toujours évaluer les deux clés (pas de court-circuit)
-  // HMAC-SHA256 produit 32 octets = 64 hex chars ; toute autre longueur est invalide.
-  const HMAC_HEX_LEN = 64;
-  const submittedBuf = Buffer.from(submittedKey, "utf8");
-  const [key0Buf, key1Buf] = validKeys.map((k) => Buffer.from(k, "utf8"));
-  const lenOk  = submittedBuf.length === HMAC_HEX_LEN;
-  const match0 = lenOk && timingSafeEqual(submittedBuf, key0Buf);
-  const match1 = lenOk && timingSafeEqual(submittedBuf, key1Buf);
-
-  if (!(match0 || match1)) {
+  if (await isInviteUsed(invite)) {
     return NextResponse.json(
-      { error: "Invalid or missing access token." },
-      { status: 403 }
+      { error: "This invitation has already been used." },
+      { status: 410 }
     );
   }
 
@@ -108,15 +101,23 @@ export async function POST(req: NextRequest) {
   if (!VALID_RELATIONS.has(relation_type)) return NextResponse.json({ error: "Invalid relation type." }, { status: 400 });
   if (message.length < 20)               return NextResponse.json({ error: "Message too short (20 chars min)." }, { status: 400 });
   if (message.length > 2000)             return NextResponse.json({ error: "Message too long (2000 chars max)." }, { status: 400 });
+  // Longueurs maximales (audit 2026-10-25 : aucun champ n'était borné hors message).
+  if (full_name.length > 100 || role.length > 100 || (company?.length ?? 0) > 100) {
+    return NextResponse.json({ error: "Field too long (100 chars max)." }, { status: 400 });
+  }
+  if ((collaboration_context?.length ?? 0) > 500 || (photo_url?.length ?? 0) > 500) {
+    return NextResponse.json({ error: "Field too long (500 chars max)." }, { status: 400 });
+  }
 
-  // Valider photo_url : doit être une URL http/https valide ou null.
+  // Valider photo_url : doit être une URL https valide ou null.
   // Sans cette validation, un attaquant pourrait injecter une URL javascript:
   // (XSS si rendue sans sanitisation) ou une URL de tracking arbitraire
-  // (fuite d'IP lors de l'affichage). On accepte uniquement http/https.
+  // (fuite d'IP lors de l'affichage). On accepte uniquement https (http: retiré à
+  // l'audit du 2026-10-25 : contenu mixte, image interceptable).
   if (photo_url) {
     try {
       const parsed = new URL(photo_url);
-      if (!["http:", "https:"].includes(parsed.protocol)) {
+      if (parsed.protocol !== "https:") {
         return NextResponse.json({ error: "Invalid photo URL protocol." }, { status: 400 });
       }
     } catch {
@@ -155,6 +156,12 @@ export async function POST(req: NextRequest) {
     console.error("[testimonial-submit] Supabase error:", error.message);
     return NextResponse.json({ error: "Database error. Please try again." }, { status: 500 });
   }
+
+  // Usage unique : l'invitation est marquée jusqu'à son expiration. Un échec
+  // ici n'annule pas le témoignage déjà enregistré.
+  await markInviteUsed(invite, expUnix).catch((e) =>
+    console.error("[testimonial-submit] could not mark invite as used:", String(e)),
+  );
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
