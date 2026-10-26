@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { readAllPosts } from "@/content/blog/fs";
-import { detectTrack, translateTag } from "@/lib/blog-utils";
+import { detectTrack, formatDate, translateTag } from "@/lib/blog-utils";
 import type React from "react";
 
 type LatestPostsProps = {
@@ -43,7 +43,9 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
       if (diverse.length >= 3) break;
       if (!used.has(p.slug)) { diverse.push(p); used.add(p.slug); }
     }
-    return diverse;
+    // La sélection garantit la diversité, l'affichage reste chronologique
+    // (audit 2026-10-25 : février, septembre, août s'affichaient dans cet ordre).
+    return diverse.sort((a, b) => (a.date < b.date ? 1 : -1));
   })();
 
   return (
@@ -61,7 +63,7 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
                 style={trackBorderStyle(postTrack)}
               >
                 <div className="flex items-center gap-2 text-xs text-muted-2">
-                  <span>{p.date}</span>
+                  <time dateTime={p.date}>{formatDate(p.date, locale)}</time>
                   <span aria-hidden="true">·</span>
                   <span>
                     {p.readingTime} {t("blog.readingTime")}
