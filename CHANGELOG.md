@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Accueil réorganisé, FAQ déplacée vers « Me recruter »** — Les projets mis en avant s'affichent juste sous l'en-tête, au lieu d'arriver après six sections ; l'alternance des fonds est rétablie (blog et contact inversés). Le bloc « Où mes deux mondes se rencontrent » passe d'un paragraphe d'environ 1 900 caractères à trois puces (FR, EN, ES ; clé `sections.bridge_points`, qui remplace `bridge_body`). La FAQ quitte l'accueil pour `/work-with-me`, avec son JSON-LD `FAQPage` : ses six questions remplacent les trois questions propres à cette page, qui faisaient doublon (contrat, disponibilité, localisation). Le composant `ServicesFaq`, devenu inutilisé, est supprimé.
 - **Disponibilité : à partir de décembre 2026** — La mention « Disponible sous 1 mois (préavis) » est remplacée par « Disponible à partir de décembre 2026 » (entretiens toujours possibles dès maintenant), sans plus aucune référence au préavis : titres et descriptions SEO, fiche profil, modale de disponibilité, FAQ, page « Me recruter » (sous-titre, étapes du recrutement, FAQ), image de partage, option « Dès que possible » du formulaire de contact et les 18 CV (PDF régénérés), en FR, EN et ES. Le sous-titre de la page « Me recruter » perd au passage sa dernière mention « et la sécurité ».
 
 ### Security
