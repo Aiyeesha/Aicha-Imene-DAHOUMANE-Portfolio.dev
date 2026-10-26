@@ -1,6 +1,5 @@
-// Server Component — audit 2026-10-23 (PERF-4) : simple lien d'évitement, sans
-// état ni gestionnaire d'événement ; la directive "use client" l'envoyait
-// inutilement dans le bundle JavaScript de chaque page.
+// Server component: a plain skip link, with no state or event handler, so
+// it ships no client JavaScript.
 
 export default function SkipToContent({
   targetId = "main",

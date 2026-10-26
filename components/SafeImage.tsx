@@ -48,9 +48,7 @@ export default function SafeImage({ src, alt, fill = true, sizes, className, pri
       className={className}
       priority={priority}
       loading={loading}
-      // Optimisées par next/image (AVIF/WebP, taille adaptée) depuis l'audit du
-      // 2026-10-25 : les vignettes de 112 px téléchargeaient l'image entière.
-      // Les SVG restent servis tels quels (pas d'optimisation possible).
+      // Optimised by next/image (AVIF/WebP, right size); SVGs are served as is.
       unoptimized={src.endsWith(".svg")}
       onError={() => setFailed(true)}
     />

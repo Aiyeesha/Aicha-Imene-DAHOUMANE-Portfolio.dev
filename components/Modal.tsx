@@ -21,7 +21,7 @@ export default function Modal({
   useEffect(() => {
     if (!open) return;
 
-    // Mémoriser l'élément actif pour restaurer le focus à la fermeture (ARIA pattern)
+    // Remember the active element to restore focus on close (ARIA pattern)
     prevFocusRef.current = document.activeElement as HTMLElement;
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -60,18 +60,15 @@ export default function Modal({
     return () => {
       clearTimeout(t);
       document.removeEventListener("keydown", onKeyDown);
-      // Restaurer le focus sur l'élément déclencheur quand la modale se ferme
+      // Restore focus to the trigger when the modal closes
       prevFocusRef.current?.focus();
     };
   }, [open, onClose]);
 
-  // Verrouillage du défilement de l'arrière-plan — audit 2026-10-23 (A11Y-6).
-  // Sans lui, la molette ou le glissé tactile faisaient défiler la page derrière
-  // la modale (aria-modal) : le contexte visuel changeait sous l'utilisateur.
-  // Même technique que le menu mobile (components/Navbar.tsx) : on mémorise la
-  // valeur d'origine pour la restaurer à la fermeture.
-  // Effet séparé, dépendant de `open` seul : l'effet ci-dessus dépend aussi de
-  // `onClose`, dont l'identité peut changer à chaque rendu du parent.
+  // Lock background scroll while the modal is open (as the mobile menu does),
+  // restoring the original value on close. Separate effect depending on
+  // `open` only: the effect above also depends on `onClose`, whose identity
+  // can change on every parent render.
   useEffect(() => {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;

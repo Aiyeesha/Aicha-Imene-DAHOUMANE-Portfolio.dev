@@ -21,10 +21,8 @@ type FeaturedProjectsProps = {
   projects: ProjectWithAssets[];
 };
 
-// Wrapper avec fallback en cascade : gallery src → cover.webp → fond vide
-// Audit 2026-10-23 (P5) : `src` vaut null quand le projet n'a ni image de
-// galerie ni couverture (lib/data/projectAssets.ts) — le visuel de
-// remplacement est alors affiché d'emblée, sans requête vouée au 404.
+// Image with fallback: gallery src → cover.webp → empty background. `src` is
+// null when the project has neither, and the placeholder is shown directly.
 function CoverImage({ src, fallback, alt, loading }: { src: string | null; fallback?: string; alt: string; loading?: "lazy" | "eager" }) {
   const [imgSrc, setImgSrc] = useState(src ?? "");
   const [failed, setFailed] = useState(src === null);
@@ -64,13 +62,8 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const pathnameLocale = pathname.split("/")[1];
   const locale: "en" | "fr" | "es" = pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en";
 
-  // Les projets is_bridge (croisement Salesforce/Infra) restent visibles quel
-  // que soit le track actif — ils prouvent justement que la séparation par
-  // track est artificielle pour ce type de projet précis. Sans ce
-  // contournement, un projet is_bridge dont le champ `track` vaut "salesforce"
-  // disparaissait entièrement côté IT Ops : le seul projet publié qui répond
-  // à "montrez-moi un exemple concret où vos deux compétences se combinent"
-  // n'était atteignable que par les visiteurs déjà convaincus.
+  // Cross-domain (is_bridge) projects stay visible on both tracks: they are
+  // the proof that the two skill sets combine.
   const featured = useMemo(() => {
     const trackMatches = projects
       .filter((p) => p.featured && p.track === track)
@@ -85,12 +78,11 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   }, [projects, track]);
 
   // ── Empty state ─────────────────────────────────────────────────────────────
-  // Déclenché quand Supabase est indisponible (retourne []) ou quand aucun
-  // projet n'a featured=true pour le track actif.
+  // Data source unavailable, or no featured project for the active track.
   if (featured.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-12 px-6 text-center">
-        {/* Icône dossier vide */}
+        {/* Empty folder icon */}
         <svg
           className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-white/20"
           fill="none"
@@ -111,15 +103,13 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   }
 
   return (
-    // grid-cols-1 = minmax(0, 1fr) : sans colonne explicite, la piste implicite
-    // vaut minmax(auto, 1fr) et une carte ne rétrécit pas sous la largeur
-    // minimale de son contenu — l'accueil débordait à 320 px (seuil WCAG
-    // 1.4.10 ; audit 2026-10-23, P2). Même correctif que ProjectsSection.
+    // grid-cols-1 is minmax(0, 1fr), so cards can shrink below their content
+    // width (otherwise the page overflows at 320px). Same as ProjectsSection.
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {featured.map((p, i) => (
         <Reveal key={p.slug} delayMs={i * 80}>
           <GlowCard className="card overflow-hidden">
-            {/* Image de couverture */}
+            {/* Cover image */}
             <div className="relative h-40 w-full bg-black/5 dark:bg-white/5">
               <CoverImage
                 src={projectCardImage(p.slug, p.gallery)?.src ?? null}
@@ -129,8 +119,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               />
             </div>
             <div className="p-6">
-            {/* max-sm:flex-wrap : sur carte étroite, le badge passe sous le
-                titre au lieu d'être coupé par l'overflow-hidden de la carte. */}
+            {/* On narrow cards the badge wraps below the title instead of being clipped. */}
             <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
               <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
               {p.badge ? (
@@ -140,12 +129,12 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               ) : null}
             </div>
 
-            {/* Période du projet (audit de contenu 2026-09-25) — affichée seulement si connue */}
+            {/* Project period, when known */}
             {p.nature?.period && (
               <p className="mt-1 text-xs text-muted-2">{p.nature.period}</p>
             )}
 
-            {/* Logo client — silencieux si absent, lazy (jusqu'à 6 cartes avec le projet-pont) */}
+            {/* Client logo: nothing if missing, lazy-loaded */}
             <div className="mt-1">
               <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
             </div>

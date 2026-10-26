@@ -1,17 +1,11 @@
 "use client";
 // components/CommandPaletteLoader.tsx
 // -------------------------------------
-// Charge CommandPalette à la demande (audit 2026-10-25, constat 7).
-//
-// Avant : dynamic(..., { ssr: false }) rendu dès le chargement de chaque page,
-// donc cmdk + Radix Dialog téléchargés et hydratés partout, y compris sur
-// mobile où la palette n'était pas atteignable. Désormais ce composant n'écoute
-// que ⌘K / Ctrl K et l'événement d'ouverture (bouton de la barre, menu
-// mobile) ; le bundle de la palette n'est demandé qu'au premier appel, et la
-// palette s'ouvre aussitôt montée. Elle gère ensuite elle-même ses raccourcis.
-//
-// next/dynamic avec ssr: false reste interdit dans un Server Component (le
-// layout), d'où ce wrapper client.
+// Loads CommandPalette on demand. Only ⌘K / Ctrl K and the open event (nav
+// button, mobile menu) are listened to; the palette bundle (cmdk + Radix
+// Dialog) is fetched on first use and mounts already open, then handles its
+// own shortcuts. A client wrapper is needed because next/dynamic with
+// ssr: false is not allowed in a server component (the layout).
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";

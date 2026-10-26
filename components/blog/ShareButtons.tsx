@@ -2,25 +2,15 @@
 
 // components/blog/ShareButtons.tsx
 // ---------------------------------
-// Boutons de partage pour les articles de blog.
+// Blog post share buttons: LinkedIn (share page in a new tab) and copy link
+// (with a "Copied!" message announced through a polite live region).
 //
-// Actions disponibles :
-//   1. LinkedIn — ouvre la page de partage LinkedIn dans un nouvel onglet
-//   2. Copier le lien — copie l'URL dans le presse-papier, feedback "Copié !"
-//
-// Accessibilité :
-//   - aria-label descriptif sur chaque bouton
-//   - role="status" aria-live="polite" pour annoncer "Copié !" aux lecteurs d'écran
-//   - focus-visible ring
-//
-// Props :
-//   url   — URL complète de l'article à partager
-//   title — Titre de l'article (pré-rempli dans le partage LinkedIn)
-//   labels — textes traduits (share, linkedin, copyLink, copied)
+// Props: url (article URL), title (prefilled on LinkedIn), labels (translated
+// strings: share, linkedin, copyLink, copied).
 
 import { useState } from "react";
 
-// ── Icônes SVG inline ──────────────────────────────────────────────────────
+// ── Inline SVG icons ───────────────────────────────────────────────────────
 
 const IconLinkedIn = () => (
   <svg
@@ -85,22 +75,22 @@ type Props = {
   labels: Labels;
 };
 
-// ── Composant ──────────────────────────────────────────────────────────────
+// ── Component ──────────────────────────────────────────────────────────────
 
 export default function ShareButtons({ url, title, labels }: Props) {
   const [copied, setCopied] = useState(false);
 
-  // LinkedIn share URL officiel
+  // Official LinkedIn share URL
   const linkedInHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
 
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      // Réinitialiser après 2 secondes
+      // Reset after 2 seconds
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback si clipboard API non disponible (http, ancien navigateur)
+      // Fallback when the Clipboard API is unavailable (http, old browsers)
       const input = document.createElement("input");
       input.value = url;
       document.body.appendChild(input);
@@ -119,7 +109,7 @@ export default function ShareButtons({ url, title, labels }: Props) {
         {labels.share}
       </span>
 
-      {/* Bouton LinkedIn */}
+      {/* LinkedIn button */}
       <a
         href={linkedInHref}
         target="_blank"
@@ -137,7 +127,7 @@ export default function ShareButtons({ url, title, labels }: Props) {
         {labels.linkedin}
       </a>
 
-      {/* Bouton Copier le lien */}
+      {/* Copy link button */}
       <button
         type="button"
         onClick={handleCopy}
@@ -155,7 +145,7 @@ export default function ShareButtons({ url, title, labels }: Props) {
         <span>{copied ? labels.copied : labels.copyLink}</span>
       </button>
 
-      {/* Annonce screen reader "Copié !" */}
+      {/* Screen reader "Copied!" announcement */}
       <span role="status" aria-live="polite" className="sr-only">
         {copied ? labels.copied : ""}
       </span>

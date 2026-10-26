@@ -7,13 +7,12 @@ import type React from "react";
 type LatestPostsProps = {
   locale: "en" | "fr" | "es";
   className?: string;
-  /** Track actif — filtre les articles affichés sur la homepage */
+  /** Active track: filters the posts shown on the home page */
   track?: "salesforce" | "itops";
 };
 
-// Bordure gauche colorée selon le track de l'article.
-// Style inline requis car .card définit border-color en dehors de @layer,
-// ce qui écrase les utilitaires Tailwind border-l-*.
+// Left border coloured by the post's track. Inline style is required: .card
+// sets border-color outside @layer, which overrides Tailwind's border-l-*.
 function trackBorderStyle(postTrack: "salesforce" | "itops" | null): React.CSSProperties | undefined {
   if (postTrack === "salesforce") return { borderLeft: "4px solid #06b6d4" }; // cyan-500
   if (postTrack === "itops")     return { borderLeft: "4px solid #8b5cf6" }; // violet-500
@@ -25,14 +24,14 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
 
   const all = readAllPosts(locale);
 
-  // Sélection des posts à afficher
+  // Posts to show
   const posts = (() => {
     if (track) {
-      // Track spécifié → filtrer par track (les neutres passent aussi)
+      // With a track: filter by it (track-neutral posts pass too)
       const filtered = all.filter((p) => { const pt = detectTrack(p.tags); return pt === null || pt === track; });
       return (filtered.length > 0 ? filtered : all).slice(0, 3);
     }
-    // Sans track → garantir au moins 1 article Salesforce + 1 IT Ops pour la diversité
+    // Without a track: at least one Salesforce and one IT Ops post
     const sfPost = all.find((p) => detectTrack(p.tags) === "salesforce");
     const itPost = all.find((p) => detectTrack(p.tags) === "itops");
     const diverse: typeof all = [];
@@ -43,8 +42,7 @@ export default function LatestPosts({ className = "", locale, track }: LatestPos
       if (diverse.length >= 3) break;
       if (!used.has(p.slug)) { diverse.push(p); used.add(p.slug); }
     }
-    // La sélection garantit la diversité, l'affichage reste chronologique
-    // (audit 2026-10-25 : février, septembre, août s'affichaient dans cet ordre).
+    // Selection ensures variety; display stays chronological.
     return diverse.sort((a, b) => (a.date < b.date ? 1 : -1));
   })();
 

@@ -11,10 +11,10 @@ type Status =
   | { kind: "sending" }
   | { kind: "success" }
   | { kind: "error"; message: string }
-  // rate_limited : countdown live jusqu'à 0 puis retour à idle
+  // rate_limited: live countdown to 0, then back to idle
   | { kind: "rate_limited"; retryAfterSeconds: number };
 
-// Formate un nombre de secondes en "Xm Ys" ou "Ys"
+// Formats seconds as "Xm Ys" or "Ys"
 function formatCountdown(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -64,32 +64,23 @@ export default function ContactForm() {
   const locale = useLocale();
   const { track } = useTrack();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  // Guard: fire contact_form_started only once per mount (first keystroke)
-
-  // ── Champs contrôlés pour permettre le pré-remplissage depuis les cartes services ──
+  // ── Controlled fields, so service cards can prefill them ──
   const [topic, setTopic] = useState("general");
   const [msgLen,  setMsgLen]  = useState(0);
-  const MSG_MAX_HARD = 2000; // doit rester égal à MAX_MESSAGE_LEN (lib/contactValidation.ts)
+  const MSG_MAX_HARD = 2000; // must match MAX_MESSAGE_LEN (lib/contactValidation.ts)
 
-  // ── Champs « recruteur » — formulaire unique depuis l'audit du 2026-10-25 :
-  // la page /contact (qui seule les affichait) redirige vers l'ancre #contact
-  // de la home, où ils sont regroupés dans un <details> replié par défaut
-  // pour ne pas allonger le formulaire rapide (prérempli via contact:prefill).
-  // Depuis l'audit de contenu du 2026-09-25, ils remplacent les anciens champs
-  // de prestation (secteur / délai / enveloppe budgétaire) : poste, type de
-  // contrat, lieu et date de prise de poste — ce qu'un recruteur a réellement
-  // sous la main. Tous facultatifs : composés dans le corps du message avant
-  // envoi plutôt que d'ajouter des colonnes en base (voir onSubmit) — aucun
-  // changement de schéma ni de validation serveur n'est requis.
+  // ── Recruiter fields: role, contract type, location, start date ──
+  // Grouped in a <details> collapsed by default to keep the quick form short.
+  // All optional; they are composed into the message body before sending (see
+  // onSubmit), so no API, validation or database change is needed.
   const [role, setRole] = useState("");
   const [contract, setContract] = useState("");
   const [workplace, setWorkplace] = useState("");
   const [startDate, setStartDate] = useState("");
 
-  // Le préfixe de contexte est compté dans les 2000 caractères imposés par
-  // lib/contactValidation.ts (MAX_MESSAGE_LEN) côté serveur — sans ce calcul,
-  // un message déjà proche du maximum pourrait dépasser la limite une fois le
-  // préfixe ajouté et échouer silencieusement à l'envoi (message_too_long).
+  // The context prefix counts towards the server's 2000-character limit
+  // (MAX_MESSAGE_LEN); without this, a message near the limit would fail with
+  // message_too_long once the prefix is added.
   const intakePrefix = useMemo(() => {
     const lines: string[] = [];
     if (role.trim())      lines.push(`${t("contact.intake.roleLabel")}: ${role.trim()}`);
@@ -99,12 +90,11 @@ export default function ContactForm() {
     return lines.length > 0 ? `[${t("contact.intake.messagePrefixHeading")}]\n${lines.join("\n")}\n\n` : "";
   }, [role, contract, workplace, startDate, t]);
 
-  // Espace restant pour le texte libre une fois le préfixe de contexte réservé.
+  // Room left for free text once the context prefix is reserved.
   const MSG_MAX = Math.max(200, MSG_MAX_HARD - intakePrefix.length);
 
-  // Listener pour l'événement custom `contact:prefill` dispatché par TrackAwareServices.
-  // Quand l'utilisateur clique "Discuter de ce service", le formulaire se pré-remplit
-  // automatiquement avec le bon topic (salesforce/itops) et le titre du service.
+  // `contact:prefill` (dispatched by TrackAwareServices) prefills the topic and
+  // subject when a visitor clicks "Discuss this" on a service card.
   useEffect(() => {
     function handlePrefill(e: Event) {
       const { topic: t } = (e as CustomEvent<{ topic: string }>).detail;
@@ -114,10 +104,8 @@ export default function ContactForm() {
     return () => window.removeEventListener("contact:prefill", handlePrefill);
   }, []);
 
-  // Countdown live : décrémente retryAfterSeconds chaque seconde jusqu'à 0,
-  // puis remet le formulaire en état idle (bouton réactivé automatiquement).
-  // Le retour à idle se fait dans le minuteur (après la dernière seconde) et
-  // non par un setState synchrone dans l'effet — audit 2026-10-23 (PERF-5).
+  // Live countdown: decrement every second, then return to idle (the reset
+  // happens in the timer, not synchronously in the effect).
   useEffect(() => {
     if (status.kind !== "rate_limited") return;
     const timer = setTimeout(() => {
@@ -133,24 +121,17 @@ export default function ContactForm() {
     e.preventDefault();
     setStatus({ kind: "sending" });
 
-    // IMPORTANT:
-    // Do NOT access properties on the React SyntheticEvent after an `await`.
-    // Depending on the React/Next.js runtime, the event object can be cleared
-    // (currentTarget becomes null), which would throw "Cannot read properties of null".
-    // We snapshot the form element first and use it throughout the async flow.
+    // Do not read the SyntheticEvent after an `await`: currentTarget can be
+    // cleared by then. Keep a reference to the form element instead.
     const formEl = e.currentTarget;
     const form = new FormData(formEl);
 
     // Honeypot field (should stay empty)
     const company = String(form.get("company") || "");
 
-    // Préfixe le message avec le contexte du poste (intitulé/contrat/lieu/
-    // date) plutôt que d'étendre le schéma de l'API /api/contact — celle-ci
-    // ne connaît que { name, email, topic, message, ... } et ignore déjà
-    // silencieusement tout champ inconnu, donc composer côté client est le
-    // chemin qui ne touche ni la validation, ni la table Supabase `messages`,
-    // ni Formhook. `intakePrefix` (mémoïsé plus haut) est aussi ce qui borne
-    // maxMessageLen ci-dessous, donc les deux restent toujours cohérents.
+    // Prefix the message with the role context (title/contract/location/date)
+    // instead of extending the /api/contact schema. `intakePrefix` also bounds
+    // maxMessageLen above, so both stay consistent.
     const rawMessage = String(form.get("message") || "");
     const message = `${intakePrefix}${rawMessage}`;
 
@@ -159,7 +140,7 @@ export default function ContactForm() {
       email: String(form.get("email") || ""),
       topic: String(form.get("topic") || "general"),
       message,
-      // Explicit RGPD consent (required)
+      // Explicit GDPR consent (required)
       acceptedPolicy: Boolean(form.get("acceptedPolicy")),
       company,
       locale
@@ -176,12 +157,12 @@ export default function ContactForm() {
         const data = (await res.json().catch(() => null)) as any;
         const code = String(data?.error || "generic");
 
-        // Cas spécial rate_limited : afficher un countdown avec les secondes exactes de l'API
+        // rate_limited: show a countdown with the exact delay from the API
         if (code === "rate_limited") {
           const retryAfter =
             typeof data?.retryAfterSeconds === "number" && data.retryAfterSeconds > 0
               ? data.retryAfterSeconds
-              : 60; // fallback 60s si absent
+              : 60; // default to 60s when missing
           setStatus({ kind: "rate_limited", retryAfterSeconds: retryAfter });
           return;
         }
@@ -190,7 +171,7 @@ export default function ContactForm() {
         throw new Error(msg);
       }
 
-      // Reset le formulaire (champs non contrôlés) + réinitialise les états contrôlés.
+      // Reset the form (uncontrolled fields) and the controlled state.
       formEl.reset();
       setTopic("general");
       setRole("");
@@ -378,7 +359,7 @@ export default function ContactForm() {
             className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring disabled:opacity-60 disabled:cursor-not-allowed ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
           >
             {status.kind === "sending" && (
-              /* Spinner CSS — aucune dépendance JS, animate-spin est natif Tailwind */
+              /* CSS spinner (Tailwind animate-spin) */
               <svg
                 aria-hidden="true"
                 className="h-3.5 w-3.5 animate-spin"
@@ -402,7 +383,6 @@ export default function ContactForm() {
 
           <div id="contact-form-status" aria-live="polite" aria-atomic="true" className="min-h-[20px]">
             {status.kind === "success" && (
-              /* animate-in = classe Tailwind v3.4+ animate-[fadeIn_0.3s_ease] */
               <span className="inline-block text-sm text-emerald-700 dark:text-emerald-200 animate-[fadeIn_0.35s_ease_forwards]">
                 {t("contact.success")}
               </span>
@@ -465,8 +445,7 @@ export default function ContactForm() {
         {/* Availability badge */}
         <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3">
           <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          {/* text-emerald-800 en clair — audit 2026-10-23 (axe color-contrast) :
-              emerald-700 sur ce fond teinté donnait 4,48:1 (4,5:1 requis). */}
+          {/* emerald-800 in light mode for 4.5:1 contrast on the tinted background */}
           <span className="text-sm text-emerald-800 dark:text-emerald-300">{t("contact.availability")}</span>
         </div>
 

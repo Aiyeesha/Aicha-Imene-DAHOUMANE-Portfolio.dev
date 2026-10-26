@@ -2,19 +2,13 @@
 
 // components/RecruiterPaths.tsx
 // ------------------------------
-// Bloc « Vous recrutez pour quel poste ? » affiché juste sous le hero de
-// l'accueil (audit de contenu du 2026-09-25, lot 2).
-//
-// Pourquoi : le toggle Salesforce / IT Ops coupait le profil en deux alors que
-// le positionnement est hybride, et un recruteur qui ne touchait pas au toggle
-// ne voyait que la moitié Salesforce. Ce bloc part du besoin du recruteur
-// (le poste à pourvoir) et l'oriente en un clic :
-//   - profil hybride  → page /hybride + CV hybride (carte mise en avant) ;
-//   - poste Salesforce → bascule le track "salesforce" puis descend aux compétences ;
-//   - poste IT Ops     → bascule le track "itops" puis descend aux compétences.
-// Le toggle reste en place : il pilote tous les contenus track-aware du site
-// (hero, compétences, services, projets). Ce bloc en devient simplement le
-// point d'entrée explicite.
+// "What role are you hiring for?" block, right below the home hero. It
+// starts from the recruiter's need and routes in one click:
+//   - hybrid profile   → /hybride page + hybrid CV (highlighted card);
+//   - Salesforce role  → switch to the "salesforce" track, scroll to skills;
+//   - IT Ops role      → switch to the "itops" track, scroll to skills.
+// The header toggle still drives all track-aware content; this block is an
+// explicit entry point to it.
 
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
@@ -27,12 +21,12 @@ export default function RecruiterPaths() {
   const locale = useLocale();
   const { track, setTrack } = useTrack();
 
-  // Les CV existent pour chaque locale et chaque profil (public/cv/).
+  // A CV exists for every locale and profile (public/cv/).
   const cvFor = (profile: "hybrid" | Track) =>
     `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-${profile}.pdf`;
 
-  // Bascule le profil affiché puis fait défiler jusqu'aux compétences, qui
-  // sont la première section track-aware sous ce bloc.
+  // Switch the displayed profile, then scroll to skills (the first
+  // track-aware section below this block).
   const choose = (next: Track) => {
     setTrack(next);
     document.getElementById("skills")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -57,8 +51,8 @@ export default function RecruiterPaths() {
       <ul className="mt-6 grid gap-4 md:grid-cols-3">
         {paths.map((p) => {
           const isHybrid = p.id === "hybrid";
-          // Carte hybride mise en avant (dégradé cyan → violet repris du bloc
-          // « pont » de l'accueil) ; les deux autres signalent le profil actif.
+          // Highlighted hybrid card (cyan → violet gradient); the other two
+          // show which profile is active.
           const isActive = !isHybrid && track === p.id;
           const cls = isHybrid
             ? `${cardBase} border-violet-500/30 bg-linear-to-br from-cyan-500/10 to-violet-500/10 dark:from-cyan-400/10 dark:to-violet-400/10`
