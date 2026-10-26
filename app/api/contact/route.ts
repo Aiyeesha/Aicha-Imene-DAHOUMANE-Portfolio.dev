@@ -1,24 +1,38 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { contactRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
 import { validate, getClientIp, isAllowedOrigin } from "@/lib/contactValidation";
 
-type Payload = {
-  name: string;
-  email: string;
-  topic?: string;
-  subject?: string;
-  message: string;
-  /**
-   * RGPD / privacy consent.
-   * We require explicit consent before storing/forwarding the message.
-   */
-  acceptedPolicy?: boolean;
-  // Honeypot: should remain empty
-  company?: string;
-  // Optional locale hint from the client ("fr" | "en")
-  locale?: string;
-};
+// Forme du corps (audit 2026-10-25) : un champ non textuel (nombre, objet)
+// provoquait une erreur 500 sur .trim(), et subject n'était pas borné. Types
+// et longueurs maximales sont vérifiés ici ; les règles métier (e-mail,
+// liens, longueur minimale) restent dans lib/contactValidation.ts. Les bornes
+// dépassent volontairement celles de validate() pour lui laisser renvoyer
+// ses codes d'erreur précis (name_too_long, message_too_long…).
+// .strict() : toute clé inconnue est refusée.
+const payloadSchema = z
+  .object({
+    name: z.string().max(500).optional(),
+    email: z.string().max(500).optional(),
+    topic: z.string().max(50).optional(),
+    subject: z.string().max(200).optional(),
+    message: z.string().max(5000).optional(),
+    /**
+     * RGPD / privacy consent.
+     * We require explicit consent before storing/forwarding the message.
+     */
+    acceptedPolicy: z.boolean().optional(),
+    // Honeypot: should remain empty
+    company: z.string().max(500).optional(),
+    // Optional locale hint from the client ("fr" | "en" | "es")
+    locale: z.string().max(10).optional(),
+  })
+  .strict();
+
+// Délai maximal de l'appel à Formhook : sans lui, une lenteur amont gardait
+// la fonction ouverte jusqu'au timeout de la plateforme.
+const FORMHOOK_TIMEOUT_MS = 5000;
 
 const FORMHOOK_ENDPOINT = process.env.FORMHOOK_ENDPOINT || "";
 // Server-to-server submissions are rejected by Formhook unless this header is
@@ -48,17 +62,20 @@ export async function POST(req: Request) {
   // Parse body early so the honeypot can fire before the rate limiter.
   // Honeypot-triggered requests shouldn't consume rate limit tokens: they're bots,
   // and the silent-200 lure should work even when Redis is unavailable.
-  const body = (await req.json().catch(() => null)) as Payload | null;
-  if (!body) return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+  const raw = await req.json().catch(() => null);
+  if (!raw) return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+  const parsed = payloadSchema.safeParse(raw);
+  if (!parsed.success) return NextResponse.json({ ok: false, error: "invalid_payload" }, { status: 400 });
+  const body = parsed.data;
 
   const name = (body.name || "").trim();
   const email = (body.email || "").trim();
-  const topic = String(body.topic || "general").trim();
-  const subject = String(body.subject || "").trim();
+  const topic = (body.topic || "general").trim();
+  const subject = (body.subject || "").trim();
   const message = (body.message || "").trim();
   const company = (body.company || "").trim(); // honeypot
   const acceptedPolicy = Boolean(body.acceptedPolicy);
-  const clientLocale = String(body.locale || "").trim() || null;
+  const clientLocale = (body.locale || "").trim() || null;
 
   // Bot check — before rate limiter so bots don't consume tokens
   if (company) return NextResponse.json({ ok: true }, { status: 200 });
@@ -87,15 +104,23 @@ export async function POST(req: Request) {
 
   // Forward to Formhook if configured
   if (FORMHOOK_ENDPOINT) {
-    const resp = await fetch(FORMHOOK_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        ...(FORMHOOK_AUTH_TOKEN ? { "X-Auth-Token": FORMHOOK_AUTH_TOKEN } : {}),
-      },
-      body: JSON.stringify({ name, email, topic, subject, message, source: "Aicha-Imene-DAHOUMANE-Portfolio.dev" })
-    });
+    let resp: Response;
+    try {
+      resp = await fetch(FORMHOOK_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          ...(FORMHOOK_AUTH_TOKEN ? { "X-Auth-Token": FORMHOOK_AUTH_TOKEN } : {}),
+        },
+        body: JSON.stringify({ name, email, topic, subject, message, source: "Aicha-Imene-DAHOUMANE-Portfolio.dev" }),
+        signal: AbortSignal.timeout(FORMHOOK_TIMEOUT_MS),
+      });
+    } catch (err) {
+      // Délai dépassé ou erreur réseau : même réponse qu'un échec amont.
+      log.error("contact/formhook-unreachable", { error: err instanceof Error ? err.name : "unknown" });
+      return NextResponse.json({ ok: false, error: "upstream_failed" }, { status: 502 });
+    }
 
     if (!resp.ok) {
       const data = (await resp.json().catch(() => null)) as Record<string, unknown> | null;

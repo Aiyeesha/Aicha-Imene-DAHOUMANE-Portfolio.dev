@@ -8,8 +8,9 @@
 //   - POST /api/csp-report       → violation CSP active (bloquée)
 //   - POST /api/csp-report?ro=1  → violation CSPO Trusted Types (report-only)
 //
-// Format W3C CSP Level 2 :
-//   { "csp-report": { "violated-directive": "…", "blocked-uri": "…", … } }
+// Formats acceptés (lib/security/cspReport.ts) :
+//   - CSP Level 2 : { "csp-report": { "violated-directive": "…", "blocked-uri": "…", … } }
+//   - Reporting API (Chrome/Edge) : [{ "type": "csp-violation", "body": { "blockedURL": "…", … } }]
 //
 // SÉCURITÉ (rate-limiting) :
 //   Upstash Redis sliding window (20 req/60 s / IP) — robuste aux cold-starts
@@ -17,6 +18,7 @@
 
 import { type NextRequest, NextResponse } from "next/server";
 import { cspAlertRatelimit, cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
+import { parseCspReports } from "@/lib/security/cspReport";
 
 export const dynamic = "force-dynamic";
 
@@ -100,49 +102,49 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json() as Record<string, unknown>;
-    // CSP Level 2 encapsule le rapport dans "csp-report".
-    // Certaines anciennes implémentations envoient les champs au niveau racine.
-    const report = (body["csp-report"] ?? body) as Record<string, unknown>;
+    const reports = parseCspReports(await req.json());
 
-    // Requête et fragment retirés des URL avant journalisation : ils peuvent
-    // porter un jeton (lien d'invitation signé) ou des données de formulaire —
-    // audit du 2026-10-14, S11.
-    const blockedUri        = stripQuery(String(report["blocked-uri"]  ?? report["blockedURI"]  ?? ""));
-    const violatedDirective = String(report["violated-directive"] ?? report["violatedDirective"] ?? "");
-    const documentUri       = stripQuery(String(report["document-uri"] ?? report["documentURL"] ?? ""));
-    const referrer          = stripQuery(String(report["referrer"]     ?? ""));
+    for (const report of reports) {
+      // Requête et fragment retirés des URL avant journalisation : ils peuvent
+      // porter un jeton (lien d'invitation signé) ou des données de formulaire —
+      // audit du 2026-10-14, S11.
+      const blockedUri        = stripQuery(report.blockedUri);
+      const violatedDirective = report.violatedDirective;
+      const documentUri       = stripQuery(report.documentUri);
+      const referrer          = stripQuery(report.referrer);
+      // La Reporting API ne passe pas par ?ro=1 : elle indique la politique
+      // report-only dans le champ disposition.
+      const reportOnly = isReportOnly || report.disposition === "report";
 
-    // ── Filtrer les faux positifs silencieusement ─────────────────────────
-    // Pas de log pour éviter le bruit — les extensions navigateur génèrent
-    // de nombreux rapports sans rapport avec une vulnérabilité du site.
-    if (isFalsePositive(blockedUri)) {
-      return new NextResponse(null, { status: 204 });
-    }
+      // ── Filtrer les faux positifs silencieusement ───────────────────────
+      // Pas de log pour éviter le bruit — les extensions navigateur génèrent
+      // de nombreux rapports sans rapport avec une vulnérabilité du site.
+      if (isFalsePositive(blockedUri)) continue;
 
-    const severity = getSeverity(violatedDirective);
+      const severity = getSeverity(violatedDirective);
 
-    // ── Log structuré → Vercel Runtime Logs ──────────────────────────────
-    // Préfixe [CSP-VIOLATION] ou [CSPO-VIOLATION] pour filtrer facilement
-    // dans Vercel Runtime Logs / un outil d'observabilité (Axiom, etc.)
-    const prefix = isReportOnly ? "[CSPO-VIOLATION]" : "[CSP-VIOLATION]";
+      // ── Log structuré → Vercel Runtime Logs ────────────────────────────
+      // Préfixe [CSP-VIOLATION] ou [CSPO-VIOLATION] pour filtrer facilement
+      // dans Vercel Runtime Logs / un outil d'observabilité (Axiom, etc.)
+      const prefix = reportOnly ? "[CSPO-VIOLATION]" : "[CSP-VIOLATION]";
 
-    console.warn(prefix, JSON.stringify({
-      severity,
-      report_only:        isReportOnly,
-      blocked_uri:        blockedUri,
-      violated_directive: violatedDirective,
-      document_uri:       documentUri,
-      referrer:           referrer || undefined,
-      original_policy:    report["original-policy"] ?? report["originalPolicy"] ?? undefined,
-    }));
+      console.warn(prefix, JSON.stringify({
+        severity,
+        report_only:        reportOnly,
+        blocked_uri:        blockedUri,
+        violated_directive: violatedDirective,
+        document_uri:       documentUri,
+        referrer:           referrer || undefined,
+        original_policy:    report.originalPolicy,
+      }));
 
-    // ── Alerte webhook pour les violations critiques (hors report-only) ──
-    // Les violations report-only ne sont pas bloquées — pas encore actives.
-    // Les violations actives sur script-src ou require-trusted-types-for
-    // signalent une injection potentielle ou une régression CSP.
-    if (severity === "critical" && !isReportOnly) {
-      await sendCriticalAlert({ violatedDirective, blockedUri, documentUri });
+      // ── Alerte webhook pour les violations critiques (hors report-only) ─
+      // Les violations report-only ne sont pas bloquées — pas encore actives.
+      // Les violations actives sur script-src ou require-trusted-types-for
+      // signalent une injection potentielle ou une régression CSP.
+      if (severity === "critical" && !reportOnly) {
+        await sendCriticalAlert({ violatedDirective, blockedUri, documentUri });
+      }
     }
   } catch {
     // Corps mal formé — ignorer silencieusement
