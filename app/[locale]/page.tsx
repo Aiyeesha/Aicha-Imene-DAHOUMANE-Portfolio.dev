@@ -38,7 +38,6 @@ const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
 });
 const ContactForm        = dynamic(() => import("@/components/ContactForm"));
 const Testimonials       = dynamic(() => import("@/components/Testimonials"));
-import ScrollToHash from "@/components/ScrollToHash";
 import { getExperienceItems } from "@/content/experience";
 import { testimonials } from "@/content/testimonials";
 import { getTranslations } from "next-intl/server";
@@ -84,8 +83,8 @@ export default async function Home({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(faqJsonLd) }}
       />
-      {/* Scroll vers ancre (#hash) sur navigation SPA inter-pages */}
-      <ScrollToHash />
+      {/* Scroll vers ancre (#hash) : géré une seule fois par Navbar via
+          lib/anchorScroll.ts (ScrollToHash supprimé, il faisait doublon). */}
 
       {/* HERO — simplifié (photo + titre + badges + 2 CTAs)
           ProfileNarrative et ProfileFactsCard ont été déplacés vers /about
