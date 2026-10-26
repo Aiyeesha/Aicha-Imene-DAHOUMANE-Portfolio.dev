@@ -1,20 +1,15 @@
 // lib/booking.ts
 // --------------
-// Lien public de la page de réservation Proton Calendar (prise de rendez-vous).
+// Public Proton Calendar booking page link. A plain link in a new tab: no
+// third-party script or iframe, so no CSP exception (Proton offers no
+// embeddable widget).
 //
-// Simple lien ouvert dans un nouvel onglet : aucun script ni iframe tiers sur
-// le site, donc aucune exception dans la CSP (remplace Calendly — audit du
-// 2026-10-14, S4). Proton ne propose pas de widget intégrable.
+// NEXT_PUBLIC_BOOKING_URL, like https://calendar.proton.me/bookings#<id>; the
+// fragment is part of the Proton link and sanitizeUrl() keeps it. Only HTTPS
+// URLs are accepted, otherwise booking buttons are hidden (empty string).
 //
-// Variable : NEXT_PUBLIC_BOOKING_URL, de la forme
-//   https://calendar.proton.me/bookings#<identifiant>
-// Le fragment (#…) fait partie du lien Proton : sanitizeUrl() le conserve.
-// Seules les URL HTTPS sont acceptées ; sinon les boutons de réservation sont
-// masqués (chaîne vide).
-//
-// Valeur par défaut : le lien public de la page de réservation. Ce n'est pas un
-// secret — il est affiché à tous les visiteurs —, il peut donc vivre dans le
-// code ; la variable d'environnement reste prioritaire si elle est définie.
+// The default is the public booking page link: not a secret (every visitor
+// sees it), so it can live in the code; the env variable wins when set.
 
 import { sanitizeUrl } from "@/lib/social";
 

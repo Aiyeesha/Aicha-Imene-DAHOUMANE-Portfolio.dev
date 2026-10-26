@@ -1,9 +1,9 @@
 // lib/incidentPlaybooks.ts
 // ------------------------
-// Checklists de réponse à incident, condensées depuis les playbooks détaillés
-// publiés dans github.com/Aiyeesha/playbook-reponse-incidents (playbooks/P01…P06).
-// Utilisées pour pré-remplir incident_checklist_items à la création d'un incident
-// (voir lib/supabase/incidents.ts → createIncident()).
+// Incident response checklists, condensed from the detailed playbooks in
+// github.com/Aiyeesha/playbook-reponse-incidents (playbooks/P01…P06). Used to
+// prefill incident_checklist_items when an incident is created (see
+// createIncident() in lib/supabase/incidents.ts).
 
 export type IncidentType =
   | "malware"

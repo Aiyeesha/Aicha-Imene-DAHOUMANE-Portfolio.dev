@@ -1,12 +1,9 @@
 // lib/supabase/admin.ts
 // ---------------------
-// Client Supabase avec la clé service_role.
-// Contourne le RLS → usage STRICTEMENT serveur (Server Components, Route Handlers).
-// Ne jamais exposer SUPABASE_SERVICE_ROLE_KEY côté client.
-//
-// `server-only` provoque une erreur de build si ce fichier est importé
-// dans un Client Component (bundle navigateur). Protection statique contre
-// une fuite accidentelle de SUPABASE_SERVICE_ROLE_KEY côté client.
+// Supabase client with the service_role key, which bypasses RLS: strictly
+// server-side (server components, route handlers). Never expose
+// SUPABASE_SERVICE_ROLE_KEY to the client: `server-only` fails the build if
+// this file is imported from a client component.
 import "server-only";
 
 import { createClient } from "@supabase/supabase-js";

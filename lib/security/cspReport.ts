@@ -1,17 +1,11 @@
 // lib/security/cspReport.ts
 // -------------------------
-// Normalise les deux formats de rapport CSP reçus par /api/csp-report.
-//
-// - CSP Level 2 (report-uri) : objet { "csp-report": { "blocked-uri", … } },
-//   envoyé par Firefox et Safari ;
-// - Reporting API (report-to / Reporting-Endpoints) : tableau
+// Normalises the two CSP report formats received by /api/csp-report:
+// - CSP Level 2 (report-uri): { "csp-report": { "blocked-uri", … } }, sent by
+//   Firefox and Safari;
+// - Reporting API (report-to / Reporting-Endpoints):
 //   [{ type: "csp-violation", body: { blockedURL, effectiveDirective, … } }],
-//   envoyé par Chrome et Edge.
-//
-// Audit du 2026-10-25 (constat 11) : seul le premier format était lu. Les
-// rapports Chrome/Edge — la majorité des visiteurs — arrivaient sous forme de
-// tableau, n'exposaient aucun champ attendu et étaient écartés comme « faux
-// positifs » (blocked-uri vide), sans trace.
+//   sent by Chrome and Edge (most visitors).
 
 export type CspReport = {
   blockedUri: string;
@@ -19,11 +13,11 @@ export type CspReport = {
   documentUri: string;
   referrer: string;
   originalPolicy: string | undefined;
-  /** "report" = politique report-only (champ disposition de la Reporting API). */
+  /** "report" = report-only policy (Reporting API disposition field). */
   disposition: "enforce" | "report" | undefined;
 };
 
-/** Plafond de rapports traités par requête (un lot Reporting API peut en contenir plusieurs). */
+/** Maximum reports handled per request (a Reporting API batch can hold several). */
 export const MAX_REPORTS_PER_REQUEST = 10;
 
 type Raw = Record<string, unknown>;
@@ -54,7 +48,7 @@ function fromReportingApi(b: Raw): CspReport {
 
 const isObject = (v: unknown): v is Raw => typeof v === "object" && v !== null && !Array.isArray(v);
 
-/** Extrait les rapports CSP d'un corps JSON, quel que soit son format. */
+/** Extracts CSP reports from a JSON body, whatever its format. */
 export function parseCspReports(body: unknown): CspReport[] {
   if (Array.isArray(body)) {
     return body

@@ -1,27 +1,22 @@
 // lib/uptime.ts
 // -------------
-// Calcule le % d'uptime par service sur les 30 derniers jours.
-// Fournit aussi l'historique de latence par heure sur 7 jours (sparklines).
-// Lit la table `uptime_pings` (Supabase, lecture publique).
-// Résultats mis en cache Redis 5 minutes (aligne avec l'intervalle du cron).
-//
-// Retourne Record<serviceName, number | null> :
-//   number → % uptime (ex: 99.7)
-//   null   → pas encore assez de données (< 3 pings)
-//
-// Note : Map n'est pas sérialisable en JSON → on utilise un objet plain.
+// 30-day uptime % per service and 7-day hourly latency history (sparklines),
+// from the `uptime_pings` table (Supabase, public read), cached 5 minutes in
+// Redis.
+// Uptime is Record<serviceName, number | null>: a % (e.g. 99.7), or null with
+// fewer than 3 pings. Plain objects, as a Map is not JSON-serialisable.
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { cacheGetOrSet }              from "@/lib/cache";
 import { redis }                      from "@/lib/redis";
 import type { ServiceStatus, HealthReport } from "@/lib/health";
 
-// Minimum de pings pour afficher un %, évite "100%" après le 1er déploiement
+// Minimum pings before showing a %, to avoid "100%" right after the first deployment
 const MIN_PINGS = 3;
 
-// ── Dernier rapport de statut (depuis uptime_pings) ───────────────────────────
-// Reconstruit un HealthReport à partir du dernier ping stocké par le cron.
-// Évite tout appel sortant en direct lors du rendu de /status.
+// ── Latest status report (from uptime_pings) ──────────────────────────────────
+// Rebuilds a HealthReport from the latest ping stored by the cron, so /status
+// makes no live outgoing calls.
 
 export async function getLatestPingReport(): Promise<HealthReport | null> {
   if (!redis) {
@@ -50,19 +45,19 @@ async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {
   try {
     const supabase = createAdminSupabaseClient();
 
-    // Récupère le dernier ping de chaque service (1 requête)
+    // Latest ping of each service (one query)
     const { data, error } = await supabase
       .from("uptime_pings")
       .select("service, status, latency_ms, checked_at")
       .order("checked_at", { ascending: false })
-      .limit(50); // assez pour couvrir tous les services du dernier batch
+      .limit(50); // enough to cover every service of the latest batch
 
     if (error || !data || data.length === 0) {
       console.error("[uptime] latest pings fetch error:", error?.message);
       return null;
     }
 
-    // Garder seulement le ping le plus récent par service
+    // Keep only the most recent ping per service
     const seen = new Set<string>();
     const latest: typeof data = [];
     for (const row of data) {
@@ -72,7 +67,7 @@ async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {
       }
     }
 
-    // Le timestamp du rapport = le plus récent parmi tous les services
+    // Report timestamp = the most recent across services
     const checkedAt = latest[0].checked_at as string;
 
     const services = latest.map((row) => ({
@@ -81,7 +76,7 @@ async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {
       latencyMs: row.latency_ms as number | null,
     }));
 
-    // Statut global : outage si au moins un est en panne, degraded si dégradé
+    // Global status: outage if any service is down, degraded if any is degraded
     const overall: ServiceStatus =
       services.some((s) => s.status === "outage")    ? "outage"      :
       services.some((s) => s.status === "degraded")  ? "degraded"    :
@@ -105,16 +100,15 @@ export async function getUptimeStats(): Promise<UptimeStats> {
 }
 
 // ── Latency history ───────────────────────────────────────────────────────────
-// Tableau de latences moyennes par heure sur les 7 derniers jours.
-// Chaque entrée est une moyenne en ms pour le créneau horaire correspondant.
-// Utilisé pour les sparklines sur la page /status.
+// Average latency (ms) per hour over the last 7 days, for the /status
+// sparklines.
 
 export type LatencyHistory = Record<string, number[]>;
 
 export async function getLatencyHistory(): Promise<LatencyHistory> {
   return cacheGetOrSet<LatencyHistory>(
     "portfolio:uptime:latency:7d",
-    300, // 5 min — aligne avec l'intervalle du cron
+    300, // 5 min, the cron interval
     fetchLatencyFromSupabase
   );
 }
@@ -138,13 +132,13 @@ async function fetchLatencyFromSupabase(): Promise<LatencyHistory> {
       return history;
     }
 
-    // Regrouper par service puis par créneau horaire (ex: "2026-03-15T14")
+    // Group by service, then by hour (e.g. "2026-03-15T14")
     type Bucket = { sum: number; count: number };
     const buckets: Record<string, Record<string, Bucket>> = {};
 
     for (const row of data) {
       if (row.latency_ms == null) continue;
-      // Tronquer à l'heure (les 13 premiers caractères de l'ISO string)
+      // Truncate to the hour (first 13 characters of the ISO string)
       const hour = (row.checked_at as string).slice(0, 13);
       if (!buckets[row.service]) buckets[row.service] = {};
       if (!buckets[row.service][hour]) buckets[row.service][hour] = { sum: 0, count: 0 };
@@ -152,7 +146,7 @@ async function fetchLatencyFromSupabase(): Promise<LatencyHistory> {
       buckets[row.service][hour].count += 1;
     }
 
-    // Convertir en tableau de moyennes (ordre chronologique garanti par la requête)
+    // Averages in chronological order (guaranteed by the query)
     for (const [service, hours] of Object.entries(buckets)) {
       history[service] = Object.values(hours).map(b => Math.round(b.sum / b.count));
     }
@@ -179,10 +173,10 @@ async function fetchFromSupabase(): Promise<UptimeStats> {
 
     if (error || !data) {
       console.error("[uptime] Supabase error:", error?.message);
-      return stats; // objet vide → dégradé gracieusement
+      return stats; // empty object: degrade gracefully
     }
 
-    // Regrouper par service
+    // Group by service
     const grouped: Record<string, { total: number; operational: number }> = {};
     for (const row of data) {
       if (!grouped[row.service]) grouped[row.service] = { total: 0, operational: 0 };
@@ -190,10 +184,10 @@ async function fetchFromSupabase(): Promise<UptimeStats> {
       if (row.status === "operational") grouped[row.service].operational++;
     }
 
-    // Calculer le % (1 décimale)
+    // Percentage, one decimal
     for (const [service, counts] of Object.entries(grouped)) {
       if (counts.total < MIN_PINGS) {
-        stats[service] = null; // pas assez de données
+        stats[service] = null; // not enough data
       } else {
         const pct = (counts.operational / counts.total) * 100;
         stats[service] = Math.round(pct * 10) / 10;

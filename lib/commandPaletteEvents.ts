@@ -1,9 +1,8 @@
 // lib/commandPaletteEvents.ts
 // ---------------------------
-// Ouverture de la palette de commandes sans clavier (audit 2026-10-25,
-// constat 7) : le bouton de la barre et l'entrée du menu mobile émettent cet
-// événement ; CommandPaletteLoader charge la palette au premier appel, puis
-// CommandPalette l'écoute elle-même.
+// Opens the command palette without a keyboard: the nav button and the
+// mobile menu entry dispatch this event; CommandPaletteLoader loads the
+// palette on the first one, then CommandPalette listens itself.
 
 export const OPEN_COMMAND_PALETTE_EVENT = "command-palette:open";
 

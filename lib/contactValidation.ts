@@ -1,8 +1,8 @@
 // lib/contactValidation.ts
 // -------------------------
-// Logique de validation du formulaire de contact, extraite de
-// app/api/contact/route.ts pour être testable sans dépendre de next/server
-// (NextResponse a besoin du global Request, absent de l'environnement Jest/jsdom).
+// Contact form validation, extracted from app/api/contact/route.ts so it can
+// be tested without next/server (NextResponse needs the global Request,
+// missing in Jest/jsdom).
 
 import { z } from "zod";
 

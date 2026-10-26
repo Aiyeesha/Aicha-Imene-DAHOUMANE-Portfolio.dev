@@ -1,68 +1,61 @@
 // playwright.config.ts
 // --------------------
-// Configuration Playwright pour les tests E2E du portfolio.
-//
-// Navigateurs :
-//   - CI    : channel:'chrome' — utilise Google Chrome pré-installé sur ubuntu-latest
-//             (/usr/bin/google-chrome). Évite tout téléchargement CDN qui gelait l'extraction.
-//   - Local : Chromium + Firefox (couverture multi-moteur)
-// En local : réutilise un serveur de dev déjà actif (reuseExistingServer).
-// En CI   : démarre le serveur de production (npm run start, après build).
-//
-// Lancer : npm run test:e2e
-// UI mode : npm run test:e2e:ui
+// Playwright E2E configuration.
+//   - CI: channel 'chrome' (Google Chrome preinstalled on ubuntu-latest, no
+//     browser download, which used to hang); starts the production server
+//     (npm run start, after a build).
+//   - Local: Chromium + Firefox; reuses a running dev server.
+// Run: npm run test:e2e (UI mode: npm run test:e2e:ui)
 
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
 
-  // Exécution parallèle — désactivée en CI (évite les conflits de port)
+  // Parallel runs, except in CI
   fullyParallel: !process.env.CI,
 
-  // Échoue si un test est marqué .only en CI (évite les oublis)
+  // Fail on a leftover .only in CI
   forbidOnly: !!process.env.CI,
 
-  // 1 retry en CI pour absorber les flakiness réseau
+  // One retry in CI for network flakiness
   retries: process.env.CI ? 1 : 0,
 
-  // 2 workers en CI (parallélisme léger sans conflits — serveur partagé stateless)
+  // 2 workers in CI (the shared server is stateless)
   workers: process.env.CI ? 2 : undefined,
 
-  // Reporter adapté à l'environnement
+  // Reporter per environment
   reporter: process.env.CI ? "github" : "list",
 
   use: {
     baseURL: "http://localhost:3000",
-    // Capture une trace sur le premier retry (debug en CI)
+    // Trace on the first retry (CI debugging)
     trace: "on-first-retry",
-    // Screenshot uniquement en cas d'échec
+    // Screenshot on failure only
     screenshot: "only-on-failure",
   },
 
-  // CI : channel:'chrome' — Google Chrome pré-installé sur ubuntu-latest, sans téléchargement.
-  // `npx playwright install` gelait systématiquement sur l'extraction du zip (CDN → extraction hang).
-  // Firefox testé en local uniquement.
+  // CI: preinstalled Google Chrome (`npx playwright install` used to hang on
+  // extraction). Firefox runs locally only.
   projects: process.env.CI
     ? [{ name: "chromium", use: { ...devices["Desktop Chrome"], channel: "chrome" } }]
     : [
         { name: "chromium", use: { ...devices["Desktop Chrome"] } },
         {
-          // Firefox — moteur Gecko, comportements CSP/crypto parfois différents de Blink
+          // Firefox (Gecko): CSP and crypto behaviour can differ from Blink
           name: "firefox",
           use: { ...devices["Desktop Firefox"] },
         },
       ],
 
-  // Serveur web automatique
+  // Web server started automatically
   webServer: {
-    // En CI : npm run start (production, requiert un build préalable)
-    // En local : npm run dev (hot-reload, pas de build nécessaire)
+    // CI: npm run start (production, needs a prior build); local: npm run dev
     command: process.env.CI ? "npm run start" : "npm run dev",
     url: "http://localhost:3000",
-    // En local : réutilise le serveur déjà lancé par le développeur
+    // Locally, reuse the server already started by the developer
     reuseExistingServer: !process.env.CI,
-    // 2 min pour le démarrage (build Next.js peut être lent)
+    // 2 minutes to start (Next.js can be slow)
     timeout: 120_000,
   },
 });

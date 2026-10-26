@@ -1,12 +1,11 @@
 // docs/take-screenshots.js
 // -------------------------
-// Prend les captures d'écran du portfolio via Playwright.
-// Usage :
+// Takes the portfolio screenshots with Playwright.
 //   node docs/take-screenshots.js                       # production
 //   SCREENSHOT_BASE_URL=http://localhost:3000 node docs/take-screenshots.js
-// Variables optionnelles :
-//   SCREENSHOT_ONLY=hero-salesforce,blog   → ne régénère que ces captures
-//   CHROMIUM_PATH=/chemin/vers/chromium     → navigateur déjà installé
+// Optional:
+//   SCREENSHOT_ONLY=hero-salesforce,blog   → regenerate only these
+//   CHROMIUM_PATH=/path/to/chromium        → use an installed browser
 
 const { chromium } = require("playwright");
 const path = require("path");
@@ -22,7 +21,7 @@ async function shot(page, name, url, { waitFor, action } = {}) {
   await page.goto(`${BASE}${url}`, { waitUntil: "networkidle" });
   if (action) await action(page);
   if (waitFor) await page.waitForSelector(waitFor, { timeout: 8000 }).catch(() => {});
-  await page.waitForTimeout(1800); // animations (révélations, indicateur de navigation)
+  await page.waitForTimeout(1800); // animations (reveals, nav indicator)
   await page.screenshot({ path: path.join(OUT, `${name}.png`), fullPage: false });
 }
 
@@ -49,16 +48,16 @@ async function shot(page, name, url, { waitFor, action } = {}) {
     waitFor: "article, [class*='blog']",
   });
 
-  // 4. Blog article (premier article disponible)
+  // 4. Blog article (first available)
   await shot(page, "blog-article", "/en/blog/salesforce-sandbox-management", {
     waitFor: "h1",
   });
 
-  // 5. About — frise chronologique
+  // 5. About — career timeline
   await shot(page, "about", "/en/about", {
     waitFor: "h1",
     action: async (p) => {
-      // Amener la frise de carrière en haut de l'écran (sous la barre de navigation)
+      // Bring the career timeline to the top of the screen (below the navbar)
       await p.evaluate(() => {
         const el = document.querySelector('ol[aria-label="Career timeline"]');
         if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 220);
@@ -67,22 +66,22 @@ async function shot(page, name, url, { waitFor, action } = {}) {
     },
   });
 
-  // 6. Profil hybride — page la plus différenciante
+  // 6. Hybrid profile
   await shot(page, "hybride", "/en/hybride", {
     waitFor: "h1",
   });
 
-  // Hero IT Ops — en dernier : le choix de profil est mémorisé (cookie) et
-  // s'appliquerait sinon aux pages suivantes.
+  // IT Ops hero last: the profile choice is remembered (cookie) and would
+  // otherwise apply to the following pages.
   await shot(page, "hero-itops", "/en", {
     action: async (p) => {
       const toggle = p.locator("button").filter({ hasText: /IT Ops|itops/i }).first();
       if (await toggle.isVisible().catch(() => false)) await toggle.click();
-      await p.waitForTimeout(3500); // fin de l'animation de frappe du sous-titre
+      await p.waitForTimeout(3500); // end of the subtitle typing animation
     },
   });
 
-  // 7. Status page — health checks + sparklines (données réelles : à prendre en production)
+  // 7. Status page — health checks + sparklines (real data: take in production)
   await shot(page, "status", "/en/status", {
     waitFor: "h2",
   });
