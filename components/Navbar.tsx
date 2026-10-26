@@ -19,6 +19,7 @@ import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
 import { BOOKING_URL } from "@/lib/booking";
 import usePlatformShortcut from "@/lib/usePlatformShortcut";
+import { openCommandPalette } from "@/lib/commandPaletteEvents";
 
 /** Petit bouton discret ⌘K / Ctrl K pour rappeler le raccourci palette de commandes. */
 function CommandPaletteTrigger() {
@@ -32,13 +33,13 @@ function CommandPaletteTrigger() {
     <button
       type="button"
       aria-label={t("open", { shortcut })}
-      onClick={() => {
-        // Simule le raccourci clavier pour ouvrir la palette
-        document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
-      }}
-      // Repoussé de 2xl à 1850px avec le reste du relâchement d'espacement du
-      // header (audit 2026-08-13, itération 4) — voir desktopLinkClass.
-      className="hidden min-[1850px]:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
+      onClick={openCommandPalette}
+      // Visible là où il y a de la place : sous xl (barre réduite au menu
+      // hamburger, écrans tactiles) et à partir de 1850px. Masqué entre les
+      // deux, où la barre desktop n'a aucune marge (audit 2026-08-13) — ces
+      // écrans ont un clavier, et le menu mobile n'y est pas affiché.
+      // Audit 2026-10-25 (constat 7) : auparavant masqué sous 1850px partout.
+      className="inline-flex xl:hidden min-[1850px]:inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs text-muted-2 hover:bg-black/10 dark:hover:bg-white/10 soft-ring transition-colors"
     >
       <span aria-hidden="true">{shortcut}</span>
     </button>
@@ -368,16 +369,22 @@ export default function Navbar({
     };
   }, [mobileOpen]);
 
+// Vrai uniquement après une ouverture : sans ce garde-fou, l'effet rendait le
+// focus au bouton du menu dès le premier rendu, sous 1280px, ce qui
+// contournait le lien d'évitement (audit 2026-10-25, constat 6).
+const mobileWasOpenRef = useRef(false);
 useEffect(() => {
   if (mobileOpen) {
+    mobileWasOpenRef.current = true;
     // Focus first focusable element inside menu on open.
     setTimeout(() => {
       const container = menuRef.current;
       const first = container?.querySelector<HTMLElement>('a[href], button:not([disabled])');
       first?.focus();
     }, 0);
-  } else {
+  } else if (mobileWasOpenRef.current) {
     // Restore focus to menu button on close.
+    mobileWasOpenRef.current = false;
     menuButtonRef.current?.focus();
   }
 }, [mobileOpen]);
@@ -832,6 +839,14 @@ useEffect(() => {
                 <ThemeToggle />
                 <LocaleSwitcher current={locale} />
               </div>
+              {/* Palette de commandes sans clavier (audit 2026-10-25, constat 7) */}
+              <button
+                type="button"
+                onClick={() => { setMobileOpen(false); openCommandPalette(); }}
+                className="mt-2 w-full rounded-xl px-3 py-2 text-left text-sm text-slate-700 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10 soft-ring"
+              >
+                {t("commandPalette.title")}
+              </button>
             </div>
 
             <div className="mt-4 space-y-2">
