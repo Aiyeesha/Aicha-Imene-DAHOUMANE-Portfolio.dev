@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { rssAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { readAllPosts } from "@/content/blog/fs";
@@ -39,7 +40,8 @@ export async function generateMetadata(
         fr: `${siteUrl}/fr/blog`,
         es: `${siteUrl}/es/blog`,
         "x-default": `${siteUrl}/en/blog`,
-      }
+      },
+      ...rssAlternates(locale),
     },
     openGraph: {
       title,

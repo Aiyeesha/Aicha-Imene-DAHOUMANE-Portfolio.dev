@@ -4,6 +4,7 @@
 // ProfileNarrative et ProfileFactsCard ont été déplacés vers la page About
 // pour alléger le hero et améliorer la lisibilité.
 
+import { rssAlternates } from "@/lib/seo";
 import dynamic from "next/dynamic";
 import TrackAwareHero from "./track-aware-hero";
 import Reveal from "@/components/Reveal";
@@ -89,7 +90,8 @@ export async function generateMetadata({
         fr: `${siteUrl}/fr`,
         es: `${siteUrl}/es`,
         "x-default": `${siteUrl}/en`,
-      }
+      },
+      ...rssAlternates(locale),
     },
     openGraph: {
       type: "website",
