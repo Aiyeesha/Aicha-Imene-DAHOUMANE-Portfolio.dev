@@ -14,6 +14,7 @@ import ThemeToggle from "./ThemeToggle";
 import TrackToggle from "./TrackToggle";
 import useActiveSection from "./useActiveSection";
 import useHashSync from "./useHashSync";
+import { scrollToAnchorWhenStable } from "@/lib/anchorScroll";
 import { useTrack } from "@/app/[locale]/providers";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
@@ -46,7 +47,9 @@ function CommandPaletteTrigger() {
 }
 
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
-const PAGE_IDS = ["about","hybrid","certifications","resources"] as const;
+// workWithMe : menu mobile uniquement (absent de DESKTOP_IDS_STATIC) — page
+// « L'essentiel recruteur », audit 2026-10-25.
+const PAGE_IDS = ["about","hybrid","certifications","resources","workWithMe"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
@@ -120,7 +123,9 @@ export default function Navbar({
             ? "certifications"
             : pathname.startsWith(`/${locale}/resources`)
               ? "resources"
-              : null;
+              : pathname.startsWith(`/${locale}/work-with-me`)
+                ? "workWithMe"
+                : null;
 
   const activeId = isHome ? spyActiveId : routeActiveId;
 
@@ -144,32 +149,14 @@ export default function Navbar({
   // Hash sync actif sur la home uniquement — l'URL reflète la section visible au scroll.
   useHashSync(isHome ? spyActiveId : "");
 
-  // Scroll vers l'ancre après navigation cross-page (ex: /about → /#projects).
-  // router.push avec scroll:false ne déclenche pas le scroll natif du navigateur
-  // dans les SPAs — on le fait manuellement après que la page est rendue.
-  // Retry toutes les 150 ms (max 20 tentatives ≈ 3 s) pour attendre que les
-  // sections dynamiques (Supabase / Suspense) soient montées dans le DOM.
+  // Scroll vers l'ancre après navigation cross-page (ex: /about → /#contact)
+  // ou accès direct. Seul point d'entrée (ScrollToHash faisait doublon) :
+  // voir lib/anchorScroll.ts — saut instantané puis recalage tant que les
+  // sections dynamiques au-dessus de la cible se montent (audit 2026-10-25).
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-
-    let attempts = 0;
-    const MAX = 20;
-    let timer: ReturnType<typeof setTimeout>;
-
-    const tryScroll = () => {
-      const el = document.getElementById(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (attempts < MAX) {
-        attempts++;
-        timer = setTimeout(tryScroll, 150);
-      }
-    };
-
-    // Premier essai après 100 ms (laisse le temps au premier render)
-    timer = setTimeout(tryScroll, 100);
-    return () => clearTimeout(timer);
+    return scrollToAnchorWhenStable(decodeURIComponent(hash));
   }, [pathname]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -452,7 +439,7 @@ useEffect(() => {
 
 // Entrées qui naviguent vers des pages dédiées (≠ ancres de la landing).
   // Elles reçoivent un badge ↗ pour signaler visuellement le changement de page.
-  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "blog", "projects"]);
+  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "workWithMe", "blog", "projects"]);
 
   // Pour le desktop nav — suit desktopActiveId (sections hors-nav mappées vers la plus proche)
   // Padding/police réduits à xl (px-1, text-[13px] au lieu de px-2, text-sm) : les libellés
@@ -483,6 +470,7 @@ useEffect(() => {
     if (id === "hybrid") return `/${locale}/hybride`;
     if (id === "certifications") return `/${locale}/certifications`;
     if (id === "resources") return `/${locale}/resources`;
+    if (id === "workWithMe") return `/${locale}/work-with-me`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
     if (id === "projects") return `/${locale}/projects`;
@@ -496,6 +484,7 @@ useEffect(() => {
     { id: "experience", label: t("nav.experience") },
     { id: "certifications", label: t("nav.certifications") },
     { id: "resources", label: t("nav.resources") },
+    { id: "workWithMe", label: t("nav.workWithMe") },
     { id: "services", label: t("nav.services") },
     ...(showTestimonials ? [{ id: "testimonials" as NavId, label: t("nav.testimonials") }] : []),
     { id: "projects", label: t("nav.projects") },

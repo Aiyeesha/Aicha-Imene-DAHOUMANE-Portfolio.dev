@@ -240,7 +240,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         <h2 id="section-cta" className="text-xl font-semibold text-slate-900 dark:text-white">{labels.ctaTitle}</h2>
         <p className="mt-2 text-sm text-muted">{labels.ctaSubtitle}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Link href={`/${locale}/contact`} className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}>
+          <Link href={`/${locale}#contact`} className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium soft-ring transition-colors ${accent.ctaBtn}`}>
             {labels.ctaContact}
           </Link>
           <BookingLink
