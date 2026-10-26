@@ -2,7 +2,8 @@
 
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useHydrated from "@/lib/useHydrated";
 
 /**
  * ThemeToggle
@@ -13,11 +14,11 @@ import { useEffect, useState } from "react";
 export default function ThemeToggle() {
   const t = useTranslations();
   const { theme, setTheme, systemTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  // useHydrated plutôt que useState + useEffect — audit 2026-10-23 (PERF-5).
+  const mounted = useHydrated();
   // `spinKey` change à chaque toggle → force le re-mount du <span> → rejoue l'animation CSS
   const [spinKey, setSpinKey] = useState(0);
 
-  useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
   const current = theme === "system" ? systemTheme : theme;
