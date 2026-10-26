@@ -1,7 +1,7 @@
 // __tests__/projectHighlights.test.ts
-// Les puces FR et ES des cartes projet (content/projectHighlights.ts) doivent
-// suivre la version anglaise : même nombre, même ordre, pour chaque projet
-// publié qui a des puces ; et la page FR doit bien afficher la traduction.
+// FR and ES project card highlights (content/projectHighlights.ts) must
+// follow the English version: same count, same order, for every published
+// project with highlights; and the FR page must show the translation.
 
 import { projects } from "@/content/projects";
 import { PROJECT_HIGHLIGHTS } from "@/content/projectHighlights";

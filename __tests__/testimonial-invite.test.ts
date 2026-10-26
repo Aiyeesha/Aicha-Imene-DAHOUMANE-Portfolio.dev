@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 // __tests__/testimonial-invite.test.ts
-// Audit 2026-10-25 : invitations à témoigner réutilisables, clé de session
-// commune à tous les visiteurs, champs non bornés, photo en http:.
+// Testimonial invitations: single use, session key bound to the invitation,
+// bounded fields, https-only photo.
 
 jest.mock("server-only", () => ({}), { virtual: true });
 

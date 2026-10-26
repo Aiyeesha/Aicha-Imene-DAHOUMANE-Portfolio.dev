@@ -1,14 +1,8 @@
 /**
- * Seed Supabase depuis :
- * - content/projects.ts
- * - content/projectDetails.ts
- * - content/about.ts
+ * Seeds Supabase from content/projects.ts, content/projectDetails.ts and
+ * content/about.ts. Certifications are not seeded: /certifications reads
+ * content/certifications.ts directly (see resetTables() below).
  *
- * (Les certifications ne sont plus seedées ici : la table Supabase
- * "certifications" a été supprimée, /certifications lit directement
- * content/certifications.ts — voir la note dans resetTables() ci-dessous.)
- *
- * Exécution :
  *   npx tsx scripts/seed.ts
  */
 
@@ -18,7 +12,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 // ------------------------------
-// 0) Charger explicitement .env.local
+// 0) Load .env.local explicitly
 // ------------------------------
 const envLocalPath = path.resolve(process.cwd(), ".env.local");
 const envPath = path.resolve(process.cwd(), ".env");
@@ -33,13 +27,13 @@ if (fs.existsSync(envLocalPath)) {
   console.warn("⚠️ No .env.local or .env file found in project root.");
 }
 
-// ✅ Imports TS directs (tsx les gère)
+// Direct TS imports (handled by tsx)
 import { aboutContent } from "../content/about";
 import { projectDetails } from "../content/projectDetails";
 import { projects } from "../content/projects";
 
 // ------------------------------
-// 1) Vars d'env
+// 1) Env vars
 // ------------------------------
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -78,15 +72,14 @@ function toArray<T>(x: unknown): T[] {
 }
 
 /**
- * IMPORTANT : ton content/projectDetails.ts exporte un TABLEAU.
- * On construit une Map slug -> details compatible avec :
- * - array [{ slug, locales, gallery }]
- * - ou objet { [slug]: details } (fallback)
+ * content/projectDetails.ts exports an ARRAY; build a slug → details Map
+ * from either an array [{ slug, locales, gallery }] or an object
+ * { [slug]: details } (fallback).
  */
 function buildDetailsMap(details: unknown): Map<string, AnyObj> {
   const map = new Map<string, AnyObj>();
 
-  // Cas 1 : tableau (TON CAS)
+  // Case 1: array (the actual shape)
   if (Array.isArray(details)) {
     for (const item of details) {
       const slug = normalizeSlug((item as AnyObj)?.slug);
@@ -95,7 +88,7 @@ function buildDetailsMap(details: unknown): Map<string, AnyObj> {
     return map;
   }
 
-  // Cas 2 : objet indexé par slug (fallback)
+  // Case 2: object keyed by slug (fallback)
   if (details && typeof details === "object") {
     for (const [slug, value] of Object.entries(details as AnyObj)) {
       map.set(normalizeSlug(slug), value as AnyObj);
@@ -108,13 +101,9 @@ function buildDetailsMap(details: unknown): Map<string, AnyObj> {
 const detailsMap = buildDetailsMap(projectDetails);
 
 /**
- * Construit la ligne à insérer en table "projects".
- * - EN : base + details.locales.en si dispo
- * - FR : details.locales.fr si dispo sinon fallback EN
- * - ES : details.locales.es si dispo sinon fallback EN (les brouillons du
- *   futur framework Salesforce/Cloud n'ont pas encore de bloc `es` dans
- *   content/projectDetails.ts — cf. app/[locale]/projects/[slug]/page.tsx
- *   qui affiche déjà un bandeau "non disponible dans cette langue" pour ce cas)
+ * Builds the row for the "projects" table: EN from the base + EN details, FR
+ * and ES from their details when available, otherwise EN (the project page
+ * already shows a "not available in this language" notice in that case).
  */
 function buildProjectRow(params: {
   locale: "en" | "fr" | "es";
@@ -127,14 +116,14 @@ function buildProjectRow(params: {
   const locales = detailsRaw?.locales ?? {};
   const d = (locale === "fr" ? locales.fr : locale === "es" ? locales.es : locales.en) ?? null;
 
-  // Titre : projectDetails.locales.<lang>.title prioritaire, sinon list EN (projects.ts)
+  // Title: projectDetails.locales.<lang>.title first, else the EN list (projects.ts)
   const title = (d?.title as string) || (base.title as string) || slug;
 
-  // hero_subtitle : depuis projectDetails si dispo
+  // hero_subtitle from projectDetails when available
   const heroSubtitle =
     (d?.heroSubtitle as string) || (base.subtitle as string) || null;
 
-  // summary : depuis projectDetails si dispo, sinon excerpt/description de la liste
+  // summary from projectDetails when available, else the list excerpt/description
   const summary =
     (d?.excerpt as string) ||
     (d?.summary as string) ||
@@ -142,19 +131,19 @@ function buildProjectRow(params: {
     (base.description as string) ||
     null;
 
-  // highlights : si projectDetails en a, sinon liste
+  // highlights from projectDetails when present, else the list
   const highlights =
     toArray<string>(d?.highlights).length > 0
       ? toArray<string>(d?.highlights)
       : toArray<string>(base.highlights);
 
-  // gallery : au niveau detailsRaw.gallery
+  // gallery at detailsRaw.gallery
   const gallery = detailsRaw?.gallery ?? base.gallery ?? null;
 
-  // sections : projectDetails.locales.<lang>.sections
+  // sections: projectDetails.locales.<lang>.sections
   const sections = d?.sections ?? null;
 
-  // champs issus de content/projects.ts
+  // fields from content/projects.ts
   const techStack = toArray<string>(base.techStack ?? base.tech_stack);
   const categories = toArray<string>(base.categories);
   const tags = toArray<string>(base.tags);
@@ -197,10 +186,9 @@ function buildProjectRow(params: {
     featured: Boolean(base.featured),
     sort_order: Number.isFinite(base.sortOrder) ? (base.sortOrder as number) : 0,
 
-    // Respecte le statut réel de content/projects.ts (draft reste draft) —
-    // hardcoder "published" ici republierait les projets brouillon (dont
-    // orgdocs-saas / sfrelease-saas, sous embargo public jusqu'en 2027) à
-    // chaque reseed, quel que soit leur statut réel en base.
+    // Keep the real status from content/projects.ts (draft stays draft):
+    // hard-coding "published" would republish draft projects (including
+    // orgdocs-saas / sfrelease-saas, embargoed until 2027) on every reseed.
     status: (base.status as string) || "draft",
     is_bridge: Boolean(base.isBridge),
     is_security: Boolean(base.isSecurity),
@@ -211,11 +199,9 @@ function buildProjectRow(params: {
 // 3) Reset tables
 // ------------------------------
 async function resetTables() {
-  // "certifications" n'est plus une table de la base (confirmé via
-  // information_schema.tables) — supprimée pour de bon après la migration
-  // de /admin et /certifications vers content/certifications.ts comme
-  // source unique (voir CHANGELOG.md). La référencer ici ferait échouer
-  // resetTables() avant même que seedProjects() ne s'exécute.
+  // "certifications" is no longer a database table: /admin and
+  // /certifications use content/certifications.ts as the only source.
+  // Referencing it here would make resetTables() fail before seedProjects().
   const tables = ["project_assets", "projects", "about_pages"] as const;
 
   for (const t of tables) {
@@ -266,13 +252,13 @@ async function seedProjects() {
 async function seedAbout() {
   console.log("📦 Seeding about_pages from content/about.ts ...");
 
-  // On stocke l'objet complet dans body (jsonb) pour ne rien perdre
+  // Store the whole object in body (jsonb) so nothing is lost
   const rows = [
     {
       locale: "fr",
-      // aboutContent.fr n'a pas "title" => on met un headline fixe
+      // aboutContent.fr has no "title": use a fixed headline
       headline: "À propos",
-      // l'intro correspond à "introduction" dans ton objet
+      // the intro is "introduction" in the object
       intro: aboutContent.fr?.introduction ?? null,
       body: aboutContent.fr ?? {},
       status: "published",
@@ -307,10 +293,8 @@ async function seedAbout() {
 // ------------------------------
 // 6) Verify (stats)
 // ------------------------------
-// NOTE: pas de seedCertifications() — la table Supabase "certifications" a
-// été supprimée (voir le commentaire dans resetTables()). Les certifications
-// sont servies exclusivement depuis content/certifications.ts, en dehors de
-// ce script.
+// No seedCertifications(): certifications are served from
+// content/certifications.ts only (see resetTables()).
 async function verifyStats() {
   const { data: pData, error: pErr } = await supabase
     .from("projects")

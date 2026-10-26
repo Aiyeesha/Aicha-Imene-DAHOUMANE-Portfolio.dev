@@ -1,21 +1,18 @@
 #!/usr/bin/env node
 // scripts/generate-project-assets.mjs
 // -----------------------------------
-// Génère content/project-assets.json : la liste des projets qui disposent
-// d'un logo (public/projects/<slug>/logo.webp) et d'une couverture
+// Generates content/project-assets.json: the projects that have a logo
+// (public/projects/<slug>/logo.webp) and a cover
 // (public/projects/<slug>/cover.webp).
 //
-// Pourquoi un manifeste plutôt qu'un test d'existence à l'exécution — audit
-// 2026-10-23 (P5) : sur Vercel, public/ est servi par le CDN et n'existe pas
-// dans le système de fichiers des fonctions serveur ; et les cartes de projet
-// sont des composants client. Sans cette information, chaque carte tentait de
-// charger un logo et une couverture qui, pour la plupart des projets,
-// n'existent pas : ~18 requêtes en 404 sur /fr/projects, chacune servie par une
-// page HTML 404 complète (~70 Ko).
+// A manifest rather than a runtime existence check: on Vercel, public/ is
+// served by the CDN and is not on the server functions' file system, and
+// project cards are client components. Without it, every card would request
+// a logo and cover that mostly do not exist.
 //
-// Usage : npm run assets:manifest   (à relancer après ajout/suppression d'un
-//         logo ou d'une couverture). Le test __tests__/projectAssets.test.ts
-//         échoue si le manifeste n'est plus synchronisé avec public/projects.
+// Usage: npm run assets:manifest (re-run after adding or removing a logo or
+//        cover). __tests__/projectAssets.test.ts fails when the manifest is
+//        out of sync with public/projects.
 
 import { readdirSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -24,7 +21,7 @@ const ROOT = process.cwd();
 const PROJECTS_DIR = join(ROOT, "public", "projects");
 const OUTPUT = join(ROOT, "content", "project-assets.json");
 
-// Dossiers de projet, triés pour un fichier stable (diffs lisibles).
+// Project folders, sorted for a stable file (readable diffs).
 const slugs = readdirSync(PROJECTS_DIR, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
@@ -33,7 +30,7 @@ const slugs = readdirSync(PROJECTS_DIR, { withFileTypes: true })
 const has = (slug, file) => existsSync(join(PROJECTS_DIR, slug, file));
 
 const manifest = {
-  // Commentaire embarqué : un JSON n'accepte pas de commentaire classique.
+  // Embedded comment: JSON has no comment syntax.
   _generated: "Fichier généré par scripts/generate-project-assets.mjs — ne pas modifier à la main.",
   logos: slugs.filter((slug) => has(slug, "logo.webp")),
   covers: slugs.filter((slug) => has(slug, "cover.webp")),

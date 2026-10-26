@@ -1,9 +1,9 @@
 // __tests__/contact-email-validation.test.ts
-// Tests unitaires — DX-02 : validation email via zod dans /api/contact.
+// Unit tests: zod email validation in /api/contact.
 
 import { z } from "zod";
 
-// Schéma identique à celui utilisé dans app/api/contact/route.ts
+// Same schema as in app/api/contact/route.ts
 const emailSchema = z.string().email();
 const MAX_EMAIL_LEN = 254;
 
@@ -51,7 +51,7 @@ describe("contact email validation (DX-02)", () => {
   });
 
   it("accepte exactement 254 chars si format valide", () => {
-    // a@b.com = 7 chars — rembourrer le local part
+    // a@b.com = 7 chars: pad the local part
     const localPart = "a".repeat(244);
     const email = `${localPart}@b.com`; // 244 + 1 + 5 = 250 chars
     expect(email.length).toBeLessThanOrEqual(MAX_EMAIL_LEN);

@@ -1,5 +1,5 @@
 // __tests__/BlogAuthorCard.test.tsx
-// Carte auteur blog — track-aware (Salesforce ↔ IT Ops).
+// Blog author card, track-aware (Salesforce ↔ IT Ops).
 
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,

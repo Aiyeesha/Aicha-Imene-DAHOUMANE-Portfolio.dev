@@ -1,11 +1,10 @@
 /**
- * Seed non destructif de public.about_pages depuis content/about.ts.
+ * Non-destructive seed of public.about_pages from content/about.ts.
  *
- * Contrairement à seed.ts (qui vide TOUTES les tables avant de reseed),
- * ce script ne fait qu'un upsert sur about_pages (locale = clé de conflit) :
- * aucune table n'est vidée, aucune autre ligne n'est touchée.
+ * Unlike seed.ts (which empties EVERY table first), this only upserts
+ * about_pages (locale as the conflict key): no table is emptied and no other
+ * row is touched.
  *
- * Usage :
  *   npx tsx scripts/seed-about.ts
  */
 

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
 
-// Charge explicitement .env.local (puis fallback .env)
+// Load .env.local explicitly (then fall back to .env)
 const envLocalPath = path.resolve(process.cwd(), ".env.local");
 const envPath = path.resolve(process.cwd(), ".env");
 

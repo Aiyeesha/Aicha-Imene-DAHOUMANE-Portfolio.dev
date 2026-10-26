@@ -1,10 +1,10 @@
 // e2e/blog.spec.ts
 // ----------------
-// Tests E2E — Blog (liste + article + partage)
+// E2E tests: blog (list, article, sharing)
 
 import { test, expect } from "@playwright/test";
 
-// Slug d'un article garanti d'exister dans /content/blog/posts/en/
+// A post slug guaranteed to exist in /content/blog/posts/en/
 const KNOWN_SLUG = "apex-triggers-best-practices";
 
 test.describe("Blog", () => {
@@ -13,8 +13,8 @@ test.describe("Blog", () => {
 
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
 
-    // Liens articles directs — exclure /tags et les liens avec ?tag= et le lien "back"
-    // Les slugs d'articles ne contiennent jamais "tag" ni ne se terminent par "/blog"
+    // Direct article links: exclude /tags, ?tag= links and the "back" link.
+    // Article slugs never contain "tag" nor end with "/blog".
     const articleLink = page.locator(
       `a[href^="/en/blog/"]:not([href*="tag"]):not([href$="/blog"])`
     ).first();
@@ -22,19 +22,19 @@ test.describe("Blog", () => {
   });
 
   test("un article s'ouvre en cliquant sur son lien", async ({ page }) => {
-    // Ce test fait 2 navigations (liste → article) : timeout élargi
+    // Two navigations (list → article): longer timeout
     test.setTimeout(60_000);
     await page.goto("/en/blog");
 
-    // Sélecteur CSS direct — exclut /tags, ?tag=, et /blog exact
+    // Direct CSS selector excluding /tags, ?tag= and the bare /blog
     const articleLink = page.locator(
       `a[href^="/en/blog/"]:not([href*="tag"]):not([href$="/blog"])`
     ).first();
 
     await expect(articleLink).toBeVisible();
 
-    // Récupère le href cible et navigue directement
-    // (click() peut être intercepté par un overlay fixe comme ScrollProgress)
+    // Read the target href and navigate directly (click() can be intercepted
+    // by a fixed overlay such as ScrollProgress)
     const href = await articleLink.getAttribute("href");
     expect(href).toMatch(/\/en\/blog\/.+/);
     await page.goto(href!);
@@ -48,7 +48,7 @@ test.describe("Blog", () => {
 
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
 
-    // L'article MDX est rendu
+    // The MDX article renders
     const article = page.locator("article").first();
     await expect(article).toBeVisible();
   });
@@ -58,11 +58,11 @@ test.describe("Blog", () => {
   }) => {
     await page.goto(`/en/blog/${KNOWN_SLUG}`);
 
-    // Bouton LinkedIn (lien)
+    // LinkedIn button (link)
     const linkedInBtn = page.getByRole("link", { name: /share on linkedin/i });
     await expect(linkedInBtn).toBeVisible();
 
-    // Bouton copier le lien
+    // Copy link button
     const copyBtn = page.getByRole("button", { name: /copy link/i });
     await expect(copyBtn).toBeVisible();
   });
@@ -86,7 +86,7 @@ test.describe("Blog", () => {
   }) => {
     await page.goto(`/en/blog/${KNOWN_SLUG}`);
 
-    // Firefox ne supporte pas clipboard-read via grantPermissions
+    // Firefox does not support clipboard-read through grantPermissions
     if (browserName !== "firefox") {
       await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
     }
@@ -94,10 +94,10 @@ test.describe("Blog", () => {
     const copyBtn = page.getByRole("button", { name: /copy link/i });
     await copyBtn.click();
 
-    // Feedback "Copied!" visible immédiatement
+    // "Copied!" feedback shows immediately
     await expect(page.getByRole("button", { name: /copied/i })).toBeVisible();
 
-    // Après 2s le texte revient à "Copy link" — on attend jusqu'à 4s
+    // After 2s the label returns to "Copy link"; wait up to 4s
     await expect(page.getByRole("button", { name: /copy link/i })).toBeVisible({
       timeout: 4000,
     });
@@ -106,14 +106,14 @@ test.describe("Blog", () => {
   test("le filtre par tag affiche des articles", async ({ page }) => {
     await page.goto("/en/blog?tag=Salesforce");
 
-    // Au moins un lien article présent
+    // At least one article link
     const links = page.locator(`a[href^="/en/blog/"]`).filter({
       hasNot: page.locator(`a[href*="tag"]`),
     });
     await expect(links.first()).toBeVisible();
   });
 
-  // Audit 2026-10-25 : la recherche suit le motif combobox (WAI-ARIA 1.2).
+  // Search follows the combobox pattern (WAI-ARIA 1.2).
   test("la recherche se pilote au clavier (↓, Entrée, Échap)", async ({ page }) => {
     await page.goto("/en/blog");
     const input = page.getByRole("combobox");

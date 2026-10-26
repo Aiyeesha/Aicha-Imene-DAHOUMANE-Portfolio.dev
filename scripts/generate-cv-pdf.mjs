@@ -1,11 +1,9 @@
 // scripts/generate-cv-pdf.mjs
 // ---------------------------
-// Génère les 6 fichiers PDF des CV à partir de leurs sources HTML.
-// Utilise Puppeteer (Chromium headless) pour un rendu fidèle au navigateur.
+// Generates the CV PDF files from their HTML sources with Puppeteer
+// (headless Chromium) for browser-accurate rendering.
 //
-// Usage : node scripts/generate-cv-pdf.mjs
-//
-// Prérequis : puppeteer installé en devDependencies (npm i -D puppeteer)
+// Usage: node scripts/generate-cv-pdf.mjs (puppeteer is a devDependency)
 
 import puppeteer from "puppeteer";
 import { PDFDocument } from "pdf-lib";
@@ -17,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
 const CV_DIR     = join(__dirname, "../public/cv");
 
-// Liste des CV à générer : source HTML → PDF cible + métadonnées
+// CVs to generate: HTML source → target PDF + metadata
 const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-en-itops.html",
@@ -82,12 +80,10 @@ const CV_FILES = [
     title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce e Infraestructura — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
-  // ── Versions ATS (une colonne, sans sidebar) ──────────────────────────────
-  // Complémentaires aux versions ci-dessus (pas un remplacement) — destinées
-  // aux dépôts sur plateformes de recrutement à parsing automatique
-  // (Taleo/Workday/SmartRecruiters), là où un layout à 2 colonnes risque de
-  // faire perdre le contenu de la sidebar (compétences, certifications) selon
-  // le parseur utilisé.
+  // ── ATS versions (single column, no sidebar) ─────────────────────────────
+  // In addition to the versions above, for recruitment platforms with
+  // automatic parsing (Taleo, Workday, SmartRecruiters), where a two-column
+  // layout can lose the sidebar content (skills, certifications).
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-itops-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops-ats.pdf",
@@ -164,11 +160,11 @@ async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
 
   const page = await browser.newPage();
 
-  // Charger le fichier HTML local (file:// URI)
+  // Load the local HTML file (file:// URI)
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
 
-  // Forcer les métadonnées avant impression — Chromium lit document.title pour
-  // le champ Title du PDF, et la balise <meta name="author"> pour le champ Author.
+  // Set metadata before printing: Chromium uses document.title for the PDF
+  // Title and <meta name="author"> for Author.
   await page.evaluate((t, a) => {
     document.title = t;
     let meta = document.querySelector('meta[name="author"]');
@@ -190,7 +186,7 @@ async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
 
   await page.close();
 
-  // Patcher les métadonnées PDF via pdf-lib (Author/Subject/Creator non lus par Chromium)
+  // Patch PDF metadata with pdf-lib (Chromium ignores Author/Subject/Creator)
   const pdfBytes = readFileSync(pdfPath);
   const pdfDoc = await PDFDocument.load(pdfBytes);
   pdfDoc.setTitle(title);

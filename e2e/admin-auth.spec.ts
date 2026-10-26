@@ -1,32 +1,28 @@
 // e2e/admin-auth.spec.ts
 // ----------------------
-// Tests E2E — l'admin ne livre aucun contenu sans authentification, quelle
-// que soit la variante d'URL.
+// E2E: the admin serves no content without authentication, whatever the URL
+// variant.
 //
-// Régression couverte — audit 2026-10-23 (P3) : le matcher de proxy.ts exclut
-// les URL contenant un point. Toute URL de la forme /admin/incidents/<x.y>
-// (ex. /admin/incidents/new.rsc) échappait donc au middleware et atteignait la
-// route /admin/incidents/[id] : en `next start`, la réponse contenait le layout
-// admin (« Portfolio Admin », « service_role ») et la page exécutait sa requête
-// Supabase service_role, sans en-tête Authorization ni rate-limit.
-// Le layout et chaque page de /admin revérifient désormais l'authentification
-// (lib/security/adminAuth.ts).
+// The proxy.ts matcher once skipped URLs containing a dot, so
+// /admin/incidents/<x.y> (e.g. /admin/incidents/new.rsc) bypassed it and
+// reached /admin/incidents/[id], which rendered the admin layout and ran its
+// service_role query unauthenticated. The layout and every /admin page now
+// re-check authentication (lib/security/adminAuth.ts).
 //
-// NB : /admin.rsc et /admin/incidents.rsc ne servent PAS l'admin (le premier
-// est interprété comme une locale « admin.rsc », le second ne correspond à
-// aucune route) ; ils restent testés pour garantir qu'aucun contenu admin n'y
-// apparaît.
+// /admin.rsc and /admin/incidents.rsc do not serve the admin (the first is
+// read as an "admin.rsc" locale, the second matches no route); they are
+// still tested to make sure no admin content appears.
 //
-// Le critère porte sur le CONTENU, pas sur le code HTTP : un notFound() levé
-// dans un layout imbriqué est servi en 200 (le shell racine est déjà parti en
-// streaming) avec le marqueur NEXT_HTTP_ERROR_FALLBACK;404 dans le flux.
+// The check is on CONTENT, not the HTTP status: a notFound() thrown in a
+// nested layout is served as 200 (the root shell is already streaming) with
+// NEXT_HTTP_ERROR_FALLBACK;404 in the stream.
 //
-// Aucun identifiant n'est utilisé ici : on vérifie uniquement le refus.
+// No credentials are used: only the refusal is checked.
 
 import { test, expect } from "@playwright/test";
 
-// Marqueurs présents dans le rendu de l'admin (layout) : leur présence dans
-// une réponse non authentifiée trahirait une fuite.
+// Markers rendered by the admin layout: seeing them in an unauthenticated
+// response would reveal a leak.
 const ADMIN_MARKERS = ["Portfolio Admin", "service_role"];
 
 const PATHS = [
@@ -37,8 +33,8 @@ const PATHS = [
   "/admin/incidents/x.json",
 ];
 
-// Avec et sans l'en-tête RSC envoyé par le routeur Next.js (Next 16 redirige
-// alors vers ?_rsc ; la redirection est suivie).
+// With and without the RSC header sent by the Next.js router (Next 16 then
+// redirects to ?_rsc; the redirect is followed).
 const VARIANTS: { name: string; headers: Record<string, string> }[] = [
   { name: "HTML", headers: {} },
   { name: "RSC", headers: { RSC: "1" } },
@@ -55,7 +51,7 @@ test.describe("Admin — aucun contenu sans authentification", () => {
           failOnStatusCode: false,
         });
 
-        // Jamais d'erreur serveur (la garde rend une 404, elle ne lève pas de 500).
+        // Never a server error (the guard renders a 404, never a 500).
         expect(response.status(), `${path} : statut ${response.status()}`).toBeLessThan(500);
 
         const body = await response.text();
@@ -68,8 +64,8 @@ test.describe("Admin — aucun contenu sans authentification", () => {
 
   test("GET /admin sans Authorization → refus du middleware (401 ou 429)", async ({ request }) => {
     const response = await request.get("/admin", { failOnStatusCode: false });
-    // 401 + WWW-Authenticate quand Redis est disponible ; 429 en fail-closed
-    // quand le rate-limiter est indisponible (CI/local sans Upstash).
+    // 401 + WWW-Authenticate when Redis is available; 429 (fail closed) when
+    // the rate limiter is unavailable (CI/local without Upstash).
     expect([401, 429]).toContain(response.status());
     const body = await response.text();
     for (const marker of ADMIN_MARKERS) expect(body).not.toContain(marker);

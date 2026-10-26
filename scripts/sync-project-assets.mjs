@@ -9,7 +9,7 @@
 // the repo — no Supabase Storage dependency.
 //
 // Usage: node --env-file=.env.local scripts/sync-project-assets.mjs
-// Re-runnable (overwrites existing files). Safe to delete once P0 is merged.
+// Re-runnable (overwrites existing files).
 
 import { createClient } from "@supabase/supabase-js";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
