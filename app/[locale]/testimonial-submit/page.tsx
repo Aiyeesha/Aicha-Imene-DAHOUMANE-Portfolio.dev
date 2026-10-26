@@ -17,7 +17,7 @@
 //   4. Les soumissions apparaissent dans `testimonial_submissions` (Supabase), approved = false
 
 import type { Metadata } from "next";
-import { createHmac, timingSafeEqual } from "crypto";
+import { isInviteUsed, isInviteValid, sessionKeyFor } from "@/lib/security/testimonialInvite";
 import TestimonialSubmitForm from "@/components/TestimonialSubmitForm";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -80,22 +80,10 @@ export default async function TestimonialSubmitPage({
   // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
   const nowSec     = Math.floor(Date.now() / 1000);
 
-  const HMAC_HEX_LENGTH = 64; // SHA-256 produit 32 octets = 64 caractères hex
-
-  let isAuthorized = false;
-  if (
-    secret.length > 0 &&
-    invite.length === HMAC_HEX_LENGTH &&
-    /^[0-9a-f]+$/.test(invite) &&
-    !isNaN(expUnix) &&
-    expUnix > nowSec // lien non expiré
-  ) {
-    const expectedHmac = createHmac("sha256", secret)
-      .update(`testimonial-invite:${expUnix}`)
-      .digest(); // Buffer 32 octets
-    const inviteBuf = Buffer.from(invite, "hex"); // Buffer 32 octets
-    isAuthorized = timingSafeEqual(expectedHmac, inviteBuf);
-  }
+  // Lien signé, non expiré et pas encore utilisé (usage unique, audit
+  // 2026-10-25 — lib/security/testimonialInvite.ts).
+  let isAuthorized = isInviteValid(secret, invite, expUnix, nowSec * 1000);
+  if (isAuthorized && (await isInviteUsed(invite))) isAuthorized = false;
 
   if (!isAuthorized) {
     return (
@@ -115,14 +103,11 @@ export default async function TestimonialSubmitPage({
     );
   }
 
-  // ── Génération d'une clé de session HMAC à durée limitée (30 min) ─────────
+  // ── Clé de session HMAC à durée limitée (30 min), liée à cette invitation ──
   // On ne passe JAMAIS le token brut au composant client — il serait sérialisé
-  // dans le payload RSC (visible dans le HTML source). À la place, on génère un
-  // HMAC(secret, bucket_temps) valable 30 min. Le composant client l'envoie
-  // à l'API, qui le revalide côté serveur sans exposer le secret d'origine.
-  // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
-  const timeBucket = Math.floor(Date.now() / (30 * 60 * 1000)).toString();
-  const sessionKey  = createHmac("sha256", secret).update(timeBucket).digest("hex");
+  // dans le payload RSC (visible dans le HTML source). La clé dérive du secret,
+  // de l'invitation et du créneau de 30 min ; l'API la revalide côté serveur.
+  const sessionKey = sessionKeyFor(secret, invite);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
@@ -141,7 +126,7 @@ export default async function TestimonialSubmitPage({
       </div>
 
       {/* Formulaire — sessionKey HMAC 30 min, jamais le token brut */}
-      <TestimonialSubmitForm sessionKey={sessionKey} locale={locale} />
+      <TestimonialSubmitForm sessionKey={sessionKey} invite={invite} exp={expUnix} locale={locale} />
 
       {/* Confidentialité */}
       <p className="mt-8 text-xs text-muted-2">

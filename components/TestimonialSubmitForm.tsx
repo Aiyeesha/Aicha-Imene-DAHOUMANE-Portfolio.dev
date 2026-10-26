@@ -29,6 +29,9 @@ type Locale = "en" | "fr" | "es";
 type Props = {
   /** Clé de session HMAC 30 min générée côté serveur — jamais le token brut */
   sessionKey: string;
+  /** Invitation (dérivé HMAC signé) et expiration : la clé de session y est liée */
+  invite: string;
+  exp: number;
   locale: Locale;
 };
 
@@ -128,7 +131,7 @@ const LABELS = {
 
 // ── Composant principal ───────────────────────────────────────────────────────
 
-export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
+export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale }: Props) {
   const l = LABELS[locale];
   const uid = useId(); // préfixe unique pour les id HTML (accessibilité)
 
@@ -166,7 +169,7 @@ export default function TestimonialSubmitForm({ sessionKey, locale }: Props) {
       const res = await fetch("/api/testimonial-submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...fields, sessionKey }),
+        body: JSON.stringify({ ...fields, sessionKey, invite, exp }),
       });
 
       const data: { ok?: boolean; error?: string } = await res.json();
