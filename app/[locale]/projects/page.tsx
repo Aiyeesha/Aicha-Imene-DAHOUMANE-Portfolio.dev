@@ -85,6 +85,11 @@ export default async function ProjectsPage({ params }: PageProps) {
       ? "Galería completa — Salesforce e IT Ops."
       : "Full gallery — Salesforce and IT Ops.",
     backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
+    indexTitle: isFr
+      ? `Index des projets (${projects.length})`
+      : isEs
+      ? `Índice de proyectos (${projects.length})`
+      : `Project index (${projects.length})`,
     empty: isFr
       ? "Aucun projet disponible pour l'instant."
       : isEs
@@ -136,6 +141,30 @@ export default async function ProjectsPage({ params }: PageProps) {
             />
           </Suspense>
         </div>
+      )}
+
+      {/* ── Index exhaustif ─────────────────────────────────────────────────────
+          Audit 2026-10-23 (SEO-5) : la galerie à onglets n'expose dans le HTML
+          que les projets de l'onglet actif (10 liens sur l'ensemble) ; les
+          autres fiches n'étaient atteignables par un robot que via le sitemap.
+          Cet index rendu côté serveur liste chaque fiche avec un lien <a>
+          classique. Le contenu d'un <details> fermé reste dans le DOM, donc
+          explorable, sans alourdir la page pour les visiteurs. */}
+      {projects.length > 0 && (
+        <details className="mt-12 rounded-2xl border border-black/10 dark:border-white/10 px-5 py-4">
+          <summary className="cursor-pointer text-sm font-medium soft-ring rounded-sm">
+            {L.indexTitle}
+          </summary>
+          <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+            {projects.map((p) => (
+              <li key={p.slug}>
+                <Link href={`/${locale}/projects/${p.slug}`} className="hover:underline soft-ring rounded-sm">
+                  {p.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
 
       {/* ── Retour accueil ───────────────────────────────────────────────────── */}
