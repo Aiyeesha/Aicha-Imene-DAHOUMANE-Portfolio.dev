@@ -1,10 +1,9 @@
 // app/[locale]/hybride/page.tsx — server component
 // -------------------------------------------------
-// Page « Profil hybride » : trois cas concrets où résoudre le problème exige la
-// combinaison Salesforce + infrastructure + sécurité — pas leur juxtaposition.
-// Contenu trilingue depuis messages/{fr,en,es}.json → namespace "hybrid".
-// Volontairement track-neutre (le sujet EST la combinaison), donc pas de
-// dépendance au toggle : rendu 100 % serveur.
+// "Hybrid profile" page: three concrete cases where solving the problem takes
+// Salesforce + infrastructure + security combined, not side by side. Content
+// from the "hybrid" namespace of messages/{fr,en,es}.json. Track-neutral (the
+// subject is the combination), fully server-rendered.
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getSiteUrl } from "@/lib/siteUrl";

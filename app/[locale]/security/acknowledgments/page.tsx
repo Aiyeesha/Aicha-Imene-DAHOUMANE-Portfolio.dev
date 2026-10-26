@@ -16,8 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : "Security Acknowledgments — Aïcha Imène DAHOUMANE";
   return {
     title,
-    // Description propre — audit 2026-10-23 (SEO-2) : la page héritait de
-    // celle de l'accueil.
+    // Own description (would otherwise inherit the home page's)
     description: isFr
       ? "Remerciements aux chercheurs en sécurité ayant signalé de manière responsable une vulnérabilité sur ce portfolio, via la politique de divulgation security.txt."
       : isEs

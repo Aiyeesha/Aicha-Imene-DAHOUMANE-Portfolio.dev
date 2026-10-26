@@ -1,13 +1,9 @@
 // app/[locale]/error.tsx
 // ----------------------
-// Error boundary locale — intercepte les crashs dans app/[locale]/* :
-// home, about, certifications, blog… (Supabase/Redis/Upstash timeout, etc.).
-//
-// useParams() résout la locale sans flash. "use client" requis par Next.js.
-//
-// Props injectés par Next.js :
-//   error  — instance Error (.digest = ID serveur pour le logging)
-//   reset  — re-rend le segment sans rechargement complet
+// Locale error boundary for crashes in app/[locale]/* (Supabase or Redis
+// timeouts…). useParams() gives the locale without a flash.
+// Props from Next.js: error (.digest = server id for logging) and reset
+// (re-renders the segment without a full reload).
 
 "use client";
 
@@ -37,7 +33,6 @@ const content = {
     altHref: "/fr",
     altLabel: "FR",
   },
-  // Espagnol ajouté (audit 2026-10-25) : /es affichait la version anglaise.
   es: {
     code: "500",
     title: "Se ha producido un error",
@@ -53,7 +48,7 @@ const content = {
 
 type Locale = keyof typeof content;
 
-// ── Icône : éclair ──────────────────────────────────────────────────────────
+// ── Icon: lightning bolt ────────────────────────────────────────────────────
 function Icon500() {
   return (
     <svg
@@ -110,7 +105,7 @@ export default function LocaleError({
         <p className="mt-3 text-sm text-slate-500 dark:text-white/60">{c.description}</p>
         <p className="mt-2 text-sm text-slate-400 dark:text-white/40">{c.hint}</p>
 
-        {/* Digest — dev uniquement */}
+        {/* Digest: development only */}
         {error.digest && process.env.NODE_ENV !== "production" && (
           <p className="mt-4 font-mono text-xs text-slate-300 dark:text-white/20">
             digest: {error.digest}

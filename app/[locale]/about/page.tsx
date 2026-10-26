@@ -1,16 +1,10 @@
 // about/page.tsx
 // ---------------
-// Page dédiée "À propos" — alimentée par Supabase via getAboutPageCached.
-//
-// Structure :
-//   1. ProfileFactsCard   — "En bref", adapté au track (Client Component)
-//   2. AboutTrackIntro    — Introduction positionnement, entièrement track-aware (Client Component)
-//   3. journey            — Timeline du parcours (Supabase) — contenu générique exhaustif
-//   4. values             — Valeurs professionnelles (Supabase) — grille 2 colonnes
-//   5. passions           — En dehors du travail (Supabase)
-//
-// ProfileNarrative a été remplacé par AboutTrackIntro pour éliminer la redondance
-// avec le contenu Supabase (journey, goals) et mieux adapter l'intro au track.
+// About page, fed by Supabase through getAboutPageCached:
+//   1. ProfileFactsCard: "At a glance", per track (client component)
+//   2. AboutTrackIntro: positioning, per track (client component)
+//   3. tech stack grid and career timeline (static)
+//   4. journey, values, passions (Supabase)
 
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -99,7 +93,7 @@ export default async function AboutPage({ params }: PageProps) {
   if (!about) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-10">
-        {/* Breadcrumb retour accueil */}
+        {/* Breadcrumb back to home */}
         <nav aria-label={t("breadcrumbAria")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
           <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm">
             {t("breadcrumbHome")}
@@ -132,8 +126,7 @@ export default async function AboutPage({ params }: PageProps) {
     <div className="mx-auto max-w-4xl px-4 py-10">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
 
-      {/* Breadcrumb — navigation retour vers l'accueil
-          Permet à l'utilisateur de comprendre qu'il est sur une page dédiée (hors landing). */}
+      {/* Breadcrumb back to home */}
       <nav aria-label={t("breadcrumbAria")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm px-1">
           {t("breadcrumbHome")}
@@ -149,9 +142,8 @@ export default async function AboutPage({ params }: PageProps) {
         ) : null}
       </header>
 
-      {/* EN BREF (ProfileFactsCard) — déplacé depuis le hero
-          Affiche : focus, localisation, langues, postes visés, disponibilité.
-          Utilise un hook client (useTrack), donc enveloppé dans Suspense. */}
+      {/* AT A GLANCE (ProfileFactsCard): focus, location, languages, target
+          roles, availability. Client hook (useTrack), hence Suspense. */}
       <section className="mt-10">
         <Suspense fallback={
           <div className="h-48 rounded-2xl border bg-black/5 dark:bg-white/5 animate-pulse" />
@@ -160,10 +152,8 @@ export default async function AboutPage({ params }: PageProps) {
         </Suspense>
       </section>
 
-      {/* INTRODUCTION TRACK-AWARE (AboutTrackIntro)
-          Remplace ProfileNarrative : positionnement + compétences + différenciant
-          Adapté au track actif (Salesforce → cyan / IT Ops → violet).
-          p4 exclu volontairement (objectif 2026 → déjà dans la section goals ci-dessous). */}
+      {/* TRACK-AWARE INTRODUCTION (AboutTrackIntro): positioning, skills and
+          edge for the active track. */}
       <section className="mt-10">
         <SectionTitle>{t("positioningTitle")}</SectionTitle>
         <div className="mt-4">
@@ -186,9 +176,8 @@ export default async function AboutPage({ params }: PageProps) {
         <TechStackGrid />
       </section>
 
-      {/* ── FRISE CHRONOLOGIQUE — données statiques, toujours visible ──────────
-          Complément visuel à la section "Mon parcours" Supabase ci-dessous.
-          Affiche les années, types et organisations clairement. */}
+      {/* ── CAREER TIMELINE: static, always visible ────────────────────────
+          Years, types and organisations, alongside the "Journey" section. */}
       <section className="mt-10 rounded-2xl border border-black/10 dark:border-white/10 p-6">
         <SectionTitle>{t("careerGlanceTitle")}</SectionTitle>
         <p className="mt-2 text-sm text-muted">{t("careerGlanceSubtitle")}</p>
@@ -196,9 +185,7 @@ export default async function AboutPage({ params }: PageProps) {
       </section>
 
       <div className="mt-10 space-y-10">
-        {/* PARCOURS / JOURNEY — rendu en timeline verticale
-            Chaque paragraphe représente une étape du parcours.
-            Ligne verticale + numéro de phase pour rythmer la lecture. */}
+        {/* JOURNEY: vertical timeline, one step per paragraph */}
         {journey?.title || (journey?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>{journey?.title ?? t("journeyTitle")}</SectionTitle>
@@ -211,7 +198,7 @@ export default async function AboutPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        {/* VALEURS / VALUES */}
+        {/* VALUES */}
         {values?.title || (values?.items?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>{values?.title ?? t("valuesTitle")}</SectionTitle>
@@ -231,7 +218,7 @@ export default async function AboutPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        {/* EN DEHORS DU TRAVAIL / PASSIONS */}
+        {/* OUTSIDE WORK / PASSIONS */}
         {passions?.title || (passions?.paragraphs?.length ?? 0) > 0 ? (
           <section className="rounded-2xl border p-6">
             <SectionTitle>{passions?.title ?? t("passionsTitle")}</SectionTitle>
@@ -249,7 +236,7 @@ export default async function AboutPage({ params }: PageProps) {
 
       </div>
 
-{/* Bouton retour accueil — navigation alternative en bas de page */}
+      {/* Back to home */}
       <div className="mt-12 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${safeLocale}`}

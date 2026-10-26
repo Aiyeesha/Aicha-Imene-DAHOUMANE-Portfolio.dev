@@ -1,32 +1,28 @@
 // sitemap.ts
 // ----------
-// Sitemap dynamique — inclut toutes les pages indexables dans les trois langues.
-// Chaque entrée expose ses alternates hreflang (EN / FR / ES / x-default)
-// pour que Google indexe correctement les trois versions linguistiques.
+// Dynamic sitemap of every indexable page in the three locales, each entry
+// with hreflang alternates (EN / FR / ES / x-default).
 //
-// Pages statiques : accueil, about, certifications, blog, tags, resources,
-//                   hybride, work-with-me, legal, privacy, accessibility
-//                   (/uses et /colophon exclues : noindex)
-// Pages dynamiques : articles de blog (MDX) + pages projets (fichiers de contenu)
+// Static pages: home, about, certifications, blog, tags, resources, hybride,
+//               work-with-me, legal, privacy, accessibility
+//               (/uses and /colophon are noindex)
+// Dynamic pages: blog posts (MDX) and project pages.
 //
-// NEXT_PUBLIC_SITE_LASTMOD (optionnel) — permet de figer la date si nécessaire.
-// Si absent, la date du build est utilisée (SITE_BUILD_DATE, next.config.mjs).
+// NEXT_PUBLIC_SITE_LASTMOD (optional) pins the date; otherwise the build date
+// (SITE_BUILD_DATE, next.config.mjs) is used.
 
 import type { MetadataRoute } from "next";
 import { readAllPosts } from "@/content/blog/fs";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 import { getSiteUrl } from "@/lib/siteUrl";
 
-// Rendu à la requête — le sitemap appelle Supabase (getPublishedProjectsWithAssetsCached)
-// qui ne doit pas être appelé au build time (credentials absentes en CI pour les PRs Dependabot).
+// Rendered per request: the project data source must not be called at build
+// time (credentials are missing in CI for Dependabot PRs).
 export const dynamic = "force-dynamic";
 
-// Si NEXT_PUBLIC_SITE_LASTMOD n'est pas défini, on utilise la date du build.
-// Audit 2026-10-23 (SEO-4) : `new Date()` était évalué au démarrage de chaque
-// instance serverless (route force-dynamic), donc le lastmod des pages
-// statiques changeait sans modification de contenu — signal que Google finit
-// par ignorer. SITE_BUILD_DATE est figée dans le bundle par next.config.mjs ;
-// `new Date()` ne reste qu'en repli (Jest, outils hors build Next).
+// Build date, frozen into the bundle by next.config.mjs, so static pages'
+// lastmod does not change on every serverless cold start. `new Date()` is only
+// a fallback (Jest, tools outside the Next build).
 const STATIC_LAST_MODIFIED = process.env.NEXT_PUBLIC_SITE_LASTMOD
   ? new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD)
   : process.env.SITE_BUILD_DATE
@@ -36,12 +32,12 @@ const STATIC_LAST_MODIFIED = process.env.NEXT_PUBLIC_SITE_LASTMOD
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
 /**
- * Génère une paire d'entrées sitemap (EN + FR) avec les balises hreflang correctes.
- * x-default pointe toujours vers la version EN (langue par défaut du site).
+ * Sitemap entries for one path in every locale, with hreflang alternates.
+ * x-default points to the EN version (the default locale).
  *
- * @param base     - URL de base (ex : "https://example.com")
- * @param path     - Chemin sans locale (ex : "/about" ou "" pour la home)
- * @param opts     - priority, changeFrequency, lastModified
+ * @param base - base URL (e.g. "https://example.com")
+ * @param path - path without locale (e.g. "/about", or "" for the home page)
+ * @param opts - priority, changeFrequency, lastModified
  */
 function biEntry(
   base: string,
@@ -78,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
 
   const pages: MetadataRoute.Sitemap = [
-    // ── Pages principales ────────────────────────────────────────────────────
+    // ── Main pages ───────────────────────────────────────────────────────────
     ...biEntry(base, "", { priority: 1.0, changeFrequency: "weekly" }),
     ...biEntry(base, "/about", { priority: 0.9, changeFrequency: "monthly" }),
     ...biEntry(base, "/certifications", { priority: 0.8, changeFrequency: "monthly" }),
@@ -87,26 +83,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...biEntry(base, "/blog", { priority: 0.8, changeFrequency: "weekly" }),
     ...biEntry(base, "/blog/tags", { priority: 0.5, changeFrequency: "weekly" }),
 
-    // ── Contenu statique ─────────────────────────────────────────────────────
+    // ── Static content ───────────────────────────────────────────────────────
     ...biEntry(base, "/resources", { priority: 0.6, changeFrequency: "monthly" }),
 
-    // ── Galerie projets ──────────────────────────────────────────────────────
+    // ── Project gallery ──────────────────────────────────────────────────────
     ...biEntry(base, "/projects", { priority: 0.8, changeFrequency: "monthly" }),
 
-    // ── Positionnement & mise en relation ────────────────────────────────────
+    // ── Positioning & hiring ─────────────────────────────────────────────────
     ...biEntry(base, "/hybride", { priority: 0.8, changeFrequency: "monthly" }),
     ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
 
-    // ── Pages légales (faible priorité SEO, peu de changements) ──────────────
+    // ── Legal pages (low priority, rarely change) ────────────────────────────
     ...biEntry(base, "/legal", { priority: 0.2, changeFrequency: "yearly" }),
     ...biEntry(base, "/privacy", { priority: 0.2, changeFrequency: "yearly" }),
     ...biEntry(base, "/accessibility", { priority: 0.2, changeFrequency: "yearly" }),
   ];
 
-  // ── Projets depuis Supabase ───────────────────────────────────────────────
-  // Récupère EN + FR pour savoir quels slugs existent dans chaque locale.
-  // Un projet locale="multi" apparaît dans les deux ; locale="en" uniquement en EN.
-  // biEntry crée des URLs EN+FR — on le restreint aux slugs qui ont une version FR.
+  // ── Projects ──────────────────────────────────────────────────────────────
+  // Fetch every locale to know which slugs exist where: a "multi" project is
+  // in all locales, an "en" one only in English.
   const [enProjects, frProjects, esProjects] = await Promise.all([
     getPublishedProjectsWithAssetsCached("en"),
     getPublishedProjectsWithAssetsCached("fr"),
@@ -136,7 +131,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ? new Date(enProject.updated_at)
       : STATIC_LAST_MODIFIED;
 
-    // Entrée EN — toujours présente
+    // EN entry, always present
     pages.push({
       url: `${base}/en/projects/${slug}`,
       lastModified: projectLastMod,
@@ -145,7 +140,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates: { languages: projectLanguages },
     });
 
-    // Entrée FR — uniquement si le projet est disponible en FR
+    // FR entry, only if the project exists in French
     if (hasFr) {
       pages.push({
         url: `${base}/fr/projects/${slug}`,
@@ -156,7 +151,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     }
 
-    // Entrée ES — uniquement si le projet est disponible en ES
+    // ES entry, only if the project exists in Spanish
     if (hasEs) {
       pages.push({
         url: `${base}/es/projects/${slug}`,
@@ -168,9 +163,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // ── Articles de blog MDX ──────────────────────────────────────────────────
-  // Les articles FR sont un sous-ensemble des articles EN.
-  // On génère une entrée par locale existante, avec hreflang conditionnels.
+  // ── MDX blog posts ────────────────────────────────────────────────────────
+  // Translations are a subset of the EN posts: one entry per existing locale,
+  // with conditional hreflang.
   const enPosts = readAllPosts("en");
   const frPosts = readAllPosts("fr");
   const esPosts = readAllPosts("es");
@@ -193,7 +188,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       languages.es = `${base}/es/blog/${post.slug}`;
     }
 
-    // Entrée EN — toujours présente
+    // EN entry, always present
     pages.push({
       url: `${base}/en/blog/${post.slug}`,
       lastModified,
@@ -202,7 +197,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates: { languages },
     });
 
-    // Entrée FR — uniquement si la traduction existe
+    // FR entry, only if the translation exists
     if (hasFr) {
       pages.push({
         url: `${base}/fr/blog/${post.slug}`,
@@ -213,7 +208,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     }
 
-    // Entrée ES — uniquement si la traduction existe
+    // ES entry, only if the translation exists
     if (hasEs) {
       pages.push({
         url: `${base}/es/blog/${post.slug}`,

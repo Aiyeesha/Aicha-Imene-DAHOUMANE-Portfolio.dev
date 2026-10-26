@@ -7,9 +7,6 @@ import BookingLink from "@/components/BookingLink";
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
 
-// Champ `since` supprimé — audit 2026-10-23 (I18N-4) : jamais affiché, typé
-// sans l'espagnol, et contradictoire avec la disponibilité réelle (« à partir
-// de décembre 2026 », portée par messages/*.json).
 const AVAILABILITY: { status: AvailabilityStatus } = {
   status: "open",
 };
@@ -19,14 +16,12 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
   const isFr = locale === "fr";
   const isEs = locale === "es";
   const isSf = track === "salesforce";
-  // FAQ déplacée depuis l'accueil (2026-10-26) : une seule source, le namespace
-  // `faq` de messages/*.json (également lu par le JSON-LD FAQPage de page.tsx).
-  // Elle remplace les trois questions propres à cette page, qui doublonnaient
-  // ses questions sur le contrat, la disponibilité et la localisation.
+  // FAQ from the `faq` namespace of messages/*.json, also used by the FAQPage
+  // JSON-LD in page.tsx.
   const tFaq = useTranslations("faq");
   const faqItems = tFaq.raw("items") as { q: string; a: string }[];
 
-  // ── Couleurs accent selon le track ────────────────────────────────────────
+  // ── Track accent colours ──────────────────────────────────────────────────
   const accent = isSf
     ? {
         kicker:     "text-cyan-600 dark:text-cyan-400",
@@ -34,9 +29,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         stepNum:    "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
         stepBadge:  "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
         ctaSection: "border-cyan-200 dark:border-cyan-800 bg-cyan-500/5 dark:bg-cyan-500/10",
-        // bg-cyan-600 + white text only reaches 3.68:1 contrast (WCAG AA needs 4.5:1
-        // for normal-size text) — cyan-700 clears it at ~5.4:1. Caught by the axe-core
-        // e2e scan added for this page.
+        // cyan-700: white text on cyan-600 is only 3.68:1 (AA needs 4.5:1)
         ctaBtn:     "bg-cyan-700 hover:bg-cyan-800 text-white",
       }
     : {
@@ -48,12 +41,8 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         ctaBtn:     "bg-violet-600 hover:bg-violet-700 text-white",
       };
 
-  // ── Contenu « Me recruter » ─────────────────────────────────────────────
-  // Réécrit à l'audit de contenu du 2026-09-25 : la page parlait à un client
-  // (appel découverte gratuit, devis sous 48 h, durée « récurrente », missions
-  // courtes et audits ponctuels) alors que la cible est un recrutement salarié
-  // (CDI, CDD, intérim, portage). L'URL /work-with-me est conservée pour ne
-  // casser aucun lien existant.
+  // ── "Hire me" content (salaried roles: permanent, fixed-term, temp,
+  // umbrella). The /work-with-me URL is kept for existing links.
   const labels = {
     kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
@@ -81,9 +70,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
-    // Postes visés (décision du 22/10/2026) : périmètre resserré à trois
-    // postes, sans ouverture « tout poste » — un ciblage net est plus lisible
-    // pour un recruteur qu'une liste large.
+    // Three target roles: a sharp focus reads better than a broad list.
     domains:        isFr
       ? ["Développeuse / administratrice Salesforce", "Administratrice systèmes & réseaux", "Ingénieure DevOps"]
       : isEs
@@ -147,9 +134,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
   const dotColor = AVAILABILITY.status === "open" ? "bg-emerald-500"
     : AVAILABILITY.status === "limited" ? "bg-amber-500" : "bg-red-500";
 
-  // Le JSON-LD ProfessionalService (référencement de prestations) a été retiré
-  // à l'audit de contenu du 2026-09-25 : il présentait le profil comme une
-  // offre de services. Le fil d'Ariane JSON-LD reste émis par page.tsx.
+  // The breadcrumb JSON-LD is emitted by page.tsx.
   const cvUrl = `/cv/Aicha-Imene-DAHOUMANE-CV-${isFr ? "fr" : isEs ? "es" : "en"}-hybrid.pdf`;
 
   return (
@@ -168,7 +153,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         <p className="mt-4 text-base text-muted leading-relaxed max-w-xl">{labels.subtitle}</p>
       </header>
 
-      {/* Disponibilité */}
+      {/* Availability */}
       <section aria-labelledby="section-availability" className="mb-10">
         <h2 id="section-availability" className="text-lg font-semibold mb-4">{labels.availTitle}</h2>
         <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
@@ -184,7 +169,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         </div>
       </section>
 
-      {/* Ce que je recherche */}
+      {/* What I'm looking for */}
       <section aria-labelledby="section-looking" className="mb-10">
         <h2 id="section-looking" className="text-lg font-semibold mb-4">{labels.lookingTitle}</h2>
         <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6 space-y-5">
@@ -271,7 +256,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
         </dl>
       </section>
 
-      {/* Retour */}
+      {/* Back */}
       <div className="border-t border-black/10 dark:border-white/10 pt-8">
         <Link href={`/${locale}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-5 py-2.5 text-sm text-muted-2 hover:bg-black/5 dark:hover:bg-white/5 soft-ring transition-colors">
           {labels.backHome}

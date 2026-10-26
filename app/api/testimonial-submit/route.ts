@@ -1,19 +1,17 @@
 // app/api/testimonial-submit/route.ts
 // ------------------------------------
-// API Route POST — soumet un témoignage dans Supabase.
+// POST: stores a testimonial in Supabase for moderation.
 //
-// Sécurité :
-//   1. Invitation signée, non expirée, non utilisée, et clé de session liée à
-//      cette invitation (lib/security/testimonialInvite.ts, audit 2026-10-25)
-//   2. Rate-limit : 3 soumissions / 24 h par IP (Upstash Redis)
-//   3. Honeypot anti-spam (champ "website" doit être vide)
-//   4. Validation des champs obligatoires (full_name, role, relation_type, message, locale)
-//   5. Insertion via supabase admin (service_role) avec approved = false
+//   1. Signed invitation, not expired, not used, with a session key bound to
+//      it (lib/security/testimonialInvite.ts)
+//   2. Rate limit: 3 submissions / 24h per IP (Upstash Redis)
+//   3. Honeypot ("website" must be empty)
+//   4. Required fields (full_name, role, relation_type, message, locale) and
+//      maximum lengths
+//   5. Insert with the service_role client, approved = false
 //
-// Variables d'environnement requises :
-//   TESTIMONIAL_SUBMIT_TOKEN   — token secret partagé via lien (jamais NEXT_PUBLIC_)
-//   SUPABASE_URL               — URL Supabase (non exposée côté client)
-//   SUPABASE_SERVICE_KEY       — clé service_role (jamais NEXT_PUBLIC_)
+// Uses TESTIMONIAL_SUBMIT_TOKEN, IP_HASH_SALT and the Supabase service_role
+// key (server-only, never NEXT_PUBLIC_).
 
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
@@ -27,13 +25,13 @@ import {
   markInviteUsed,
 } from "@/lib/security/testimonialInvite";
 
-// ── Champs autorisés pour relation_type ──────────────────────────────────────
+// ── Allowed relation_type values ──────────────────────────────────────────────
 const VALID_RELATIONS = new Set([
   "colleague", "trainer", "jury", "classmate", "client", "other"
 ]);
 
 export async function POST(req: NextRequest) {
-  // ── 1. Rate-limit par IP ────────────────────────────────────────────────────
+  // ── 1. Per-IP rate limit ────────────────────────────────────────────────────
   const headersList = await headers();
   const ip =
     headersList.get("x-real-ip") ||
@@ -48,7 +46,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // ── 2. Parse du body JSON ───────────────────────────────────────────────────
+  // ── 2. Parse the JSON body ──────────────────────────────────────────────────
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -56,16 +54,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  // ── 3. Honeypot anti-bot (champ "website" doit être absent ou vide) ─────────
+  // ── 3. Honeypot ("website" must be missing or empty) ────────────────────────
   if (body.website) {
-    // Bot détecté — répondre 200 pour ne pas le signaler
+    // Bot: answer 200 so it is not tipped off
     return NextResponse.json({ ok: true });
   }
 
-  // ── 4. Invitation et clé de session ─────────────────────────────────────────
-  // L'invitation (lien signé) doit être valide, non expirée et pas encore
-  // utilisée ; la clé de session est un HMAC de l'invitation et du créneau de
-  // 30 min, émis par la page serveur. Le token brut n'est jamais exposé.
+  // ── 4. Invitation and session key ───────────────────────────────────────────
+  // The signed invitation must be valid, unexpired and unused; the session key
+  // is an HMAC of the invitation and a 30-minute slot, issued by the server
+  // page. The raw token is never exposed.
   const secret     = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
   const invite     = typeof body.invite === "string" ? body.invite.trim() : "";
   const expUnix    = typeof body.exp === "number" ? body.exp : NaN;
@@ -84,7 +82,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // ── 5. Validation des champs obligatoires ───────────────────────────────────
+  // ── 5. Required fields ──────────────────────────────────────────────────────
   const full_name             = typeof body.full_name === "string" ? body.full_name.trim() : "";
   const role                  = typeof body.role === "string" ? body.role.trim() : "";
   const company               = typeof body.company === "string" ? body.company.trim() : null;
@@ -101,7 +99,7 @@ export async function POST(req: NextRequest) {
   if (!VALID_RELATIONS.has(relation_type)) return NextResponse.json({ error: "Invalid relation type." }, { status: 400 });
   if (message.length < 20)               return NextResponse.json({ error: "Message too short (20 chars min)." }, { status: 400 });
   if (message.length > 2000)             return NextResponse.json({ error: "Message too long (2000 chars max)." }, { status: 400 });
-  // Longueurs maximales (audit 2026-10-25 : aucun champ n'était borné hors message).
+  // Maximum lengths
   if (full_name.length > 100 || role.length > 100 || (company?.length ?? 0) > 100) {
     return NextResponse.json({ error: "Field too long (100 chars max)." }, { status: 400 });
   }
@@ -109,11 +107,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Field too long (500 chars max)." }, { status: 400 });
   }
 
-  // Valider photo_url : doit être une URL https valide ou null.
-  // Sans cette validation, un attaquant pourrait injecter une URL javascript:
-  // (XSS si rendue sans sanitisation) ou une URL de tracking arbitraire
-  // (fuite d'IP lors de l'affichage). On accepte uniquement https (http: retiré à
-  // l'audit du 2026-10-25 : contenu mixte, image interceptable).
+  // photo_url must be a valid https URL or null: blocks javascript: URLs and
+  // mixed content.
   if (photo_url) {
     try {
       const parsed = new URL(photo_url);
@@ -125,19 +120,15 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── 6. Pseudonymisation de l'IP (RGPD) ──────────────────────────────────────
-  // L'adresse IP est une donnée personnelle au sens RGPD. On la hache avec un sel
-  // secret (IP_HASH_SALT) avant stockage pour permettre la déduplication (rate-limit
-  // manuel, détection d'abus) sans stocker la valeur brute.
-  // Si IP_HASH_SALT n'est pas défini, on utilise une chaîne vide — le hachage reste
-  // irréversible mais sans sel, ce qui est acceptable pour un cas d'usage à faible
-  // volumétrie. Ajouter IP_HASH_SALT en variable d'environnement est recommandé.
+  // ── 6. IP pseudonymisation (GDPR) ───────────────────────────────────────────
+  // The IP is personal data: it is hashed with a secret salt (IP_HASH_SALT)
+  // before storage, which still allows abuse detection.
   const ipHashSalt = process.env.IP_HASH_SALT ?? "";
   const ipHash = createHash("sha256")
     .update(ip + ipHashSalt)
     .digest("hex");
 
-  // ── 7. Insertion Supabase (service_role — contourne le RLS) ─────────────────
+  // ── 7. Insert (service_role bypasses RLS) ───────────────────────────────────
   const supabase = createAdminSupabaseClient();
   const { error } = await supabase.from("testimonial_submissions").insert({
     full_name,
@@ -148,8 +139,8 @@ export async function POST(req: NextRequest) {
     message,
     photo_url,
     locale,
-    approved:              false,    // toujours false — modération manuelle
-    submitted_ip:          ipHash,   // hash SHA-256 + sel — jamais l'IP brute
+    approved:              false,    // always false: manual moderation
+    submitted_ip:          ipHash,   // salted SHA-256 hash, never the raw IP
   });
 
   if (error) {
@@ -157,8 +148,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Database error. Please try again." }, { status: 500 });
   }
 
-  // Usage unique : l'invitation est marquée jusqu'à son expiration. Un échec
-  // ici n'annule pas le témoignage déjà enregistré.
+  // Single use: the invitation stays marked until it expires. A failure here
+  // does not undo the stored testimonial.
   await markInviteUsed(invite, expUnix).catch((e) =>
     console.error("[testimonial-submit] could not mark invite as used:", String(e)),
   );

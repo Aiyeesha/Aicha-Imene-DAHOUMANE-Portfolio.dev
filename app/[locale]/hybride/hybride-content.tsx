@@ -1,14 +1,13 @@
 // app/[locale]/hybride/hybride-content.tsx — server component
 // -----------------------------------------------------------
-// Rendu de la page « Profil hybride ». Track-neutre : accent cyan→violet
-// (la combinaison des deux) plutôt qu'une couleur de track.
+// "Hybrid profile" page. Track-neutral: cyan→violet accent (both tracks
+// combined) rather than a track colour.
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-// Une preuve est soit une page interne (href relatif, préfixé par la locale),
-// soit un artefact public vérifiable (href absolu, ex. un workflow GitHub) :
-// ce second cas reçoit le libellé « Vérifiable » pour qu'un lecteur sache
-// d'un coup d'œil qu'il peut ouvrir la source plutôt qu'une description.
+// A proof is either an internal page (relative href, locale-prefixed) or a
+// public, verifiable artefact (absolute href, e.g. a GitHub workflow); the
+// latter is labelled "Verifiable" so readers know they can open the source.
 type Proof = { label: string; href: string };
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 type Scenario = {
@@ -61,7 +60,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
         <p className="mt-4 text-base text-muted leading-relaxed">{t("lead")}</p>
       </header>
 
-      {/* Scénarios */}
+      {/* Scenarios */}
       <section aria-labelledby="section-scenarios" className="mb-10">
         <h2 id="section-scenarios" className="text-lg font-semibold mb-4">
           {t("scenariosTitle")}
@@ -118,9 +117,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/[0.07] px-3 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-emerald-500/15 soft-ring transition-colors"
                       >
-                        {/* text-emerald-800 (et non 700) — audit 2026-10-23 (A11Y-5) :
-                            en mode clair, 700 sur ce fond donnait 4,2:1 pour un
-                            texte de 10 px (4,5:1 requis, WCAG 1.4.3). */}
+                        {/* emerald-800 in light mode for 4.5:1 contrast on 10px text */}
                         <span className="rounded-full bg-emerald-600/15 px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
                           {labels.verifiable}
                         </span>
@@ -144,7 +141,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
         </ol>
       </section>
 
-      {/* Ce que la combinaison élimine */}
+      {/* What the combination removes */}
       <section aria-labelledby="section-eliminates" className="mb-10">
         <h2 id="section-eliminates" className="text-lg font-semibold mb-4">
           {t("eliminatesTitle")}
@@ -194,7 +191,7 @@ export default async function HybrideContent({ locale }: { locale: string }) {
         </div>
       </section>
 
-      {/* Retour */}
+      {/* Back */}
       <div className="border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${locale}`}

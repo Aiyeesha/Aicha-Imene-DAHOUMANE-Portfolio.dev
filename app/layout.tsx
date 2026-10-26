@@ -12,18 +12,12 @@ import DevConsoleMessage from "@/components/DevConsoleMessage";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 
-// ── Polices premium ────────────────────────────────────────────────────────────
-// Space Grotesk : display/titres — distinctive, géométrique, moderne
-// Inter         : corps de texte — lisible, neutre, éprouvée
-//
-// Auto-hébergées (app/fonts/, fichiers variables Fontsource, licence SIL OFL
-// 1.1) au lieu de next/font/google : le build ne dépend plus d'un
-// téléchargement chez Google Fonts au moment du build (cause d'échecs
-// intermittents en CI). Rendu identique pour les visiteurs.
-// font-display: swap évite le FOIT (flash of invisible text).
-// Sous-ensemble latin : couvre le français, l'anglais et l'espagnol.
-// variable : expose une CSS variable, reprise par le thème Tailwind
-// (--font-display / --font-body dans app/globals.css).
+// ── Fonts ──────────────────────────────────────────────────────────────────────
+// Space Grotesk for display/headings, Inter for body text. Self-hosted
+// (app/fonts/, Fontsource variable files, SIL OFL 1.1) so the build does not
+// download from Google Fonts. font-display: swap; Latin subset (FR/EN/ES).
+// Each exposes a CSS variable used by the Tailwind theme (--font-display /
+// --font-body in app/globals.css).
 
 const spaceGrotesk = localFont({
   src: "./fonts/space-grotesk-latin-wght.woff2",
@@ -39,14 +33,9 @@ const inter = localFont({
   weight: "100 900",
 });
 
-// Root layout — point d'entrée HTML unique (html + body)
-// --------------------------------------------------------
-// SEO :
-//   - metadataBase configurée depuis NEXT_PUBLIC_SITE_URL (nécessaire pour les balises OG relatives)
-//   - JSON-LD Schema.org injecté en <head> :
-//       WebSite + Person
-//   - Validable sur : https://validator.schema.org/
-//
+// Root layout: the single <html>/<body> entry point.
+// metadataBase comes from NEXT_PUBLIC_SITE_URL (needed for relative OG URLs);
+// WebSite + Person JSON-LD is injected in <head>.
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -59,17 +48,16 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  // Icônes PWA — déclarées ici pour que Next.js injecte les <link> dans <head>
+  // PWA icons, declared here so Next.js adds the <link> tags
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" }
     ],
-    // apple-touch-icon : iOS Safari (favoris, écran d'accueil)
+    // apple-touch-icon: iOS Safari (bookmarks, home screen)
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
   },
-  // Flux RSS — annoncé dans <head> pour les lecteurs de flux et moteurs de recherche
-  // Trois flux : EN (/feed.xml), FR (/feed-fr.xml), ES (/feed-es.xml).
+  // RSS feeds announced in <head>: EN (/feed.xml), FR (/feed-fr.xml), ES (/feed-es.xml).
   alternates: {
     types: {
       "application/rss+xml": [
@@ -82,15 +70,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * Construit le bloc JSON-LD Schema.org injecté dans <head>.
- * Contient :
- *   - WebSite : nom du site, URL, langue
- *   - Person  : identité professionnelle, titre, réseaux sociaux (sameAs)
- *   (Le nœud ProfessionalService a été retiré à l'audit de contenu du 2026-09-25 :
- *    il présentait le profil comme une offre de prestations, alors que la cible
- *    est un recrutement salarié.)
- *
- * Configurable via variables d'environnement (pas de secrets nécessaires).
+ * Schema.org JSON-LD for <head>: WebSite (name, URL) and Person (identity,
+ * job title, social profiles). Configured through public env variables.
  */
 function buildJsonLd(locale: string) {
   const siteUrl = getSiteUrl();
@@ -98,35 +79,32 @@ function buildJsonLd(locale: string) {
   const personName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps";
 
-  // Liste des profils sociaux/professionnels (LinkedIn, GitHub…) — séparés par des virgules dans l'env var
-  // Note : les URLs doivent déjà être en ASCII dans l'env var (slug LinkedIn sans accents).
-  // new URL().href encode les caractères non-ASCII, ce qui produit des URLs percent-encodées
-  // non canoniques (%C3%AF…) — mieux vaut garantir la saisie correcte côté env.
+  // Social and professional profiles (LinkedIn, GitHub…), comma-separated.
+  // URLs must already be ASCII in the env var: new URL().href would
+  // percent-encode accented characters into non-canonical URLs.
   const sameAs = (process.env.NEXT_PUBLIC_SAME_AS || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean)
     .map((url) => { try { return new URL(url).href; } catch { return url; } });
 
-  // Identifiant unique de la personne dans le graphe JSON-LD
+  // Person id in the JSON-LD graph
   const personId = `${siteUrl}/#person`;
 
   return {
     "@context": "https://schema.org",
     "@graph": [
-      // WebSite — entité de base du site
+      // WebSite
       {
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
         name: siteName,
         url: siteUrl,
-        // inLanguage intentionnellement absent : propriété non standard pour WebSite,
-        // source de conflits d'@id quand FR et EN sont crawlés avec le même #website.
-        // potentialAction SearchAction supprimée : la route /blog?q= n'implémente
-        // pas de recherche côté serveur — Google ignorerait ou déprécierait l'entrée.
+        // No inLanguage (non-standard on WebSite, and it caused @id conflicts
+        // between locales) and no SearchAction (/blog?q= has no server-side search).
       },
 
-      // Person — profil professionnel indexable
+      // Person
       {
         "@type": "Person",
         "@id": personId,
@@ -140,64 +118,40 @@ function buildJsonLd(locale: string) {
           addressRegion: "Île-de-France",
           addressLocality: "Val-d'Oise"
         },
-        // knowsAbout : compétences clés pour le rich snippet Knowledge Graph
+        // Key skills for the Knowledge Graph
         knowsAbout: [
           "Salesforce", "Apex", "Lightning Web Components", "SOQL",
           "CI/CD", "DevOps", "Linux", "Docker", "GitHub Actions",
           "IT Operations", "System Administration"
         ],
         sameAs,
-        // Lien vers la page About pour plus de détails
+        // About page for details
         mainEntityOfPage: `${siteUrl}/${locale}/about`
       },
     ]
   };
 }
 
-// ── NOTE ARCHITECTURALE : tension CSP nonce ↔ cache CDN ──────────────────────
-//
-// Ce layout appelle headers() via getLocale() (next-intl lit x-next-intl-locale
-// en interne). En Next.js App Router, cet appel opt toute la route en rendu
-// dynamique (per-request) : Cache-Control: no-store, ISR ignoré, TTFB ~1.5–2s.
-//
-// L'appel explicite à headers().get("x-nonce") a été supprimé (F3) car
-// <script type="application/ld+json"> n'est pas un script exécutable — la
-// directive CSP script-src ne s'y applique pas, le nonce y était superflu.
-// Next.js applique le nonce à ses propres scripts internes via l'en-tête
-// x-nonce posé par proxy.ts, sans que le layout ait à le lire.
-//
-// CONCLUSION SPIKE TICKET-03 (setRequestLocale) :
-//   Deux barrières cumulatives empêchent l'ISR, même avec setRequestLocale :
-//
-//   1. BARRIÈRE LAYOUT : getLocale() ici est le seul endroit qui lit headers().
-//      L'hypothèse était de déplacer <html lang> dans app/[locale]/layout.tsx et
-//      d'y appeler setRequestLocale(locale) avant tout appel async. En pratique,
-//      Next.js exige que le root layout rende <html>/<body> ; imbriquer une seconde
-//      balise <html> dans le locale layout provoque une hydration break (vérifié).
-//      Supprimer getLocale() ici nécessite PPR (Partial Pre-Rendering, expérimental).
-//
-//   2. BARRIÈRE CSP : même si le blocage layout était levé, le nonce CSP généré
-//      par requête dans proxy.ts resterait incompatible avec le cache HTML CDN.
-//      Un HTML mis en cache par Vercel CDN embarquerait un nonce périmé ; le
-//      navigateur bloquerait tous les scripts inline sur chaque cache hit.
-//      Abandon du nonce au profit de hash-based CSP serait requis (refacto majeur).
-//
-//   → setRequestLocale est conservé dans app/[locale]/layout.tsx pour ses bénéfices
-//     sur les composants enfants (pas de lecture headers() dans le sous-arbre), mais
-//     le Cache-Control: no-store sur les routes HTML reste inchangé.
-//
-// RÉSOLUTION PRÉVUE — migration homelab (fin 2026) :
-//   Nginx / Caddy en reverse proxy peut mettre en cache le HTML rendu à sa couche
-//   indépendamment du Cache-Control applicatif. TTFB cible : ~5–20ms sur HIT.
+// ── Note: CSP nonce vs CDN caching ───────────────────────────────────────────
+// getLocale() reads headers(), which makes every route dynamic
+// (Cache-Control: no-store, no ISR). Two things prevent ISR even with
+// setRequestLocale:
+//   1. The root layout must render <html>/<body>, and moving <html lang> to
+//      app/[locale]/layout.tsx breaks hydration; avoiding getLocale() here
+//      would need Partial Prerendering.
+//   2. The per-request CSP nonce (proxy.ts) cannot be cached: a cached page
+//      would carry a stale nonce and its scripts would be blocked. Caching
+//      HTML would require a hash-based CSP.
+// setRequestLocale is still used in app/[locale]/layout.tsx for the child
+// components. Next.js applies the nonce to its own scripts from the x-nonce
+// header set by proxy.ts; the layout does not need to read it.
 // ─────────────────────────────────────────────────────────────────────────────
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const locale = await getLocale(); // "en" | "fr" — lit x-next-intl-locale via headers()
+  const locale = await getLocale(); // reads x-next-intl-locale through headers()
   const jsonLd = buildJsonLd(locale);
-  // data-track rendu côté serveur — audit 2026-10-23 (PERF-3) : il n'était posé
-  // qu'après hydratation (effet de Providers), d'où un dégradé Salesforce affiché
-  // un instant aux visiteurs IT Ops. Même cookie et même repli que l'initialTrack
-  // du layout de langue ; la variante CSS `itops:` (globals.css) s'appuie dessus.
-  // Ce layout lit déjà headers() (getLocale) : son mode de rendu ne change pas.
+  // data-track is rendered on the server so IT Ops visitors never see the
+  // Salesforce gradient before hydration. Same cookie and fallback as the
+  // locale layout's initialTrack; the `itops:` CSS variant relies on it.
   const track = (await cookies()).get("track")?.value === "itops" ? "itops" : "salesforce";
   return (
     <html
@@ -208,22 +162,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`${spaceGrotesk.variable} ${inter.variable}`}
     >
       <head>
-        {/* Preconnect — réduit la latence DNS+TCP+TLS pour les APIs SSR et client */}
-        {/* Supabase : projets, certifications, about (SSR + client) */}
+        {/* Preconnect to Supabase (SSR and client data) */}
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
         )}
-        {/* Identité sociale — vérification IndieWeb. LinkedIn lit la même source
-            (NEXT_PUBLIC_LINKEDIN_URL) que les liens visibles, pour n'exposer
-            qu'une seule URL (audit du 2026-10-14, constat 8). */}
+        {/* IndieWeb identity. Same LinkedIn URL source as the visible links. */}
         {LINKEDIN_URL && <link rel="me" href={LINKEDIN_URL} />}
         <link rel="me" href="https://github.com/Aiyeesha" />
-        {/* Pas de preload manuel de l'avatar (audit 2026-10-25) : le héro
-            l'affiche via next/image avec priority, qui précharge déjà la
-            variante optimisée (/_next/image). Le preload de /avatar.webp
-            téléchargeait en priorité un fichier que la page n'utilisait pas. */}
-        {/* type="application/ld+json" est une donnée, pas un script exécutable —
-            pas besoin de nonce (CSP script-src ne s'applique pas à ce type). */}
+        {/* No manual avatar preload: next/image with priority already
+            preloads the optimised variant.
+            application/ld+json is data, not executable script, so it needs no
+            CSP nonce. */}
         <script
           type="application/ld+json"
           suppressHydrationWarning

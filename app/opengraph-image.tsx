@@ -1,10 +1,8 @@
 // app/opengraph-image.tsx
 // -----------------------
-// Image OpenGraph du site (image par défaut — homepage).
-// Design dual-track : présente les deux profils (Salesforce + IT Ops)
-// côte à côte, puisque le track toggle est côté client et invisible des crawlers.
-//
-// Rendue avec Satori / @vercel/og (inclus dans next/og). Taille : 1200×630.
+// Default OpenGraph image (home page), 1200×630, rendered with Satori
+// (next/og). Shows both profiles side by side, since the track toggle is
+// client-side and invisible to crawlers.
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -19,12 +17,12 @@ export default function Image() {
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  // Palette Salesforce
+  // Salesforce palette
   const cyan   = "#22d3ee";
   const cyanBg = "rgba(34,211,238,0.15)";
   const cyanBd = "rgba(34,211,238,0.35)";
 
-  // Palette IT Ops
+  // IT Ops palette
   const violet   = "#a78bfa";
   const violetBg = "rgba(167,139,250,0.15)";
   const violetBd = "rgba(167,139,250,0.35)";
@@ -48,7 +46,7 @@ export default function Image() {
           position: "relative",
         }}
       >
-        {/* Halos décoratifs */}
+        {/* Decorative glows */}
         <div
           style={{
             position: "absolute",
@@ -74,7 +72,7 @@ export default function Image() {
           }}
         />
 
-        {/* HAUT — Initiales + Nom + Headline */}
+        {/* TOP: initials + name + headline */}
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{
@@ -102,7 +100,7 @@ export default function Image() {
               style={{
                 fontSize: 22,
                 fontWeight: 500,
-                // Dégradé cyan → violet pour signifier les deux tracks
+                // Cyan → violet gradient: both tracks
                 background: `linear-gradient(90deg, ${cyan} 0%, ${violet} 100%)`,
                 WebkitBackgroundClip: "text",
                 color: "transparent",
@@ -113,9 +111,9 @@ export default function Image() {
           </div>
         </div>
 
-        {/* MILIEU — Deux colonnes track */}
+        {/* MIDDLE: two track columns */}
         <div style={{ display: "flex", gap: 24, flex: 1, alignItems: "center", paddingTop: 8 }}>
-          {/* Colonne Salesforce */}
+          {/* Salesforce column */}
           <div
             style={{
               flex: 1,
@@ -173,7 +171,7 @@ export default function Image() {
             </div>
           </div>
 
-          {/* Séparateur vertical */}
+          {/* Vertical separator */}
           <div
             style={{
               width: 1,
@@ -184,7 +182,7 @@ export default function Image() {
             }}
           />
 
-          {/* Colonne IT Ops */}
+          {/* IT Ops column */}
           <div
             style={{
               flex: 1,
@@ -243,7 +241,7 @@ export default function Image() {
           </div>
         </div>
 
-        {/* BAS — URL */}
+        {/* BOTTOM: URL */}
         <div
           style={{
             display: "flex",

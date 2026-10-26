@@ -1,6 +1,6 @@
 // app/[locale]/certifications/opengraph-image.tsx
 // ------------------------------------------------
-// Image OG dédiée à la page Certifications.
+// OG image for the Certifications page.
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -20,8 +20,8 @@ export default async function Image({ params }: Props) {
     .replace(/^https?:\/\//, "");
 
   const title    = isFr ? "Certifications & Diplômes"  : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas";
-  // Admin et Platform Developer I ne sont pas encore obtenues : l'image de
-  // partage doit les annoncer « en préparation », sans ambiguïté sur LinkedIn.
+  // Admin and Platform Developer I are not obtained yet: the share image must
+  // say "in preparation" unambiguously.
   const subtitle = isFr
     ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Admin & Platform Developer I en préparation (début 2027)"
     : isEs
@@ -49,7 +49,7 @@ export default async function Image({ params }: Props) {
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
-        {/* Cercle décoratif */}
+        {/* Decorative circle */}
         <div
           style={{
             position: "absolute",
@@ -63,7 +63,7 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* HAUT — Titre + Sous-titre */}
+        {/* TOP: title + subtitle */}
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div style={{ fontSize: 54, fontWeight: 700, letterSpacing: -1, lineHeight: 1.1 }}>
             {title}
@@ -73,7 +73,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* MILIEU — Badges de statut */}
+        {/* MIDDLE: status badges */}
         <div style={{ display: "flex", gap: 16 }}>
           {badges.map((badge) => (
             <div
@@ -94,7 +94,7 @@ export default async function Image({ params }: Props) {
           ))}
         </div>
 
-        {/* BAS — Auteure + URL */}
+        {/* BOTTOM: author + URL */}
         <div
           style={{
             display: "flex",

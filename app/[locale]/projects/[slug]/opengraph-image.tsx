@@ -1,14 +1,9 @@
 // app/[locale]/projects/[slug]/opengraph-image.tsx
 // -------------------------------------------------
-// Image OG dynamique par page de projet.
-// Rendue avec Satori (next/og) — générée à la demande (force-dynamic)
-// car les projets sont stockés dans Supabase (données dynamiques).
-//
-// Design :
-//   - HAUT    : badge "Project" + badge track (Salesforce cyan / IT Ops violet)
-//   - MILIEU  : titre du projet (grand) + résumé (2 lignes max)
-//   - INFÉRIEUR : tags tech stack (4 max)
-//   - BAS     : auteure + URL
+// OG image per project (Satori via next/og), rendered on demand.
+// Top: "Project" badge + track badge (Salesforce cyan / IT Ops violet);
+// middle: title + summary (2 lines max); then tech tags (4 max); bottom:
+// author + URL.
 
 import { ImageResponse } from "next/og";
 import { getPublishedProjectBySlugWithAssets } from "@/lib/data/projectBySlug";
@@ -17,8 +12,8 @@ import { getSiteUrl } from "@/lib/siteUrl";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Rendu à la demande : les données Supabase sont dynamiques.
-// Next.js met en cache l'image OG via le header Cache-Control CDN (Vercel Edge).
+// Rendered on demand (dynamic project data); cached by the CDN through
+// Cache-Control.
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -26,7 +21,7 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 export default async function Image({ params }: Props) {
   const { locale, slug } = await params;
 
-  // ── Données projet depuis Supabase ──────────────────────────────────────
+  // ── Project data ────────────────────────────────────────────────────────
   const project = await getPublishedProjectBySlugWithAssets(locale, slug);
 
   const title      = project?.title    || slug.replace(/-/g, " ");
@@ -38,8 +33,7 @@ export default async function Image({ params }: Props) {
     .replace(/^https?:\/\//, "");
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
 
-  // ── Couleurs selon le track ──────────────────────────────────────────────
-  // Salesforce : cyan  — IT Ops : violet/indigo
+  // ── Track colours: Salesforce cyan, IT Ops violet ────────────────────────
   const trackColor   = track === "itops" ? "#a78bfa" : "#22d3ee";
   const trackBg     = track === "itops" ? "rgba(167,139,250,0.15)" : "rgba(34,211,238,0.15)";
   const trackBorder = track === "itops" ? "rgba(167,139,250,0.35)" : "rgba(34,211,238,0.35)";
@@ -62,7 +56,7 @@ export default async function Image({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Cercle décoratif — couleur adaptée au track */}
+        {/* Decorative circle in the track colour */}
         <div
           style={{
             position: "absolute",
@@ -76,9 +70,9 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* ── HAUT — Badges "Project" + track ─────────────────────────── */}
+        {/* ── TOP: "Project" + track badges ────────────────────────────── */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* Badge générique "Project" */}
+          {/* Generic "Project" badge */}
           <div
             style={{
               padding: "6px 16px",
@@ -94,7 +88,7 @@ export default async function Image({ params }: Props) {
             Project
           </div>
 
-          {/* Badge track — Salesforce ou IT Ops */}
+          {/* Track badge */}
           <div
             style={{
               padding: "6px 16px",
@@ -111,7 +105,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* ── MILIEU — Titre + Résumé ──────────────────────────────────── */}
+        {/* ── MIDDLE: title + summary ──────────────────────────────────── */}
         <div
           style={{
             display: "flex",
@@ -121,7 +115,7 @@ export default async function Image({ params }: Props) {
             justifyContent: "center",
           }}
         >
-          {/* Titre — taille adaptée à la longueur */}
+          {/* Title, sized by length */}
           <div
             style={{
               fontSize: title.length > 55 ? 38 : title.length > 35 ? 46 : 54,
@@ -135,7 +129,7 @@ export default async function Image({ params }: Props) {
             {title}
           </div>
 
-          {/* Résumé (2 lignes max) */}
+          {/* Summary (2 lines max) */}
           {summary && (
             <div
               style={{
@@ -154,9 +148,9 @@ export default async function Image({ params }: Props) {
           )}
         </div>
 
-        {/* ── INFÉRIEUR + BAS — Tags tech + Auteure + URL ─────────────── */}
+        {/* ── BOTTOM: tech tags + author + URL ─────────────────────────── */}
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Tags tech stack */}
+          {/* Tech tags */}
           {tags.length > 0 && (
             <div style={{ display: "flex", gap: 10 }}>
               {tags.map((tag) => (
@@ -179,7 +173,7 @@ export default async function Image({ params }: Props) {
             </div>
           )}
 
-          {/* Séparateur + auteure + URL */}
+          {/* Separator + author + URL */}
           <div
             style={{
               display: "flex",

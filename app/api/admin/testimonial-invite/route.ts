@@ -1,17 +1,14 @@
 // app/api/admin/testimonial-invite/route.ts
 // ------------------------------------------
-// Endpoint admin — génère un lien d'invitation HMAC à durée limitée
-// pour la page de soumission de témoignage.
-//
-// Le lien ne contient JAMAIS le token brut (TESTIMONIAL_SUBMIT_TOKEN).
-// Il contient uniquement un dérivé HMAC signé et horodaté :
+// Admin endpoint generating a time-limited HMAC invitation link for the
+// testimonial page. The link never contains TESTIMONIAL_SUBMIT_TOKEN, only a
+// signed, timestamped derivative:
 //   invite = HMAC-SHA256(TESTIMONIAL_SUBMIT_TOKEN, "testimonial-invite:" + exp)
 //   URL    = /{locale}/testimonial-submit?invite={invite}&exp={exp}
 //
-// Authentification : Bearer token = ADMIN_PASSWORD (comparaison timing-safe).
-// Rate-limit : partagé avec adminRatelimit (5 req / 15 min / IP).
+// Auth: Bearer ADMIN_PASSWORD (timing-safe). Rate limit shared with
+// adminRatelimit (5 requests / 15 min / IP).
 //
-// Exemple d'appel :
 //   curl -X POST https://yoursite.com/api/admin/testimonial-invite \
 //     -H "Authorization: Bearer YOUR_ADMIN_PASSWORD" \
 //     -H "Content-Type: application/json" \
@@ -25,12 +22,12 @@ import { MAX_INVITE_DAYS, signInvite } from "@/lib/security/testimonialInvite";
 
 export const runtime = "nodejs";
 
-// 14 jours au plus (30 avant l'audit du 2026-10-25), voir lib/security/testimonialInvite.ts.
+// At most 14 days (lib/security/testimonialInvite.ts).
 const MAX_DAYS = MAX_INVITE_DAYS;
 const DEFAULT_DAYS = 7;
 
 export async function POST(req: NextRequest) {
-  // ── 1. Rate-limit anti brute-force ─────────────────────────────────────────
+  // ── 1. Rate limit (brute force) ────────────────────────────────────────────
   const ip =
     req.headers.get("x-real-ip") ??
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -41,7 +38,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
 
-  // ── 2. Authentification Bearer ADMIN_PASSWORD ───────────────────────────────
+  // ── 2. Bearer ADMIN_PASSWORD ────────────────────────────────────────────────
   const expectedPass = process.env.ADMIN_PASSWORD ?? "";
   if (!expectedPass) {
     return NextResponse.json({ error: "Not configured." }, { status: 503 });
@@ -54,13 +51,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  // ── 3. Vérification TESTIMONIAL_SUBMIT_TOKEN configuré ─────────────────────
+  // ── 3. TESTIMONIAL_SUBMIT_TOKEN configured? ───────────────────────────────
   const secret = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
   if (!secret) {
     return NextResponse.json({ error: "Testimonial feature not configured." }, { status: 503 });
   }
 
-  // ── 4. Paramètres optionnels ────────────────────────────────────────────────
+  // ── 4. Optional parameters ──────────────────────────────────────────────────
   let days = DEFAULT_DAYS;
   let locale: "en" | "fr" | "es" = "en";
 
@@ -72,17 +69,17 @@ export async function POST(req: NextRequest) {
     if (body.locale === "fr") locale = "fr";
     else if (body.locale === "es") locale = "es";
   } catch {
-    // Body absent ou invalide → paramètres par défaut
+    // Missing or invalid body: defaults
   }
 
-  // ── 5. Génération du token d'invitation HMAC ────────────────────────────────
-  // exp = timestamp Unix (secondes) — date d'expiration du lien
+  // ── 5. Invitation HMAC ─────────────────────────────────────────────────────
+  // exp = link expiry, Unix seconds
   const expUnix = Math.floor(Date.now() / 1000) + days * 86_400;
 
-  // HMAC-SHA256(secret, "testimonial-invite:" + exp) — préfixe domain-separation
+  // HMAC-SHA256(secret, "testimonial-invite:" + exp), with a domain-separation prefix
   const invite = signInvite(secret, expUnix);
 
-  // ── 6. Construction de l'URL d'invitation ──────────────────────────────────
+  // ── 6. Invitation URL ───────────────────────────────────────────────────────
   const siteUrl = getSiteUrl();
   const url = `${siteUrl}/${locale}/testimonial-submit?invite=${invite}&exp=${expUnix}`;
 

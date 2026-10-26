@@ -1,11 +1,8 @@
 // app/[locale]/projects/page.tsx
 // --------------------------------
-// Galerie exhaustive des projets — liste TOUS les projets publiés pour la locale.
-// Accessible depuis la home (bouton "Voir tous les projets →"), la Command Palette
-// (entrée "Tous les projets" dans le groupe Pages) et le bouton "Retour" du détail.
-//
-// Rendu serveur avec cache Redis (via getPublishedProjectsWithAssetsCached).
-// ISR identique à la page de détail (revalidate = 300 s).
+// Full project gallery: every published project for the locale. Linked from
+// the home page, the command palette and project pages' back link. Rendered
+// on the server with the Redis cache (getPublishedProjectsWithAssetsCached).
 
 import Link from "next/link";
 import { Suspense } from "react";
@@ -122,7 +119,7 @@ export default async function ProjectsPage({ params }: PageProps) {
         <span className="text-muted">{L.title}</span>
       </nav>
 
-      {/* ── En-tête ─────────────────────────────────────────────────────────── */}
+      {/* ── Header ──────────────────────────────────────────────────────────── */}
       <h1 className="text-3xl font-semibold">{L.title}</h1>
       <p className="mt-3 text-muted">{L.subtitle}</p>
 
@@ -130,9 +127,8 @@ export default async function ProjectsPage({ params }: PageProps) {
         <p className="mt-12 text-center text-muted">{L.empty}</p>
       ) : (
         <div className="mt-10">
-          {/* useSearchParams() dans ProjectsSection (support de ?tab=… pour les
-              deep-links /projects?tab=security) exige une frontière Suspense sur
-              cette route ISR (revalidate = 300), sans quoi le build échoue. */}
+          {/* useSearchParams() in ProjectsSection (?tab=… deep links) needs a
+              Suspense boundary on this route, or the build fails. */}
           <Suspense fallback={null}>
             <ProjectsSection
               projects={projects}
@@ -143,13 +139,10 @@ export default async function ProjectsPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* ── Index exhaustif ─────────────────────────────────────────────────────
-          Audit 2026-10-23 (SEO-5) : la galerie à onglets n'expose dans le HTML
-          que les projets de l'onglet actif (10 liens sur l'ensemble) ; les
-          autres fiches n'étaient atteignables par un robot que via le sitemap.
-          Cet index rendu côté serveur liste chaque fiche avec un lien <a>
-          classique. Le contenu d'un <details> fermé reste dans le DOM, donc
-          explorable, sans alourdir la page pour les visiteurs. */}
+      {/* ── Full index ─────────────────────────────────────────────────────────
+          The tabbed gallery only renders the active tab's projects, so this
+          server-rendered index links every project page for crawlers. A closed
+          <details> keeps the content in the DOM without weighing on the page. */}
       {projects.length > 0 && (
         <details className="mt-12 rounded-2xl border border-black/10 dark:border-white/10 px-5 py-4">
           <summary className="cursor-pointer text-sm font-medium soft-ring rounded-sm">
@@ -167,7 +160,7 @@ export default async function ProjectsPage({ params }: PageProps) {
         </details>
       )}
 
-      {/* ── Retour accueil ───────────────────────────────────────────────────── */}
+      {/* ── Back to home ─────────────────────────────────────────────────────── */}
       <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${locale}`}
