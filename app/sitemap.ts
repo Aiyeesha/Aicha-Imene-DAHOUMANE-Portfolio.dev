@@ -10,7 +10,7 @@
 // Pages dynamiques : articles de blog (MDX) + pages projets (fichiers de contenu)
 //
 // NEXT_PUBLIC_SITE_LASTMOD (optionnel) — permet de figer la date si nécessaire.
-// Si absent, la date du jour est utilisée (acceptable pour un portfolio).
+// Si absent, la date du build est utilisée (SITE_BUILD_DATE, next.config.mjs).
 
 import type { MetadataRoute } from "next";
 import { readAllPosts } from "@/content/blog/fs";
@@ -21,10 +21,16 @@ import { getSiteUrl } from "@/lib/siteUrl";
 // qui ne doit pas être appelé au build time (credentials absentes en CI pour les PRs Dependabot).
 export const dynamic = "force-dynamic";
 
-// Si NEXT_PUBLIC_SITE_LASTMOD n'est pas défini, on utilise la date du jour.
-// La valeur est correcte au déploiement (Vercel injecte la variable via les Settings).
+// Si NEXT_PUBLIC_SITE_LASTMOD n'est pas défini, on utilise la date du build.
+// Audit 2026-10-23 (SEO-4) : `new Date()` était évalué au démarrage de chaque
+// instance serverless (route force-dynamic), donc le lastmod des pages
+// statiques changeait sans modification de contenu — signal que Google finit
+// par ignorer. SITE_BUILD_DATE est figée dans le bundle par next.config.mjs ;
+// `new Date()` ne reste qu'en repli (Jest, outils hors build Next).
 const STATIC_LAST_MODIFIED = process.env.NEXT_PUBLIC_SITE_LASTMOD
   ? new Date(process.env.NEXT_PUBLIC_SITE_LASTMOD)
+  : process.env.SITE_BUILD_DATE
+  ? new Date(process.env.SITE_BUILD_DATE)
   : new Date();
 
 type SitemapEntry = MetadataRoute.Sitemap[number];

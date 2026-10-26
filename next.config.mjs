@@ -136,6 +136,13 @@ const nextConfig = {
 
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
+  // Date du build, figée dans le bundle serveur — audit 2026-10-23 (SEO-4) :
+  // le sitemap (force-dynamic) prenait `new Date()` au démarrage de chaque
+  // instance, d'où un lastmod qui changeait sans modification de contenu.
+  env: {
+    SITE_BUILD_DATE: new Date().toISOString(),
+  },
+
   images: {
     // Servir AVIF en priorité (25-50 % plus léger que WebP), fallback WebP.
     // Next.js teste le support navigateur via Accept et sert le bon format.

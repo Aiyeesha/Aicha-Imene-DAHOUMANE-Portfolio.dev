@@ -9,7 +9,10 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+
+// La langue du navigateur ne change pas pendant la vie de la page.
+const subscribeNoop = () => () => {};
 
 function getPreferredLocale(): "fr" | "en" {
   if (typeof window === "undefined") return "en";
@@ -74,11 +77,9 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const [locale, setLocale] = useState<"fr" | "en">("en");
-
-  useEffect(() => {
-    setLocale(getPreferredLocale());
-  }, []);
+  // Langue du navigateur lue après hydratation sans setState dans un effet —
+  // audit 2026-10-23 (PERF-5). "en" côté serveur et pendant l'hydratation.
+  const locale = useSyncExternalStore(subscribeNoop, getPreferredLocale, () => "en" as const);
 
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
