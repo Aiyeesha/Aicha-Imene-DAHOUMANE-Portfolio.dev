@@ -172,22 +172,39 @@ export async function proxy(request: NextRequest) {
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
 
-    let rlSuccess = false;
+    // Audit 2026-10-25 (constat 10) : chaque requête consommait un jeton, y
+    // compris authentifiée — l'administratrice se verrouillait après 2 ou 3
+    // navigations (5 requêtes / 15 min, sous-ressources RSC comprises).
+    // Désormais : on refuse d'emblée si le quota d'échecs est épuisé (sans
+    // même évaluer les identifiants), et seul un échec d'authentification
+    // consomme un jeton.
+    const rlKey = await pseudonymizeKey(ip);
+    const tooManyRequests = () =>
+      new NextResponse("Too many requests.", {
+        status: 429,
+        headers: { "Retry-After": "300" },
+      });
+
+    let remaining = 0;
     try {
-      ({ success: rlSuccess } = await adminRatelimit.limit(await pseudonymizeKey(ip)));
+      ({ remaining } = await adminRatelimit.getRemaining(rlKey));
     } catch (err) {
       // Panne Redis : fail-closed volontaire sur /admin (endpoint sensible).
       console.error("[admin] rate-limit error → fail-closed", err);
     }
-    if (!rlSuccess) {
-      return new NextResponse("Too many requests.", {
-        status: 429,
-        headers: { "Retry-After": "300" },
-      });
-    }
+    if (remaining <= 0) return tooManyRequests();
 
     const deny = await adminAuth(request);
-    if (deny) return deny;
+    if (deny) {
+      try {
+        const { success } = await adminRatelimit.limit(rlKey);
+        if (!success) return tooManyRequests();
+      } catch (err) {
+        console.error("[admin] rate-limit error → fail-closed", err);
+        return tooManyRequests();
+      }
+      return deny;
+    }
 
     // Injecter le nonce dans les headers de requête :
     //   - x-nonce         → lu par les Server Components via headers().get('x-nonce')
@@ -281,6 +298,18 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // feed/* : flux RSS par tag — routes API sans locale, exclues de l'i18n
-  matcher: ["/((?!api|_next|opengraph-image|twitter-image|feed|.*\\..*).*)"],
+  // feed/* : flux RSS par tag — routes API sans locale, exclues de l'i18n.
+  //
+  // Audit 2026-10-25 (constat 9) : l'ancienne exclusion `.*\..*` laissait
+  // passer sans CSP ni rate-limit tout chemin contenant un point
+  // (/fr/audit.test, /admin/incidents/new.rsc…). Seules les extensions
+  // réellement servies depuis public/ ou par une route de fichier sont
+  // exclues ; les CV HTML (public/cv/) et offline.html le sont par chemin.
+  // /admin est en plus listé explicitement : il passe toujours par le proxy,
+  // quel que soit le suffixe.
+  matcher: [
+    "/((?!api|_next|opengraph-image|twitter-image|feed|cv/|offline\\.html|.*\\.(?:png|jpe?g|gif|webp|avif|svg|ico|txt|xml|js|css|map|pdf|webmanifest|woff2?)$).*)",
+    "/admin",
+    "/admin/:path*",
+  ],
 };

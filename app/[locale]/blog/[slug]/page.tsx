@@ -21,7 +21,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { LINKEDIN_URL } from "@/lib/social";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { oneBySlug } from "@/lib/data/projectsSource";
-import { pageTitle, clampDescription } from "@/lib/seo";
+import { pageTitle, clampDescription, rssAlternates } from "@/lib/seo";
 
 type Params = { locale: "en" | "fr" | "es"; slug: string };
 
@@ -76,7 +76,7 @@ export async function generateMetadata(
     // Gabarit unique, sans suffixe de parcours — audit 2026-10-23 (SEO-1).
     title: pageTitle(title),
     description,
-    alternates: { canonical: urlPath, languages },
+    alternates: { canonical: urlPath, languages, ...rssAlternates(locale) },
     openGraph: {
       type: "article",
       locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
