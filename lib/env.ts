@@ -47,6 +47,18 @@ const serverSchema = z.object({
   FORMHOOK_AUTH_TOKEN: z.string().min(1).optional(),
 });
 
+// Secrets lus par le code mais jamais validés jusqu'à l'audit du 2026-10-25 :
+// sel de pseudonymisation des IP (lib/ratelimit.ts), secrets de
+// revalidation et d'invalidation du cache, jeton des invitations témoignage.
+// Validés quand ils sont définis ; leur absence n'est qu'un avertissement,
+// leur présence en production n'ayant pas pu être vérifiée.
+const recommendedSchema = z.object({
+  IP_HASH_SALT:             z.string().min(16).optional(),
+  REVALIDATE_SECRET:        z.string().min(32).optional(),
+  CACHE_INVALIDATE_SECRET:  z.string().min(32).optional(),
+  TESTIMONIAL_SUBMIT_TOKEN: z.string().min(32).optional(),
+});
+
 // ── Validation ────────────────────────────────────────────────────────────────
 
 export function validateEnv(): void {
@@ -69,8 +81,31 @@ export function validateEnv(): void {
     }
   }
 
+  // Secrets recommandés : jamais bloquants, même mal formés — une valeur
+  // existante plus courte que le minimum ne doit pas empêcher la production
+  // de démarrer.
+  const recWarnings: string[] = [];
+  const rec = recommendedSchema.safeParse(process.env);
+  if (!rec.success) {
+    for (const e of rec.error.issues) recWarnings.push(`${e.path.join(".")}: ${e.message}`);
+  }
+  const missing = Object.keys(recommendedSchema.shape).filter((k) => !process.env[k]);
+  if (missing.length > 0) recWarnings.push(`absents : ${missing.join(", ")}`);
+  if (recWarnings.length > 0) {
+    console.warn(`[env] Secrets recommandés :\n${recWarnings.map((l) => `  • ${l}`).join("\n")}`);
+  }
+
+  const isProductionDeployment = process.env.VERCEL_ENV === "production";
+
   if (issues.length === 0) return;
 
   const block = issues.map((l) => `  • ${l}`).join("\n");
-  console.error(`[env] ⚠ Variables d'environnement invalides :\n${block}`);
+  const message = `[env] ⚠ Variables d'environnement invalides :\n${block}`;
+
+  // Audit 2026-10-25 : en production, une configuration invalide arrête le
+  // démarrage au lieu d'un simple console.error ignoré. Les prévisualisations
+  // (souvent sans clés Supabase) et le développement local gardent un
+  // avertissement.
+  if (isProductionDeployment) throw new Error(message);
+  console.error(message);
 }
