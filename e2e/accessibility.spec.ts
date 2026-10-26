@@ -8,7 +8,7 @@
 //   - Blog (liste) /en/blog
 //   - Blog (article) /en/blog/apex-triggers-best-practices
 //   - Certifications /en/certifications
-//   - Contact /en/contact
+//   - Contact /en/contact (redirigé vers /en#contact, bloc recruteur déplié)
 //   - Work with me /en/work-with-me
 //   - Accueil FR /fr (vérification locale)
 //   - Accueil ES /es (vérification locale)
@@ -146,9 +146,13 @@ test.describe("WCAG 2.2 AA — Audit automatisé", () => {
     expect(serious, `Violations sérieuses : ${JSON.stringify(formatViolations(serious))}`).toHaveLength(0);
   });
 
-  test("Page Contact /en/contact — aucune violation critique/sérieuse", async ({ page }) => {
+  test("Contact /en/contact → /en#contact — aucune violation critique/sérieuse", async ({ page }) => {
+    // Formulaire unique (audit 2026-10-25) : /contact redirige vers l'ancre de
+    // la home ; on déplie le bloc recruteur pour auditer aussi ses champs.
     await page.goto("/en/contact");
+    await expect(page).toHaveURL(/\/en#contact$/);
     await waitForReady(page);
+    await page.locator("#contact details summary").click();
 
     const results = await runAxe(page);
 
