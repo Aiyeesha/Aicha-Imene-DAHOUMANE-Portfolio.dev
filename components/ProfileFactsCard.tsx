@@ -36,7 +36,8 @@ export default function ProfileFactsCard({ delayMs = 120 }: { delayMs?: number }
   return (
     <Reveal delayMs={delayMs}>
       <div className="card p-6">
-        <h3 className="text-lg font-semibold">{t("profile.atAGlanceTitle")}</h3>
+        {/* h2 : première section sous le h1 de /about (audit 2026-10-25, heading-order) */}
+        <h2 className="text-lg font-semibold">{t("profile.atAGlanceTitle")}</h2>
 
         <dl className="mt-4 space-y-4">
           {facts.map((f) => (
