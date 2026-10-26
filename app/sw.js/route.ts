@@ -1,13 +1,10 @@
 // app/sw.js/route.ts
 // ------------------
-// Sert le Service Worker avec le hash du commit injecté dans CACHE_VERSION.
-//
-// Avantage vs postbuild : indépendant du build command Vercel (qui peut
-// exécuter `next build` directement, contournant les hooks npm pre/postbuild).
-// VERCEL_GIT_COMMIT_SHA est disponible à runtime — pas de dépendance au build.
-//
-// Scope SW : /sw.js servi depuis la racine → scope par défaut = "/"
-// MIME type : application/javascript requis par les navigateurs pour les SW.
+// Serves the service worker with the commit hash injected as CACHE_VERSION.
+// VERCEL_GIT_COMMIT_SHA is available at runtime, so this does not depend on
+// npm pre/postbuild hooks (Vercel may run `next build` directly). Served from
+// the root, so the default scope is "/"; application/javascript is required
+// for service workers.
 
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -32,8 +29,7 @@ export async function GET() {
   return new NextResponse(sw, {
     headers: {
       "Content-Type": "application/javascript; charset=utf-8",
-      // must-revalidate : le navigateur revérifie à chaque visite si le SW a changé.
-      // Pas de max-age positif : on veut toujours la version la plus fraîche.
+      // must-revalidate with max-age=0: the browser checks for a new worker on every visit.
       "Cache-Control": "public, max-age=0, must-revalidate",
     },
   });

@@ -1,31 +1,23 @@
 // app/api/health/route.ts
 // ----------------------
-// Endpoint JSON public de health check.
-// Pinge Supabase, Redis, Formhook et renvoie l'état de chaque service.
+// Public JSON health check: pings Supabase, Redis and Formhook and returns
+// each service's status (GET /api/health → HealthReport). Never cached, no
+// authentication (statuses only, no secrets).
 //
-// GET /api/health → HealthReport JSON
-//
-// Cache : no-store (résultat toujours frais — pas de cache CDN).
-// Pas d'authentification : les données sont publiques (statuts sans secrets).
-//
-// SÉCURITÉ :
-//   - CORS restreint à l'origine du site (plus de wildcard *).
-//     Les outils de monitoring externes (UptimeRobot, etc.) n'ont pas besoin
-//     de CORS — ils font des requêtes serveur-à-serveur, pas depuis un navigateur.
-//     Le wildcard * permettait à n'importe quelle page tierce de lire les
-//     latences internes (Supabase : 117 ms, Redis : 66 ms) via fetch() côté client.
-//   - Rate-limiting léger pour éviter l'abus en boucle (DoS indirect Supabase).
+// CORS is limited to the site origin: monitoring tools call server-to-server
+// and need no CORS, and a wildcard would let any page read internal latencies.
+// Light rate limiting prevents abuse loops.
 
 import { NextRequest, NextResponse } from "next/server";
 import { runHealthChecks } from "@/lib/health";
 import { getLatestPingReport } from "@/lib/uptime";
 import { blogRatelimit, safeLimit } from "@/lib/ratelimit";
 
-export const dynamic = "force-dynamic"; // jamais mis en cache par Next.js
+export const dynamic = "force-dynamic"; // never cached by Next.js
 
 export async function GET(req: NextRequest) {
-  // ── Rate-limiting léger ──────────────────────────────────────────────
-  // Réutilise le limiteur blog (30 req/60 s) — profil de trafic identique.
+  // ── Light rate limiting ──────────────────────────────────────────────
+  // Reuses the blog limiter (30 requests / 60s), same traffic profile.
   const ip =
     req.headers.get("x-real-ip") ??
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -45,7 +37,7 @@ export async function GET(req: NextRequest) {
     getLatestPingReport(),
   ]);
 
-  // Code HTTP basé sur le statut global
+  // HTTP status from the global status
   const httpStatus =
     report.overall === "operational" ? 200 :
     report.overall === "degraded"    ? 207 : // Multi-Status
@@ -61,8 +53,8 @@ export async function GET(req: NextRequest) {
   const publicReport = {
     ...report,
     services: report.services.map(({ latencyMs: _l, message: _m, ...rest }) => rest),
-    // lastStoredCheckAt : timestamp du dernier run de cron (null si aucun run enregistré).
-    // Utilisé par le workflow drift-check (T4) pour détecter un monitoring stale.
+    // Last cron run timestamp (null before the first run), used by the
+    // drift-check workflow to detect stale monitoring.
     lastStoredCheckAt: storedPing?.checkedAt ?? null,
   };
 
@@ -71,10 +63,9 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(publicReport, {
     status: httpStatus,
     headers: {
-      // CORS restreint à l'origine du site uniquement.
-      // Les outils de monitoring font des requêtes serveur-à-serveur → pas de CORS nécessaire.
+      // CORS limited to the site origin (monitoring tools need none).
       "Access-Control-Allow-Origin": siteOrigin,
-      // Pas de cache — le résultat doit toujours être frais
+      // Never cached
       "Cache-Control": "no-store, no-cache, must-revalidate",
     },
   });

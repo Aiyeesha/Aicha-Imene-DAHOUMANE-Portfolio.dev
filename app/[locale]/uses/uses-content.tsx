@@ -1,8 +1,5 @@
-// Server Component — audit 2026-10-23 (PERF-3) : le composant n'était client
-// que pour lire le parcours (useTrack) et choisir des couleurs d'accent ; toute
-// la liste trilingue des outils partait dans le bundle JavaScript. Les accents
-// passent par la variante CSS `itops:` (globals.css), qui suit aussi une
-// bascule en cours de session.
+// Server component: accents use the `itops:` CSS variant (globals.css), which
+// also follows a track switch, so no client JavaScript is needed.
 
 import Link from "next/link";
 
@@ -85,15 +82,12 @@ const USES: UseCategory[] = [
 ];
 
 export default function UsesContent({ locale }: { locale: string }) {
-  // Traduit intégralement en espagnol le 2026-09-26 (audit) — auparavant
-  // `Locale` était fr/en-only et l'espagnol retombait silencieusement sur
-  // l'anglais pour chaque description d'outil.
   const safeLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
   const isFr = locale === "fr";
   const isEs = locale === "es";
 
-  // Badge classes — open-source badge suit le track (Salesforce par défaut,
-  // IT Ops via la variante `itops:`)
+  // Open-source badge follows the track (Salesforce by default, IT Ops via
+  // the `itops:` variant)
   const openSourceBadge =
     "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 itops:bg-violet-500/10 itops:text-violet-700 itops:dark:text-violet-300";
 
@@ -103,10 +97,8 @@ export default function UsesContent({ locale }: { locale: string }) {
     paid:           "bg-slate-500/10   text-slate-600   dark:text-slate-300",
   };
 
-  // Hover sur les cards et liens
-  // Les variantes dark:hover:border-* sont nécessaires : sans elles,
-  // dark:border-white/10 l'emportait et la bordure d'accent n'apparaissait
-  // jamais au survol en thème sombre (constaté lors de la migration PERF-3).
+  // Card and link hover. dark:hover:border-* is needed, otherwise
+  // dark:border-white/10 wins and the accent border never shows in dark mode.
   const cardHover  =
     "hover:border-cyan-400/40 dark:hover:border-cyan-400/40 " +
     "itops:hover:border-violet-400/40 itops:dark:hover:border-violet-400/40";

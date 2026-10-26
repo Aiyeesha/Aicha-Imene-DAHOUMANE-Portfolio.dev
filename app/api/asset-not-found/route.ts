@@ -1,14 +1,9 @@
 // app/api/asset-not-found/route.ts
 // --------------------------------
-// Réponse 404 légère pour les fichiers statiques absents (images, PDF).
-// Atteinte via la réécriture `afterFiles` de next.config.mjs — audit
-// 2026-10-23 (P5) : auparavant, une image manquante recevait la page HTML 404
-// complète du site (~70 Ko, rendue dynamiquement).
-//
-// - Texte brut de quelques octets, aucun rendu React.
-// - X-Robots-Tag: noindex — rien à indexer.
-// - Cache CDN court (5 min) : un fichier ajouté au déploiement suivant est
-//   servi immédiatement (chaque déploiement Vercel repart d'un cache vide).
+// Lightweight 404 for missing static files (images, PDF), reached through the
+// `afterFiles` rewrite in next.config.mjs instead of the full HTML 404 page.
+// A few bytes of plain text, X-Robots-Tag: noindex, short CDN cache (5 min)
+// so a file added in the next deployment is served right away.
 
 const HEADERS = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -20,7 +15,7 @@ function notFound(): Response {
   return new Response("Not Found", { status: 404, headers: HEADERS });
 }
 
-// GET (balises <img>, liens) et HEAD (vérifications de lien, robots).
+// GET (<img> tags, links) and HEAD (link checkers, crawlers).
 export function GET(): Response {
   return notFound();
 }

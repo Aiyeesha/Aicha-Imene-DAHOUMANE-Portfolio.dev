@@ -1,6 +1,6 @@
 // app/admin/incidents/[id]/page.tsx
 // ------------------------------------
-// Détail d'un incident : infos, statut, checklist interactive groupée par phase.
+// Incident detail: info, status, interactive checklist grouped by phase.
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -42,8 +42,8 @@ export default async function IncidentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
-  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
+  // why it runs in each page as well as in the layout.
   await assertAdminOrNotFound();
 
   const { id } = await params;

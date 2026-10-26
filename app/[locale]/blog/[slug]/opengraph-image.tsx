@@ -1,14 +1,9 @@
 // app/[locale]/blog/[slug]/opengraph-image.tsx
 // ---------------------------------------------
-// Image OG dynamique par article de blog.
-// Rendue avec Satori (next/og) — une image par (locale, slug).
-// Affiche : titre de l'article, tags, temps de lecture, auteure, URL du site.
-//
-// Couleur d'accent déterminée par la catégorie principale de l'article :
-//   Salesforce  → cyan   (#22d3ee)
-//   IT Ops      → violet (#a78bfa)
-//   Next.js/Web → orange (#f97316)
-//   Autre       → cyan   (défaut)
+// OG image per blog post (Satori via next/og), one per (locale, slug): title,
+// tags, reading time, author, site URL. Accent colour from the post's main
+// category: Salesforce cyan (#22d3ee), IT Ops violet (#a78bfa), Next.js/Web
+// orange (#f97316), otherwise cyan.
 
 import { ImageResponse } from "next/og";
 import { readAllPosts, readPostMeta } from "@/content/blog/fs";
@@ -18,7 +13,7 @@ import type { BlogLocale } from "@/content/blog/fs";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Pré-génère les paramètres (locale × slug) au build pour les URLs statiques
+// Pre-generate (locale × slug) at build time
 export async function generateStaticParams() {
   const locales: BlogLocale[] = ["en", "fr", "es"];
   const params: { locale: string; slug: string }[] = [];
@@ -31,10 +26,9 @@ export async function generateStaticParams() {
   return params;
 }
 
-// ── Détection de catégorie depuis les tags ──────────────────────────────────
-//
-// Priorité : IT Ops > Next.js/Web > Salesforce (défaut)
-// On teste les tags ET le slug pour une détection robuste.
+// ── Category from tags ──────────────────────────────────────────────────────
+// Priority: IT Ops > Next.js/Web > Salesforce (default). Tags and slug are
+// both checked.
 type CategoryTheme = {
   accent: string;
   accentBg: string;
@@ -74,7 +68,7 @@ function getCategoryTheme(tags: string[], slug: string): CategoryTheme {
     };
   }
 
-  // Salesforce (défaut)
+  // Salesforce (default)
   return {
     accent: "#22d3ee",
     accentBg: "rgba(34,211,238,0.15)",
@@ -90,7 +84,7 @@ export default async function Image({ params }: Props) {
   const { locale, slug } = await params;
   const safeLocale: BlogLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
-  // Lecture des métadonnées de l'article
+  // Post metadata
   const post = readPostMeta(safeLocale, slug);
 
   const title       = post?.title       || slug.replace(/-/g, " ");
@@ -104,7 +98,7 @@ export default async function Image({ params }: Props) {
     .replace(/^https?:\/\//, "");
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
 
-  // Déterminer la palette selon la catégorie
+  // Palette from the category
   const { accent, accentBg, accentBorder, glow, categoryLabel } = getCategoryTheme(tags, slug);
 
   return new ImageResponse(
@@ -123,7 +117,7 @@ export default async function Image({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Halo décoratif — couleur de la catégorie */}
+        {/* Decorative glow in the category colour */}
         <div
           style={{
             position: "absolute",
@@ -137,7 +131,7 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* HAUT — Badge catégorie + temps de lecture + tags */}
+        {/* TOP: category badge + reading time + tags */}
         <div
           style={{
             display: "flex",
@@ -145,7 +139,7 @@ export default async function Image({ params }: Props) {
             gap: 12,
           }}
         >
-          {/* Badge catégorie coloré */}
+          {/* Category badge */}
           <div
             style={{
               padding: "6px 18px",
@@ -161,7 +155,7 @@ export default async function Image({ params }: Props) {
             {categoryLabel}
           </div>
 
-          {/* Badge "Blog" neutre */}
+          {/* Neutral "Blog" badge */}
           <div
             style={{
               padding: "6px 16px",
@@ -177,7 +171,7 @@ export default async function Image({ params }: Props) {
             Blog
           </div>
 
-          {/* Temps de lecture */}
+          {/* Reading time */}
           {readingTime && (
             <div
               style={{
@@ -213,7 +207,7 @@ export default async function Image({ params }: Props) {
           ))}
         </div>
 
-        {/* MILIEU — Titre + excerpt */}
+        {/* MIDDLE: title + excerpt */}
         <div
           style={{
             display: "flex",
@@ -223,7 +217,7 @@ export default async function Image({ params }: Props) {
             justifyContent: "center",
           }}
         >
-          {/* Ligne d'accent à gauche du titre */}
+          {/* Accent bar left of the title */}
           <div style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
             <div
               style={{
@@ -269,7 +263,7 @@ export default async function Image({ params }: Props) {
           )}
         </div>
 
-        {/* BAS — Auteure + URL */}
+        {/* BOTTOM: author + URL */}
         <div
           style={{
             display: "flex",
@@ -280,7 +274,7 @@ export default async function Image({ params }: Props) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* Pastille colorée de catégorie */}
+            {/* Category dot */}
             <div
               style={{
                 width: 10,
