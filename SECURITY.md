@@ -62,7 +62,7 @@ report-uri /api/csp-report
 report-to csp-endpoint
 ```
 
-Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. No third-party script, stylesheet or frame is allowed: booking a call is a plain link to a Proton Calendar booking page, opened in a new tab. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs.
+Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. No third-party script, stylesheet or frame is allowed: booking a call is a plain link to a Proton Calendar booking page, opened in a new tab. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs. Both report formats are parsed: CSP Level 2 (`{"csp-report": …}`, Firefox and Safari) and the Reporting API (`[{"type": "csp-violation", "body": …}]`, Chrome and Edge), see `lib/security/cspReport.ts`.
 
 **Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` using the Web Crypto API. The nonce is:
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
@@ -90,7 +90,7 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
 | `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
 | `GET /api/blog/latest` | 30 requests | 60 seconds / IP | Public read route |
-| `GET /admin/*` | 5 requests | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — counts every request, checked before the credentials |
+| `GET /admin/*` | 5 failed attempts | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — only failed authentications consume the quota; once it is exhausted, requests are refused before the credentials are checked |
 
 IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controlled) with `x-forwarded-for` as fallback.
 
@@ -113,7 +113,8 @@ Fail-open on slowness or errors keeps the contact form usable during an Upstash 
 
 - Protected by HTTP Basic Auth (credentials from `ADMIN_USERNAME` / `ADMIN_PASSWORD` environment variables, compared in constant time)
 - `ADMIN_PASSWORD` is validated at 8 characters minimum by `lib/env.ts`; 24 or more random characters are recommended (see the rotation table below)
-- Rate-limited: **5 requests per 15 minutes per IP**, checked before the credentials — brute force locked out at the middleware level (`proxy.ts`)
+- Rate-limited: **5 failed attempts per 15 minutes per IP** (`proxy.ts`). Authenticated requests do not consume the quota; an exhausted quota is refused before the credentials are checked
+- Always routed through the middleware: the matcher lists `/admin/:path*` explicitly, and only real static file extensions (not any path containing a dot) are excluded elsewhere
 - Never cached by the service worker (`/admin` is network-only in `public/sw-template.js`), so contact messages are not stored in the browser cache
 - Returns `503` if credentials are not configured
 - Metadata set to `robots: { index: false, follow: false }` — not indexed by search engines
@@ -140,10 +141,9 @@ Row Level Security (RLS) is **enabled on all tables**. Policies by table:
 | `projects` | `status = 'published'` only | ❌ | Draft and archived projects are invisible |
 | `project_assets` | Only if parent project is `published` | ❌ | Assets of unpublished projects are protected |
 | `about_pages` | ✅ (all) | ❌ | Public content |
-| `certifications` | ✅ (all) | ❌ | Public content |
 | `testimonials` | `is_published = true` only | ❌ | Unpublished testimonials not visible |
 | `messages` | ❌ | ❌ | **No longer used** — the contact form forwards to Formhook with no DB write; the table is retained only for historical rows |
-| `testimonial_submissions` | ❌ | ✅ | Pending admin review, `approved = false` by default |
+| `testimonial_submissions` | ❌ | ❌ | Written only by `/api/testimonial-submit` with the service_role client; `approved = false` by default, pending admin review |
 | `uptime_pings` | ❌ | ❌ | Server-side only (service_role) — anon SELECT policy removed |
 | `goals_2026` | ✅ (all) | ❌ | Public content (intentional — used for public roadmap display) |
 
@@ -157,11 +157,10 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 |-------|---------------------|
 | `GET /admin/*` | HTTP Basic Auth + rate-limit (middleware), re-checked in the admin layout and in every admin page (`lib/security/adminAuth.ts` — 404 when unauthenticated, independent of the middleware matcher) |
 | `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET`; body validated with zod (`locale` ∈ supported locales, `slug` kebab-case, no unknown keys, ≤ 1 KiB) |
-| `POST /api/revalidate` | `?secret=` query param compared to `REVALIDATE_SECRET` |
+| `POST /api/revalidate` | `x-revalidate-secret` header compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
 | `POST /api/testimonial-submit` | `token` field in body compared to `TESTIMONIAL_SUBMIT_TOKEN` |
 | `POST /api/errors` | Public (client reports) — rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
-| `GET /api/redis-test` | **Only available in `development` mode** — returns 404 in production |
 | `GET /api/health` | Public — CORS restricted to `NEXT_PUBLIC_SITE_URL` (no wildcard `*`) |
 
 ---
