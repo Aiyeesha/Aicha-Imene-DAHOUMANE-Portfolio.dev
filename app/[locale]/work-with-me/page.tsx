@@ -67,8 +67,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
       { "@type": "ListItem", position: 2, name: isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me", item: `${siteUrl}/${locale}/work-with-me` },
     ],
   };
-  // FAQPage JSON-LD — déplacé depuis l'accueil avec la FAQ (2026-10-26).
-  // Même source que la FAQ affichée (namespace `faq`).
+  // FAQPage JSON-LD, from the same `faq` namespace as the displayed FAQ.
   const tFaq = await getTranslations({ locale, namespace: "faq" });
   const faqItems = tFaq.raw("items") as { q: string; a: string }[];
   const faqJsonLd = {

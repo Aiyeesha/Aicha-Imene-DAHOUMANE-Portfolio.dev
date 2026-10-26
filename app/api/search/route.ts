@@ -1,11 +1,9 @@
 // app/api/search/route.ts
 // ----------------------
-// Recherche full-text dans les articles de blog via MiniSearch.
-// GET /api/search?q=apex&locale=en  → JSON array de résultats
-//
-// L'index est buildé en mémoire à la première requête et mis en cache
-// pour la durée de vie du processus serveur (pas de rebuild à chaque appel).
-// Revalidate ISR : 24h — les nouveaux articles apparaissent sans redéploiement.
+// Full-text blog search with MiniSearch:
+// GET /api/search?q=apex&locale=en → JSON array of results.
+// The index is built in memory on the first request and kept for the life of
+// the server process.
 
 import { NextResponse, type NextRequest } from "next/server";
 import MiniSearch from "minisearch";
@@ -98,8 +96,7 @@ function buildIndex(locale: BlogLocale): { index: MiniSearch<SearchDoc>; docs: S
 }
 
 export async function GET(request: NextRequest) {
-  // Requête plafonnée à 64 caractères : la recherche floue (fuzzy + prefix) a un
-  // coût qui croît avec la longueur — audit du 2026-10-14, S7.
+  // Query capped at 64 characters: fuzzy + prefix search cost grows with length.
   const q      = (request.nextUrl.searchParams.get("q") ?? "").trim().slice(0, 64);
   const locale = (request.nextUrl.searchParams.get("locale") ?? "en") as BlogLocale;
   const validLocale: BlogLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";

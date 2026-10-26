@@ -1,15 +1,12 @@
 // app/api/cron/ping/route.ts
 // --------------------------
-// Vercel Cron endpoint — appelé une fois par jour à 8h UTC (voir vercel.json).
-//
-// 1. Vérifie CRON_SECRET dans le header Authorization
-// 2. Exécute les health checks (lib/health.ts)
-// 3. Insère une ligne par service dans uptime_pings (Supabase service_role)
-// 4. Purge les lignes de plus de 30 jours (table bornée)
-//
-// Env vars :
-//   CRON_SECRET           — secret partagé avec Vercel (arbitraire, min 32 chars)
-//   NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY — déjà nécessaires ailleurs
+// Vercel cron endpoint, called daily at 08:00 UTC (see vercel.json):
+//   1. checks CRON_SECRET in the Authorization header;
+//   2. runs the health checks (lib/health.ts);
+//   3. inserts one row per service into uptime_pings (service_role);
+//   4. purges old rows (uptime 30 days, contact messages and pending
+//      testimonial submissions 90 days);
+//   5. pings an external heartbeat if configured.
 
 import { NextResponse }                from "next/server";
 import { runHealthChecks }             from "@/lib/health";
@@ -17,12 +14,11 @@ import { createAdminSupabaseClient }   from "@/lib/supabase/admin";
 import { timingSafeStringEqual }       from "@/lib/security/timingSafeEqual";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs"; // Supabase JS ne supporte pas l'Edge runtime
+export const runtime = "nodejs"; // Supabase JS does not support the Edge runtime
 
 export async function GET(req: Request) {
-  // ── 1. Authentification — CRON_SECRET obligatoire ─────────────────────────
-  // Si la variable n'est pas configurée, on refuse toute requête pour éviter
-  // qu'un endpoint non protégé soit accessible publiquement.
+  // ── 1. Authentication: CRON_SECRET required ───────────────────────────────
+  // Without the variable, every request is refused (never a public endpoint).
   const cronSecret = process.env.CRON_SECRET;
   if (!cronSecret) {
     console.error("[CRON/PING] CRON_SECRET is not configured — request blocked.");
@@ -36,10 +32,9 @@ export async function GET(req: Request) {
   // ── 2. Health checks ──────────────────────────────────────────────────────
   const report = await runHealthChecks();
 
-  // ── 2b. Alerte webhook (optionnel) ────────────────────────────────────────
-  // Si ALERT_WEBHOOK_URL est configuré et que l'état global n'est pas "operational",
-  // envoie une notification POST compatible Discord, Slack, ntfy, Make, etc.
-  // Non bloquant — une erreur ici ne fait pas échouer la réponse cron.
+  // ── 2b. Webhook alert (optional) ──────────────────────────────────────────
+  // When ALERT_WEBHOOK_URL is set and the global status is not "operational",
+  // POST a notification (Discord, Slack, ntfy, Make…). Non-blocking.
   const alertUrl = process.env.ALERT_WEBHOOK_URL;
   if (alertUrl && report.overall !== "operational") {
     const lines = report.services
@@ -47,7 +42,7 @@ export async function GET(req: Request) {
       .map((s) => `• ${s.name}: ${s.status}${s.message ? ` — ${s.message}` : ""}`)
       .join("\n");
     const msg = `Portfolio status: ${report.overall}\n${lines}`;
-    // Payload générique : content (Discord), text (Slack), message (ntfy/Make)
+    // Generic payload: content (Discord), text (Slack), message (ntfy/Make)
     fetch(alertUrl, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
@@ -55,14 +50,14 @@ export async function GET(req: Request) {
     }).catch((e) => console.warn("[CRON/PING] Alert webhook failed:", String(e)));
   }
 
-  // ── 3. Insert dans Supabase ───────────────────────────────────────────────
+  // ── 3. Insert into Supabase ───────────────────────────────────────────────
   const supabase = createAdminSupabaseClient();
 
   const rows = report.services.map((s) => ({
     service:    s.name,
     status:     s.status,
     latency_ms: s.latencyMs ?? null,
-    checked_at: report.checkedAt, // timestamp partagé pour regrouper le ping
+    checked_at: report.checkedAt, // shared timestamp groups the ping
   }));
 
   const { error } = await supabase.from("uptime_pings").insert(rows);
@@ -71,8 +66,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "db_insert_failed" }, { status: 500 });
   }
 
-  // ── 4. Purge des lignes uptime_pings > 30 jours ──────────────────────────
-  // Purge non bloquante — une erreur ici ne fait pas échouer la réponse.
+  // ── 4. Purge uptime_pings older than 30 days (non-blocking) ───────────────
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const { error: purgeError } = await supabase
     .from("uptime_pings")
@@ -80,10 +74,9 @@ export async function GET(req: Request) {
     .lt("checked_at", cutoff);
   if (purgeError) console.warn("[CRON/PING] Purge warning:", purgeError.message);
 
-  // ── 5. Purge des messages de contact > 90 jours ───────────────────────────
-  // Rétention RGPD : données personnelles (nom, email, message) conservées
-  // 90 jours maximum, conformément à la politique de confidentialité.
-  // Purge non bloquante.
+  // ── 5. Purge contact messages older than 90 days ──────────────────────────
+  // GDPR retention of personal data (name, email, message), as stated in the
+  // privacy policy. Non-blocking.
   const msgCutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
   const { error: msgPurgeError } = await supabase
     .from("messages")
@@ -91,23 +84,20 @@ export async function GET(req: Request) {
     .lt("created_at", msgCutoff);
   if (msgPurgeError) console.warn("[CRON/PING] Messages purge warning:", msgPurgeError.message);
 
-  // ── 6. Purge des soumissions de témoignages non approuvées > 90 jours ─────
-  // Les testimonial_submissions stockent l'IP de soumission (donnée personnelle).
-  // Les soumissions approuvées sont conservées (elles alimentent la table
-  // testimonials) ; les soumissions rejetées ou en attente sont purgées.
-  // Purge non bloquante.
+  // ── 6. Purge unapproved testimonial submissions older than 90 days ───────
+  // Submissions store the submitter's IP hash; approved ones are kept (they
+  // feed the testimonials table). Non-blocking.
   const { error: submPurgeError } = await supabase
     .from("testimonial_submissions")
     .delete()
-    .lt("created_at", msgCutoff) // même cutoff 90 jours
+    .lt("created_at", msgCutoff) // same 90-day cutoff
     .eq("approved", false);
   if (submPurgeError) console.warn("[CRON/PING] Testimonial submissions purge warning:", submPurgeError.message);
 
-  // ── 7. Heartbeat externe (dead-man's switch) ─────────────────────────────
-  // Si HEALTHCHECK_URL est configuré, un GET est envoyé après chaque exécution
-  // réussie. L'absence de ping pendant une fenêtre configurable déclenche une
-  // alerte côté service externe (ex. healthchecks.io) — indépendante de GitHub
-  // et de Vercel. Non bloquant : une erreur ici ne fait pas échouer la réponse.
+  // ── 7. External heartbeat (dead-man's switch) ────────────────────────────
+  // When HEALTHCHECK_URL is set, a GET is sent after each successful run; a
+  // missing ping triggers an alert on the external service (e.g.
+  // healthchecks.io), independent of GitHub and Vercel. Non-blocking.
   const healthcheckUrl = process.env.HEALTHCHECK_URL;
   if (healthcheckUrl) {
     fetch(healthcheckUrl, { method: "GET" })

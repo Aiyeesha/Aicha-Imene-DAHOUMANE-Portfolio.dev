@@ -1,27 +1,16 @@
 // app/api/errors/route.ts
 // -----------------------
-// Endpoint de réception des erreurs JS clientes (GlobalErrorHandler).
-//
-// Flux :
-//   GlobalErrorHandler (client) → navigator.sendBeacon → POST /api/errors
-//                                                      → console.error (Vercel Runtime Logs)
-//
-// Sécurité :
-//   - Rate-limit : 10 req / 60 s par IP (errorRatelimit)
-//   - Validation stricte du payload (type, message obligatoires)
-//   - Pas de stockage persistant — log structuré uniquement (Vercel Runtime Logs)
-//   - Aucune donnée PII loguée (pas d'IP, pas de User-Agent, stack tronquée côté client)
-//
-// Réponse :
-//   202 Accepted — non bloquant côté client (sendBeacon ignore la réponse)
-//   429 Too Many Requests — rate limit atteint
-//   400 Bad Request — payload invalide
+// Receives client JS errors from GlobalErrorHandler (sendBeacon) and logs
+// them (Vercel runtime logs). Rate limited (10 requests / 60s / IP), strict
+// payload validation, nothing stored, no personal data logged (no IP or
+// user agent; stack truncated on the client).
+// Responses: 202 Accepted, 429 rate limited, 400 invalid payload.
 
 import { type NextRequest, NextResponse } from "next/server";
 import { errorRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
 
-// ── Type du payload client ────────────────────────────────────────────────────
+// ── Client payload type ───────────────────────────────────────────────────────
 type ErrorReport = {
   type: "uncaught" | "unhandledrejection";
   message: string;
@@ -39,8 +28,8 @@ function isValidReport(body: unknown): body is ErrorReport {
     (b.type === "uncaught" || b.type === "unhandledrejection") &&
     typeof b.message === "string" &&
     b.message.length > 0 &&
-    b.message.length <= 200 && // correspond au MAX_MSG du client
-    // Champs optionnels : si présents, doivent être du bon type
+    b.message.length <= 200 && // matches the client's MAX_MSG
+    // Optional fields must have the right type when present
     (b.stack === undefined || typeof b.stack === "string") &&
     (b.url   === undefined || typeof b.url   === "string") &&
     (b.line  === undefined || typeof b.line  === "number") &&
@@ -71,7 +60,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 400 });
   }
 
-  // Log structuré → Vercel Runtime Logs (filtre: msg = "client-error")
+  // Structured log → Vercel runtime logs (filter: msg = "client-error")
   log.error("client-error", {
     type:    body.type,
     message: body.message,
@@ -81,6 +70,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     stack:   body.stack,
   });
 
-  // 202 Accepted — sendBeacon n'attend pas et ignore le corps de la réponse
+  // 202 Accepted: sendBeacon ignores the response
   return new NextResponse(null, { status: 202 });
 }

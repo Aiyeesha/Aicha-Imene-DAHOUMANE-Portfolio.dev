@@ -67,19 +67,19 @@ export default async function AccessibilityPage({
 
       <div className="mt-8 grid gap-6">
 
-        {/* Engagement d'accessibilité */}
+        {/* Accessibility commitment */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("commitmentTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("commitmentBody")}</p>
         </section>
 
-        {/* Limites connues — clé présente dans les traductions, section précédemment non rendue */}
+        {/* Known limitations */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("limitsTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("limitsBody")}</p>
         </section>
 
-        {/* Signaler un problème */}
+        {/* Report an issue */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("helpTitle")}</h2>
           <p className="mt-2 text-sm text-muted-2">{t("helpBody")}</p>

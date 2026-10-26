@@ -1,11 +1,10 @@
 // certifications/page.tsx
 // -----------------------
-// Page dédiée "Certifications & Diplômes" — layout premium en 3 sections :
-//   1. Obtenu (✓ vert)  — diplômes RNCP + Linguaskill
-//   2. Actif   (↻ cyan) — Trailhead Ranger
-//   3. En préparation (◎ ambre) — Salesforce Admin, PDI, Security+…
-//
-// Source : content/certifications.ts (données statiques fiables).
+// "Certifications & diplomas" page in three sections:
+//   1. Completed (green ✓): RNCP diplomas + Linguaskill
+//   2. Active (cyan ↻): Trailhead Ranger
+//   3. In preparation (amber ◎): Salesforce, CompTIA Security+
+// Data: content/certifications.ts (static).
 
 import { trailheadProfile } from "@/content/certifications";
 import AnimatedCounter from "@/components/AnimatedCounter";
@@ -69,7 +68,7 @@ export async function generateMetadata({
   };
 }
 
-// ── Helpers — badges de statut ─────────────────────────────────────────────────
+// ── Helpers: status badges ─────────────────────────────────────────────────────
 
 type StatusBadgeProps = {
   status: "completed" | "active" | "upcoming";
@@ -80,7 +79,7 @@ function StatusBadge({ status, locale }: StatusBadgeProps) {
   const isFr = locale === "fr";
   const isEs = locale === "es";
 
-  // Couleurs et libellés par statut
+  // Colours and labels per status
   const config = {
     completed: {
       label: isFr ? "✓ Obtenu" : isEs ? "✓ Obtenido" : "✓ Completed",
@@ -108,7 +107,7 @@ function StatusBadge({ status, locale }: StatusBadgeProps) {
   );
 }
 
-// ── Composant — Icône certification (logo si disponible, sinon badge initiales) ──
+// ── Certification icon (logo when available, initials badge otherwise) ──────────
 
 function CertIcon({
   initials, color, logoUrl
@@ -140,7 +139,7 @@ function CertIcon({
   );
 }
 
-// ── Page principale ────────────────────────────────────────────────────────────
+// ── Page ───────────────────────────────────────────────────────────────────────
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -152,11 +151,9 @@ export default async function CertificationsPage({ params }: PageProps) {
   const isFr = locale === "fr";
   const isEs = locale === "es";
 
-  // Note : la page utilise uniquement les données statiques (bilingues et complètes).
-  // L'intégration Supabase sera activée ultérieurement quand les IDs et
-  // les traductions FR seront alignés dans la base de données.
+  // Static data only (complete, in every locale); Supabase is not used here.
 
-  // ── Contenu i18n statique ─────────────────────────────────────────────────
+  // ── Static i18n content ───────────────────────────────────────────────────
 
   const labels = {
     sectionCompleted: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",
@@ -191,8 +188,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       : "Earned RNCP degrees, active certifications, and certifications currently in preparation.",
   };
 
-  // ── Données certifications complétées ─────────────────────────────────────
-  // Libellés traduits pour les certifications statiques
+  // ── Completed certifications: translated labels ───────────────────────────
 
   const completedCerts = [
     {
@@ -280,26 +276,9 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
   ];
 
-  // Certifications en préparation — groupées par horizon (2026 en cours vs. 2027 roadmap).
-  // Les certifications reportées à date indéterminée (Sales Foundations, CPQ Admin,
-  // MC Engagement Admin) ne sont volontairement PAS affichées ici.
-  //
-  // Recalage du 2026-09-26 : les 4 certifications Salesforce, initialement
-  // réparties sept.–oct., sont regroupées sur novembre 2026. Les 3 CompTIA
-  // (Network+, Security+, Linux+), initialement oct.–déc. 2026, rejoignent
-  // le roadmap 2027 ("Début 2027") pour laisser la place au sprint Salesforce.
-  //
-  // Recalage du 2026-10-14 : les 4 certifications Salesforce passent de
-  // novembre 2026 à début 2027 ; l'INSIDE LVMH Certificate (parcours en ligne,
-  // à terminer avant le 15 décembre 2026) devient la seule échéance 2026.
-  // Le groupe "2026" regroupe désormais les prochaines échéances (déc. 2026 –
-  // début 2027) ; le groupe "2027" reste la roadmap repliée.
-  //
-  // Recalage du 2026-10-15 : seules les échéances proches restent affichées
-  // (4 Salesforce + CompTIA Security+, début 2027). La roadmap 2027–2028 est
-  // retirée : une longue liste d'intentions nuisait à la crédibilité. L'INSIDE
-  // LVMH Certificate n'est plus affiché avant l'obtention ; il rejoindra les
-  // certifications obtenues une fois l'évaluation réussie.
+  // Upcoming certifications: only the near-term ones are listed (Salesforce
+  // and CompTIA Security+, early 2027). Certifications postponed with no date
+  // are deliberately not shown; a long list of intentions hurts credibility.
   type UpcomingItem = {
     id: string;
     name: string;
@@ -314,9 +293,9 @@ export default async function CertificationsPage({ params }: PageProps) {
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── Prochaines échéances — début 2027 (Salesforce, puis Security+) ───────
-    // Formulation alignée sur la FAQ et la page À propos (« planifiées pour
-    // début 2027 ») : à mettre à jour aux trois endroits après chaque résultat.
+    // ── Next: early 2027 (Salesforce, then Security+) ───────────────────────
+    // Wording matches the FAQ and the About page ("planned for early 2027"):
+    // update all three after each result.
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
@@ -377,7 +356,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
     },
-    // ── Cybersécurité — une seule certification affichée (début 2027) ───────
+    // ── Cybersecurity: a single certification shown (early 2027) ────────────
     {
       id: "comptia-security-plus",
       name: "CompTIA Security+ (SY0-701)",
@@ -397,7 +376,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
   const certs2026 = upcomingItems;
 
-  // ── JSON-LD — BreadcrumbList ──────────────────────────────────────────────
+  // ── JSON-LD: BreadcrumbList ───────────────────────────────────────────────
   const siteUrl = getSiteUrl();
   const jsonLdBreadcrumb = {
     "@context": "https://schema.org",
@@ -410,7 +389,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
-      {/* Données structurées — BreadcrumbList */}
+      {/* Structured data: BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }}
@@ -428,14 +407,14 @@ export default async function CertificationsPage({ params }: PageProps) {
         <span className="text-muted">{labels.breadcrumbCerts}</span>
       </nav>
 
-      {/* ── En-tête ─────────────────────────────────────────────────────────── */}
+      {/* ── Header ──────────────────────────────────────────────────────────── */}
       <h1 className="text-3xl font-semibold">
         {isFr ? "Certifications & Diplômes" : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas"}
       </h1>
       <p className="mt-3 text-muted">{labels.intro}</p>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 1 — Obtenu / Completed                                        */}
+      {/* SECTION 1 — Completed                                                 */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section aria-labelledby="section-completed" className="mt-12">
         <div className="flex items-center gap-3">
@@ -447,13 +426,13 @@ export default async function CertificationsPage({ params }: PageProps) {
         <p className="mt-1 text-sm text-muted">{labels.sectionCompletedSub}</p>
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
-          {/* Certifications statiques */}
+          {/* Static certifications */}
           {completedCerts.map((cert) => (
             <article
               key={cert.id}
               className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
             >
-              {/* En-tête de carte */}
+              {/* Card header */}
               <div className="flex items-start gap-4">
                 <CertIcon initials={cert.initials} color={cert.color} logoUrl={(cert as { logoUrl?: string }).logoUrl} />
                 <div className="min-w-0">
@@ -469,7 +448,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {/* Description */}
               <p className="mt-4 text-sm text-muted leading-relaxed">{cert.description}</p>
 
-              {/* Tags compétences */}
+              {/* Skill tags */}
               {cert.skills.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {cert.skills.map((skill) => (
@@ -483,7 +462,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Liens diplôme + vérification */}
+              {/* Diploma + verification links */}
               {((cert as any).diplomaUrl || cert.credentialUrl) && (
                 <div className="mt-4 flex flex-wrap gap-4">
                   {(cert as any).diplomaUrl && (
@@ -515,7 +494,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 2 — Actif / Active : Trailhead Ranger                         */}
+      {/* SECTION 2 — Active: Trailhead Ranger                                  */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section aria-labelledby="section-active" className="mt-14">
         <div className="flex items-center gap-3">
@@ -530,12 +509,12 @@ export default async function CertificationsPage({ params }: PageProps) {
           <article className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-6 transition-shadow hover:shadow-md dark:hover:shadow-none">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
 
-              {/* Icône Trailhead stylisée */}
+              {/* Trailhead icon */}
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-cyan-500 to-blue-600 text-lg font-bold text-white">
                 ☁
               </div>
 
-              {/* Texte */}
+              {/* Text */}
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3">
                   <h3 className="text-base font-semibold text-slate-900 dark:text-white">Trailhead Expeditioner</h3>
@@ -543,7 +522,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                 <p className="mt-0.5 text-sm text-muted">Salesforce Trailhead</p>
                 <p className="mt-2 text-sm text-muted leading-relaxed">{labels.trailheadHint}</p>
 
-                {/* Stats Trailhead */}
+                {/* Trailhead stats */}
                 <div className="mt-5 grid grid-cols-3 gap-4">
                   <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-center">
                     <p className="text-xl font-bold text-slate-900 dark:text-white">
@@ -565,7 +544,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                {/* Progression vers Ranger */}
+                {/* Progress to Ranger */}
                 <div className="mt-5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-muted-2">
@@ -594,7 +573,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                {/* Lien profil */}
+                {/* Profile link */}
                 <div className="mt-4">
                   <a
                     href={trailheadProfile.profileUrl}
@@ -612,7 +591,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 3 — En préparation / In preparation                           */}
+      {/* SECTION 3 — In preparation                                            */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section aria-labelledby="section-upcoming" className="mt-14">
         <div className="flex items-center gap-3">
@@ -623,7 +602,7 @@ export default async function CertificationsPage({ params }: PageProps) {
         </div>
         <p className="mt-1 text-sm text-muted">{labels.sectionUpcomingSub}</p>
 
-        {/* ── Sous-groupe 2026 — en cours / planifiées ─────────────────────── */}
+        {/* ── Upcoming ─────────────────────────────────────────────────────── */}
         <div className="mt-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
@@ -666,7 +645,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
       </section>
 
-      {/* ── Bouton retour accueil ────────────────────────────────────────────── */}
+      {/* ── Back to home ─────────────────────────────────────────────────────── */}
       <div className="mt-14 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${safeLocale}`}

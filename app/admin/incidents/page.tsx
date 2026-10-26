@@ -1,7 +1,7 @@
 // app/admin/incidents/page.tsx
 // -----------------------------
-// Liste des incidents — dashboard de gestion d'incidents.
-// Opérationnalise les playbooks de github.com/Aiyeesha/playbook-reponse-incidents.
+// Incident list: incident management dashboard, operationalising the
+// playbooks of github.com/Aiyeesha/playbook-reponse-incidents.
 
 import Link from "next/link";
 import { listIncidents, getIncidentWithChecklist, computeChecklistProgress } from "@/lib/supabase/incidents";
@@ -39,8 +39,8 @@ function fmtDate(iso: string) {
 }
 
 export default async function IncidentsPage() {
-  // Garde d'authentification — avant toute lecture service_role (audit 2026-10-23, P3).
-  // Voir lib/security/adminAuth.ts : pourquoi dans chaque page en plus du layout.
+  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
+  // why it runs in each page as well as in the layout.
   await assertAdminOrNotFound();
 
   const incidents = await listIncidents();

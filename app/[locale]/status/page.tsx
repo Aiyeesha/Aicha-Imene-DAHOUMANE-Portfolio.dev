@@ -1,10 +1,7 @@
 // status/page.tsx
 // ----------------
-// Page de statut publique — affiche l'état opérationnel du site.
-// Les données proviennent de uptime_pings (Supabase), alimenté par le cron
-// quotidien app/api/cron/ping. Aucun appel sortant en direct au rendu (F5).
-//
-// Revalidation ISR : 60 secondes — statuts frais sans rebuild complet.
+// Public status page. Data comes from uptime_pings (Supabase), filled by the
+// daily cron (app/api/cron/ping); no outgoing check runs at render time.
 
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -13,22 +10,19 @@ import { getUptimeStats, getLatencyHistory, getLatestPingReport } from "@/lib/up
 import LatencySparkline from "@/components/LatencySparkline";
 import { getSiteUrl } from "@/lib/siteUrl";
 
-// ISR — revalidation toutes les 60 secondes.
-// ⚠️ Actuellement sans effet : app/layout.tsx appelle headers() pour lire le nonce
-// CSP (x-nonce), ce qui opt toute la route en rendu dynamique (Cache-Control: no-store).
-// Conserver cette valeur : elle redeviendra opérationnelle lors de la migration
-// homelab (reverse proxy cache indépendant du Cache-Control applicatif — cf. §6).
-// La fraîcheur des données est déjà assurée par le cache Redis dans lib/uptime.ts.
+// 60-second ISR. Currently no effect: app/layout.tsx reads headers(), which
+// makes the route dynamic. Data freshness comes from the Redis cache in
+// lib/uptime.ts.
 export const revalidate = 60;
 
-// ── Types locaux ─────────────────────────────────────────────────────────────
+// ── Local types ──────────────────────────────────────────────────────────────
 
 type Locale = "en" | "fr" | "es";
 
-// "maintenance" est un statut d'affichage uniquement (pas retourné par les checks)
+// "maintenance" is display-only (never returned by the checks)
 type DisplayStatus = ServiceStatus | "maintenance";
 
-// ── Descriptions des services (i18n) ─────────────────────────────────────────
+// ── Service descriptions (i18n) ──────────────────────────────────────────────
 
 const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
@@ -41,9 +35,8 @@ const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "PWA / Service Worker": { en: "Offline mode and static asset caching",         fr: "Mode hors-ligne et cache des fichiers statiques",       es: "Modo sin conexión y cache de archivos estáticos" },
 };
 
-// Noms affichés — les clés restent les identifiants techniques renvoyés par
-// lib/health.ts (aussi exposés tels quels par /api/health), seule la page les
-// traduit (audit du 2026-10-14, constat 10).
+// Display names: keys stay the technical ids returned by lib/health.ts (and
+// /api/health); only this page translates them.
 const SERVICE_NAMES: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Website",              fr: "Site web",                       es: "Sitio web" },
   "Contact form":         { en: "Contact form",         fr: "Formulaire de contact",          es: "Formulario de contacto" },
@@ -55,7 +48,7 @@ const SERVICE_NAMES: Record<string, Record<Locale, string>> = {
   "PWA / Service Worker": { en: "PWA / Service Worker", fr: "PWA / Service Worker",           es: "PWA / Service Worker" },
 };
 
-// ── Configuration visuelle par statut ─────────────────────────────────────────
+// ── Visual config per status ──────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<
   DisplayStatus,
@@ -138,7 +131,7 @@ export async function generateMetadata({
       description,
       images: [`${siteUrl}/twitter-image`],
     },
-    robots: { index: false }, // page technique, pas d'intérêt SEO
+    robots: { index: false }, // technical page, no SEO value
   };
 }
 
@@ -154,23 +147,21 @@ export default async function StatusPage({
   const isFr = safeLocale === "fr";
   const isEs = safeLocale === "es";
 
-  // Lit le dernier rapport stocké par le cron + stats uptime + historique latence.
-  // Aucun appel sortant en direct — données issues de uptime_pings (Supabase).
+  // Latest report stored by the cron, uptime stats and latency history, all
+  // from uptime_pings; no live outgoing calls.
   const [report, uptimeStats, latencyHistory] = await Promise.all([
     getLatestPingReport(),
     getUptimeStats(),
     getLatencyHistory(),
   ]);
 
-  // Fallback si aucun ping n'a encore été enregistré (déploiement initial)
+  // Fallback before the first ping is recorded (initial deployment)
   const global   = report?.overall ?? "operational";
   const cfg      = STATUS_CONFIG[global];
   const checkedAt = report
-    // Fuseau explicite — audit 2026-10-23 (NAV-6) : la page est rendue côté
-    // serveur (UTC sur Vercel), l'heure affichée l'était donc en UTC sans le
-    // dire. Europe/Paris + nom du fuseau (« UTC+1 », « CET »…). NB : dateStyle /
-    // timeStyle ne se combinent pas avec timeZoneName (TypeError d'Intl) —
-    // d'où les champs détaillés.
+    // Explicit Europe/Paris time zone with its name: the page is rendered on
+    // the server (UTC). dateStyle/timeStyle cannot be combined with
+    // timeZoneName (Intl TypeError), hence the detailed fields.
     ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", {
         day: "numeric",
         month: "short",
@@ -182,9 +173,9 @@ export default async function StatusPage({
       })
     : "—";
 
-  // Garde de fraîcheur : avertissement si les données dépassent 48 h
+  // Staleness guard: warn when data is older than 48h
   const STALE_THRESHOLD_HOURS = 48;
-  // eslint-disable-next-line react-hooks/purity -- Server Component async function, pas un hook React
+  // eslint-disable-next-line react-hooks/purity -- async server component, not a React hook
   const nowMs = Date.now();
   const ageHours = report
     ? (nowMs - new Date(report.checkedAt).getTime()) / (1000 * 3600)
@@ -237,10 +228,10 @@ export default async function StatusPage({
         <span className="text-muted">{labels.breadcrumb}</span>
       </nav>
 
-      {/* ── Titre de page — seul h1 (audit du 2026-10-14, constat 10) ────────── */}
+      {/* ── Page title, the only h1 ──────────────────────────────────────── */}
       <h1 className="mb-6 text-3xl font-bold tracking-tight">{labels.headline}</h1>
 
-      {/* ── Garde de fraîcheur — avertissement si données > 48 h ─────────── */}
+      {/* ── Staleness warning (data > 48h) ──────────────────────────────── */}
       {isStale && (
         <div
           role="alert"
@@ -251,7 +242,7 @@ export default async function StatusPage({
         </div>
       )}
 
-      {/* ── Bannière statut global ────────────────────────────────────────── */}
+      {/* ── Global status banner ──────────────────────────────────────────── */}
       <div className={`mb-10 flex items-center gap-4 rounded-2xl border p-6 ${cfg.banner}`}>
         <span className="relative flex h-4 w-4 flex-none" aria-hidden="true">
           <span className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 motion-reduce:animate-none ${cfg.dot}`} />
@@ -265,7 +256,7 @@ export default async function StatusPage({
         </div>
       </div>
 
-      {/* ── Liste des services ────────────────────────────────────────────── */}
+      {/* ── Services ──────────────────────────────────────────────────────── */}
       <section aria-labelledby="services-heading">
         <h2 id="services-heading" className="mb-4 text-xl font-semibold">
           {labels.servicesTitle}
@@ -286,19 +277,19 @@ export default async function StatusPage({
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 sm:gap-3">
-                  {/* Sparkline latence 7 jours — masquée sur petits écrans (<sm) */}
+                  {/* 7-day latency sparkline, hidden below sm */}
                   {(latencyHistory[service.name]?.length ?? 0) >= 2 && (
                     <span title={labels.sparklineLabel} className="hidden sm:inline">
                       <LatencySparkline data={latencyHistory[service.name]} />
                     </span>
                   )}
-                  {/* Latence instantanée (uniquement si mesurée et significative) */}
+                  {/* Current latency (only when measured) */}
                   {service.latencyMs !== null && service.latencyMs > 0 && (
                     <span className="text-xs text-muted-2 tabular-nums">
                       {service.latencyMs} ms
                     </span>
                   )}
-                  {/* Uptime % sur 30 jours — affiché dès que 3 pings existent */}
+                  {/* 30-day uptime %, once 3 pings exist */}
                   {uptimeStats[service.name] != null && (
                     <span
                       className="text-xs text-muted-2 tabular-nums"
@@ -317,7 +308,7 @@ export default async function StatusPage({
         </div>
       </section>
 
-      {/* ── Historique incidents ──────────────────────────────────────────── */}
+      {/* ── Incident history ──────────────────────────────────────────────── */}
       <section aria-labelledby="incidents-heading" className="mt-10">
         <h2 id="incidents-heading" className="mb-4 text-xl font-semibold">
           {labels.incidentTitle}
@@ -327,7 +318,7 @@ export default async function StatusPage({
         </div>
       </section>
 
-      {/* ── Lien endpoint JSON ────────────────────────────────────────────── */}
+      {/* ── JSON endpoint link ────────────────────────────────────────────── */}
       <div className="mt-6 text-center">
         <a
           href="/api/health"
@@ -339,7 +330,7 @@ export default async function StatusPage({
         </a>
       </div>
 
-      {/* ── Retour accueil ────────────────────────────────────────────────── */}
+      {/* ── Back to home ──────────────────────────────────────────────────── */}
       <div className="mt-10 border-t border-black/10 dark:border-white/10 pt-8">
         <Link
           href={`/${safeLocale}`}

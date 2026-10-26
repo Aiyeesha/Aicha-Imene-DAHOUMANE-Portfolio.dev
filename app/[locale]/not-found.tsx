@@ -1,9 +1,7 @@
 // app/[locale]/not-found.tsx
 // --------------------------
-// Page 404 locale — prioritaire sur app/not-found.tsx pour toutes les routes
-// sous app/[locale]/ (projets, blog, certifications, etc.).
-//
-// useParams() résout la locale synchroniquement depuis l'URL — zéro flash.
+// Locale 404 for everything under app/[locale]/ (including unknown URLs, via
+// the [...rest] catch-all). useParams() gives the locale with no flash.
 
 "use client";
 
@@ -50,7 +48,7 @@ const LANGUAGES: { code: Locale; label: string }[] = [
   { code: "es", label: "ES" },
 ];
 
-// ── Icône : boussole ────────────────────────────────────────────────────────
+// ── Icon: compass ───────────────────────────────────────────────────────────
 function Icon404() {
   return (
     <svg
@@ -83,12 +81,10 @@ export default function LocaleNotFound() {
     <div className="min-h-screen grid place-items-center px-6 bg-white dark:bg-[#070B1A] text-slate-900 dark:text-white">
       <div className="w-full max-w-md text-center animate-[fadeIn_0.4s_ease_forwards]">
 
-        {/* React 19 remonte <title> dans <head> : un composant client ne peut pas
-            exporter de metadata, et axe exige un titre (règle document-title). */}
+        {/* React 19 hoists <title> and <meta> into <head>: a client component
+            cannot export metadata, and axe requires a title (document-title).
+            The page has its own description rather than the home page's. */}
         <title>{`${c.title} — 404`}</title>
-        {/* Description propre, remontée dans <head> par React 19 comme <title> —
-            audit 2026-10-23 (SEO-2) : la 404 reprenait celle de l'accueil,
-            héritée du layout (déplacée depuis dans app/[locale]/page.tsx). */}
         <meta name="description" content={c.metaDescription} />
 
         <Icon404 />
@@ -116,7 +112,7 @@ export default function LocaleNotFound() {
           </a>
         </div>
 
-        {/* Sélecteur de langue complet — EN/FR/ES */}
+        {/* Full language switcher (EN/FR/ES) */}
         <div className="mt-8 flex flex-col items-center gap-2">
           <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-white/70">
             {c.langLabel}
