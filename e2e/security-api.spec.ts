@@ -1,21 +1,17 @@
 // e2e/security-api.spec.ts
 // ------------------------
-// Tests E2E — sécurité de l'API /api/contact.
-//
-// Vérifie deux invariants critiques :
-//   1. Origin guard : un POST avec un Origin étranger retourne 403 (production uniquement).
-//   2. Honeypot   : un POST avec le champ `company` rempli retourne 200 silencieusement.
-//
-// Le test origin guard est skippé hors CI car l'origin guard n'est actif qu'en
-// production (NODE_ENV=production + NEXT_PUBLIC_SITE_URL configuré).
+// E2E: /api/contact security invariants:
+//   1. Origin guard: a POST with a foreign Origin gets 403 (production only).
+//   2. Honeypot: a POST with `company` filled gets a silent 200.
+// The origin guard test is skipped outside CI, as the guard is only active in
+// production (NODE_ENV=production + NEXT_PUBLIC_SITE_URL set).
 
 import { test, expect } from "@playwright/test";
 
 test.describe("API security — /api/contact", () => {
   test("POST with foreign Origin → 403 forbidden_origin (production only)", async ({ request }) => {
-    // L'origin guard n'est activé qu'avec NODE_ENV=production + ALLOWED_ORIGIN configuré.
-    // En CI, le serveur tourne en mode production (npm run start après build).
-    // En local (npm run dev), NODE_ENV=development → le guard est inactif.
+    // The guard needs NODE_ENV=production. CI runs the production server
+    // (npm run start after a build); locally (npm run dev) it is inactive.
     test.skip(!process.env.CI, "origin guard only enforced in production builds");
 
     const response = await request.post("/api/contact", {
@@ -37,8 +33,8 @@ test.describe("API security — /api/contact", () => {
   });
 
   test("POST with honeypot field filled → silent 200 ok:true", async ({ request }) => {
-    // Le champ `company` est un honeypot invisible dans le formulaire.
-    // S'il est rempli, la route retourne { ok: true } sans traitement (leurre pour bots).
+    // `company` is an invisible honeypot field; when filled the route returns
+    // { ok: true } without processing (a bot lure).
     const response = await request.post("/api/contact", {
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +49,7 @@ test.describe("API security — /api/contact", () => {
       },
     });
 
-    // Rejet silencieux — pas de 400 ni de message d'erreur révélateur
+    // Silent rejection: no 400 or revealing error message
     expect(response.status()).toBe(200);
     const body = await response.json();
     expect(body.ok).toBe(true);

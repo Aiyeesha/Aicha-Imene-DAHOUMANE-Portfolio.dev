@@ -1,12 +1,10 @@
 /**
- * Ajoute les lignes locale = 'es' dans public.projects, à partir de
- * content/projects.ts + content/projectDetails.ts (bloc locales.es).
+ * Adds the locale = 'es' rows to public.projects from content/projects.ts +
+ * content/projectDetails.ts (locales.es block).
  *
- * Contrairement à seed.ts, ce script N'EFFACE RIEN : il insère uniquement
- * les lignes ES manquantes (idempotent — supprime d'abord ses propres
- * lignes ES avant de les réinsérer, ne touche jamais aux lignes fr/en).
+ * Unlike seed.ts, this deletes nothing else: it only (re)inserts its own ES
+ * rows (idempotent), never touching fr/en rows.
  *
- * Usage :
  *   npx tsx scripts/seed-es-projects.ts
  */
 

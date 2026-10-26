@@ -1,6 +1,6 @@
 // __tests__/RecruiterPaths.test.tsx
-// Bloc « Vous recrutez pour quel poste ? » de l'accueil (audit de contenu
-// 2026-09-25, lot 2) : lien vers /hybride, bascule du track et CV par profil.
+// Home page "What role are you hiring for?" block: /hybride link, track
+// switch and CV per profile.
 
 const setTrack = jest.fn();
 
@@ -47,7 +47,7 @@ describe("RecruiterPaths", () => {
     const user = userEvent.setup();
     render(<RecruiterPaths />);
     const buttons = screen.getAllByRole("button", { name: /showProfile/ });
-    // Ordre des cartes : hybride (lien), Salesforce, IT Ops.
+    // Card order: hybrid (link), Salesforce, IT Ops.
     expect(buttons[0]).toHaveAttribute("aria-pressed", "true");
     await user.click(buttons[1]);
     expect(setTrack).toHaveBeenCalledWith("itops");

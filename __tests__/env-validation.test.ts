@@ -2,9 +2,8 @@
  * @jest-environment node
  */
 // __tests__/env-validation.test.ts
-// Audit 2026-10-25 : en production, une configuration invalide doit arrêter
-// le démarrage. Les quatre secrets applicatifs sont requis (2026-10-26) ;
-// leur longueur minimale ne déclenche qu'un avertissement.
+// In production an invalid configuration must stop the start-up. The four
+// app secrets are required; their minimum length only triggers a warning.
 
 jest.mock("server-only", () => ({}), { virtual: true });
 

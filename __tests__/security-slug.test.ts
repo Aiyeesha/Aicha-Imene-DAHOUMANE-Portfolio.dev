@@ -1,7 +1,6 @@
 // __tests__/security-slug.test.ts
-// Tests unitaires — lib/security/slug.ts
-// Vérifie qu'un slug kebab-case passe et que tout caractère dangereux
-// (retour à la ligne, traversée, balise, schéma d'URL) est rejeté.
+// Unit tests: lib/security/slug.ts. A kebab-case slug passes; any dangerous
+// character (newline, traversal, tag, URL scheme) is rejected.
 
 import { isValidSlug } from "@/lib/security/slug";
 
