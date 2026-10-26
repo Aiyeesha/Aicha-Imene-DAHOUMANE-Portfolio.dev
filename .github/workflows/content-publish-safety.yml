@@ -40,10 +40,12 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+    # Audit 2026-10-25 : la clé service_role était déclarée au niveau du job,
+    # donc visible des scripts postinstall de toutes les dépendances pendant
+    # `npm ci`. Elle n'est plus exposée qu'aux deux étapes qui la lisent, et
+    # l'installation se fait sans scripts de cycle de vie.
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
     steps:
       - name: Checkout
@@ -58,9 +60,13 @@ jobs:
       - name: Install
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-        run: npm ci
+        # --ignore-scripts : aucun postinstall de dépendance n'est exécuté.
+        # Le script de contrôle (tsx + supabase-js) n'en a pas besoin.
+        run: npm ci --ignore-scripts
 
       - name: Check secret is configured
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           if [ -z "${SUPABASE_SERVICE_ROLE_KEY}" ]; then
             echo "::error::SUPABASE_SERVICE_ROLE_KEY is not configured in repo secrets."
@@ -72,4 +78,7 @@ jobs:
           fi
 
       - name: Run publish safety check
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: npm run content:safety
