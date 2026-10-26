@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Un seul formulaire de contact, un libellé « Me recruter » cohérent** — « Me recruter » menait tantôt au formulaire de l'accueil (héro, menu mobile), tantôt à la page `/work-with-me` (pied de page, palette), et deux formulaires coexistaient (`#contact` et `/contact`). « Me recruter » ouvre désormais partout le formulaire de l'accueil. La page `/work-with-me` s'intitule « L'essentiel recruteur » dans le pied de page et la palette, et entre dans le menu mobile. Les champs recruteur facultatifs de `/contact` (poste, contrat, lieu, date de prise de poste) rejoignent le formulaire de l'accueil, repliés par défaut ; `/contact` redirige (307) vers `/:locale#contact` et sort du sitemap (audit du 25/10/2026, Navigation et routes).
 - **Disponibilité : à partir de décembre 2026** — La mention « Disponible sous 1 mois (préavis) » est remplacée par « Disponible à partir de décembre 2026 » (entretiens toujours possibles dès maintenant), sans plus aucune référence au préavis : titres et descriptions SEO, fiche profil, modale de disponibilité, FAQ, page « Me recruter » (sous-titre, étapes du recrutement, FAQ), image de partage, option « Dès que possible » du formulaire de contact et les 18 CV (PDF régénérés), en FR, EN et ES. Le sous-titre de la page « Me recruter » perd au passage sa dernière mention « et la sécurité ».
 
 ### Security
@@ -22,6 +23,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Les ancres #contact atterrissent sur le formulaire** — Depuis une autre page, « Contact » et « Me recruter » arrivaient 1 500 à 4 000 px trop haut, dans la section Projets, et l'URL devenait `#projects` : le défilement démarrait avant le montage des sections dynamiques situées au-dessus de la cible. Le nouveau `lib/anchorScroll.ts` saute sur l'ancre puis se recale jusqu'à stabilisation de la mise en page, sans contrarier un défilement de l'utilisateur ; `useHashSync` attend la fin de ce recalage. Test Playwright à 1440 et 390 px (audit du 25/10/2026, constat 3).
+- **Recherche du blog lisible** — La liste de résultats et le message « Aucun résultat » n'avaient pas de fond (variable CSS inexistante) et se superposaient aux cartes (audit du 25/10/2026, constat 2).
+- **Image de partage des certifications** — Elle présentait Salesforce Admin et Platform Developer I comme obtenues, et son badge anglais affichait « 2026 » : les deux sont désormais annoncées « en préparation (début 2027) » en FR, EN et ES (audit du 25/10/2026, constat 4).
+- **CV français** — « workstations » devient « postes de travail » dans les CV hybride et Salesforce (mise en page et ATS, PDF régénérés).
 - **Accessibilité : constats axe-core corrigés sur tout le site** — Contrôle axe-core (WCAG 2.1 AA) sur les 159 pages du sitemap, en thèmes clair et sombre. Corrections :
   - les fiches projet n'imbriquent plus un second `<main>` ;
   - les blocs de code sont atteignables et défilables au clavier, avec un libellé traduit ;
