@@ -54,7 +54,7 @@ export default function Providers({
   const t = useTranslations();
 
   // The <title>/<meta description> are computed server-side from the track
-  // cookie (generateMetadata in app/[locale]/layout.tsx) — correct on first
+  // cookie (generateMetadata in app/[locale]/page.tsx) — correct on first
   // load, but a same-session toggle only updates the DOM (data-track, cookie),
   // never the tab title, until the next full navigation. A CTO watching the
   // toggle in an interview would see everything else switch except the tab —
@@ -65,8 +65,8 @@ export default function Providers({
   // titre de N'IMPORTE QUELLE page par le titre générique de l'accueil
   // (ex. « À propos — … » devenait « … — Ingénieure Systèmes & IT Ops » sur
   // /fr/about). Seul l'accueil a un titre qui dépend du parcours
-  // (metadata.title / metadata.titleItops dans le generateMetadata du
-  // layout) ; les autres pages ont leur propre titre, indépendant du
+  // (metadata.title / metadata.titleItops dans le generateMetadata de
+  // l'accueil) ; les autres pages ont leur propre titre, indépendant du
   // parcours, qu'il ne faut jamais écraser.
   // Option A du brief retenue plutôt que l'option B (router.refresh() après
   // setTrack) : pas de rendu serveur supplémentaire à chaque bascule.
@@ -94,6 +94,11 @@ export default function Providers({
   useEffect(() => {
     const saved = localStorage.getItem("track");
     if (saved === "itops" || saved === "salesforce") {
+      // Repli unique au montage sur un état que l'utilisateur modifie ensuite
+      // (setTrack) : useSyncExternalStore ne convient pas, et lire localStorage
+      // dans l'initialiseur de useState casserait l'hydratation. Audit
+      // 2026-10-23 (PERF-5) : avertissement examiné et conservé.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- repli localStorage au montage
       setTrackState(saved);
     }
   }, []);

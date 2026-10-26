@@ -13,12 +13,10 @@ import CopyButton from "./CopyButton";
 import { getTranslations } from "next-intl/server";
 
 // ── Extraction récursive du texte brut (pour le bouton copier) ─────────────
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractText(node: any): string {
   if (node == null) return "";
   if (typeof node === "string") return node;
   if (Array.isArray(node)) return node.map(extractText).join("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof node === "object" && "props" in node) return extractText((node as any).props?.children);
   return "";
 }
@@ -59,11 +57,9 @@ const LANG_LABELS: Record<string, string> = {
 };
 
 type CodeBlockServerProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
   // rehype-pretty-code injecte data-language sur <pre>
   "data-language"?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 };
 
