@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import SafeImage from "@/components/SafeImage";
+import { isGenericAlt } from "@/lib/galleryAlt";
 
 export type GalleryImage = { src: string; alt: string };
 
@@ -16,13 +17,20 @@ export type GalleryImage = { src: string; alt: string };
  */
 export default function ImageGallery({
   images,
+  title,
   className = ""
 }: {
   images: GalleryImage[];
+  /** Nom du projet : sert à remplacer les textes alternatifs génériques. */
+  title: string;
   className?: string;
 }) {
   const t = useTranslations();
   const safeImages = useMemo(() => images.filter(Boolean), [images]);
+  const altFor = (img: GalleryImage, i: number) =>
+    isGenericAlt(img.alt)
+      ? t("a11y.galleryImageAlt", { title, index: i + 1, total: safeImages.length })
+      : img.alt;
   const [idx, setIdx] = useState(0);
 
   if (safeImages.length === 0) return null;
@@ -35,7 +43,7 @@ export default function ImageGallery({
         <div className="relative aspect-video w-full">
           <SafeImage
             src={current.src}
-            alt={current.alt}
+            alt={altFor(current, safeImages.indexOf(current))}
             sizes="(max-width: 768px) 100vw, 900px"
             className="object-contain bg-white/90 dark:bg-white/10"
             priority={idx === 0}
@@ -58,7 +66,8 @@ export default function ImageGallery({
               ].join(" ")}
               aria-label={t("a11y.showImage", { index: i + 1 })}
             >
-              <SafeImage src={img.src} alt={img.alt} sizes="112px" className="object-contain" />
+              {/* Vignette décorative : le bouton porte déjà son nom (« Afficher l'image N ») */}
+              <SafeImage src={img.src} alt="" sizes="112px" className="object-contain" />
             </button>
           ))}
         </div>

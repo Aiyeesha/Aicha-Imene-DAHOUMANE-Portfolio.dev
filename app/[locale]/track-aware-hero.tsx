@@ -5,28 +5,25 @@
 // Hero section : photo + titre + tagline percutante + proof tags + CTAs.
 // Deux variantes selon le track toggle (Salesforce / IT Ops).
 //
-// Animations (Framer Motion) :
+// Animations (CSS — framer-motion retiré du héro à l'audit du 2026-10-25 : tout
+// le bundle motion était chargé au premier écran pour une entrée et 28 px de
+// parallaxe) :
 //   - Entrance stagger : avatar + bloc texte s'animent en séquence au chargement
+//                        (@keyframes hero-avatar-in / hero-text-in, globals.css)
 //   - Track switch     : fondu CSS (@keyframes fadeIn, déjà utilisé ailleurs sur
 //                        le site) sur le contenu dynamique — pas de Framer Motion
 //                        ici : voir la note plus bas sur pourquoi AnimatePresence
 //                        a été retiré de ce bloc précis.
-//   - Parallaxe avatar : léger décalage vertical de l'avatar au scroll (useScroll)
+//   - Parallaxe avatar : léger décalage vertical de l'avatar au scroll (écouteur
+//                        passif + requestAnimationFrame, limité aux 400 premiers px)
 //   - Reduced motion   : toutes les animations sont désactivées si prefers-reduced-motion
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTrack } from "./providers";
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "framer-motion";
 import { TypingText } from "@/components/TypingText";
 import BookingLink from "@/components/BookingLink";
 
@@ -37,52 +34,39 @@ const AvailabilityModal = dynamic(() => import("@/components/AvailabilityModal")
   ssr: false,
 });
 
-// ── Variants Framer Motion ─────────────────────────────────────────────────
-// Container : orchestre le stagger des enfants — pas d'opacité propre.
-// Le container reste visible (opacity: 1) dès le premier paint pour que
-// l'image avatar (priority, LCP) soit immédiatement rendue, même avant
-// que Framer Motion n'ait hydraté. Seul le bloc texte fait un fade-in.
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
-  },
-};
-
-// Avatar : zoom léger seulement — opacity reste à 1 pour ne pas retarder le LCP
-const avatarVariants: Variants = {
-  hidden: { opacity: 1, scale: 0.93 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
-
-// Bloc texte : glisse depuis le bas
-// opacity reste à 1 pour que le H1 soit indexable dans le HTML SSR.
-// La montée seule (y: 18→0) suffit pour signaler l'animation visuellement.
-const textBlockVariants: Variants = {
-  hidden: { opacity: 1, y: 18 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
-  },
-};
+// ── Entrée animée ───────────────────────────────────────────────────────────
+// Reprend les anciens variants : l'avatar garde opacity 1 (candidat LCP, rendu
+// dès le premier paint) et ne fait qu'un léger zoom ; le bloc texte monte de
+// 18 px sans fondu pour que le H1 reste visible dans le HTML SSR.
+// Classes .hero-avatar-in / .hero-text-in : app/globals.css.
 
 export default function TrackAwareHero() {
   const t = useTranslations();
   const { track, setTrack } = useTrack();
   const locale = useLocale();
-  const shouldReduce = useReducedMotion();
 
   // ── Parallaxe avatar ───────────────────────────────────────────────────────
-  // scrollY : 0 → 400px de scroll → avatar remonte de 0 → -28px (subtil).
-  // Désactivé si prefers-reduced-motion (useTransform appelé inconditionnellement
-  // mais appliqué seulement si !shouldReduce pour respecter la règle des hooks).
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 400], [0, -28]);
+  // 0 → 400px de scroll → l'avatar remonte de 0 → -28px (subtil). Écrit
+  // directement dans le style (pas de re-render) ; désactivé si
+  // prefers-reduced-motion.
+  const parallaxRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = parallaxRef.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const apply = () => {
+      raf = 0;
+      const y = -28 * Math.min(window.scrollY, 400) / 400;
+      el.style.transform = `translateY(${y}px)`;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    apply();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   // Les téléchargements de CV ne sont plus dans le hero : les trois CV
   // (hybride, Salesforce, IT Ops) sont proposés dans le bloc RecruiterPaths
@@ -110,20 +94,12 @@ export default function TrackAwareHero() {
         ];
 
   return (
-    <motion.div
-      className="grid items-center gap-8 lg:grid-cols-[260px_1fr]"
-      // Entrance stagger (désactivé si reduced motion)
-      variants={shouldReduce ? {} : containerVariants}
-      initial={shouldReduce ? false : "hidden"}
-      animate="visible"
-    >
+    <div className="grid items-center gap-8 lg:grid-cols-[260px_1fr]">
       {/* ── Colonne 1 — Avatar avec bordure gradient cyan→bleu ─────────────── */}
-      {/* style.y : parallaxe au scroll (désactivé si prefers-reduced-motion) */}
-      <motion.div
-        className="mx-auto lg:mx-0"
-        variants={shouldReduce ? {} : avatarVariants}
-        style={shouldReduce ? undefined : { y: parallaxY }}
-      >
+      {/* Parallaxe sur ce conteneur, zoom d'entrée sur l'enfant : deux
+          transform distincts qui ne s'écrasent pas. */}
+      <div ref={parallaxRef} className="mx-auto lg:mx-0">
+       <div className="hero-avatar-in">
         <div className={`rounded-2xl p-[3px] shadow-xl ${track === "salesforce" ? "bg-linear-to-br from-cyan-400 via-cyan-500 to-blue-600 shadow-cyan-500/20 dark:shadow-cyan-400/15" : "bg-linear-to-br from-violet-400 via-violet-500 to-purple-700 shadow-violet-500/20 dark:shadow-violet-400/15"}`}>
           <div className="relative h-[140px] w-[140px] sm:h-[240px] sm:w-[240px] overflow-hidden rounded-2xl bg-[#0d1b2e]">
             <Image
@@ -137,10 +113,11 @@ export default function TrackAwareHero() {
             />
           </div>
         </div>
-      </motion.div>
+       </div>
+      </div>
 
       {/* ── Colonne 2 — Texte ────────────────────────────────────────────────── */}
-      <motion.div variants={shouldReduce ? {} : textBlockVariants} suppressHydrationWarning>
+      <div className="hero-text-in">
 
         {/* Badge de disponibilité — cliquable → ouvre la modale de détails */}
         <div className="mb-2">
@@ -187,7 +164,8 @@ export default function TrackAwareHero() {
             Tailwind) en remplacement du crossfade Framer Motion. */}
         <div
           key={track}
-          className={shouldReduce ? "" : "animate-[fadeIn_0.3s_ease_forwards]"}
+          // motion-safe : pas de fondu si prefers-reduced-motion
+          className="motion-safe:animate-[fadeIn_0.3s_ease_forwards]"
           suppressHydrationWarning
         >
             {/* Accroche courte — typing effect */}
@@ -275,7 +253,7 @@ export default function TrackAwareHero() {
               : t("hero.switchToSalesforce")}
           </button>
         </p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

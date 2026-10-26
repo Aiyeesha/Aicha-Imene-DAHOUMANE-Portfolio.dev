@@ -37,6 +37,18 @@ const content = {
     altHref: "/fr",
     altLabel: "FR",
   },
+  // Espagnol ajouté (audit 2026-10-25) : /es affichait la version anglaise.
+  es: {
+    code: "500",
+    title: "Se ha producido un error",
+    description: "Se produjo un error inesperado al cargar esta página.",
+    hint: "Puede tratarse de un problema temporal. Inténtalo de nuevo o vuelve al inicio.",
+    retry: "Reintentar",
+    home: "Volver al inicio",
+    href: "/es",
+    altHref: "/en",
+    altLabel: "EN",
+  },
 } as const;
 
 type Locale = keyof typeof content;
@@ -74,7 +86,7 @@ export default function LocaleError({
 }) {
   const params = useParams();
   const raw = params?.locale;
-  const locale: Locale = raw === "fr" || raw === "en" ? raw : "en";
+  const locale: Locale = raw === "fr" || raw === "en" || raw === "es" ? raw : "en";
 
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
