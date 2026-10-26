@@ -5,12 +5,8 @@
 // Reveals content with a directional fade animation when it enters the viewport.
 // Powered by CSS transitions + native IntersectionObserver — zero Framer Motion.
 //
-// Why not Framer Motion here?
-//   Framer Motion is ~99 KB parsed / ~25 KB gzip. Reveal is used on every page
-//   (about, blog, certifications…) for simple fade-in animations. Using Framer
-//   just for opacity + translateY is excessive — the native API achieves the same
-//   result at zero bundle cost. Framer Motion is kept in track-aware-hero.tsx
-//   where AnimatePresence, useScroll and useTransform are genuinely needed.
+// Plain CSS transitions + IntersectionObserver rather than Framer Motion,
+// which would be heavy for an opacity/translate fade used on every page.
 //
 // Mechanism:
 //   - SSR: element renders fully visible (no layout shift on first paint)

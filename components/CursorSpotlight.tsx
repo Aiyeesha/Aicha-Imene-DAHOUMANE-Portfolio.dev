@@ -6,8 +6,8 @@ export default function CursorSpotlight() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Skip on touch-only devices (no mouse) and when reduced motion is requested
-    // (audit 2026-10-25: the halo trails the cursor, which is motion).
+    // Skip on touch-only devices and with reduced motion (the halo trailing
+    // the cursor is motion).
     if (window.matchMedia("(pointer: coarse)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -29,9 +29,8 @@ export default function CursorSpotlight() {
       if (!rafId) rafId = requestAnimationFrame(tick);
     };
 
-    // Lerp for smooth magnetic lag. The loop stops once the halo has caught
-    // up with the cursor and restarts on the next mousemove (audit
-    // 2026-10-25: it used to run every frame even with the mouse idle).
+    // Lerp for a smooth magnetic lag. The loop stops once the halo catches up
+    // and restarts on the next mousemove.
     const tick = () => {
       curX += (targetX - curX) * 0.10;
       curY += (targetY - curY) * 0.10;

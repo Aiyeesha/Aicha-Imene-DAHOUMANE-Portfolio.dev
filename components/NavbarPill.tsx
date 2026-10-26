@@ -47,9 +47,7 @@ export default function NavbarPill({
       rafRef.current = requestAnimationFrame(measure);
     };
 
-    // Première mesure planifiée à la frame suivante, comme celles déclenchées
-    // par resize/scroll, plutôt qu'un setState synchrone dans l'effet —
-    // audit 2026-10-23 (PERF-5).
+    // First measurement on the next frame, like the resize/scroll ones.
     onResize();
     window.addEventListener("resize", onResize);
     window.addEventListener("scroll", onResize, { passive: true });

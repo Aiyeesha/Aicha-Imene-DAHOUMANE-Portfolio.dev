@@ -2,31 +2,25 @@
 
 // TrustedBy.tsx
 // -------------
-// Section "Ils m'ont fait confiance" — affichée tant que les témoignages réels
-// ne sont pas disponibles (NEXT_PUBLIC_SHOW_TESTIMONIALS !== "true").
+// "They trusted me" logo strip, shown while real testimonials are disabled
+// (NEXT_PUBLIC_SHOW_TESTIMONIALS !== "true"). Infinite CSS marquee that
+// pauses on hover; the duplicate pass that makes the loop seamless is
+// aria-hidden. With reduced motion the logos are static and centred.
 //
-// Comportement :
-// - Défilement horizontal automatique infini (marquee CSS Tailwind)
-// - Logos en niveaux de gris → passage en couleur au hover de la bande entière
-// - Duplication invisible du tableau pour un loop sans saut (aria-hidden sur le doublon)
-// - prefers-reduced-motion : animation stoppée, logos statiques centrés
-// - Pause au hover : group-hover sur le conteneur suspend l'animation
-//
-// Pour ajouter une entreprise : ajouter un objet dans `companies` et
-// déposer le logo dans /public/companies/ (format .webp ou .svg recommandé).
+// To add a company: add an entry to `companies` and put the logo in
+// /public/companies/ (.webp or .svg).
 
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import { useTranslations } from "next-intl";
 
-// Définition des entreprises/organismes associés
-// Mettre is_visible: false pour masquer temporairement sans supprimer
+// Companies and schools; set is_visible: false to hide one without deleting it
 const companies: {
   id: string;
   name: string;
-  /** Chemin dans /public/companies/ */
+  /** Path under /public/companies/ */
   logo: string;
-  /** Largeur d'affichage en pixels */
+  /** Display width in pixels */
   width: number;
   height: number;
   is_visible: boolean;
@@ -65,11 +59,8 @@ const companies: {
   }
 ];
 
-// Bloc logo individuel — réutilisé dans les deux passes du marquee.
-// Lisibilité (audit 2026-10-25) : à opacity-50, les logos étaient délavés en
-// thème clair et les textes sombres (OpenClassrooms, « du Val d'Oise »)
-// disparaissaient sur le fond sombre. Opacité relevée à 80 % et, en thème
-// sombre, pastille claire derrière chaque logo pour garder ses couleurs d'origine.
+// Single logo, used in both marquee passes. 80% opacity keeps logos legible;
+// in dark mode a light pill keeps their original colours visible.
 function LogoItem({ company }: { company: (typeof companies)[0] }) {
   return (
     <div
@@ -99,27 +90,24 @@ function LogoItem({ company }: { company: (typeof companies)[0] }) {
 export default function TrustedBy() {
   const t = useTranslations();
 
-  // Filtrer uniquement les logos visibles
+  // Visible logos only
   const visible = companies.filter((c) => c.is_visible);
 
-  // Si aucun logo n'est disponible, ne rien afficher
+  // Nothing to show
   if (visible.length === 0) return null;
 
   return (
     <Reveal>
       <div className="text-center">
-        {/* Titre de section sobre */}
+        {/* Section title */}
         <p className="text-sm font-medium uppercase tracking-widest text-muted-2">
           {t("trustedBy.title")}
         </p>
 
-        {/* ── Bande de défilement ───────────────────────────────────────────── */}
-        {/* Cas normal      : overflow-hidden + animate-marquee (défilement infini)
-            Reduced motion  : overflow visible + flex-wrap centré (pas de scroll)
-            group-hover     : pause au survol de la bande entière */}
-        {/* role="region" est requis pour que aria-label soit reconnu par les lecteurs
-            d'écran (un <div> sans role ARIA ignore son aria-label — violation ARIA 1.2).
-            La région est nommée par le <p> précédent, confirmé par aria-label. */}
+        {/* ── Marquee ─────────────────────────────────────────────────────── */}
+        {/* Default: overflow-hidden + infinite marquee, paused on hover.
+            Reduced motion: static, wrapped and centred.
+            role="region" is required for aria-label to be exposed on a <div>. */}
         <div
           role="region"
           aria-label={t("trustedBy.title")}
@@ -137,13 +125,13 @@ export default function TrustedBy() {
               group-hover:[animation-play-state:paused]
             "
           >
-            {/* Première passe — contenu accessible */}
+            {/* First pass: accessible content */}
             {visible.map((company) => (
               <LogoItem key={`a-${company.id}`} company={company} />
             ))}
 
-            {/* Deuxième passe — doublon visuel masqué des lecteurs d'écran
-                (ignoré dans le cas motion-reduce car display:none via motion-reduce) */}
+            {/* Second pass: visual duplicate, hidden from screen readers
+                (and not displayed with reduced motion) */}
             <div
               aria-hidden="true"
               className="contents motion-reduce:hidden"

@@ -2,18 +2,9 @@
 
 // TechStackGrid.tsx
 // -----------------
-// Grille interactive de la stack technique.
-// Chaque technologie est représentée par un badge coloré par catégorie.
-// Tooltip au hover : niveau de maîtrise (barres), années d'expérience, contexte.
-//
-// Comportement :
-// - Badge : abbr colorée + nom court
-// - Tooltip CSS pur (pas de JS) : visible au hover/focus, positionné au-dessus
-// - Niveau : 4 pastilles pleines/vides (● ● ● ○) avec couleur adaptée
-// - Accessibilité : focus-visible ring, role="tooltip", aria-describedby
-// - prefers-reduced-motion : tooltip sans transition
-// - Track-aware : contenu différent Salesforce vs IT Ops
-// - Locale-aware : contexte en EN ou FR
+// Interactive tech stack grid: one badge per technology, coloured by category,
+// with a CSS-only tooltip (shown on hover/focus) giving the skill level,
+// years of experience and context. Content depends on the track and locale.
 
 import { useTrack } from "@/app/[locale]/providers";
 import { useLocale } from "next-intl";
@@ -32,9 +23,9 @@ function toLocale(locale: string): Locale {
   return (LOCALES as string[]).includes(locale) ? (locale as Locale) : "en";
 }
 
-// ── Sous-composant : pastilles de niveau ──────────────────────────────────
+// ── Level dots ──────────────────────────────────────────────────────────
 function LevelDots({ level }: { level: TechLevel }) {
-  // 4 pastilles — pleines jusqu'au niveau, vides après
+  // 4 dots, filled up to the level
   return (
     <span className="flex items-center gap-0.5" aria-hidden="true">
       {([1, 2, 3, 4] as TechLevel[]).map((n) => (
@@ -52,19 +43,14 @@ function LevelDots({ level }: { level: TechLevel }) {
   );
 }
 
-// ── Alignement du tooltip selon la colonne ────────────────────────────────
-// Audit 2026-10-23 (P2) : le tooltip (w-52, soit 208 px) était toujours centré
-// sur sa carte. Sur mobile, les cartes font ~100 px de large : celui des
-// cartes de la dernière colonne dépassait à droite et, même invisible
-// (opacity-0 — il reste dans le flux de mise en page), élargissait la page
-// (/about mesuré à 403-420 px de large pour un viewport de 390 px). Celui des
-// cartes de la première colonne dépassait à gauche et était coupé à l'affichage.
-// Correctif : aligner le tooltip sur le bord gauche de la carte en première
-// colonne, sur le bord droit en dernière colonne, centré ailleurs. Le nombre
-// de colonnes suit les breakpoints de la grille (3 / sm:4 / md:5) ; à partir
-// de lg (6 colonnes, cartes larges) le centrage ne déborde plus et est rétabli.
-// Les classes sont écrites en toutes lettres (pas de concaténation) pour que
-// Tailwind les détecte à la compilation.
+// ── Tooltip alignment per column ──────────────────────────────────────────
+// The 208px tooltip is wider than a mobile card. Centred, it overflowed the
+// page from the last column (even while invisible, it stays in the layout)
+// and was clipped from the first one. It is aligned to the card's left edge
+// in the first column and right edge in the last, centred elsewhere. Column
+// counts follow the grid breakpoints (3 / sm:4 / md:5); from lg (6 wide
+// columns) centring fits again. Class names are spelled out in full so
+// Tailwind can detect them.
 const ALIGN_LEFT = {
   base: "left-0 translate-x-0 after:left-1/4",
   sm: "sm:left-0 sm:right-auto sm:translate-x-0 sm:after:left-1/4",
@@ -89,12 +75,12 @@ function tooltipAlignClasses(index: number): string {
     if (col === COLUMNS[bp] - 1) return ALIGN_RIGHT[bp];
     return ALIGN_CENTER[bp];
   });
-  // lg et au-delà : centrage d'origine.
+  // lg and up: centred.
   parts.push("lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:after:left-1/2");
   return parts.join(" ");
 }
 
-// ── Sous-composant : badge individuel + tooltip ───────────────────────────
+// ── Badge + tooltip ───────────────────────────────────────────────────────
 function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; index: number }) {
   const safeLocale = toLocale(locale);
   const colors  = CATEGORY_COLORS[tech.category];
@@ -106,14 +92,12 @@ function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; ind
     ? `${tech.years} año${tech.years !== 1 ? "s" : ""}`
     : `${tech.years} yr${tech.years !== 1 ? "s" : ""}`;
 
-  // id unique pour aria-describedby
+  // Unique id for aria-describedby
   const tooltipId = `tooltip-${tech.id}`;
 
   return (
-    // group — permet au hover/focus d'activer les classes group-hover:
-    // Pas de role="button" : cet élément ne fait qu'afficher un tooltip au focus/hover,
-    // il n'a aucun gestionnaire de clic/clavier — role="button" sans action associée
-    // trompait les lecteurs d'écran et les utilisateurs clavier (WCAG 4.1.2 / 2.1.1).
+    // Focusable so keyboard users get the tooltip. No role="button": the
+    // element has no action.
     <div className="group relative" tabIndex={0} aria-describedby={tooltipId}>
       {/* ── Badge ──────────────────────────────────────────────────────── */}
       <div
@@ -127,7 +111,7 @@ function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; ind
           colors.border,
         ].join(" ")}
       >
-        {/* Abréviation — 2-3 lettres, stylisée */}
+        {/* Abbreviation (2-3 letters) */}
         <span
           className={[
             "font-display font-bold text-base leading-none",
@@ -138,31 +122,27 @@ function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; ind
           {tech.abbr}
         </span>
 
-        {/* Nom complet — court, tronqué si nécessaire */}
+        {/* Short name, truncated if needed */}
         <span className="text-[10px] font-medium text-center text-muted-2 leading-tight max-w-[60px] truncate">
           {tech.name}
         </span>
       </div>
 
       {/* ── Tooltip ────────────────────────────────────────────────────── */}
-      {/* Positionné au-dessus du badge, centré horizontalement.
-          invisible → visible au hover/focus via group-hover: / group-focus:
-          translate-y-1 → translate-y-0 pour effet de surgissement.
-          z-50 pour passer au-dessus des autres éléments. */}
+      {/* Above the badge; revealed on hover/focus with a small upward slide. */}
       <div
         id={tooltipId}
         role="tooltip"
         className={[
-          // Positionnement — horizontal selon la colonne (voir tooltipAlignClasses)
+          // Horizontal position depends on the column (see tooltipAlignClasses)
           "absolute bottom-full mb-2 z-50",
           tooltipAlignClasses(index),
           "w-52",
-          // Apparence
+          // Look
           "rounded-xl border border-black/10 dark:border-white/10",
           "bg-white/95 dark:bg-[#0d1b2e]/95 backdrop-blur-xs",
           "p-3 shadow-xl shadow-black/10 dark:shadow-black/30",
-          // Flèche pointant vers le bas
-          // (position horizontale de la flèche : after:left-* dans tooltipAlignClasses)
+          // Arrow pointing down (horizontal position: after:left-* in tooltipAlignClasses)
           "after:absolute after:top-full after:-translate-x-1/2",
           "after:border-4 after:border-transparent",
           "after:border-t-white/95 dark:after:border-t-[#0d1b2e]/95",
@@ -175,10 +155,10 @@ function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; ind
           "motion-reduce:transition-none",
         ].join(" ")}
       >
-        {/* Nom + catégorie */}
+        {/* Name + category */}
         <p className="font-semibold text-sm text-strong leading-tight">{tech.name}</p>
 
-        {/* Niveau : pastilles + label */}
+        {/* Level: dots + label */}
         <div className="mt-1.5 flex items-center gap-2">
           <LevelDots level={tech.level} />
           <span className={["text-xs font-medium", colors.text].join(" ")}>
@@ -186,19 +166,19 @@ function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; ind
           </span>
         </div>
 
-        {/* Années d'expérience */}
+        {/* Years of experience */}
         <p className="mt-1 text-xs text-muted-2">
           {locale === "fr" ? `${yearsLabel} d'expérience` : locale === "es" ? `${yearsLabel} de experiencia` : `${yearsLabel} of experience`}
         </p>
 
-        {/* Contexte / usage */}
+        {/* Context / usage */}
         <p className="mt-1.5 text-xs text-muted leading-relaxed">{context}</p>
       </div>
     </div>
   );
 }
 
-// ── Composant principal ────────────────────────────────────────────────────
+// ── Main component ─────────────────────────────────────────────────────────
 export default function TechStackGrid() {
   const { track } = useTrack();
   const locale    = useLocale();
@@ -208,9 +188,9 @@ export default function TechStackGrid() {
   return (
     <Reveal delayMs={80}>
       <div
-        // Grille responsive : 4 colonnes desktop, 3 tablette, 2+ mobile
+        // Responsive grid: 3 columns on mobile up to 6 on desktop
         className="mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"
-        // Rôle liste pour les screen readers
+        // List role for screen readers
         role="list"
         aria-label={
           locale === "fr"

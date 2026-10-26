@@ -16,7 +16,7 @@ export default function ProfileFactsCard({ delayMs = 120 }: { delayMs?: number }
 
   const isSalesforce = track === "salesforce";
 
-  // Valeurs track-spécifiques
+  // Track-specific values
   const focusValue = isSalesforce
     ? t("profile.focusValueSalesforce")
     : t("profile.focusValueItOps");
@@ -36,7 +36,7 @@ export default function ProfileFactsCard({ delayMs = 120 }: { delayMs?: number }
   return (
     <Reveal delayMs={delayMs}>
       <div className="card p-6">
-        {/* h2 : première section sous le h1 de /about (audit 2026-10-25, heading-order) */}
+        {/* h2: first section under the /about h1 (heading order) */}
         <h2 className="text-lg font-semibold">{t("profile.atAGlanceTitle")}</h2>
 
         <dl className="mt-4 space-y-4">

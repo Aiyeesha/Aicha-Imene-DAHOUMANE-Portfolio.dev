@@ -2,22 +2,17 @@
 
 // VisualTimeline.tsx
 // ------------------
-// Timeline verticale animée pour la section "Parcours" de la page About.
-// Données : tableau de paragraphes texte depuis Supabase.
-//
-// Comportement :
-// - Chaque étape entre dans le viewport → animation entrée (slide + fade)
-// - Cercle numéroté gradient cyan, ligne de connexion qui "se dessine" vers le bas
-// - Carte avec fond subtil, bordure, shadow légère
-// - prefers-reduced-motion : animations désactivées, rendu statique
-// - Accessible : ol > li sémantique, aria-label sur la liste
+// Animated vertical timeline for the "Journey" section of the About page
+// (paragraphs from Supabase). Steps slide and fade in on scroll, the
+// connecting line "draws" downwards; static with reduced motion. Semantic
+// ol > li with an aria-label.
 
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
-// ── Variants Framer Motion ──────────────────────────────────────────────
+// ── Framer Motion variants ──────────────────────────────────────────────
 
-// Carte : glisse de la droite + fade
+// Card: slide in from the right + fade
 const cardVariants = {
   hidden:  { opacity: 0, x: 16, y: 8 },
   visible: { opacity: 1, x: 0,  y: 0,
@@ -25,7 +20,7 @@ const cardVariants = {
   },
 };
 
-// Cercle : zoom depuis 0
+// Circle: scale up from 0
 const circleVariants = {
   hidden:  { opacity: 0, scale: 0.6 },
   visible: { opacity: 1, scale: 1,
@@ -33,7 +28,7 @@ const circleVariants = {
   },
 };
 
-// Ligne verticale : grandit vers le bas (scaleY 0 → 1, origin top)
+// Vertical line: grows downwards (scaleY 0 → 1 from the top)
 const lineVariants = {
   hidden:  { scaleY: 0 },
   visible: { scaleY: 1,
@@ -41,7 +36,7 @@ const lineVariants = {
   },
 };
 
-// ── Sous-composant : étape individuelle ──────────────────────────────────
+// ── Single step ──────────────────────────────────────────────────────────
 function TimelineStep({
   text,
   index,
@@ -55,19 +50,19 @@ function TimelineStep({
 }) {
   const ref = useRef<HTMLLIElement>(null);
 
-  // Déclenché une seule fois quand le li entre dans le viewport
+  // Fire once when the <li> enters the viewport
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
-  // Animate uniquement si réduction non demandée
+  // No animation with reduced motion
   const animate = shouldReduce ? "visible" : (inView ? "visible" : "hidden");
 
   return (
     <li ref={ref} className="flex gap-4 md:gap-6">
 
-      {/* ── Colonne gauche — cercle + ligne ────────────────────────────── */}
+      {/* ── Left column: circle + line ──────────────────────────────── */}
       <div className="flex flex-col items-center shrink-0">
 
-        {/* Cercle numéroté — gradient cyan/bleu */}
+        {/* Numbered circle */}
         <motion.div
           variants={shouldReduce ? {} : circleVariants}
           initial="hidden"
@@ -86,13 +81,13 @@ function TimelineStep({
         >
           {index + 1}
 
-          {/* Halo pulsant discret sur la dernière étape "en cours" */}
+          {/* Subtle pulse on the last ("current") step */}
           {isLast && !shouldReduce && (
             <span className="absolute inset-0 rounded-full animate-ping bg-cyan-400/20 motion-reduce:animate-none" />
           )}
         </motion.div>
 
-        {/* Ligne de connexion — grandit vers le bas */}
+        {/* Connecting line */}
         {!isLast && (
           <motion.div
             variants={shouldReduce ? {} : lineVariants}
@@ -109,24 +104,24 @@ function TimelineStep({
         )}
       </div>
 
-      {/* ── Colonne droite — carte de contenu ──────────────────────────── */}
+      {/* ── Right column: content card ───────────────────────────────── */}
       <motion.div
         variants={shouldReduce ? {} : cardVariants}
         initial="hidden"
         animate={animate}
         className={[
           "flex-1 rounded-2xl border p-4 md:p-5",
-          // Fond subtil différencié selon la position
+          // Alternating subtle background
           index % 2 === 0
             ? "bg-black/2 dark:bg-white/2"
             : "bg-cyan-500/3 dark:bg-cyan-400/3",
-          // Bordure légère
+          // Light border
           "border-black/8 dark:border-white/8",
-          // Espacement avec la prochaine étape
+          // Gap before the next step
           isLast ? "mb-0" : "mb-6",
         ].join(" ")}
       >
-        {/* Texte de l'étape */}
+        {/* Step text */}
         <p className="text-sm leading-relaxed text-muted">
           {text}
         </p>
@@ -136,7 +131,7 @@ function TimelineStep({
   );
 }
 
-// ── Composant principal ────────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────
 export default function VisualTimeline({
   steps,
   ariaLabel,
