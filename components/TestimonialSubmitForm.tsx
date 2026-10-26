@@ -2,23 +2,14 @@
 
 // TestimonialSubmitForm.tsx
 // -------------------------
-// Formulaire de soumission de témoignage professionnel.
-// Accessible via /[locale]/testimonial-submit?token=SECRET.
+// Professional testimonial form, reached through a signed invitation link
+// (/[locale]/testimonial-submit?…).
 //
-// Sécurité :
-//   - Le token est passé en prop depuis le Server Component (non exposé en URL côté client)
-//   - Honeypot anti-spam (champ "website" caché visuellement mais présent dans le DOM)
-//   - Validation côté client + côté serveur (API route)
+// Security: the server component passes a session key (never the raw token),
+// a honeypot field catches bots, and input is validated on both sides.
 //
-// Champs :
-//   - Nom complet *
-//   - Rôle / Poste *
-//   - Entreprise (optionnel)
-//   - Relation avec Aïcha * (dropdown)
-//   - Contexte de collaboration (optionnel)
-//   - Message / Témoignage * (20-2000 caractères)
-//   - URL photo (optionnel)
-//   - Langue du témoignage *
+// Fields: full name*, role*, company, relationship*, collaboration context,
+// testimonial* (20-2000 characters), photo URL, testimonial language*.
 
 import { useState, useId } from "react";
 
@@ -27,9 +18,9 @@ import { useState, useId } from "react";
 type Locale = "en" | "fr" | "es";
 
 type Props = {
-  /** Clé de session HMAC 30 min générée côté serveur — jamais le token brut */
+  /** 30-minute HMAC session key generated on the server, never the raw token */
   sessionKey: string;
-  /** Invitation (dérivé HMAC signé) et expiration : la clé de session y est liée */
+  /** Signed invitation and its expiry; the session key is bound to them */
   invite: string;
   exp: number;
   locale: Locale;
@@ -37,7 +28,7 @@ type Props = {
 
 type FormState = "idle" | "loading" | "success" | "error";
 
-// ── Traductions inline (pas de useTranslations — page hors layout principal) ──
+// ── Inline translations (the page is outside the main i18n layout) ──
 
 const LABELS = {
   en: {
@@ -129,17 +120,17 @@ const LABELS = {
   },
 } as const;
 
-// ── Composant principal ───────────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────────
 
 export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale }: Props) {
   const l = LABELS[locale];
-  const uid = useId(); // préfixe unique pour les id HTML (accessibilité)
+  const uid = useId(); // unique prefix for HTML ids (accessibility)
 
   const [formState, setFormState] = useState<FormState>("idle");
   const [errorMsg,  setErrorMsg]  = useState("");
   const [charCount, setCharCount] = useState(0);
 
-  // Valeurs du formulaire
+  // Form values
   const [fields, setFields] = useState({
     full_name:             "",
     role:                  "",
@@ -152,14 +143,14 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
     website:               "", // honeypot
   });
 
-  // ── Mise à jour d'un champ ──────────────────────────────────────────────────
+  // ── Field update ────────────────────────────────────────────────────────────
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setFields((prev) => ({ ...prev, [name]: value }));
     if (name === "message") setCharCount(value.length);
   }
 
-  // ── Soumission ──────────────────────────────────────────────────────────────
+  // ── Submit ──────────────────────────────────────────────────────────────────
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormState("loading");
@@ -187,7 +178,7 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
     }
   }
 
-  // ── Succès ─────────────────────────────────────────────────────────────────
+  // ── Success ────────────────────────────────────────────────────────────────
   if (formState === "success") {
     return (
       <div
@@ -203,11 +194,11 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
     );
   }
 
-  // ── Formulaire ─────────────────────────────────────────────────────────────
+  // ── Form ───────────────────────────────────────────────────────────────────
   return (
     <form onSubmit={handleSubmit} noValidate className="grid gap-5">
 
-      {/* ── Honeypot — masqué visuellement, ignoré par les humains ────────── */}
+      {/* ── Honeypot: visually hidden, ignored by humans ────────────────── */}
       <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", opacity: 0 }}>
         <label htmlFor={`${uid}-website`}>Website</label>
         <input
@@ -221,10 +212,10 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
         />
       </div>
 
-      {/* Grille 2 colonnes sur desktop */}
+      {/* Two columns on desktop */}
       <div className="grid gap-5 sm:grid-cols-2">
 
-        {/* Nom complet */}
+        {/* Full name */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${uid}-full_name`} className="text-sm font-medium">
             {l.full_name} <span className="text-rose-500" aria-label={l.required}>*</span>
@@ -242,7 +233,7 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
           />
         </div>
 
-        {/* Rôle */}
+        {/* Role */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${uid}-role`} className="text-sm font-medium">
             {l.role} <span className="text-rose-500" aria-label={l.required}>*</span>
@@ -260,7 +251,7 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
         </div>
       </div>
 
-      {/* Entreprise */}
+      {/* Company */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${uid}-company`} className="text-sm font-medium">
           {l.company}
@@ -277,7 +268,7 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
         />
       </div>
 
-      {/* Relation */}
+      {/* Relationship */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${uid}-relation_type`} className="text-sm font-medium">
           {l.relation_type} <span className="text-rose-500" aria-label={l.required}>*</span>
@@ -297,7 +288,7 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
         </select>
       </div>
 
-      {/* Contexte */}
+      {/* Context */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${uid}-collaboration_context`} className="text-sm font-medium">
           {l.context}
@@ -329,13 +320,13 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
           onChange={handleChange}
           className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2.5 text-sm outline-hidden focus:ring-2 focus:ring-cyan-500/40 resize-y"
         />
-        {/* Compteur de caractères */}
+        {/* Character counter */}
         <p className="text-xs text-muted-2 text-right">
           {charCount} / 2000 — {l.message_hint}
         </p>
       </div>
 
-      {/* URL photo */}
+      {/* Photo URL */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${uid}-photo_url`} className="text-sm font-medium">
           {l.photo_url}
@@ -352,7 +343,7 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
         />
       </div>
 
-      {/* Langue */}
+      {/* Language */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${uid}-locale`} className="text-sm font-medium">
           {l.lang} <span className="text-rose-500" aria-label={l.required}>*</span>
@@ -370,14 +361,14 @@ export default function TestimonialSubmitForm({ sessionKey, invite, exp, locale 
         </select>
       </div>
 
-      {/* Erreur globale */}
+      {/* Form-level error */}
       {formState === "error" && errorMsg && (
         <p role="alert" className="rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
           {errorMsg}
         </p>
       )}
 
-      {/* Bouton submit */}
+      {/* Submit button */}
       <div>
         <button
           type="submit"

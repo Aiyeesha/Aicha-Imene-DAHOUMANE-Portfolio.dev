@@ -26,11 +26,10 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
         }
       }
     });
-    // Synchronisation légitime avec le DOM (balises <link hreflang> de la page
-    // affichée, relues après chaque navigation) : ni dérivable au rendu — elles
-    // n'existent pas côté serveur pour ce composant — ni exposée par un store
-    // abonnable. Audit 2026-10-23 (PERF-5) : avertissement examiné et conservé.
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture DOM post-navigation
+    // Legitimate DOM sync: the page's <link hreflang> tags are re-read after
+    // each navigation; they cannot be derived during render (they do not
+    // exist on the server for this component) and no store exposes them.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM read after navigation
     setAlternates(map);
   }, [pathname]);
 

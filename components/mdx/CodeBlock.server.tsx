@@ -1,18 +1,15 @@
 // CodeBlock.server.tsx
 // --------------------
-// Server Component wrapper pour les blocs de code MDX.
-// Utilisé par mdx-components.tsx (App Router @next/mdx).
-//
-// Architecture :
-//   - Le bloc <pre> est rendu côté serveur (aucun JS nécessaire pour l'affichage)
-//   - Le bouton "Copier" est un Client Component (CopyButton) — interactivité minimale
-//   - data-language, data-theme et autres attrs de rehype-pretty-code sont transmis
-//     au <pre> pour que les CSS vars shiki fonctionnent (--shiki-light / --shiki-dark)
+// Server component wrapping MDX code blocks (mapped in mdx-components.tsx).
+// The <pre> is rendered on the server; only the "Copy" button (CopyButton) is
+// a client component. data-language, data-theme and the other
+// rehype-pretty-code attributes are passed to <pre> so the shiki CSS
+// variables (--shiki-light / --shiki-dark) apply.
 
 import CopyButton from "./CopyButton";
 import { getTranslations } from "next-intl/server";
 
-// ── Extraction récursive du texte brut (pour le bouton copier) ─────────────
+// ── Recursive plain-text extraction (for the copy button) ─────────────────
 function extractText(node: any): string {
   if (node == null) return "";
   if (typeof node === "string") return node;
@@ -21,7 +18,7 @@ function extractText(node: any): string {
   return "";
 }
 
-// ── Labels humains pour les langages ──────────────────────────────────────
+// ── Human-readable language labels ────────────────────────────────────────
 const LANG_LABELS: Record<string, string> = {
   js: "JavaScript",
   javascript: "JavaScript",
@@ -58,7 +55,7 @@ const LANG_LABELS: Record<string, string> = {
 
 type CodeBlockServerProps = {
   children: any;
-  // rehype-pretty-code injecte data-language sur <pre>
+  // Set on <pre> by rehype-pretty-code
   "data-language"?: string;
   [key: string]: any;
 };
@@ -68,15 +65,15 @@ export default async function CodeBlockServer({
   "data-language": dataLanguage,
   ...rest
 }: CodeBlockServerProps) {
-  // Texte brut extrait pour le bouton copier
+  // Plain text for the copy button
   const codeText = extractText(children);
 
-  // Label humain du langage (ex. "apex" → "Apex", "ts" → "TypeScript")
+  // Human-readable language label (e.g. "apex" → "Apex", "ts" → "TypeScript")
   const langLabel = dataLanguage
     ? (LANG_LABELS[dataLanguage.toLowerCase()] ?? dataLanguage.toUpperCase())
     : null;
 
-  // Nom accessible du bloc défilable, traduit (locale résolue par next-intl).
+  // Translated accessible name of the scrollable block (locale from next-intl).
   const t = await getTranslations("a11y");
   const regionLabel = langLabel
     ? t("codeBlockLang", { language: langLabel })
@@ -84,7 +81,7 @@ export default async function CodeBlockServer({
 
   return (
     <div className="mdx-code">
-      {/* Toolbar : badge de langage à gauche + bouton copier à droite */}
+      {/* Toolbar: language badge on the left, copy button on the right */}
       <div className="mdx-code__toolbar">
         {langLabel && (
           <span className="mdx-code__lang" aria-hidden="true">
@@ -94,17 +91,11 @@ export default async function CodeBlockServer({
         <CopyButton text={codeText} />
       </div>
 
-      {/* <pre> — data-language et les autres attrs shiki sont transmis
-          pour que les variables CSS --shiki-light / --shiki-dark fonctionnent */}
-      {/* Accessibilité clavier — audit 2026-10-23 (A11Y-2, axe
-          scrollable-region-focusable, gravité « serious ») : un bloc de code
-          plus large que l'écran défile horizontalement ; sans tabIndex, un
-          utilisateur clavier ne pouvait pas l'atteindre ni le faire défiler
-          (WCAG 2.1.1). tabIndex={0} le rend focalisable (flèches pour
-          défiler) ; role="region" + aria-label annoncent ce qu'il contient —
-          un aria-label n'est pas autorisé sur un <pre> sans rôle explicite.
-          {...rest} reste avant ces attributs : rehype-pretty-code ne doit pas
-          pouvoir les écraser. */}
+      {/* shiki attributes are passed through so its CSS variables apply.
+          Wide code scrolls horizontally: tabIndex={0} makes it reachable and
+          scrollable from the keyboard (WCAG 2.1.1), role="region" +
+          aria-label name it (aria-label is not allowed on a bare <pre>).
+          {...rest} comes first so rehype-pretty-code cannot override these. */}
       <pre
         className="mdx-code__pre soft-ring"
         data-language={dataLanguage}

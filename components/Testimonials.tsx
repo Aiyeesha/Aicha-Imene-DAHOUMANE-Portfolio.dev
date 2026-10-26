@@ -17,11 +17,8 @@ export default function Testimonials({ items }: { items: Testimonial[] }) {
   const t = useTranslations();
   const [index, setIndex] = useState(0);
 
-  // Real guard against shipping unattributed template testimonials — see the
-  // isPlaceholder doc comment in content/testimonials.ts. Filtering here (not
-  // just gating with NEXT_PUBLIC_SHOW_TESTIMONIALS at the call site) means a
-  // future caller can't accidentally render a placeholder just by passing the
-  // raw content array.
+  // Never render template testimonials (see isPlaceholder in
+  // content/testimonials.ts), whatever the caller passes.
   const publishable = useMemo(() => items.filter((item) => !item.isPlaceholder), [items]);
 
   const current = useMemo(() => publishable[index], [publishable, index]);

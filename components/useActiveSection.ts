@@ -8,9 +8,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
  * Scroll-spy for anchored sections with fixed navbar:
  * - Primary: IntersectionObserver (cheap)
  * - Secondary: scroll-based fallback (accurate) when IO doesn't yield a stable result.
- *
- * Tips:
- * - Tune rootMargin / thresholds for your header height and desired feel.
  */
 export default function useActiveSection(sectionIds: string[]) {
   const [activeId, setActiveId] = useState<string>("");
@@ -63,7 +60,7 @@ export default function useActiveSection(sectionIds: string[]) {
     // ---- Scroll fallback (secondary) ----
     // Picks the section whose top is the closest to a target line.
     const onScroll = () => {
-      // Au sommet de la page (hero visible) → aucune section active dans la navbar.
+      // At the very top (hero visible), no nav item is active.
       if (window.scrollY < 50) {
         setActiveId("");
         return;

@@ -21,7 +21,7 @@ export default function ImageGallery({
   className = ""
 }: {
   images: GalleryImage[];
-  /** Nom du projet : sert à remplacer les textes alternatifs génériques. */
+  /** Project name, used to replace generic alt texts. */
   title: string;
   className?: string;
 }) {
@@ -66,7 +66,7 @@ export default function ImageGallery({
               ].join(" ")}
               aria-label={t("a11y.showImage", { index: i + 1 })}
             >
-              {/* Vignette décorative : le bouton porte déjà son nom (« Afficher l'image N ») */}
+              {/* Decorative thumbnail: the button already has a name ("Show image N") */}
               <SafeImage src={img.src} alt="" sizes="112px" className="object-contain" />
             </button>
           ))}
