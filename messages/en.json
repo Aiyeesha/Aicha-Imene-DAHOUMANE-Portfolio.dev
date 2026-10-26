@@ -466,7 +466,7 @@
       },
       {
         "q": "Where are you based? Which work mode?",
-        "a": "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, and I'm also open to relocation. I work on-site or hybrid; I'm not looking for fully remote roles."
+        "a": "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, and I'm also open to international relocation. I work on-site or hybrid; I'm not looking for fully remote roles."
       },
       {
         "q": "What happens after you're contacted?",
@@ -501,7 +501,7 @@
     "rolesValuesSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
     "rolesValuesItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
     "location": "Location",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France · Open to relocation",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France · Open to international relocation",
     "cta": "Get in touch →"
   },
   "hybrid": {

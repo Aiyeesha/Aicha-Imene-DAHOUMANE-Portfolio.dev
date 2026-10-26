@@ -466,7 +466,7 @@
       },
       {
         "q": "Où êtes-vous basée ? Quel mode de travail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France ; je suis également ouverte à la relocalisation. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Ma priorité est Paris et l'Île-de-France ; je suis également ouverte à la relocalisation internationale. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
       },
       {
         "q": "Comment se passe la suite après une prise de contact ?",
@@ -501,7 +501,7 @@
     "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France · Ouverte à la relocalisation",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Priorité Paris / Île-de-France · Ouverte à la relocalisation internationale",
     "cta": "Prendre contact →"
   },
   "hybrid": {
