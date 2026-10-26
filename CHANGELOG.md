@@ -17,6 +17,15 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
+- **Sécurité et hygiène (lot 4 de l'audit du 25/10/2026)** :
+  - le proxy s'applique à tout chemin, même contenant un point (CSP et rate-limit de `/admin` étaient contournés), et `/admin/:path*` y est listé explicitement ;
+  - le rate-limit de `/admin` ne compte plus que les échecs d'authentification (l'administratrice se verrouillait en quelques navigations) ;
+  - `/api/csp-report` lit aussi les rapports de la Reporting API envoyés par Chrome et Edge, jusqu'ici ignorés ;
+  - `/api/contact` valide son corps avec un schéma strict (plus d'erreur 500 sur un champ non textuel) et limite l'appel à Formhook à 5 s ;
+  - en production, une configuration d'environnement invalide arrête le démarrage ; quatre secrets supplémentaires sont contrôlés (avertissement seulement) ;
+  - CI : la clé `service_role` n'est plus visible des scripts d'installation, `npm ci --ignore-scripts` ;
+  - service worker : plus de page obsolète servie après une redirection ou une 404, cache des pages borné ;
+  - images distantes limitées au projet Supabase du site, ancien alias Vercel redirigé en 308, flux RSS découvrables sur l'accueil et le blog, `security.txt` prolongé, `/api/redis-test` supprimé, `SECURITY.md` aligné sur le code.
 - **Admin : authentification revérifiée côté application** — Le `matcher` du middleware exclut les URL contenant un point : en `next start`, toute URL `/admin/incidents/<x.y>` (ex. `/admin/incidents/new.rsc`) atteignait la route `/admin/incidents/[id]` sans authentification ni rate-limit, rendait le layout admin et exécutait sa requête Supabase `service_role`. Le layout et chacune des 4 pages de `/admin` revérifient désormais l'authentification Basic (nouveau `lib/security/adminAuth.ts`, partagé avec les Server Actions) et rendent une 404 en cas d'échec. `requireAdminAuth` n'est plus exportée depuis un fichier `"use server"` (elle y constituait une Server Action publique). Non reproduit en production, où le middleware s'exécute (audit du 23/10/2026, P3).
 - **`/api/cache/invalidate` : corps validé** — `locale` doit appartenir aux langues du site, `slug` doit être un slug valide et accompagné d'une `locale`, les clés inconnues sont refusées, le corps est limité à 1 Kio. Un JSON invalide renvoie désormais 400 au lieu de vider tout le cache. Le vidage complet parcourt les clés projet avec `SCAN` au lieu de `KEYS` (commande O(N) bloquante) (audit du 23/10/2026, P7).
 - **Middleware : locale validée** — La locale extraite de l'URL par `proxy.ts` n'est transmise aux Server Components que si elle appartient à `routing.locales` (audit du 23/10/2026, CFG-4).
