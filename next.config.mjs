@@ -162,6 +162,14 @@ const nextConfig = {
       // pouvoir republier un article sans cache de redirection permanente.
       ...UNPUBLISHED_BLOG_REDIRECTS,
       ...UNPUBLISHED_PROJECT_REDIRECTS,
+      // Formulaire unique (audit 2026-10-25) : l'ancienne page /contact et ses
+      // champs recruteur sont fusionnés dans le formulaire #contact de l'accueil.
+      // Temporaire (307) pour pouvoir rétablir une page dédiée sans cache navigateur.
+      {
+        source: "/:locale(en|fr|es)/contact",
+        destination: "/:locale#contact",
+        permanent: false,
+      },
       // Ancien slug blog iDEM Connect — URL incorrecte référencée dans l'audit (2026-06-29)
       {
         source: "/:locale(en|fr|es)/projects/apex-backend-idem-connect",
