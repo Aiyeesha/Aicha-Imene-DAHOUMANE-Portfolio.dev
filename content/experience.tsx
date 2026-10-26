@@ -1,13 +1,10 @@
 // content/experience.tsx
 // ----------------------
-// Expériences professionnelles affichées dans la frise « Expérience » de la
-// page d'accueil (components/ExperienceTimeline.tsx), de la plus récente à la
-// plus ancienne.
-//
-// Chaque expérience est structurée en champs séparés — poste, entreprise,
-// type de contrat, période, lieu — pour composer le titre « Poste · Entreprise »
-// et la ligne « Contrat · Période · Lieu ». `note` est une remarque affichée
-// en tête des réalisations, en italique atténué.
+// Experiences shown in the home page "Experience" timeline
+// (components/ExperienceTimeline.tsx), newest first. Separate fields (role,
+// company, contract type, period, location) build the "Role · Company" title
+// and the "Contract · Period · Location" line; `note` is shown before the
+// achievements in muted italics.
 
 export type Locale = "en" | "fr" | "es";
 
@@ -18,7 +15,7 @@ export type ExperienceItem = {
   contract: string;
   period: string;
   location: string;
-  /** Remarque facultative, affichée avant les réalisations. */
+  /** Optional note, shown before the achievements. */
   note?: string;
   highlights: string[];
 };

@@ -1,9 +1,7 @@
 // lib/data/projects.ts
 // --------------------
-// Project list accessors, backed by file content (see lib/data/projectsSource.ts).
-// The Supabase read path was removed in the de-Supabase refactor — project
-// content now lives in content/projects.ts + content/projectDetails.ts and
-// images under /public/projects/.
+// Project list accessors, backed by file content (see lib/data/projectsSource.ts):
+// content/projects.ts + content/projectDetails.ts, images under /public/projects/.
 //
 // Signatures stay async so existing `await` call sites and the Redis-cached
 // wrappers (lib/data/*.cached.ts) keep working unchanged.

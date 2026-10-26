@@ -1,28 +1,23 @@
 // lib/supabase/withRetry.ts
 // -------------------------
-// Retry utilitaire pour les appels Supabase exposés aux blocages Cloudflare (503/429/524).
-// Utilise un backoff exponentiel avec jitter pour éviter les thundering herds.
-// Ne relance PAS sur les erreurs d'autorisation (401/403) ni "not found".
+// Retry helper for Supabase calls hit by Cloudflare blocks (503/429/524), with
+// exponential backoff and jitter. Never retries authorisation errors
+// (401/403) or "not found".
 
 const RETRYABLE_CODES = new Set([429, 503, 524, 520, 521, 522, 523]);
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 200;
-// Plafond dur par tentative — un client réseau qui traîne (DNS, TLS, undici
-// hanging) ne doit jamais faire dépasser le budget de la requête appelante.
-// Sans ce plafond, une tentative bloquée + le backoff des retries suivants
-// peut à elle seule dépasser les timeouts de test E2E (30s) ou de route API.
+// Hard cap per attempt, so a hanging network client (DNS, TLS, undici) never
+// pushes the caller past its request budget (E2E or API route timeouts).
 const ATTEMPT_TIMEOUT_MS = 5000;
-// CI (et les previews sans secrets configurés, ex. PRs Dependabot) retombe sur
-// cette URL factice — voir .github/workflows/ci.yml. Retenter contre un hôte
-// qu'on sait déjà cassé n'apporte rien et ne fait qu'accumuler du backoff sur
-// chaque appel Supabase de chaque page testée (c'est ce qui faisait dépasser
-// les timeouts Playwright, indépendamment de la version de @supabase/supabase-js).
+// CI (and previews without secrets, e.g. Dependabot PRs) use this placeholder
+// URL (see .github/workflows/ci.yml). Retrying against a host known to be
+// broken only adds backoff to every Supabase call of every tested page.
 export const isPlaceholderSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL === "https://placeholder.supabase.co";
-// Contre le placeholder, on sait déjà que l'appel échouera — pas besoin d'attendre
-// jusqu'à ATTEMPT_TIMEOUT_MS pour un vrai aller-retour réseau qui n'aboutira jamais.
-// Cet appel se produit sur CHAQUE page rendue (ex. getFeaturedProjectsForNav dans le
-// layout) ; sous charge E2E concurrente, même quelques secondes par page suffisent à
-// dépasser les timeouts d'assertion stricts (ex. 5s sur un changement de langue).
+// Against the placeholder the call is bound to fail: do not wait for a real
+// round trip. This runs on every rendered page (e.g. getFeaturedProjectsForNav
+// in the layout), and under concurrent E2E load even a few seconds per page
+// break strict assertion timeouts.
 const PLACEHOLDER_ATTEMPT_TIMEOUT_MS = 300;
 
 function isRetryable(error: { code?: string | number; status?: number; message?: string } | null): boolean {
@@ -53,9 +48,8 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Course entre la promesse Supabase et un timer : si le client réseau n'a pas
-// répondu dans le délai imparti, on traite ça comme une erreur "timeout"
-// (retryable, voir isRetryable) plutôt que de rester bloqué indéfiniment.
+// Race the Supabase promise against a timer: no answer in time is treated as
+// a retryable "timeout" error rather than hanging forever.
 function withTimeout<T>(
   promise: PromiseLike<{ data: T | null; error: { code?: string | number; status?: number; message?: string } | null }>,
   ms: number

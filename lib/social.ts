@@ -1,7 +1,6 @@
 // lib/social.ts
-// Source unique de vérité pour les liens sociaux assainis.
-// Tolère une variable d'env malformée (virgule, espaces, double-encodage)
-// sans dupliquer la logique dans chaque composant.
+// Single source of truth for sanitised social links; tolerates a malformed
+// env variable (commas, spaces, double encoding).
 
 export function sanitizeUrl(raw: string | undefined, fallback = ""): string {
   const candidate = (raw ?? "").split(",")[0].trim();
@@ -16,10 +15,10 @@ export function sanitizeUrl(raw: string | undefined, fallback = ""): string {
 
 export const LINKEDIN_URL = sanitizeUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL);
 
-// Extrait l'URL GitHub depuis NEXT_PUBLIC_SAME_AS (liste séparée par virgules).
-// Exemple : "https://linkedin.com/in/...,https://github.com/Aiyeesha"
-// Vérifie le hostname via new URL() plutôt qu'un substring — évite qu'une URL
-// comme "https://evil.com/github.com" ne soit acceptée à tort (CWE-184).
+// GitHub URL from NEXT_PUBLIC_SAME_AS (comma-separated list, e.g.
+// "https://linkedin.com/in/...,https://github.com/Aiyeesha"). The hostname is
+// checked with new URL() rather than a substring, so
+// "https://evil.com/github.com" is rejected (CWE-184).
 export const GITHUB_URL = (() => {
   const sameAs = process.env.NEXT_PUBLIC_SAME_AS ?? "";
   const parts = sameAs.split(",").map((s) => s.trim());

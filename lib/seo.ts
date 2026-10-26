@@ -1,22 +1,14 @@
 // lib/seo.ts
 // ----------
-// Gabarit unique des balises <title> et borne des meta descriptions.
-//
-// Audit 2026-10-23 (SEO-1, SEO-2) :
-//   - les pages statiques utilisaient « X — Aïcha Imène DAHOUMANE » mais les
-//     fiches projet et les articles « X | Aïcha Imène DAHOUMANE — Salesforce &
-//     IT Ops » : deux gabarits, et jusqu'à 156 caractères (Google tronque vers
-//     60). Un seul gabarit, sans suffixe de parcours, pour toutes les pages ;
-//   - les descriptions des fiches et articles (reprises du contenu) allaient
-//     jusqu'à 351 caractères ; Google en affiche ~155-160. Elles sont bornées à
-//     160 caractères, coupées à une frontière de mot.
-//
-// Pour raccourcir le suffixe sur tout le site (ex. « A. I. DAHOUMANE »), il
-// suffit de modifier TITLE_SUFFIX — c'est l'unique source.
+// Single <title> template and meta description length limit.
+// Every page uses "{title} — Aïcha Imène DAHOUMANE" (no track suffix, short
+// enough for Google's ~60 characters), and descriptions are capped at 160
+// characters on a word boundary. TITLE_SUFFIX is the only place to change the
+// suffix site-wide.
 
 export const TITLE_SUFFIX = "Aïcha Imène DAHOUMANE";
 
-/** Titre de page selon le gabarit unique : « {titre} — Aïcha Imène DAHOUMANE ». */
+/** Page title from the shared template: "{title} — Aïcha Imène DAHOUMANE". */
 export function pageTitle(title: string): string {
   return `${title} — ${TITLE_SUFFIX}`;
 }
@@ -24,28 +16,26 @@ export function pageTitle(title: string): string {
 const DESCRIPTION_MAX = 160;
 
 /**
- * Borne une meta description à 160 caractères : coupe à la dernière frontière
- * de mot avant la limite et ajoute « … ». Les espaces multiples et retours à
- * la ligne (fréquents dans les contenus MDX) sont normalisés.
+ * Caps a meta description at 160 characters: cuts at the last word boundary
+ * before the limit and adds "…". Repeated spaces and newlines (common in MDX)
+ * are normalised.
  */
 export function clampDescription(text: string, max = DESCRIPTION_MAX): string {
   const clean = text.replace(/\s+/g, " ").trim();
-  // Comparaison en points de code (« é », « — » comptent pour 1).
+  // Count code points ("é", "—" count as 1).
   const chars = [...clean];
   if (chars.length <= max) return clean;
   const cut = chars.slice(0, max - 1).join("");
   const lastSpace = cut.lastIndexOf(" ");
-  // Coupe au dernier espace s'il n'est pas trop loin ; ponctuation finale retirée.
+  // Cut at the last space unless it is too far back; trailing punctuation removed.
   const base = lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut;
   return `${base.replace(/[\s,;:.\-—–]+$/u, "")}…`;
 }
 
-// ── Flux RSS découvrables ──────────────────────────────────────────────────
-// Audit 2026-10-25 (constat 12) : le layout racine annonce les flux RSS, mais
-// chaque page qui définit ses propres `alternates` (canonical, hreflang)
-// remplace l'objet entier — l'accueil, /blog et les articles n'exposaient donc
-// aucun <link rel="alternate" type="application/rss+xml">. À répandre dans
-// `alternates` : `alternates: { canonical, languages, ...rssAlternates(locale) }`.
+// ── Discoverable RSS feeds ─────────────────────────────────────────────────
+// A page defining its own `alternates` (canonical, hreflang) replaces the
+// whole object, dropping the root layout's feed links. Spread this into it:
+// `alternates: { canonical, languages, ...rssAlternates(locale) }`.
 const FEEDS: Record<string, { url: string; title: string }> = {
   en: { url: "/feed.xml", title: "RSS Feed (EN)" },
   fr: { url: "/feed-fr.xml", title: "Flux RSS (FR)" },

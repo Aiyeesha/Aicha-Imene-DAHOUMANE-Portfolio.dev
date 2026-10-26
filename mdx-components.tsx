@@ -10,13 +10,13 @@ import TableServer from "@/components/mdx/Table.server";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
-    // Transmission de tous les props (data-language, data-theme…) depuis rehype-pretty-code
+    // Pass every prop (data-language, data-theme…) from rehype-pretty-code
     pre: (props: any) => <CodeBlockServer {...props} />,
     h2: (props: any) => <H2>{props.children}</H2>,
     h3: (props: any) => <H3>{props.children}</H3>,
     a: (props: any) => <a {...props} className={["mdx-link", props.className || ""].join(" ")} />,
-    // Tableaux GFM : conteneur défilable accessible, pour qu'un tableau large
-    // ne fasse jamais déborder la page sur mobile (audit 2026-10-23, P2).
+    // GFM tables: accessible scrollable wrapper, so a wide table never
+    // overflows the page on mobile.
     table: (props: any) => <TableServer {...props} />,
     // remark-gfm renders `- [ ] …` task lists as a disabled <input type="checkbox">.
     // These are decorative, read-only markers — the list item text carries the

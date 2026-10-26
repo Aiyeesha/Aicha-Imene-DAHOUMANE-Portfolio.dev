@@ -1,27 +1,21 @@
 // content/blog/series.ts
 // ----------------------
-// Définition statique des séries d'articles du blog.
-// Une série = un parcours de lecture ordonné reliant des articles complémentaires.
-//
-// Pour ajouter une série :
-//   1. Ajouter un objet dans SERIES (id unique, noms EN/FR, slugs dans l'ordre)
-//   2. Les slugs doivent correspondre exactement aux noms de fichiers MDX (sans extension)
-//   3. Les articles des deux locales partagent le même slug — pas besoin de dupliquer
-//
-// Usage : getSerie(slug) → trouve la série d'un article + sa position
+// Blog article series: ordered reading paths across related posts.
+// To add one: add an entry to SERIES (unique id, names, slugs in reading
+// order). Slugs must match the MDX file names (without extension); all
+// locales share the same slug.
+// getSeriePosition(slug) finds a post's series and position.
 
 export type Serie = {
-  /** Identifiant unique de la série */
+  /** Unique series id */
   id: string;
-  /** Nom affiché de la série (trilingue) */
+  /** Display name (per locale) */
   name: { en: string; fr: string; es: string };
-  /** Slugs des articles dans l'ordre de lecture */
+  /** Post slugs in reading order */
   slugs: string[];
 };
 
-// ── Séries Salesforce ─────────────────────────────────────────────────────────
-// Séries resserrées à l'audit de contenu du 2026-09-25 (lot 4) : le blog ne
-// garde que 14 articles, tous rattachés à un projet du portfolio.
+// ── Salesforce series ─────────────────────────────────────────────────────────
 
 const SALESFORCE_DEV: Serie = {
   id: "salesforce-dev",
@@ -52,7 +46,7 @@ const SALESFORCE_DEVOPS: Serie = {
   ],
 };
 
-// ── Séries IT Ops ─────────────────────────────────────────────────────────────
+// ── IT Ops series ─────────────────────────────────────────────────────────────
 
 const ITOPS_WINDOWS: Serie = {
   id: "itops-windows",
@@ -76,21 +70,21 @@ export const SERIES: Serie[] = [
   ITOPS_WINDOWS,
 ];
 
-// ── Helper : trouver la série d'un article ────────────────────────────────────
+// ── Helper: find a post's series ──────────────────────────────────────────────
 
 export type SeriePosition = {
   serie:    Serie;
-  /** Index 0-based de l'article dans la série */
+  /** 0-based index of the post in the series */
   index:    number;
-  /** Slug de l'article précédent dans la série (ou null) */
+  /** Previous post slug in the series (or null) */
   prevSlug: string | null;
-  /** Slug de l'article suivant dans la série (ou null) */
+  /** Next post slug in the series (or null) */
   nextSlug: string | null;
 };
 
 /**
- * Retourne la position d'un article dans sa série, ou null s'il n'appartient à aucune.
- * Si un article est dans plusieurs séries (rare), retourne la première trouvée.
+ * A post's position in its series, or null when it belongs to none. If a post
+ * is in several series (rare), the first one found wins.
  */
 export function getSeriePosition(slug: string): SeriePosition | null {
   for (const serie of SERIES) {

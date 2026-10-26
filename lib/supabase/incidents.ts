@@ -1,9 +1,9 @@
 // lib/supabase/incidents.ts
 // --------------------------
-// Accès aux données du dashboard de gestion d'incidents (/admin/incidents).
-// Server-only — utilise createAdminSupabaseClient() (service_role), les
-// tables incidents / incident_checklist_items ont RLS deny-all (voir
-// supabase/migrations/009_incidents_schema.sql).
+// Data access for the incident management dashboard (/admin/incidents).
+// Server-only: uses createAdminSupabaseClient() (service_role); the incidents
+// and incident_checklist_items tables are RLS deny-all
+// (supabase/migrations/009_incidents_schema.sql).
 import "server-only";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
@@ -46,7 +46,7 @@ export type CreateIncidentInput = {
   description?: string;
 };
 
-// ── Lecture ──────────────────────────────────────────────────────────────────
+// ── Read ───────────────────────────────────────────────────────────────────────
 
 export async function listIncidents(): Promise<IncidentRow[]> {
   const supabase = createAdminSupabaseClient();
@@ -83,7 +83,7 @@ export async function getIncidentWithChecklist(id: string): Promise<{
   };
 }
 
-// ── Écriture ─────────────────────────────────────────────────────────────────
+// ── Write ──────────────────────────────────────────────────────────────────────
 
 export async function createIncident(input: CreateIncidentInput): Promise<string> {
   const supabase = createAdminSupabaseClient();
@@ -141,5 +141,5 @@ export async function updateIncidentStatus(id: string, status: IncidentStatus): 
   if (error) throw new Error(error.message);
 }
 
-// Fonctions pures (computeChecklistProgress, groupChecklistByPhase) : voir
-// lib/incidentProgress.ts et le ré-export en tête de fichier.
+// Pure functions (computeChecklistProgress, groupChecklistByPhase): see
+// lib/incidentProgress.ts and the re-export at the top of this file.

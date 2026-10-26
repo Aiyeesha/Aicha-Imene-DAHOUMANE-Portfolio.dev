@@ -5,10 +5,9 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1"
   },
-  // Exclure : build Next.js, node_modules, et les tests E2E Playwright
-  // (les specs e2e/ utilisent @playwright/test, incompatible avec Jest).
-  // .claude/ : worktrees git éphémères créés par les agents — contiennent une
-  // copie du repo (dont e2e/), que Jest tenterait sinon de charger. Absent en CI.
+  // Excluded: Next.js build, node_modules, Playwright E2E specs (they use
+  // @playwright/test, incompatible with Jest) and .claude/ (temporary agent
+  // worktrees holding a copy of the repo; absent in CI).
   testPathIgnorePatterns: [
     "<rootDir>/.next/",
     "<rootDir>/node_modules/",
@@ -18,15 +17,14 @@ module.exports = {
   transform: {
     "^.+\\.(t|j)sx?$": ["ts-jest", { tsconfig: "<rootDir>/tsconfig.json" }]
   },
-  // next-intl et use-intl sont des packages ESM purs.
-  // Jest (CommonJS) ne peut pas les importer sans transformation.
-  // On les exclut de transformIgnorePatterns pour que ts-jest les traite.
+  // next-intl and use-intl are ESM-only: excluded from transformIgnorePatterns
+  // so ts-jest transforms them.
   transformIgnorePatterns: [
     "/node_modules/(?!(next-intl|use-intl)/).*"
   ],
   coverageDirectory: "coverage",
-  // Périmètre de la couverture : l'ensemble du code livré (app/components/lib),
-  // pas seulement les fichiers déjà importés par les tests existants.
+  // Coverage covers all shipped code (app/components/lib), not only files
+  // imported by existing tests.
   collectCoverageFrom: [
     "app/**/*.{ts,tsx}",
     "components/**/*.{ts,tsx}",
@@ -35,19 +33,13 @@ module.exports = {
     "!**/*.test.{ts,tsx}",
     "!**/*.spec.{ts,tsx}",
   ],
-  // ts-jest ne passe pas par Babel, donc le provider "babel" par défaut de Jest
-  // n'instrumente aucun fichier (couverture silencieusement à 0/0). Le provider
-  // "v8" fonctionne indépendamment du transform utilisé.
+  // ts-jest bypasses Babel, so Jest's default "babel" provider instruments
+  // nothing (silently 0/0); "v8" works whatever the transform.
   coverageProvider: "v8",
-  // Seuil de couverture plancher — reflète désormais la couverture réelle mesurée
-  // sur l'ensemble du code livré (app/, components/, lib/), et non plus
-  // seulement les fichiers déjà importés par les tests existants (ce qui donnait
-  // une fausse impression de couverture représentative à 50%). Les valeurs
-  // ci-dessous sont légèrement en dessous des chiffres réels mesurés le
-  // 2026-07-12 (statements 7.14%, branches 42.58%, functions 17.01%, lines
-  // 7.14%), après avoir ciblé les modules critiques (lib/contactValidation.ts,
-  // lib/ratelimit.ts — cf. audit) plutôt que viser un chiffre global élevé.
-  // À augmenter progressivement au fil de l'ajout de nouvelles suites de tests.
+  // Floor thresholds, slightly below the coverage measured over all shipped
+  // code, after targeting critical modules (lib/contactValidation.ts,
+  // lib/ratelimit.ts…) rather than a high global figure. Raise them as test
+  // suites are added.
   coverageThreshold: {
     global: {
       statements: 7,

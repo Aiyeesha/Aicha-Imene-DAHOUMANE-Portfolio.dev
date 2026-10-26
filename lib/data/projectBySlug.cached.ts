@@ -1,7 +1,7 @@
 import { cacheGetOrSet } from "@/lib/cache";
 import { getPublishedProjectBySlugWithAssets } from "@/lib/data/projectBySlug";
 
-// On déduit le type réel depuis la fonction source (toujours synchro)
+// Real type inferred from the source function (always in sync)
 type ProjectWithAssets = Awaited<ReturnType<typeof getPublishedProjectBySlugWithAssets>>;
 
 export async function getPublishedProjectBySlugWithAssetsCached(

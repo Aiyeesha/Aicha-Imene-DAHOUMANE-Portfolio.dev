@@ -8,23 +8,22 @@ export type Testimonial = {
   context?: string;
   quote: string;
   /**
-   * Gabarit non attribué (name/role/company encore entre crochets) — ne doit
-   * JAMAIS être rendu. `components/Testimonials.tsx` filtre ce flag avant
-   * affichage ; ne pas se fier à la seule variable d'env
-   * NEXT_PUBLIC_SHOW_TESTIMONIALS pour empêcher une publication accidentelle.
+   * Unattributed template (name/role/company still in brackets): must NEVER
+   * be rendered. components/Testimonials.tsx filters on this flag; do not
+   * rely on NEXT_PUBLIC_SHOW_TESTIMONIALS alone to prevent accidental
+   * publication.
    */
   isPlaceholder?: boolean;
 };
 
-// POLITIQUE : n'afficher que des avis réels et attribuables.
-// Les entrées marquées [PLACEHOLDER] ne doivent JAMAIS être publiées —
-// elles servent de gabarit uniquement. Activer NEXT_PUBLIC_SHOW_TESTIMONIALS=true
-// uniquement lorsque toutes les entrées sont réelles et vérifiées.
-// Le flag `isPlaceholder: true` ci-dessous est le garde-fou réel (voir
-// components/Testimonials.tsx) — le retirer seulement une fois name/role/
-// company remplacés par de vraies informations d'attribution vérifiées.
+// POLICY: only real, attributable testimonials are shown. [PLACEHOLDER]
+// entries are templates and must NEVER be published; enable
+// NEXT_PUBLIC_SHOW_TESTIMONIALS=true only once every entry is real and
+// verified. `isPlaceholder: true` is the actual safeguard (see
+// components/Testimonials.tsx): remove it only once name/role/company hold
+// real, verified attribution.
 export const testimonials: Testimonial[] = [
-  // ── Avis réels (à compléter avec des informations d'attribution vérifiées) ──
+  // ── Real testimonials (to complete with verified attribution) ──
   {
     id: "t1",
     name: "Product Owner — Retail (EU)",
@@ -52,7 +51,7 @@ export const testimonials: Testimonial[] = [
     quote:
       "Très rigoureux sur la maintenabilité et la réduction des risques. Une approche structurée (checklists, doc, validation) qui sécurise la mise en production."
   },
-  // ── [PLACEHOLDER] — gabarits à remplacer par de vrais avis avant publication ──
+  // ── [PLACEHOLDER] templates, to replace with real testimonials before publishing ──
   {
     id: "t4",
     name: "[Prénom Nom]",
