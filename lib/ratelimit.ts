@@ -37,6 +37,11 @@ function createNoOpRatelimit(maxReq: number, windowMs: number) {
       limit: maxReq,
       remaining: isProd ? 0 : maxReq,
       reset: Date.now() + windowMs
+    }),
+    // Lecture sans consommation (utilisée par /admin, voir proxy.ts).
+    getRemaining: async () => ({
+      remaining: isProd ? 0 : maxReq,
+      reset: Date.now() + windowMs
     })
   } as unknown as Ratelimit;
 }
