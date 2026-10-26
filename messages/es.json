@@ -466,7 +466,7 @@
       },
       {
         "q": "¿Dónde estás ubicada? ¿Qué modalidad de trabajo?",
-        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Mi prioridad es París y la región de Île-de-France, y también estoy abierta a la reubicación. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
+        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Mi prioridad es París y la región de Île-de-France, y también estoy abierta a la reubicación internacional. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
       },
       {
         "q": "¿Qué pasa después de contactarme?",
@@ -501,7 +501,7 @@
     "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "location": "Ubicación",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France · Abierta a la reubicación",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France · Abierta a la reubicación internacional",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
