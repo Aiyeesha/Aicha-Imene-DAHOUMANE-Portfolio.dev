@@ -413,7 +413,6 @@ export default async function CertificationsPage({ params }: PageProps) {
       {/* Données structurées — BreadcrumbList */}
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }}
       />
 

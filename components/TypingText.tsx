@@ -9,20 +9,20 @@ interface TypingTextProps {
 }
 
 export function TypingText({ text, speed = 32, className }: TypingTextProps) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
+  // Progression rattachée au texte animé : quand `text` change, le compteur
+  // repart de 0 par dérivation, sans setState synchrone dans l'effet —
+  // audit 2026-10-23 (PERF-5).
+  const [progress, setProgress] = useState({ text, count: 0 });
+  const count = progress.text === text ? progress.count : 0;
+  const displayed = text.slice(0, count);
+  const done = count >= text.length;
 
   useEffect(() => {
-    setDisplayed("");
-    setDone(false);
     let i = 0;
     const id = setInterval(() => {
       i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) {
-        clearInterval(id);
-        setDone(true);
-      }
+      setProgress({ text, count: i });
+      if (i >= text.length) clearInterval(id);
     }, speed);
     return () => clearInterval(id);
   }, [text, speed]);
