@@ -26,6 +26,11 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
         }
       }
     });
+    // Synchronisation légitime avec le DOM (balises <link hreflang> de la page
+    // affichée, relues après chaque navigation) : ni dérivable au rendu — elles
+    // n'existent pas côté serveur pour ce composant — ni exposée par un store
+    // abonnable. Audit 2026-10-23 (PERF-5) : avertissement examiné et conservé.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture DOM post-navigation
     setAlternates(map);
   }, [pathname]);
 

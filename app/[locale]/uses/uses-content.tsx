@@ -1,7 +1,10 @@
-"use client";
+// Server Component — audit 2026-10-23 (PERF-3) : le composant n'était client
+// que pour lire le parcours (useTrack) et choisir des couleurs d'accent ; toute
+// la liste trilingue des outils partait dans le bundle JavaScript. Les accents
+// passent par la variante CSS `itops:` (globals.css), qui suit aussi une
+// bascule en cours de session.
 
 import Link from "next/link";
-import { useTrack } from "@/app/[locale]/providers";
 
 type Locale = "en" | "fr" | "es";
 
@@ -82,8 +85,6 @@ const USES: UseCategory[] = [
 ];
 
 export default function UsesContent({ locale }: { locale: string }) {
-  const { track } = useTrack();
-  const isSf = track === "salesforce";
   // Traduit intégralement en espagnol le 2026-09-26 (audit) — auparavant
   // `Locale` était fr/en-only et l'espagnol retombait silencieusement sur
   // l'anglais pour chaque description d'outil.
@@ -91,10 +92,10 @@ export default function UsesContent({ locale }: { locale: string }) {
   const isFr = locale === "fr";
   const isEs = locale === "es";
 
-  // Badge classes — open-source badge suit le track
-  const openSourceBadge = isSf
-    ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300"
-    : "bg-violet-500/10 text-violet-700 dark:text-violet-300";
+  // Badge classes — open-source badge suit le track (Salesforce par défaut,
+  // IT Ops via la variante `itops:`)
+  const openSourceBadge =
+    "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 itops:bg-violet-500/10 itops:text-violet-700 itops:dark:text-violet-300";
 
   const BADGE_CLASSES: Record<string, string> = {
     free:           "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
@@ -103,10 +104,15 @@ export default function UsesContent({ locale }: { locale: string }) {
   };
 
   // Hover sur les cards et liens
-  const cardHover  = isSf ? "hover:border-cyan-400/40"  : "hover:border-violet-400/40";
-  const linkHover  = isSf
-    ? "hover:border-cyan-400/40 hover:text-cyan-700 dark:hover:text-cyan-300"
-    : "hover:border-violet-400/40 hover:text-violet-700 dark:hover:text-violet-300";
+  // Les variantes dark:hover:border-* sont nécessaires : sans elles,
+  // dark:border-white/10 l'emportait et la bordure d'accent n'apparaissait
+  // jamais au survol en thème sombre (constaté lors de la migration PERF-3).
+  const cardHover  =
+    "hover:border-cyan-400/40 dark:hover:border-cyan-400/40 " +
+    "itops:hover:border-violet-400/40 itops:dark:hover:border-violet-400/40";
+  const linkHover  =
+    "hover:border-cyan-400/40 dark:hover:border-cyan-400/40 hover:text-cyan-700 dark:hover:text-cyan-300 " +
+    "itops:hover:border-violet-400/40 itops:dark:hover:border-violet-400/40 itops:hover:text-violet-700 itops:dark:hover:text-violet-300";
 
   const labels = {
     title:    isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup",
