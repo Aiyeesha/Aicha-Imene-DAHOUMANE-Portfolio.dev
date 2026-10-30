@@ -1,9 +1,9 @@
-// scripts/generate-cv-pdf.mjs
+// scripts/content/generate-cv-pdf.mjs
 // ---------------------------
 // Generates the CV PDF files from their HTML sources with Puppeteer
 // (headless Chromium) for browser-accurate rendering.
 //
-// Usage: node scripts/generate-cv-pdf.mjs (puppeteer is a devDependency)
+// Usage: node scripts/content/generate-cv-pdf.mjs (puppeteer is a devDependency)
 
 import puppeteer from "puppeteer";
 import { PDFDocument } from "pdf-lib";
@@ -13,7 +13,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
-const CV_DIR     = join(__dirname, "../public/cv");
+const CV_DIR     = join(__dirname, "../../public/cv");
 
 // CVs to generate: HTML source → target PDF + metadata
 const CV_FILES = [

@@ -5,7 +5,7 @@
  * about_pages (locale as the conflict key): no table is emptied and no other
  * row is touched.
  *
- *   npx tsx scripts/seed-about.ts
+ *   npx tsx scripts/db/seed-about.ts
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -18,7 +18,7 @@ if (fs.existsSync(envLocalPath)) {
   dotenv.config({ path: envLocalPath, override: true });
 }
 
-import { aboutContent } from "../content/about";
+import { aboutContent } from "../../content/about";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

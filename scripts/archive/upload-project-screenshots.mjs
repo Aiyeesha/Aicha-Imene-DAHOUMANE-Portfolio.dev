@@ -1,5 +1,5 @@
 // Uploads the screenshots of public/projects/<slug>/ to the Supabase Storage "projects" bucket.
-// Usage: node scripts/upload-project-screenshots.mjs <slug1> [slug2] [...]
+// Usage: node scripts/archive/upload-project-screenshots.mjs <slug1> [slug2] [...]
 // Needs .env.local with NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
 
 import { createClient } from "@supabase/supabase-js";
@@ -21,7 +21,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 const slugs = process.argv.slice(2);
 
 if (slugs.length === 0) {
-  console.error("Usage: node scripts/upload-project-screenshots.mjs <slug1> [slug2] ...");
+  console.error("Usage: node scripts/archive/upload-project-screenshots.mjs <slug1> [slug2] ...");
   process.exit(1);
 }
 

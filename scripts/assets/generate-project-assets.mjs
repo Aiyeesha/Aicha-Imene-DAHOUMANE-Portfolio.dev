@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/generate-project-assets.mjs
+// scripts/assets/generate-project-assets.mjs
 // -----------------------------------
 // Generates content/project-assets.json: the projects that have a logo
 // (public/projects/<slug>/logo.webp) and a cover
@@ -31,7 +31,7 @@ const has = (slug, file) => existsSync(join(PROJECTS_DIR, slug, file));
 
 const manifest = {
   // Embedded comment: JSON has no comment syntax.
-  _generated: "Fichier généré par scripts/generate-project-assets.mjs — ne pas modifier à la main.",
+  _generated: "Fichier généré par scripts/assets/generate-project-assets.mjs — ne pas modifier à la main.",
   logos: slugs.filter((slug) => has(slug, "logo.webp")),
   covers: slugs.filter((slug) => has(slug, "cover.webp")),
 };
