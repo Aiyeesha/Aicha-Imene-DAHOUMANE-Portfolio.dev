@@ -28,6 +28,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Security
 
+- **Génération des liens de témoignage** — `POST /api/admin/testimonial-invite` n'accepte plus `ADMIN_PASSWORD` : un jeton dédié `TESTIMONIAL_INVITE_ADMIN_TOKEN` (32 caractères minimum) est requis, sinon la route répond 503. Les échecs partagent le compteur de `/admin` (même limiteur, même clé : 5 échecs / 15 min / IP), seuls les échecs le consomment, et la route refuse si Redis est indisponible.
+- **Invitation de témoignage réellement à usage unique** — L'invitation est réservée de façon atomique dans Redis (`SET NX`) avant l'insertion : deux soumissions simultanées avec le même lien ne créent plus deux lignes. Si l'insertion échoue, le lien est rendu réutilisable.
+- **Migrations Supabase rejouables sans risque** — Nouvelle migration idempotente qui supprime les politiques `anon` recréées par `003_uptime.sql` et `004_testimonial_submissions.sql` après `002_policies.sql`. Aucun effet en production (déjà saine) ; protège les bases reconstruites (branches Preview, `supabase db reset`).
+- **`/api/errors`** — Taille de `stack` (1 500) et `url` (300) plafonnée côté serveur, comme côté client ; `line` et `col` doivent être des nombres finis.
 - **Invitations à témoigner durcies** (avant toute réactivation de la section) — Les liens restaient valables 30 jours et réutilisables, et la clé de session était commune à tous les visiteurs. Désormais : 14 jours au plus, usage unique (marqué dans Redis jusqu'à l'expiration, 410 en cas de réutilisation), clé de session liée à l'invitation, champs bornés et photo en `https:` uniquement (audit du 25/10/2026).
 - **Sécurité et hygiène (lot 4 de l'audit du 25/10/2026)** :
   - le proxy s'applique à tout chemin, même contenant un point (CSP et rate-limit de `/admin` étaient contournés), et `/admin/:path*` y est listé explicitement ;
@@ -45,6 +49,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **`/feed/{tag}`** — Un « % » littéral (`/feed/%25`) provoquait une erreur 500 (double décodage) ; un tag inconnu renvoyait un flux vide en 200, mis en cache. Les deux répondent désormais 404.
+- **Webhooks coupés par Vercel** — Les alertes de `cron/ping`, le heartbeat externe et l'alerte CSP critique partaient dans un `fetch` non attendu, qu'une fonction serverless peut interrompre. Ils passent par `after()` de `next/server`.
 - **Erreur d'hydratation React (#418) sur `/about`** — Pour les visiteurs ayant activé « réduire les animations », `VisualTimeline` rendait un élément différent côté serveur et côté client. Le rendu ne dépend plus de `useReducedMotion()` : la pulsation est masquée en CSS (`motion-reduce:hidden`) et `MotionConfig reducedMotion="user"` gère le reste.
 - **Recherche du blog et ancres utilisables au clavier** — La recherche suit le motif combobox (↑/↓, Entrée, Échap, nombre de résultats annoncé). Après un saut d'ancre (barre, menu mobile, palette, URL avec `#section`), le focus est placé sur la section atteinte au lieu de rester dans l'en-tête (audit du 25/10/2026).
 - **Accessibilité et performance (lot 3 de l'audit du 25/10/2026)** :
