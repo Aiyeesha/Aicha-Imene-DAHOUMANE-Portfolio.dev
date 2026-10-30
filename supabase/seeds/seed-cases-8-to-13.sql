@@ -244,15 +244,15 @@ INSERT INTO projects (slug, locale, title, summary, track, categories, tags, bad
 VALUES (
   'it-ops-email-config', 'en',
   'Configuring Outlook 2016 Email Account',
-  'Training exercise at Greta du Val d''Oise: wrote a step-by-step user support script for configuring a Microsoft Outlook 2016 email account, then applied it hands-on by setting up tai7@outlook.fr in Outlook and validating message delivery from tai12@outlook.fr.',
+  'Training exercise at Greta du Val d''Oise: wrote a step-by-step user support script for configuring a Microsoft Outlook 2016 email account, then applied it hands-on by setting up t•••7@outlook.fr in Outlook and validating message delivery from t•••12@outlook.fr.',
   'itops', ARRAY['IT Ops', 'IT Support'],
   ARRAY['Outlook', 'Email'],
   '{"tone": "training", "label": "TRAINING LAB"}',
   ARRAY[
     'Drafted a user support script covering the full Outlook 2016 account setup procedure',
     'Launched Outlook, navigated to File → Account Settings → New to add a new email account',
-    'Configured automatic account setup: name, email address (tai7@outlook.fr), and password',
-    'Verified successful configuration and received a test email from tai12@outlook.fr',
+    'Configured automatic account setup: name, email address (t•••7@outlook.fr), and password',
+    'Verified successful configuration and received a test email from t•••12@outlook.fr',
     'Supervised by trainer Julien CHARLES-NICOLAS — Greta du Val d''Oise'
   ],
   false, 130, 'published', NULL, NULL,
@@ -264,15 +264,15 @@ INSERT INTO projects (slug, locale, title, summary, track, categories, tags, bad
 VALUES (
   'it-ops-email-config', 'fr',
   'Configuration d''une messagerie Outlook 2016',
-  'Exercice de formation au Greta du Val d''Oise : rédaction d''un script de support utilisateur pour configurer un compte de messagerie Microsoft Outlook 2016, puis application pratique en paramétrant le compte tai7@outlook.fr dans Outlook et validation de la réception d''un message envoyé par tai12@outlook.fr.',
+  'Exercice de formation au Greta du Val d''Oise : rédaction d''un script de support utilisateur pour configurer un compte de messagerie Microsoft Outlook 2016, puis application pratique en paramétrant le compte t•••7@outlook.fr dans Outlook et validation de la réception d''un message envoyé par t•••12@outlook.fr.',
   'itops', ARRAY['IT Ops', 'IT Support'],
   ARRAY['Outlook', 'Email'],
   '{"tone": "training", "label": "TRAINING LAB"}',
   ARRAY[
     'Rédaction d''un script de support utilisateur couvrant la procédure complète de configuration Outlook 2016',
     'Lancement d''Outlook, navigation vers Fichier → Paramètres du compte → Nouveau pour ajouter un compte',
-    'Configuration automatique du compte : nom, adresse email (tai7@outlook.fr) et mot de passe',
-    'Vérification de la configuration réussie et réception d''un email de test envoyé par tai12@outlook.fr',
+    'Configuration automatique du compte : nom, adresse email (t•••7@outlook.fr) et mot de passe',
+    'Vérification de la configuration réussie et réception d''un email de test envoyé par t•••12@outlook.fr',
     'Encadrement : formateur Julien CHARLES-NICOLAS — Greta du Val d''Oise'
   ],
   false, 130, 'published', NULL, NULL,

@@ -122,7 +122,7 @@ export default async function LocaleLayout({
                     >
                       {t("footer.hybrid")}
                     </Link>
-                    {/* "Hire me" → the home page contact form, same label and
+                    {/* "Contact me" → the home page contact form, same label and
                         destination as in the hero and mobile menu */}
                     <Link
                       className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"

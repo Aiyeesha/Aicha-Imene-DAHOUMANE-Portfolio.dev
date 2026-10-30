@@ -3,8 +3,6 @@
 
 import Link from "next/link";
 
-// Flip to true once the GitHub repository is made public.
-const REPO_IS_PUBLIC = false;
 const REPO_URL = "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev";
 
 type StackItem = { name: string; role: string; link?: string };
@@ -32,20 +30,12 @@ export default function ColophonContent({ locale }: { locale: string }) {
     cacheTitle:     isFr ? "Stratégie de cache" : isEs ? "Estrategia de caché" : "Caching strategy",
     secTitle:       isFr ? "Sécurité" : isEs ? "Seguridad" : "Security",
     openSourceTitle:isFr ? "Code source" : isEs ? "Código fuente" : "Source code",
-    sourceNote: REPO_IS_PUBLIC
-      ? isFr
-        ? "Le dépôt de ce site est public — architecture, CI/CD, tests et sécurité consultables directement sur GitHub."
-        : isEs
-        ? "El repositorio de este sitio es público — arquitectura, CI/CD, pruebas y seguridad consultables directamente en GitHub."
-        : "This site's repository is public — architecture, CI/CD, tests, and security are all viewable directly on GitHub."
-      : isFr
-      ? "Le dépôt de ce site est privé pour le moment — accès sur demande via le formulaire de contact."
+    sourceNote:     isFr
+      ? "Le dépôt de ce site est public — architecture, CI/CD, tests et sécurité consultables directement sur GitHub."
       : isEs
-      ? "El repositorio de este sitio es privado por ahora — acceso bajo solicitud mediante el formulario de contacto."
-      : "This site's repository is private for now — access on request via the contact form.",
-    learnMore: REPO_IS_PUBLIC
-      ? isFr ? "Voir le dépôt GitHub" : isEs ? "Ver el repositorio en GitHub" : "View the GitHub repository"
-      : isFr ? "Demander l'accès" : isEs ? "Solicitar acceso" : "Request access",
+      ? "El repositorio de este sitio es público — arquitectura, CI/CD, pruebas y seguridad consultables directamente en GitHub."
+      : "This site's repository is public — architecture, CI/CD, tests, and security are all viewable directly on GitHub.",
+    learnMore:      isFr ? "Voir le dépôt GitHub" : isEs ? "Ver el repositorio en GitHub" : "View the GitHub repository",
     viewLive:       isFr ? "Voir le site en ligne" : isEs ? "Ver el sitio en vivo" : "View live site",
   };
 
@@ -53,7 +43,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     {
       title: "Frontend",
       items: [
-        { name: "Next.js",      role: isFr ? "Framework React (App Router, SSR, SSG, ISR)" : isEs ? "Framework de React (App Router, SSR, SSG, ISR)" : "React framework (App Router, SSR, SSG, ISR)", link: "https://nextjs.org" },
+        { name: "Next.js",      role: isFr ? "Framework React (App Router, SSR, SSG)" : isEs ? "Framework de React (App Router, SSR, SSG)" : "React framework (App Router, SSR, SSG)", link: "https://nextjs.org" },
         { name: "React",        role: isFr ? "Bibliothèque UI — Server & Client Components" : isEs ? "Biblioteca de UI — Server & Client Components" : "UI library — Server & Client Components", link: "https://react.dev" },
         { name: "TypeScript",   role: isFr ? "Typage statique de bout en bout" : isEs ? "Tipado estático de extremo a extremo" : "End-to-end static typing", link: "https://www.typescriptlang.org" },
         { name: "Tailwind CSS 4", role: isFr ? "CSS utility-first, configuration CSS-first (`@theme`) — mode sombre via class" : isEs ? "CSS utility-first, configuración CSS-first (`@theme`) — modo oscuro vía class" : "Utility-first CSS, CSS-first configuration (`@theme`) — dark mode via class", link: "https://tailwindcss.com" },
@@ -296,15 +286,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
         <h2 id="section-oss" className="text-xl font-semibold">{labels.openSourceTitle}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">{labels.sourceNote}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          {REPO_IS_PUBLIC ? (
-            <a href={REPO_URL} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
-              {labels.learnMore}<span aria-hidden="true"> ↗</span>
-            </a>
-          ) : (
-            <Link href={`/${locale}#contact`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
-              {labels.learnMore}<span aria-hidden="true"> →</span>
-            </Link>
-          )}
+          <a href={REPO_URL} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring">
+            {labels.learnMore}<span aria-hidden="true"> ↗</span>
+          </a>
           <a href={`/${locale}`} target="_blank" rel="noreferrer noopener" className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium soft-ring ${ctaBtnClass}`}>
             {labels.viewLive}<span aria-hidden="true"> ↗</span>
           </a>

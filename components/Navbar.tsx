@@ -18,6 +18,7 @@ import { scrollToAnchorWhenStable, scrollToSection } from "@/lib/anchorScroll";
 import { useTrack } from "@/app/[locale]/providers";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { GITHUB_URL } from "@/lib/social";
+import { showTestimonials } from "@/content/testimonials";
 import { BOOKING_URL } from "@/lib/booking";
 import usePlatformShortcut from "@/lib/usePlatformShortcut";
 import { openCommandPalette } from "@/lib/commandPaletteEvents";
@@ -84,7 +85,6 @@ export default function Navbar({
   const [avatarSrc, setAvatarSrc] = useState<string | null>(process.env.NEXT_PUBLIC_AVATAR_URL || "/avatar.webp");
 
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
-  const showTestimonials = process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true";
   const spyActiveId = useActiveSection(
     isHome ? SECTION_IDS.filter((id) => id !== "testimonials" || showTestimonials) : []
   );

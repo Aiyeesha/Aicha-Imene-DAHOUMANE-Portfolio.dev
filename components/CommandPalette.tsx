@@ -17,6 +17,7 @@ import { LINKEDIN_URL } from "@/lib/social";
 import usePlatformShortcut from "@/lib/usePlatformShortcut";
 import { OPEN_COMMAND_PALETTE_EVENT } from "@/lib/commandPaletteEvents";
 import { scrollToSection } from "@/lib/anchorScroll";
+import { showTestimonials } from "@/content/testimonials";
 
 // ── Styles injected once via <style> ─────────────────────────────────────────
 // cmdk only accepts class names, so the overlay and panel are styled here.
@@ -252,7 +253,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
                 { id: "skills",      label: L.skills,      icon: "M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" },
                 { id: "experience",  label: L.experience,  icon: "M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" },
                 { id: "services",    label: L.services,    icon: "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" },
-                ...(process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true"
+                ...(showTestimonials
                   ? [{ id: "testimonials", label: L.testimonials, icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" }]
                   : []),
                 { id: "projects",    label: L.projects,    icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
