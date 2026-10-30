@@ -44,7 +44,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         {
           title: "Soft skills & manière de travailler",
           items: [
-            "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
+            "Français (natif), Anglais (C1 en compréhension orale, B2 en lecture), Espagnol (B1), Italien (A1)",
             "Documentation technique claire",
             "Communication active avec des interlocuteurs non techniques",
             "Collaboration à distance (multi-fuseaux horaires)",
@@ -89,7 +89,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       {
         title: "Langues & collaboration",
         items: [
-          "Français (natif), Anglais (C1+), Espagnol (B1), Italien (A1)",
+          "Français (natif), Anglais (C1 en compréhension orale, B2 en lecture), Espagnol (B1), Italien (A1)",
           "Collaboration à distance",
           "Communication structurée",
           "Autonomie",
@@ -136,7 +136,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         {
           title: "Soft skills y forma de trabajar",
           items: [
-            "Francés (nativo), Inglés (C1+), Español (B1), Italiano (A1)",
+            "Francés (nativo), Inglés (C1 comprensión oral, B2 lectura), Español (B1), Italiano (A1)",
             "Documentación técnica clara",
             "Comunicación activa con interlocutores no técnicos",
             "Colaboración remota (múltiples zonas horarias)",
@@ -181,7 +181,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       {
         title: "Idiomas y colaboración",
         items: [
-          "Francés (nativo), Inglés (C1+), Español (B1), Italiano (A1)",
+          "Francés (nativo), Inglés (C1 comprensión oral, B2 lectura), Español (B1), Italiano (A1)",
           "Colaboración remota",
           "Comunicación estructurada",
           "Autonomía",
@@ -228,7 +228,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       {
         title: "Ways of working",
         items: [
-          "French (native), English (C1+), Spanish (B1), Italian (A1)",
+          "French (native), English (C1 listening, B2 reading), Spanish (B1), Italian (A1)",
           "Clear technical documentation",
           "Active communication with non-technical stakeholders",
           "Remote collaboration across time zones",
@@ -272,7 +272,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
     {
       title: "Languages & collaboration",
       items: [
-        "French (native), English (C1+), Spanish (B1), Italian (A1)",
+        "French (native), English (C1 listening, B2 reading), Spanish (B1), Italian (A1)",
         "Remote collaboration",
         "Structured communication",
         "Autonomy",
