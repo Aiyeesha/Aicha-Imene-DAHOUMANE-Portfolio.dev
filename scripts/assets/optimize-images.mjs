@@ -1,10 +1,10 @@
-// scripts/optimize-images.mjs
+// scripts/assets/optimize-images.mjs
 // ---------------------------
 // Optimises every image of public/projects/ into public/projects-optimized/:
 // - PNG/JPG/JPEG → WebP (quality 82, max 1920px)
 // - existing WebP → recompressed (quality 82, max 1920px)
 // - SVG → copied as is
-// Usage: node scripts/optimize-images.mjs
+// Usage: node scripts/assets/optimize-images.mjs
 
 import sharp from "sharp";
 import { readdir, stat, mkdir, copyFile, writeFile } from "fs/promises";
@@ -12,8 +12,8 @@ import { join, relative, extname, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const INPUT_DIR  = join(__dirname, "../public/projects");
-const OUTPUT_DIR = join(__dirname, "../public/projects-optimized");
+const INPUT_DIR  = join(__dirname, "../../public/projects");
+const OUTPUT_DIR = join(__dirname, "../../public/projects-optimized");
 const MAX_WIDTH  = 1920;
 const QUALITY    = 82;
 
@@ -100,7 +100,7 @@ async function main() {
 
   // Mapping file for the Supabase update
   await writeFile(
-    join(__dirname, "../public/projects-optimized/_mapping.json"),
+    join(__dirname, "../../public/projects-optimized/_mapping.json"),
     JSON.stringify(mapping, null, 2)
   );
   console.log("📄 Mapping généré : public/projects-optimized/_mapping.json\n");

@@ -15,8 +15,7 @@ coverage/
 
 # Project images are committed to the repo under /public/projects/<slug>/ and
 # served by Vercel's CDN (de-Supabase refactor — see lib/data/projectsSource.ts).
-# Re-sync from the old Supabase bucket with scripts/sync-project-assets.mjs.
-# The *-optimized/ dir is a local build artifact of scripts/optimize-images.mjs.
+# The *-optimized/ dir is a local build artifact of scripts/assets/optimize-images.mjs.
 /public/projects-optimized/
 
 # Salesforce CLI local state (sf/sfdx MCP tooling)
