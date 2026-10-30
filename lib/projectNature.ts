@@ -136,6 +136,19 @@ const NATURES: Record<ProjectNature, NatureInfo> = {
   },
 };
 
+// Prefix of a period inherited from the nature: it is the programme's or the
+// internships' period, not the project's own duration, and must read as such.
+const PROGRAMME_PERIOD_PREFIX: Localized = {
+  fr: "Période de formation : ",
+  en: "Programme period: ",
+  es: "Periodo de formación: ",
+};
+const INTERNSHIP_PERIOD_PREFIX: Localized = {
+  fr: "Période des stages : ",
+  en: "Internship period: ",
+  es: "Periodo de prácticas: ",
+};
+
 export type ResolvedNature = {
   nature: ProjectNature;
   label: string;
@@ -145,9 +158,17 @@ export type ResolvedNature = {
 
 /**
  * Label, period and note of a project for a locale. The project's own period
- * (content/projects.ts) wins over the nature's; with neither, `period` is
- * null (nothing is invented).
+ * (content/projects.ts) wins and is shown as is; otherwise the nature's
+ * period is shown with a prefix ("Programme period: …"), since it is not the
+ * project's duration. With neither, `period` is null (nothing is invented).
  */
+function inheritedPeriod(nature: ProjectNature, info: NatureInfo, loc: Locale): string | null {
+  const own = info.period?.[loc];
+  if (!own) return null;
+  const prefix = nature === "internship" ? INTERNSHIP_PERIOD_PREFIX : PROGRAMME_PERIOD_PREFIX;
+  return prefix[loc] + own;
+}
+
 export function resolveNature(
   nature: ProjectNature | null | undefined,
   locale: string,
@@ -160,7 +181,7 @@ export function resolveNature(
   return {
     nature,
     label: info.label[loc],
-    period: period?.[loc] ?? info.period?.[loc] ?? null,
+    period: period?.[loc] ?? inheritedPeriod(nature, info, loc),
     note: info.note[loc],
   };
 }

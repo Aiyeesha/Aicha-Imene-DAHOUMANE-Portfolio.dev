@@ -101,6 +101,6 @@ UPDATE projects SET gallery = '[
 
 -- ── CASE 13 — it-ops-email-config ────────────────────────────────────────────
 UPDATE projects SET gallery = '[
-  {"src":"/projects/it-ops-email-config/cover.png","alt":"Outlook 2016 inbox — tai7@outlook.fr account configured with test email received from tai12@outlook.fr"},
+  {"src":"/projects/it-ops-email-config/cover.png","alt":"Outlook 2016 inbox — t•••7@outlook.fr account configured with test email received from t•••12@outlook.fr"},
   {"src":"/projects/it-ops-email-config/img-2.png","alt":"Bienvenue dans Microsoft Outlook 2016 — account setup wizard launch screen"}
 ]' WHERE slug = 'it-ops-email-config';

@@ -21,6 +21,12 @@ type ErrorReport = {
 };
 
 // ── Validation ────────────────────────────────────────────────────────────────
+// Same limits as the client (components/GlobalErrorHandler.tsx): a payload
+// sent without that client cannot push oversized entries into the logs.
+const MAX_MSG   = 200;
+const MAX_STACK = 1_500;
+const MAX_URL   = 300;
+
 function isValidReport(body: unknown): body is ErrorReport {
   if (!body || typeof body !== "object") return false;
   const b = body as Record<string, unknown>;
@@ -28,12 +34,12 @@ function isValidReport(body: unknown): body is ErrorReport {
     (b.type === "uncaught" || b.type === "unhandledrejection") &&
     typeof b.message === "string" &&
     b.message.length > 0 &&
-    b.message.length <= 200 && // matches the client's MAX_MSG
+    b.message.length <= MAX_MSG &&
     // Optional fields must have the right type when present
-    (b.stack === undefined || typeof b.stack === "string") &&
-    (b.url   === undefined || typeof b.url   === "string") &&
-    (b.line  === undefined || typeof b.line  === "number") &&
-    (b.col   === undefined || typeof b.col   === "number")
+    (b.stack === undefined || (typeof b.stack === "string" && b.stack.length <= MAX_STACK)) &&
+    (b.url   === undefined || (typeof b.url   === "string" && b.url.length   <= MAX_URL)) &&
+    (b.line  === undefined || Number.isFinite(b.line)) &&
+    (b.col   === undefined || Number.isFinite(b.col))
   );
 }
 

@@ -1,4 +1,4 @@
-// scripts/upload-to-supabase-storage.mjs
+// scripts/archive/upload-to-supabase-storage.mjs
 // ----------------------------------------
 // Uploads all optimized images from public/projects-optimized/
 // to Supabase Storage bucket "projects".
@@ -8,7 +8,7 @@
 // - Upsert mode: safe to re-run
 // - Sets correct Content-Type per extension
 //
-// Usage: node scripts/upload-to-supabase-storage.mjs
+// Usage: node scripts/archive/upload-to-supabase-storage.mjs
 
 import { createClient } from "@supabase/supabase-js";
 import { readdir, readFile, stat } from "fs/promises";
@@ -21,11 +21,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SUPABASE_URL          = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BUCKET                = "projects";
-const INPUT_DIR             = join(__dirname, "../public/projects-optimized");
+const INPUT_DIR             = join(__dirname, "../../public/projects-optimized");
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.error("❌  NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing.");
-  console.error("    Run: node --env-file=.env.local scripts/upload-to-supabase-storage.mjs");
+  console.error("    Run: node --env-file=.env.local scripts/archive/upload-to-supabase-storage.mjs");
   process.exit(1);
 }
 

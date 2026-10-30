@@ -1014,7 +1014,7 @@ export const projects: Project[] = [
     "slug": "it-ops-email-config",
     "nature": "greta_tai",
     "title": "Configuring Outlook 2016 Email Account",
-    "excerpt": "Day-1 user onboarding scenario: Outlook 2016 account auto-configured via Exchange ActiveSync (tai7@outlook.fr), bidirectional test email validated — inbox ready in under 5 minutes.",
+    "excerpt": "Day-1 user onboarding scenario: Outlook 2016 account auto-configured via Exchange ActiveSync (t•••7@outlook.fr), bidirectional test email validated — inbox ready in under 5 minutes.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -1031,8 +1031,8 @@ export const projects: Project[] = [
     "highlights": [
       "Drafted a user support script covering the full Outlook 2016 account setup procedure",
       "Launched Outlook, navigated to File → Account Settings → New to add a new email account",
-      "Configured automatic account setup: name, email address (tai7@outlook.fr), and password",
-      "Verified successful configuration and received a test email from tai12@outlook.fr",
+      "Configured automatic account setup: name, email address (t•••7@outlook.fr), and password",
+      "Verified successful configuration and received a test email from t•••12@outlook.fr",
       "Supervised by trainer Julien CHARLES-NICOLAS — Greta du Val d'Oise"
     ],
     "featured": false,

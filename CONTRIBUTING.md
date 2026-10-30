@@ -67,6 +67,7 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 | `ADMIN_PASSWORD` | No | Password for `/admin` Basic Auth — server-only |
 | `CRON_SECRET` | No | Bearer token for `/api/cron/ping` |
 | `TESTIMONIAL_SUBMIT_TOKEN` | No | Token for the testimonial submission form |
+| `TESTIMONIAL_INVITE_ADMIN_TOKEN` | No | Bearer token for `POST /api/admin/testimonial-invite` (32+ chars) — server-only |
 | `CACHE_INVALIDATE_SECRET` | No | Secret header for `/api/cache/invalidate` |
 
 The site works without Supabase in dev mode — most pages fall back gracefully.
@@ -108,7 +109,9 @@ All commands run from the repository root.
 | `npm test` | Run Jest test suite |
 | `npm run test:watch` | Tests in watch mode |
 | `npm run test:ci` | Tests in CI mode (no interactive output) |
-| `npm run db:migrate` | Apply Supabase SQL migrations |
+| `npm run test:e2e` | Playwright end-to-end tests |
+
+Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). Supabase migrations are applied with the Supabase CLI (`supabase db push`), never with an archived script.
 
 **Before opening a PR, always run:**
 
