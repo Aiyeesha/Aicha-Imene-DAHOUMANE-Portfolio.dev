@@ -14,7 +14,7 @@
  * .github/workflows/content-publish-safety.yml).
  *
  * Usage:
- *   npx tsx scripts/check-publish-safety.ts
+ *   npx tsx scripts/content/check-publish-safety.ts
  */
 
 import { createClient } from "@supabase/supabase-js";

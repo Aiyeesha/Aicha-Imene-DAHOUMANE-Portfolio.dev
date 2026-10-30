@@ -1,10 +1,10 @@
-// scripts/redact-screenshots.mjs
+// scripts/privacy/redact-screenshots.mjs
 // --------------------------------
 // Finds sensitive areas with OCR (IPs, emails, domain names, org URLs, phone
 // numbers, Salesforce ids) in the portfolio screenshots and blurs them with
 // sharp.
 //
-// Usage: node scripts/redact-screenshots.mjs [--dry-run] [--folder <name>]
+// Usage: node scripts/privacy/redact-screenshots.mjs [--dry-run] [--folder <name>]
 //   --dry-run : show what would be blurred without changing files
 //   --folder  : only process one sub-folder
 
@@ -16,7 +16,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PROJECTS_DIR = join(__dirname, "../public/projects");
+const PROJECTS_DIR = join(__dirname, "../../public/projects");
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");

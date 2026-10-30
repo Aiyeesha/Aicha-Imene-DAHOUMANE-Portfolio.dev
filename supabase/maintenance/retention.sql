@@ -1,4 +1,4 @@
--- supabase/retention.sql
+-- supabase/maintenance/retention.sql
 -- ----------------------
 -- Documentation de la politique de rétention des données RGPD.
 --
