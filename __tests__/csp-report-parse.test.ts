@@ -5,6 +5,12 @@
 // CSP report parsing: one test per format (CSP Level 2 object and Reporting
 // API array [{ type, body }]), plus a pass through the route.
 
+// after() needs a request scope: run the task right away in tests.
+jest.mock("next/server", () => ({
+  ...jest.requireActual("next/server"),
+  after: (task: () => unknown) => { void task(); },
+}));
+
 jest.mock("@/lib/ratelimit", () => ({
   cspReportRatelimit: { limit: async () => ({ success: true }) },
   cspAlertRatelimit:  { limit: async () => ({ success: true }) },
