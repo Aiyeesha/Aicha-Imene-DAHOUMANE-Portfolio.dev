@@ -8,7 +8,8 @@
 //   3. Honeypot ("website" must be empty)
 //   4. Required fields (full_name, role, relation_type, message, locale) and
 //      maximum lengths
-//   5. Insert with the service_role client, approved = false
+//   5. Atomic single-use claim of the invitation (Redis SET NX)
+//   6. Insert with the service_role client, approved = false
 //
 // Uses TESTIMONIAL_SUBMIT_TOKEN, IP_HASH_SALT and the Supabase service_role
 // key (server-only, never NEXT_PUBLIC_).
@@ -19,10 +20,11 @@ import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
 import {
+  claimInvite,
   isInviteUsed,
   isInviteValid,
   isSessionKeyValid,
-  markInviteUsed,
+  releaseInvite,
 } from "@/lib/security/testimonialInvite";
 
 // ── Allowed relation_type values ──────────────────────────────────────────────
@@ -128,7 +130,17 @@ export async function POST(req: NextRequest) {
     .update(ip + ipHashSalt)
     .digest("hex");
 
-  // ── 7. Insert (service_role bypasses RLS) ───────────────────────────────────
+  // ── 7. Single use: atomic claim before the insert ───────────────────────────
+  // The isInviteUsed() check above only gives an early, friendly answer; two
+  // concurrent requests can both pass it. SET NX lets exactly one through.
+  if (!(await claimInvite(invite, expUnix))) {
+    return NextResponse.json(
+      { error: "This invitation has already been used." },
+      { status: 410 }
+    );
+  }
+
+  // ── 8. Insert (service_role bypasses RLS) ───────────────────────────────────
   const supabase = createAdminSupabaseClient();
   const { error } = await supabase.from("testimonial_submissions").insert({
     full_name,
@@ -145,14 +157,12 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     console.error("[testimonial-submit] Supabase error:", error.message);
+    // Nothing was stored: give the link back so the author can retry.
+    await releaseInvite(invite).catch((e) =>
+      console.error("[testimonial-submit] could not release invite:", String(e)),
+    );
     return NextResponse.json({ error: "Database error. Please try again." }, { status: 500 });
   }
-
-  // Single use: the invitation stays marked until it expires. A failure here
-  // does not undo the stored testimonial.
-  await markInviteUsed(invite, expUnix).catch((e) =>
-    console.error("[testimonial-submit] could not mark invite as used:", String(e)),
-  );
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

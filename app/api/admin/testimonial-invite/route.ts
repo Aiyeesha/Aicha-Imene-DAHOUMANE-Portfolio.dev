@@ -6,17 +6,20 @@
 //   invite = HMAC-SHA256(TESTIMONIAL_SUBMIT_TOKEN, "testimonial-invite:" + exp)
 //   URL    = /{locale}/testimonial-submit?invite={invite}&exp={exp}
 //
-// Auth: Bearer ADMIN_PASSWORD (timing-safe). Rate limit shared with
-// adminRatelimit (5 requests / 15 min / IP).
+// Auth: Bearer TESTIMONIAL_INVITE_ADMIN_TOKEN (dedicated, 32+ characters,
+// timing-safe), never ADMIN_PASSWORD, so a leaked invite token cannot open
+// /admin and vice versa. Brute force: same failure counter as /admin
+// (adminRatelimit, 5 failures / 15 min / IP, same pseudonymized key as
+// proxy.ts), consumed only by failed attempts, fail closed if Redis is down.
 //
 //   curl -X POST https://yoursite.com/api/admin/testimonial-invite \
-//     -H "Authorization: Bearer YOUR_ADMIN_PASSWORD" \
+//     -H "Authorization: Bearer YOUR_TESTIMONIAL_INVITE_ADMIN_TOKEN" \
 //     -H "Content-Type: application/json" \
 //     -d '{"locale":"fr","days":7}'
 
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
-import { adminRatelimit, safeLimit } from "@/lib/ratelimit";
+import { adminRatelimit, pseudonymizeKey } from "@/lib/ratelimit";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { MAX_INVITE_DAYS, signInvite } from "@/lib/security/testimonialInvite";
 
@@ -25,29 +28,48 @@ export const runtime = "nodejs";
 // At most 14 days (lib/security/testimonialInvite.ts).
 const MAX_DAYS = MAX_INVITE_DAYS;
 const DEFAULT_DAYS = 7;
+// Same minimum as the other machine-to-machine secrets (lib/env.ts).
+const MIN_TOKEN_LENGTH = 32;
+
+const tooManyRequests = () =>
+  NextResponse.json({ error: "Too many requests." }, { status: 429, headers: { "Retry-After": "300" } });
 
 export async function POST(req: NextRequest) {
-  // ── 1. Rate limit (brute force) ────────────────────────────────────────────
+  // ── 1. Configured? ─────────────────────────────────────────────────────────
+  // A missing or short token disables the route instead of accepting a weak one.
+  const expectedToken = process.env.TESTIMONIAL_INVITE_ADMIN_TOKEN ?? "";
+  if (expectedToken.length < MIN_TOKEN_LENGTH) {
+    return NextResponse.json({ error: "Not configured." }, { status: 503 });
+  }
+
+  // ── 2. Brute force: shared /admin failure counter ──────────────────────────
   const ip =
     req.headers.get("x-real-ip") ??
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
+  const rlKey = await pseudonymizeKey(ip);
 
-  const { success: rateLimitOk } = await safeLimit(adminRatelimit, `invite:${ip}`);
-  if (!rateLimitOk) {
-    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  // Quota used up: refuse before checking the token. Redis outage: refuse too.
+  let remaining = 0;
+  try {
+    ({ remaining } = await adminRatelimit.getRemaining(rlKey));
+  } catch (err) {
+    console.error("[testimonial-invite] rate-limit error → fail-closed", err);
   }
-
-  // ── 2. Bearer ADMIN_PASSWORD ────────────────────────────────────────────────
-  const expectedPass = process.env.ADMIN_PASSWORD ?? "";
-  if (!expectedPass) {
-    return NextResponse.json({ error: "Not configured." }, { status: 503 });
-  }
+  if (remaining <= 0) return tooManyRequests();
 
   const authHeader = req.headers.get("authorization") ?? "";
   const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
 
-  if (!(await timingSafeStringEqual(bearerToken, expectedPass))) {
+  if (!(await timingSafeStringEqual(bearerToken, expectedToken))) {
+    // Only a failed attempt consumes a token.
+    try {
+      const { success } = await adminRatelimit.limit(rlKey);
+      if (!success) return tooManyRequests();
+    } catch (err) {
+      console.error("[testimonial-invite] rate-limit error → fail-closed", err);
+      return tooManyRequests();
+    }
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
