@@ -6,7 +6,7 @@
 //   3. In preparation (amber ◎): Salesforce, CompTIA Security+
 // Data: content/certifications.ts (static).
 
-import { trailheadProfile } from "@/content/certifications";
+import { SCHEDULED_EXAMS, trailheadProfile } from "@/content/certifications";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,10 +32,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et prochaines certifications Salesforce et CompTIA Security+ prévues début 2027."
+    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et examens Salesforce Platform Foundations et Platform Administrator planifiés en décembre 2026."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y próximas certificaciones Salesforce y CompTIA Security+ previstas para principios de 2027."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and upcoming Salesforce and CompTIA Security+ certifications planned for early 2027.";
+    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y exámenes Salesforce Platform Foundations y Platform Administrator programados en diciembre de 2026."
+    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and Salesforce Platform Foundations and Platform Administrator exams scheduled for December 2026.";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -165,7 +165,7 @@ export default async function CertificationsPage({ params }: PageProps) {
     sectionActive: isFr ? "Actif" : isEs ? "Activo" : "Active",
     sectionActiveSub: isFr ? "Progression continue" : isEs ? "Aprendizaje continuo" : "Continuous learning",
     sectionUpcoming: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation",
-    sectionUpcomingSub: isFr ? "Objectifs début 2027" : isEs ? "Objetivos para principios de 2027" : "Early 2027 goals",
+    sectionUpcomingSub: isFr ? "Deux examens planifiés en décembre 2026, puis 2027" : isEs ? "Dos exámenes programados en diciembre de 2026, después 2027" : "Two exams booked for December 2026, then 2027",
     trailheadBadges: isFr ? "badges" : isEs ? "badges" : "badges",
     trailheadPoints: isFr ? "points" : isEs ? "puntos" : "points",
     trailheadTrails: isFr ? "parcours" : isEs ? "trails" : "trails",
@@ -276,8 +276,8 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
   ];
 
-  // Upcoming certifications: only the near-term ones are listed (Salesforce
-  // and CompTIA Security+, early 2027). Certifications postponed with no date
+  // Upcoming certifications: only the near-term ones are listed (two booked
+  // Salesforce exams in December 2026, then 2027). Certifications postponed with no date
   // are deliberately not shown; a long list of intentions hurts credibility.
   type UpcomingItem = {
     id: string;
@@ -293,14 +293,14 @@ export default async function CertificationsPage({ params }: PageProps) {
   };
 
   const upcomingItems: UpcomingItem[] = [
-    // ── Next: early 2027 (Salesforce, then Security+) ───────────────────────
-    // Wording matches the FAQ and the About page ("planned for early 2027"):
-    // update all three after each result.
+    // ── Booked exams (dates in content/certifications.ts), then 2027 ────────
+    // Wording matches the FAQ and the About page: update all three after
+    // each result.
     {
       id: "sf-platform-foundations",
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: isFr ? `Examen le ${SCHEDULED_EXAMS.platformFoundations.fr}` : isEs ? `Examen el ${SCHEDULED_EXAMS.platformFoundations.es}` : `Exam on ${SCHEDULED_EXAMS.platformFoundations.en}`,
       description: isFr
         ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
         : isEs
@@ -313,9 +313,9 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
     {
       id: "sf-platform-administrator",
-      name: "Salesforce Platform Administrator (ADM-201)",
+      name: "Salesforce Platform Administrator",
       issuer: "Salesforce",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: isFr ? `Examen le ${SCHEDULED_EXAMS.platformAdministrator.fr}` : isEs ? `Examen el ${SCHEDULED_EXAMS.platformAdministrator.es}` : `Exam on ${SCHEDULED_EXAMS.platformAdministrator.en}`,
       description: isFr
         ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
@@ -330,7 +330,7 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "sf-platform-app-builder",
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: "2027",
       description: isFr
         ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
         : isEs
@@ -343,9 +343,9 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
     {
       id: "sf-platform-developer-i",
-      name: "Salesforce Platform Developer I (PD1)",
+      name: "Salesforce Platform Developer",
       issuer: "Salesforce",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: "2027",
       description: isFr
         ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
         : isEs
@@ -356,12 +356,12 @@ export default async function CertificationsPage({ params }: PageProps) {
       logoUrl: "/certifications/salesforce.svg",
       track: "salesforce",
     },
-    // ── Cybersecurity: a single certification shown (early 2027) ────────────
+    // ── Cybersecurity: a single certification shown (2027) ──────────────────
     {
       id: "comptia-security-plus",
       name: "CompTIA Security+ (SY0-701)",
       issuer: "CompTIA",
-      target: isFr ? "Début 2027" : isEs ? "Principios de 2027" : "Early 2027",
+      target: "2027",
       description: isFr
         ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
         : isEs
@@ -609,7 +609,7 @@ export default async function CertificationsPage({ params }: PageProps) {
               {isFr ? "En cours / Prochaines échéances" : isEs ? "En curso / Próximos plazos" : "In progress / Next up"}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— début 2027" : isEs ? "— principios de 2027" : "— early 2027"}
+              {isFr ? "— décembre 2026, puis 2027" : isEs ? "— diciembre de 2026, después 2027" : "— December 2026, then 2027"}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
