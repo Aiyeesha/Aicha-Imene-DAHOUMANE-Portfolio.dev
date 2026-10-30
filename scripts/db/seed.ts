@@ -3,7 +3,7 @@
  * content/about.ts. Certifications are not seeded: /certifications reads
  * content/certifications.ts directly (see resetTables() below).
  *
- *   npx tsx scripts/seed.ts
+ *   npx tsx scripts/db/seed.ts
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -28,9 +28,9 @@ if (fs.existsSync(envLocalPath)) {
 }
 
 // Direct TS imports (handled by tsx)
-import { aboutContent } from "../content/about";
-import { projectDetails } from "../content/projectDetails";
-import { projects } from "../content/projects";
+import { aboutContent } from "../../content/about";
+import { projectDetails } from "../../content/projectDetails";
+import { projects } from "../../content/projects";
 
 // ------------------------------
 // 1) Env vars

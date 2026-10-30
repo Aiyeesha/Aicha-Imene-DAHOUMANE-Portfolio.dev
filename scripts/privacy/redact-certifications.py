@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# scripts/redact-certifications.py
+# scripts/privacy/redact-certifications.py
 # --------------------------------
 # Produces the publishable versions of the diplomas (public/certifications/)
 # by irreversibly blurring personal data: date and place of birth, title
@@ -13,7 +13,7 @@
 #
 # Usage:
 #   pip install pypdfium2 pillow
-#   python3 scripts/redact-certifications.py <originals-folder> public/certifications
+#   python3 scripts/privacy/redact-certifications.py <originals-folder> public/certifications
 #
 # The originals folder must contain:
 #   tssr-greta-diploma.pdf, tai-greta-diploma.pdf, openclassrooms-dcl-diploma.pdf,

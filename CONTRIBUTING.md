@@ -108,7 +108,9 @@ All commands run from the repository root.
 | `npm test` | Run Jest test suite |
 | `npm run test:watch` | Tests in watch mode |
 | `npm run test:ci` | Tests in CI mode (no interactive output) |
-| `npm run db:migrate` | Apply Supabase SQL migrations |
+| `npm run test:e2e` | Playwright end-to-end tests |
+
+Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). Supabase migrations are applied with the Supabase CLI (`supabase db push`), never with an archived script.
 
 **Before opening a PR, always run:**
 
