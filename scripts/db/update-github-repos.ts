@@ -5,7 +5,7 @@
  * resets a table.
  *
  * Usage:
- *   npx tsx scripts/update-github-repos.ts
+ *   npx tsx scripts/db/update-github-repos.ts
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -23,7 +23,7 @@ if (fs.existsSync(envLocalPath)) {
   dotenv.config({ path: envPath, override: true });
 }
 
-import { GITHUB_REPOS } from "../content/github-repos";
+import { GITHUB_REPOS } from "../../content/github-repos";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

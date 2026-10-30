@@ -123,7 +123,7 @@ jobs:
       # devDependencies (not deployed) and optionalDependencies. The latter is
       # needed because next pins sharp as a vulnerable optionalDependency that
       # npm overrides cannot reach; the project depends directly on a fixed
-      # sharp and scripts/fix-nested-sharp.mjs removes the nested copy after
+      # sharp and scripts/tooling/fix-nested-sharp.mjs removes the nested copy after
       # install, so no real risk is hidden.
       - name: Security audit
         run: npm audit --audit-level=high --omit=dev --omit=optional

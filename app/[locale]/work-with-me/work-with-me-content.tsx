@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 import BookingLink from "@/components/BookingLink";
+import { AVAILABILITY as START_DATE } from "@/lib/availability";
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
 
@@ -47,16 +48,16 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
     subtitle:       isFr
-      ? "Développeuse Salesforce en CDI chez LD Digitales, je recherche mon prochain poste, disponible à partir de décembre 2026 : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page."
+      ? `Développeuse Salesforce en CDI chez LD Digitales, je recherche mon prochain poste, disponible ${START_DATE.fr.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
       : isEs
-      ? "Desarrolladora Salesforce con contrato indefinido en LD Digitales, busco mi próximo puesto, disponible a partir de diciembre de 2026: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página."
-      : "A full-time Salesforce Developer at LD Digitales, I'm looking for my next role, available from December 2026: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.",
+      ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales, busco mi próximo puesto, disponible ${START_DATE.es.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
+      : `A full-time Salesforce Developer at LD Digitales, I'm looking for my next role, available ${START_DATE.en.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`,
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
-    availSince:     isFr ? "Entretiens dès maintenant · Disponible à partir de décembre 2026" : isEs ? "Entrevistas desde ya · Disponible a partir de diciembre de 2026" : "Interviews now · Available from December 2026",
+    availSince:     isFr ? `Entretiens dès maintenant · Disponible ${START_DATE.fr.from}` : isEs ? `Entrevistas desde ya · Disponible ${START_DATE.es.from}` : `Interviews now · Available ${START_DATE.en.from}`,
     availContracts: isFr
       ? "CDI · CDD · Intérim · Portage salarial — tous secteurs d'activité"
       : isEs
@@ -99,18 +100,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? [
           { n: "01", title: "Premier contact",      desc: "Par email, LinkedIn ou le formulaire recruteur. Je réponds sous 48 h, avec mon CV adapté au poste.",                        badge: "48 h" },
           { n: "02", title: "Entretiens",           desc: "Échange RH, entretien technique (Apex, SOQL, Flow, ou mise en situation systèmes et réseaux), rencontre de l'équipe.",       badge: "Dès maintenant" },
-          { n: "03", title: "Prise de poste",       desc: "Arrivée à partir de décembre 2026, diplômes fournis sur demande.",                                            badge: "Déc. 2026" },
+          { n: "03", title: "Prise de poste",       desc: `Arrivée ${START_DATE.fr.from}, diplômes fournis sur demande.`,                                            badge: START_DATE.fr.badge },
         ]
       : isEs
       ? [
           { n: "01", title: "Primer contacto",      desc: "Por email, LinkedIn o el formulario para reclutadores. Respondo en 48 h, con mi CV adaptado al puesto.",                     badge: "48 h" },
           { n: "02", title: "Entrevistas",          desc: "Entrevista de RR. HH., entrevista técnica (Apex, SOQL, Flow o caso práctico de sistemas y redes), encuentro con el equipo.", badge: "Desde ya" },
-          { n: "03", title: "Incorporación",        desc: "Incorporación a partir de diciembre de 2026; diplomas disponibles bajo petición.",                             badge: "Dic. 2026" },
+          { n: "03", title: "Incorporación",        desc: `Incorporación ${START_DATE.es.from}; diplomas disponibles bajo petición.`,                             badge: START_DATE.es.badge },
         ]
       : [
           { n: "01", title: "First contact",        desc: "By email, LinkedIn or the recruiter form. I reply within 48 hours, with a résumé tailored to the role.",                    badge: "48 h" },
           { n: "02", title: "Interviews",           desc: "HR screening, technical interview (Apex, SOQL, Flow, or a systems and network scenario), meeting the team.",                 badge: "Now" },
-          { n: "03", title: "Start",                desc: "Start from December 2026; diplomas available on request.",                                                  badge: "Dec. 2026" },
+          { n: "03", title: "Start",                desc: `Start ${START_DATE.en.from}; diplomas available on request.`,                                                  badge: START_DATE.en.badge },
         ],
 
     ctaTitle:    isFr ? "Un poste à pourvoir ?" : isEs ? "¿Tienes un puesto por cubrir?" : "Hiring for a role?",

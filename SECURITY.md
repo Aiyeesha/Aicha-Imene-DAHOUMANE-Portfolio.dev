@@ -88,6 +88,7 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `POST /api/revalidate` | 10 requests | 60 seconds / IP | Protects ISR invalidation against REVALIDATE_SECRET brute-force |
 | `GET /api/health` | 30 requests | 60 seconds / IP | Prevents infrastructure probing in a loop |
 | `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
+| `POST /api/admin/testimonial-invite` | `Authorization: Bearer {TESTIMONIAL_INVITE_ADMIN_TOKEN}` (dedicated, 32+ chars, never `ADMIN_PASSWORD`); failures share the `/admin` counter (5 / 15 min / IP); fail closed if Redis is down |
 | `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
 | `GET /api/blog/latest` | 30 requests | 60 seconds / IP | Public read route |
 | `GET /admin/*` | 5 failed attempts | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — only failed authentications consume the quota; once it is exhausted, requests are refused before the credentials are checked |
@@ -159,7 +160,7 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 | `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET`; body validated with zod (`locale` ∈ supported locales, `slug` kebab-case, no unknown keys, ≤ 1 KiB) |
 | `POST /api/revalidate` | `x-revalidate-secret` header compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
-| `POST /api/testimonial-submit` | Signed invitation link (HMAC of `TESTIMONIAL_SUBMIT_TOKEN`, 14 days max), **single use** (marked in Redis until expiry; reuse → 410), plus a 30-minute session key bound to that invitation (`lib/security/testimonialInvite.ts`) |
+| `POST /api/testimonial-submit` | Signed invitation link (HMAC of `TESTIMONIAL_SUBMIT_TOKEN`, 14 days max), **single use** (claimed atomically in Redis with `SET NX` before the insert, so two concurrent submissions cannot both pass; reuse → 410), plus a 30-minute session key bound to that invitation (`lib/security/testimonialInvite.ts`) |
 | `POST /api/errors` | Public (client reports) — rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
 | `GET /api/health` | Public — CORS restricted to `NEXT_PUBLIC_SITE_URL` (no wildcard `*`) |
 
@@ -201,6 +202,7 @@ All secrets below should be rotated **immediately** if compromised, and periodic
 | `REVALIDATE_SECRET` | `openssl rand -base64 32` | Vercel env vars → redeploy |
 | `CACHE_INVALIDATE_SECRET` | `openssl rand -base64 32` | Vercel env vars → redeploy |
 | `TESTIMONIAL_SUBMIT_TOKEN` | `openssl rand -base64 32` | Vercel env vars → redeploy |
+| `TESTIMONIAL_INVITE_ADMIN_TOKEN` | `openssl rand -base64 32` | Vercel env vars → redeploy |
 | `IP_HASH_SALT` | `openssl rand -hex 32` | Vercel env vars → redeploy (invalidates existing hashes) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → Settings → API | Vercel env vars → redeploy |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Console → Database → REST API | Vercel env vars → redeploy |

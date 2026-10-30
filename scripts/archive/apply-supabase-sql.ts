@@ -17,7 +17,7 @@
  *   SUPABASE_PROJECT_REF    — project id (Settings > General > Reference ID)
  *   SUPABASE_ACCESS_TOKEN   — personal token (https://supabase.com/dashboard/account/tokens)
  *
- *   npx tsx scripts/apply-supabase-sql.ts
+ *   npx tsx scripts/archive/apply-supabase-sql.ts
  *
  * Idempotent (IF NOT EXISTS / DROP IF EXISTS): safe to re-run.
  */
