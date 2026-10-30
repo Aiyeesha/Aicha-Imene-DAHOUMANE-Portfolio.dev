@@ -5,6 +5,12 @@
 // Unit tests: webhook alerts on critical CSP violations.
 // Node environment (not jsdom): next/server needs Node's Web Fetch globals.
 
+// after() needs a request scope: run the task right away in tests.
+jest.mock("next/server", () => ({
+  ...jest.requireActual("next/server"),
+  after: (task: () => unknown) => { void task(); },
+}));
+
 jest.mock("@/lib/ratelimit", () => ({
   cspReportRatelimit: { limit: async () => ({ success: true, reset: Date.now() + 60_000 }) },
   cspAlertRatelimit:  { limit: async () => ({ success: true, reset: Date.now() + 60_000 }) },
