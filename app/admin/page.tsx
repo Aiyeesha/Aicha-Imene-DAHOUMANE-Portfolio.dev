@@ -2,8 +2,8 @@
 // ------------------
 // Admin dashboard over the Supabase data, behind HTTP Basic Auth (proxy.ts
 // and lib/security/adminAuth.ts): stats, projects with links to the public
-// pages, latest 20 messages, testimonials with inline publish toggle, blog
-// counts per category, cache revalidation.
+// pages, latest 20 messages, testimonials with inline publish toggle and the
+// invitation link generator, blog counts per category, cache revalidation.
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { certifications as staticCertifications } from "@/content/certifications";
@@ -12,6 +12,7 @@ import { join } from "path";
 import Link from "next/link";
 import TogglePublished from "./TogglePublished";
 import RevalidateButton from "./RevalidateButton";
+import TestimonialInviteGenerator from "./TestimonialInviteGenerator";
 import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -456,6 +457,7 @@ export default async function AdminPage() {
             </div>
           }
         />
+        <TestimonialInviteGenerator />
         {testimonials.length === 0 ? (
           <p className="text-sm text-slate-500">Aucun témoignage.</p>
         ) : (
