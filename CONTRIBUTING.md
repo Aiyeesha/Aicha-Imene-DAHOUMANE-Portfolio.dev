@@ -67,6 +67,7 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 | `ADMIN_PASSWORD` | No | Password for `/admin` Basic Auth — server-only |
 | `CRON_SECRET` | No | Bearer token for `/api/cron/ping` |
 | `TESTIMONIAL_SUBMIT_TOKEN` | No | Token for the testimonial submission form |
+| `TESTIMONIAL_INVITE_ADMIN_TOKEN` | No | Bearer token for `POST /api/admin/testimonial-invite` (32+ chars) — server-only |
 | `CACHE_INVALIDATE_SECRET` | No | Secret header for `/api/cache/invalidate` |
 
 The site works without Supabase in dev mode — most pages fall back gracefully.

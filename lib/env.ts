@@ -59,6 +59,8 @@ const secretStrengthSchema = z.object({
   REVALIDATE_SECRET:        z.string().min(32).optional(),
   CACHE_INVALIDATE_SECRET:  z.string().min(32).optional(),
   TESTIMONIAL_SUBMIT_TOKEN: z.string().min(32).optional(),
+  // Optional: without it, /api/admin/testimonial-invite answers 503.
+  TESTIMONIAL_INVITE_ADMIN_TOKEN: z.string().min(32).optional(),
 });
 
 // ── Validation ────────────────────────────────────────────────────────────────
