@@ -25,9 +25,14 @@ describe("nature des projets", () => {
   });
 
   it("date le stage Midrange et n'invente pas de période pour un projet personnel", () => {
-    expect(resolveNature("internship", "fr")?.period).toBe("févr. – mai 2023");
+    expect(resolveNature("internship", "fr")?.period).toBe("Période des stages : févr. – mai 2023");
     expect(resolveNature("personal", "fr")?.period).toBeNull();
     expect(resolveNature("reconstructed", "en")?.period).toBeNull();
+  });
+
+  it("présente la période héritée comme celle de la formation, pas du projet", () => {
+    expect(resolveNature("rncp", "fr")?.period).toBe("Période de formation : oct. 2023 – oct. 2025");
+    expect(resolveNature("greta_tssr", "en")?.period).toBe("Programme period: Oct 2022 – Jun 2023");
   });
 
   it("une période propre au projet prime sur celle de sa nature", () => {
