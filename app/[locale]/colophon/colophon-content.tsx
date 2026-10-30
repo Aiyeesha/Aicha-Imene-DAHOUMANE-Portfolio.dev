@@ -81,11 +81,11 @@ export default function ColophonContent({ locale }: { locale: string }) {
       title: isFr ? "CI/CD & Qualité" : isEs ? "CI/CD y Calidad" : "CI/CD & Quality",
       items: [
         { name: "GitHub Actions",    role: isFr ? "Pipeline CI : build, lint, typecheck, tests unitaires, audit sécurité npm, E2E Playwright, Lighthouse CI" : isEs ? "Pipeline de CI: build, lint, typecheck, pruebas unitarias, auditoría de seguridad npm, E2E Playwright, Lighthouse CI" : "CI pipeline: build, lint, typecheck, unit tests, npm security audit, Playwright E2E, Lighthouse CI" },
-        { name: "Lighthouse CI",     role: isFr ? "Budgets performance & accessibilité sur chaque PR — accessibilité ≥ 90 (bloquant), performance ≥ 40 (bloquant)" : isEs ? "Presupuestos de rendimiento y accesibilidad en cada PR — accesibilidad ≥ 90 (bloqueante), rendimiento ≥ 40 (bloqueante)" : "Performance & accessibility budgets on every PR — accessibility ≥ 90 (blocking), performance ≥ 40 (blocking)", link: "https://github.com/GoogleChrome/lighthouse-ci" },
+        { name: "Lighthouse CI",     role: isFr ? "Budgets performance & accessibilité sur chaque PR, bloquants en cas de régression" : isEs ? "Presupuestos de rendimiento y accesibilidad en cada PR, bloqueantes en caso de regresión" : "Performance & accessibility budgets on every PR, blocking on regression", link: "https://github.com/GoogleChrome/lighthouse-ci" },
         { name: "axe-core / Playwright", role: isFr ? "Audit WCAG 2.2 AA automatisé sur 9 routes — zéro tolérance pour les violations critiques" : isEs ? "Auditoría WCAG 2.2 AA automatizada en 9 rutas — tolerancia cero para violaciones críticas" : "Automated WCAG 2.2 AA audit on 9 routes — zero tolerance for critical violations", link: "https://github.com/dequelabs/axe-core" },
         { name: "Dependabot",        role: isFr ? "Mises à jour npm hebdomadaires (5 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle" : isEs ? "Actualizaciones npm semanales (5 grupos), Actions mensuales — versiones mayores de next-intl/framer-motion bajo revisión manual" : "Weekly npm updates (5 groups), monthly Actions — next-intl/framer-motion majors require manual review" },
         { name: "OpenSSF Scorecard", role: isFr ? "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits" : isEs ? "Puntuación semanal de seguridad de la cadena de suministro — branch protection, SAST, dependency pinning, signed commits" : "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits", link: "https://securityscorecard.com" },
-        { name: "Content Publish Safety", role: isFr ? "Check quotidien sur public.projects : bloque la parité de locale rompue (publié sans les 3 langues) et l'embargo produits SaaS (aucun produit personnel publiable avant 2027, quel que soit le statut en base)" : isEs ? "Verificación diaria sobre public.projects: bloquea la paridad de idioma rota (publicado sin los 3 idiomas) y el embargo de productos SaaS (ningún producto propio publicable antes de 2027, sea cual sea el estado en base de datos)" : "Daily check on public.projects: blocks broken locale parity (published without all 3 languages) and the personal SaaS product embargo (no product of mine goes public before 2027, regardless of its database status)" },
+        { name: "Content Publish Safety", role: isFr ? "Contrôle quotidien de public.projects : aucun projet n'est publié sans ses trois langues" : isEs ? "Verificación diaria de public.projects: ningún proyecto se publica sin sus tres idiomas" : "Daily check of public.projects: no project goes live without its three languages" },
       ],
     },
   ];
@@ -123,7 +123,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
-        "**ISR (pages HTML)** : non activé sur Vercel CDN par choix de sécurité — le nonce CSP généré par requête (suppression de `'unsafe-inline'`) est incompatible avec un HTML mis en cache. Cache prévu via reverse-proxy homelab (Q4 2026), qui pourra mettre en cache le HTML à sa couche sans compromettre le nonce.",
+        "**ISR (pages HTML)** : non activé sur Vercel CDN par choix de sécurité — le nonce CSP généré par requête (suppression de `'unsafe-inline'`) est incompatible avec un HTML mis en cache.",
       ]
     : isEs
     ? [
@@ -131,14 +131,14 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**stale-while-revalidate**: si el dato está en caché, se devuelve de inmediato mientras se dispara una revalidación asíncrona en segundo plano.",
         "**Invalidación manual**: el endpoint `POST /api/cache/invalidate` (protegido por secreto) permite purgar la caché tras una actualización de datos.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en caché CDN, revalidado cada 24h.",
-        "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado. Se planea una caché vía reverse-proxy en homelab (Q4 2026), que podrá cachear el HTML en su propia capa sin comprometer el nonce.",
+        "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado.",
       ]
     : [
         "**Upstash Redis** stores the remaining Supabase read responses (testimonials list, incidents / status) with a 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",
-        "**ISR (HTML pages)**: disabled on Vercel CDN by security design — the per-request CSP nonce (eliminating `'unsafe-inline'`) is incompatible with cached HTML. Caching is planned via a homelab reverse proxy (Q4 2026), which will cache HTML at its own layer without compromising the nonce.",
+        "**ISR (HTML pages)**: disabled on Vercel CDN by security design — the per-request CSP nonce (eliminating `'unsafe-inline'`) is incompatible with cached HTML.",
       ];
 
   const secPoints = isFr
