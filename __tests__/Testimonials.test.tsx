@@ -62,12 +62,12 @@ describe("Testimonials", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("le contenu réel de content/testimonials.ts ne peut pas fuiter un placeholder même sans filtre appelant", () => {
-    // Without the internal filter, NEXT_PUBLIC_SHOW_TESTIMONIALS=true alone
-    // would publish the 4 templates.
-    render(<Testimonials items={realTestimonials} />);
-    for (const item of realTestimonials.filter((t) => t.isPlaceholder)) {
-      expect(byQuoteText(item.quote)).not.toBeInTheDocument();
+  it("content/testimonials.ts ne contient que des témoignages réels (aucun gabarit)", () => {
+    // The repository is public: a template or invented quote in this file
+    // is published on GitHub even when the section is hidden.
+    expect(realTestimonials.filter((t) => t.isPlaceholder)).toHaveLength(0);
+    for (const item of realTestimonials) {
+      expect(`${item.name} ${item.role} ${item.company ?? ""}`).not.toMatch(/\[|\]/);
     }
   });
 });

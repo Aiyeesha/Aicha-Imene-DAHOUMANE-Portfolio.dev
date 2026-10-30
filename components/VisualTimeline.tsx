@@ -6,9 +6,15 @@
 // (paragraphs from Supabase). Steps slide and fade in on scroll, the
 // connecting line "draws" downwards; static with reduced motion. Semantic
 // ol > li with an aria-label.
+//
+// Hydration: useReducedMotion() is null on the server and true/false on the
+// client, so it must never change the rendered markup (elements, variants,
+// initial styles). It only picks the animation target after mount; the
+// reduced-motion rendering itself is handled by MotionConfig and CSS
+// (motion-reduce:*).
 
 import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { MotionConfig, motion, useInView, useReducedMotion } from "framer-motion";
 
 // ── Framer Motion variants ──────────────────────────────────────────────
 
@@ -64,7 +70,7 @@ function TimelineStep({
 
         {/* Numbered circle */}
         <motion.div
-          variants={shouldReduce ? {} : circleVariants}
+          variants={circleVariants}
           initial="hidden"
           animate={animate}
           className="
@@ -82,15 +88,15 @@ function TimelineStep({
           {index + 1}
 
           {/* Subtle pulse on the last ("current") step */}
-          {isLast && !shouldReduce && (
-            <span className="absolute inset-0 rounded-full animate-ping bg-cyan-400/20 motion-reduce:animate-none" />
+          {isLast && (
+            <span className="absolute inset-0 rounded-full animate-ping bg-cyan-400/20 motion-reduce:hidden" />
           )}
         </motion.div>
 
         {/* Connecting line */}
         {!isLast && (
           <motion.div
-            variants={shouldReduce ? {} : lineVariants}
+            variants={lineVariants}
             initial="hidden"
             animate={animate}
             style={{ originY: 0 }}
@@ -106,7 +112,7 @@ function TimelineStep({
 
       {/* ── Right column: content card ───────────────────────────────── */}
       <motion.div
-        variants={shouldReduce ? {} : cardVariants}
+        variants={cardVariants}
         initial="hidden"
         animate={animate}
         className={[
@@ -144,19 +150,23 @@ export default function VisualTimeline({
   if (!steps.length) return null;
 
   return (
-    <ol
-      className="mt-6 space-y-0 list-none"
-      aria-label={ariaLabel}
-    >
-      {steps.map((text, i) => (
-        <TimelineStep
-          key={i}
-          text={text}
-          index={i}
-          isLast={i === steps.length - 1}
-          shouldReduce={shouldReduce}
-        />
-      ))}
-    </ol>
+    // reducedMotion="user": skips transform animations when the OS setting
+    // is on, so steps simply appear in place.
+    <MotionConfig reducedMotion="user">
+      <ol
+        className="mt-6 space-y-0 list-none"
+        aria-label={ariaLabel}
+      >
+        {steps.map((text, i) => (
+          <TimelineStep
+            key={i}
+            text={text}
+            index={i}
+            isLast={i === steps.length - 1}
+            shouldReduce={shouldReduce}
+          />
+        ))}
+      </ol>
+    </MotionConfig>
   );
 }
