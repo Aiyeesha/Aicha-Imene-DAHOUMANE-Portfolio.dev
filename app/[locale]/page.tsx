@@ -38,6 +38,7 @@ import { cookies } from "next/headers";
 import { getSiteUrl } from "@/lib/siteUrl";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
+import { toFeaturedProjectCards } from "@/lib/data/featuredProjects";
 
 type Props = { params: Promise<{ locale: "en" | "fr" | "es" }> };
 
@@ -117,7 +118,7 @@ export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
   const experienceItems = getExperienceItems(locale);
-  const supabaseProjects = await getPublishedProjectsWithAssetsCached(locale);
+  const featuredProjects = toFeaturedProjectCards(await getPublishedProjectsWithAssetsCached(locale));
 
 
   return (
@@ -147,7 +148,7 @@ export default async function Home({ params }: Props) {
             <h2 className="text-xl font-semibold">{t("projects.featured")}</h2>
           </Reveal>
           <div className="mt-5">
-            <FeaturedProjects projects={supabaseProjects} />
+            <FeaturedProjects projects={featuredProjects} />
           </div>
           <div className="mt-6 flex justify-end">
             <Link
