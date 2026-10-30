@@ -168,7 +168,8 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `CACHE_INVALIDATE_SECRET` | Required in production | Secret for `/api/cache/invalidate` endpoint |
 | `CONTACT_RATE_LIMIT_WINDOW_SECONDS` | Optional | Rate-limit window in seconds (default: 600) |
 | `CONTACT_RATE_LIMIT_MAX_REQUESTS` | Optional | Max requests per window (default: 5) |
-| `TESTIMONIAL_SUBMIT_TOKEN` | Required in production | Token for `/[locale]/testimonial-submit?token=...` (generate with `openssl rand -base64 32`) |
+| `TESTIMONIAL_SUBMIT_TOKEN` | Required in production | HMAC key for the testimonial invitation links (generate with `openssl rand -base64 32`) |
+| `TESTIMONIAL_INVITE_ADMIN_TOKEN` | Optional | Bearer token for `POST /api/admin/testimonial-invite`, 32+ characters, distinct from `ADMIN_PASSWORD` (generate with `openssl rand -base64 32`); without it the route answers 503 |
 | `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
 | `ADMIN_USERNAME` | Optional | Username for `/admin` HTTP Basic Auth |
 | `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
@@ -180,7 +181,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `NEXT_PUBLIC_SITE_NAME` / `NEXT_PUBLIC_OG_NAME` / `NEXT_PUBLIC_OG_HEADLINE` | Optional | Site name, person name and headline used in metadata and OG images |
 | `NEXT_PUBLIC_BRAND_INITIALS` | Optional | Navbar logo initials (default: `A`) |
 | `NEXT_PUBLIC_SITE_LASTMOD` | Optional | Pins sitemap `lastModified` (YYYY-MM-DD); defaults to build date |
-| `NEXT_PUBLIC_SHOW_TESTIMONIALS` | Optional | `true` to display the testimonials section (currently disabled) |
+| `NEXT_PUBLIC_SHOW_TESTIMONIALS` | Optional | `true` to display the testimonials section; it only appears once `content/testimonials.ts` holds at least one real entry |
 
 ---
 

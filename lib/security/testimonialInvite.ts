@@ -66,9 +66,23 @@ export async function isInviteUsed(invite: string): Promise<boolean> {
   }
 }
 
-/** Marks the invitation as used until it expires. */
-export async function markInviteUsed(invite: string, expUnix: number, nowMs = Date.now()): Promise<void> {
-  if (!redis) return;
+/**
+ * Atomically claims the invitation (SET NX): of two concurrent submissions
+ * with the same link, only one gets true. The claim lasts until the link
+ * expires, so it also marks the invitation as used.
+ */
+export async function claimInvite(invite: string, expUnix: number, nowMs = Date.now()): Promise<boolean> {
+  if (!redis) return !failClosed();
   const ttl = Math.max(60, expUnix - Math.floor(nowMs / 1000));
-  await redis.set(usedInviteKey(invite), "1", { ex: ttl });
+  try {
+    return (await redis.set(usedInviteKey(invite), "1", { nx: true, ex: ttl })) === "OK";
+  } catch {
+    return !failClosed();
+  }
+}
+
+/** Gives the invitation back after a failed insert, so the author can retry. */
+export async function releaseInvite(invite: string): Promise<void> {
+  if (!redis) return;
+  await redis.del(usedInviteKey(invite));
 }

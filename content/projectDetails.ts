@@ -8137,8 +8137,8 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Configure a Microsoft/Exchange email account (tai7@outlook.fr) in Outlook 2016",
-              "Validate bidirectional communication with a peer account (tai12@outlook.fr)",
+              "Configure a Microsoft/Exchange email account (t•••7@outlook.fr) in Outlook 2016",
+              "Validate bidirectional communication with a peer account (t•••12@outlook.fr)",
               "Get the workstation email-ready in under 5 minutes after handover",
               "Simulate a Day 1 onboarding — mailbox, calendar and contacts accessible immediately",
               "Document the procedure for reproduction in a professional context"
@@ -8150,7 +8150,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Outlook 2016 profile created using Exchange ActiveSync auto-discovery for outlook.fr",
               "No manual server entry required — automatic account configuration wizard used",
-              "Test email sent from tai7@outlook.fr to tai12@outlook.fr and confirmed received",
+              "Test email sent from t•••7@outlook.fr to t•••12@outlook.fr and confirmed received",
               "Mailbox, calendar and contacts immediately accessible in Outlook 2016",
               "Email operational in under 5 minutes from workstation handover"
             ],
@@ -8176,7 +8176,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Enter account details",
-                "description": "Entered user name, email address (tai7@outlook.fr) and password. Outlook 2016 supports both automatic and manual configuration."
+                "description": "Entered user name, email address (t•••7@outlook.fr) and password. Outlook 2016 supports both automatic and manual configuration."
               },
               {
                 "label": "Automatic configuration",
@@ -8195,7 +8195,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Fully operational Outlook 2016 profile",
                 "label": "Account configured",
-                "value": "tai7@outlook.fr"
+                "value": "t•••7@outlook.fr"
               },
               {
                 "note": "Auto-detected by Autodiscover",
@@ -8229,8 +8229,8 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Configurer un compte de messagerie Microsoft/Exchange (tai7@outlook.fr) dans Outlook 2016",
-              "Valider la communication bidirectionnelle avec un compte pair (tai12@outlook.fr)",
+              "Configurer un compte de messagerie Microsoft/Exchange (t•••7@outlook.fr) dans Outlook 2016",
+              "Valider la communication bidirectionnelle avec un compte pair (t•••12@outlook.fr)",
               "Rendre le poste opérationnel en moins de 5 minutes après remise à l'utilisateur",
               "Simuler un onboarding Jour 1 — messagerie, calendrier et contacts accessibles immédiatement",
               "Documenter la procédure pour reproduction en contexte professionnel"
@@ -8242,7 +8242,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Profil Outlook 2016 créé avec découverte automatique Exchange ActiveSync pour outlook.fr",
               "Aucune saisie manuelle de serveur requise — assistant de configuration automatique utilisé",
-              "Email de test envoyé depuis tai7@outlook.fr vers tai12@outlook.fr et confirmé reçu",
+              "Email de test envoyé depuis t•••7@outlook.fr vers t•••12@outlook.fr et confirmé reçu",
               "Boîte mail, calendrier et contacts immédiatement accessibles dans Outlook 2016",
               "Messagerie opérationnelle en moins de 5 minutes après remise du poste"
             ],
@@ -8268,7 +8268,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Saisie des informations du compte",
-                "description": "Nom de l'utilisateur, adresse (tai7@outlook.fr) et mot de passe saisis. Outlook 2016 supporte la configuration automatique et manuelle."
+                "description": "Nom de l'utilisateur, adresse (t•••7@outlook.fr) et mot de passe saisis. Outlook 2016 supporte la configuration automatique et manuelle."
               },
               {
                 "label": "Configuration automatique",
@@ -8287,7 +8287,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Profil Outlook 2016 opérationnel",
                 "label": "Compte configuré",
-                "value": "tai7@outlook.fr"
+                "value": "t•••7@outlook.fr"
               },
               {
                 "note": "Détecté automatiquement",
@@ -8323,8 +8323,8 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Configurar una cuenta de correo Microsoft/Exchange (tai7@outlook.fr) en Outlook 2016",
-              "Validar la comunicación bidireccional con una cuenta par (tai12@outlook.fr)",
+              "Configurar una cuenta de correo Microsoft/Exchange (t•••7@outlook.fr) en Outlook 2016",
+              "Validar la comunicación bidireccional con una cuenta par (t•••12@outlook.fr)",
               "Dejar el equipo operativo en menos de 5 minutos tras la entrega al usuario",
               "Simular un onboarding de Día 1 — correo, calendario y contactos accesibles de inmediato",
               "Documentar el procedimiento para su reproducción en contexto profesional"
@@ -8336,7 +8336,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Perfil de Outlook 2016 creado con detección automática Exchange ActiveSync para outlook.fr",
               "Ninguna configuración manual de servidor necesaria — asistente de configuración automática utilizado",
-              "Correo de prueba enviado desde tai7@outlook.fr a tai12@outlook.fr y confirmado como recibido",
+              "Correo de prueba enviado desde t•••7@outlook.fr a t•••12@outlook.fr y confirmado como recibido",
               "Buzón, calendario y contactos accesibles de inmediato en Outlook 2016",
               "Correo operativo en menos de 5 minutos tras la entrega del equipo"
             ],
@@ -8362,7 +8362,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Introducción de los datos de la cuenta",
-                "description": "Nombre del usuario, dirección (tai7@outlook.fr) y contraseña introducidos. Outlook 2016 admite configuración automática y manual."
+                "description": "Nombre del usuario, dirección (t•••7@outlook.fr) y contraseña introducidos. Outlook 2016 admite configuración automática y manual."
               },
               {
                 "label": "Configuración automática",
@@ -8381,7 +8381,7 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "note": "Perfil de Outlook 2016 operativo",
                 "label": "Cuenta configurada",
-                "value": "tai7@outlook.fr"
+                "value": "t•••7@outlook.fr"
               },
               {
                 "note": "Detectado automáticamente",

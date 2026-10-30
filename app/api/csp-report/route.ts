@@ -11,7 +11,7 @@
 // Rate limited with an Upstash sliding window (20 requests / 60s / IP), which
 // survives serverless cold starts unlike an in-memory counter.
 
-import { type NextRequest, NextResponse } from "next/server";
+import { after, type NextRequest, NextResponse } from "next/server";
 import { cspAlertRatelimit, cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
 import { parseCspReports } from "@/lib/security/cspReport";
 
@@ -66,11 +66,17 @@ async function sendCriticalAlert(data: {
   if (!success) return;
 
   const msg = `🚨 CSP Critical Violation\nDirective: ${data.violatedDirective}\nBlocked: ${data.blockedUri}\nDocument: ${data.documentUri}`;
-  fetch(webhookUrl, {
-    method:  "POST",
-    headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify({ content: msg, text: msg, message: msg }),
-  }).catch((e) => console.warn("[CSP-VIOLATION] Alert webhook failed:", String(e)));
+  // after(): sent once the response is out, but the function stays alive
+  // until it completes (a bare un-awaited fetch can be cut off by Vercel).
+  after(() =>
+    fetch(webhookUrl, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ content: msg, text: msg, message: msg }),
+    })
+      .then(() => undefined)
+      .catch((e) => console.warn("[CSP-VIOLATION] Alert webhook failed:", String(e)))
+  );
 }
 
 /** Cuts a URL before "?" or "#" (special values such as "inline" unchanged). */
