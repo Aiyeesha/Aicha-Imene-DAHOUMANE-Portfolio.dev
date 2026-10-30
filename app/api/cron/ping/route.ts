@@ -8,7 +8,7 @@
 //      testimonial submissions 90 days);
 //   5. pings an external heartbeat if configured.
 
-import { NextResponse }                from "next/server";
+import { after, NextResponse }         from "next/server";
 import { runHealthChecks }             from "@/lib/health";
 import { createAdminSupabaseClient }   from "@/lib/supabase/admin";
 import { timingSafeStringEqual }       from "@/lib/security/timingSafeEqual";
@@ -42,12 +42,17 @@ export async function GET(req: Request) {
       .map((s) => `• ${s.name}: ${s.status}${s.message ? ` — ${s.message}` : ""}`)
       .join("\n");
     const msg = `Portfolio status: ${report.overall}\n${lines}`;
-    // Generic payload: content (Discord), text (Slack), message (ntfy/Make)
-    fetch(alertUrl, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ content: msg, text: msg, message: msg }),
-    }).catch((e) => console.warn("[CRON/PING] Alert webhook failed:", String(e)));
+    // Generic payload: content (Discord), text (Slack), message (ntfy/Make).
+    // after(): runs after the response without being cut off by Vercel.
+    after(() =>
+      fetch(alertUrl, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ content: msg, text: msg, message: msg }),
+      })
+        .then(() => undefined)
+        .catch((e) => console.warn("[CRON/PING] Alert webhook failed:", String(e)))
+    );
   }
 
   // ── 3. Insert into Supabase ───────────────────────────────────────────────
@@ -100,8 +105,11 @@ export async function GET(req: Request) {
   // healthchecks.io), independent of GitHub and Vercel. Non-blocking.
   const healthcheckUrl = process.env.HEALTHCHECK_URL;
   if (healthcheckUrl) {
-    fetch(healthcheckUrl, { method: "GET" })
-      .catch((e) => console.warn("[CRON/PING] Heartbeat failed:", String(e)));
+    after(() =>
+      fetch(healthcheckUrl, { method: "GET" })
+        .then(() => undefined)
+        .catch((e) => console.warn("[CRON/PING] Heartbeat failed:", String(e)))
+    );
   }
 
   return NextResponse.json({

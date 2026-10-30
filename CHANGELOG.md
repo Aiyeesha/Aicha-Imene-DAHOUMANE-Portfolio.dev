@@ -9,6 +9,13 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **Génération des liens de témoignage** — `POST /api/admin/testimonial-invite` n'accepte plus `ADMIN_PASSWORD` : un jeton dédié `TESTIMONIAL_INVITE_ADMIN_TOKEN` (32 caractères minimum) est requis, sinon la route répond 503. Les échecs partagent le compteur de `/admin` (même limiteur, même clé : 5 échecs / 15 min / IP), seuls les échecs le consomment, et la route refuse si Redis est indisponible.
+- **Invitation de témoignage réellement à usage unique** — L'invitation est réservée de façon atomique dans Redis (`SET NX`) avant l'insertion : deux soumissions simultanées avec le même lien ne créent plus deux lignes. Si l'insertion échoue, le lien est rendu réutilisable.
+- **Migrations Supabase rejouables sans risque** — Nouvelle migration idempotente qui supprime les politiques `anon` recréées par `003_uptime.sql` et `004_testimonial_submissions.sql` après `002_policies.sql`. Aucun effet en production (déjà saine) ; protège les bases reconstruites (branches Preview, `supabase db reset`).
+- **`/api/errors`** — Taille de `stack` (1 500) et `url` (300) plafonnée côté serveur, comme côté client ; `line` et `col` doivent être des nombres finis.
+
 ### Changed
 
 - **Colophon : dépôt présenté comme privé** — La page Colophon affirmait que le dépôt GitHub était public et renvoyait vers lui, alors qu'il est encore privé (comme l'indique déjà le message de la console). Elle indique désormais « dépôt privé pour le moment — accès sur demande », et le bouton « Demander l'accès » mène au formulaire de contact, en FR, EN et ES. Une constante `REPO_IS_PUBLIC` permettra de rétablir le texte et le lien publics le jour de l'ouverture du dépôt.
@@ -39,6 +46,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **`/feed/{tag}`** — Un « % » littéral (`/feed/%25`) provoquait une erreur 500 (double décodage) ; un tag inconnu renvoyait un flux vide en 200, mis en cache. Les deux répondent désormais 404.
+- **Webhooks coupés par Vercel** — Les alertes de `cron/ping`, le heartbeat externe et l'alerte CSP critique partaient dans un `fetch` non attendu, qu'une fonction serverless peut interrompre. Ils passent par `after()` de `next/server`.
 - **Recherche du blog et ancres utilisables au clavier** — La recherche suit le motif combobox (↑/↓, Entrée, Échap, nombre de résultats annoncé). Après un saut d'ancre (barre, menu mobile, palette, URL avec `#section`), le focus est placé sur la section atteinte au lieu de rester dans l'en-tête (audit du 25/10/2026).
 - **Accessibilité et performance (lot 3 de l'audit du 25/10/2026)** :
   - la palette de commandes s'ouvre sans clavier (bouton sous 1 280 px et dès 1 850 px, entrée dans le menu mobile) et n'est chargée qu'à la première demande ; son action « langue » conserve la page courante ;

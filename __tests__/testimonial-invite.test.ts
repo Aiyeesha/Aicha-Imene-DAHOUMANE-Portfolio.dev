@@ -11,7 +11,12 @@ const store = new Map<string, string>();
 jest.mock("@/lib/redis", () => ({
   redis: {
     exists: async (k: string) => (store.has(k) ? 1 : 0),
-    set: async (k: string, v: string) => { store.set(k, v); return "OK"; },
+    set: async (k: string, v: string, opts?: { nx?: boolean }) => {
+      if (opts?.nx && store.has(k)) return null;
+      store.set(k, v);
+      return "OK";
+    },
+    del: async (k: string) => (store.delete(k) ? 1 : 0),
   },
 }));
 jest.mock("@/lib/ratelimit", () => ({
@@ -19,7 +24,7 @@ jest.mock("@/lib/ratelimit", () => ({
   safeLimit: async () => ({ success: true }),
 }));
 jest.mock("next/headers", () => ({ headers: async () => new Headers({ "x-real-ip": "1.2.3.4" }) }));
-const insert = jest.fn(async () => ({ error: null }));
+const insert = jest.fn(async (): Promise<{ error: { message: string } | null }> => ({ error: null }));
 jest.mock("@/lib/supabase/admin", () => ({
   createAdminSupabaseClient: () => ({ from: () => ({ insert }) }),
 }));
@@ -92,5 +97,17 @@ describe("POST /api/testimonial-submit", () => {
     expect((await post(body({ photo_url: "http://example.com/p.jpg" }))).status).toBe(400);
     expect((await post(body({ full_name: "x".repeat(101) }))).status).toBe(400);
     expect(insert).not.toHaveBeenCalled();
+  });
+
+  it("ne laisse passer qu'une soumission sur deux envoyées en même temps", async () => {
+    const statuses = (await Promise.all([post(body()), post(body())])).map((r) => r.status).sort();
+    expect(statuses).toEqual([201, 410]);
+    expect(insert).toHaveBeenCalledTimes(1);
+  });
+
+  it("rend l'invitation réutilisable si l'insertion échoue", async () => {
+    insert.mockImplementationOnce(async () => ({ error: { message: "db down" } }));
+    expect((await post(body())).status).toBe(500);
+    expect((await post(body())).status).toBe(201);
   });
 });
