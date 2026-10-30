@@ -1,4 +1,4 @@
-// scripts/sync-project-assets.mjs
+// scripts/archive/sync-project-assets.mjs
 // --------------------------------
 // One-shot migration: pull every file from the public Supabase Storage bucket
 // `projects` into `public/projects/<slug>/`, then rewrite the Supabase CDN URLs
@@ -8,7 +8,7 @@
 // After this runs, the project galleries/covers are served by Vercel's CDN from
 // the repo — no Supabase Storage dependency.
 //
-// Usage: node --env-file=.env.local scripts/sync-project-assets.mjs
+// Usage: node --env-file=.env.local scripts/archive/sync-project-assets.mjs
 // Re-runnable (overwrites existing files).
 
 import { createClient } from "@supabase/supabase-js";
@@ -17,7 +17,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dirname, "..");
+const ROOT = join(__dirname, "../..");
 const PUBLIC_DIR = join(ROOT, "public", "projects");
 const BUCKET = "projects";
 
