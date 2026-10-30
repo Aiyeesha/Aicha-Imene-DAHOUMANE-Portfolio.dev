@@ -85,7 +85,7 @@ UPDATE projects SET summary =
 WHERE slug = 'it-ops-hardware-procurement' AND locale = 'en';
 
 UPDATE projects SET summary =
-  'Day-1 user onboarding scenario: Outlook 2016 account auto-configured via Exchange ActiveSync (tai7@outlook.fr), bidirectional test email validated — inbox ready in under 5 minutes.'
+  'Day-1 user onboarding scenario: Outlook 2016 account auto-configured via Exchange ActiveSync (t•••7@outlook.fr), bidirectional test email validated — inbox ready in under 5 minutes.'
 WHERE slug = 'it-ops-email-config' AND locale = 'en';
 
 -- ══ SUMMARIES — FR ══════════════════════════════════════════════════════════
@@ -139,5 +139,5 @@ UPDATE projects SET summary =
 WHERE slug = 'it-ops-hardware-procurement' AND locale = 'fr';
 
 UPDATE projects SET summary =
-  'Scénario d''onboarding Jour-1 : compte Outlook 2016 configuré automatiquement via Exchange ActiveSync (tai7@outlook.fr), email de test bidirectionnel validé — messagerie opérationnelle en moins de 5 minutes.'
+  'Scénario d''onboarding Jour-1 : compte Outlook 2016 configuré automatiquement via Exchange ActiveSync (t•••7@outlook.fr), email de test bidirectionnel validé — messagerie opérationnelle en moins de 5 minutes.'
 WHERE slug = 'it-ops-email-config' AND locale = 'fr';
