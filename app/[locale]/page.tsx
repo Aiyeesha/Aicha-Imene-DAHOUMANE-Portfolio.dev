@@ -31,7 +31,7 @@ const LatestPosts        = dynamic(() => import("@/components/LatestPosts"), {
 const ContactForm        = dynamic(() => import("@/components/ContactForm"));
 const Testimonials       = dynamic(() => import("@/components/Testimonials"));
 import { getExperienceItems } from "@/content/experience";
-import { testimonials } from "@/content/testimonials";
+import { showTestimonials, testimonials } from "@/content/testimonials";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -257,10 +257,10 @@ export default async function Home({ params }: Props) {
       </section>
 
       {/* TESTIMONIALS / COMPANY LOGOS — default background.
-          NEXT_PUBLIC_SHOW_TESTIMONIALS=true shows real testimonials; otherwise
-          the "They trusted me" logo strip (no placeholders). */}
-      <section id={process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true" ? "testimonials" : "trusted-by"} className="py-14">
-        {process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS === "true" ? (
+          showTestimonials (env flag + at least one real entry) shows real
+          testimonials; otherwise the "They trusted me" logo strip. */}
+      <section id={showTestimonials ? "testimonials" : "trusted-by"} className="py-14">
+        {showTestimonials ? (
           <>
             <Reveal>
               <h2 className="text-3xl font-semibold">{t("sections.testimonials_title")}</h2>

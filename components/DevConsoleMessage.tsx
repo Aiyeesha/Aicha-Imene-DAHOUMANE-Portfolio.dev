@@ -19,7 +19,7 @@ export default function DevConsoleMessage() {
         "  → Next.js 16 (App Router) + React 19 + TypeScript\n" +
         "  → Tailwind CSS + next-themes (dark mode)\n" +
         "  → Supabase (PostgreSQL) + Upstash Redis\n" +
-        "  → next-intl (EN/FR) + MDX blog\n" +
+        "  → next-intl (FR/EN/ES) + MDX blog\n" +
         "  → Deployed on Vercel",
       "font-size:13px; color:#94a3b8; line-height:1.6;"
     );
@@ -29,9 +29,9 @@ export default function DevConsoleMessage() {
       process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact via the form on the site"
     );
     console.log(
-      // Private repository: no direct link.
-      "%c💼 Source code: private repository — access on request via the contact form",
-      "font-size:13px; color:#94a3b8;"
+      "%c💼 Source code → %s",
+      "font-size:13px; color:#94a3b8;",
+      "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev"
     );
   }, []);
 

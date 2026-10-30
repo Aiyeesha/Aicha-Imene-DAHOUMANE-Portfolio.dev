@@ -162,7 +162,7 @@ export default function TrackAwareHero() {
             </h1>
 
             {/* Mobile CTA (< 640px): on small screens the avatar, badges and
-                title push every button below the fold, so "Hire me" also sits
+                title push every button below the fold, so "Contact me" also sits
                 right under the H1; the one in the CTA row below is hidden on
                 mobile to avoid a duplicate. */}
             <div className="mt-4 sm:hidden">
