@@ -37,6 +37,16 @@ export default function TrackAwareHero() {
   const { track, setTrack } = useTrack();
   const locale = useLocale();
 
+  // ── Fade on track switch only ─────────────────────────────────────────────
+  // The fade starts at opacity 0: applied on first render, it would hide the
+  // tagline (the mobile LCP element) until the animation runs, which a busy
+  // main thread delays by seconds. It is only enabled once the track changes.
+  const [trackSwitched, setTrackSwitched] = useState(false);
+  const firstTrack = useRef(track);
+  useEffect(() => {
+    if (track !== firstTrack.current) setTrackSwitched(true);
+  }, [track]);
+
   // ── Avatar parallax ────────────────────────────────────────────────────────
   // 0 → 400px of scroll moves the avatar 0 → -28px. Written straight to the
   // style (no re-render); off with prefers-reduced-motion.
@@ -137,7 +147,7 @@ export default function TrackAwareHero() {
         <div
           key={track}
           // motion-safe: no fade with prefers-reduced-motion
-          className="motion-safe:animate-[fadeIn_0.3s_ease_forwards]"
+          className={trackSwitched ? "motion-safe:animate-[fadeIn_0.3s_ease_forwards]" : undefined}
           suppressHydrationWarning
         >
             {/* Short hook, typing effect */}

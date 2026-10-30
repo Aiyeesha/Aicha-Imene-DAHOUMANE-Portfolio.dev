@@ -15,10 +15,11 @@ import { GlowCard } from "./GlowCard";
 import ProjectClientLogo from "./ProjectClientLogo";
 import { projectCardImage } from "@/lib/data/projectAssets";
 import { useTrack } from "@/app/[locale]/providers";
-import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
+import type { FeaturedProjectCard } from "@/lib/data/featuredProjects";
 
 type FeaturedProjectsProps = {
-  projects: ProjectWithAssets[];
+  // Trimmed on the server (toFeaturedProjectCards): props end up in the HTML.
+  projects: FeaturedProjectCard[];
 };
 
 // Image with fallback: gallery src → cover.webp → empty background. `src` is
