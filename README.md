@@ -180,7 +180,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `NEXT_PUBLIC_SITE_NAME` / `NEXT_PUBLIC_OG_NAME` / `NEXT_PUBLIC_OG_HEADLINE` | Optional | Site name, person name and headline used in metadata and OG images |
 | `NEXT_PUBLIC_BRAND_INITIALS` | Optional | Navbar logo initials (default: `A`) |
 | `NEXT_PUBLIC_SITE_LASTMOD` | Optional | Pins sitemap `lastModified` (YYYY-MM-DD); defaults to build date |
-| `NEXT_PUBLIC_SHOW_TESTIMONIALS` | Optional | `true` to display the testimonials section (currently disabled) |
+| `NEXT_PUBLIC_SHOW_TESTIMONIALS` | Optional | `true` to display the testimonials section; it only appears once `content/testimonials.ts` holds at least one real entry |
 
 ---
 
