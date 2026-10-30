@@ -228,16 +228,16 @@ WHERE slug = 'it-ops-hardware-procurement' AND locale = 'fr';
 UPDATE projects SET
   hero_subtitle = 'Outlook 2016 · Microsoft account · Email configuration · User support',
   sections = '[
-    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Julien CHARLES-NICOLAS. The task was twofold: write a step-by-step user support script for configuring Outlook 2016, then apply the procedure hands-on with a real Microsoft account (tai7@outlook.fr)."]},
+    {"type":"text","title":"Context","paragraphs":["Training exercise at Greta du Val d''Oise under trainer Julien CHARLES-NICOLAS. The task was twofold: write a step-by-step user support script for configuring Outlook 2016, then apply the procedure hands-on with a real Microsoft account (t•••7@outlook.fr)."]},
     {"type":"timeline","title":"Procedure","steps":[
       {"title":"Launch Outlook 2016","description":"Opened Microsoft Outlook 2016 and clicked through the welcome screen."},
       {"title":"Add new email account","description":"Navigated to File → Info → Account Settings → Account Settings → Email tab → New."},
-      {"title":"Automatic account configuration","description":"In the Add New Account dialog: entered full name, email (tai7@outlook.fr), and password. Clicked Next — Outlook auto-configured the settings. Dialog confirmed account created. Clicked Finish then Close."},
-      {"title":"Verification","description":"Inbox received a test email from tai12 greta (tai12@outlook.fr) on 23/03/2022 at 13:30 with subject ''Test envoi d''un message'' — send/receive confirmed."}
+      {"title":"Automatic account configuration","description":"In the Add New Account dialog: entered full name, email (t•••7@outlook.fr), and password. Clicked Next — Outlook auto-configured the settings. Dialog confirmed account created. Clicked Finish then Close."},
+      {"title":"Verification","description":"Inbox received a test email from t•••12@outlook.fr on 23/03/2022 at 13:30 with subject ''Test envoi d''un message'' — send/receive confirmed."}
     ]},
     {"type":"metrics","title":"Outcomes","items":[
-      {"label":"Account","value":"tai7@outlook.fr configured in Outlook 2016 via automatic setup"},
-      {"label":"Email test","value":"Test message received from tai12@outlook.fr — confirmed"},
+      {"label":"Account","value":"t•••7@outlook.fr configured in Outlook 2016 via automatic setup"},
+      {"label":"Email test","value":"Test message received from t•••12@outlook.fr — confirmed"},
       {"label":"Support script","value":"Step-by-step dialogue written covering automatic and manual setup"},
       {"label":"Skills","value":"Outlook 2016 account setup, user support communication, Microsoft account"}
     ]}
@@ -247,16 +247,16 @@ WHERE slug = 'it-ops-email-config' AND locale = 'en';
 UPDATE projects SET
   hero_subtitle = 'Outlook 2016 · Compte Microsoft · Configuration messagerie · Support utilisateur',
   sections = '[
-    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de Julien CHARLES-NICOLAS. La mission était double : rédiger un script de support utilisateur pour configurer un compte Outlook 2016, puis appliquer la procédure en pratique avec un vrai compte Microsoft (tai7@outlook.fr)."]},
+    {"type":"text","title":"Contexte","paragraphs":["Exercice de formation au Greta du Val d''Oise sous la supervision de Julien CHARLES-NICOLAS. La mission était double : rédiger un script de support utilisateur pour configurer un compte Outlook 2016, puis appliquer la procédure en pratique avec un vrai compte Microsoft (t•••7@outlook.fr)."]},
     {"type":"timeline","title":"Procédure","steps":[
       {"title":"Lancement d''Outlook 2016","description":"Ouverture de Microsoft Outlook 2016 et navigation à travers l''écran de bienvenue."},
       {"title":"Ajout d''un nouveau compte","description":"Navigation vers Fichier → Informations → Paramètres du compte → Paramètres du compte → onglet Adresse de courrier → Nouveau."},
-      {"title":"Configuration automatique du compte","description":"Dans la boîte de dialogue : renseignement du nom complet, de l''adresse email (tai7@outlook.fr) et du mot de passe. Clic sur Suivant — Outlook configure automatiquement le compte. Confirmation de création. Clic sur Terminer puis Fermer."},
-      {"title":"Vérification","description":"La boîte de réception a reçu un email de tai12 greta (tai12@outlook.fr) le 23/03/2022 à 13h30, objet ''Test envoi d''un message'' — envoi/réception confirmés."}
+      {"title":"Configuration automatique du compte","description":"Dans la boîte de dialogue : renseignement du nom complet, de l''adresse email (t•••7@outlook.fr) et du mot de passe. Clic sur Suivant — Outlook configure automatiquement le compte. Confirmation de création. Clic sur Terminer puis Fermer."},
+      {"title":"Vérification","description":"La boîte de réception a reçu un email de t•••12@outlook.fr le 23/03/2022 à 13h30, objet ''Test envoi d''un message'' — envoi/réception confirmés."}
     ]},
     {"type":"metrics","title":"Résultats","items":[
-      {"label":"Compte","value":"tai7@outlook.fr configuré dans Outlook 2016 via configuration automatique"},
-      {"label":"Test email","value":"Message de test reçu de tai12@outlook.fr — confirmé"},
+      {"label":"Compte","value":"t•••7@outlook.fr configuré dans Outlook 2016 via configuration automatique"},
+      {"label":"Test email","value":"Message de test reçu de t•••12@outlook.fr — confirmé"},
       {"label":"Script support","value":"Dialogue rédigé couvrant les scénarios automatique et manuel"},
       {"label":"Compétences","value":"Configuration Outlook 2016, support utilisateur, compte Microsoft"}
     ]}

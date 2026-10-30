@@ -6,7 +6,10 @@
 //   abbr     — 2-3 letters for the badge
 //   category — groups badges by colour
 //   level    — 1 (beginner) to 4 (expert); nothing is rated 4: "expert" after
-//              2-3 years of experience would not hold up in an interview
+//              2-3 years of experience would not hold up in an interview.
+//              3 ("advanced") requires 2+ years of regular use; under 2
+//              years is 2 ("intermediate"), whatever the project's ambition
+//              (checked by __tests__/tech-stack.test.ts)
 //   years    — years of experience (decimal)
 //   context  — short context sentence (EN, with FR/ES translations)
 //   track    — "salesforce" | "itops" | "both"
@@ -71,7 +74,7 @@ const TECH_STACK: TechItem[] = [
     name: "LWC",
     abbr: "LW",
     category: "salesforce",
-    level: 3,
+    level: 2,
     years: 1.5,
     context: {
       en: "Reusable Lightning Web Components for custom UI.",
@@ -129,7 +132,7 @@ const TECH_STACK: TechItem[] = [
     name: "TypeScript",
     abbr: "TS",
     category: "code",
-    level: 3,
+    level: 2,
     years: 1.5,
     context: {
       en: "Type-safe Next.js application and API routes.",
@@ -215,7 +218,7 @@ const TECH_STACK: TechItem[] = [
     name: "Next.js",
     abbr: "Nx",
     category: "devops",
-    level: 3,
+    level: 2,
     years: 1,
     context: {
       en: "This portfolio. App Router, SSR, i18n, Supabase.",
@@ -289,7 +292,7 @@ const TECH_STACK: TechItem[] = [
     name: "Supabase",
     abbr: "Sb",
     category: "data",
-    level: 3,
+    level: 2,
     years: 1,
     context: {
       en: "PostgreSQL backend: RLS, API routes, real-time.",
