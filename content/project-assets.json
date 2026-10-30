@@ -1,5 +1,5 @@
 {
-  "_generated": "Fichier généré par scripts/generate-project-assets.mjs — ne pas modifier à la main.",
+  "_generated": "Fichier généré par scripts/assets/generate-project-assets.mjs — ne pas modifier à la main.",
   "logos": [
     "digit-learning-salesforce-update",
     "fasha-apex-backend-optimization",

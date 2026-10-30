@@ -262,10 +262,10 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   ├── fr.json                 # French translations (same keys)
 │   └── es.json                 # Spanish translations (same keys)
 ├── supabase/
-│   ├── migrations/             # DDL + RLS (numérotés, appliqués par db:migrate)
-│   ├── seeds/                  # Données initiales des projets
-│   └── scripts/                # Correctifs one-off déjà appliqués (référence)
-├── scripts/                    # Utility scripts (db:migrate, CV generation)
+│   ├── migrations/             # DDL + RLS, applied with the Supabase CLI (supabase db push)
+│   ├── maintenance/            # Manual SQL still in use (GDPR retention)
+│   └── archive/                # One-off fixes and seeds of the former projects table (reference only)
+├── scripts/                    # Utility scripts by theme, see scripts/README.md
 └── public/
     ├── .well-known/
     │   └── security.txt        # RFC 9116 security contact
@@ -296,6 +296,8 @@ npm run typecheck    # TypeScript check (tsc --noEmit)
 npm test             # Jest unit tests
 npm run test:e2e     # Playwright end-to-end tests (incl. axe accessibility checks)
 ```
+
+Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are listed in [`scripts/README.md`](scripts/README.md).
 
 ---
 
