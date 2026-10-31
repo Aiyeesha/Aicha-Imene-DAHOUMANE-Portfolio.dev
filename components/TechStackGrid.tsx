@@ -86,11 +86,15 @@ function TechCard({ tech, locale, index }: { tech: TechItem; locale: string; ind
   const colors  = CATEGORY_COLORS[tech.category];
   const label   = LEVEL_LABELS[tech.level][safeLocale];
   const context = tech.context[safeLocale];
+  // Localised decimal separator ("1,5" in FR/ES, "1.5" in EN). French takes
+  // the plural from 2 on ("1,5 an", "2 ans"); Spanish and English from
+  // anything other than 1 ("1,5 años", "1.5 yrs").
+  const years = new Intl.NumberFormat(safeLocale, { maximumFractionDigits: 1 }).format(tech.years);
   const yearsLabel = locale === "fr"
-    ? `${tech.years} an${tech.years > 1 ? "s" : ""}`
+    ? `${years} an${tech.years >= 2 ? "s" : ""}`
     : locale === "es"
-    ? `${tech.years} año${tech.years !== 1 ? "s" : ""}`
-    : `${tech.years} yr${tech.years !== 1 ? "s" : ""}`;
+    ? `${years} año${tech.years !== 1 ? "s" : ""}`
+    : `${years} yr${tech.years !== 1 ? "s" : ""}`;
 
   // Unique id for aria-describedby
   const tooltipId = `tooltip-${tech.id}`;

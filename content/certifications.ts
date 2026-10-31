@@ -26,8 +26,8 @@ export const certifications: Certification[] = [
     name: 'Higher Technician in Systems & Networks',
     issuer: 'GRETA du Val d\'Oise',
     badgeUrl: '/certifications/systems-networks-badge.png',
-    earnedDate: 'Oct 2022 – Jun 2023',
-    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Two one-month internships at MIDRANGE GROUP: Windows Autopilot deployment (264 workstations), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, PfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
+    earnedDate: 'Jun 2023',
+    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Two one-month internships at MIDRANGE GROUP: deployment of 264 workstations (64 re-imaged with Sysprep, 200 via Windows Autopilot), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, PfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
     skills: ['Windows Server 2022', 'Active Directory', 'DNS', 'DHCP', 'WDS', 'GPO', 'PXE Deployment', 'VMware Workstation 17', 'PfSense', 'Squid Proxy', 'Acronis Cyber Protect', 'Datto RMM', 'Windows Autopilot', 'Sysprep', 'Blancco Secure Erase', 'Splashtop', 'Autotask', 'Webroot']
   },
   {
@@ -35,7 +35,7 @@ export const certifications: Certification[] = [
     name: 'IT Support Technician',
     issuer: 'GRETA du Val d\'Oise — Lycée Louis Jouvet',
     badgeUrl: '/certifications/tai-badge.png',
-    earnedDate: 'Jan 2022 – Jul 2022',
+    earnedDate: 'Jul 2022',
     description: 'RNCP Level 4 (Bac) in IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Covers Windows 10 installation, VirtualBox virtualization (training 2022), TP-Link network configuration, Active Directory roaming profiles, and hardware/software support.',
     skills: ['Windows 10', 'VirtualBox (formation 2022)', 'Active Directory', 'Roaming Profiles', 'WiFi Configuration', 'AOMEI Partition Assistant', 'Hardware Diagnosis', 'User Support', 'Messaging Configuration']
   },

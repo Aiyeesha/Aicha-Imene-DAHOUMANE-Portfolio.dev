@@ -15,17 +15,14 @@
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTrack } from "./providers";
 import { TypingText } from "@/components/TypingText";
 import BookingLink from "@/components/BookingLink";
+// Availability badge: rendered on the server (part of the initial HTML);
+// the modal content it opens is loaded on demand inside the component.
+import AvailabilityModal from "@/components/AvailabilityModal";
 
-// AvailabilityModal is only needed on click: loaded with a dynamic import
-// (ssr: false) to keep it out of the hero's initial JS.
-const AvailabilityModal = dynamic(() => import("@/components/AvailabilityModal"), {
-  ssr: false,
-});
 
 // ── Entrance ────────────────────────────────────────────────────────────────
 // The avatar keeps opacity 1 (LCP candidate, painted immediately) and only
