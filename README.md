@@ -169,9 +169,9 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `CONTACT_RATE_LIMIT_MAX_REQUESTS` | Optional | Max requests per window (default: 5) |
 | `TESTIMONIAL_SUBMIT_TOKEN` | Required in production | HMAC key for the testimonial invitation links (generate with `openssl rand -base64 32`) |
 | `TESTIMONIAL_INVITE_ADMIN_TOKEN` | Optional | Bearer token for `POST /api/admin/testimonial-invite`, 32+ characters, distinct from `ADMIN_PASSWORD` (generate with `openssl rand -base64 32`); without it the route answers 503 |
-| `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
-| `ADMIN_USERNAME` | Optional | Username for `/admin` HTTP Basic Auth |
-| `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
+| `CRON_SECRET` | Required in production | Bearer token (32+ characters) Vercel sends to `/api/cron/ping`; without it every call is refused — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
+| `ADMIN_USERNAME` | Required in production | Username for `/admin` HTTP Basic Auth |
+| `ADMIN_PASSWORD` | Required in production | Password for `/admin` HTTP Basic Auth, **16 characters minimum** (validated by `lib/env.ts`; production refuses to start below that) — generate with `openssl rand -base64 32` |
 | `REVALIDATE_SECRET` | Required in production | Shared secret for `/api/revalidate` (header `x-revalidate-secret`, manual call or webhook) |
 | `IP_HASH_SALT` | Required in production | HMAC key that pseudonymises IP-based rate-limit identifiers before they reach Redis (generate with `openssl rand -hex 32`) |
 | `HEALTHCHECK_URL` | Optional | Dead-man's switch URL pinged after each successful `/api/cron/ping` run |
