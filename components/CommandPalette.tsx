@@ -4,7 +4,8 @@
 // ------------------
 // ⌘K / Ctrl+K command palette, available on every page: jump to a section,
 // open a page, switch track, theme or language, download the CV, open
-// LinkedIn.
+// LinkedIn. Typing also searches projects, blog posts and certifications
+// (index fetched from /api/palette-index/<locale> on first open).
 
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
@@ -18,6 +19,8 @@ import usePlatformShortcut from "@/lib/usePlatformShortcut";
 import { OPEN_COMMAND_PALETTE_EVENT } from "@/lib/commandPaletteEvents";
 import { scrollToSection } from "@/lib/anchorScroll";
 import { showTestimonials } from "@/content/testimonials";
+import type { PaletteEntry, PaletteIndex } from "@/lib/search/paletteIndex";
+import { paletteFilter, VALUE_SEPARATOR } from "@/lib/search/paletteFilter";
 
 // ── Styles injected once via <style> ─────────────────────────────────────────
 // cmdk only accepts class names, so the overlay and panel are styled here.
@@ -90,6 +93,13 @@ const PALETTE_STYLES = `
   [cmdk-item]:hover {
     background: rgba(34, 211, 238, 0.08);
   }
+  [cmdk-item] .cmdk-hint {
+    margin-left: auto;
+    padding-left: 0.75rem;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
   [cmdk-empty] {
     padding: 2rem;
     text-align: center;
@@ -122,6 +132,11 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const [search, setSearch] = useState("");
+  // Index kept with its locale: after a language switch it no longer matches
+  // and is fetched again, so results stay in the page's language.
+  const [loaded, setLoaded] = useState<{ locale: string; data: PaletteIndex } | null>(null);
+  const index = loaded?.locale === locale ? loaded.data : null;
 
   // ── ⌘K / Ctrl+K shortcut ──────────────────────────────────────────────────
   useEffect(() => {
@@ -129,6 +144,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setOpen((o) => !o);
+        setSearch("");
       }
     };
     // Nav button and mobile menu entry (no keyboard needed).
@@ -141,9 +157,28 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
     };
   }, []);
 
+  // ── Content index (projects, posts, certifications) ─────────────────────────
+  // Fetched once per locale, on first open: the pages' HTML stays unchanged.
+  // On failure the palette keeps working with its static commands only.
+  useEffect(() => {
+    if (!open || index) return;
+    const ctrl = new AbortController();
+    fetch(`/api/palette-index/${locale}`, { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: PaletteIndex | null) => { if (data) setLoaded({ locale, data }); })
+      .catch(() => { /* aborted or offline: static commands only */ });
+    return () => ctrl.abort();
+  }, [open, index, locale]);
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
+  // Every close also clears the query, so the palette reopens on the full list.
+  const changeOpen = (next: boolean) => {
+    setOpen(next);
+    if (!next) setSearch("");
+  };
+
   const run = (fn: () => void) => {
-    setOpen(false);
+    changeOpen(false);
     // Short delay so the palette visibly closes before the action
     setTimeout(fn, 60);
   };
@@ -213,7 +248,21 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
     navigate:    t("navigate"),
     select:      t("select"),
     alsoShortcut: t("alsoShortcut", { shortcut }),
+    groupProjects: t("groupProjects"),
+    groupPosts:    t("groupPosts"),
+    groupCerts:    t("groupCerts"),
   };
+
+  // Content results are listed only once the visitor types, so the default
+  // list stays short; cmdk then filters them on title and keywords.
+  const searching = search.trim().length > 0;
+  const contentGroups: { heading: string; entries: PaletteEntry[]; icon: string }[] = index
+    ? [
+        { heading: L.groupProjects, entries: index.projects, icon: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" },
+        { heading: L.groupPosts, entries: index.posts, icon: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" },
+        { heading: L.groupCerts, entries: index.certifications, icon: "M12 15l8-8-3-3-5 5-2-2-3 3z M20 7l-8 8-4-4" },
+      ]
+    : [];
 
   // ── Shared item class ────────────────────────────────────────────────────────
   const itemCls = "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm cursor-pointer outline-hidden";
@@ -225,8 +274,10 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
       <Command.Dialog
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={changeOpen}
         label={L.title}
+        // Word-based matching instead of cmdk's fuzzy one (lib/search/paletteFilter.ts)
+        filter={paletteFilter}
       >
         {/* Main panel */}
         <div className="bg-white dark:bg-[#0f1929] text-slate-900 dark:text-white">
@@ -238,6 +289,8 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
 
           {/* Search input */}
           <Command.Input
+            value={search}
+            onValueChange={setSearch}
             placeholder={L.placeholder}
             className="dark:placeholder:text-white/40 placeholder:text-slate-400 dark:text-white text-slate-900 border-b border-black/10 dark:border-white/10"
           />
@@ -245,6 +298,27 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
           {/* Command list */}
           <Command.List>
             <Command.Empty>{L.noResults}</Command.Empty>
+
+            {/* ── Content search (only while typing) ──────────────────── */}
+            {searching && contentGroups.map(({ heading, entries, icon }) => (
+              <Command.Group key={heading} heading={heading}>
+                {entries.map((entry) => (
+                  <Command.Item
+                    key={entry.id}
+                    // Unique value (two entries may share a title); the
+                    // keywords let "apex" or "pfsense" find the entry.
+                    value={`${entry.title}${VALUE_SEPARATOR}${entry.id}`}
+                    keywords={entry.keywords}
+                    onSelect={() => navigate(entry.href)}
+                    className={itemCls}
+                  >
+                    <Icon d={icon} />
+                    <span className="truncate">{entry.title}</span>
+                    {entry.hint && <span className="cmdk-hint">{entry.hint}</span>}
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            ))}
 
             {/* ── Sections (scroll to anchor) ─────────────────────────── */}
             <Command.Group heading={L.sections}>
