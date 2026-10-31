@@ -93,7 +93,7 @@ Browser
 
 - **Dual-track hero** — Salesforce and IT Ops profiles share the same avatar; text, tags, and accent colors adapt per track
 - **Availability modal** — pulsing "open to work" badge in the hero; click opens a modal detailing contract types, work modes, target roles, and location (FR/EN/ES)
-- **Dedicated pages** — `/about`, `/hybride` (hybrid Salesforce × IT Ops profile), `/work-with-me`, `/contact`, `/certifications`, `/blog`, `/projects`, `/status`, `/resources`, `/colophon`, `/uses`
+- **Dedicated pages** — `/about`, `/hybride` (hybrid Salesforce × IT Ops profile), `/work-with-me`, `/contact`, `/certifications`, `/blog`, `/projects`, `/status`, `/colophon`, `/uses` (`/resources` redirects there)
 - **Career timeline** — visual timeline (2022 → present) on the About page
 - **Blog** — 14 MDX articles in each of EN / FR / ES, syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
 - **Article series** — curated reading paths across related articles

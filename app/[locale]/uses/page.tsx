@@ -18,10 +18,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Configuración y herramientas — Aïcha Imène DAHOUMANE"
     : "Uses & Setup — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Mon environnement de développement, mes outils Salesforce et IT Ops, et ce que j'utilise au quotidien."
+    ? "Mon environnement de développement, mes outils Salesforce et IT Ops, et les références que j'utilise au quotidien."
     : isEs
-    ? "Mi entorno de desarrollo, mis herramientas de Salesforce e IT Ops, y lo que uso a diario."
-    : "My development environment, Salesforce & IT Ops tools, and what I use daily.";
+    ? "Mi entorno de desarrollo, mis herramientas de Salesforce e IT Ops, y las referencias que uso a diario."
+    : "My development environment, Salesforce & IT Ops tools, and the references I use daily.";
   return {
     title,
     description,
@@ -42,15 +42,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
       alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
       siteName,
-      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
+      images: [{ url: `${urlPath}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [`${siteUrl}/twitter-image`],
+      images: [`${urlPath}/opengraph-image`],
     },
-    robots: { index: false, follow: true },
   };
 }
 

@@ -1,6 +1,6 @@
-// app/[locale]/resources/opengraph-image.tsx
+// app/[locale]/uses/opengraph-image.tsx
 // -------------------------------------------
-// OpenGraph image for the Resources page.
+// OpenGraph image for the Uses page (setup, tools and references).
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -20,7 +20,7 @@ export default async function Image({ params }: Props) {
   const siteUrl = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  const title   = isFr ? "Ressources & Boîte à outils" : isEs ? "Recursos y caja de herramientas" : "Resources & Toolbox";
+  const title   = isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup";
   const subtitle = isFr
     ? "Outils, stacks et références en Salesforce, IT Ops et développement web"
     : isEs

@@ -13,13 +13,6 @@ import TrackAwareSkills from "@/components/TrackAwareSkills";
 import RecruiterPaths from "@/components/RecruiterPaths";
 // Below the fold: lazy-loaded to reduce initial JS.
 //
-// TrackAwareServices goes through TrackAwareServicesLoader because
-// dynamic(..., { ssr: false }) is not allowed in a server component.
-// ssr: false is deliberate: with server rendering, the dynamic() + Reveal
-// chain sometimes left an unreconciled server DOM (missing icons and
-// "operational maturity" block, track cookie ignored) until something forced
-// a re-render.
-import TrackAwareServices from "@/components/TrackAwareServicesLoader";
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
 const GlobalMetrics      = dynamic(() => import("@/components/GlobalMetrics"));
 const FeaturedProjects   = dynamic(() => import("@/components/FeaturedProjects"), {
@@ -243,18 +236,6 @@ export default async function Home({ params }: Props) {
             </Link>
           </div>
         </Reveal>
-      </section>
-
-      {/* SERVICES — section-stripe */}
-      <section id="services" className="section-stripe py-14">
-        <Reveal>
-          <h2 className="text-3xl font-semibold">{t("sections.services_title")}</h2>
-        </Reveal>
-        <Reveal delayMs={70}>
-          <p className="mt-3 text-muted">{t("sections.services_subtitle")}</p>
-        </Reveal>
-        <TrackAwareServices locale={locale} />
-        {/* The FAQ lives on /work-with-me, with its FAQPage JSON-LD. */}
       </section>
 
       {/* TESTIMONIALS / COMPANY LOGOS — default background.
