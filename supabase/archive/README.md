@@ -11,5 +11,7 @@ overwrite the current copy of the content in Supabase.
   (`about_pages`, `goals_2026`, `certifications`, the latter dropped by
   migration `20260809074953`).
 
-Still in use: `supabase/migrations/` (schema and RLS) and
-`supabase/maintenance/retention.sql` (manual GDPR purge).
+The site no longer uses Supabase (retired in October 2026). The whole
+`supabase/` folder, `supabase/migrations/` and
+`supabase/maintenance/retention.sql` included, is kept only for a possible
+return to a SQL database.

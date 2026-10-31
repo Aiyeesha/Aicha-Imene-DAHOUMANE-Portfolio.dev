@@ -28,7 +28,6 @@ type DisplayStatus = ServiceStatus | "maintenance";
 const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
   "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam",    es: "Envío de mensajes, limitación de tasa, anti-spam" },
-  "Database (Supabase)":  { en: "Backup copy of the uptime history — PostgreSQL, being retired",  fr: "Copie de secours de l'historique — PostgreSQL, en cours de retrait",  es: "Copia de respaldo del historial — PostgreSQL, en proceso de retirada" },
   "Content integrity":    { en: "Featured projects have complete case-study content", fr: "Les projets mis en avant ont un contenu complet", es: "Los proyectos destacados tienen contenido completo" },
   "Security cluster integrity": { en: "Security projects keep their flag in the content", fr: "Les projets Sécurité gardent leur marqueur dans le contenu", es: "Los proyectos de seguridad conservan su marcador en el contenido" },
   "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit",             es: "Cache de respuestas y limitación de tasa" },
@@ -41,7 +40,6 @@ const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
 const SERVICE_NAMES: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Website",              fr: "Site web",                       es: "Sitio web" },
   "Contact form":         { en: "Contact form",         fr: "Formulaire de contact",          es: "Formulario de contacto" },
-  "Database (Supabase)":  { en: "Database (Supabase)",  fr: "Base de données (Supabase)",     es: "Base de datos (Supabase)" },
   "Content integrity":    { en: "Content integrity",    fr: "Intégrité du contenu",           es: "Integridad del contenido" },
   "Security cluster integrity": { en: "Security cluster integrity", fr: "Intégrité du cluster Sécurité", es: "Integridad del clúster de seguridad" },
   "Cache (Upstash Redis)":{ en: "Cache (Upstash Redis)", fr: "Cache (Upstash Redis)",         es: "Caché (Upstash Redis)" },

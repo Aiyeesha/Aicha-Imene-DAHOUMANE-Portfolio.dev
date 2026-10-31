@@ -8,7 +8,6 @@
 
 jest.mock("server-only", () => ({}), { virtual: true });
 jest.mock("@/lib/redis", () => ({ redis: null }));
-jest.mock("@/lib/supabase/admin", () => ({ createAdminSupabaseClient: jest.fn() }));
 jest.mock("next/cache", () => ({ revalidatePath: jest.fn() }));
 
 const auth = { ok: true };
