@@ -1,7 +1,7 @@
 // app/api/revalidate/route.ts
 // ---------------------------
-// On-demand revalidation of the affected Next.js pages, typically called by a
-// Supabase webhook when a project is published or edited.
+// On-demand revalidation of the affected Next.js pages, called manually or by
+// a webhook (formerly a Supabase database webhook).
 //
 // Security: POST only, `x-revalidate-secret` header compared to
 // REVALIDATE_SECRET, no internal details in error responses.
@@ -44,16 +44,16 @@ export async function POST(request: NextRequest) {
   }
 
   // ── 2. Parameters: query string first, then body ─────────────────────────
-  // Supabase database webhooks send the row as the body (not customisable),
-  // so parameters go in the query string: /api/revalidate?type=projects&locale=en.
-  // A JSON body is still accepted for manual calls and other webhooks.
+  // Webhooks that send their own payload as the body (Supabase database
+  // webhooks did) pass parameters in the query string:
+  // /api/revalidate?type=projects&locale=en. A JSON body is accepted too.
   const { searchParams } = new URL(request.url);
 
   let bodyParams: { type?: string; locale?: string; slug?: string } = {};
   try {
     bodyParams = await request.json();
   } catch {
-    // Missing or non-JSON body (Supabase case): ignore
+    // Missing or non-JSON body (webhook payload): ignore
   }
 
   const type = searchParams.get("type") ?? bodyParams.type ?? "all";
