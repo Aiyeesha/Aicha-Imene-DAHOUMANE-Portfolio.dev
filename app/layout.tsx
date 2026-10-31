@@ -115,8 +115,9 @@ function buildJsonLd(locale: string) {
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
-          addressRegion: "Île-de-France",
-          addressLocality: "Val-d'Oise"
+          // addressLocality is a town: "Val-d'Oise" (a département) was wrong
+          // there. The region is precise enough for a job search.
+          addressRegion: "Île-de-France"
         },
         // Key skills for the Knowledge Graph
         knowsAbout: [
