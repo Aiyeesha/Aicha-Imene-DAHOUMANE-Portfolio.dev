@@ -125,4 +125,18 @@ test.describe("Audit 2026-10-25 — focus au chargement et palette sans clavier"
     await page.getByRole("button", { name: /palette de commandes/i }).click();
     await expect(page.locator("[cmdk-root]")).toBeVisible();
   });
+
+  test("la palette recherche dans les projets, articles et certifications", async ({ page }) => {
+    await gotoHydrated(page, "/fr");
+    await page.keyboard.press("Control+k");
+    const input = page.locator("[cmdk-input]");
+    await input.fill("pfsense");
+    // Whole-word match: only entries that really mention pfSense.
+    const first = page.locator("[cmdk-item]").first();
+    await expect(first).toContainText(/pfsense/i);
+    await input.fill("Platform Administrator");
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/fr\/certifications#sf-platform-administrator$/);
+    await expect(page.locator("#sf-platform-administrator")).toBeVisible();
+  });
 });
