@@ -91,7 +91,7 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `POST /api/admin/testimonial-invite` | 5 failed attempts | 15 minutes / IP | Bearer `TESTIMONIAL_INVITE_ADMIN_TOKEN` (dedicated, 32+ chars, never `ADMIN_PASSWORD`); failures share the `/admin` counter; fail closed if Redis is down |
 | `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
 | `GET /api/blog/latest` | 30 requests | 60 seconds / IP | Public read route |
-| `GET /api/search` | 30 searches | 60 seconds / IP | Public full-text search; empty or 1-character queries are not counted; 429 responses are `no-store` |
+| `GET /api/search` | 30 searches | 60 seconds / IP | Public full-text search; empty or 1-character queries are not counted; 429 responses are `no-store`; fails **open** without Upstash (read-only route) |
 | `GET /admin/*` | 5 failed attempts | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — only failed authentications consume the quota; once it is exhausted, requests are refused before the credentials are checked |
 
 IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controlled) with `x-forwarded-for` as fallback.
