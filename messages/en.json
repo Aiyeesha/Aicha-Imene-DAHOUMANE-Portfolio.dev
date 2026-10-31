@@ -480,8 +480,9 @@
     "limitsTitle": "Known limitations",
     "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
     "helpTitle": "Accessibility issue?",
-    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please report it by specifying the URL of the page and the nature of the problem. Contact: via the contact form or by email.",
-    "lastAudit": "Last verified: June 28, 2026 — Tools: axe-core (automated CI), manual keyboard navigation testing."
+    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please let me know, specifying the URL of the page and the nature of the problem, via the <form>contact form</form>.",
+    "helpEmail": "You can also email me at <mail>{email}</mail>.",
+    "lastAudit": "Last verified: October 31, 2026 — Tools: axe-core (automated CI and command palette), manual keyboard navigation testing."
   },
   "availModal": {
     "badge": "Interviews now — Available from December 2026",
@@ -620,7 +621,6 @@
     "downloadCv": "Download CV",
     "linkedin": "LinkedIn",
     "noResults": "No results.",
-    "switchLang": "Cambiar a español",
     "close": "Close",
     "navigate": "navigate",
     "select": "select",
