@@ -423,7 +423,7 @@
     "rightsBody": "In accordance with applicable data protection regulations (GDPR), you have the right to access, rectify, request deletion of, and obtain portability of your personal data, as well as the right to object.",
     "contact": "To exercise your rights: {email}",
     "processorsTitle": "Data processors",
-    "processorsBody": "Data collected through this website is processed by the following sub-processors: Formhook (email delivery of the contact and testimonial forms — EU-hosted), Vercel (hosting and CDN — United States), Supabase (site incident dashboard, no visitor data — United States, GDPR compliance via Standard Contractual Clauses), Upstash (anti-spam rate limiting, pseudonymised per-IP counter — ephemeral data; site uptime history, no personal data). These providers act as data processors within the meaning of Article 28 of the GDPR.",
+    "processorsBody": "Data collected through this website is processed by the following sub-processors: Formhook (email delivery of the contact and testimonial forms — EU-hosted), Vercel (hosting and CDN — United States), Supabase (copy of the public project entries, no visitor data, being retired — United States, GDPR compliance via Standard Contractual Clauses), Upstash (anti-spam rate limiting, pseudonymised per-IP counter — ephemeral data; site uptime history and incident dashboard, no visitor data). These providers act as data processors within the meaning of Article 28 of the GDPR.",
     "lastUpdated": "October 14, 2026",
     "controllerTitle": "Data controller",
     "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, acting in a personal capacity (professional portfolio, no commercial activity). Contact: {email}",

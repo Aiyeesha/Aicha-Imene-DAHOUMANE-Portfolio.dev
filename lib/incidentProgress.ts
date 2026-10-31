@@ -1,7 +1,7 @@
 // lib/incidentProgress.ts
 // -------------------------
 // Pure computations on incident checklists, kept apart from
-// lib/supabase/incidents.ts (which imports "server-only") so Jest can test
+// lib/incidents.ts (which imports "server-only") so Jest can test
 // them directly without mocks (see CONTRIBUTING.md → Testing).
 import type { ChecklistPhase } from "@/lib/incidentPlaybooks";
 

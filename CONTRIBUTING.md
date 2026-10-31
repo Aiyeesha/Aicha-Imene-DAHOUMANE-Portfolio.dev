@@ -73,7 +73,7 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 
 The full list, with production requirements, is in the [README](README.md#environment-variables) and `.env.example`.
 
-Public pages do not need Supabase: projects, blog, about and certifications are read from `content/`. Supabase is only used by `/admin`, the incident dashboard, `/status` and `/api/health`, which degrade gracefully without it.
+Public pages do not need Supabase: projects, blog, about and certifications are read from `content/`. Supabase, being retired, is only read by `/admin` and `/api/health` (copy of the projects), which degrade gracefully without it. The uptime history and the incident dashboard live in Upstash Redis.
 Rate-limiting is disabled if Upstash is not configured (all limiters degrade to a no-op).
 
 > **Security:** Never commit `.env.local` to version control. It is excluded by `.gitignore` (pattern `.env*`).

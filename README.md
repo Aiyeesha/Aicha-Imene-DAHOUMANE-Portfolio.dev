@@ -45,7 +45,7 @@ Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR / ES) |
 | Content | Files in the repository (`content/`, MDX) — projects, blog, about, certifications; among public pages only `/status` reads the database (server-side) |
-| Backend | Supabase (PostgreSQL + RLS) — incident dashboard and a copy of the projects used by `/admin` and the health checks; **being retired** in favour of Redis |
+| Backend | Upstash Redis for the uptime history and the incident dashboard; Supabase (PostgreSQL + RLS) only keeps a copy of the projects used by `/admin` and the health checks, and is **being retired** |
 | Search | Command palette (cmdk) over a static per-locale index; blog full-text search (MiniSearch) |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
@@ -76,8 +76,8 @@ Browser
   │           └─ /api/errors                → client JS error reports (GlobalErrorHandler)
   │
   ├─ Supabase (PostgreSQL + RLS) — server-side only (service_role)
-  │     Tables: incidents · incident_checklist_items · uptime_pings (copy, until retirement)
-  │             projects · project_assets (copy of content/, for /admin and health checks)
+  │     Tables: projects · project_assets (read by /admin and health checks)
+  │             uptime_pings (copy, until retirement) · incidents (no longer used)
   │             admins · testimonial_submissions (empty, no longer written)
   │
   ├─ Upstash Redis
@@ -86,6 +86,7 @@ Browser
   │                 (identifiers HMAC-pseudonymised with IP_HASH_SALT)
   │     Cache:      portfolio:uptime:* · project:* · projects_with_assets:*
   │     Uptime:     portfolio:uptime:history (sorted set, one batch per day, 30 days)
+  │     Incidents:  portfolio:incidents (index) + portfolio:incident:<uuid> (JSON)
   │     Invites:    single-use testimonial invitations (SET NX)
   │
   └─ Vercel
@@ -291,7 +292,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 ## Deployment (Vercel)
 
 1. Import the repository in [Vercel](https://vercel.com) (the app lives at the repository root)
-2. Configure all required environment variables (Production and Preview). Prefer a **separate Supabase project for Preview**: otherwise `/admin` actions on a preview deployment (incidents) write to the production database
+2. Configure all required environment variables (Production and Preview). Preview deployments share the production Upstash database unless Preview-scoped variables point to another one: incidents created from `/admin` on a preview land in production data, and rate-limit counters are shared
 3. Region: `fra1` (see `vercel.json`); daily cron at 08:00 UTC
 4. Deploy — Vercel handles build, CDN, and HTTPS automatically. `NEXT_PUBLIC_*` values are inlined at build time: redeploy after changing one.
 

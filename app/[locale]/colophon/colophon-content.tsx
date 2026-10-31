@@ -66,7 +66,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     {
       title: "Backend",
       items: [
-        { name: "Supabase",      role: isFr ? "PostgreSQL hébergé — tableau des incidents, en cours de remplacement par Redis. RLS activé sur toutes les tables. (Projets, messages, témoignages et historique de disponibilité n'y sont plus stockés.)" : isEs ? "PostgreSQL alojado — panel de incidencias, en proceso de sustitución por Redis. RLS activado en todas las tablas. (Los proyectos, los mensajes, los testimonios y el historial de disponibilidad ya no se almacenan aquí.)" : "Hosted PostgreSQL — incident dashboard, being replaced by Redis. RLS enabled on all tables. (Projects, messages, testimonials and the uptime history are no longer stored there.)", link: "https://supabase.com" },
+        { name: "Supabase",      role: isFr ? "PostgreSQL hébergé — en cours de retrait : il ne contient plus qu'une copie des fiches projets lue par l'administration. RLS activé sur toutes les tables. (Incidents, historique de disponibilité, messages et témoignages n'y sont plus stockés.)" : isEs ? "PostgreSQL alojado — en proceso de retirada: solo contiene una copia de las fichas de proyecto leída por la administración. RLS activado en todas las tablas. (Las incidencias, el historial de disponibilidad, los mensajes y los testimonios ya no se almacenan aquí.)" : "Hosted PostgreSQL — being retired: it only holds a copy of the project entries read by the admin dashboard. RLS enabled on all tables. (Incidents, the uptime history, messages and testimonials are no longer stored there.)", link: "https://supabase.com" },
         { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health) + historique de disponibilité sur 30 jours" : isEs ? "Caché stale-while-revalidate + rate-limiting en los endpoints de escritura y sensibles (contacto, testimonios, invalidación de caché, admin, informes CSP, health) + historial de disponibilidad de 30 días" : "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health) + 30-day uptime history", link: "https://upstash.com" },
         { name: "Formhook",      role: isFr ? "Acheminement par email des messages du formulaire de contact — hébergé dans l'UE, aucune persistance côté serveur" : isEs ? "Entrega por email de los mensajes del formulario de contacto — alojado en la UE, sin persistencia en el servidor" : "Email delivery for contact-form messages — EU-hosted, no server-side persistence", link: "https://formhook.app" },
       ],
@@ -96,7 +96,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Track toggle** côté client (cookie `track`) : un seul composant hero, compétences et services adaptés selon le profil Salesforce ou IT Ops.",
         "**Pages dédiées** pour About, Certifications et Blog — accessibles via la navbar, non dupliquées dans la landing.",
         "**Server Components par défaut** : seuls les composants interactifs (hero, toggle de thème, formulaire) sont marqués `use client`.",
-        "**Lectures Supabase** (incidents) récupérées côté serveur avec cache Redis (stale-while-revalidate) — pas de requêtes client directes. Les fiches projets sont versionnées dans `content/` et servies statiquement.",
+        "**Aucune lecture de base de données côté client** : l'historique de disponibilité et le tableau des incidents sont lus dans Redis côté serveur. Les fiches projets sont versionnées dans `content/` et servies statiquement.",
         "**Blog MDX** : articles écrits en `.mdx` dans `content/blog/posts/{locale}/` — rendu statique au build, pas de base de données requise.",
       ]
     : isEs
@@ -105,7 +105,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Selector de track** en el cliente (cookie `track`): un único componente hero, con habilidades y servicios adaptados al perfil Salesforce o IT Ops.",
         "**Páginas dedicadas** para About, Certificaciones y Blog — accesibles desde la navbar, sin duplicarse en la landing.",
         "**Server Components por defecto**: solo los componentes interactivos (hero, selector de tema, formulario) están marcados como `use client`.",
-        "**Lecturas de Supabase** (incidencias) obtenidas en el servidor con caché Redis (stale-while-revalidate) — sin consultas directas desde el cliente. Las fichas de proyecto están versionadas en `content/` y se sirven de forma estática.",
+        "**Ninguna lectura de base de datos desde el cliente**: el historial de disponibilidad y el panel de incidencias se leen en Redis desde el servidor. Las fichas de proyecto están versionadas en `content/` y se sirven de forma estática.",
         "**Blog en MDX**: artículos escritos en `.mdx` dentro de `content/blog/posts/{locale}/` — renderizado estático en el build, sin necesidad de base de datos.",
       ]
     : [
@@ -113,13 +113,13 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Client-side track toggle** (cookie `track`): a single hero component, skills and services adapt to Salesforce or IT Ops profile.",
         "**Dedicated pages** for About, Certifications, and Blog — accessible via the navbar, not duplicated in the landing.",
         "**Server Components by default**: only interactive components (hero, theme toggle, contact form) are marked `use client`.",
-        "**Supabase reads** (incidents) fetched server-side with a Redis cache (stale-while-revalidate) — no direct client queries. Project entries are version-controlled in `content/` and served statically.",
+        "**No database reads from the client**: the uptime history and the incident dashboard are read from Redis on the server. Project entries are version-controlled in `content/` and served statically.",
         "**MDX Blog**: articles written as `.mdx` files in `content/blog/posts/{locale}/` — statically rendered at build time, no database required.",
       ];
 
   const cachePoints = isFr
     ? [
-        "**Upstash Redis** conserve l'historique de disponibilité (un relevé par jour, 30 jours) et met en cache les vues de `/status` et les lectures Supabase restantes (incidents) avec un TTL de 1 à 5 minutes.",
+        "**Upstash Redis** conserve l'historique de disponibilité (un relevé par jour, 30 jours) , le tableau des incidents de l'administration, et met en cache les vues de `/status` avec un TTL de 1 à 5 minutes.",
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
@@ -127,14 +127,14 @@ export default function ColophonContent({ locale }: { locale: string }) {
       ]
     : isEs
     ? [
-        "**Upstash Redis** guarda el historial de disponibilidad (un registro al día, 30 días) y almacena en caché las vistas de `/status` y las lecturas restantes a Supabase (incidencias) con un TTL de 1 a 5 minutos.",
+        "**Upstash Redis** guarda el historial de disponibilidad (un registro al día, 30 días) , el panel de incidencias de la administración, y almacena en caché las vistas de `/status` con un TTL de 1 a 5 minutos.",
         "**stale-while-revalidate**: si el dato está en caché, se devuelve de inmediato mientras se dispara una revalidación asíncrona en segundo plano.",
         "**Invalidación manual**: el endpoint `POST /api/cache/invalidate` (protegido por secreto) permite purgar la caché tras una actualización de datos.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en caché CDN, revalidado cada 24h.",
         "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado.",
       ]
     : [
-        "**Upstash Redis** keeps the uptime history (one check a day, 30 days) and caches the `/status` views and the remaining Supabase reads (incidents) with a 1- to 5-minute TTL.",
+        "**Upstash Redis** keeps the uptime history (one check a day, 30 days) , the admin incident dashboard, and caches the `/status` views with a 1- to 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",
@@ -145,7 +145,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     ? [
         "**CSP nonce-based** : `'unsafe-inline'` retiré de `script-src`. Un nonce cryptographique unique est généré par requête dans le proxy (`proxy.ts`) et appliqué aux scripts d'hydratation de Next.js ; les scripts qu'ils chargent héritent de la confiance via `'strict-dynamic'`. Tout script inline sans nonce est bloqué par le navigateur. Aucun script, style ni cadre tiers n'est autorisé : le site ne charge ni outil de mesure d'audience ni widget externe.",
         "**En-têtes HTTP** dans `next.config.mjs` : HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy étendu, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Fingerprinting du framework désactivé (`poweredByHeader: false`).",
-        "**Contenu des projets versionné** : les fiches projets et leurs visuels sont commités dans le dépôt et servis statiquement — aucune base de données n'est exposée pour cette partie. **Row Level Security (RLS)** reste activé sur les tables Supabase restantes (incidents / statut).",
+        "**Contenu des projets versionné** : les fiches projets et leurs visuels sont commités dans le dépôt et servis statiquement — aucune base de données n'est exposée pour cette partie. **Row Level Security (RLS)** reste activé sur les tables Supabase restantes, en cours de retrait.",
         "**Rate-limiting** via Upstash Redis (fenêtre glissante) sur les endpoints sensibles : contact (5 req/10 min), témoignages (3 req/24h), invalidation cache (10 req/min), health check (30 req/min), rapports CSP (20 req/min), panneau admin (5 req/15 min — protection anti brute-force). Si Redis **n'est pas configuré** en production, le limiteur bascule en *fail-closed* (toutes les requêtes bloquées). En cas de **panne transitoire** de Redis, il bascule en *fail-open* pour ne pas pénaliser les utilisateurs légitimes — sauf sur `/admin` où le comportement reste *fail-closed*.",
         "**Honeypot** : champs cachés dans les formulaires de contact et de témoignages — les bots remplissant ces champs reçoivent un 200 silencieux.",
         "**Validation d'origine** : les requêtes API provenant d'origines inconnues sont rejetées en production.",
@@ -159,7 +159,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     ? [
         "**CSP basada en nonce**: `'unsafe-inline'` eliminado de `script-src`. Se genera un nonce criptográfico único por solicitud en el proxy (`proxy.ts`) y se aplica a los scripts de hidratación de Next.js; los scripts que estos cargan heredan la confianza mediante `'strict-dynamic'`. Cualquier script inline sin nonce es bloqueado por el navegador. No se autoriza ningún script, estilo ni marco de terceros: el sitio no carga ninguna herramienta de medición de audiencia ni widget externo.",
         "**Cabeceras HTTP** en `next.config.mjs`: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy extendida, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Fingerprinting del framework desactivado (`poweredByHeader: false`).",
-        "**Contenido de proyectos versionado**: las fichas de proyecto y sus recursos se versionan en el repositorio y se sirven de forma estática — no se expone ninguna base de datos para esta parte. **Row Level Security (RLS)** sigue activo en las tablas de Supabase restantes (incidencias / estado).",
+        "**Contenido de proyectos versionado**: las fichas de proyecto y sus recursos se versionan en el repositorio y se sirven de forma estática — no se expone ninguna base de datos para esta parte. **Row Level Security (RLS)** sigue activo en las tablas de Supabase restantes, en proceso de retirada.",
         "**Rate-limiting** vía Upstash Redis (ventana deslizante) en los endpoints sensibles: contacto (5 req/10 min), testimonios (3 req/24h), invalidación de caché (10 req/min), health check (30 req/min), informes CSP (20 req/min), panel admin (5 req/15 min — protección anti fuerza bruta). Si Redis **no está configurado** en producción, el limitador pasa a modo *fail-closed* (todas las solicitudes bloqueadas). Ante una **caída transitoria** de Redis, pasa a *fail-open* para no penalizar a los usuarios legítimos — excepto en `/admin`, donde el comportamiento sigue siendo *fail-closed*.",
         "**Honeypot**: campos ocultos en los formularios de contacto y testimonios — los bots que rellenan estos campos reciben un 200 silencioso.",
         "**Validación de origen**: las solicitudes API procedentes de orígenes desconocidos se rechazan en producción.",
@@ -172,7 +172,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     : [
         "**Nonce-based CSP**: `'unsafe-inline'` removed from `script-src`. A unique cryptographic nonce is generated per request in the proxy (`proxy.ts`) and applied to Next.js hydration scripts; scripts they load inherit trust through `'strict-dynamic'`. Any inline script without a nonce is blocked by the browser. No third-party script, style or frame is allowed: the site loads no audience-measurement tool and no external widget.",
         "**HTTP headers** in `next.config.mjs`: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, extended Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Framework fingerprinting disabled (`poweredByHeader: false`).",
-        "**Version-controlled project content**: project entries and their assets are committed to the repo and served statically — no database is exposed for this part. **Row Level Security (RLS)** remains enabled on the remaining Supabase tables (incidents / status).",
+        "**Version-controlled project content**: project entries and their assets are committed to the repo and served statically — no database is exposed for this part. **Row Level Security (RLS)** remains enabled on the remaining Supabase tables, which are being retired.",
         "**Rate-limiting** via Upstash Redis (sliding window) on sensitive endpoints: contact (5 req/10 min), testimonials (3 req/24h), cache invalidation (10 req/min), health check (30 req/min), CSP reports (20 req/min), admin panel (5 req/15 min — brute-force protection). If Redis is **not configured** in production, the limiter fails closed (all requests blocked). During a **transient Redis outage**, it fails open to avoid blocking legitimate users — except on `/admin`, which remains fail-closed.",
         "**Honeypot fields** on contact and testimonial forms — bots filling hidden fields receive a silent 200 response.",
         "**Origin validation**: API requests from unknown origins are rejected in production.",

@@ -8,8 +8,8 @@ import {
   toggleChecklistItem,
   updateIncidentStatus,
   type IncidentStatus,
-} from "@/lib/supabase/incidents";
-import type { IncidentSeverity } from "@/lib/supabase/incidents";
+} from "@/lib/incidents";
+import type { IncidentSeverity } from "@/lib/incidents";
 import type { IncidentType } from "@/lib/incidentPlaybooks";
 
 const INCIDENT_TYPES: IncidentType[] = [
@@ -56,7 +56,7 @@ export async function toggleChecklistItemAction(
   incidentId: string
 ): Promise<void> {
   await requireAdminAuth();
-  await toggleChecklistItem(id, currentValue);
+  await toggleChecklistItem(incidentId, id, currentValue);
   revalidatePath(`/admin/incidents/${incidentId}`);
 }
 
