@@ -327,8 +327,12 @@ footer,
   from { transform: translateY(18px); }
   to   { transform: translateY(0); }
 }
-.hero-avatar-in { animation: hero-avatar-in 0.6s ease-out 0.05s both; }
-.hero-text-in   { animation: hero-text-in 0.55s ease-out 0.14s both; }
+/* fill-mode "backwards" (not "both"): the start keyframe applies during the
+   delay, but no transform is kept once the animation ends. A retained
+   transform makes the element the containing block of any position: fixed
+   descendant (overlays, toasts), which then stops covering the viewport. */
+.hero-avatar-in { animation: hero-avatar-in 0.6s ease-out 0.05s backwards; }
+.hero-text-in   { animation: hero-text-in 0.55s ease-out 0.14s backwards; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
