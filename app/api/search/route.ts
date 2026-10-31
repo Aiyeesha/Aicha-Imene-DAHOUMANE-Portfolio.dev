@@ -3,7 +3,7 @@
 // Full-text blog search with MiniSearch:
 // GET /api/search?q=apex&locale=en → JSON array of results.
 // The index is built in memory on the first request and kept for the life of
-// the server process.
+// the server process. Rate limited per IP (lib/ratelimit.ts: 30 / 60s).
 
 import { NextResponse, type NextRequest } from "next/server";
 import MiniSearch from "minisearch";
@@ -11,6 +11,8 @@ import { readAllPosts } from "@/content/blog/fs";
 import fs from "node:fs";
 import { parseFrontmatter } from "@/lib/frontmatter";
 import type { BlogLocale } from "@/content/blog/fs";
+import { searchRatelimit, safeLimit } from "@/lib/ratelimit";
+import { getClientIp } from "@/lib/contactValidation";
 
 export const revalidate = 86400;
 
@@ -103,6 +105,21 @@ export async function GET(request: NextRequest) {
 
   if (!q || q.length < 2) {
     return NextResponse.json({ results: [] });
+  }
+
+  // ── Rate limiting (only queries that actually run a search) ───────────
+  // The CDN cache (Cache-Control below) absorbs repeated identical queries;
+  // this bounds loops of distinct queries that would each reach the function.
+  const rl = await safeLimit(searchRatelimit, `search:ip:${getClientIp(request)}`);
+  if (!rl.success) {
+    const now = Date.now();
+    const resetMs = typeof rl.reset === "number" ? rl.reset : now + 10_000;
+    const retryAfterSeconds = Math.max(1, Math.ceil((resetMs - now) / 1000));
+    return NextResponse.json(
+      { results: [], error: "rate_limited" },
+      // no-store: a 429 must never be cached and served to other visitors
+      { status: 429, headers: { "Retry-After": String(retryAfterSeconds), "Cache-Control": "no-store" } }
+    );
   }
 
   const { index } = buildIndex(validLocale);

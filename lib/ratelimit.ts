@@ -19,18 +19,21 @@ const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 // Local dev and CI: success=true (no friction without Redis). Production:
 // success=false (fail closed), so an Upstash outage never silently disables
 // flood protection.
+// `failOpen` exempts public read-only routes, for which failing closed would
+// switch the feature off for every visitor (e.g. the blog search).
 const isProd = process.env.NODE_ENV === "production";
-function createNoOpRatelimit(maxReq: number, windowMs: number) {
+function createNoOpRatelimit(maxReq: number, windowMs: number, { failOpen = false } = {}) {
+  const closed = isProd && !failOpen;
   return {
     limit: async () => ({
-      success: !isProd, // fail closed in production, permissive in dev/CI
+      success: !closed, // fail closed in production, permissive in dev/CI
       limit: maxReq,
-      remaining: isProd ? 0 : maxReq,
+      remaining: closed ? 0 : maxReq,
       reset: Date.now() + windowMs
     }),
     // Read without consuming (used by /admin, see proxy.ts).
     getRemaining: async () => ({
-      remaining: isProd ? 0 : maxReq,
+      remaining: closed ? 0 : maxReq,
       reset: Date.now() + windowMs
     })
   } as unknown as Ratelimit;
@@ -69,6 +72,16 @@ export const contactRatelimit = redis
 export const blogRatelimit = redis
   ? createRatelimit(redis, 30, 60, "portfolio:rl:blog")
   : createNoOpRatelimit(30, 60_000);
+
+// ── /api/search ────────────────────────────────────────────────────────
+// 30 requests / 60s / IP: public full-text search, cheap per call but each
+// uncached query runs a fuzzy + prefix MiniSearch over every post, so an
+// unthrottled loop could keep a function busy. Same budget as /api/blog/latest.
+// Without Redis it fails open: a read-only public route, where failing closed
+// would disable search for everyone (and does in CI, which runs `next start`).
+export const searchRatelimit = redis
+  ? createRatelimit(redis, 30, 60, "portfolio:rl:search")
+  : createNoOpRatelimit(30, 60_000, { failOpen: true });
 
 // ── /api/testimonial-submit ───────────────────────────────────────────
 // 3 submissions / 24h / IP: testimonials are rare and deliberate
