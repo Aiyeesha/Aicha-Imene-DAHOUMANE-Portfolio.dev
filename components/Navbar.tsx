@@ -44,9 +44,10 @@ function CommandPaletteTrigger() {
   );
 }
 
-const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
-// workWithMe (recruiter summary page) is listed in the mobile menu only.
-const PAGE_IDS = ["about","hybrid","certifications","uses","workWithMe"] as const;
+const SECTION_IDS = ["skills","experience","testimonials","projects","blog","contact"] as const;
+// workWithMe (recruiter summary page) is listed in the mobile menu only;
+// services live on that page (#services).
+const PAGE_IDS = ["about","hybrid","certifications","uses","workWithMe","services"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
@@ -386,7 +387,7 @@ export default function Navbar({
   }, [projectsDropdownOpen, projectsMenuPos]);
 
   // Entries that open a separate page (not a home anchor) get a ↗ badge.
-  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "uses", "workWithMe", "blog", "projects"]);
+  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "uses", "workWithMe", "services", "blog", "projects"]);
 
   // Compact padding and font size up to 1850px: French and Spanish labels are
   // longer and would overflow. 1850px is where everything fits once the
@@ -411,6 +412,7 @@ export default function Navbar({
     if (id === "certifications") return `/${locale}/certifications`;
     if (id === "uses") return `/${locale}/uses`;
     if (id === "workWithMe") return `/${locale}/work-with-me`;
+    if (id === "services") return `/${locale}/work-with-me#services`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
     if (id === "projects") return `/${locale}/projects`;
