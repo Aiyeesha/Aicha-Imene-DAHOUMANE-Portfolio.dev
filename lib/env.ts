@@ -9,8 +9,6 @@ import { z } from "zod";
 // ── Schemas ───────────────────────────────────────────────────────────────────
 
 const publicSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL:    z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   NEXT_PUBLIC_SITE_URL:        z.string().url(),
   NEXT_PUBLIC_LINKEDIN_URL: z
     .string()
@@ -25,7 +23,6 @@ const publicSchema = z.object({
 });
 
 const serverSchema = z.object({
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   UPSTASH_REDIS_REST_URL:    z.string().url(),
   UPSTASH_REDIS_REST_TOKEN:  z
     .string()
@@ -100,7 +97,7 @@ export function validateEnv(): void {
   const message = `[env] ⚠ Variables d'environnement invalides :\n${block}`;
 
   // In production an invalid configuration stops the start-up. Previews
-  // (often without Supabase keys) and local development only warn.
+  // and local development only warn.
   if (isProductionDeployment) throw new Error(message);
   console.error(message);
 }

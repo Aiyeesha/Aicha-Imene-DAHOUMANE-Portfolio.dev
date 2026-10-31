@@ -3,7 +3,7 @@
  */
 // __tests__/cron-ping.test.ts
 // Daily cron (/api/cron/ping): the Redis uptime history is the source of
-// /status, so a failed write fails the job; the Supabase copy is best effort.
+// /status, so a failed write fails the job.
 
 jest.mock("server-only", () => ({}), { virtual: true });
 jest.mock("next/server", () => {
@@ -21,15 +21,6 @@ jest.mock("@/lib/health", () => ({ runHealthChecks: async () => report }));
 const recordPingBatch = jest.fn(async (): Promise<boolean> => true);
 jest.mock("@/lib/uptime", () => ({ recordPingBatch: (...a: unknown[]) => recordPingBatch(...(a as [])) }));
 
-const insert = jest.fn(async (): Promise<{ error: { message: string } | null }> => ({ error: null }));
-// Purges: delete().lt() is awaited directly, or followed by .eq().
-const purge = () => Object.assign(Promise.resolve({ error: null }), { eq: async () => ({ error: null }) });
-jest.mock("@/lib/supabase/admin", () => ({
-  createAdminSupabaseClient: () => ({
-    from: () => ({ insert, delete: () => ({ lt: purge }) }),
-  }),
-}));
-
 import { GET } from "@/app/api/cron/ping/route";
 
 const call = () => GET(new Request("http://localhost/api/cron/ping", { headers: { authorization: "Bearer s3cret" } }));
@@ -39,7 +30,6 @@ beforeEach(() => {
   delete process.env.ALERT_WEBHOOK_URL;
   delete process.env.HEALTHCHECK_URL;
   recordPingBatch.mockClear();
-  insert.mockClear();
 });
 
 describe("GET /api/cron/ping", () => {
@@ -57,14 +47,6 @@ describe("GET /api/cron/ping", () => {
     const res = await call();
     expect(res.status).toBe(500);
     expect(await res.json()).toMatchObject({ error: "history_store_failed" });
-  });
-
-  it("réussit même si la copie Supabase échoue", async () => {
-    insert.mockResolvedValueOnce({ error: { message: "paused project" } });
-    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
-    expect((await call()).status).toBe(200);
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining("Supabase copy skipped"), "paused project");
-    warn.mockRestore();
   });
 
   it("refuse une requête sans le bon secret", async () => {

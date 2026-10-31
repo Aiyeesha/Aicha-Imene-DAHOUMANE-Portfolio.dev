@@ -27,11 +27,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://aicha-imene-dahoumane-portfolio.vercel.app";
 
-// The site's Supabase project host (remote images, see images.remotePatterns).
-const SUPABASE_HOST = (() => {
-  try { return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname; } catch { return ""; }
-})();
-
 // Former Vercel alias still serving production: 308 to the main domain so
 // shared links stop circulating under the old name.
 const LEGACY_HOSTS = ["portfolio-next-one-gold.vercel.app"].filter(
@@ -159,12 +154,9 @@ const nextConfig = {
     minimumCacheTTL: 2592000, // 30 days
     // Default sizes plus 480px (common on mobile).
     deviceSizes: [480, 640, 750, 828, 1080, 1200, 1920],
-    // Remote image optimisation is limited to the site's own Supabase project
-    // (a wildcard would turn the optimiser into a relay for third-party
-    // content). No remote host when the URL is not configured.
-    remotePatterns: SUPABASE_HOST
-      ? [{ protocol: "https", hostname: SUPABASE_HOST }]
-      : [],
+    // No remote image host: every image is served from public/ (a wildcard
+    // would turn the optimiser into a relay for third-party content).
+    remotePatterns: [],
   },
 
   async redirects() {

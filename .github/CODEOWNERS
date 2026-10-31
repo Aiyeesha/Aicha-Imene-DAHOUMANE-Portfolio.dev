@@ -6,7 +6,6 @@
 /proxy.ts                    @Aiyeesha
 /next.config.mjs             @Aiyeesha
 /lib/ratelimit.ts            @Aiyeesha
-/lib/supabase/admin.ts       @Aiyeesha
 /supabase/                   @Aiyeesha
 /app/api/                    @Aiyeesha
 /app/admin/                  @Aiyeesha

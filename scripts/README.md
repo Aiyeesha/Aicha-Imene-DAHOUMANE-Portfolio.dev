@@ -1,7 +1,7 @@
 # Scripts
 
 Utility scripts, grouped by theme. Run every command from the repository root.
-Scripts that talk to Supabase read `.env.local` (or `.env`).
+Scripts read `.env.local` (or `.env`). The `db/` scripts need the optional Supabase variables listed at the end of `.env.example`.
 
 ## `content/` — site content
 
@@ -24,7 +24,7 @@ Scripts that talk to Supabase read `.env.local` (or `.env`).
 | `npm run assets:redact` | `redact-screenshots.mjs` | OCR + blur of IPs, emails, domains, phone numbers and Salesforce ids in project screenshots. `-- --dry-run` previews, `-- --folder <slug>` limits to one project. |
 | — | `redact-certifications.py` | Irreversibly blurs personal data on diploma scans: `python3 scripts/privacy/redact-certifications.py <originals> public/certifications`. |
 
-## `db/` — copy of the content in Supabase
+## `db/` — former Supabase copy (kept, not used by the site)
 
 The site serves projects from `content/`; nothing in the app reads Supabase any more for them. These scripts maintained the former `public.projects` copy and are **kept on purpose**, in case the content moves back to a SQL database. Run them only against a database you intend to fill.
 
@@ -38,7 +38,7 @@ The site serves projects from `content/`; nothing in the app reads Supabase any 
 | `npm run db:uptime:copy` | `copy-uptime-to-redis.ts` | One-shot, optional copy of the last 30 days of `uptime_pings` to the Redis uptime history (`-- --dry` counts only). Idempotent. |
 | — | `seed.ts` | **Destructive**: empties the tables, then re-seeds everything. Deliberately not an npm command: `npx tsx scripts/db/seed.ts`, only after a backup. |
 
-Schema changes go through `supabase/migrations/` and the Supabase CLI (`supabase db push`), not through these scripts.
+If a SQL database comes back, schema changes go through `supabase/migrations/` and the Supabase CLI, not through these scripts. `@supabase/supabase-js` stays as a dev dependency for them only.
 
 ## `tooling/` — build and install
 
