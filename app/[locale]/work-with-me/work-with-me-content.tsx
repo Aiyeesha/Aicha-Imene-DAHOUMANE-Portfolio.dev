@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 import BookingLink from "@/components/BookingLink";
+import TrackAwareServices from "@/components/TrackAwareServicesLoader";
 import { AVAILABILITY as START_DATE } from "@/lib/availability";
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
@@ -20,6 +21,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
   // FAQ from the `faq` namespace of messages/*.json, also used by the FAQPage
   // JSON-LD in page.tsx.
   const tFaq = useTranslations("faq");
+  const tSections = useTranslations("sections");
   const faqItems = tFaq.raw("items") as { q: string; a: string }[];
 
   // ── Track accent colours ──────────────────────────────────────────────────
@@ -200,6 +202,14 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Services for the active track. Moved here from the home page, which
+          they made ~4,400px longer on mobile; #services is the nav target. */}
+      <section id="services" aria-labelledby="section-services" className="mb-10 scroll-mt-24">
+        <h2 id="section-services" className="text-lg font-semibold">{tSections("services_title")}</h2>
+        <p className="mt-2 text-sm text-muted">{tSections("services_subtitle")}</p>
+        <TrackAwareServices locale={isFr ? "fr" : isEs ? "es" : "en"} />
       </section>
 
       {/* Process */}
