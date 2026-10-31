@@ -4,6 +4,8 @@
 // and app/[locale]/status/page.tsx (direct server render). Each check returns
 // a status, a latency and an optional message; 4-second timeout per check.
 
+import { featuredWithoutContent, securityProjectCount } from "@/lib/contentChecks";
+
 export type ServiceStatus = "operational" | "degraded" | "outage";
 
 export type ServiceHealth = {
@@ -130,35 +132,15 @@ async function checkContactForm(): Promise<ServiceHealth> {
 }
 
 // ── Content integrity ─────────────────────────────────────────────────────────
-// Application-level backstop for the SQL constraint
-// `featured_published_requires_sections`: a published, featured project must
-// never have empty `sections`, in any locale. The constraint prevents the
-// regression in the database; this check makes it visible.
+// Read from content/ (the source of truth): a published, featured project must
+// have a case study in every locale (sections or an MDX file). Synchronous and
+// local, so its latency is ~0 ms.
 
-type ContentGap = { slug: string; locale: string };
-
-async function checkContentIntegrity(): Promise<ServiceHealth> {
+function checkContentIntegrity(): ServiceHealth {
   const start = Date.now();
   try {
-    const { createServerSupabaseClient } = await import("@/lib/supabase/server");
-    const { withRetry } = await import("@/lib/supabase/withRetry");
-    const supabase = createServerSupabaseClient();
-
-    const { data, error } = await withRetry<ContentGap[]>(() =>
-      supabase
-        .from("projects")
-        .select("slug, locale")
-        .eq("status", "published")
-        .eq("featured", true)
-        .or("sections.is.null,sections.eq.[]")
-    );
-
+    const gaps = featuredWithoutContent();
     const latencyMs = Date.now() - start;
-    if (error) {
-      return { name: "Content integrity", status: "degraded", latencyMs, message: String((error as { message?: string })?.message ?? error) };
-    }
-
-    const gaps = data ?? [];
     if (gaps.length > 0) {
       const sample = gaps.slice(0, 3).map((g) => `${g.slug} (${g.locale})`).join(", ");
       return {
@@ -168,48 +150,30 @@ async function checkContentIntegrity(): Promise<ServiceHealth> {
         message: `${gaps.length} featured project(s) missing body content: ${sample}${gaps.length > 3 ? "…" : ""}`,
       };
     }
-
     return { name: "Content integrity", status: "operational", latencyMs };
   } catch (e) {
     return { name: "Content integrity", status: "degraded", latencyMs: Date.now() - start, message: String(e) };
   }
 }
 
-// ── is_security flag integrity ───────────────────────────────────────────────
-// A reseed that drops the flag would clear it on every project at once, so
-// this only checks that at least one published project still has
-// is_security = true (a fixed count would raise false alarms as the security
-// cluster grows).
-async function checkSecurityClusterIntegrity(): Promise<ServiceHealth> {
+// ── isSecurity flag integrity ─────────────────────────────────────────────────
+// At least one published project must keep isSecurity (content/projects.ts):
+// losing the flag on every project at once would empty the Security cluster
+// links without any visible error.
+
+function checkSecurityClusterIntegrity(): ServiceHealth {
   const start = Date.now();
   try {
-    const { createServerSupabaseClient } = await import("@/lib/supabase/server");
-    const { withRetry } = await import("@/lib/supabase/withRetry");
-    const supabase = createServerSupabaseClient();
-
-    const { data, error } = await withRetry<{ slug: string }[]>(() =>
-      supabase
-        .from("projects")
-        .select("slug")
-        .eq("status", "published")
-        .eq("is_security", true)
-        .limit(1)
-    );
-
+    const count = securityProjectCount();
     const latencyMs = Date.now() - start;
-    if (error) {
-      return { name: "Security cluster integrity", status: "degraded", latencyMs, message: String((error as { message?: string })?.message ?? error) };
-    }
-
-    if (!data || data.length === 0) {
+    if (count === 0) {
       return {
         name: "Security cluster integrity",
         status: "degraded",
         latencyMs,
-        message: "0 published project has is_security = true — likely a reseed regression (see lib/health.ts).",
+        message: "0 published project has isSecurity = true in content/projects.ts.",
       };
     }
-
     return { name: "Security cluster integrity", status: "operational", latencyMs };
   } catch (e) {
     return { name: "Security cluster integrity", status: "degraded", latencyMs: Date.now() - start, message: String(e) };
@@ -243,13 +207,13 @@ function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
 
 export async function runHealthChecks(): Promise<HealthReport> {
   // Network checks in parallel; static checks are instant
-  const [supabase, redis, contact, contentIntegrity, securityCluster] = await Promise.all([
+  const [supabase, redis, contact] = await Promise.all([
     checkSupabase(),
     checkRedis(),
     checkContactForm(),
-    checkContentIntegrity(),
-    checkSecurityClusterIntegrity(),
   ]);
+  const contentIntegrity = checkContentIntegrity();
+  const securityCluster  = checkSecurityClusterIntegrity();
 
   const services: ServiceHealth[] = [
     checkWebsite(),

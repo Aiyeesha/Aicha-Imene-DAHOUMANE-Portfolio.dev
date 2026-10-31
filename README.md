@@ -45,7 +45,7 @@ Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR / ES) |
 | Content | Files in the repository (`content/`, MDX) — projects, blog, about, certifications; among public pages only `/status` reads the database (server-side) |
-| Backend | Upstash Redis for the uptime history and the incident dashboard; Supabase (PostgreSQL + RLS) only keeps a copy of the projects used by `/admin` and the health checks, and is **being retired** |
+| Backend | Upstash Redis for the uptime history and the incident dashboard; Supabase (PostgreSQL + RLS) is **being retired**: the app only pings it from the health checks and keeps a best-effort copy of the uptime history |
 | Search | Command palette (cmdk) over a static per-locale index; blog full-text search (MiniSearch) |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
@@ -76,8 +76,8 @@ Browser
   │           └─ /api/errors                → client JS error reports (GlobalErrorHandler)
   │
   ├─ Supabase (PostgreSQL + RLS) — server-side only (service_role)
-  │     Tables: projects · project_assets (read by /admin and health checks)
-  │             uptime_pings (copy, until retirement) · incidents (no longer used)
+  │     Tables kept until retirement, no longer read by the app:
+  │             projects · project_assets · uptime_pings (best-effort copy) · incidents
   │             admins · testimonial_submissions (empty, no longer written)
   │
   ├─ Upstash Redis
@@ -93,8 +93,6 @@ Browser
         CDN (static assets, ISR pages)
         Cron jobs (vercel.json)
 ```
-
-> **Known leftovers (October 2026):** `/admin` and `/api/cron/ping` still query the `messages` and `testimonials` tables, which no longer exist in production. The errors are ignored (empty lists, a daily warning in the logs); a cleanup is planned.
 
 ---
 

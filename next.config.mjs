@@ -134,6 +134,16 @@ const nextConfig = {
 
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
+  // The health checks (lib/contentChecks.ts) look for case-study MDX files on
+  // disk: ship them with the functions that run those checks, otherwise a
+  // featured project whose body lives in MDX would be reported as empty.
+  outputFileTracingIncludes: {
+    "/api/health": ["./content/projects/**/*.mdx"],
+    "/api/cron/ping": ["./content/projects/**/*.mdx"],
+    "/[locale]/status": ["./content/projects/**/*.mdx"],
+    "/admin": ["./content/projects/**/*.mdx"],
+  },
+
   // Build date, frozen into the server bundle so the sitemap's lastmod does
   // not change on every instance start.
   env: {

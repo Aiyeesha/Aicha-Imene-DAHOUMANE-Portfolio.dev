@@ -7,7 +7,7 @@ Scripts that talk to Supabase read `.env.local` (or `.env`).
 
 | Command | Script | Purpose |
 |---|---|---|
-| `npm run content:safety` | `check-publish-safety.ts` | Checks `public.projects`: FR/EN/ES parity and the SaaS embargo. Also run daily by `.github/workflows/content-publish-safety.yml`. |
+| `npm run content:safety` | `check-publish-safety.ts` | Checks `content/`: FR/EN/ES parity of published projects and the SaaS embargo (rules in `lib/contentChecks.ts`, also tested on every PR). Run daily by `.github/workflows/content-publish-safety.yml`, no secret needed. |
 | `npm run content:cv` | `generate-cv-pdf.mjs` | Builds the CV PDFs of `public/cv/` from their HTML sources (Puppeteer). |
 
 ## `assets/` — images and generated manifests
@@ -26,7 +26,7 @@ Scripts that talk to Supabase read `.env.local` (or `.env`).
 
 ## `db/` — copy of the content in Supabase
 
-The site serves projects from `content/`. The `public.projects` table is a copy read by `/admin`, the health checks (`lib/health.ts`) and `content:safety`; these scripts keep that copy in sync.
+The site serves projects from `content/`; nothing in the app reads Supabase any more for them. These scripts maintained the former `public.projects` copy and are **kept on purpose**, in case the content moves back to a SQL database. Run them only against a database you intend to fill.
 
 > **October 2026:** the `about_pages` table no longer exists in production, so `db:seed:about` fails until the table is recreated or the script is retired. The about page itself reads `content/about.ts` and is not affected.
 

@@ -1,43 +1,21 @@
 // app/admin/page.tsx
 // ------------------
-// Admin dashboard over the Supabase data, behind HTTP Basic Auth (proxy.ts
-// and lib/security/adminAuth.ts): stats, projects with links to the public
-// pages, latest 20 messages, testimonials with inline publish toggle and the
-// invitation link generator, blog counts per category, cache revalidation.
+// Admin dashboard, behind HTTP Basic Auth (proxy.ts and
+// lib/security/adminAuth.ts): stats and projects read from content/ (the
+// source of truth), project translation gaps, the testimonial invitation
+// generator, blog counts per category, certifications, cache revalidation.
+// Contact messages and testimonials arrive by e-mail (Formhook) and are not
+// stored, so they have no section here.
 
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { projects as contentProjects } from "@/content/projects";
+import { projectTranslationGaps } from "@/lib/contentChecks";
 import { certifications as staticCertifications } from "@/content/certifications";
 import { readdir } from "fs/promises";
 import { join } from "path";
 import Link from "next/link";
-import TogglePublished from "./TogglePublished";
 import RevalidateButton from "./RevalidateButton";
 import TestimonialInviteGenerator from "./TestimonialInviteGenerator";
 import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type ProjectRow = {
-  id: string; slug: string; locale: string; title: string;
-  status: string; track: string | null; featured: boolean;
-  sort_order: number | null; created_at: string | null;
-};
-
-type ProjectTranslationRow = {
-  slug: string; locale: string; title: string | null; summary: string | null;
-};
-
-type MessageRow = {
-  id: string; name: string; email: string; topic: string | null;
-  subject: string | null; message: string; locale: string | null;
-  created_at: string | null;
-};
-
-type TestimonialRow = {
-  id: string; name: string; role: string | null; company: string | null;
-  quote: string | null; locale: string; is_published: boolean;
-  sort_order: number | null; created_at: string | null;
-};
 
 // ── Blog counter (filesystem) ─────────────────────────────────────────────────
 
@@ -70,90 +48,6 @@ async function countBlogArticles() {
   }
 }
 
-// ── Data fetching ─────────────────────────────────────────────────────────────
-
-async function fetchDashboardData() {
-  const supabase = createAdminSupabaseClient();
-
-  const [projects, projectTranslations, messages, testimonials, blog] = await Promise.all([
-    supabase
-      .from("projects")
-      .select("id, slug, locale, title, status, track, featured, sort_order, created_at")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false }),
-
-    supabase
-      .from("projects")
-      .select("slug, locale, title, summary")
-      .eq("status", "published"),
-
-    supabase
-      .from("messages")
-      .select("id, name, email, topic, subject, message, locale, created_at")
-      .order("created_at", { ascending: false })
-      .limit(20),
-
-    supabase
-      .from("testimonials")
-      .select("id, name, role, company, quote, locale, is_published, sort_order, created_at")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false }),
-
-    countBlogArticles(),
-  ]);
-
-  return {
-    projects:             (projects.data             ?? []) as ProjectRow[],
-    projectTranslations:  (projectTranslations.data   ?? []) as ProjectTranslationRow[],
-    messages:             (messages.data              ?? []) as MessageRow[],
-    testimonials:         (testimonials.data          ?? []) as TestimonialRow[],
-    blog,
-    errors: {
-      projects:     projects.error?.message,
-      messages:     messages.error?.message,
-      testimonials: testimonials.error?.message,
-    },
-  };
-}
-
-// ── Translation-completeness check (published projects only) ──────────────────
-//
-// Heuristic: a locale row can exist while its title/summary was never
-// translated and silently equals the EN source. Flags any fr/es title or
-// summary identical (case/space-insensitive) to its en counterpart, or
-// missing.
-type TranslationGap = { slug: string; locale: "fr" | "es"; field: "title" | "summary"; reason: "missing" | "matches_en" };
-
-function findProjectTranslationGaps(rows: ProjectTranslationRow[]): TranslationGap[] {
-  const bySlug = new Map<string, Record<string, ProjectTranslationRow>>();
-  for (const r of rows) {
-    const entry = bySlug.get(r.slug) ?? {};
-    entry[r.locale] = r;
-    bySlug.set(r.slug, entry);
-  }
-
-  const norm = (s: string | null) => (s ?? "").trim().toLowerCase();
-  const gaps: TranslationGap[] = [];
-
-  for (const [slug, byLocale] of bySlug) {
-    const en = byLocale.en;
-    if (!en) continue;
-
-    for (const locale of ["fr", "es"] as const) {
-      const row = byLocale[locale];
-      for (const field of ["title", "summary"] as const) {
-        if (!row || !norm(row[field])) {
-          gaps.push({ slug, locale, field, reason: "missing" });
-        } else if (norm(row[field]) === norm(en[field]) && norm(en[field])) {
-          gaps.push({ slug, locale, field, reason: "matches_en" });
-        }
-      }
-    }
-  }
-
-  return gaps;
-}
-
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
 function StatCard({ label, value, sub, color = "slate" }: {
@@ -182,14 +76,6 @@ function StatCard({ label, value, sub, color = "slate" }: {
   );
 }
 
-function ErrorBanner({ message }: { message: string }) {
-  return (
-    <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-      <strong>Erreur Supabase :</strong> {message}
-    </div>
-  );
-}
-
 function Badge({ label, color }: { label: string; color: string }) {
   return (
     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${color}`}>
@@ -212,32 +98,25 @@ function SectionHeader({ title, count, right }: { title: string; count?: number;
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AdminPage() {
-  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
-  // why it runs in each page as well as in the layout.
+  // Auth guard first; see lib/security/adminAuth.ts for why it runs in each
+  // page as well as in the layout.
   await assertAdminOrNotFound();
 
-  const { projects, projectTranslations, messages, testimonials, blog, errors } =
-    await fetchDashboardData();
+  const blog = await countBlogArticles();
+  const translationGaps = projectTranslationGaps();
 
-  const projectTranslationGaps = findProjectTranslationGaps(projectTranslations);
+  // Project stats (content/projects.ts, one entry per slug)
+  const statusOf = (p: { status?: string }) => p.status ?? "published";
+  const projectsPublished  = contentProjects.filter((p) => statusOf(p) === "published").length;
+  const projectsDraft      = contentProjects.filter((p) => statusOf(p) === "draft").length;
+  const projectsArchived   = contentProjects.filter((p) => statusOf(p) === "archived").length;
+  const projectsSalesforce = contentProjects.filter((p) => p.track === "salesforce").length;
+  const projectsItops      = contentProjects.filter((p) => p.track === "itops").length;
 
-  // Project stats
-  const enProjects = projects.filter((p) => p.locale === "en");
-  const projectsPublished  = enProjects.filter((p) => p.status === "published").length;
-  const projectsDraft      = enProjects.filter((p) => p.status === "draft").length;
-  const projectsArchived   = enProjects.filter((p) => p.status === "archived").length;
-  const projectsSalesforce = enProjects.filter((p) => p.track === "salesforce").length;
-  const projectsItops      = enProjects.filter((p) => p.track === "itops").length;
-
-  // Testimonial stats
-  const testimonialsPublished = testimonials.filter((t) => t.is_published).length;
-  const testimonialsDraft     = testimonials.filter((t) => !t.is_published).length;
-
-  function fmtDate(iso: string | null) {
+  function fmtDate(iso: string | null | undefined) {
     if (!iso) return "—";
-    return new Date(iso).toLocaleString("fr-FR", {
+    return new Date(iso).toLocaleDateString("fr-FR", {
       day: "2-digit", month: "short", year: "numeric",
-      hour: "2-digit", minute: "2-digit",
     });
   }
 
@@ -252,23 +131,13 @@ export default async function AdminPage() {
     : t === "itops"    ? "bg-violet-500/15 text-violet-400"
     :                    "bg-slate-500/15 text-slate-400";
 
-  const topicBadge = (t: string | null) => ({
-    salesforce: "bg-cyan-500/15 text-cyan-400",
-    itops:      "bg-violet-500/15 text-violet-400",
-    web:        "bg-emerald-500/15 text-emerald-400",
-    other:      "bg-slate-500/15 text-slate-400",
-  }[t ?? ""] ?? "bg-slate-500/15 text-slate-400");
-
-  // Only show "en" projects in table (deduplicated)
-  const enProjectRows = projects.filter((p) => p.locale === "en");
+  // Same order as the site: featured first, then sort order
+  const enProjectRows = [...contentProjects].sort(
+    (a, b) => Number(b.featured) - Number(a.featured) || (a.sortOrder ?? 0) - (b.sortOrder ?? 0),
+  );
 
   return (
     <div className="space-y-10">
-
-      {/* Errors */}
-      {Object.entries(errors).map(([key, msg]) =>
-        msg ? <ErrorBanner key={key} message={`${key}: ${msg}`} /> : null
-      )}
 
       {/* ── Overview ──────────────────────────────────────────────────────────── */}
       <section>
@@ -284,7 +153,7 @@ export default async function AdminPage() {
             <RevalidateButton />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard
             label="Projets"
             value={enProjectRows.length}
@@ -308,18 +177,6 @@ export default async function AdminPage() {
             value={staticCertifications.length}
             sub="Source statique — content/certifications.ts"
             color="violet"
-          />
-          <StatCard
-            label="Messages"
-            value={messages.length}
-            sub="20 derniers affichés"
-            color="slate"
-          />
-          <StatCard
-            label="Témoignages"
-            value={testimonials.length / 2}
-            sub={`${testimonialsPublished / 2} publiés · ${testimonialsDraft / 2} masqués`}
-            color="amber"
           />
         </div>
 
@@ -353,11 +210,11 @@ export default async function AdminPage() {
       {/* ── Projects: translations to check ───────────────────────────────────── */}
       {/* A slug present in FR/ES is not necessarily translated: this section
           shows such gaps before a visitor finds them. */}
-      {projectTranslationGaps.length > 0 && (
+      {translationGaps.length > 0 && (
         <section>
           <SectionHeader
             title="Projets — traductions à vérifier"
-            count={projectTranslationGaps.length}
+            count={translationGaps.length}
             right={
               <div className="text-xs text-slate-500">
                 Champ identique à l&apos;EN ou manquant
@@ -375,7 +232,7 @@ export default async function AdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {projectTranslationGaps.map((g) => (
+                {translationGaps.map((g) => (
                   <tr key={`${g.slug}-${g.locale}-${g.field}`} className="hover:bg-white/3 transition-colors">
                     <td className="px-4 py-3 font-mono text-xs text-slate-300">{g.slug}</td>
                     <td className="px-4 py-3">
@@ -408,7 +265,7 @@ export default async function AdminPage() {
                 <th className="px-4 py-3">Track</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">★</th>
-                <th className="px-4 py-3">Créé le</th>
+                <th className="px-4 py-3">Mis à jour</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -418,7 +275,7 @@ export default async function AdminPage() {
                 </tr>
               ) : (
                 enProjectRows.map((p) => (
-                  <tr key={p.id} className="hover:bg-white/3 transition-colors group">
+                  <tr key={p.slug} className="hover:bg-white/3 transition-colors group">
                     <td className="px-4 py-3 max-w-[220px]">
                       <a
                         href={`/en/projects/${p.slug}`}
@@ -426,7 +283,7 @@ export default async function AdminPage() {
                         rel="noreferrer"
                         className="font-medium text-slate-200 hover:text-cyan-400 transition-colors truncate block group-hover:underline"
                       >
-                        {p.title} <span className="opacity-0 group-hover:opacity-60 text-xs">↗</span>
+                        {p.title ?? p.slug} <span className="opacity-0 group-hover:opacity-60 text-xs">↗</span>
                       </a>
                     </td>
                     <td className="px-4 py-3 text-slate-500 font-mono text-xs">{p.slug}</td>
@@ -434,10 +291,10 @@ export default async function AdminPage() {
                       {p.track && <Badge label={p.track} color={trackBadge(p.track)} />}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge label={p.status} color={statusBadge(p.status)} />
+                      <Badge label={statusOf(p)} color={statusBadge(statusOf(p))} />
                     </td>
                     <td className="px-4 py-3 text-slate-400">{p.featured ? "⭐" : "—"}</td>
-                    <td className="px-4 py-3 text-xs text-slate-500">{fmtDate(p.created_at)}</td>
+                    <td className="px-4 py-3 text-xs text-slate-500">{fmtDate(p.updatedAt)}</td>
                   </tr>
                 ))
               )}
@@ -447,84 +304,11 @@ export default async function AdminPage() {
       </section>
 
       {/* ── Testimonials ──────────────────────────────────────────────────────── */}
+      {/* Submissions arrive by e-mail (Formhook); the site section is fed by
+          content/testimonials.ts once a testimonial is approved. */}
       <section>
-        <SectionHeader
-          title="Témoignages"
-          count={testimonials.filter((t) => t.locale === "en").length}
-          right={
-            <div className="text-xs text-slate-500">
-              Cliquez sur le badge pour publier/masquer
-            </div>
-          }
-        />
+        <SectionHeader title="Témoignages" />
         <TestimonialInviteGenerator />
-        {testimonials.length === 0 ? (
-          <p className="text-sm text-slate-500">Aucun témoignage.</p>
-        ) : (
-          <div className="space-y-3">
-            {testimonials
-              .filter((t) => t.locale === "en")
-              .map((t) => (
-                <div
-                  key={t.id}
-                  className="rounded-xl border border-white/10 bg-white/3 p-4 flex gap-4 items-start"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="font-medium text-slate-100 text-sm">{t.name}</span>
-                      {t.role && <span className="text-xs text-slate-400">{t.role}</span>}
-                      {t.company && (
-                        <span className="text-xs text-slate-500">@ {t.company}</span>
-                      )}
-                      <span className="ml-auto text-xs text-slate-600">{fmtDate(t.created_at)}</span>
-                    </div>
-                    {t.quote && (
-                      <p className="text-sm text-slate-300 italic leading-relaxed line-clamp-3">
-                        &ldquo;{t.quote}&rdquo;
-                      </p>
-                    )}
-                  </div>
-                  <div className="shrink-0">
-                    <TogglePublished id={t.id} isPublished={t.is_published} />
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-      </section>
-
-      {/* ── Contact messages ──────────────────────────────────────────────────── */}
-      <section>
-        <SectionHeader title="Messages de contact" count={messages.length} />
-        {messages.length === 0 ? (
-          <p className="text-sm text-slate-500">Aucun message reçu.</p>
-        ) : (
-          <div className="space-y-3">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className="rounded-xl border border-white/10 bg-white/3 p-4"
-              >
-                <div className="flex flex-wrap items-center gap-2 text-sm">
-                  <span className="font-medium text-slate-100">{m.name}</span>
-                  <span className="text-slate-500">—</span>
-                  <a href={`mailto:${m.email}`} className="text-cyan-400 hover:underline text-xs">
-                    {m.email}
-                  </a>
-                  {m.topic && <Badge label={m.topic} color={topicBadge(m.topic)} />}
-                  {m.locale && <Badge label={m.locale.toUpperCase()} color="bg-slate-500/15 text-slate-400" />}
-                  <span className="ml-auto text-xs text-slate-500">{fmtDate(m.created_at)}</span>
-                </div>
-                {m.subject && (
-                  <p className="mt-2 text-xs font-medium text-slate-400">Sujet : {m.subject}</p>
-                )}
-                <p className="mt-2 text-sm text-slate-300 leading-relaxed line-clamp-4">
-                  {m.message}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
       </section>
 
       {/* ── Certifications ────────────────────────────────────────────────────── */}

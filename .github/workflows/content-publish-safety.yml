@@ -1,22 +1,17 @@
 name: Content Publish Safety
 
 # ── Purpose ───────────────────────────────────────────────────────────────────
-# Checks daily that `public.projects` (Supabase) breaks neither publication
-# rule:
-#   1. No project published in one locale without the other two (en/fr/es,
-#      or 'multi'), otherwise the ES site silently diverges.
-#   2. No SaaS product of the author (orgdocs-saas, sfrelease-saas, and any
-#      product added to SAAS_EMBARGO_SLUGS in the script) is `published` or
-#      has a `live_url` before 2027; the schema does not enforce this.
+# Checks daily that the project content (content/projects.ts and
+# content/projectDetails.ts) breaks neither publication rule:
+#   1. No project published without a title in en, fr and es, otherwise the
+#      FR or ES site silently diverges.
+#   2. No SaaS product of the author (SAAS_EMBARGO_SLUGS in
+#      lib/contentChecks.ts) is published or has a live URL before 2027.
 #
-# Unlike drift-check.yml, this check never skips when the secret is missing:
-# content safety is its only purpose, so a silent skip would hide exactly
-# what it exists to catch.
-#
-# Repository secret (Settings → Secrets and variables → Actions):
-#   SUPABASE_SERVICE_ROLE_KEY — read-only use here, but the key itself can
-#                               write: treat it as sensitive
-# Also uses the existing NEXT_PUBLIC_SUPABASE_URL secret (ci.yml build-test).
+# The same rules run on every pull request through
+# __tests__/content-checks.test.ts; this scheduled run also catches the
+# embargo date passing. No secret is needed (the former version read the
+# Supabase copy, see scripts/archive/check-publish-safety-supabase.ts).
 
 on:
   schedule:
@@ -24,8 +19,7 @@ on:
     - cron: "0 5 * * *"
   workflow_dispatch: {}
 
-# Least privilege (Scorecard): the workflow writes nothing to the repo or to
-# Supabase (read-only script).
+# Least privilege (Scorecard): the workflow only reads the repository.
 permissions: read-all
 
 jobs:
@@ -35,9 +29,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
-    # The service_role key is only exposed to the two steps that read it (not
-    # the whole job, where dependency postinstall scripts would see it during
-    # `npm ci`), and installation runs without lifecycle scripts.
+    # Installation runs without lifecycle scripts (none is needed).
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -55,24 +47,8 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         # --ignore-scripts: no dependency postinstall runs; the check script
-        # (tsx + supabase-js) does not need any.
+        # (tsx) does not need any.
         run: npm ci --ignore-scripts
 
-      - name: Check secret is configured
-        env:
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          if [ -z "${SUPABASE_SERVICE_ROLE_KEY}" ]; then
-            echo "::error::SUPABASE_SERVICE_ROLE_KEY is not configured in repo secrets."
-            echo "This check exists to catch a real risk (SaaS products published"
-            echo "early, or a locale silently missing on the ES site) — it fails"
-            echo "loudly instead of skipping so the gap doesn't go unnoticed."
-            echo "Add it under Settings → Secrets and variables → Actions."
-            exit 1
-          fi
-
       - name: Run publish safety check
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: npm run content:safety
