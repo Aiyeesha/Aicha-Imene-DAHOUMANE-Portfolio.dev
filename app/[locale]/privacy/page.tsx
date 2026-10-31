@@ -104,6 +104,23 @@ export default async function PrivacyPage({
           <p className="mt-2 text-sm text-muted-2">{t("processorsBody")}</p>
         </section>
 
+        {/* Legal basis of each processing (GDPR art. 13(1)(c)) */}
+        <section className="card p-6">
+          <h2 className="text-lg font-semibold">{t("legalBasisTitle")}</h2>
+          <ul className="mt-2 list-disc space-y-2 pl-5 text-sm text-muted-2">
+            <li>{t("legalBasisContact")}</li>
+            <li>{t("legalBasisTestimonial")}</li>
+            <li>{t("legalBasisSecurity")}</li>
+            <li>{t("legalBasisCookie")}</li>
+          </ul>
+        </section>
+
+        {/* Transfers outside the EU and their safeguards (GDPR art. 13(1)(f)) */}
+        <section className="card p-6">
+          <h2 className="text-lg font-semibold">{t("transfersTitle")}</h2>
+          <p className="mt-2 text-sm text-muted-2">{t("transfersBody")}</p>
+        </section>
+
         {/* Data breach (GDPR art. 33) */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("breachTitle")}</h2>
