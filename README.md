@@ -69,7 +69,7 @@ Browser
   │           ├─ /api/health           → ping Supabase + Redis + Formhook
   │           ├─ /api/cron/ping        → Vercel Cron (daily 08:00 UTC) → uptime_pings
   │           ├─ /api/errors           → client JS error reports (GlobalErrorHandler)
-  │           └─ /api/testimonial-submit → testimonial_submissions
+  │           └─ /api/testimonial-submit → Formhook (e-mail, nothing stored)
   │
   ├─ Supabase (PostgreSQL + RLS)
   │     Tables: projects · project_assets · about_pages · certifications
