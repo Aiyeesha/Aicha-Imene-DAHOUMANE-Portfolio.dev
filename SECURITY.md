@@ -139,7 +139,7 @@ Row Level Security (RLS) is **enabled on all tables**. Content pages do not quer
 
 | Table | Policy | Notes |
 |-------|--------|-------|
-| `projects` | `anon` SELECT where `status = 'published'` | Copy of `content/`, used by `/admin`, the health checks and `content:safety` |
+| `projects` | `anon` SELECT where `status = 'published'` | Former copy of `content/`, no longer read by the app (the health check only pings it) |
 | `project_assets` | `anon` SELECT only if the parent project is `published` | Assets of unpublished projects are protected |
 | `uptime_pings` | Explicit deny (`false`) for `anon` and `authenticated` | Best-effort copy written by `/api/cron/ping` until Supabase is retired; `/status` now reads the Redis history |
 | `incidents` | Explicit deny for `anon` and `authenticated` | No longer used: the incident dashboard is stored in Redis (`lib/incidents.ts`) |

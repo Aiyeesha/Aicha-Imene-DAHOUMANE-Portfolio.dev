@@ -10,4 +10,5 @@ npm command. Their header comments still show their former paths.
 | `sync-project-assets.mjs` | One-shot move of the images from Supabase Storage to `public/projects/`, already done. |
 | `upload-to-supabase-storage.mjs` (was `npm run images:upload`) | Uploaded images to Supabase Storage, which the site no longer uses (images are served by Vercel from `public/`). |
 | `upload-project-screenshots.mjs` | Same: upload to Supabase Storage. |
+| `check-publish-safety-supabase.ts` | Former `content:safety`, which read the Supabase `projects` copy. The current check reads `content/`. Kept for a possible return to a SQL database. |
 | `test-supabase-public.ts` | Ad-hoc connectivity check of the public key; `/api/health` and `/status` cover it. |
