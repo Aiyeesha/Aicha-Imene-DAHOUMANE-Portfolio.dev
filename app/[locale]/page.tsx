@@ -85,7 +85,8 @@ export async function generateMetadata({
         {
           // Absolute URL: some OG crawlers (LinkedIn, Slack, WhatsApp) ignore
           // metadataBase and fail on relative URLs.
-          url: `${siteUrl}/opengraph-image`,
+          // Localised image (app/[locale]/opengraph-image.tsx)
+          url: `${siteUrl}/${locale}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: title
@@ -96,7 +97,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [`${siteUrl}/twitter-image`]
+      images: [`${siteUrl}/${locale}/opengraph-image`]
     }
   };
 }
