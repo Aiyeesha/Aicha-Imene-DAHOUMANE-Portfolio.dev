@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Générateur de liens d'invitation dans `/admin`** — La section Témoignages propose un bouton « Générer un lien d'invitation » (langue FR / EN / ES, validité 7 ou 14 jours) qui affiche le lien signé, un bouton Copier et la date d'expiration : plus besoin de commande `curl`, utilisable depuis un téléphone. Le lien est produit par une action serveur qui revérifie l'authentification de `/admin`. La construction du lien est mutualisée dans `createInviteLink` (`lib/security/testimonialInvite.ts`), utilisée aussi par `POST /api/admin/testimonial-invite`. Remplace la PR #26.
+
 ### Changed
 
 - **Performance mobile de l'accueil** — Le fondu du hero (opacité de départ nulle) ne s'applique plus qu'au changement de parcours : au premier chargement, la phrase d'accroche (élément LCP mobile) est peinte dès le premier rendu. `FeaturedProjects` ne reçoit plus les 26 projets complets mais seulement les projets mis en avant, réduits aux champs affichés (`lib/data/featuredProjects.ts`) : le HTML de l'accueil passe de 327 Ko à 185 Ko. Lighthouse mobile local (médiane de 3) : score 71 → 89, temps de blocage 681 → 227 ms, LCP observé 495 → 256 ms.
