@@ -478,10 +478,11 @@
     "commitmentTitle": "Engagement d'accessibilité",
     "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
     "limitsTitle": "Limites connues",
-    "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours sont les bienvenus.",
+    "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours me sont précieux.",
     "helpTitle": "Un problème d'accessibilité ?",
-    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email.",
-    "lastAudit": "Dernière vérification : 28 juin 2026 — Outils : axe-core (CI automatisé), vérification manuelle Navigation clavier."
+    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de me le signaler en précisant l'URL de la page concernée et la nature du problème, via le <form>formulaire de contact</form>.",
+    "helpEmail": "Vous pouvez aussi m'écrire à <mail>{email}</mail>.",
+    "lastAudit": "Dernière vérification : 31 octobre 2026 — Outils : axe-core (CI automatisé et palette de commandes), vérification manuelle de la navigation au clavier."
   },
   "availModal": {
     "badge": "Entretiens dès maintenant — Disponible à partir de décembre 2026",
@@ -620,7 +621,6 @@
     "downloadCv": "Télécharger le CV",
     "linkedin": "LinkedIn",
     "noResults": "Aucun résultat.",
-    "switchLang": "Switch to English",
     "close": "Fermer",
     "navigate": "naviguer",
     "select": "sélectionner",

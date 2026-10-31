@@ -99,17 +99,19 @@ export default async function LocaleLayout({
                     © 2025–{new Date().getFullYear()} Aïcha Imène DAHOUMANE — {t("footer.builtWith")}
                   </span>
                   {/* Next.js Link for client-side navigation */}
-                  <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-4">
+                  {/* Links get py-2 (≈36px tap targets instead of 20px); the padding
+                      replaces the vertical gap between wrapped rows. */}
+                  <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-x-4 gap-y-0">
                     {/* Certifications (RNCP 6 diploma, Trailhead, upcoming
                         vendor certification) */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/certifications`}
                     >
                       {t("nav.certifications")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/work-with-me`}
                     >
                       {t("footer.workWithMe")}
@@ -117,7 +119,7 @@ export default async function LocaleLayout({
                     {/* "Hybrid profile": three cases where Salesforce +
                         infrastructure + security are needed together */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/hybride`}
                     >
                       {t("footer.hybrid")}
@@ -125,43 +127,43 @@ export default async function LocaleLayout({
                     {/* "Contact me" → the home page contact form, same label and
                         destination as in the hero and mobile menu */}
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}#contact`}
                     >
                       {t("footer.qualifyMission")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/colophon`}
                     >
                       {t("footer.colophon")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/privacy`}
                     >
                       {t("footer.privacy")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/legal`}
                     >
                       {t("footer.legal")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/accessibility`}
                     >
                       {t("footer.accessibility")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/status`}
                     >
                       {t("footer.status")}
                     </Link>
                     <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       href={`/${locale}/uses`}
                     >
                       {t("footer.uses")}
@@ -172,7 +174,7 @@ export default async function LocaleLayout({
                         target="_blank"
                         rel="noreferrer"
                         aria-label="GitHub"
-                        className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                        className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
                       >
                         GitHub
                       </a>

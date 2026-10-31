@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       siteName,
-      images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
+      images: [{ url: `${siteUrl}/${locale}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -51,6 +51,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
   };
 }
+
+// Public contact address, as in components/ContactForm.tsx (empty: form only).
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
 
 export default async function AccessibilityPage({
   params
@@ -82,7 +85,30 @@ export default async function AccessibilityPage({
         {/* Report an issue */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("helpTitle")}</h2>
-          <p className="mt-2 text-sm text-muted-2">{t("helpBody")}</p>
+          <p className="mt-2 text-sm text-muted-2">
+            {t.rich("helpBody", {
+              // Contact section of the home page
+              form: (chunks) => (
+                <a href={`/${locale}#contact`} className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm">
+                  {chunks}
+                </a>
+              ),
+            })}
+            {/* E-mail, only when configured (same variable as the contact form) */}
+            {CONTACT_EMAIL && (
+              <>
+                {" "}
+                {t.rich("helpEmail", {
+                  email: CONTACT_EMAIL,
+                  mail: (chunks) => (
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm">
+                      {chunks}
+                    </a>
+                  ),
+                })}
+              </>
+            )}
+          </p>
         </section>
 
       </div>
