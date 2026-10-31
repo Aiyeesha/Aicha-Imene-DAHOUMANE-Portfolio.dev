@@ -3,14 +3,17 @@
 // Vercel cron endpoint, called daily at 08:00 UTC (see vercel.json):
 //   1. checks CRON_SECRET in the Authorization header;
 //   2. runs the health checks (lib/health.ts);
-//   3. inserts one row per service into uptime_pings (service_role);
-//   4. purges old rows (uptime 30 days, contact messages and pending
+//   3. records the run in the uptime history (Upstash Redis, lib/uptime.ts),
+//      then copies it to Supabase uptime_pings, best effort, until Supabase
+//      is retired;
+//   4. purges old Supabase rows (uptime 30 days, contact messages and pending
 //      testimonial submissions 90 days);
 //   5. pings an external heartbeat if configured.
 
 import { after, NextResponse }         from "next/server";
 import { runHealthChecks }             from "@/lib/health";
 import { createAdminSupabaseClient }   from "@/lib/supabase/admin";
+import { recordPingBatch }             from "@/lib/uptime";
 import { timingSafeStringEqual }       from "@/lib/security/timingSafeEqual";
 
 export const dynamic = "force-dynamic";
@@ -55,7 +58,24 @@ export async function GET(req: Request) {
     );
   }
 
-  // ── 3. Insert into Supabase ───────────────────────────────────────────────
+  // ── 3. Uptime history (Redis) ─────────────────────────────────────────────
+  // Source of /status. A failed write is a real failure of this job.
+  const stored = await recordPingBatch({
+    checkedAt: report.checkedAt,
+    services: report.services.map((s) => ({
+      name: s.name,
+      status: s.status,
+      latencyMs: s.latencyMs ?? null,
+    })),
+  });
+  if (!stored) {
+    console.error("[CRON/PING] Could not record the uptime history in Redis.");
+    return NextResponse.json({ ok: false, error: "history_store_failed" }, { status: 500 });
+  }
+
+  // ── 3b. Copy to Supabase (best effort, until Supabase is retired) ─────────
+  // Keeps the former table in sync so the move can be rolled back; a failure
+  // here only logs a warning.
   const supabase = createAdminSupabaseClient();
 
   const rows = report.services.map((s) => ({
@@ -66,10 +86,7 @@ export async function GET(req: Request) {
   }));
 
   const { error } = await supabase.from("uptime_pings").insert(rows);
-  if (error) {
-    console.error("[CRON/PING] Insert error:", error.message);
-    return NextResponse.json({ ok: false, error: "db_insert_failed" }, { status: 500 });
-  }
+  if (error) console.warn("[CRON/PING] Supabase copy skipped:", error.message);
 
   // ── 4. Purge uptime_pings older than 30 days (non-blocking) ───────────────
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();

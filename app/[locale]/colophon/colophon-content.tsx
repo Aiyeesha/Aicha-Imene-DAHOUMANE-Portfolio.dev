@@ -66,8 +66,8 @@ export default function ColophonContent({ locale }: { locale: string }) {
     {
       title: "Backend",
       items: [
-        { name: "Supabase",      role: isFr ? "PostgreSQL hébergé — historique du statut et des incidents. RLS activé sur toutes les tables. (Projets, messages de contact et témoignages n'y sont plus stockés.)" : isEs ? "PostgreSQL alojado — historial de estado e incidencias. RLS activado en todas las tablas. (Los proyectos, los mensajes de contacto y los testimonios ya no se almacenan aquí.)" : "Hosted PostgreSQL — service-status and incident history. RLS enabled on all tables. (Projects, contact messages and testimonials are no longer stored there.)", link: "https://supabase.com" },
-        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health)" : isEs ? "Caché stale-while-revalidate + rate-limiting en los endpoints de escritura y sensibles (contacto, testimonios, invalidación de caché, admin, informes CSP, health)" : "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health)", link: "https://upstash.com" },
+        { name: "Supabase",      role: isFr ? "PostgreSQL hébergé — tableau des incidents, en cours de remplacement par Redis. RLS activé sur toutes les tables. (Projets, messages, témoignages et historique de disponibilité n'y sont plus stockés.)" : isEs ? "PostgreSQL alojado — panel de incidencias, en proceso de sustitución por Redis. RLS activado en todas las tablas. (Los proyectos, los mensajes, los testimonios y el historial de disponibilidad ya no se almacenan aquí.)" : "Hosted PostgreSQL — incident dashboard, being replaced by Redis. RLS enabled on all tables. (Projects, messages, testimonials and the uptime history are no longer stored there.)", link: "https://supabase.com" },
+        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health) + historique de disponibilité sur 30 jours" : isEs ? "Caché stale-while-revalidate + rate-limiting en los endpoints de escritura y sensibles (contacto, testimonios, invalidación de caché, admin, informes CSP, health) + historial de disponibilidad de 30 días" : "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health) + 30-day uptime history", link: "https://upstash.com" },
         { name: "Formhook",      role: isFr ? "Acheminement par email des messages du formulaire de contact — hébergé dans l'UE, aucune persistance côté serveur" : isEs ? "Entrega por email de los mensajes del formulario de contacto — alojado en la UE, sin persistencia en el servidor" : "Email delivery for contact-form messages — EU-hosted, no server-side persistence", link: "https://formhook.app" },
       ],
     },
@@ -96,7 +96,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Track toggle** côté client (cookie `track`) : un seul composant hero, compétences et services adaptés selon le profil Salesforce ou IT Ops.",
         "**Pages dédiées** pour About, Certifications et Blog — accessibles via la navbar, non dupliquées dans la landing.",
         "**Server Components par défaut** : seuls les composants interactifs (hero, toggle de thème, formulaire) sont marqués `use client`.",
-        "**Lectures Supabase** (incidents / statut) récupérées côté serveur avec cache Redis (stale-while-revalidate) — pas de requêtes client directes. Les fiches projets sont versionnées dans `content/` et servies statiquement.",
+        "**Lectures Supabase** (incidents) récupérées côté serveur avec cache Redis (stale-while-revalidate) — pas de requêtes client directes. Les fiches projets sont versionnées dans `content/` et servies statiquement.",
         "**Blog MDX** : articles écrits en `.mdx` dans `content/blog/posts/{locale}/` — rendu statique au build, pas de base de données requise.",
       ]
     : isEs
@@ -105,7 +105,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Selector de track** en el cliente (cookie `track`): un único componente hero, con habilidades y servicios adaptados al perfil Salesforce o IT Ops.",
         "**Páginas dedicadas** para About, Certificaciones y Blog — accesibles desde la navbar, sin duplicarse en la landing.",
         "**Server Components por defecto**: solo los componentes interactivos (hero, selector de tema, formulario) están marcados como `use client`.",
-        "**Lecturas de Supabase** (incidencias / estado) obtenidas en el servidor con caché Redis (stale-while-revalidate) — sin consultas directas desde el cliente. Las fichas de proyecto están versionadas en `content/` y se sirven de forma estática.",
+        "**Lecturas de Supabase** (incidencias) obtenidas en el servidor con caché Redis (stale-while-revalidate) — sin consultas directas desde el cliente. Las fichas de proyecto están versionadas en `content/` y se sirven de forma estática.",
         "**Blog en MDX**: artículos escritos en `.mdx` dentro de `content/blog/posts/{locale}/` — renderizado estático en el build, sin necesidad de base de datos.",
       ]
     : [
@@ -113,13 +113,13 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Client-side track toggle** (cookie `track`): a single hero component, skills and services adapt to Salesforce or IT Ops profile.",
         "**Dedicated pages** for About, Certifications, and Blog — accessible via the navbar, not duplicated in the landing.",
         "**Server Components by default**: only interactive components (hero, theme toggle, contact form) are marked `use client`.",
-        "**Supabase reads** (incidents / status) fetched server-side with a Redis cache (stale-while-revalidate) — no direct client queries. Project entries are version-controlled in `content/` and served statically.",
+        "**Supabase reads** (incidents) fetched server-side with a Redis cache (stale-while-revalidate) — no direct client queries. Project entries are version-controlled in `content/` and served statically.",
         "**MDX Blog**: articles written as `.mdx` files in `content/blog/posts/{locale}/` — statically rendered at build time, no database required.",
       ];
 
   const cachePoints = isFr
     ? [
-        "**Upstash Redis** stocke les réponses des lectures Supabase restantes (incidents / statut) avec un TTL de 5 minutes.",
+        "**Upstash Redis** conserve l'historique de disponibilité (un relevé par jour, 30 jours) et met en cache les vues de `/status` et les lectures Supabase restantes (incidents) avec un TTL de 1 à 5 minutes.",
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
@@ -127,14 +127,14 @@ export default function ColophonContent({ locale }: { locale: string }) {
       ]
     : isEs
     ? [
-        "**Upstash Redis** almacena las respuestas de las lecturas restantes a Supabase (incidencias / estado) con un TTL de 5 minutos.",
+        "**Upstash Redis** guarda el historial de disponibilidad (un registro al día, 30 días) y almacena en caché las vistas de `/status` y las lecturas restantes a Supabase (incidencias) con un TTL de 1 a 5 minutos.",
         "**stale-while-revalidate**: si el dato está en caché, se devuelve de inmediato mientras se dispara una revalidación asíncrona en segundo plano.",
         "**Invalidación manual**: el endpoint `POST /api/cache/invalidate` (protegido por secreto) permite purgar la caché tras una actualización de datos.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en caché CDN, revalidado cada 24h.",
         "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado.",
       ]
     : [
-        "**Upstash Redis** stores the remaining Supabase read responses (incidents / status) with a 5-minute TTL.",
+        "**Upstash Redis** keeps the uptime history (one check a day, 30 days) and caches the `/status` views and the remaining Supabase reads (incidents) with a 1- to 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",

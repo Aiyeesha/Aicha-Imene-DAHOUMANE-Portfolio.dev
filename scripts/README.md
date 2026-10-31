@@ -35,6 +35,7 @@ The site serves projects from `content/`. The `public.projects` table is a copy 
 | `npm run db:seed:about` | `seed-about.ts` | Upserts `about_pages` from `content/about.ts` (non-destructive). |
 | `npm run db:seed:es` | `seed-es-projects.ts` | (Re)inserts the `es` rows of `projects` (idempotent, fr/en untouched). |
 | `npm run db:repos` | `update-github-repos.ts` | Updates only `projects.repo_url` from `content/github-repos.ts`. |
+| `npm run db:uptime:copy` | `copy-uptime-to-redis.ts` | One-shot, optional copy of the last 30 days of `uptime_pings` to the Redis uptime history (`-- --dry` counts only). Idempotent. |
 | — | `seed.ts` | **Destructive**: empties the tables, then re-seeds everything. Deliberately not an npm command: `npx tsx scripts/db/seed.ts`, only after a backup. |
 
 Schema changes go through `supabase/migrations/` and the Supabase CLI (`supabase db push`), not through these scripts.
