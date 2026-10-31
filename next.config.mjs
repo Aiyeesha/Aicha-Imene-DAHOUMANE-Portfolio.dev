@@ -177,6 +177,12 @@ const nextConfig = {
         destination: "/:locale#contact",
         permanent: false,
       },
+      // /resources was merged into /uses (same tools, plus references).
+      {
+        source: "/:locale(en|fr|es)/resources",
+        destination: "/:locale/uses",
+        permanent: true,
+      },
       // Old iDEM Connect project slug
       {
         source: "/:locale(en|fr|es)/projects/apex-backend-idem-connect",
