@@ -4,7 +4,7 @@
 // playbooks of github.com/Aiyeesha/playbook-reponse-incidents.
 
 import Link from "next/link";
-import { listIncidents, getIncidentWithChecklist, computeChecklistProgress } from "@/lib/supabase/incidents";
+import { listIncidents, getIncidentWithChecklist, computeChecklistProgress } from "@/lib/incidents";
 import { INCIDENT_TYPE_LABELS } from "@/lib/incidentPlaybooks";
 import { assertAdminOrNotFound } from "@/lib/security/adminAuth";
 
