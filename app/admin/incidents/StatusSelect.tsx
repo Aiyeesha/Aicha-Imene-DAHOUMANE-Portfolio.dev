@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { updateIncidentStatusAction } from "./actions";
-import type { IncidentStatus } from "@/lib/supabase/incidents";
+import type { IncidentStatus } from "@/lib/incidents";
 
 const STATUS_LABELS: Record<IncidentStatus, string> = {
   open: "Ouvert",
