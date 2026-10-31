@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Professional portfolio of a **Salesforce Developer & Administrator** targeting Salesforce, systems & network administration, and DevOps roles.
-Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills, services, and projects sections.
+Features a **track toggle** (Salesforce ↔ IT Ops) that dynamically adapts the hero, skills and projects sections, and the services listed on `/work-with-me`.
 
 **Live → [aicha-imene-dahoumane-portfolio.vercel.app/en](https://aicha-imene-dahoumane-portfolio.vercel.app/en)**
 
@@ -44,10 +44,12 @@ Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280
 | Fonts | Space Grotesk + Inter, self-hosted variable WOFF2 (`app/fonts/`, SIL OFL 1.1) via `next/font/local` |
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR / ES) |
-| Backend | Supabase (PostgreSQL) — projects, contact, testimonials, uptime |
+| Content | Files in the repository (`content/`, MDX) — projects, blog, about, certifications; among public pages only `/status` reads the database (server-side) |
+| Backend | Supabase (PostgreSQL + RLS) — uptime history, incident dashboard, and a copy of the projects used by `/admin` and the health checks |
+| Search | Command palette (cmdk) over a static per-locale index; blog full-text search (MiniSearch) |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
-| Forms | API Route → Formhook (e-mail delivery, no storage at rest) + honeypot + rate-limit |
+| Forms | API Routes → Formhook (e-mail delivery, no storage at rest) for contact and testimonials + honeypot + rate-limit |
 | Booking | Plain link to a Proton Calendar booking page (no third-party script) |
 | Analytics | None — no audience measurement or visitor tracking; performance is checked in CI with Lighthouse CI |
 | Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → Supabase `uptime_pings` |
@@ -61,31 +63,36 @@ Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280
 Browser
   │
   ├─ Next.js 16 (App Router — SSR + ISR)
-  │     ├─ Server Components → Supabase REST API ──► PostgreSQL
+  │     ├─ Server Components → content/ (projects, blog MDX, about, certifications)
   │     │                    → Upstash Redis (cache, rate-limit)
-  │     ├─ Client Components → Framer Motion, next-intl, track toggle
+  │     ├─ Client Components → Framer Motion, next-intl, track toggle, ⌘K palette
   │     └─ API Routes
-  │           ├─ /api/contact          → Formhook (e-mail, nothing stored)
-  │           ├─ /api/health           → ping Supabase + Redis + Formhook
-  │           ├─ /api/cron/ping        → Vercel Cron (daily 08:00 UTC) → uptime_pings
-  │           ├─ /api/errors           → client JS error reports (GlobalErrorHandler)
-  │           └─ /api/testimonial-submit → Formhook (e-mail, nothing stored)
+  │           ├─ /api/contact               → Formhook (e-mail, nothing stored)
+  │           ├─ /api/testimonial-submit    → Formhook (e-mail, nothing stored)
+  │           ├─ /api/palette-index/[locale] → static JSON index (built at build time)
+  │           ├─ /api/search                → blog full-text search (MiniSearch)
+  │           ├─ /api/health                → ping Supabase + Redis + Formhook
+  │           ├─ /api/cron/ping             → Vercel Cron (daily 08:00 UTC) → uptime_pings
+  │           └─ /api/errors                → client JS error reports (GlobalErrorHandler)
   │
-  ├─ Supabase (PostgreSQL + RLS)
-  │     Tables: projects · project_assets · about_pages · certifications
-  │             messages · testimonials · testimonial_submissions
-  │             goals_2026 · uptime_pings
+  ├─ Supabase (PostgreSQL + RLS) — server-side only (service_role)
+  │     Tables: uptime_pings · incidents · incident_checklist_items
+  │             projects · project_assets (copy of content/, for /admin and health checks)
+  │             admins · testimonial_submissions (empty, no longer written)
   │
   ├─ Upstash Redis
   │     Rate-limit: portfolio:rl:{contact,blog,testimonial,admin,errors,
   │                 revalidate,cache-invalidate,csp-report,csp-alert}
   │                 (identifiers HMAC-pseudonymised with IP_HASH_SALT)
   │     Cache:      portfolio:uptime:* · project:* · projects_with_assets:*
+  │     Invites:    single-use testimonial invitations (SET NX)
   │
   └─ Vercel
         CDN (static assets, ISR pages)
         Cron jobs (vercel.json)
 ```
+
+> **Known leftovers (October 2026):** `/admin` and `/api/cron/ping` still query the `messages` and `testimonials` tables, which no longer exist in production. The errors are ignored (empty lists, a daily warning in the logs); a cleanup is planned.
 
 ---
 
@@ -98,14 +105,14 @@ Browser
 - **Blog** — 14 MDX articles in each of EN / FR / ES, syntax highlighting, copy button, table of contents, reading time, article series, track-filtered homepage preview
 - **Article series** — curated reading paths across related articles
 - **Certifications page** — completed certifications, in-progress items with target dates, and the roadmap
-- **Testimonial form** — `/testimonial-submit?token=SECRET` — token-gated, stores to Supabase with `approved = false`
+- **Testimonial form** — signed, single-use invitation links (14 days max) generated from `/admin`; submissions are e-mailed through Formhook, nothing is stored
 - **Contact form** — rate-limited, honeypot, topic selector; delivered by e-mail through Formhook
 - **Booking** — "Book a call" links (hero, contact section, `/work-with-me`, mobile menu) open the Proton Calendar booking page in a new tab
 - **Status page** — real health checks (Supabase, Redis, Formhook, content integrity), uptime % over 30 days, latency sparklines (7 days); localized service names
-- **Admin dashboard** — `/admin` (HTTP Basic Auth) — project/cert/testimonial/message stats and recent contact messages
-- **Command palette** — `⌘K` / `Ctrl+K` — navigate sections and pages (including `/hybride`), switch track/theme/language, download CV, open LinkedIn — fully translated
+- **Admin dashboard** — `/admin` (HTTP Basic Auth) — project and translation checks, certifications, testimonial invitation generator, incident dashboard (`/admin/incidents`)
+- **Command palette** — `⌘K` / `Ctrl+K` — navigate sections and pages, search projects, blog posts and certifications by title or technology (word-based matching), switch track/theme/language, download CV, open LinkedIn — fully translated; the search index is loaded on first open only
 - **Animations** — Framer Motion: scroll parallax, directional reveals, stagger, AnimatedCounter, AnimatePresence on track switch
-- **Open Graph** — dynamic OG images per blog article, project page, `/about`, `/certifications` and `/hybride` (`next/og`)
+- **Open Graph** — dynamic OG images per blog article, project page, `/about`, `/certifications`, `/hybride` and `/uses` (`next/og`)
 - **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP; `X-Powered-By` suppressed
 - **RSS feeds** — `/feed.xml` (EN), `/feed-fr.xml` (FR), `/feed-es.xml` (ES)
 - **PWA** — Web App Manifest (installable), service worker with offline fallback (`/admin` and the testimonial form are never cached)
@@ -196,16 +203,15 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   │   ├── [...rest]/          # Catch-all → notFound() — localized 404
 │   │   ├── about/              # About page + opengraph-image.tsx
 │   │   ├── hybride/            # Hybrid Salesforce × IT Ops profile + opengraph-image.tsx
-│   │   ├── work-with-me/       # Recruiter page (contract types, FAQ, booking link)
+│   │   ├── work-with-me/       # Recruiter page (services, contract types, FAQ, booking link)
 │   │   ├── contact/            # Contact page
 │   │   ├── certifications/     # Certifications & Diplomas + opengraph-image.tsx
 │   │   ├── blog/               # Blog index + [slug] post pages + tags/
 │   │   ├── projects/           # Projects [slug] detail pages + opengraph-image.tsx
 │   │   ├── status/             # Public status page (health checks, uptime, sparklines)
-│   │   ├── resources/          # Boîte à outils (20 tools, 4 categories)
 │   │   ├── security/           # Security acknowledgments (linked from security.txt)
 │   │   ├── colophon/           # Full stack documentation
-│   │   ├── uses/               # Tools & setup page
+│   │   ├── uses/               # Setup, tools & references (33 entries) + opengraph-image.tsx; /resources redirects here
 │   │   ├── legal/              # Legal notice
 │   │   ├── privacy/            # Privacy policy
 │   │   ├── accessibility/      # Accessibility statement
@@ -213,7 +219,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   │   ├── error.tsx           # Locale error boundary (500 — useParams locale)
 │   │   ├── not-found.tsx       # Locale 404 (useParams — no hydration flash)
 │   │   └── layout.tsx          # Locale layout (Navbar, Footer, ScrollToTop)
-│   ├── admin/                  # Admin dashboard (HTTP Basic Auth, Supabase service_role)
+│   ├── admin/                  # Admin dashboard + incidents/ (HTTP Basic Auth, Supabase service_role)
 │   ├── api/                    # API routes
 │   │   ├── contact/            # Contact form → Formhook (nothing stored)
 │   │   ├── cache/invalidate/   # Manual Redis cache invalidation
@@ -223,9 +229,10 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   │   ├── csp-report/         # CSP violation reports (query strings stripped before logging)
 │   │   ├── blog/latest/        # Latest posts API (locale whitelist)
 │   │   ├── search/             # Blog full-text search (MiniSearch, query capped at 64 chars)
+│   │   ├── palette-index/      # ⌘K palette index per locale (static, generateStaticParams)
 │   │   ├── revalidate/         # ISR revalidation (Supabase webhook)
 │   │   ├── admin/              # Admin-only APIs (testimonial invitations)
-│   │   └── testimonial-submit/ # Token-gated testimonial submission
+│   │   └── testimonial-submit/ # Invitation-gated testimonial submission → Formhook
 │   ├── error.tsx               # Root error boundary (500)
 │   ├── feed.xml/ feed-fr.xml/ feed-es.xml/  # RSS feeds (EN / FR / ES)
 │   ├── fonts/                  # Self-hosted variable fonts + OFL licences
@@ -246,24 +253,27 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   │   ├── series.ts           # Article series definitions
 │   │   └── toc.ts              # Table of contents utilities
 │   ├── about.ts                # Static about content (FR / EN / ES)
-│   ├── certifications.ts       # Static certifications data
+│   ├── projects.ts / projectDetails.ts  # Project cards and detail pages (source of truth)
+│   ├── projects/               # Optional MDX case studies per project slug
+│   ├── certifications.ts       # Certifications data and booked exam dates
 │   ├── experience.tsx          # Work experience accordion data
 │   ├── testimonials.ts         # Testimonials (feature-flagged)
 │   └── skills.ts / services.ts
 ├── lib/
-│   ├── data/                   # Supabase data fetchers (cached via Redis)
+│   ├── data/                   # Content accessors (projects from content/, cached via Redis)
+│   ├── search/                 # ⌘K palette index and word-based filter
 │   ├── supabase/               # Supabase client helpers (anon + service_role)
-│   ├── security/               # timingSafeEqual.ts (HMAC-SHA256), jsonLdSafe.ts, slug.ts
+│   ├── security/               # adminAuth, testimonialInvite (HMAC links), cspReport, timingSafeEqual, jsonLdSafe, slug
 │   ├── env.ts                  # Zod env validation (called from instrumentation.ts)
 │   ├── social.ts               # LinkedIn / GitHub URL sanitization (single source)
 │   ├── booking.ts              # Proton Calendar booking link (default + env override)
 │   └── ratelimit.ts / redis.ts / cache.ts  # ratelimit.ts also pseudonymises keys (HMAC)
 ├── messages/
-│   ├── en.json                 # English translations (~410 keys)
+│   ├── en.json                 # English translations (~440 keys)
 │   ├── fr.json                 # French translations (same keys)
 │   └── es.json                 # Spanish translations (same keys)
 ├── supabase/
-│   ├── migrations/             # DDL + RLS, applied with the Supabase CLI (supabase db push)
+│   ├── migrations/             # DDL + RLS history (does not rebuild a blank database on its own, see Deployment)
 │   ├── maintenance/            # Manual SQL still in use (GDPR retention)
 │   └── archive/                # One-off fixes and seeds of the former projects table (reference only)
 ├── scripts/                    # Utility scripts by theme, see scripts/README.md
@@ -280,9 +290,11 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 ## Deployment (Vercel)
 
 1. Import the repository in [Vercel](https://vercel.com) (the app lives at the repository root)
-2. Configure all required environment variables (Production and Preview)
+2. Configure all required environment variables (Production and Preview). Prefer a **separate Supabase project for Preview**: otherwise `/admin` actions on a preview deployment (incidents) write to the production database
 3. Region: `fra1` (see `vercel.json`); daily cron at 08:00 UTC
 4. Deploy — Vercel handles build, CDN, and HTTPS automatically. `NEXT_PUBLIC_*` values are inlined at build time: redeploy after changing one.
+
+> **Database from scratch:** `supabase/migrations/` records the schema history but does not create every table the production schema relies on (`admins`, for instance, predates the migrations). To set up a new Supabase project, copy the production schema (`supabase db dump --schema-only`) rather than running `supabase db push` on an empty database.
 
 ---
 
@@ -307,14 +319,13 @@ Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are list
 | Layer | Measure |
 |-------|---------|
 | HTTP headers | Per-request nonce CSP with `'strict-dynamic'`, no third-party script/style/frame origins, `frame-src 'none'`; Trusted Types in report-only; HSTS (2 yr + preload), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — `X-Powered-By` suppressed |
-| Database | Supabase RLS on all tables — `project_assets` restricted to published projects only; `is_admin()` REVOKE'd from PUBLIC; trigger functions have `search_path = ''` |
+| Database | Supabase RLS on all tables — `anon` can only read published `projects` / `project_assets`; `uptime_pings`, `incidents` and `incident_checklist_items` deny `anon` and `authenticated` explicitly; `is_admin()` REVOKE'd from PUBLIC; trigger functions have `search_path = ''` |
 | Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/blog/latest`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/revalidate`, `/api/health`, `/api/errors`, `/api/csp-report` and `/admin`; identifiers HMAC-pseudonymised (no IP in clear in Redis). Behaviour during a Redis outage is documented in SECURITY.md |
 | Admin panel | HTTP Basic Auth + proxy rate-limit (5 req / 15 min / IP), never cached by the service worker |
-| Contact form | Honeypot, origin check, server-side input validation, e-mail delivery via Formhook with no storage at rest |
+| Contact & testimonial forms | Honeypot, server-side input validation, e-mail delivery via Formhook with no storage at rest; contact checks the Origin, testimonials need a signed single-use invitation |
 | Privacy | No analytics or tracking; no third-party script; CSP reports logged without query strings |
 | Env validation | `instrumentation.ts` → `lib/env.ts` validates all env vars via Zod at server startup — catches missing secrets, invalid URLs, tokens with whitespace |
 | Credential comparison | `lib/security/timingSafeEqual.ts` — HMAC-SHA256 timing-safe comparison (Web Crypto API, Edge Runtime compatible) |
-| Debug routes | `/api/redis-test` returns 404 in production |
 | Crawlers | `robots.txt` disallows `/cv/` and `/admin/` |
 
 See [`SECURITY.md`](SECURITY.md) for the full security policy and vulnerability disclosure process.

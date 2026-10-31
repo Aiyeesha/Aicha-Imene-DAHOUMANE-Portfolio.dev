@@ -26,7 +26,9 @@ Scripts that talk to Supabase read `.env.local` (or `.env`).
 
 ## `db/` — copy of the content in Supabase
 
-The site serves projects from `content/`. The `public.projects` and `about_pages` tables are a copy read by `/admin`, the health checks (`lib/health.ts`) and `content:safety`; these scripts keep that copy in sync.
+The site serves projects from `content/`. The `public.projects` table is a copy read by `/admin`, the health checks (`lib/health.ts`) and `content:safety`; these scripts keep that copy in sync.
+
+> **October 2026:** the `about_pages` table no longer exists in production, so `db:seed:about` fails until the table is recreated or the script is retired. The about page itself reads `content/about.ts` and is not affected.
 
 | Command | Script | Purpose |
 |---|---|---|
