@@ -70,6 +70,14 @@ export const blogRatelimit = redis
   ? createRatelimit(redis, 30, 60, "portfolio:rl:blog")
   : createNoOpRatelimit(30, 60_000);
 
+// ── /api/search ────────────────────────────────────────────────────────
+// 30 requests / 60s / IP: public full-text search, cheap per call but each
+// uncached query runs a fuzzy + prefix MiniSearch over every post, so an
+// unthrottled loop could keep a function busy. Same budget as /api/blog/latest.
+export const searchRatelimit = redis
+  ? createRatelimit(redis, 30, 60, "portfolio:rl:search")
+  : createNoOpRatelimit(30, 60_000);
+
 // ── /api/testimonial-submit ───────────────────────────────────────────
 // 3 submissions / 24h / IP: testimonials are rare and deliberate
 export const testimonialRatelimit = redis
