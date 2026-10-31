@@ -199,7 +199,9 @@ export default async function CertificationsPage({ params }: PageProps) {
         ? "Técnico/a de Asistencia Informática"
         : "IT Support Technician",
       issuer: "GRETA du Val d'Oise — Lycée Louis Jouvet",
-      earnedDate: isFr ? "Janv. 2022 – Juil. 2022" : isEs ? "Ene. 2022 – Jul. 2022" : "Jan 2022 – Jul 2022",
+      // Award date of the diploma; the training period is shown separately.
+      earnedDate: isFr ? "4 juillet 2022" : isEs ? "4 de julio de 2022" : "July 4, 2022",
+      trainingPeriod: isFr ? "janv. – juil. 2022" : isEs ? "ene. – jul. 2022" : "Jan – Jul 2022",
       level: isFr ? "Titre RNCP niveau 4 (Bac)" : isEs ? "Título RNCP nivel 4 (equivalente a Bachillerato)" : "RNCP Level 4 (Bac)",
       description: isFr
         ? "Support et assistance informatique. Formation au Lycée Louis Jouvet (Taverny). Installation Windows 10, virtualisation VirtualBox, configuration réseau TP-Link, profils itinérants Active Directory, diagnostic matériel."
@@ -221,7 +223,8 @@ export default async function CertificationsPage({ params }: PageProps) {
         ? "Técnica Superior en Sistemas y Redes"
         : "Higher Technician in Systems & Networks",
       issuer: "GRETA du Val d'Oise",
-      earnedDate: isFr ? "Oct. 2022 – Juin 2023" : isEs ? "Oct. 2022 – Jun. 2023" : "Oct 2022 – Jun 2023",
+      earnedDate: isFr ? "27 juin 2023" : isEs ? "27 de junio de 2023" : "June 27, 2023",
+      trainingPeriod: isFr ? "oct. 2022 – juin 2023" : isEs ? "oct. 2022 – jun. 2023" : "Oct 2022 – Jun 2023",
       level: isFr ? "Titre RNCP niveau 5 (Bac+2)" : isEs ? "Título RNCP nivel 5 (equivalente a Bac+2)" : "RNCP Level 5 (Bac+2)",
       description: isFr
         ? "Administration systèmes & réseaux. Deux stages d'un mois chez Midrange Group : déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
@@ -443,6 +446,12 @@ export default async function CertificationsPage({ params }: PageProps) {
                   <p className="mt-0.5 text-xs text-muted-2">
                     {isFr ? "Obtenu :" : isEs ? "Obtenido:" : "Earned:"} {cert.earnedDate}
                   </p>
+                  {/* Training period, for diplomas earned after a course */}
+                  {"trainingPeriod" in cert && cert.trainingPeriod && (
+                    <p className="mt-0.5 text-xs text-muted-2">
+                      {isFr ? "Formation :" : isEs ? "Formación:" : "Training:"} {cert.trainingPeriod}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -463,15 +472,17 @@ export default async function CertificationsPage({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Diploma + verification links */}
+              {/* Diploma + verification links. py-2 enlarges the tap target
+                  (20px → 36px); mt-2 / -mb-2 absorb that padding so the
+                  card's spacing is unchanged. */}
               {((cert as any).diplomaUrl || cert.credentialUrl) && (
-                <div className="mt-4 flex flex-wrap gap-4">
+                <div className="mt-2 -mb-2 flex flex-wrap gap-x-4">
                   {(cert as any).diplomaUrl && (
                     <a
                       href={(cert as any).diplomaUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                      className="inline-block py-2 text-sm underline underline-offset-4 hover:opacity-80"
                     >
                       {labels.diplomaLink}<span aria-hidden="true"> ↗</span>
                     </a>
@@ -481,7 +492,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                      className="inline-block py-2 text-sm underline underline-offset-4 hover:opacity-80"
                     >
                       {labels.credentialLink}<span aria-hidden="true"> ↗</span>
                     </a>

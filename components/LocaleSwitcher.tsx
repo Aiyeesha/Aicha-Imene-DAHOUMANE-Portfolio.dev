@@ -50,7 +50,7 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
               ? track === "salesforce"
                 ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
                 : "border-violet-400/40 bg-violet-500/10 text-violet-700 dark:text-violet-200"
-              : "border-black/10 dark:border-white/10 text-muted hover:text-white"
+              : "border-black/10 dark:border-white/10 text-muted hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           {l.toUpperCase()}
