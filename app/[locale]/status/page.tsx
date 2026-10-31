@@ -1,7 +1,8 @@
 // status/page.tsx
 // ----------------
-// Public status page. Data comes from uptime_pings (Supabase), filled by the
-// daily cron (app/api/cron/ping); no outgoing check runs at render time.
+// Public status page. Data comes from the uptime history in Upstash Redis
+// (lib/uptime.ts), filled by the daily cron (app/api/cron/ping); no outgoing
+// check runs at render time.
 
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -27,7 +28,7 @@ type DisplayStatus = ServiceStatus | "maintenance";
 const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
   "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam",    es: "Envío de mensajes, limitación de tasa, anti-spam" },
-  "Database (Supabase)":  { en: "Service status and incidents — PostgreSQL",  fr: "Statut et incidents du site — PostgreSQL",  es: "Estado e incidencias del sitio — PostgreSQL" },
+  "Database (Supabase)":  { en: "Incident dashboard — PostgreSQL",  fr: "Tableau des incidents — PostgreSQL",  es: "Panel de incidencias — PostgreSQL" },
   "Content integrity":    { en: "Featured projects have complete case-study content", fr: "Les projets mis en avant ont un contenu complet", es: "Los proyectos destacados tienen contenido completo" },
   "Security cluster integrity": { en: "is_security flag survives content re-seeds", fr: "Le flag is_security résiste aux ré-imports de contenu", es: "El flag is_security resiste las reimportaciones de contenido" },
   "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit",             es: "Cache de respuestas y limitación de tasa" },
@@ -148,7 +149,7 @@ export default async function StatusPage({
   const isEs = safeLocale === "es";
 
   // Latest report stored by the cron, uptime stats and latency history, all
-  // from uptime_pings; no live outgoing calls.
+  // from the Redis uptime history; no live outgoing calls.
   const [report, uptimeStats, latencyHistory] = await Promise.all([
     getLatestPingReport(),
     getUptimeStats(),
