@@ -32,35 +32,6 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-// ── Supabase ──────────────────────────────────────────────────────────────────
-
-async function checkSupabase(): Promise<ServiceHealth> {
-  const start = Date.now();
-  try {
-    const url   = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const anon  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!url || !anon) throw new Error("Supabase env vars not set");
-
-    // Light REST query: one row of projects (always public)
-    const res = await withTimeout(
-      fetch(`${url}/rest/v1/projects?select=id&limit=1`, {
-        headers: {
-          apikey:        anon,
-          Authorization: `Bearer ${anon}`,
-        },
-        cache: "no-store",
-      }),
-      4000
-    );
-
-    const latencyMs = Date.now() - start;
-    if (!res.ok) return { name: "Database (Supabase)", status: "degraded", latencyMs, message: `HTTP ${res.status}` };
-    return { name: "Database (Supabase)", status: "operational", latencyMs };
-  } catch (e) {
-    return { name: "Database (Supabase)", status: "outage", latencyMs: Date.now() - start, message: String(e) };
-  }
-}
-
 // ── Upstash Redis ─────────────────────────────────────────────────────────────
 
 async function checkRedis(): Promise<ServiceHealth> {
@@ -207,8 +178,7 @@ function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
 
 export async function runHealthChecks(): Promise<HealthReport> {
   // Network checks in parallel; static checks are instant
-  const [supabase, redis, contact] = await Promise.all([
-    checkSupabase(),
+  const [redis, contact] = await Promise.all([
     checkRedis(),
     checkContactForm(),
   ]);
@@ -218,7 +188,6 @@ export async function runHealthChecks(): Promise<HealthReport> {
   const services: ServiceHealth[] = [
     checkWebsite(),
     contact,
-    supabase,
     redis,
     contentIntegrity,
     securityCluster,

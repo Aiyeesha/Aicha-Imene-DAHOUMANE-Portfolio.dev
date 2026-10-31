@@ -45,15 +45,15 @@ function buildCSP(nonce: string, isDev: boolean): string {
       // trusted.
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https://*.supabase.co",
+    "img-src 'self' data:",
     "font-src 'self'",
     // No iframes on the site: every frame is refused.
     "frame-src 'none'",
     // Only hosts the browser actually contacts: Formhook and Upstash Redis
     // are called server-side only, so they are not allowed here.
     isDev
-      ? "connect-src 'self' data: https://*.supabase.co"
-      : "connect-src 'self' https://*.supabase.co",
+      ? "connect-src 'self' data:"
+      : "connect-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
     // <form action="..."> cannot submit to an external URL (classic HTML

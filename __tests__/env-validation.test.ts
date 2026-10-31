@@ -8,10 +8,7 @@
 jest.mock("server-only", () => ({}), { virtual: true });
 
 const base = {
-  NEXT_PUBLIC_SUPABASE_URL: "https://x.supabase.co",
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon",
   NEXT_PUBLIC_SITE_URL: "https://example.com",
-  SUPABASE_SERVICE_ROLE_KEY: "service",
   UPSTASH_REDIS_REST_URL: "https://x.upstash.io",
   UPSTASH_REDIS_REST_TOKEN: "token",
   ADMIN_USERNAME: "admin",

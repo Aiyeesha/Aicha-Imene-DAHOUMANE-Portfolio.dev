@@ -162,10 +162,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`${spaceGrotesk.variable} ${inter.variable}`}
     >
       <head>
-        {/* Preconnect to Supabase (SSR and client data) */}
-        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
-          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
-        )}
         {/* IndieWeb identity. Same LinkedIn URL source as the visible links. */}
         {LINKEDIN_URL && <link rel="me" href={LINKEDIN_URL} />}
         <link rel="me" href="https://github.com/Aiyeesha" />
