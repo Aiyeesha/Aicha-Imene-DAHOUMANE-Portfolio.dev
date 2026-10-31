@@ -66,6 +66,14 @@ describe("validateEnv", () => {
     },
   );
 
+  it("bloque le démarrage en production si ADMIN_PASSWORD fait moins de 16 caractères", async () => {
+    process.env.VERCEL_ENV = "production";
+    process.env.ADMIN_PASSWORD = "a".repeat(15);
+    await expect(run()).rejects.toThrow(/ADMIN_PASSWORD/);
+    process.env.ADMIN_PASSWORD = "a".repeat(16);
+    await expect(run()).resolves.toBeUndefined();
+  });
+
   it("ne bloque jamais sur un secret présent mais trop court", async () => {
     process.env.VERCEL_ENV = "production";
     process.env.IP_HASH_SALT = "court";

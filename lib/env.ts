@@ -32,7 +32,9 @@ const serverSchema = z.object({
       { message: "contient un espace ou retour à la ligne — recoller depuis le dashboard Upstash" }
     ),
   ADMIN_USERNAME: z.string().min(1),
-  ADMIN_PASSWORD: z.string().min(8),
+  // 16 characters minimum: HTTP Basic credentials checked by proxy.ts, with
+  // a brute-force limiter (5 failures / 15 min / IP) as a second layer.
+  ADMIN_PASSWORD: z.string().min(16),
   CRON_SECRET:    z.string().min(32),
   // Optional: app/api/contact/route.ts handles a missing FORMHOOK_ENDPOINT
   // (the message is simply not forwarded). Validated as a URL when set.
