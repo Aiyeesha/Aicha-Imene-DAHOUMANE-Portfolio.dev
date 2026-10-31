@@ -3,9 +3,9 @@
 // Dynamic sitemap of every indexable page in the three locales, each entry
 // with hreflang alternates (EN / FR / ES / x-default).
 //
-// Static pages: home, about, certifications, blog, tags, resources, hybride,
+// Static pages: home, about, certifications, blog, tags, uses, hybride,
 //               work-with-me, legal, privacy, accessibility
-//               (/uses and /colophon are noindex)
+//               (/colophon is noindex; /resources redirects to /uses)
 // Dynamic pages: blog posts (MDX) and project pages.
 //
 // NEXT_PUBLIC_SITE_LASTMOD (optional) pins the date; otherwise the build date
@@ -84,7 +84,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...biEntry(base, "/blog/tags", { priority: 0.5, changeFrequency: "weekly" }),
 
     // ── Static content ───────────────────────────────────────────────────────
-    ...biEntry(base, "/resources", { priority: 0.6, changeFrequency: "monthly" }),
+    ...biEntry(base, "/uses", { priority: 0.6, changeFrequency: "monthly" }),
 
     // ── Project gallery ──────────────────────────────────────────────────────
     ...biEntry(base, "/projects", { priority: 0.8, changeFrequency: "monthly" }),
