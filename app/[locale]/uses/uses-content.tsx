@@ -42,6 +42,7 @@ const USES: UseCategory[] = [
       { name: "Workbench",                           description: { en: "Web-based SOQL/SOSL query tool, REST Explorer and metadata deploy/retrieve.", fr: "Outil web pour SOQL/SOSL, REST Explorer et déploiement/récupération de métadonnées.", es: "Herramienta web para SOQL/SOSL, REST Explorer y despliegue/recuperación de metadatos." }, url: "https://workbench.developerforce.com" },
       { name: "GitHub Actions",                      description: { en: "CI/CD for Salesforce deployments: validate on PRs, deploy on merge to main using Salesforce CLI.", fr: "CI/CD pour les déploiements Salesforce : validation sur les PR, déploiement sur merge via Salesforce CLI.", es: "CI/CD para despliegues Salesforce: validación en las PR, despliegue al fusionar a main mediante Salesforce CLI." }, url: "https://github.com/features/actions", badge: "free" },
       { name: "Trailhead",                           description: { en: "Salesforce's learning platform. Expeditioner rank — 94 badges, 59,775 points, 14 trails completed.", fr: "Plateforme d'apprentissage Salesforce. Rang Expeditioner — 94 badges, 59 775 points, 14 parcours.", es: "Plataforma de aprendizaje de Salesforce. Rango Expeditioner — 94 badges, 59.775 puntos, 14 rutas completadas." }, url: "https://trailhead.salesforce.com" },
+      { name: "PMD Apex (Static Analysis)", description: { en: "Static analysis tool for Apex code — catches security issues, dead code, and performance anti-patterns.", fr: "Outil d'analyse statique pour Apex — détecte les failles de sécurité, le code mort et les anti-patterns de performance.", es: "Herramienta de análisis estático para código Apex — detecta problemas de seguridad, código muerto y anti-patrones de rendimiento." }, url: "https://pmd.github.io/latest/pmd_rules_apex.html", badge: "open-source" },
     ],
   },
   {
@@ -54,6 +55,7 @@ const USES: UseCategory[] = [
       { name: "Windows Server 2022",                 description: { en: "Primary server OS for Active Directory, GPO management, and DHCP/DNS lab setups.", fr: "OS serveur principal pour Active Directory, GPO et configurations lab DHCP/DNS.", es: "Sistema operativo de servidor principal para Active Directory, gestión de GPO y configuraciones de laboratorio DHCP/DNS." }, url: "https://www.microsoft.com/en-us/windows-server" },
       { name: "Datto RMM",                           description: { en: "Remote monitoring and management platform used for device supervision and automated runbooks.", fr: "Plateforme RMM utilisée pour la supervision des postes et les runbooks automatisés.", es: "Plataforma de supervisión y gestión remota usada para la supervisión de equipos y runbooks automatizados." }, url: "https://www.datto.com/rmm" },
       { name: "PowerShell",                          description: { en: "Scripting language for Windows automation — AD user provisioning, report generation, backups.", fr: "Langage de script Windows — provisioning utilisateurs AD, génération de rapports, sauvegardes.", es: "Lenguaje de scripting para automatización en Windows — aprovisionamiento de usuarios AD, generación de informes, copias de seguridad." }, url: "https://learn.microsoft.com/en-us/powershell", badge: "open-source" },
+      { name: "Ansible", description: { en: "Agentless automation engine for configuration management, app deployment, and orchestration.", fr: "Moteur d'automatisation sans agent pour la gestion de configuration, le déploiement d'applications et l'orchestration.", es: "Motor de automatización sin agente para gestión de configuración, despliegue de aplicaciones y orquestación." }, url: "https://www.ansible.com", badge: "open-source" },
     ],
   },
   {
@@ -66,6 +68,20 @@ const USES: UseCategory[] = [
       { name: "Tailwind CSS", description: { en: "Utility-first CSS framework. Fast to write, easy to maintain, pairs well with dark mode.", fr: "Framework CSS utility-first. Rapide à écrire, facile à maintenir, idéal pour le dark mode.", es: "Framework CSS utility-first. Rápido de escribir, fácil de mantener, ideal para el modo oscuro." }, url: "https://tailwindcss.com", badge: "open-source" },
       { name: "Vercel",       description: { en: "Deployment platform for this portfolio — CI/CD on push, CDN, Cron jobs.", fr: "Plateforme de déploiement — CI/CD sur push, CDN, Cron jobs.", es: "Plataforma de despliegue de este portfolio — CI/CD en cada push, CDN, tareas Cron." }, url: "https://vercel.com" },
       { name: "Upstash Redis",description: { en: "Serverless Redis for API rate-limiting, cache (SWR), and uptime statistics.", fr: "Redis serverless pour le rate-limiting d'API, le cache (SWR) et les statistiques d'uptime.", es: "Redis serverless para el rate-limiting de API, la caché (SWR) y las estadísticas de uptime." }, url: "https://upstash.com" },
+      { name: "TypeScript", description: { en: "Typed superset of JavaScript. Strict mode + editor integration dramatically reduces runtime errors.", fr: "Surcouche typée de JavaScript. Le mode strict et l'intégration IDE réduisent drastiquement les erreurs à l'exécution.", es: "Superconjunto tipado de JavaScript. El modo estricto y la integración con el editor reducen drásticamente los errores en tiempo de ejecución." }, url: "https://www.typescriptlang.org", badge: "open-source" },
+      { name: "Jest + Testing Library", description: { en: "The go-to testing stack for React. Encourages tests that resemble how users interact with the UI.", fr: "La stack de test de référence pour React. Encourage des tests qui reflètent la façon dont les utilisateurs interagissent avec l'UI.", es: "La stack de pruebas de referencia para React. Fomenta pruebas que reflejan cómo interactúan los usuarios con la UI." }, url: "https://testing-library.com", badge: "open-source" },
+    ],
+  },
+  {
+    id: "learning",
+    icon: "📚",
+    title: { en: "References & Learning", fr: "Références & apprentissage", es: "Referencias y aprendizaje" },
+    items: [
+      { name: "Salesforce Developer Documentation", description: { en: "The authoritative reference for Apex, LWC, REST API, Metadata API, and Salesforce platform limits.", fr: "La référence officielle pour Apex, LWC, REST API, Metadata API et les limites de la plateforme Salesforce.", es: "La referencia oficial para Apex, LWC, REST API, Metadata API y los límites de la plataforma Salesforce." }, url: "https://developer.salesforce.com/docs", badge: "free" },
+      { name: "MDN Web Docs", description: { en: "The definitive reference for HTML, CSS, JavaScript, and Web APIs. Bookmark it.", fr: "La référence incontournable pour HTML, CSS, JavaScript et les APIs web. À mettre en favoris.", es: "La referencia definitiva para HTML, CSS, JavaScript y las APIs web. Guárdala en favoritos." }, url: "https://developer.mozilla.org", badge: "free" },
+      { name: "OWASP Top 10", description: { en: "The standard reference for web application security risks. Essential reading before shipping anything.", fr: "La référence standard pour les risques de sécurité des applications web. Lecture obligatoire avant tout déploiement.", es: "La referencia estándar de riesgos de seguridad en aplicaciones web. Lectura imprescindible antes de publicar nada." }, url: "https://owasp.org/www-project-top-ten/", badge: "free" },
+      { name: "roadmap.sh", description: { en: "Visual learning roadmaps for frontend, backend, DevOps, and more. Great for structuring self-study.", fr: "Parcours d'apprentissage visuels pour frontend, backend, DevOps et plus. Idéal pour structurer une formation autonome.", es: "Rutas de aprendizaje visuales para frontend, backend, DevOps y más. Ideal para estructurar el autoaprendizaje." }, url: "https://roadmap.sh", badge: "free" },
+      { name: "The Pragmatic Programmer", description: { en: "Timeless book on software craftsmanship — DRY, orthogonality, debugging, and professionalism.", fr: "Ouvrage intemporel sur l'artisanat logiciel — DRY, orthogonalité, débogage et professionnalisme.", es: "Libro atemporal sobre la artesanía del software — DRY, ortogonalidad, depuración y profesionalismo." }, url: "https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/", badge: "book" },
     ],
   },
   {
@@ -95,6 +111,7 @@ export default function UsesContent({ locale }: { locale: string }) {
     free:           "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
     "open-source":  openSourceBadge,
     paid:           "bg-slate-500/10   text-slate-600   dark:text-slate-300",
+    book:           "bg-violet-500/10 text-violet-700 dark:text-violet-300",
   };
 
   // Card and link hover. dark:hover:border-* is needed, otherwise

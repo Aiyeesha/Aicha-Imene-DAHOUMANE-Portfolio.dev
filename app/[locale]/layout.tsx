@@ -166,13 +166,6 @@ export default async function LocaleLayout({
                     >
                       {t("footer.uses")}
                     </Link>
-                    {/* /resources is not in the desktop nav, so it is linked here. */}
-                    <Link
-                      className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
-                      href={`/${locale}/resources`}
-                    >
-                      {t("nav.resources")}
-                    </Link>
                     {GITHUB_URL && (
                       <a
                         href={GITHUB_URL}
