@@ -53,6 +53,9 @@ export default function ProjectClientLogo({ slug, alt, size = "md", loading = "e
       <Image
         src={`${STORAGE_CDN}/${slug}/logo.webp`}
         alt={alt}
+        // Decorative logo (alt="", the card title follows): hidden from
+        // assistive technologies, as e2e/accessibility.spec.ts requires.
+        aria-hidden={alt === "" ? true : undefined}
         width={width}
         height={height}
         className={`object-contain object-left ${imgClass}`}
