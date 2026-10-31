@@ -12,6 +12,7 @@
 import "server-only";
 import { createHmac, timingSafeEqual } from "crypto";
 import { redis } from "@/lib/redis";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 const HMAC_HEX_LENGTH = 64; // SHA-256 = 32 bytes = 64 hex characters
 const SESSION_BUCKET_MS = 30 * 60 * 1000;
@@ -32,6 +33,31 @@ export function isInviteValid(secret: string, invite: string, expUnix: number, n
 
 export function signInvite(secret: string, expUnix: number): string {
   return hmac(secret, `testimonial-invite:${expUnix}`).toString("hex");
+}
+
+export type InviteLocale = "en" | "fr" | "es";
+
+export type InviteLink = {
+  url: string;
+  expiresAt: string;
+  locale: InviteLocale;
+  daysValid: number;
+};
+
+/**
+ * Signed invitation link valid `days` days (1 to MAX_INVITE_DAYS). Shared by
+ * POST /api/admin/testimonial-invite and the /admin generator button.
+ */
+export function createInviteLink(secret: string, locale: InviteLocale, days: number, nowMs = Date.now()): InviteLink {
+  const daysValid = Math.min(MAX_INVITE_DAYS, Math.max(1, Math.floor(days)));
+  const expUnix = Math.floor(nowMs / 1000) + daysValid * 86_400;
+  const invite = signInvite(secret, expUnix);
+  return {
+    url: `${getSiteUrl()}/${locale}/testimonial-submit?invite=${invite}&exp=${expUnix}`,
+    expiresAt: new Date(expUnix * 1000).toISOString(),
+    locale,
+    daysValid,
+  };
 }
 
 /** Session key specific to an invitation, for the current 30-minute slot. */
