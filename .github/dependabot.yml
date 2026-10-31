@@ -8,7 +8,7 @@
 #   - "next-ecosystem"  : Next.js + React + TypeScript (core, test before merging)
 #   - "tailwind"        : Tailwind CSS + plugins
 #   - "dev-tooling"     : ESLint, Jest, ts-jest, testing-library (dev only)
-#   - "supabase-upstash": backend (Supabase, Upstash Redis)
+#   - "supabase-upstash": Upstash Redis backend + Supabase client (kept for scripts/db only)
 #   - every other dependency is updated on its own
 #
 # Every Dependabot PR runs the CI workflow (lint, typecheck, tests, build).
@@ -61,7 +61,7 @@ updates:
           - "@types/jest"
           - "typescript-eslint"
 
-      # Supabase + Upstash Redis backend
+      # Upstash Redis backend + Supabase client used by scripts/db
       supabase-upstash:
         patterns:
           - "@supabase/*"

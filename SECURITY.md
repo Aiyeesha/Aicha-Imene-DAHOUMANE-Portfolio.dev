@@ -49,10 +49,10 @@ Production policy, as built by `buildCSP()` in `proxy.ts`:
 default-src 'self'
 script-src 'self' 'nonce-{per-request}' 'strict-dynamic'
 style-src 'self' 'unsafe-inline'
-img-src 'self' data: https://*.supabase.co
+img-src 'self' data:
 font-src 'self'
 frame-src 'none'
-connect-src 'self' https://*.supabase.co
+connect-src 'self'
 object-src 'none'
 base-uri 'self'
 form-action 'self'
@@ -133,12 +133,20 @@ Fail-open on slowness or errors keeps the contact form usable during an Upstash 
 
 ---
 
-### Backend (Supabase + RLS)
+### Data storage
 
-Row Level Security (RLS) is **enabled on all tables**. Content pages do not query the database (content is served from `content/`); `/status`, `/api/health`, `/api/cron/ping` and `/admin` access it through the server-side `service_role` client only. Policies in production, checked on 2026-10-31 (`pg_policies`):
+The site has **no database**. Content (projects, blog, about page, certifications) lives in the repository and is served from `content/`. Upstash Redis, reached server-side only, holds:
 
-| Table | Policy | Notes |
-|-------|--------|-------|
+| Data | Key | Retention |
+|------|-----|-----------|
+| Uptime history (one batch per daily cron run, no personal data) | `portfolio:uptime:history` | 30 days, key expires after 35 days without writes |
+| Incident dashboard (`/admin/incidents`, demo, no visitor data) | `portfolio:incidents`, `portfolio:incident:<uuid>` | Until deleted |
+| Used testimonial invitations (signature of the link, no personal data) | `portfolio:testimonial:used:*` | Until the invitation expires |
+| Rate-limit counters (pseudonymised with `IP_HASH_SALT`) | `portfolio:rl:*` | Sliding window |
+
+Contact messages and testimonials are forwarded by e-mail (Formhook) and never stored. Supabase was retired in October 2026: the former project and its tables are no longer used by the site; `supabase/` and `scripts/db/` are kept only for a possible return to SQL.
+
+-------|--------|-------|
 | `projects` | `anon` SELECT where `status = 'published'` | Former copy of `content/`, no longer read by the app (the health check only pings it) |
 | `project_assets` | `anon` SELECT only if the parent project is `published` | Assets of unpublished projects are protected |
 | `uptime_pings` | Explicit deny (`false`) for `anon` and `authenticated` | Best-effort copy written by `/api/cron/ping` until Supabase is retired; `/status` now reads the Redis history |
@@ -170,8 +178,8 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 
 ### Environment Variables
 
-- All secrets (`SUPABASE_SERVICE_ROLE_KEY`, `UPSTASH_REDIS_REST_TOKEN`, `ADMIN_PASSWORD`, etc.) are server-only — no `NEXT_PUBLIC_` prefix
-- Only genuinely public values use `NEXT_PUBLIC_*` (site URL, Supabase anon key, contact email, booking page URL)
+- All secrets (`UPSTASH_REDIS_REST_TOKEN`, `ADMIN_PASSWORD`, `TESTIMONIAL_SUBMIT_TOKEN`, etc.) are server-only — no `NEXT_PUBLIC_` prefix
+- Only genuinely public values use `NEXT_PUBLIC_*` (site URL, contact email, booking page URL)
 - `.env.local` is excluded from version control via `.gitignore` (pattern: `.env*`)
 - See `.env.example` for the full list of expected variables
 
@@ -207,7 +215,6 @@ All secrets below should be rotated **immediately** if compromised, and periodic
 | `TESTIMONIAL_SUBMIT_TOKEN` | `openssl rand -base64 32` | Vercel env vars → redeploy |
 | `TESTIMONIAL_INVITE_ADMIN_TOKEN` | `openssl rand -base64 32` | Vercel env vars → redeploy |
 | `IP_HASH_SALT` | `openssl rand -hex 32` | Vercel env vars → redeploy (invalidates existing hashes) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → Settings → API | Vercel env vars → redeploy |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Console → Database → REST API | Vercel env vars → redeploy |
 
 ### Step-by-step procedure
@@ -215,14 +222,13 @@ All secrets below should be rotated **immediately** if compromised, and periodic
 1. **Generate** a new secret value (use the command shown in the table, or a password manager)
 2. **Update** the secret in Vercel → Project Settings → Environment Variables (Production + Preview)
 3. **Trigger a redeploy** on Vercel (or push a commit) — the new value takes effect immediately after deployment
-4. **Revoke** the old secret from its source (Supabase, Upstash Console) if applicable
+4. **Revoke** the old secret from its source (Upstash Console, Formhook) if applicable
 5. **Verify** the deployment is healthy via `/api/health` and `/status`
 
 > **Note on `IP_HASH_SALT` rotation**: changing this salt invalidates all existing rate-limit keys in Upstash Redis (keys are HMAC-pseudonymised with this salt before storage). This has no functional impact beyond briefly resetting in-flight rate-limit counters.
 
 ### Signs of compromise to watch for
 
-- Any entry in the Supabase `testimonial_submissions` table (no longer written by the site)
 - Unusual spike in Vercel function invocations (> 100k/month on Hobby plan)
 - CSP violations reported to `/api/csp-report` from unexpected `document-uri`
 - `/api/health` returning degraded status for Redis (possible token invalidation)
