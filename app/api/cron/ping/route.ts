@@ -6,9 +6,10 @@
 //   3. records the run in the uptime history (Upstash Redis, lib/uptime.ts),
 //      then copies it to Supabase uptime_pings, best effort, until Supabase
 //      is retired;
-//   4. purges old Supabase rows (uptime 30 days, contact messages and pending
-//      testimonial submissions 90 days);
+//   4. purges Supabase uptime rows older than 30 days;
 //   5. pings an external heartbeat if configured.
+// Contact messages and testimonials are e-mailed (Formhook) and never stored,
+// so there is nothing else to purge.
 
 import { after, NextResponse }         from "next/server";
 import { runHealthChecks }             from "@/lib/health";
@@ -96,27 +97,7 @@ export async function GET(req: Request) {
     .lt("checked_at", cutoff);
   if (purgeError) console.warn("[CRON/PING] Purge warning:", purgeError.message);
 
-  // ── 5. Purge contact messages older than 90 days ──────────────────────────
-  // GDPR retention of personal data (name, email, message), as stated in the
-  // privacy policy. Non-blocking.
-  const msgCutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
-  const { error: msgPurgeError } = await supabase
-    .from("messages")
-    .delete()
-    .lt("created_at", msgCutoff);
-  if (msgPurgeError) console.warn("[CRON/PING] Messages purge warning:", msgPurgeError.message);
-
-  // ── 6. Purge unapproved testimonial submissions older than 90 days ───────
-  // Submissions store the submitter's IP hash; approved ones are kept (they
-  // feed the testimonials table). Non-blocking.
-  const { error: submPurgeError } = await supabase
-    .from("testimonial_submissions")
-    .delete()
-    .lt("created_at", msgCutoff) // same 90-day cutoff
-    .eq("approved", false);
-  if (submPurgeError) console.warn("[CRON/PING] Testimonial submissions purge warning:", submPurgeError.message);
-
-  // ── 7. External heartbeat (dead-man's switch) ────────────────────────────
+  // ── 5. External heartbeat (dead-man's switch) ────────────────────────────
   // When HEALTHCHECK_URL is set, a GET is sent after each successful run; a
   // missing ping triggers an alert on the external service (e.g.
   // healthchecks.io), independent of GitHub and Vercel. Non-blocking.
