@@ -357,8 +357,8 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
       {projects.length > 0 && (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((p, idx) => (
-          <Reveal key={p.slug} delayMs={Math.min(280, idx * 60)}>
-            <GlowCard className="card overflow-hidden">
+          <Reveal className="h-full" key={p.slug} delayMs={Math.min(280, idx * 60)}>
+            <GlowCard className="card flex h-full flex-col overflow-hidden">
               {/* Cover image */}
               <div className="relative h-36 w-full bg-black/5 dark:bg-white/5">
                 <CoverImage
@@ -366,11 +366,16 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   fallback={projectCardImage(p.slug, p.gallery)?.fallback ?? undefined}
                   alt={p.title}
                 />
+                {/* Client logo, in a white tile over the cover; nothing if missing.
+                  Decorative (alt=""): the project title follows. */}
+                <ProjectClientLogo slug={p.slug} alt="" size="tile" loading="lazy" />
               </div>
-              <div className="p-5">
-              {/* Header: title + badge. On narrow cards the badge wraps below
-                  the title instead of being clipped. */}
-              <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
+            {/* flex-1 + mt-auto on the CTAs: buttons aligned across a row of cards */}
+            <div className="flex flex-1 flex-col p-5">
+              {/* Header: title, then the badge on its own line. Side by side, a long
+                  badge ("Projet de formation — Titre RNCP 6") squeezed the title onto
+                  3–4 lines. */}
+              <div className="flex flex-col items-start gap-2">
                 <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
                 {p.badge ? (
                   <span className={getBadgeClass(p.badge.tone)}>{tBadge(p.badge.label, locale)}</span>
@@ -382,10 +387,6 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                 <p className="mt-1 text-xs text-muted-2">{p.nature.period}</p>
               )}
 
-              {/* Client logo: nothing if missing, lazy-loaded */}
-              <div className="mt-1">
-                <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
-              </div>
 
               {(p.is_bridge || p.is_security) && (
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -419,7 +420,7 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
 
               {/* CTAs. The data layer only returns published projects, so
                   every card has a detail page. */}
-              <div className="mt-5 flex items-center gap-2 flex-wrap">
+              <div className="mt-auto pt-5 flex items-center gap-2 flex-wrap">
                 {p.status === "published" && (
                   <Link
                     href={`/${locale}/projects/${p.slug}`}

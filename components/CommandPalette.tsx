@@ -104,13 +104,16 @@ const PALETTE_STYLES = `
     padding: 2rem;
     text-align: center;
     font-size: 0.875rem;
-    opacity: 0.45;
+    /* 0.7 keeps at least 4.5:1 in both themes (0.45 did not) */
+    opacity: 0.7;
   }
-  [cmdk-separator] {
-    height: 1px;
-    margin: 0.35rem 0;
-    opacity: 0.07;
-    background: currentColor;
+  /* Groups are separated by a border instead of <Command.Separator />,
+     whose role="separator" is not allowed inside a listbox (axe:
+     aria-required-children). */
+  [cmdk-group] + [cmdk-group] {
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid rgba(127, 127, 127, 0.15);
   }
 `;
 
@@ -122,6 +125,13 @@ const Icon = ({ d }: { d: string }) => (
     <path d={d} />
   </svg>
 );
+
+// ── Languages offered in the palette (native names) ─────────────────────────
+const LANGUAGES = [
+  { code: "fr", label: "Version française" },
+  { code: "en", label: "English version" },
+  { code: "es", label: "Versión en español" },
+] as const;
 
 export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: boolean }) {
   // defaultOpen: the palette is loaded on demand (CommandPaletteLoader) on the
@@ -243,7 +253,6 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
     downloadCv:  t("downloadCv"),
     linkedin:    t("linkedin"),
     noResults:   t("noResults"),
-    switchLang:  t("switchLang"),
     shortcut:    t("close"),
     navigate:    t("navigate"),
     select:      t("select"),
@@ -343,8 +352,6 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
               ))}
             </Command.Group>
 
-            <Command.Separator />
-
             {/* ── Pages ──────────────────────────────────────────────── */}
             <Command.Group heading={L.pages}>
               {[
@@ -369,8 +376,6 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
               ))}
             </Command.Group>
 
-            <Command.Separator />
-
             {/* ── Legal & info pages ──────────────────────────────────── */}
             <Command.Group heading={L.info}>
               {[
@@ -389,8 +394,6 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
                 </Command.Item>
               ))}
             </Command.Group>
-
-            <Command.Separator />
 
             {/* ── Actions ────────────────────────────────────────────── */}
             <Command.Group heading={L.actions}>
@@ -420,21 +423,23 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
                 {resolvedTheme === "dark" ? L.lightMode : L.darkMode}
               </Command.Item>
 
-              {/* Language */}
-              <Command.Item
-                // Stays on the current page
-                onSelect={() => {
-                  const next = locale === "fr" ? "en" : locale === "en" ? "es" : "fr";
-                  navigate(`/${next}${pathname.replace(/^\/(en|fr|es)(?=\/|$)/, "")}`);
-                }}
-                className={itemCls}
-              >
-                <Icon d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-2.333A17.9 17.9 0 0 1 8.027 13H4.062a8.008 8.008 0 0 0 5.648 6.667zM10.03 13c.151 2.439.848 4.73 1.97 6.752A15.905 15.905 0 0 0 13.97 13h-3.94zm9.908 0h-3.965a17.9 17.9 0 0 1-1.683 6.667A8.008 8.008 0 0 0 19.938 13z" />
-                {L.switchLang}
-              </Command.Item>
+              {/* Languages: one entry per other language (a rotating toggle
+                  made ES unreachable in one step from FR). Each label is in
+                  its own language, marked with lang for screen readers; the
+                  visitor stays on the current page. */}
+              {LANGUAGES.filter((l) => l.code !== locale).map((l) => (
+                <Command.Item
+                  key={l.code}
+                  value={`lang-${l.code} ${l.label}`}
+                  keywords={["language", "langue", "idioma", l.code]}
+                  onSelect={() => navigate(`/${l.code}${pathname.replace(/^\/(en|fr|es)(?=\/|$)/, "")}`)}
+                  className={itemCls}
+                >
+                  <Icon d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-2.333A17.9 17.9 0 0 1 8.027 13H4.062a8.008 8.008 0 0 0 5.648 6.667zM10.03 13c.151 2.439.848 4.73 1.97 6.752A15.905 15.905 0 0 0 13.97 13h-3.94zm9.908 0h-3.965a17.9 17.9 0 0 1-1.683 6.667A8.008 8.008 0 0 0 19.938 13z" />
+                  <span lang={l.code}>{l.label}</span>
+                </Command.Item>
+              ))}
             </Command.Group>
-
-            <Command.Separator />
 
             {/* ── External links ──────────────────────────────────────── */}
             <Command.Group heading={L.links}>
@@ -463,11 +468,12 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
           </Command.List>
 
           {/* Footer: keyboard legend */}
-          <div className="border-t border-black/10 dark:border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-slate-500 dark:text-white/40">
+          {/* slate-600 / white-70: ≥ 4.5:1 on both panel backgrounds */}
+          <div className="border-t border-black/10 dark:border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-slate-600 dark:text-white/70">
             <span><kbd className="font-mono">↑↓</kbd> {L.navigate}</span>
             <span><kbd className="font-mono">↵</kbd> {L.select}</span>
             <span><kbd className="font-mono">Esc</kbd> {L.shortcut}</span>
-            <span className="ml-auto opacity-60">{L.alsoShortcut}</span>
+            <span className="ml-auto">{L.alsoShortcut}</span>
           </div>
         </div>
       </Command.Dialog>

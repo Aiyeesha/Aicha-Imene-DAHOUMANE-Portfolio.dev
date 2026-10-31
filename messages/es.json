@@ -480,8 +480,9 @@
     "limitsTitle": "Limitaciones conocidas",
     "limitsBody": "Algunos contenidos de terceros (visores de PDF, widgets externos) pueden no ser totalmente accesibles. Si utilizas un lector de pantalla (NVDA, VoiceOver, JAWS) y encuentras algún problema específico, tus comentarios son bienvenidos.",
     "helpTitle": "¿Un problema de accesibilidad?",
-    "helpBody": "Si encuentras una barrera al navegar por este sitio web — un elemento no accesible mediante teclado, una imagen sin alternativa, contraste insuficiente o cualquier otra dificultad —, indícalo especificando la URL de la página y la naturaleza del problema. Contacto: a través del formulario de contacto o por email.",
-    "lastAudit": "Última verificación: 28 de junio de 2026 — Herramientas: axe-core (CI automatizado), pruebas manuales de navegación por teclado."
+    "helpBody": "Si encuentras una barrera al navegar por este sitio web — un elemento no accesible mediante teclado, una imagen sin alternativa, contraste insuficiente o cualquier otra dificultad —, indícamelo especificando la URL de la página y la naturaleza del problema, a través del <form>formulario de contacto</form>.",
+    "helpEmail": "También puedes escribirme a <mail>{email}</mail>.",
+    "lastAudit": "Última verificación: 31 de octubre de 2026 — Herramientas: axe-core (CI automatizado y paleta de comandos), pruebas manuales de navegación por teclado."
   },
   "availModal": {
     "badge": "Entrevistas ya — Disponible a partir de diciembre de 2026",
@@ -620,7 +621,6 @@
     "downloadCv": "Descargar el CV",
     "linkedin": "LinkedIn",
     "noResults": "Sin resultados.",
-    "switchLang": "Passer en français",
     "close": "Cerrar",
     "navigate": "navegar",
     "select": "seleccionar",
