@@ -1,6 +1,18 @@
 "use client";
 
+// Modal.tsx
+// ---------
+// Accessible dialog (focus trap, Escape, focus restored on close, background
+// scroll locked).
+//
+// Rendered through a portal at the end of <body>: a position: fixed element
+// is laid out against its nearest ancestor with a transform (or filter), not
+// against the viewport. The hero column animates with a transform, so a
+// modal rendered inside it was trapped in that column (and, on mobile, its
+// CTA ended up below the fold of a scroll-locked page).
+
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 
 export default function Modal({
@@ -78,9 +90,11 @@ export default function Modal({
     };
   }, [open]);
 
-  if (!open) return null;
+  // Closed, or rendered on the server (no document): nothing to show. The
+  // modal only ever opens after a click, so it never takes part in SSR.
+  if (!open || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-80">
       <button
         type="button"
@@ -94,9 +108,12 @@ export default function Modal({
           role="dialog"
           aria-modal="true"
           aria-label={title}
-          className="card w-full max-w-3xl overflow-hidden"
+          // Capped at the viewport height (dvh: follows the mobile browser
+          // bars) minus the p-4 gutter; the header stays put and the body
+          // scrolls, so every action stays reachable on small screens.
+          className="card flex max-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col overflow-hidden"
         >
-          <div className="flex items-center justify-between border-b border-black/10 px-5 py-4 dark:border-white/10">
+          <div className="flex shrink-0 items-center justify-between border-b border-black/10 px-5 py-4 dark:border-white/10">
             <div className="font-semibold">{title}</div>
             <button
               type="button"
@@ -108,9 +125,10 @@ export default function Modal({
             </button>
           </div>
 
-          <div className="p-5">{children}</div>
+          <div className="min-h-0 overflow-y-auto overscroll-contain p-5">{children}</div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
