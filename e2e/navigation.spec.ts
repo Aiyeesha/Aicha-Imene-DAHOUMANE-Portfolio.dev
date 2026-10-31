@@ -84,14 +84,15 @@ test.describe("Navigation de base", () => {
   // pages stayed stuck on the app/[locale]/loading.tsx skeleton; the content
   // was streamed but never applied. Production builds only (next build &&
   // next start), never next dev, hence every affected route is covered.
-  test("Certifications et Resources sont accessibles via URL directe, avec contenu réel", async ({ page }) => {
+  test("Certifications et Uses sont accessibles via URL directe, avec contenu réel", async ({ page }) => {
     await page.goto("/en/certifications");
     await expect(page).toHaveURL(/\/en\/certifications/);
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
     await expect(page.locator("main")).not.toBeEmpty();
 
+    // /resources was merged into /uses: the old URL redirects there.
     await page.goto("/en/resources");
-    await expect(page).toHaveURL(/\/en\/resources/);
+    await expect(page).toHaveURL(/\/en\/uses/);
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
     await expect(page.locator("main")).not.toBeEmpty();
   });
