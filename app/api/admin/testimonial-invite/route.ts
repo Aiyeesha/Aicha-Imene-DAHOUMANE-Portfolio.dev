@@ -20,8 +20,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 import { adminRatelimit, pseudonymizeKey } from "@/lib/ratelimit";
-import { getSiteUrl } from "@/lib/siteUrl";
-import { MAX_INVITE_DAYS, signInvite } from "@/lib/security/testimonialInvite";
+import { MAX_INVITE_DAYS, createInviteLink } from "@/lib/security/testimonialInvite";
 
 export const runtime = "nodejs";
 
@@ -94,24 +93,6 @@ export async function POST(req: NextRequest) {
     // Missing or invalid body: defaults
   }
 
-  // ── 5. Invitation HMAC ─────────────────────────────────────────────────────
-  // exp = link expiry, Unix seconds
-  const expUnix = Math.floor(Date.now() / 1000) + days * 86_400;
-
-  // HMAC-SHA256(secret, "testimonial-invite:" + exp), with a domain-separation prefix
-  const invite = signInvite(secret, expUnix);
-
-  // ── 6. Invitation URL ───────────────────────────────────────────────────────
-  const siteUrl = getSiteUrl();
-  const url = `${siteUrl}/${locale}/testimonial-submit?invite=${invite}&exp=${expUnix}`;
-
-  return NextResponse.json(
-    {
-      url,
-      expiresAt: new Date(expUnix * 1000).toISOString(),
-      locale,
-      daysValid: days,
-    },
-    { status: 201 }
-  );
+  // ── 5. Signed invitation link (lib/security/testimonialInvite.ts) ─────────
+  return NextResponse.json(createInviteLink(secret, locale, days), { status: 201 });
 }
