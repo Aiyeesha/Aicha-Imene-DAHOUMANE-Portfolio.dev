@@ -2,12 +2,12 @@
 
 // TrackAwareServicesLoader.tsx
 // -----------------------------
-// `next/dynamic(..., { ssr: false })` can't be called directly inside a Server
-// Component (app/[locale]/page.tsx) — Next.js requires the ssr:false dynamic()
-// call to live in a Client Component. This is that thin wrapper; page.tsx
-// imports it normally instead of calling dynamic() itself.
-//
-// Why ssr:false at all: see the comment on this import in page.tsx.
+// Loads TrackAwareServices on the client only (rendered on /work-with-me).
+// ssr: false is deliberate: with server rendering, the dynamic() + Reveal
+// chain sometimes left an unreconciled server DOM (missing icons and
+// "operational maturity" block, track cookie ignored) until something forced
+// a re-render. The dynamic() call lives in this Client Component so that a
+// Server Component can also import it.
 
 import dynamic from "next/dynamic";
 import SkeletonCard from "@/components/SkeletonCard";
