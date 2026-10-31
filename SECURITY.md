@@ -88,7 +88,7 @@ All write and sensitive endpoints are rate-limited via **Upstash Redis** (slidin
 | `POST /api/revalidate` | 10 requests | 60 seconds / IP | Protects ISR invalidation against REVALIDATE_SECRET brute-force |
 | `GET /api/health` | 30 requests | 60 seconds / IP | Prevents infrastructure probing in a loop |
 | `POST /api/csp-report` | 20 requests | 60 seconds / IP | Prevents flood of CSP violation reports (replaces in-memory counter, cold-start safe) |
-| `POST /api/admin/testimonial-invite` | `Authorization: Bearer {TESTIMONIAL_INVITE_ADMIN_TOKEN}` (dedicated, 32+ chars, never `ADMIN_PASSWORD`); failures share the `/admin` counter (5 / 15 min / IP); fail closed if Redis is down |
+| `POST /api/admin/testimonial-invite` | 5 failed attempts | 15 minutes / IP | Bearer `TESTIMONIAL_INVITE_ADMIN_TOKEN` (dedicated, 32+ chars, never `ADMIN_PASSWORD`); failures share the `/admin` counter; fail closed if Redis is down |
 | `POST /api/errors` | 10 requests | 60 seconds / IP | Client error reporting — absorbs crash-loop bursts, protected against flood |
 | `GET /api/blog/latest` | 30 requests | 60 seconds / IP | Public read route |
 | `GET /admin/*` | 5 failed attempts | 15 minutes / IP | **Brute-force protection** on HTTP Basic Auth — only failed authentications consume the quota; once it is exhausted, requests are refused before the credentials are checked |
@@ -116,7 +116,7 @@ Fail-open on slowness or errors keeps the contact form usable during an Upstash 
 - `ADMIN_PASSWORD` is validated at 8 characters minimum by `lib/env.ts`; 24 or more random characters are recommended (see the rotation table below)
 - Rate-limited: **5 failed attempts per 15 minutes per IP** (`proxy.ts`). Authenticated requests do not consume the quota; an exhausted quota is refused before the credentials are checked
 - Always routed through the middleware: the matcher lists `/admin/:path*` explicitly, and only real static file extensions (not any path containing a dot) are excluded elsewhere
-- Never cached by the service worker (`/admin` is network-only in `public/sw-template.js`), so contact messages are not stored in the browser cache
+- Never cached by the service worker (`/admin` is network-only in `public/sw-template.js`), so admin pages and invitation links are not stored in the browser cache
 - Returns `503` if credentials are not configured
 - Metadata set to `robots: { index: false, follow: false }` — not indexed by search engines
 - Not linked from public navigation
@@ -135,18 +135,19 @@ Fail-open on slowness or errors keeps the contact form usable during an Upstash 
 
 ### Backend (Supabase + RLS)
 
-Row Level Security (RLS) is **enabled on all tables**. Policies by table:
+Row Level Security (RLS) is **enabled on all tables**. Content pages do not query the database (content is served from `content/`); `/status`, `/api/health`, `/api/cron/ping` and `/admin` access it through the server-side `service_role` client only. Policies in production, checked on 2026-10-31 (`pg_policies`):
 
-| Table | `anon` SELECT | `anon` INSERT | Notes |
-|-------|---------------|---------------|-------|
-| `projects` | `status = 'published'` only | ❌ | Draft and archived projects are invisible |
-| `project_assets` | Only if parent project is `published` | ❌ | Assets of unpublished projects are protected |
-| `about_pages` | ✅ (all) | ❌ | Public content |
-| `testimonials` | `is_published = true` only | ❌ | Unpublished testimonials not visible |
-| `messages` | ❌ | ❌ | **No longer used** — the contact form forwards to Formhook with no DB write; the table is retained only for historical rows |
-| `testimonial_submissions` | ❌ | ❌ | **No longer written** — `/api/testimonial-submit` emails testimonials through Formhook; the table is empty and kept pending removal |
-| `uptime_pings` | ❌ | ❌ | Server-side only (service_role) — anon SELECT policy removed |
-| `goals_2026` | ✅ (all) | ❌ | Public content (intentional — used for public roadmap display) |
+| Table | Policy | Notes |
+|-------|--------|-------|
+| `projects` | `anon` SELECT where `status = 'published'` | Copy of `content/`, used by `/admin`, the health checks and `content:safety` |
+| `project_assets` | `anon` SELECT only if the parent project is `published` | Assets of unpublished projects are protected |
+| `uptime_pings` | Explicit deny (`false`) for `anon` and `authenticated` | Written by `/api/cron/ping`, read by `/status` (service_role) |
+| `incidents` | Explicit deny for `anon` and `authenticated` | Incident dashboard `/admin/incidents` (service_role) |
+| `incident_checklist_items` | Explicit deny for `anon` and `authenticated` | Same |
+| `admins` | SELECT of one's own row (`auth.uid() = user_id`) | Legacy, used by `is_admin()`; no Supabase Auth login on the site |
+| `testimonial_submissions` | `anon` INSERT denied, no other policy | **No longer written** — testimonials are e-mailed through Formhook; the table is empty and kept pending removal |
+
+No table has an `anon` INSERT, UPDATE or DELETE policy; migration `20261030170000_reassert_no_anon_policies.sql` drops the legacy ones if they reappear. The `messages`, `testimonials`, `about_pages`, `goals_2026` and `certifications` tables mentioned in older migrations no longer exist in production.
 
 The `service_role` key bypasses RLS automatically and is **strictly server-side** — never exposed to the client or in any `NEXT_PUBLIC_*` variable. The admin Supabase client (`lib/supabase/admin.ts`) uses `import 'server-only'` to produce a build-time error if accidentally imported into a client bundle.
 
@@ -160,8 +161,9 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 | `POST /api/cache/invalidate` | `x-cache-secret` header compared to `CACHE_INVALIDATE_SECRET`; body validated with zod (`locale` ∈ supported locales, `slug` kebab-case, no unknown keys, ≤ 1 KiB) |
 | `POST /api/revalidate` | `x-revalidate-secret` header compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
-| `POST /api/testimonial-submit` | Signed invitation link (HMAC of `TESTIMONIAL_SUBMIT_TOKEN`, 14 days max), **single use** (claimed atomically in Redis with `SET NX` before the insert, so two concurrent submissions cannot both pass; reuse → 410), plus a 30-minute session key bound to that invitation (`lib/security/testimonialInvite.ts`) |
+| `POST /api/testimonial-submit` | Signed invitation link (HMAC of `TESTIMONIAL_SUBMIT_TOKEN`, 14 days max), **single use** (claimed atomically in Redis with `SET NX` before the e-mail is sent, so two concurrent submissions cannot both pass; reuse → 410; released if Formhook fails), plus a 30-minute session key bound to that invitation (`lib/security/testimonialInvite.ts`) |
 | `POST /api/errors` | Public (client reports) — rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
+| `GET /api/palette-index/[locale]` | Public, static JSON generated at build time from public content only (titles, links, tags); unknown locales return 404 |
 | `GET /api/health` | Public — CORS restricted to `NEXT_PUBLIC_SITE_URL` (no wildcard `*`) |
 
 ---
@@ -177,13 +179,14 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 
 ### CI / CD
 
-- GitHub Actions: `npm ci` (lockfile-enforced installs), lint → typecheck → test → build
-- `npm audit --audit-level=high --production` runs on every CI build — fails on HIGH/CRITICAL CVEs in production dependencies
+- GitHub Actions (`ci.yml`): gitleaks secret scan, then `npm ci` (lockfile-enforced installs) → depcheck → `npm audit` → lint → typecheck → test → build; Playwright E2E (with axe accessibility checks) and Lighthouse CI run after the build
+- `npm audit --audit-level=high --omit=dev --omit=optional` runs on every CI build — fails on HIGH/CRITICAL CVEs in production dependencies
 - All third-party GitHub Actions pinned to **immutable commit SHAs** (not mutable tags) — supply chain attack mitigation
 - CI jobs run with `permissions: contents: read` (principle of least privilege — default GITHUB_TOKEN write access revoked)
 - Secrets injected via GitHub Secrets — never hardcoded in workflow files
 - Dependabot enabled for npm and GitHub Actions dependency updates (security updates + alerts)
-- CodeQL code scanning enabled — runs on every push/PR and weekly
+- CodeQL code scanning enabled — runs on every push and PR to `main` and weekly (Mondays 04:30 UTC)
+- OpenSSF Scorecard and a daily drift check (production runs the `main` HEAD, monitoring data under 48 h old)
 - Secret scanning enabled — GitHub alerts on any accidentally committed credentials
 
 ---

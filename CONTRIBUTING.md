@@ -41,7 +41,7 @@ npm run dev
 Open [http://localhost:3000/en](http://localhost:3000/en).
 
 > **Note:** The site uses Next.js App Router with next-intl.
-> The default locale is `en`. `/fr` is the secondary locale.
+> The default locale is `en`; `/fr` and `/es` are fully translated (same keys in the three message files).
 
 ---
 
@@ -69,8 +69,11 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 | `TESTIMONIAL_SUBMIT_TOKEN` | No | Token for the testimonial submission form |
 | `TESTIMONIAL_INVITE_ADMIN_TOKEN` | No | Bearer token for `POST /api/admin/testimonial-invite` (32+ chars) — server-only |
 | `CACHE_INVALIDATE_SECRET` | No | Secret header for `/api/cache/invalidate` |
+| `IP_HASH_SALT` | No | HMAC key that pseudonymises rate-limit identifiers (required in production) |
 
-The site works without Supabase in dev mode — most pages fall back gracefully.
+The full list, with production requirements, is in the [README](README.md#environment-variables) and `.env.example`.
+
+Public pages do not need Supabase: projects, blog, about and certifications are read from `content/`. Supabase is only used by `/admin`, the incident dashboard, `/status` and `/api/health`, which degrade gracefully without it.
 Rate-limiting is disabled if Upstash is not configured (all limiters degrade to a no-op).
 
 > **Security:** Never commit `.env.local` to version control. It is excluded by `.gitignore` (pattern `.env*`).
@@ -111,7 +114,7 @@ All commands run from the repository root.
 | `npm run test:ci` | Tests in CI mode (no interactive output) |
 | `npm run test:e2e` | Playwright end-to-end tests |
 
-Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). Supabase migrations are applied with the Supabase CLI (`supabase db push`), never with an archived script.
+Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). New Supabase migrations are applied with the Supabase CLI (`supabase db push`), never with an archived script. The migration folder does not rebuild a blank database on its own: to create a new Supabase project (a preview database, for instance), copy the production schema with `supabase db dump --schema-only`.
 
 **Before opening a PR, always run:**
 
@@ -119,7 +122,7 @@ Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are desc
 npm run typecheck && npm run lint && npm test && npm run build
 ```
 
-The CI pipeline runs exactly these four checks in order.
+The CI pipeline runs these four checks in this order (after a gitleaks scan, depcheck and `npm audit`), then Playwright E2E (`npm run test:e2e`, with axe accessibility checks) and Lighthouse CI on the built site. CodeQL runs on every PR to `main`.
 
 ---
 
@@ -149,13 +152,14 @@ The CI pipeline runs exactly these four checks in order.
 ### Accessibility
 - Every interactive element must be keyboard-navigable
 - Use `aria-label` on icon buttons, `aria-live` on dynamic content
-- Respect `prefers-reduced-motion` for all animations (Framer Motion's `useReducedMotion()` is already wired)
+- Respect `prefers-reduced-motion` for all animations: `useReducedMotion()` or `<MotionConfig reducedMotion="user">` for Framer Motion, `motion-reduce:` variants for CSS. Keep the rendered markup identical on server and client (hide with classes rather than conditional elements) to avoid hydration mismatches
 - Minimum contrast ratio: 4.5:1 (WCAG AA)
 
 ### Testing
 - New components should have a corresponding test in `__tests__/`
 - Mock `next-intl` and `@/app/[locale]/providers` in component tests (see existing tests for pattern)
 - Pure functions (no React): test directly without mocks
+- User journeys (navigation, palette, forms, keyboard access) belong in `e2e/` (Playwright)
 - Aim to test behavior, not implementation details
 
 ---
