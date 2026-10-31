@@ -51,11 +51,8 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key (public) |
 | `NEXT_PUBLIC_SITE_URL` | Yes | Production URL (no trailing slash) |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Yes | Contact email displayed on site |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key — **server-only, never expose** |
 | `UPSTASH_REDIS_REST_URL` | Recommended | Upstash Redis URL (rate-limiting) |
 | `UPSTASH_REDIS_REST_TOKEN` | Recommended | Upstash Redis token — server-only |
 | `NEXT_PUBLIC_LINKEDIN_URL` | No | LinkedIn profile URL |
@@ -73,7 +70,7 @@ Copy `.env.example` to `.env.local` and fill in the required values.
 
 The full list, with production requirements, is in the [README](README.md#environment-variables) and `.env.example`.
 
-Public pages do not need Supabase: projects, blog, about and certifications are read from `content/`. Supabase, being retired, is only pinged by `/api/health` and receives a best-effort copy of the uptime history; nothing depends on it. The uptime history and the incident dashboard live in Upstash Redis.
+The site needs no database: projects, blog, about and certifications are read from `content/`; the uptime history and the incident dashboard live in Upstash Redis (without Redis in development they are simply empty).
 Rate-limiting is disabled if Upstash is not configured (all limiters degrade to a no-op).
 
 > **Security:** Never commit `.env.local` to version control. It is excluded by `.gitignore` (pattern `.env*`).
@@ -114,7 +111,7 @@ All commands run from the repository root.
 | `npm run test:ci` | Tests in CI mode (no interactive output) |
 | `npm run test:e2e` | Playwright end-to-end tests |
 
-Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). New Supabase migrations are applied with the Supabase CLI (`supabase db push`), never with an archived script. The migration folder does not rebuild a blank database on its own: to create a new Supabase project (a preview database, for instance), copy the production schema with `supabase db dump --schema-only`.
+Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). The site no longer uses Supabase; `supabase/` and `scripts/db/` are kept only in case the content moves back to a SQL database.
 
 **Before opening a PR, always run:**
 
