@@ -430,7 +430,8 @@ export default async function CertificationsPage({ params }: PageProps) {
           {completedCerts.map((cert) => (
             <article
               key={cert.id}
-              className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+              id={cert.id}
+              className="scroll-mt-24 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
             >
               {/* Card header */}
               <div className="flex items-start gap-4">
@@ -616,7 +617,8 @@ export default async function CertificationsPage({ params }: PageProps) {
             {certs2026.map((cert) => (
               <article
                 key={cert.id}
-                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
+                id={cert.id}
+                className="scroll-mt-24 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/3 p-5 transition-shadow hover:shadow-md dark:hover:shadow-none"
               >
                 <div className="flex items-start gap-3">
                   <CertIcon initials={cert.initials} color={cert.color} logoUrl={cert.logoUrl} />

@@ -597,7 +597,7 @@
   "commandPalette": {
     "title": "Paleta de comandos",
     "open": "Abrir la paleta de comandos ({shortcut})",
-    "placeholder": "Buscar una acción…",
+    "placeholder": "Buscar páginas, proyectos, artículos…",
     "sections": "Secciones",
     "pages": "Páginas",
     "actions": "Acciones",
@@ -624,6 +624,9 @@
     "close": "Cerrar",
     "navigate": "navegar",
     "select": "seleccionar",
-    "alsoShortcut": "También {shortcut}"
+    "alsoShortcut": "También {shortcut}",
+    "groupProjects": "Proyectos",
+    "groupPosts": "Artículos",
+    "groupCerts": "Certificaciones"
   }
 }
