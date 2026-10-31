@@ -23,7 +23,6 @@ const ROUTES = [
   "/certifications",
   "/hybride",
   "/work-with-me",
-  "/resources",
   "/uses",
   "/colophon",
   "/status",
