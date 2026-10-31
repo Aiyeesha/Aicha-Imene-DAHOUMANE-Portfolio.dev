@@ -142,8 +142,8 @@ Row Level Security (RLS) is **enabled on all tables**. Content pages do not quer
 | `projects` | `anon` SELECT where `status = 'published'` | Copy of `content/`, used by `/admin`, the health checks and `content:safety` |
 | `project_assets` | `anon` SELECT only if the parent project is `published` | Assets of unpublished projects are protected |
 | `uptime_pings` | Explicit deny (`false`) for `anon` and `authenticated` | Best-effort copy written by `/api/cron/ping` until Supabase is retired; `/status` now reads the Redis history |
-| `incidents` | Explicit deny for `anon` and `authenticated` | Incident dashboard `/admin/incidents` (service_role) |
-| `incident_checklist_items` | Explicit deny for `anon` and `authenticated` | Same |
+| `incidents` | Explicit deny for `anon` and `authenticated` | No longer used: the incident dashboard is stored in Redis (`lib/incidents.ts`) |
+| `incident_checklist_items` | Explicit deny for `anon` and `authenticated` | No longer used (see above) |
 | `admins` | SELECT of one's own row (`auth.uid() = user_id`) | Legacy, used by `is_admin()`; no Supabase Auth login on the site |
 | `testimonial_submissions` | `anon` INSERT denied, no other policy | **No longer written** — testimonials are e-mailed through Formhook; the table is empty and kept pending removal |
 

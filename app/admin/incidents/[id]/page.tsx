@@ -8,7 +8,7 @@ import {
   getIncidentWithChecklist,
   computeChecklistProgress,
   groupChecklistByPhase,
-} from "@/lib/supabase/incidents";
+} from "@/lib/incidents";
 import { INCIDENT_TYPE_LABELS, CHECKLIST_PHASE_LABELS, type ChecklistPhase } from "@/lib/incidentPlaybooks";
 import ChecklistItem from "../ChecklistItem";
 import StatusSelect from "../StatusSelect";
