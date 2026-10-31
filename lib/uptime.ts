@@ -1,201 +1,185 @@
 // lib/uptime.ts
 // -------------
-// 30-day uptime % per service and 7-day hourly latency history (sparklines),
-// from the `uptime_pings` table (Supabase, public read), cached 5 minutes in
-// Redis.
-// Uptime is Record<serviceName, number | null>: a % (e.g. 99.7), or null with
-// fewer than 3 pings. Plain objects, as a Map is not JSON-serialisable.
+// Uptime history for /status and /api/health, stored in Upstash Redis.
+//
+// Each run of the daily cron (app/api/cron/ping) records one "batch": the
+// timestamp of the run and the status and latency of every service. Batches
+// live in a sorted set scored by timestamp and are trimmed to 30 days, so the
+// set never holds more than ~30 entries (a few kilobytes).
+//
+// From these batches /status shows:
+//   - the latest report (no live outgoing call at render time);
+//   - the 30-day uptime % per service (null with fewer than 3 pings);
+//   - the 7-day latency history per service (sparklines), one point per hour.
+//
+// The computations are pure functions (exported for the tests); reading goes
+// through a 5-minute Redis cache like the rest of the site. Without Redis
+// (local development, CI) the page simply shows no history.
 
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { cacheGetOrSet }              from "@/lib/cache";
-import { redis }                      from "@/lib/redis";
+import { cacheGetOrSet } from "@/lib/cache";
+import { redis }         from "@/lib/redis";
 import type { ServiceStatus, HealthReport } from "@/lib/health";
 
-// Minimum pings before showing a %, to avoid "100%" right after the first deployment
+// ── Storage format ──────────────────────────────────────────────────────────
+
+/** One cron run: shared timestamp, then one entry per service. */
+export type PingBatch = {
+  checkedAt: string; // ISO 8601
+  services: { name: string; status: ServiceStatus; latencyMs: number | null }[];
+};
+
+export const UPTIME_HISTORY_KEY = "portfolio:uptime:history";
+const DAY_MS        = 24 * 60 * 60 * 1000;
+const RETENTION_MS  = 30 * DAY_MS;
+// Safety net: the whole set expires if the cron stops writing for 35 days.
+const KEY_TTL_S     = 35 * 24 * 60 * 60;
+
+// Minimum pings before showing a %, to avoid "100%" right after the first run
 const MIN_PINGS = 3;
 
-// ── Latest status report (from uptime_pings) ──────────────────────────────────
-// Rebuilds a HealthReport from the latest ping stored by the cron, so /status
-// makes no live outgoing calls.
-
-export async function getLatestPingReport(): Promise<HealthReport | null> {
-  if (!redis) {
-    return fetchLatestPingsFromSupabase();
-  }
-
+/**
+ * Records one cron run and drops batches older than 30 days.
+ * Returns false when Redis is not configured or the write fails.
+ */
+export async function recordPingBatch(batch: PingBatch, nowMs = Date.now()): Promise<boolean> {
+  if (!redis) return false;
+  const score = Date.parse(batch.checkedAt);
+  if (Number.isNaN(score)) return false;
   try {
-    const cached = await redis.get<HealthReport | null>("portfolio:uptime:latest");
-    if (cached && cached.checkedAt) {
-      // Guard: if cached data is older than 10 min the key is stale (e.g. set
-      // manually without TTL). Delete it and fall through to a fresh fetch.
-      const ageMs = Date.now() - new Date(cached.checkedAt).getTime();
-      if (ageMs < 10 * 60 * 1000) return cached;
-      await redis.del("portfolio:uptime:latest").catch(() => {});
-    }
-  } catch {}
-
-  const fresh = await fetchLatestPingsFromSupabase();
-  if (fresh) {
-    await redis.set("portfolio:uptime:latest", fresh, { ex: 60 }).catch(() => {});
+    // Stored as a JSON string: the member is the whole batch, unique by its
+    // timestamp, and parsed back by parseBatch().
+    await redis.zadd(UPTIME_HISTORY_KEY, { score, member: JSON.stringify(batch) });
+    await redis.zremrangebyscore(UPTIME_HISTORY_KEY, 0, nowMs - RETENTION_MS);
+    await redis.expire(UPTIME_HISTORY_KEY, KEY_TTL_S);
+    // The cached views are now outdated.
+    await redis.del(
+      "portfolio:uptime:latest",
+      "portfolio:uptime:stats:30d",
+      "portfolio:uptime:latency:7d",
+    );
+    return true;
+  } catch (e) {
+    console.error("[uptime] could not record ping batch:", String(e));
+    return false;
   }
-  return fresh;
 }
 
-async function fetchLatestPingsFromSupabase(): Promise<HealthReport | null> {
+/** Accepts a member as stored (JSON string) or already parsed by the client. */
+export function parseBatch(member: unknown): PingBatch | null {
   try {
-    const supabase = createAdminSupabaseClient();
-
-    // Latest ping of each service (one query)
-    const { data, error } = await supabase
-      .from("uptime_pings")
-      .select("service, status, latency_ms, checked_at")
-      .order("checked_at", { ascending: false })
-      .limit(50); // enough to cover every service of the latest batch
-
-    if (error || !data || data.length === 0) {
-      console.error("[uptime] latest pings fetch error:", error?.message);
-      return null;
-    }
-
-    // Keep only the most recent ping per service
-    const seen = new Set<string>();
-    const latest: typeof data = [];
-    for (const row of data) {
-      if (!seen.has(row.service)) {
-        seen.add(row.service);
-        latest.push(row);
-      }
-    }
-
-    // Report timestamp = the most recent across services
-    const checkedAt = latest[0].checked_at as string;
-
-    const services = latest.map((row) => ({
-      name:      row.service as string,
-      status:    row.status  as ServiceStatus,
-      latencyMs: row.latency_ms as number | null,
-    }));
-
-    // Global status: outage if any service is down, degraded if any is degraded
-    const overall: ServiceStatus =
-      services.some((s) => s.status === "outage")    ? "outage"      :
-      services.some((s) => s.status === "degraded")  ? "degraded"    :
-                                                       "operational";
-
-    return { checkedAt, overall, services };
-  } catch (e) {
-    console.error("[uptime] latest pings unexpected error:", e);
+    const value = typeof member === "string" ? JSON.parse(member) : member;
+    if (!value || typeof value !== "object") return null;
+    const b = value as PingBatch;
+    if (typeof b.checkedAt !== "string" || !Array.isArray(b.services)) return null;
+    return b;
+  } catch {
     return null;
   }
 }
 
+/** Batches since `sinceMs`, oldest first. Empty without Redis or on error. */
+async function readBatches(sinceMs: number): Promise<PingBatch[]> {
+  if (!redis) return [];
+  try {
+    const members = await redis.zrange<unknown[]>(UPTIME_HISTORY_KEY, sinceMs, "+inf", { byScore: true });
+    return members
+      .map(parseBatch)
+      .filter((b): b is PingBatch => b !== null)
+      .sort((a, b) => a.checkedAt.localeCompare(b.checkedAt));
+  } catch (e) {
+    console.error("[uptime] could not read history:", String(e));
+    return [];
+  }
+}
+
+// ── Pure computations ───────────────────────────────────────────────────────
+
+/** Report rebuilt from the most recent batch, or null when there is none. */
+export function latestReport(batches: PingBatch[]): HealthReport | null {
+  const last = batches.at(-1);
+  if (!last || last.services.length === 0) return null;
+
+  const services = last.services.map((s) => ({
+    name: s.name,
+    status: s.status,
+    latencyMs: s.latencyMs,
+  }));
+  // Global status: outage if any service is down, degraded if any is degraded
+  const overall: ServiceStatus =
+    services.some((s) => s.status === "outage")   ? "outage"   :
+    services.some((s) => s.status === "degraded") ? "degraded" :
+                                                    "operational";
+  return { checkedAt: last.checkedAt, overall, services };
+}
+
 export type UptimeStats = Record<string, number | null>;
+
+/** % of "operational" pings per service, one decimal; null under MIN_PINGS. */
+export function computeUptimeStats(batches: PingBatch[]): UptimeStats {
+  const grouped: Record<string, { total: number; operational: number }> = {};
+  for (const batch of batches) {
+    for (const s of batch.services) {
+      grouped[s.name] ??= { total: 0, operational: 0 };
+      grouped[s.name].total++;
+      if (s.status === "operational") grouped[s.name].operational++;
+    }
+  }
+  const stats: UptimeStats = {};
+  for (const [service, counts] of Object.entries(grouped)) {
+    stats[service] = counts.total < MIN_PINGS
+      ? null
+      : Math.round((counts.operational / counts.total) * 1000) / 10;
+  }
+  return stats;
+}
+
+export type LatencyHistory = Record<string, number[]>;
+
+/** Average latency per service and per hour, in chronological order. */
+export function computeLatencyHistory(batches: PingBatch[]): LatencyHistory {
+  type Bucket = { sum: number; count: number };
+  const buckets: Record<string, Map<string, Bucket>> = {};
+  const ordered = [...batches].sort((a, b) => a.checkedAt.localeCompare(b.checkedAt));
+  for (const batch of ordered) {
+    const hour = batch.checkedAt.slice(0, 13); // "2026-03-15T14"
+    for (const s of batch.services) {
+      if (s.latencyMs == null) continue;
+      buckets[s.name] ??= new Map();
+      const bucket = buckets[s.name].get(hour) ?? { sum: 0, count: 0 };
+      bucket.sum += s.latencyMs;
+      bucket.count += 1;
+      buckets[s.name].set(hour, bucket);
+    }
+  }
+  const history: LatencyHistory = {};
+  for (const [service, hours] of Object.entries(buckets)) {
+    history[service] = [...hours.values()].map((b) => Math.round(b.sum / b.count));
+  }
+  return history;
+}
+
+// ── Cached readers used by /status and /api/health ──────────────────────────
+
+export async function getLatestPingReport(): Promise<HealthReport | null> {
+  return cacheGetOrSet<HealthReport | null>(
+    "portfolio:uptime:latest",
+    60,
+    async () => latestReport(await readBatches(Date.now() - RETENTION_MS)),
+  );
+}
 
 export async function getUptimeStats(): Promise<UptimeStats> {
   return cacheGetOrSet<UptimeStats>(
     "portfolio:uptime:stats:30d",
-    300, // 5 minutes
-    fetchFromSupabase
+    300,
+    async () => computeUptimeStats(await readBatches(Date.now() - RETENTION_MS)),
   );
 }
-
-// ── Latency history ───────────────────────────────────────────────────────────
-// Average latency (ms) per hour over the last 7 days, for the /status
-// sparklines.
-
-export type LatencyHistory = Record<string, number[]>;
 
 export async function getLatencyHistory(): Promise<LatencyHistory> {
   return cacheGetOrSet<LatencyHistory>(
     "portfolio:uptime:latency:7d",
-    300, // 5 min, the cron interval
-    fetchLatencyFromSupabase
+    300,
+    async () => computeLatencyHistory(await readBatches(Date.now() - 7 * DAY_MS)),
   );
-}
-
-async function fetchLatencyFromSupabase(): Promise<LatencyHistory> {
-  const history: LatencyHistory = {};
-
-  try {
-    const supabase = createAdminSupabaseClient();
-    const since    = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-    const { data, error } = await supabase
-      .from("uptime_pings")
-      .select("service, latency_ms, checked_at")
-      .gte("checked_at", since)
-      .not("latency_ms", "is", null)
-      .order("checked_at", { ascending: true });
-
-    if (error || !data) {
-      console.error("[uptime] latency fetch error:", error?.message);
-      return history;
-    }
-
-    // Group by service, then by hour (e.g. "2026-03-15T14")
-    type Bucket = { sum: number; count: number };
-    const buckets: Record<string, Record<string, Bucket>> = {};
-
-    for (const row of data) {
-      if (row.latency_ms == null) continue;
-      // Truncate to the hour (first 13 characters of the ISO string)
-      const hour = (row.checked_at as string).slice(0, 13);
-      if (!buckets[row.service]) buckets[row.service] = {};
-      if (!buckets[row.service][hour]) buckets[row.service][hour] = { sum: 0, count: 0 };
-      buckets[row.service][hour].sum   += row.latency_ms as number;
-      buckets[row.service][hour].count += 1;
-    }
-
-    // Averages in chronological order (guaranteed by the query)
-    for (const [service, hours] of Object.entries(buckets)) {
-      history[service] = Object.values(hours).map(b => Math.round(b.sum / b.count));
-    }
-  } catch (e) {
-    console.error("[uptime] latency unexpected error:", e);
-  }
-
-  return history;
-}
-
-// ── Uptime stats ──────────────────────────────────────────────────────────────
-
-async function fetchFromSupabase(): Promise<UptimeStats> {
-  const stats: UptimeStats = {};
-
-  try {
-    const supabase = createAdminSupabaseClient();
-    const since    = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-
-    const { data, error } = await supabase
-      .from("uptime_pings")
-      .select("service, status")
-      .gte("checked_at", since);
-
-    if (error || !data) {
-      console.error("[uptime] Supabase error:", error?.message);
-      return stats; // empty object: degrade gracefully
-    }
-
-    // Group by service
-    const grouped: Record<string, { total: number; operational: number }> = {};
-    for (const row of data) {
-      if (!grouped[row.service]) grouped[row.service] = { total: 0, operational: 0 };
-      grouped[row.service].total++;
-      if (row.status === "operational") grouped[row.service].operational++;
-    }
-
-    // Percentage, one decimal
-    for (const [service, counts] of Object.entries(grouped)) {
-      if (counts.total < MIN_PINGS) {
-        stats[service] = null; // not enough data
-      } else {
-        const pct = (counts.operational / counts.total) * 100;
-        stats[service] = Math.round(pct * 10) / 10;
-      }
-    }
-  } catch (e) {
-    console.error("[uptime] Unexpected error:", e);
-  }
-
-  return stats;
 }

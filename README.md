@@ -45,14 +45,14 @@ Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR / ES) |
 | Content | Files in the repository (`content/`, MDX) — projects, blog, about, certifications; among public pages only `/status` reads the database (server-side) |
-| Backend | Supabase (PostgreSQL + RLS) — uptime history, incident dashboard, and a copy of the projects used by `/admin` and the health checks |
+| Backend | Supabase (PostgreSQL + RLS) — incident dashboard and a copy of the projects used by `/admin` and the health checks; **being retired** in favour of Redis |
 | Search | Command palette (cmdk) over a static per-locale index; blog full-text search (MiniSearch) |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
 | Forms | API Routes → Formhook (e-mail delivery, no storage at rest) for contact and testimonials + honeypot + rate-limit |
 | Booking | Plain link to a Proton Calendar booking page (no third-party script) |
 | Analytics | None — no audience measurement or visitor tracking; performance is checked in CI with Lighthouse CI |
-| Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → Supabase `uptime_pings` |
+| Monitoring | Vercel Cron (daily at 08:00 UTC) → `/api/cron/ping` → 30-day uptime history in Upstash Redis (`lib/uptime.ts`) |
 | Deployment | Vercel (Hobby) |
 
 ---
@@ -72,11 +72,11 @@ Browser
   │           ├─ /api/palette-index/[locale] → static JSON index (built at build time)
   │           ├─ /api/search                → blog full-text search (MiniSearch)
   │           ├─ /api/health                → ping Supabase + Redis + Formhook
-  │           ├─ /api/cron/ping             → Vercel Cron (daily 08:00 UTC) → uptime_pings
+  │           ├─ /api/cron/ping             → Vercel Cron (daily 08:00 UTC) → Redis uptime history
   │           └─ /api/errors                → client JS error reports (GlobalErrorHandler)
   │
   ├─ Supabase (PostgreSQL + RLS) — server-side only (service_role)
-  │     Tables: uptime_pings · incidents · incident_checklist_items
+  │     Tables: incidents · incident_checklist_items · uptime_pings (copy, until retirement)
   │             projects · project_assets (copy of content/, for /admin and health checks)
   │             admins · testimonial_submissions (empty, no longer written)
   │
@@ -85,6 +85,7 @@ Browser
   │                 revalidate,cache-invalidate,csp-report,csp-alert}
   │                 (identifiers HMAC-pseudonymised with IP_HASH_SALT)
   │     Cache:      portfolio:uptime:* · project:* · projects_with_assets:*
+  │     Uptime:     portfolio:uptime:history (sorted set, one batch per day, 30 days)
   │     Invites:    single-use testimonial invitations (SET NX)
   │
   └─ Vercel
@@ -223,7 +224,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   ├── api/                    # API routes
 │   │   ├── contact/            # Contact form → Formhook (nothing stored)
 │   │   ├── cache/invalidate/   # Manual Redis cache invalidation
-│   │   ├── cron/ping/          # Vercel Cron (daily 08:00 UTC) → uptime_pings
+│   │   ├── cron/ping/          # Vercel Cron (daily 08:00 UTC) → Redis uptime history
 │   │   ├── errors/             # Client JS error reports (GlobalErrorHandler → sendBeacon)
 │   │   ├── health/             # Ping Supabase + Redis + Formhook
 │   │   ├── csp-report/         # CSP violation reports (query strings stripped before logging)

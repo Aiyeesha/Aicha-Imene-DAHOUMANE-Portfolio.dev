@@ -26,6 +26,7 @@
     "db:seed:about": "tsx scripts/db/seed-about.ts",
     "db:seed:es": "tsx scripts/db/seed-es-projects.ts",
     "db:repos": "tsx scripts/db/update-github-repos.ts",
+    "db:uptime:copy": "tsx scripts/db/copy-uptime-to-redis.ts",
     "postinstall": "node scripts/tooling/fix-nested-sharp.mjs",
     "prepare": "husky"
   },
