@@ -362,7 +362,7 @@
     "title": "Des systèmes & réseaux au développement Salesforce",
     "p1": "Développeuse Salesforce avec 3 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
     "p2": "J'ai commencé ma carrière côté infrastructure — deux stages d'un mois chez MIDRANGE GROUP (entre février et mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 264 postes Dell (dont 200 via Windows Autopilot), administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
-    "p3": "D'oct. 2023 à oct. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction d'environ 30 % de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
+    "p3": "D'oct. 2023 à sept. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction d'environ 30 % de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
@@ -385,7 +385,7 @@
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
     "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
     "p4_salesforce": "En CDI chez LD Digitales depuis octobre 2025, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les examens Salesforce Platform Foundations et Platform Administrator sont planifiés les 3 et 17 décembre 2026, suivis de Platform App Builder et Platform Developer en 2027.",
-    "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE GROUP (entre février et mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (Windows Autopilot, image Sysprep, effacement certifié NIST 800-88).",
+    "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE GROUP (entre février et mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, traité 316 tickets de support et déployé 264 postes Dell (64 réimagés depuis une image Sysprep après effacement certifié NIST 800-88, 200 via Windows Autopilot).",
     "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
     "p3_itops": "Je garde une attention particulière à la continuité de service : 85 alertes de sauvegarde Acronis triées pendant les stages.",
     "p4_itops": "En CDI Salesforce chez LD Digitales — les compétences IT Ops & DevOps, acquises en stages chez MIDRANGE GROUP puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
@@ -478,10 +478,11 @@
     "commitmentTitle": "Engagement d'accessibilité",
     "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
     "limitsTitle": "Limites connues",
-    "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours sont les bienvenus.",
+    "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours me sont précieux.",
     "helpTitle": "Un problème d'accessibilité ?",
-    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de nous le signaler en précisant l'URL de la page concernée et la nature du problème. Contact : via le formulaire de contact ou par email.",
-    "lastAudit": "Dernière vérification : 28 juin 2026 — Outils : axe-core (CI automatisé), vérification manuelle Navigation clavier."
+    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de me le signaler en précisant l'URL de la page concernée et la nature du problème, via le <form>formulaire de contact</form>.",
+    "helpEmail": "Vous pouvez aussi m'écrire à <mail>{email}</mail>.",
+    "lastAudit": "Dernière vérification : 31 octobre 2026 — Outils : axe-core (CI automatisé et palette de commandes), vérification manuelle de la navigation au clavier."
   },
   "availModal": {
     "badge": "Entretiens dès maintenant — Disponible à partir de décembre 2026",
@@ -620,7 +621,6 @@
     "downloadCv": "Télécharger le CV",
     "linkedin": "LinkedIn",
     "noResults": "Aucun résultat.",
-    "switchLang": "Switch to English",
     "close": "Fermer",
     "navigate": "naviguer",
     "select": "sélectionner",

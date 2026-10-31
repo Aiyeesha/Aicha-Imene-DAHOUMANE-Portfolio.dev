@@ -17,10 +17,20 @@ import { hasProjectLogo } from "@/lib/data/projectAssets";
 const STORAGE_CDN = "/projects";
 
 // "md": project page, next to the H1, above the fold → eager loading.
-// "sm": cards (/projects grid, featured projects), many per page → lazy.
+// "tile": cards (/projects grid, featured projects), many per page → lazy.
+//   Overlaid on the bottom-left corner of the cover (the parent must be
+//   positioned) in a white tile: the logos are opaque, often near-square
+//   images, which at the former 20px height (≈ 23×20px) were unreadable and
+//   looked like broken images. 32px inside a padded tile, without adding
+//   height to the card.
 const SIZES = {
-  md: { boxClass: "h-8 max-w-[140px]", imgClass: "h-8 w-auto", width: 140, height: 32 },
-  sm: { boxClass: "h-5 max-w-[90px]", imgClass: "h-5 w-auto", width: 90, height: 20 },
+  md: { boxClass: "relative h-8 max-w-[140px]", imgClass: "h-8 w-auto", width: 140, height: 32 },
+  tile: {
+    boxClass: "absolute bottom-2 left-2 z-10 h-10 max-w-[140px] rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/10",
+    imgClass: "h-8 w-auto",
+    width: 140,
+    height: 32,
+  },
 } as const;
 
 type Props = {
@@ -39,10 +49,13 @@ export default function ProjectClientLogo({ slug, alt, size = "md", loading = "e
   const { boxClass, imgClass, width, height } = SIZES[size];
 
   return (
-    <div className={`relative w-auto shrink-0 ${boxClass}`}>
+    <div className={`w-auto shrink-0 ${boxClass}`}>
       <Image
         src={`${STORAGE_CDN}/${slug}/logo.webp`}
         alt={alt}
+        // Decorative logo (alt="", the card title follows): hidden from
+        // assistive technologies, as e2e/accessibility.spec.ts requires.
+        aria-hidden={alt === "" ? true : undefined}
         width={width}
         height={height}
         className={`object-contain object-left ${imgClass}`}
