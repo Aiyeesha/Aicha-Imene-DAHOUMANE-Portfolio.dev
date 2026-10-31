@@ -1,6 +1,9 @@
 // app/api/testimonial-submit/route.ts
 // ------------------------------------
-// POST: stores a testimonial in Supabase for moderation.
+// POST: emails a testimonial to the site owner through Formhook, like the
+// contact form (app/api/contact/route.ts). Nothing is stored server side:
+// moderation happens when reading the email, and a published testimonial is
+// added to content/testimonials.ts by hand.
 //
 //   1. Signed invitation, not expired, not used, with a session key bound to
 //      it (lib/security/testimonialInvite.ts)
@@ -9,14 +12,14 @@
 //   4. Required fields (full_name, role, relation_type, message, locale) and
 //      maximum lengths
 //   5. Atomic single-use claim of the invitation (Redis SET NX)
-//   6. Insert with the service_role client, approved = false
+//   6. Delivery to Formhook (same endpoint and token as the contact form);
+//      on failure the invitation is released so the author can retry
 //
-// Uses TESTIMONIAL_SUBMIT_TOKEN, IP_HASH_SALT and the Supabase service_role
-// key (server-only, never NEXT_PUBLIC_).
+// Uses TESTIMONIAL_SUBMIT_TOKEN, FORMHOOK_ENDPOINT and FORMHOOK_AUTH_TOKEN
+// (server-only, never NEXT_PUBLIC_).
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHash } from "crypto";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { log } from "@/lib/logger";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
 import {
@@ -26,6 +29,10 @@ import {
   isSessionKeyValid,
   releaseInvite,
 } from "@/lib/security/testimonialInvite";
+
+// Formhook call timeout, so a slow upstream cannot keep the function open
+// until the platform timeout (same value as the contact form).
+const FORMHOOK_TIMEOUT_MS = 5000;
 
 // ── Allowed relation_type values ──────────────────────────────────────────────
 const VALID_RELATIONS = new Set([
@@ -122,15 +129,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── 6. IP pseudonymisation (GDPR) ───────────────────────────────────────────
-  // The IP is personal data: it is hashed with a secret salt (IP_HASH_SALT)
-  // before storage, which still allows abuse detection.
-  const ipHashSalt = process.env.IP_HASH_SALT ?? "";
-  const ipHash = createHash("sha256")
-    .update(ip + ipHashSalt)
-    .digest("hex");
-
-  // ── 7. Single use: atomic claim before the insert ───────────────────────────
+  // ── 6. Single use: atomic claim before delivery ──────────────────────────────
   // The isInviteUsed() check above only gives an early, friendly answer; two
   // concurrent requests can both pass it. SET NX lets exactly one through.
   if (!(await claimInvite(invite, expUnix))) {
@@ -140,29 +139,60 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // ── 8. Insert (service_role bypasses RLS) ───────────────────────────────────
-  const supabase = createAdminSupabaseClient();
-  const { error } = await supabase.from("testimonial_submissions").insert({
-    full_name,
-    role,
-    company:               company || null,
-    relation_type,
-    collaboration_context,
-    message,
-    photo_url,
-    locale,
-    approved:              false,    // always false: manual moderation
-    submitted_ip:          ipHash,   // salted SHA-256 hash, never the raw IP
-  });
+  // ── 7. Delivery by email (Formhook) ─────────────────────────────────────────
+  // Read at request time so tests and redeploys pick up the current values.
+  const endpoint = process.env.FORMHOOK_ENDPOINT || "";
+  const authToken = process.env.FORMHOOK_AUTH_TOKEN || "";
 
-  if (error) {
-    console.error("[testimonial-submit] Supabase error:", error.message);
-    // Nothing was stored: give the link back so the author can retry.
+  // Gives the link back so the author can retry, then answers with `status`.
+  const fail = async (status: number, error: string) => {
     await releaseInvite(invite).catch((e) =>
-      console.error("[testimonial-submit] could not release invite:", String(e)),
+      log.error("testimonial/release-failed", { error: String(e) }),
     );
-    return NextResponse.json({ error: "Database error. Please try again." }, { status: 500 });
+    return NextResponse.json({ error }, { status });
+  };
+
+  if (!endpoint) {
+    // Never accept a testimonial that would go nowhere.
+    log.error("testimonial/formhook-not-configured", {});
+    return fail(503, "Testimonial delivery is not configured.");
   }
 
+  let resp: Response;
+  try {
+    resp = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(authToken ? { "X-Auth-Token": authToken } : {}),
+      },
+      body: JSON.stringify({
+        name: full_name,
+        topic: "testimonial",
+        subject: `Nouveau témoignage — ${full_name}, ${role}`,
+        role,
+        company: company || "",
+        relation_type,
+        collaboration_context: collaboration_context || "",
+        message,
+        photo_url: photo_url || "",
+        locale,
+        source: "Aicha-Imene-DAHOUMANE-Portfolio.dev",
+      }),
+      signal: AbortSignal.timeout(FORMHOOK_TIMEOUT_MS),
+    });
+  } catch (err) {
+    log.error("testimonial/formhook-unreachable", { error: err instanceof Error ? err.name : "unknown" });
+    return fail(502, "Delivery failed. Please try again.");
+  }
+
+  if (!resp.ok) {
+    log.error("testimonial/formhook-failed", { status: resp.status });
+    return fail(502, "Delivery failed. Please try again.");
+  }
+
+  // No personal data in the log.
+  log.info("testimonial/sent-via-formhook", { relation_type, locale });
   return NextResponse.json({ ok: true }, { status: 201 });
 }
