@@ -46,14 +46,14 @@ function CommandPaletteTrigger() {
 
 const SECTION_IDS = ["skills","experience","services","testimonials","projects","blog","contact"] as const;
 // workWithMe (recruiter summary page) is listed in the mobile menu only.
-const PAGE_IDS = ["about","hybrid","certifications","resources","workWithMe"] as const;
+const PAGE_IDS = ["about","hybrid","certifications","uses","workWithMe"] as const;
 type NavId = (typeof SECTION_IDS)[number] | (typeof PAGE_IDS)[number];
 
 const MENU_ID = "mobile-menu";
 const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-// Items shown in the desktop nav. "hybrid" takes the slot of "resources":
-// showing both overflows the nav. /resources stays reachable from the mobile
+// Items shown in the desktop nav. "hybrid" takes the slot of "uses":
+// showing both overflows the nav. /uses stays reachable from the mobile
 // menu, the command palette and the footer.
 const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "certifications", "services", "testimonials", "projects", "blog", "contact"]);
 
@@ -101,8 +101,8 @@ export default function Navbar({
           ? "hybrid"
           : pathname.startsWith(`/${locale}/certifications`)
             ? "certifications"
-            : pathname.startsWith(`/${locale}/resources`)
-              ? "resources"
+            : pathname.startsWith(`/${locale}/uses`)
+              ? "uses"
               : pathname.startsWith(`/${locale}/work-with-me`)
                 ? "workWithMe"
                 : null;
@@ -386,7 +386,7 @@ export default function Navbar({
   }, [projectsDropdownOpen, projectsMenuPos]);
 
   // Entries that open a separate page (not a home anchor) get a ↗ badge.
-  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "resources", "workWithMe", "blog", "projects"]);
+  const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "uses", "workWithMe", "blog", "projects"]);
 
   // Compact padding and font size up to 1850px: French and Spanish labels are
   // longer and would overflow. 1850px is where everything fits once the
@@ -409,7 +409,7 @@ export default function Navbar({
     if (id === "about") return `/${locale}/about`;
     if (id === "hybrid") return `/${locale}/hybride`;
     if (id === "certifications") return `/${locale}/certifications`;
-    if (id === "resources") return `/${locale}/resources`;
+    if (id === "uses") return `/${locale}/uses`;
     if (id === "workWithMe") return `/${locale}/work-with-me`;
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
@@ -423,7 +423,7 @@ export default function Navbar({
     { id: "skills", label: t("nav.skills") },
     { id: "experience", label: t("nav.experience") },
     { id: "certifications", label: t("nav.certifications") },
-    { id: "resources", label: t("nav.resources") },
+    { id: "uses", label: t("footer.uses") },
     { id: "workWithMe", label: t("nav.workWithMe") },
     { id: "services", label: t("nav.services") },
     ...(showTestimonials ? [{ id: "testimonials" as NavId, label: t("nav.testimonials") }] : []),
