@@ -3,7 +3,8 @@
  */
 // __tests__/testimonial-invite.test.ts
 // Testimonial invitations: single use, session key bound to the invitation,
-// bounded fields, https-only photo.
+// bounded fields, https-only photo, delivery by email (Formhook) with the
+// invitation released when delivery fails.
 
 jest.mock("server-only", () => ({}), { virtual: true });
 
@@ -24,10 +25,7 @@ jest.mock("@/lib/ratelimit", () => ({
   safeLimit: async () => ({ success: true }),
 }));
 jest.mock("next/headers", () => ({ headers: async () => new Headers({ "x-real-ip": "1.2.3.4" }) }));
-const insert = jest.fn(async (): Promise<{ error: { message: string } | null }> => ({ error: null }));
-jest.mock("@/lib/supabase/admin", () => ({
-  createAdminSupabaseClient: () => ({ from: () => ({ insert }) }),
-}));
+jest.mock("@/lib/logger", () => ({ log: { info: jest.fn(), error: jest.fn() } }));
 
 import {
   isInviteValid,
@@ -39,6 +37,7 @@ import { POST } from "@/app/api/testimonial-submit/route";
 import { NextRequest } from "next/server";
 
 const SECRET = "s".repeat(40);
+const send = jest.spyOn(globalThis, "fetch");
 const exp = Math.floor(Date.now() / 1000) + 3600;
 
 describe("lib/security/testimonialInvite", () => {
@@ -59,9 +58,13 @@ describe("lib/security/testimonialInvite", () => {
 describe("POST /api/testimonial-submit", () => {
   beforeEach(() => {
     process.env.TESTIMONIAL_SUBMIT_TOKEN = SECRET;
+    process.env.FORMHOOK_ENDPOINT = "https://formhook.example/f/abc";
+    process.env.FORMHOOK_AUTH_TOKEN = "formhook-token";
     store.clear();
-    insert.mockClear();
+    send.mockReset().mockResolvedValue(new Response(null, { status: 200 }));
   });
+
+  afterAll(() => send.mockRestore());
 
   const invite = () => signInvite(SECRET, exp);
   const body = (over: Record<string, unknown> = {}) => ({
@@ -85,7 +88,33 @@ describe("POST /api/testimonial-submit", () => {
   it("accepte une première soumission puis refuse la réutilisation du lien (410)", async () => {
     expect((await post(body())).status).toBe(201);
     expect((await post(body())).status).toBe(410);
-    expect(insert).toHaveBeenCalledTimes(1);
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("envoie le témoignage par e-mail via Formhook, avec le jeton serveur", async () => {
+    expect((await post(body({ company: "Greta" }))).status).toBe(201);
+    const [url, init] = send.mock.calls[0] as [string, RequestInit];
+    expect(url).toBe("https://formhook.example/f/abc");
+    expect((init.headers as Record<string, string>)["X-Auth-Token"]).toBe("formhook-token");
+    const payload = JSON.parse(String(init.body));
+    expect(payload).toMatchObject({
+      name: "Ada Lovelace",
+      topic: "testimonial",
+      subject: "Nouveau témoignage — Ada Lovelace, Formatrice",
+      company: "Greta",
+      relation_type: "trainer",
+      locale: "fr",
+    });
+    // No invitation material or IP in the email.
+    expect(JSON.stringify(payload)).not.toMatch(/invite|sessionKey|1\.2\.3\.4/);
+  });
+
+  it("refuse (503) et rend le lien si Formhook n'est pas configuré", async () => {
+    delete process.env.FORMHOOK_ENDPOINT;
+    expect((await post(body())).status).toBe(503);
+    expect(send).not.toHaveBeenCalled();
+    process.env.FORMHOOK_ENDPOINT = "https://formhook.example/f/abc";
+    expect((await post(body())).status).toBe(201);
   });
 
   it("refuse une clé de session émise pour une autre invitation", async () => {
@@ -96,18 +125,20 @@ describe("POST /api/testimonial-submit", () => {
   it("refuse une photo en http: et les champs trop longs", async () => {
     expect((await post(body({ photo_url: "http://example.com/p.jpg" }))).status).toBe(400);
     expect((await post(body({ full_name: "x".repeat(101) }))).status).toBe(400);
-    expect(insert).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
   });
 
   it("ne laisse passer qu'une soumission sur deux envoyées en même temps", async () => {
     const statuses = (await Promise.all([post(body()), post(body())])).map((r) => r.status).sort();
     expect(statuses).toEqual([201, 410]);
-    expect(insert).toHaveBeenCalledTimes(1);
+    expect(send).toHaveBeenCalledTimes(1);
   });
 
-  it("rend l'invitation réutilisable si l'insertion échoue", async () => {
-    insert.mockImplementationOnce(async () => ({ error: { message: "db down" } }));
-    expect((await post(body())).status).toBe(500);
+  it("rend l'invitation réutilisable si Formhook échoue ou ne répond pas", async () => {
+    send.mockResolvedValueOnce(new Response(null, { status: 500 }));
+    expect((await post(body())).status).toBe(502);
+    send.mockRejectedValueOnce(new Error("timeout"));
+    expect((await post(body())).status).toBe(502);
     expect((await post(body())).status).toBe(201);
   });
 });
