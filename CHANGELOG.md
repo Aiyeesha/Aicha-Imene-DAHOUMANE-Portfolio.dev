@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Générateur de liens d'invitation dans `/admin`** — La section Témoignages propose un bouton « Générer un lien d'invitation » (langue FR / EN / ES, validité 7 ou 14 jours) qui affiche le lien signé, un bouton Copier et la date d'expiration : plus besoin de commande `curl`, utilisable depuis un téléphone. Le lien est produit par une action serveur qui revérifie l'authentification de `/admin`. La construction du lien est mutualisée dans `createInviteLink` (`lib/security/testimonialInvite.ts`), utilisée aussi par `POST /api/admin/testimonial-invite`. Remplace la PR #26.
+
 ### Changed
 
 - **Accueil resserré : services déplacés vers « Me recruter »** — La section Services, qui occupait près du quart de l'accueil sur mobile (≈ 4 400 px), est désormais sur `/work-with-me#services`, à côté du processus de recrutement. Le menu et la palette de commandes y mènent directement. Hauteur de l'accueil : 18 248 → 13 872 px sur mobile, 8 891 → 7 004 px sur ordinateur. Compétences, expérience et blog (déjà limité à 3 articles) restent sur l'accueil.
