@@ -463,15 +463,17 @@ export default async function CertificationsPage({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Diploma + verification links */}
+              {/* Diploma + verification links. py-2 enlarges the tap target
+                  (20px → 36px); mt-2 / -mb-2 absorb that padding so the
+                  card's spacing is unchanged. */}
               {((cert as any).diplomaUrl || cert.credentialUrl) && (
-                <div className="mt-4 flex flex-wrap gap-4">
+                <div className="mt-2 -mb-2 flex flex-wrap gap-x-4">
                   {(cert as any).diplomaUrl && (
                     <a
                       href={(cert as any).diplomaUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                      className="inline-block py-2 text-sm underline underline-offset-4 hover:opacity-80"
                     >
                       {labels.diplomaLink}<span aria-hidden="true"> ↗</span>
                     </a>
@@ -481,7 +483,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                      className="inline-block py-2 text-sm underline underline-offset-4 hover:opacity-80"
                     >
                       {labels.credentialLink}<span aria-hidden="true"> ↗</span>
                     </a>

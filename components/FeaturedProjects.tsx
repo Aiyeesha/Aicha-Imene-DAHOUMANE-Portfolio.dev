@@ -108,8 +108,8 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
     // width (otherwise the page overflows at 320px). Same as ProjectsSection.
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {featured.map((p, i) => (
-        <Reveal key={p.slug} delayMs={i * 80}>
-          <GlowCard className="card overflow-hidden">
+        <Reveal className="h-full" key={p.slug} delayMs={i * 80}>
+          <GlowCard className="card flex h-full flex-col overflow-hidden">
             {/* Cover image */}
             <div className="relative h-40 w-full bg-black/5 dark:bg-white/5">
               <CoverImage
@@ -118,10 +118,16 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                 alt={p.title}
                 loading={i === 0 ? "eager" : "lazy"}
               />
-            </div>
-            <div className="p-6">
-            {/* On narrow cards the badge wraps below the title instead of being clipped. */}
-            <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
+              {/* Client logo, in a white tile over the cover; nothing if missing.
+                  Decorative (alt=""): the project title follows. */}
+                <ProjectClientLogo slug={p.slug} alt="" size="tile" loading="lazy" />
+              </div>
+            {/* flex-1 + mt-auto on the CTAs: buttons aligned across a row of cards */}
+            <div className="flex flex-1 flex-col p-6">
+            {/* Header: title, then the badge on its own line. Side by side, a long
+                badge ("Projet de formation — Titre RNCP 6") squeezed the title onto
+                3–4 lines. */}
+            <div className="flex flex-col items-start gap-2">
               <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
               {p.badge ? (
                 <span className={getBadgeClass(p.badge.tone)}>
@@ -135,10 +141,6 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               <p className="mt-1 text-xs text-muted-2">{p.nature.period}</p>
             )}
 
-            {/* Client logo: nothing if missing, lazy-loaded */}
-            <div className="mt-1">
-              <ProjectClientLogo slug={p.slug} alt={p.title} size="sm" loading="lazy" />
-            </div>
 
             {p.is_bridge ? (
               <span className="badge badge-bridge mt-2 inline-flex">{t("projects.bridgeBadge")}</span>
@@ -155,7 +157,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             </div>
 
             {/* CTAs */}
-            <div className="mt-6 flex items-center gap-2 flex-wrap">
+            <div className="mt-auto pt-6 flex items-center gap-2 flex-wrap">
               <Link
                 href={`/${locale}/projects/${p.slug}`}
                 className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring ${track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"}`}
