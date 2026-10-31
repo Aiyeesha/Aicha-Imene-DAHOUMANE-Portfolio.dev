@@ -45,7 +45,7 @@ Screenshots are generated with `node docs/take-screenshots.js` (Playwright, 1280
 | Animations | Framer Motion (scroll-triggered, parallax, stagger, reduced-motion aware) |
 | i18n | next-intl (EN default / FR / ES) |
 | Content | Files in the repository (`content/`, MDX) — projects, blog, about, certifications; among public pages only `/status` reads the database (server-side) |
-| Backend | Upstash Redis for the uptime history and the incident dashboard; Supabase (PostgreSQL + RLS) is **being retired**: the app only pings it from the health checks and keeps a best-effort copy of the uptime history |
+| Backend | No database: Upstash Redis holds the uptime history, the incident dashboard and the single-use invitations. Supabase was retired in October 2026; its migrations and `db:*` scripts are kept in case the content moves back to SQL |
 | Search | Command palette (cmdk) over a static per-locale index; blog full-text search (MiniSearch) |
 | Cache / Rate-limit | Upstash Redis (stale-while-revalidate + rate-limiting) |
 | Blog | MDX (`@next/mdx`) + gray-matter + rehype/remark + article series |
@@ -71,14 +71,9 @@ Browser
   │           ├─ /api/testimonial-submit    → Formhook (e-mail, nothing stored)
   │           ├─ /api/palette-index/[locale] → static JSON index (built at build time)
   │           ├─ /api/search                → blog full-text search (MiniSearch)
-  │           ├─ /api/health                → ping Supabase + Redis + Formhook
+  │           ├─ /api/health                → Redis + Formhook + content checks
   │           ├─ /api/cron/ping             → Vercel Cron (daily 08:00 UTC) → Redis uptime history
   │           └─ /api/errors                → client JS error reports (GlobalErrorHandler)
-  │
-  ├─ Supabase (PostgreSQL + RLS) — server-side only (service_role)
-  │     Tables kept until retirement, no longer read by the app:
-  │             projects · project_assets · uptime_pings (best-effort copy) · incidents
-  │             admins · testimonial_submissions (empty, no longer written)
   │
   ├─ Upstash Redis
   │     Rate-limit: portfolio:rl:{contact,blog,testimonial,admin,errors,
@@ -108,7 +103,7 @@ Browser
 - **Testimonial form** — signed, single-use invitation links (14 days max) generated from `/admin`; submissions are e-mailed through Formhook, nothing is stored
 - **Contact form** — rate-limited, honeypot, topic selector; delivered by e-mail through Formhook
 - **Booking** — "Book a call" links (hero, contact section, `/work-with-me`, mobile menu) open the Proton Calendar booking page in a new tab
-- **Status page** — real health checks (Supabase, Redis, Formhook, content integrity), uptime % over 30 days, latency sparklines (7 days); localized service names
+- **Status page** — real health checks (Redis, Formhook, content integrity), uptime % over 30 days, latency sparklines (7 days); localized service names
 - **Admin dashboard** — `/admin` (HTTP Basic Auth) — project and translation checks, certifications, testimonial invitation generator, incident dashboard (`/admin/incidents`)
 - **Command palette** — `⌘K` / `Ctrl+K` — navigate sections and pages, search projects, blog posts and certifications by title or technology (word-based matching), switch track/theme/language, download CV, open LinkedIn — fully translated; the search index is loaded on first open only
 - **Animations** — Framer Motion: scroll parallax, directional reveals, stagger, AnimatedCounter, AnimatePresence on track switch
@@ -159,9 +154,6 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `NEXT_PUBLIC_SITE_URL` | ✅ | Canonical site URL (no trailing slash) |
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon key (public) |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key (server-only, never expose) |
 | `UPSTASH_REDIS_REST_URL` | ✅ | Upstash Redis REST endpoint |
 | `UPSTASH_REDIS_REST_TOKEN` | ✅ | Upstash Redis REST token (server-only) |
 | `FORMHOOK_ENDPOINT` | Recommended | Formhook form endpoint URL |
@@ -180,7 +172,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 | `CRON_SECRET` | Optional | Bearer token Vercel sends to `/api/cron/ping` — set in Vercel Dashboard (generate with `openssl rand -base64 32`) |
 | `ADMIN_USERNAME` | Optional | Username for `/admin` HTTP Basic Auth |
 | `ADMIN_PASSWORD` | Optional | Password for `/admin` HTTP Basic Auth (generate with `openssl rand -base64 32`) |
-| `REVALIDATE_SECRET` | Required in production | Shared secret for `/api/revalidate` (header `x-revalidate-secret`, Supabase webhook) |
+| `REVALIDATE_SECRET` | Required in production | Shared secret for `/api/revalidate` (header `x-revalidate-secret`, manual call or webhook) |
 | `IP_HASH_SALT` | Required in production | HMAC key that pseudonymises IP-based rate-limit identifiers before they reach Redis (generate with `openssl rand -hex 32`) |
 | `HEALTHCHECK_URL` | Optional | Dead-man's switch URL pinged after each successful `/api/cron/ping` run |
 | `ALERT_WEBHOOK_URL` | Optional | Discord/Slack/ntfy webhook alerted when global status != operational |
@@ -219,18 +211,18 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   │   ├── error.tsx           # Locale error boundary (500 — useParams locale)
 │   │   ├── not-found.tsx       # Locale 404 (useParams — no hydration flash)
 │   │   └── layout.tsx          # Locale layout (Navbar, Footer, ScrollToTop)
-│   ├── admin/                  # Admin dashboard + incidents/ (HTTP Basic Auth, Supabase service_role)
+│   ├── admin/                  # Admin dashboard + incidents/ (HTTP Basic Auth)
 │   ├── api/                    # API routes
 │   │   ├── contact/            # Contact form → Formhook (nothing stored)
 │   │   ├── cache/invalidate/   # Manual Redis cache invalidation
 │   │   ├── cron/ping/          # Vercel Cron (daily 08:00 UTC) → Redis uptime history
 │   │   ├── errors/             # Client JS error reports (GlobalErrorHandler → sendBeacon)
-│   │   ├── health/             # Ping Supabase + Redis + Formhook
+│   │   ├── health/             # Redis + Formhook + content checks
 │   │   ├── csp-report/         # CSP violation reports (query strings stripped before logging)
 │   │   ├── blog/latest/        # Latest posts API (locale whitelist)
 │   │   ├── search/             # Blog full-text search (MiniSearch, query capped at 64 chars)
 │   │   ├── palette-index/      # ⌘K palette index per locale (static, generateStaticParams)
-│   │   ├── revalidate/         # ISR revalidation (Supabase webhook)
+│   │   ├── revalidate/         # ISR revalidation (manual call or webhook)
 │   │   ├── admin/              # Admin-only APIs (testimonial invitations)
 │   │   └── testimonial-submit/ # Invitation-gated testimonial submission → Formhook
 │   ├── error.tsx               # Root error boundary (500)
@@ -262,7 +254,6 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 ├── lib/
 │   ├── data/                   # Content accessors (projects from content/, cached via Redis)
 │   ├── search/                 # ⌘K palette index and word-based filter
-│   ├── supabase/               # Supabase client helpers (anon + service_role)
 │   ├── security/               # adminAuth, testimonialInvite (HMAC links), cspReport, timingSafeEqual, jsonLdSafe, slug
 │   ├── env.ts                  # Zod env validation (called from instrumentation.ts)
 │   ├── social.ts               # LinkedIn / GitHub URL sanitization (single source)
@@ -272,10 +263,10 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   ├── en.json                 # English translations (~440 keys)
 │   ├── fr.json                 # French translations (same keys)
 │   └── es.json                 # Spanish translations (same keys)
-├── supabase/
-│   ├── migrations/             # DDL + RLS history (does not rebuild a blank database on its own, see Deployment)
-│   ├── maintenance/            # Manual SQL still in use (GDPR retention)
-│   └── archive/                # One-off fixes and seeds of the former projects table (reference only)
+├── supabase/                   # Kept for a possible return to SQL; not used by the site
+│   ├── migrations/             # DDL + RLS history (does not rebuild a blank database on its own)
+│   ├── maintenance/            # Former manual GDPR purge
+│   └── archive/                # One-off fixes and seeds of the former projects table
 ├── scripts/                    # Utility scripts by theme, see scripts/README.md
 └── public/
     ├── .well-known/
@@ -294,7 +285,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 3. Region: `fra1` (see `vercel.json`); daily cron at 08:00 UTC
 4. Deploy — Vercel handles build, CDN, and HTTPS automatically. `NEXT_PUBLIC_*` values are inlined at build time: redeploy after changing one.
 
-> **Database from scratch:** `supabase/migrations/` records the schema history but does not create every table the production schema relies on (`admins`, for instance, predates the migrations). To set up a new Supabase project, copy the production schema (`supabase db dump --schema-only`) rather than running `supabase db push` on an empty database.
+> **No database required.** The site runs on Vercel + Upstash Redis + Formhook. If the content ever moves back to SQL, note that `supabase/migrations/` records the former schema history but does not create every table it relied on (`admins`, for instance, predates the migrations): start from a schema dump rather than replaying the migrations on an empty database.
 
 ---
 
@@ -319,7 +310,7 @@ Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are list
 | Layer | Measure |
 |-------|---------|
 | HTTP headers | Per-request nonce CSP with `'strict-dynamic'`, no third-party script/style/frame origins, `frame-src 'none'`; Trusted Types in report-only; HSTS (2 yr + preload), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — `X-Powered-By` suppressed |
-| Database | Supabase RLS on all tables — `anon` can only read published `projects` / `project_assets`; `uptime_pings`, `incidents` and `incident_checklist_items` deny `anon` and `authenticated` explicitly; `is_admin()` REVOKE'd from PUBLIC; trigger functions have `search_path = ''` |
+| Data at rest | No database: Redis holds only the uptime history, the incident dashboard, single-use invitation markers and pseudonymised rate-limit counters; contact messages and testimonials are e-mailed, never stored |
 | Rate-limiting | Upstash Redis sliding window on `/api/contact`, `/api/blog/latest`, `/api/testimonial-submit`, `/api/cache/invalidate`, `/api/revalidate`, `/api/health`, `/api/errors`, `/api/csp-report` and `/admin`; identifiers HMAC-pseudonymised (no IP in clear in Redis). Behaviour during a Redis outage is documented in SECURITY.md |
 | Admin panel | HTTP Basic Auth + proxy rate-limit (5 req / 15 min / IP), never cached by the service worker |
 | Contact & testimonial forms | Honeypot, server-side input validation, e-mail delivery via Formhook with no storage at rest; contact checks the Origin, testimonials need a signed single-use invitation |

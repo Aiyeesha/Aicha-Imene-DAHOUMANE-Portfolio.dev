@@ -4,21 +4,18 @@
 //   1. checks CRON_SECRET in the Authorization header;
 //   2. runs the health checks (lib/health.ts);
 //   3. records the run in the uptime history (Upstash Redis, lib/uptime.ts),
-//      then copies it to Supabase uptime_pings, best effort, until Supabase
-//      is retired;
-//   4. purges Supabase uptime rows older than 30 days;
-//   5. pings an external heartbeat if configured.
+//      trimmed to 30 days;
+//   4. pings an external heartbeat if configured.
 // Contact messages and testimonials are e-mailed (Formhook) and never stored,
 // so there is nothing else to purge.
 
 import { after, NextResponse }         from "next/server";
 import { runHealthChecks }             from "@/lib/health";
-import { createAdminSupabaseClient }   from "@/lib/supabase/admin";
 import { recordPingBatch }             from "@/lib/uptime";
 import { timingSafeStringEqual }       from "@/lib/security/timingSafeEqual";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs"; // Supabase JS does not support the Edge runtime
+export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   // ── 1. Authentication: CRON_SECRET required ───────────────────────────────
@@ -74,30 +71,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "history_store_failed" }, { status: 500 });
   }
 
-  // ── 3b. Copy to Supabase (best effort, until Supabase is retired) ─────────
-  // Keeps the former table in sync so the move can be rolled back; a failure
-  // here only logs a warning.
-  const supabase = createAdminSupabaseClient();
-
-  const rows = report.services.map((s) => ({
-    service:    s.name,
-    status:     s.status,
-    latency_ms: s.latencyMs ?? null,
-    checked_at: report.checkedAt, // shared timestamp groups the ping
-  }));
-
-  const { error } = await supabase.from("uptime_pings").insert(rows);
-  if (error) console.warn("[CRON/PING] Supabase copy skipped:", error.message);
-
-  // ── 4. Purge uptime_pings older than 30 days (non-blocking) ───────────────
-  const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-  const { error: purgeError } = await supabase
-    .from("uptime_pings")
-    .delete()
-    .lt("checked_at", cutoff);
-  if (purgeError) console.warn("[CRON/PING] Purge warning:", purgeError.message);
-
-  // ── 5. External heartbeat (dead-man's switch) ────────────────────────────
+  // ── 4. External heartbeat (dead-man's switch) ────────────────────────────
   // When HEALTHCHECK_URL is set, a GET is sent after each successful run; a
   // missing ping triggers an alert on the external service (e.g.
   // healthchecks.io), independent of GitHub and Vercel. Non-blocking.
@@ -113,7 +87,7 @@ export async function GET(req: Request) {
   return NextResponse.json({
     ok:             true,
     checkedAt:      report.checkedAt,
-    servicesStored: rows.length,
+    servicesStored: report.services.length,
     overall:        report.overall,
   });
 }
