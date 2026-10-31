@@ -28,9 +28,9 @@ type DisplayStatus = ServiceStatus | "maintenance";
 const SERVICE_DESCRIPTIONS: Record<string, Record<Locale, string>> = {
   "Website":              { en: "Next.js frontend — pages, blog, projects",      fr: "Frontend Next.js — pages, blog, projets",              es: "Frontend Next.js — páginas, blog, proyectos" },
   "Contact form":         { en: "Message delivery, rate-limiting, anti-spam",    fr: "Envoi de messages, limitation de débit, anti-spam",    es: "Envío de mensajes, limitación de tasa, anti-spam" },
-  "Database (Supabase)":  { en: "Copy of the project entries — PostgreSQL, being retired",  fr: "Copie des fiches projets — PostgreSQL, en cours de retrait",  es: "Copia de las fichas de proyecto — PostgreSQL, en proceso de retirada" },
+  "Database (Supabase)":  { en: "Backup copy of the uptime history — PostgreSQL, being retired",  fr: "Copie de secours de l'historique — PostgreSQL, en cours de retrait",  es: "Copia de respaldo del historial — PostgreSQL, en proceso de retirada" },
   "Content integrity":    { en: "Featured projects have complete case-study content", fr: "Les projets mis en avant ont un contenu complet", es: "Los proyectos destacados tienen contenido completo" },
-  "Security cluster integrity": { en: "is_security flag survives content re-seeds", fr: "Le flag is_security résiste aux ré-imports de contenu", es: "El flag is_security resiste las reimportaciones de contenido" },
+  "Security cluster integrity": { en: "Security projects keep their flag in the content", fr: "Les projets Sécurité gardent leur marqueur dans le contenu", es: "Los proyectos de seguridad conservan su marcador en el contenido" },
   "Cache (Upstash Redis)":{ en: "Response caching and rate-limiting backend",    fr: "Cache des réponses et limitation de débit",             es: "Cache de respuestas y limitación de tasa" },
   "Blog & MDX":           { en: "Salesforce & IT Ops articles — static build",   fr: "Articles Salesforce & IT Ops — build statique",        es: "Artículos de Salesforce & IT Ops — build estático" },
   "PWA / Service Worker": { en: "Offline mode and static asset caching",         fr: "Mode hors-ligne et cache des fichiers statiques",       es: "Modo sin conexión y cache de archivos estáticos" },
