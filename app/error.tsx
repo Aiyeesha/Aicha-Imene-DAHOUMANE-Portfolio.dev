@@ -11,9 +11,12 @@ import { useEffect, useSyncExternalStore } from "react";
 // The browser language does not change during the page's life.
 const subscribeNoop = () => () => {};
 
-function getPreferredLocale(): "fr" | "en" {
+function getPreferredLocale(): "fr" | "en" | "es" {
   if (typeof window === "undefined") return "en";
-  return navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en";
+  const lang = navigator.language?.toLowerCase() ?? "";
+  if (lang.startsWith("fr")) return "fr";
+  if (lang.startsWith("es")) return "es";
+  return "en";
 }
 
 const content = {
@@ -38,6 +41,17 @@ const content = {
     href: "/en",
     altHref: "/fr",
     altLabel: "FR",
+  },
+  es: {
+    code: "500",
+    title: "Se ha producido un error",
+    description: "Algo ha fallado en la aplicación.",
+    hint: "Puedes volver a intentarlo o volver a la página de inicio si el problema persiste.",
+    retry: "Reintentar",
+    home: "Volver al inicio",
+    href: "/es",
+    altHref: "/en",
+    altLabel: "EN",
   },
 } as const;
 

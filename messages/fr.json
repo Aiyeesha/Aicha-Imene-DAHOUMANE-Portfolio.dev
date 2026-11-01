@@ -139,7 +139,7 @@
       "policy_not_accepted": "Vous devez accepter la politique de confidentialité pour envoyer un message.",
       "too_many_links": "Trop de liens dans le message."
     },
-    "homeIntro": "Je préfère être contactée par email. Vous pouvez aussi utiliser le formulaire sécurisé ci-dessous. Anti-spam et limitation de débit activés.",
+    "homeIntro": "Un email est le moyen le plus rapide de me joindre ; LinkedIn et le CV sont accessibles en un clic.",
     "homeMethodsTitle": "Liens rapides",
     "homeCv": "Télécharger le CV",
     "homeLinkedIn": "LinkedIn",
@@ -318,9 +318,9 @@
   "services": {
     "discuss": "En parler pour un poste",
     "maturityTitle": "Maturité d'exploitation",
-    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (base de données, cache, formulaire de contact) avec latence et disponibilité mesurées en direct — pas une page statique. Le colophon détaille comment il est construit et sécurisé : CSP à nonce, en-têtes de sécurité, limites de débit, audits Lighthouse et axe en intégration continue, dépendances surveillées.",
-    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose en direct la santé réelle de ses services, et le colophon détaille ses choix de sécurité et son intégration continue.",
-    "maturityStatusCta": "Voir le statut en direct",
+    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (site, cache, formulaire de contact, intégrité du contenu), relevé chaque jour, avec latence et disponibilité sur 30 jours — pas une page statique. Le colophon détaille comment il est construit et sécurisé : CSP à nonce, en-têtes de sécurité, limites de débit, audits Lighthouse et axe en intégration continue, dépendances surveillées.",
+    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose la santé réelle de ses services, relevée chaque jour, et le colophon détaille ses choix de sécurité et son intégration continue.",
+    "maturityStatusCta": "Voir le statut du site",
     "maturityChangelogCta": "Voir comment ce site est construit",
     "sectorsTitle": "Secteurs abordés dans mes études de cas",
     "sectorsBody": "Mes projets de formation (titre RNCP 6, OpenClassrooms) reposent sur des scénarios d'entreprise fictifs mais réalistes : chacun m'a obligée à tenir compte des contraintes de son secteur en matière de conformité, de traçabilité et de tolérance à l'erreur.",
