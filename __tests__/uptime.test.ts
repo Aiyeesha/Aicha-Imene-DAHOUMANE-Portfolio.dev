@@ -28,6 +28,7 @@ jest.mock("@/lib/redis", () => ({
 }));
 
 import {
+  computeDisruptions,
   computeLatencyHistory,
   computeUptimeStats,
   getUptimeStats,
@@ -81,6 +82,26 @@ describe("calculs de lib/uptime", () => {
     expect(parseBatch("pas du json")).toBeNull();
     expect(parseBatch({ checkedAt: 1 })).toBeNull();
     expect(parseBatch(JSON.stringify(batch("2026-10-01T08:00:00Z")))?.services).toHaveLength(2);
+  });
+});
+
+describe("computeDisruptions (historique de /status)", () => {
+  it("ne garde que les relevés avec un service non opérationnel, du plus récent au plus ancien", () => {
+    const out = computeDisruptions([
+      batch("2026-10-01T08:00:00Z", "degraded"),
+      batch("2026-10-02T08:00:00Z"),
+      batch("2026-10-03T08:00:00Z", "outage"),
+    ]);
+    expect(out).toEqual([
+      { checkedAt: "2026-10-03T08:00:00Z", services: [{ name: "Website", status: "outage" }] },
+      { checkedAt: "2026-10-01T08:00:00Z", services: [{ name: "Website", status: "degraded" }] },
+    ]);
+  });
+
+  it("renvoie une liste vide quand tout était opérationnel, et respecte la limite", () => {
+    expect(computeDisruptions([batch("2026-10-02T08:00:00Z")])).toEqual([]);
+    const many = Array.from({ length: 15 }, (_, i) => batch(`2026-10-${String(i + 1).padStart(2, "0")}T08:00:00Z`, "degraded"));
+    expect(computeDisruptions(many)).toHaveLength(10);
   });
 });
 
