@@ -148,10 +148,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Rate-limiting** via Upstash Redis (fenêtre glissante) sur les endpoints sensibles : contact (5 req/10 min), témoignages (3 req/24h), invalidation cache (10 req/min), health check (30 req/min), rapports CSP (20 req/min), panneau admin (5 req/15 min — protection anti brute-force). Si Redis **n'est pas configuré** en production, le limiteur bascule en *fail-closed* (toutes les requêtes bloquées). En cas de **panne transitoire** de Redis, il bascule en *fail-open* pour ne pas pénaliser les utilisateurs légitimes — sauf sur `/admin` où le comportement reste *fail-closed*.",
         "**Honeypot** : champs cachés dans les formulaires de contact et de témoignages — les bots remplissant ces champs reçoivent un 200 silencieux.",
         "**Validation d'origine** : les requêtes API provenant d'origines inconnues sont rejetées en production.",
-        "**Routes de diagnostic désactivées en production** : `/api/redis-test` retourne 404 hors mode développement.",
         "**CORS restreint** : `/api/health` scoped à l'origine du site uniquement — les outils de monitoring opèrent en serveur-à-serveur.",
         "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116) — contact de divulgation responsable.",
-        "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (service role, token Redis, credentials admin) restent strictement côté serveur.",
+        "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (token Redis, identifiants admin, secrets HMAC) restent strictement côté serveur.",
         "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — posture HTTP vérifiée indépendamment du site.",
       ]
     : isEs
@@ -162,10 +161,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Rate-limiting** vía Upstash Redis (ventana deslizante) en los endpoints sensibles: contacto (5 req/10 min), testimonios (3 req/24h), invalidación de caché (10 req/min), health check (30 req/min), informes CSP (20 req/min), panel admin (5 req/15 min — protección anti fuerza bruta). Si Redis **no está configurado** en producción, el limitador pasa a modo *fail-closed* (todas las solicitudes bloqueadas). Ante una **caída transitoria** de Redis, pasa a *fail-open* para no penalizar a los usuarios legítimos — excepto en `/admin`, donde el comportamiento sigue siendo *fail-closed*.",
         "**Honeypot**: campos ocultos en los formularios de contacto y testimonios — los bots que rellenan estos campos reciben un 200 silencioso.",
         "**Validación de origen**: las solicitudes API procedentes de orígenes desconocidos se rechazan en producción.",
-        "**Rutas de diagnóstico desactivadas en producción**: `/api/redis-test` devuelve 404 fuera del modo desarrollo.",
         "**CORS restringido**: `/api/health` limitado únicamente al origen del sitio — las herramientas de monitorización operan servidor a servidor.",
         "**security.txt** disponible en `/.well-known/security.txt` (RFC 9116) — contacto de divulgación responsable.",
-        "**Ningún secreto** en las variables `NEXT_PUBLIC_*` — todas las claves sensibles (service role, token de Redis, credenciales de admin) permanecen estrictamente en el servidor.",
+        "**Ningún secreto** en las variables `NEXT_PUBLIC_*` — todas las claves sensibles (token de Redis, credenciales de admin, secretos HMAC) permanecen estrictamente en el servidor.",
         "**Validación externa (terceros neutrales)**: [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — postura HTTP verificada de forma independiente al sitio.",
       ]
     : [
@@ -175,10 +173,9 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**Rate-limiting** via Upstash Redis (sliding window) on sensitive endpoints: contact (5 req/10 min), testimonials (3 req/24h), cache invalidation (10 req/min), health check (30 req/min), CSP reports (20 req/min), admin panel (5 req/15 min — brute-force protection). If Redis is **not configured** in production, the limiter fails closed (all requests blocked). During a **transient Redis outage**, it fails open to avoid blocking legitimate users — except on `/admin`, which remains fail-closed.",
         "**Honeypot fields** on contact and testimonial forms — bots filling hidden fields receive a silent 200 response.",
         "**Origin validation**: API requests from unknown origins are rejected in production.",
-        "**Debug routes disabled in production**: `/api/redis-test` returns 404 outside of development mode.",
         "**CORS restricted**: `/api/health` scoped to the site origin only — monitoring tools call server-to-server, no browser CORS needed.",
         "**security.txt** at `/.well-known/security.txt` (RFC 9116) — responsible disclosure contact.",
-        "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (service role, Redis token, admin credentials) remain strictly server-side.",
+        "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (Redis token, admin credentials, HMAC secrets) remain strictly server-side.",
         "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — HTTP security posture verified independently from the site.",
       ];
 
