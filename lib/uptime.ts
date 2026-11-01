@@ -133,6 +133,31 @@ export function computeUptimeStats(batches: PingBatch[]): UptimeStats {
   return stats;
 }
 
+/** A recorded check where at least one service was not operational. */
+export type Disruption = {
+  checkedAt: string;
+  services: { name: string; status: ServiceStatus }[];
+};
+
+/**
+ * Checks with at least one degraded or down service, most recent first
+ * (max `limit`). This is what /status shows as its incident history: real
+ * measurements only (the /admin incident board holds response-playbook
+ * exercises, which must not be presented as outages).
+ */
+export function computeDisruptions(batches: PingBatch[], limit = 10): Disruption[] {
+  return batches
+    .map((b) => ({
+      checkedAt: b.checkedAt,
+      services: b.services
+        .filter((s) => s.status !== "operational")
+        .map((s) => ({ name: s.name, status: s.status })),
+    }))
+    .filter((d) => d.services.length > 0)
+    .sort((a, b) => Date.parse(b.checkedAt) - Date.parse(a.checkedAt))
+    .slice(0, limit);
+}
+
 export type LatencyHistory = Record<string, number[]>;
 
 /** Average latency per service and per hour, in chronological order. */
@@ -173,6 +198,14 @@ export async function getUptimeStats(): Promise<UptimeStats> {
     "portfolio:uptime:stats:30d",
     300,
     async () => computeUptimeStats(await readBatches(Date.now() - RETENTION_MS)),
+  );
+}
+
+export async function getRecentDisruptions(): Promise<Disruption[]> {
+  return cacheGetOrSet<Disruption[]>(
+    "portfolio:uptime:disruptions:30d",
+    300,
+    async () => computeDisruptions(await readBatches(Date.now() - RETENTION_MS)),
   );
 }
 
