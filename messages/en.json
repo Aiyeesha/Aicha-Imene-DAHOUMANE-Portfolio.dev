@@ -139,7 +139,7 @@
       "policy_not_accepted": "You must accept the privacy policy to send a message.",
       "too_many_links": "Too many links in the message."
     },
-    "homeIntro": "I prefer to be contacted by email. You can also use the secure form below. Anti-spam and rate limiting are enabled.",
+    "homeIntro": "Email is the fastest way to reach me; LinkedIn and my CV are one click away.",
     "homeMethodsTitle": "Quick links",
     "homeCv": "Download CV",
     "homeLinkedIn": "LinkedIn",
@@ -318,9 +318,9 @@
   "services": {
     "discuss": "Discuss this for a role",
     "maturityTitle": "Operational maturity",
-    "maturityBody": "This portfolio is itself run like a production product, not just presented as one: /status exposes the real state of its services (database, cache, contact form) with live-measured latency and uptime — not a static page. The colophon explains how it is built and secured: nonce-based CSP, security headers, rate limits, Lighthouse and axe audits in CI, monitored dependencies.",
-    "maturityBodySalesforce": "The same discipline carries over to my Salesforce delivery work: a CI/CD pipeline with automated Apex validations and traceable sandbox-to-production deployments (see the Salesforce ⇄ Infra bridge project above). This portfolio is that discipline applied at scale: /status exposes the real health of its services live, and the colophon explains its security choices and continuous integration.",
-    "maturityStatusCta": "See live status",
+    "maturityBody": "This portfolio is itself run like a production product, not just presented as one: /status exposes the real state of its services (site, cache, contact form, content integrity), checked daily, with latency and 30-day uptime — not a static page. The colophon explains how it is built and secured: nonce-based CSP, security headers, rate limits, Lighthouse and axe audits in CI, monitored dependencies.",
+    "maturityBodySalesforce": "The same discipline carries over to my Salesforce delivery work: a CI/CD pipeline with automated Apex validations and traceable sandbox-to-production deployments (see the Salesforce ⇄ Infra bridge project above). This portfolio is that discipline applied at scale: /status exposes the real health of its services, checked daily, and the colophon explains its security choices and continuous integration.",
+    "maturityStatusCta": "See site status",
     "maturityChangelogCta": "See how this site is built",
     "sectorsTitle": "Sectors covered by my case studies",
     "sectorsBody": "My training projects (RNCP Level 6 diploma, OpenClassrooms) are built on fictional but realistic business scenarios: each one made me work within its sector's compliance, traceability and error-tolerance constraints.",

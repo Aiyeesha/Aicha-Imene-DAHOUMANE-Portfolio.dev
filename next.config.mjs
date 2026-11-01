@@ -288,30 +288,28 @@ const nextConfig = {
             value: "strict-origin-when-cross-origin"
           },
           // Disable sensitive APIs the site does not use (payment, USB,
-          // Bluetooth…), so an injected or third-party script cannot use them.
+          // camera…), so an injected or third-party script cannot use them.
+          // Only directives Chromium recognises: ambient-light-sensor, battery,
+          // bluetooth, document-domain and web-share each logged an
+          // "Unrecognized feature" console error on every page (Chromium 153),
+          // and interest-cohort targeted FLoC, abandoned by Google.
           {
             key: "Permissions-Policy",
             value: [
               "accelerometer=()",
-              "ambient-light-sensor=()",
-              "battery=()",
-              "bluetooth=()",
               "camera=()",
               "clipboard-read=()",
               "display-capture=()",
-              "document-domain=()",
               "encrypted-media=()",
               "fullscreen=(self)",
               "geolocation=()",
               "gyroscope=()",
-              "interest-cohort=()",
               "magnetometer=()",
               "microphone=()",
               "midi=()",
               "payment=()",
               "serial=()",
               "usb=()",
-              "web-share=(self)",
               "xr-spatial-tracking=()",
             ].join(", ")
           },
