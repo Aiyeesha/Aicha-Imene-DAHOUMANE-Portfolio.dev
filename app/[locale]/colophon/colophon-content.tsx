@@ -19,7 +19,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
   const labels = {
     breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
     backHome:       isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
-    title:          "Colophon",
+    title:          isEs ? "Colofón" : "Colophon",
     subtitle: isFr
       ? "Comment ce site est construit — stack, architecture, cache et sécurité."
       : isEs
