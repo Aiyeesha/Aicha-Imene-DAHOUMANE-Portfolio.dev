@@ -7,7 +7,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { ServiceStatus } from "@/lib/health";
-import { getUptimeStats, getLatencyHistory, getLatestPingReport } from "@/lib/uptime";
+import { getUptimeStats, getLatencyHistory, getLatestPingReport, getRecentDisruptions } from "@/lib/uptime";
 import LatencySparkline from "@/components/LatencySparkline";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -98,10 +98,11 @@ export async function generateMetadata({
     ? "Estado del sitio — Aïcha Imène DAHOUMANE"
     : "Site Status — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "État opérationnel en temps réel du site et de ses services."
+    // Daily check (cron at 08:00 UTC, vercel.json), not real time.
+    ? "État opérationnel du site et de ses services, relevé chaque jour, et historique sur 30 jours."
     : isEs
-    ? "Estado operativo en tiempo real del sitio y sus servicios."
-    : "Real-time operational status of the site and its services.";
+    ? "Estado operativo del sitio y sus servicios, comprobado cada día, con historial de 30 días."
+    : "Operational status of the site and its services, checked daily, with a 30-day history.";
   return {
     title,
     description,
@@ -148,15 +149,19 @@ export default async function StatusPage({
 
   // Latest report stored by the cron, uptime stats and latency history, all
   // from the Redis uptime history; no live outgoing calls.
-  const [report, uptimeStats, latencyHistory] = await Promise.all([
+  const [report, uptimeStats, latencyHistory, disruptions] = await Promise.all([
     getLatestPingReport(),
     getUptimeStats(),
     getLatencyHistory(),
+    getRecentDisruptions(),
   ]);
 
-  // Fallback before the first ping is recorded (initial deployment)
+  // No check recorded yet (first deployment, Redis unreachable): the status
+  // is unknown, never assumed "operational".
   const global   = report?.overall ?? "operational";
-  const cfg      = STATUS_CONFIG[global];
+  const cfg      = report
+    ? STATUS_CONFIG[global]
+    : { dot: "bg-slate-400", banner: "border-black/10 bg-black/2 dark:border-white/10 dark:bg-white/2" };
   const checkedAt = report
     // Explicit Europe/Paris time zone with its name: the page is rendered on
     // the server (UTC). dateStyle/timeStyle cannot be combined with
@@ -195,12 +200,18 @@ export default async function StatusPage({
     latency:       isFr ? "Latence"                  : isEs ? "Latencia"                         : "Latency",
     sparklineLabel: isFr ? "Latence sur 7 jours"     : isEs ? "Latencia de 7 días"               : "7-day latency",
     backHome:      isFr ? "← Retour à l'accueil"    : isEs ? "← Volver al inicio"                : "← Back to home",
+    unknown:       isFr ? "État inconnu : aucun relevé disponible pour le moment." : isEs ? "Estado desconocido: todavía no hay ninguna comprobación disponible." : "Status unknown: no check is available yet.",
     noIncidents:   isFr
-      ? "Aucun incident signalé. Tout fonctionne normalement."
+      ? "Aucune perturbation relevée sur les 30 derniers jours."
       : isEs
-      ? "No se ha reportado ningún incidente. Todo funciona con normalidad."
-      : "No incidents reported. Everything is running normally.",
-    incidentTitle: isFr ? "Historique des incidents" : isEs ? "Historial de incidentes"         : "Incident history",
+      ? "No se ha registrado ninguna incidencia en los últimos 30 días."
+      : "No disruption recorded over the last 30 days.",
+    noHistory:     isFr
+      ? "Aucun relevé enregistré pour l'instant."
+      : isEs
+      ? "Todavía no hay comprobaciones registradas."
+      : "No checks recorded yet.",
+    incidentTitle: isFr ? "Perturbations relevées (30 jours)" : isEs ? "Incidencias registradas (30 días)" : "Recorded disruptions (30 days)",
     apiLink:       isFr ? "Endpoint JSON brut ↗"    : isEs ? "Endpoint JSON sin procesar ↗"      : "Raw JSON endpoint ↗",
     staleWarning:  isFr
       ? `Avertissement : données de monitoring potentiellement obsolètes (${Math.floor(ageHours ?? 0)} h). Le cron de vérification n'a peut-être pas tourné récemment.`
@@ -210,6 +221,7 @@ export default async function StatusPage({
   };
 
   const globalMessage =
+    !report                  ? labels.unknown  :
     global === "operational" ? labels.allOk    :
     global === "degraded"    ? labels.degraded :
     global === "outage"      ? labels.outage   :
@@ -312,9 +324,33 @@ export default async function StatusPage({
         <h2 id="incidents-heading" className="mb-4 text-xl font-semibold">
           {labels.incidentTitle}
         </h2>
-        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/2 px-6 py-8 text-center">
-          <p className="text-sm text-muted-2">{labels.noIncidents}</p>
-        </div>
+        {/* Built from the daily checks (lib/uptime.ts computeDisruptions),
+            never written by hand. */}
+        {disruptions.length === 0 ? (
+          <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/2 px-6 py-8 text-center">
+            <p className="text-sm text-muted-2">{report ? labels.noIncidents : labels.noHistory}</p>
+          </div>
+        ) : (
+          <ul className="divide-y divide-black/5 dark:divide-white/5 rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden">
+            {disruptions.map((d) => (
+              <li key={d.checkedAt} className="bg-white dark:bg-white/2 px-4 py-3 sm:px-6">
+                <p className="text-xs text-muted-2">
+                  {new Date(d.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", {
+                    day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+                    timeZone: "Europe/Paris", timeZoneName: "short",
+                  })}
+                </p>
+                <ul className="mt-1 flex flex-wrap gap-2">
+                  {d.services.map((svc) => (
+                    <li key={svc.name} className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_CONFIG[svc.status].badge}`}>
+                      {SERVICE_NAMES[svc.name]?.[safeLocale] ?? svc.name} · {STATUS_CONFIG[svc.status].label[safeLocale]}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {/* ── JSON endpoint link ────────────────────────────────────────────── */}
