@@ -75,6 +75,13 @@ describe("CV / site consistency", () => {
     }
   });
 
+  it("Trailhead links use the final salesforce.com URL, not the retired trailblazer.me", () => {
+    // trailblazer.me/id/… answers with a 302 redirect: link the final URL.
+    for (const f of fs.readdirSync(CV_DIR).filter((x) => x.endsWith(".html"))) {
+      expect({ f, stale: read(f).includes("trailblazer.me") }).toEqual({ f, stale: false });
+    }
+  });
+
   it("no CV describes Windows Autopilot as image-based (Sysprep/WDS/PXE)", () => {
     // Autopilot provisions from the cloud without an image; Sysprep, WDS and
     // PXE belong to the 64 re-imaged machines and must not be attributed to it.

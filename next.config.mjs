@@ -237,8 +237,8 @@ const nextConfig = {
   },
 
   // ── Lightweight 404 for missing static files ─────────────────────────────
-  // A missing image would otherwise hit the app/[locale]/[...rest] catch-all
-  // and get a full, dynamically rendered HTML 404. `afterFiles` rewrites run
+  // A missing image would otherwise get the full, dynamically rendered HTML
+  // 404 of app/not-found.tsx. `afterFiles` rewrites run
   // after public/ and static routes but before dynamic routes, so existing
   // files are served normally and only missing ones reach
   // app/api/asset-not-found (plain-text 404).
