@@ -2,7 +2,7 @@
 title: "Salesforce Governor Limits: Understanding, Monitoring, and Avoiding Them"
 excerpt: "A practical guide to Salesforce governor limits — the most critical ones, how to monitor your consumption, and patterns to stay well within bounds."
 date: "2025-11-03"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Best Practices"]
 projects: ["fasha-apex-backend-optimization"]
 ---
@@ -34,17 +34,18 @@ Salesforce is a multi-tenant platform. Your org shares compute, database, and AP
 | SOQL queries | 200 |
 | DML statements | 150 |
 | DML rows | 10,000 |
-| Heap size | 12 MB (batch) |
+| Heap size | 12 MB (all asynchronous Apex) |
 | CPU time | 60,000 ms |
 
 ### Org-Wide Daily Limits
 
 | Limit | Value |
 |-------|-------|
-| Async Apex executions | 250,000 |
-| Email alerts | 1,000 per user per day |
-| Outbound messages | 10,000 |
+| Async Apex executions (Batch, Future, Queueable, Scheduled) | 250,000 or 200 × the number of user licenses, whichever is greater, over a rolling 24 hours |
+| Email alerts (workflow rules, approvals, flows) | 1,000 per standard Salesforce license (15 in Developer Edition), capped at 2,000,000 per org |
 | API calls | Varies by edition (Developer: 15,000/day) |
+
+Check these org limits at any time with `OrgLimits.getMap()` in Apex or the REST `/limits` resource.
 
 ## Monitoring Your Limits
 
@@ -133,7 +134,7 @@ if (!toUpdate.isEmpty()) update toUpdate; // 1 DML total
 
 ### 3. Use `@future` or Queueable for Callouts
 
-Callouts can't be made from DML-opened transactions synchronously in some contexts. Offload them:
+A trigger cannot make a synchronous callout, and a callout after uncommitted DML in the same transaction fails ("You have uncommitted work pending"). Offload them:
 
 ```apex
 public class ExternalSyncService {
@@ -261,7 +262,7 @@ You'll see a chart of governor limit consumption throughout the transaction — 
 | DML in loop | 150 DML limit | Collect records, DML once |
 | Large SOQL without LIMIT | 50,000 row limit | Add WHERE, LIMIT, or use aggregate |
 | Trigger recursion | Infinite loop | Recursion guard based on processed Ids |
-| Synchronous callout | CPU/callout limit | @future or Queueable + AllowsCallouts |
+| Callout from a trigger | Synchronous callouts are not allowed in triggers, and fail after uncommitted DML ("uncommitted work pending") | @future(callout=true) or Queueable + AllowsCallouts |
 | Storing full SObject lists | 6MB heap | Use ID sets/maps instead |
 
 ## Conclusion
