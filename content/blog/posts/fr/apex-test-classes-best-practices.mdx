@@ -2,7 +2,7 @@
 title: "Classes de test Apex : couverture 85 %+ sans tricher"
 excerpt: "Écrivez des tests Apex qui détectent vraiment les bugs — TestDataFactory, tests asynchrones, mocks de callouts et anti-patterns à éviter."
 date: "2026-01-20"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
 featured: false
 projects: ["idemconnect-apex-backend", "fasha-apex-backend-optimization"]
@@ -170,8 +170,9 @@ Pour les scénarios d'erreur, créez un second mock qui retourne 4xx/5xx et test
 Les mauvaises assertions gonflent la couverture sans détecter de bugs :
 
 ```apex
-// ❌ Inutile — passe toujours
+// ❌ Passe toujours
 System.assert(true);
+// ❌ Trop faible — ne vérifie que l'existence d'un résultat, pas son contenu
 System.assertNotEquals(null, result);
 
 // ✅ Significatif — détecte les régressions
@@ -183,12 +184,14 @@ System.assertEquals('ESCALATED', ticket.Status__c,
 
 Utilisez toujours le troisième paramètre (message) — il vous indique *ce qui* a échoué quand l'assertion plante.
 
+Depuis Winter '23, la classe `Assert` (`Assert.areEqual`, `Assert.isTrue`, `Assert.fail`…) est l'API recommandée pour les nouveaux tests ; `System.assertEquals` reste valide, et l'ordre des paramètres (attendu, puis obtenu, puis message) est le même.
+
 ---
 
 ## Anti-patterns à éviter
 
 - **`SeeAllData=true`** : expose vos tests aux données réelles de l'org, les rendant dépendants de l'environnement. À éviter par défaut, et à réserver aux rares cas où les données nécessaires ne peuvent pas être créées en test. Pour le catalogue de prix standard, il est inutile : `Test.getStandardPricebookId()` fonctionne sans.
-- **Insertion dans chaque méthode** : consomme les limites DML et ralentit les exécutions. Utilisez `@TestSetup` ou `TestDataFactory`.
+- **Insertion dans chaque méthode** : duplique le code et ralentit les exécutions (chaque méthode a ses propres limites, mais recrée toutes ses données). Utilisez `@TestSetup` ou `TestDataFactory`.
 - **Tester uniquement le chemin heureux** : écrivez au moins un test négatif.
 - **Ignorer les tests en masse** : ajoutez un test avec 200 enregistrements pour vérifier la bulkification.
 
@@ -202,7 +205,8 @@ static void testBulk200Records() {
     AccountService.processAll(accounts);
     Test.stopTest();
 
-    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed']);
+    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed'],
+        'Les 200 comptes doivent être traités en une seule transaction');
 }
 ```
 
