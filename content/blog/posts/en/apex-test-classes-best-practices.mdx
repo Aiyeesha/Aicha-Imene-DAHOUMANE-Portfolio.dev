@@ -2,7 +2,7 @@
 title: "Apex Test Classes: 85%+ Coverage Without Cheating"
 excerpt: "Write meaningful Apex tests that actually catch bugs — TestDataFactory, async testing, callout mocks, and the anti-patterns that inflate coverage without value."
 date: "2026-01-20"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
 featured: false
 projects: ["idemconnect-apex-backend", "fasha-apex-backend-optimization"]
@@ -170,8 +170,9 @@ For error scenarios, create a second mock that returns 4xx/5xx and test your err
 Bad assertions inflate coverage without catching bugs:
 
 ```apex
-// ❌ Useless — always passes
+// ❌ Always passes
 System.assert(true);
+// ❌ Too weak — only checks that a result exists, not what it contains
 System.assertNotEquals(null, result);
 
 // ✅ Meaningful — will catch regressions
@@ -185,12 +186,14 @@ System.assert(result.contains(expectedId),
 
 Always use the third parameter (message) — it tells you *what* failed when the assertion breaks.
 
+Since Winter '23, the `Assert` class (`Assert.areEqual`, `Assert.isTrue`, `Assert.fail`…) is the recommended API for new tests; `System.assertEquals` still works, with the same parameter order (expected, actual, message).
+
 ---
 
 ## Anti-Patterns to Avoid
 
 - **`SeeAllData=true`**: Exposes your tests to real org data, making them environment-dependent and unreliable. Avoid it by default, and keep it for the rare cases where the data you need can't be created in a test. You don't need it for the standard price book: `Test.getStandardPricebookId()` works without it.
-- **Inserting in every test method**: Costs DML limits and slows runs. Use `@TestSetup` or `TestDataFactory`.
+- **Inserting in every test method**: Duplicates code and slows runs (each test method gets its own limits, but rebuilds all its data). Use `@TestSetup` or `TestDataFactory`.
 - **Testing only the happy path**: Write at least one negative test — what happens with null input, missing fields, or invalid data?
 - **Ignoring bulk tests**: Add a test with 200 records to verify your code is properly bulkified.
 
@@ -204,7 +207,8 @@ static void testBulk200Records() {
     AccountService.processAll(accounts);
     Test.stopTest();
 
-    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed']);
+    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed'],
+        'All 200 accounts should be processed in a single transaction');
 }
 ```
 
