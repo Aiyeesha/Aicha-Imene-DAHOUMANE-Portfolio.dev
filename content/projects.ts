@@ -519,8 +519,8 @@ export const projects: Project[] = [
   {
     "slug": "python-password-checker",
     "nature": "personal",
-    "title": "Password Strength Analyzer (Python CLI)",
-    "excerpt": "CLI tool scoring password strength via entropy calculation, regex pattern detection, dictionary matching, and a HaveIBeenPwned API check using k-anonymity.",
+    "title": "Password Checker — Strength & Breach Analyzer",
+    "excerpt": "Zero-dependency Python CLI and bilingual web app estimating a password's effective entropy (common words, leet speak, keyboard walks, sequences) and checking breaches via the Pwned Passwords k-anonymity API — only 5 hash characters ever leave the device.",
     "track": "itops",
     "categories": [
       "Security",
@@ -528,28 +528,40 @@ export const projects: Project[] = [
     ],
     "tags": [
       "Python",
-      "Regex",
+      "TypeScript",
       "Security",
-      "API",
+      "k-anonymity",
+      "HaveIBeenPwned",
       "CLI",
-      "HaveIBeenPwned"
+      "GitHub Actions",
+      "CSP"
     ],
     "badge": {
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/Python-Password-Checker-project",
+    "repoUrl": "https://github.com/Aiyeesha/password-checker",
+    "liveUrl": "https://aiyeesha.github.io/password-checker/",
     "techStack": [
       "Python",
-      "Regex",
-      "Security",
-      "API",
-      "CLI",
-      "HaveIBeenPwned"
+      "TypeScript",
+      "Web Crypto API",
+      "pytest",
+      "Node.js test runner",
+      "GitHub Actions",
+      "GitHub Pages"
+    ],
+    "updatedAt": "2026-11-04",
+    "highlights": [
+      "Effective entropy: dictionary, leet speak, keyboard walks, sequences",
+      "k-anonymity breach check: only 5 SHA-1 characters sent",
+      "Bilingual web app with strict CSP on GitHub Pages",
+      "77 Python + 48 TypeScript tests, 22 cases shared by both engines"
     ],
     "featured": false,
     "sortOrder": 230,
-    "status": "draft"
+    "status": "published",
+    "isSecurity": true
   },
   {
     "slug": "risk-assessment-matrix",
