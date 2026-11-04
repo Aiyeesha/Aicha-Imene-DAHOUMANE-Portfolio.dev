@@ -12,6 +12,7 @@ import path from "node:path";
 import fr from "@/messages/fr.json";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
+import { LINKEDIN_PROFILE_URL } from "@/lib/social";
 
 const CV_DIR = path.join(process.cwd(), "public", "cv");
 const MESSAGES = { fr, en, es } as const;
@@ -63,6 +64,16 @@ describe("CV / site consistency", () => {
       }
     });
   }
+
+  it("every CV links to the canonical LinkedIn profile (accented handle)", () => {
+    // The unaccented handle "aicha-imene-dahoumane" is another profile: a
+    // recruiter clicking it from a CV would land on "profile not found".
+    for (const f of fs.readdirSync(CV_DIR).filter((x) => x.endsWith(".html"))) {
+      const html = read(f);
+      expect({ f, ok: html.includes(`href="${LINKEDIN_PROFILE_URL}"`) }).toEqual({ f, ok: true });
+      expect({ f, stale: /linkedin\.com\/in\/aicha-imene-dahoumane/.test(html) }).toEqual({ f, stale: false });
+    }
+  });
 
   it("no CV describes Windows Autopilot as image-based (Sysprep/WDS/PXE)", () => {
     // Autopilot provisions from the cloud without an image; Sysprep, WDS and
