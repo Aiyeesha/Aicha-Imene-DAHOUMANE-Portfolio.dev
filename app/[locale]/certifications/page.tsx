@@ -247,14 +247,16 @@ export default async function CertificationsPage({ params }: PageProps) {
         : "Développeur Concepteur Logiciel",
       issuer: "OpenClassrooms",
       earnedDate: isFr ? "Oct. 2025" : isEs ? "Oct. 2025" : "Oct 2025",
-      level: isFr ? "Titre RNCP niveau 6 (Bac+3/4)" : isEs ? "Título RNCP nivel 6 (equivalente a Bac+3/4)" : "RNCP Level 6 (Bac+3/4 equivalent)",
+      // RNCP35976: the record the diploma cites (France compétences decision
+      // published Oct 15, 2021); since replaced by RNCP38038.
+      level: isFr ? "Titre RNCP niveau 6 (Bac+3/4) · RNCP35976" : isEs ? "Título RNCP nivel 6 (equivalente a Bac+3/4) · RNCP35976" : "RNCP Level 6 (Bac+3/4 equivalent) · RNCP35976",
       description: isFr
         ? "Titre professionnel en conception et développement logiciel avec spécialisation Salesforce : Apex, Flows, modélisation des données, CI/CD (Salesforce CLI, GitHub Actions), LWC, sécurité et permission sets."
         : isEs
         ? "Título profesional en diseño y desarrollo de software con especialización en Salesforce: Apex, Flows, modelado de datos, CI/CD (Salesforce CLI, GitHub Actions), LWC, seguridad y permission sets."
         : "Professional title in software design & development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.",
       skills: ["Apex", "Salesforce Flows", "LWC", "Data Modeling", "CI/CD", "GitHub Actions", "Salesforce CLI", "API Integration", "Security & Permissions", "Automated Testing"],
-      credentialUrl: undefined,
+      credentialUrl: "https://www.francecompetences.fr/recherche/rncp/35976/",
       diplomaUrl: "/certifications/openclassrooms-dcl-diploma.pdf",
       initials: "DCL",
       color: "bg-indigo-700",
