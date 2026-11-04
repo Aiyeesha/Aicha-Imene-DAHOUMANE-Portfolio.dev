@@ -2,7 +2,7 @@
 title: "Governor Limits Salesforce : comprendre, surveiller et les éviter"
 excerpt: "Guide pratique sur les governor limits Salesforce — les plus critiques, comment surveiller votre consommation et les patterns pour rester bien en dessous des seuils."
 date: "2025-11-03"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Bonnes pratiques"]
 projects: ["fasha-apex-backend-optimization"]
 ---
@@ -34,17 +34,18 @@ Salesforce est une plateforme multi-tenant. Votre org partage les ressources de 
 | Requêtes SOQL | 200 |
 | Instructions DML | 150 |
 | Lignes DML | 10 000 |
-| Taille du heap | 12 Mo (batch) |
+| Taille du heap | 12 Mo (tout l'Apex asynchrone) |
 | Temps CPU | 60 000 ms |
 
 ### Limites quotidiennes à l'échelle de l'org
 
 | Limite | Valeur |
 |--------|--------|
-| Exécutions Apex asynchrones | 250 000 |
-| Alertes email | 1 000 par utilisateur par jour |
-| Messages sortants | 10 000 |
+| Exécutions Apex asynchrones (Batch, Future, Queueable, Scheduled) | 250 000 ou 200 × le nombre de licences utilisateur, la valeur la plus élevée, sur 24 h glissantes |
+| Alertes email (règles de workflow, approbations, flows) | 1 000 par licence Salesforce standard (15 en Developer Edition), plafonné à 2 000 000 pour l'org |
 | Appels API | Varie selon l'édition |
+
+Ces limites d'org se consultent à tout moment avec `OrgLimits.getMap()` en Apex ou la ressource REST `/limits`.
 
 ## Surveiller vos limites
 
@@ -222,7 +223,7 @@ if (toProcess.isEmpty()) return;
 | DML dans une boucle | Limite de 150 DML | Collecter les enregistrements, DML unique |
 | SOQL large sans LIMIT | Limite de 50 000 lignes | Ajouter WHERE, LIMIT ou agrégat |
 | Récursion de trigger | Boucle infinie | Garde de récursion fondée sur les Id déjà traités |
-| Callout synchrone | Limites CPU/callout | @future ou Queueable + AllowsCallouts |
+| Callout depuis un trigger | Callout synchrone interdit dans un trigger, et refusé après un DML non validé (« uncommitted work pending ») | @future(callout=true) ou Queueable + AllowsCallouts |
 | Stockage de listes SObject complètes | Heap de 6 Mo | Utiliser des ensembles/maps d'ID |
 
 ## Conclusion

@@ -2,7 +2,7 @@
 title: "Clases de test Apex: cobertura del 85 %+ sin hacer trampa"
 excerpt: "Escribe tests Apex significativos que realmente detecten bugs — TestDataFactory, tests asíncronos, mocks de callouts y los antipatrones que inflan la cobertura sin aportar valor."
 date: "2026-01-20"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "Apex", "Testing", "Best Practices"]
 featured: false
 projects: ["idemconnect-apex-backend", "fasha-apex-backend-optimization"]
@@ -170,8 +170,9 @@ Para los escenarios de error, crea un segundo mock que devuelva 4xx/5xx y prueba
 Las aserciones deficientes inflan la cobertura sin detectar bugs:
 
 ```apex
-// ❌ Inútil — siempre pasa
+// ❌ Siempre pasa
 System.assert(true);
+// ❌ Demasiado débil — solo comprueba que hay un resultado, no su contenido
 System.assertNotEquals(null, result);
 
 // ✅ Significativa — detectará regresiones
@@ -185,12 +186,14 @@ System.assert(result.contains(expectedId),
 
 Usa siempre el tercer parámetro (el mensaje) — te indica *qué* falló cuando la aserción se rompe.
 
+Desde Winter '23, la clase `Assert` (`Assert.areEqual`, `Assert.isTrue`, `Assert.fail`…) es la API recomendada para los nuevos tests; `System.assertEquals` sigue siendo válido, con el mismo orden de parámetros (esperado, obtenido, mensaje).
+
 ---
 
 ## Antipatrones a evitar
 
 - **`SeeAllData=true`**: expone tus tests a los datos reales de la org, haciéndolos dependientes del entorno y poco fiables. Evítalo por defecto y resérvalo para los raros casos en que los datos necesarios no se pueden crear en un test. Para el catálogo de precios estándar no hace falta: `Test.getStandardPricebookId()` funciona sin él.
-- **Insertar en cada método de test**: consume límites de DML y ralentiza las ejecuciones. Usa `@TestSetup` o `TestDataFactory`.
+- **Insertar en cada método de test**: duplica el código y ralentiza las ejecuciones (cada método tiene sus propios límites, pero recrea todos sus datos). Usa `@TestSetup` o `TestDataFactory`.
 - **Probar solo el camino feliz**: escribe al menos un test negativo — ¿qué ocurre con una entrada nula, campos faltantes o datos inválidos?
 - **Ignorar los tests masivos**: añade un test con 200 registros para verificar que tu código está correctamente "bulkificado".
 
@@ -204,7 +207,8 @@ static void testBulk200Records() {
     AccountService.processAll(accounts);
     Test.stopTest();
 
-    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed']);
+    System.assertEquals(200, [SELECT COUNT() FROM Account WHERE Status__c = 'Processed'],
+        'Las 200 cuentas deben procesarse en una sola transacción');
 }
 ```
 

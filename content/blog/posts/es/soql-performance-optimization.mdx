@@ -2,7 +2,7 @@
 title: "Optimización de rendimiento SOQL: de consultas lentas a resultados en menos de un segundo"
 excerpt: "Técnicas prácticas para escribir consultas SOQL más rápidas en Salesforce — índices, filtros selectivos, planes de consulta y anti-patrones comunes a eliminar."
 date: "2025-05-05"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "SOQL", "Rendimiento", "Base de datos", "Buenas prácticas"]
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
@@ -11,7 +11,7 @@ Las consultas SOQL lentas son uno de los cuellos de botella de rendimiento más 
 
 ## Entendiendo cómo Salesforce ejecuta las consultas
 
-Antes de optimizar, entiende el modelo de ejecución. Salesforce usa una **base de datos Oracle** por debajo, con una arquitectura multi-tenant. Conceptos clave:
+Antes de optimizar, entiende el modelo de ejecución. Salesforce funciona sobre una base de datos relacional (históricamente **Oracle**) compartida entre orgs, con una arquitectura multi-tenant. Conceptos clave:
 
 - **Selectividad**: una consulta es "selectiva" si su filtro coincide con un pequeño porcentaje del total de registros. Salesforce requiere selectividad para usar un índice.
 - **Tipos de índice**: los campos estándar (Id, Name, SystemModstamp, etc.) están auto-indexados. Los campos personalizados pueden indexarse bajo solicitud.
@@ -120,9 +120,9 @@ List<Account> accounts = [
 ```
 
 **Límites a tener en cuenta:**
-- Máximo 1 nivel de anidamiento de subconsultas
-- La subconsulta devuelve máximo 200 registros por padre
-- Máximo 20 subconsultas por consulta de nivel superior
+- Hasta 5 niveles de relaciones padre-hijo (el padre y luego 4 niveles de hijos): desde la API 58.0 en REST y SOAP, desde la API 61.0 (Summer '24) en Apex; antes, un solo nivel de subconsulta
+- Con más de 200 registros hijos por padre, recorre la subconsulta en un bucle `for` SOQL: asignarla directamente a una lista lanza «Aggregate query has too many rows for direct assignment»
+- Máximo 20 subconsultas padre-hijo por consulta
 
 ## 5. Limita tus resultados con LIMIT
 
@@ -162,7 +162,7 @@ Usa `FOR UPDATE` solo cuando necesites bloqueo a nivel de fila para evitar actua
 
 ## 7. Literales de fecha vs. fechas dinámicas
 
-Los literales de fecha son más eficientes que las expresiones dinámicas porque son más amigables para el optimizador:
+En rendimiento, un literal de fecha y una variable de fecha enlazada son equivalentes: ambos siguen siendo selectivos sobre un campo indexado. Los literales son más legibles y tienen en cuenta la zona horaria del usuario y el año fiscal de la org:
 
 ```apex
 // ✅ Usa literales de fecha
@@ -170,7 +170,7 @@ WHERE CreatedDate = LAST_N_DAYS:30
 WHERE CloseDate = THIS_QUARTER
 WHERE SystemModstamp > LAST_MONTH  // indexado, a diferencia de LastModifiedDate
 
-// ⚠️ Fechas dinámicas — funcionan pero son ligeramente más pesadas
+// ✅ También válido — útil cuando el límite se calcula
 WHERE CreatedDate > :Date.today().addDays(-30)
 ```
 
@@ -183,7 +183,7 @@ WHERE CreatedDate > :Date.today().addDays(-30)
 
 ## 8. Consultas agregadas y GROUP BY
 
-Las consultas SOQL agregadas pueden reducir drásticamente los datos que recuperas:
+Las consultas SOQL agregadas pueden reducir drásticamente los datos transferidos a Apex. Ojo: cada fila agregada sigue contando en el límite de 50.000 filas de consulta, salvo `COUNT()` sin `GROUP BY`, que cuenta como una sola fila.
 
 ```apex
 // ❌ Recuperar todas las oportunidades para contar en Apex
@@ -219,12 +219,11 @@ WHERE StageName IN ('Prospecting', 'Qualification', 'Proposal')
 
 ## 10. Solicita índices personalizados para filtros de alto volumen
 
-Si filtras frecuentemente sobre un campo personalizado con millones de registros, solicita un **índice personalizado** a través de Salesforce Support.
+Si filtras frecuentemente sobre un campo personalizado con millones de registros, solicita un **índice personalizado** a través de Salesforce Support. No hace falta para los campos marcados como *External ID* o *Unique*: se indexan automáticamente.
 
 Candidatos para indexación personalizada:
 - Campos filtrados en batch jobs que afectan a más de 100 mil registros
 - Campos usados en cláusulas WHERE de SOSL/SOQL de LWC en objetos de alto volumen
-- Campos External ID usados para upserts de integración de datos
 
 ## Checklist de rendimiento
 
