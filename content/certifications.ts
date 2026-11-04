@@ -72,7 +72,8 @@ export const trailheadProfile = {
   points: 59775,
   trails: 14,
   superbadges: 0,
-  profileUrl: 'https://trailblazer.me/id/aidahoumane',
+  // Final URL: trailblazer.me/id/… is a retired domain that redirects (302) here.
+  profileUrl: 'https://www.salesforce.com/trailblazer/aidahoumane',
   nextRank: {
     name: "Ranger",
     badgesNeeded: 6,
