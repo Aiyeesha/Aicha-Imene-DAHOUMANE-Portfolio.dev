@@ -1,7 +1,8 @@
 // app/[locale]/not-found.tsx
 // --------------------------
-// Locale 404 for everything under app/[locale]/ (including unknown URLs, via
-// the [...rest] catch-all). useParams() gives the locale with no flash.
+// Locale 404 for notFound() calls from pages under app/[locale]/ (unknown
+// blog post or project). Unknown URLs go to app/not-found.tsx, rendered on
+// the server. useParams() gives the locale with no flash.
 
 "use client";
 
