@@ -369,5 +369,19 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
       "8 perfiles casi idénticos consolidados en 5 Permission Set Groups",
       "Migración completa de Visualforce, botones JavaScript y Process Builder a LWC y Flow, probada en masa con más de 200 registros"
     ]
+  },
+  "python-password-checker": {
+    "fr": [
+      "Entropie effective : mots courants, leet speak, suites de touches, suites logiques",
+      "Vérification des fuites par k-anonymité : seuls 5 caractères SHA-1 envoyés",
+      "Application web bilingue avec CSP stricte sur GitHub Pages",
+      "77 tests Python + 48 tests TypeScript, 22 cas partagés par les deux moteurs"
+    ],
+    "es": [
+      "Entropía efectiva: palabras comunes, leet speak, recorridos de teclado, secuencias",
+      "Comprobación de filtraciones por k-anonimato: solo se envían 5 caracteres SHA-1",
+      "Aplicación web bilingüe con CSP estricta en GitHub Pages",
+      "77 pruebas Python + 48 pruebas TypeScript, 22 casos compartidos por ambos motores"
+    ]
   }
 };
