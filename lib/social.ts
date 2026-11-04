@@ -13,7 +13,14 @@ export function sanitizeUrl(raw: string | undefined, fallback = ""): string {
   }
 }
 
-export const LINKEDIN_URL = sanitizeUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL);
+// Canonical LinkedIn profile (with the accents of the real handle,
+// "aïcha-imène-dahoumane", percent-encoded). The CVs in public/cv link to
+// exactly this URL (checked by __tests__/cv-consistency.test.ts); it is also
+// the fallback when NEXT_PUBLIC_LINKEDIN_URL is not set. The unaccented
+// "aicha-imene-dahoumane" handle is a different, non-existent profile.
+export const LINKEDIN_PROFILE_URL = "https://www.linkedin.com/in/a%C3%AFcha-im%C3%A8ne-dahoumane/";
+
+export const LINKEDIN_URL = sanitizeUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL, LINKEDIN_PROFILE_URL);
 
 // GitHub URL from NEXT_PUBLIC_SAME_AS (comma-separated list, e.g.
 // "https://linkedin.com/in/...,https://github.com/Aiyeesha"). The hostname is
