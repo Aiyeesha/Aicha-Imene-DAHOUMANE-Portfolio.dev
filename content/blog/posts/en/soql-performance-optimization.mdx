@@ -2,7 +2,7 @@
 title: "SOQL Performance Optimization: From Slow Queries to Sub-Second Results"
 excerpt: "Practical techniques to write faster SOQL queries in Salesforce — indexes, selective filters, query plans, and common anti-patterns to eliminate."
 date: "2025-05-05"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "SOQL", "Performance", "Database", "Best Practices"]
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
@@ -11,7 +11,7 @@ Slow SOQL queries are one of the most common performance bottlenecks in Salesfor
 
 ## Understanding How Salesforce Executes Queries
 
-Before optimizing, understand the execution model. Salesforce uses an **Oracle database** under the hood with a multi-tenant architecture. Key concepts:
+Before optimizing, understand the execution model. Salesforce runs on a relational database (historically **Oracle**) shared across orgs, in a multi-tenant architecture. Key concepts:
 
 - **Selectivity**: a query is "selective" if its filter matches a small percentage of total records. Salesforce requires selectivity to use an index.
 - **Index types**: standard fields (Id, Name, SystemModstamp, etc.) are auto-indexed. Custom fields can be indexed on request.
@@ -120,9 +120,9 @@ List<Account> accounts = [
 ```
 
 **Limits to know:**
-- Max 1 level of sub-query nesting
-- Sub-query returns max 200 records per parent
-- Max 20 sub-queries per top-level query
+- Up to 5 levels of parent-to-child relationships (the parent, then 4 levels of children): since API 58.0 in REST and SOAP, since API 61.0 (Summer '24) in Apex; previously a single sub-query level
+- Beyond 200 child records for a parent, iterate the sub-query in a SOQL `for` loop: assigning it directly to a list throws "Aggregate query has too many rows for direct assignment"
+- Max 20 parent-to-child sub-queries per query
 
 ## 5. LIMIT Your Results
 
@@ -162,7 +162,7 @@ Use `FOR UPDATE` only when you need row-level locking to prevent concurrent upda
 
 ## 7. Date Literals vs. Dynamic Dates
 
-Date literals are more performant than dynamic expressions because they're optimizer-friendly:
+Performance-wise, a date literal and a bound date variable are equivalent: both stay selective on an indexed field. Literals are more readable, though, and they honor the user's time zone and the org's fiscal year:
 
 ```apex
 // ✅ Use date literals
@@ -170,7 +170,7 @@ WHERE CreatedDate = LAST_N_DAYS:30
 WHERE CloseDate = THIS_QUARTER
 WHERE SystemModstamp > LAST_MONTH  // indexed, unlike LastModifiedDate
 
-// ⚠️ Dynamic dates — still works but slightly heavier
+// ✅ Also fine — useful when the bound is computed
 WHERE CreatedDate > :Date.today().addDays(-30)
 ```
 
@@ -183,7 +183,7 @@ WHERE CreatedDate > :Date.today().addDays(-30)
 
 ## 8. Aggregate Queries and GROUP BY
 
-Aggregate SOQL can dramatically reduce the data you retrieve:
+Aggregate SOQL can dramatically reduce the data transferred to Apex. Note that each aggregated row still counts toward the 50,000 query-row limit, except `COUNT()` without `GROUP BY`, which counts as a single row.
 
 ```apex
 // ❌ Retrieve all opportunities to count in Apex
@@ -219,12 +219,11 @@ WHERE StageName IN ('Prospecting', 'Qualification', 'Proposal')
 
 ## 10. Request Custom Indexes for High-Volume Filters
 
-If you frequently filter on a custom field with millions of records, request a **custom index** via Salesforce Support.
+If you frequently filter on a custom field with millions of records, request a **custom index** via Salesforce Support. Not needed for fields marked *External ID* or *Unique*: they are indexed automatically.
 
 Candidates for custom indexing:
 - Fields filtered in batch jobs affecting > 100k records
 - Fields used in WHERE clauses of LWC SOSL/SOQL on high-volume objects
-- External ID fields used for data integration upserts
 
 ## Performance Checklist
 
