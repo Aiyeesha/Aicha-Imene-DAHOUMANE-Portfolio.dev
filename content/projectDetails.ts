@@ -3967,250 +3967,281 @@ export const projectDetails: ProjectDetails[] = [
         "src": "/projects/python-password-checker/cover.svg"
       },
       {
-        "alt": "Screenshot 1",
-        "src": "/projects/python-password-checker/screenshot-1.svg"
+        "alt": "Web interface — light theme (French)",
+        "src": "/projects/python-password-checker/web-light-fr.png"
+      },
+      {
+        "alt": "Web interface — dark theme (English)",
+        "src": "/projects/python-password-checker/web-dark-en.png"
       }
     ],
     "locales": {
       "en": {
-        "title": "Password Strength Analyzer (Python CLI)",
-        "heroSubtitle": "Password strength analyzer — entropy, regex, HaveIBeenPwned (Python CLI)",
-        "sections": [
-          {
-            "body": "I built this personal security-focused CLI tool: it rigorously evaluates password strength without ever transmitting the password in plain text. I built it to explore Python's regex engine, entropy mathematics, and privacy-preserving API design (HaveIBeenPwned k-anonymity). It runs interactively in the terminal and produces a full structured report in one pass.",
-            "type": "text",
-            "title": "Context"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "I implemented entropy calculation: log₂(pool^length) character-pool-aware — composite 0–100 score",
-              "I compiled 6 regex rules: repeated chars, numeric/alphabetic sequences, keyboard walks (qwerty/azerty), embedded years",
-              "I added dictionary matching against 30+ common passwords and base words",
-              "I built crack-time estimation at 3 attack speeds (10k/s, 1M/s, 1B/s)",
-              "I integrated HaveIBeenPwned via k-anonymity: only the first 5 SHA-1 chars sent to the API — the password never leaves the machine",
-              "I built ANSI-colored terminal output with a progress bar, per-criterion checklist, and improvement suggestions"
-            ],
-            "title": "Features Built"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Python 3 stdlib — re, hashlib (SHA-1), math, getpass (input masking)",
-              "Compiled regex — 6 rules (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
-              "HIBP k-anonymity — only 5-char SHA-1 prefix sent to the API",
-              "requests (optional) — HaveIBeenPwned API call",
-              "ANSI escape codes — colored output and terminal progress bar",
-              "Zero mandatory dependencies — runs on stdlib alone"
-            ],
-            "title": "Stack & Technologies"
-          },
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "label": "Secure input",
-                "description": "getpass.getpass() used to mask password entry in the terminal — never displayed in plain text."
-              },
-              {
-                "label": "Entropy & score",
-                "description": "Character pool detected (lowercase, uppercase, digits, special). Entropy computed: log₂(pool^length). Composite 0–100 score with length and complexity bonuses."
-              },
-              {
-                "label": "Pattern analysis",
-                "description": "6 compiled regex rules applied: repetitions, sequences, keyboard walks, embedded years. Each detected pattern penalizes the score."
-              },
-              {
-                "label": "HIBP check",
-                "description": "SHA-1 hash of the password computed. Only the first 5 characters sent to the HIBP API (k-anonymity). Response analyzed for breach detection — password never revealed."
-              },
-              {
-                "label": "Terminal report",
-                "description": "ANSI-colored output: score, progress bar, criteria checklist, crack-time estimate, targeted improvement suggestions."
-              }
-            ],
-            "title": "How It Works"
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Character-pool aware",
-                "label": "Entropy model",
-                "value": "log₂(pool^length)"
-              },
-              {
-                "note": "Only 5 SHA-1 chars sent",
-                "label": "HIBP privacy",
-                "value": "k-anonymity"
-              },
-              {
-                "note": "RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...",
-                "label": "Pattern engine",
-                "value": "6 regex rules"
-              },
-              {
-                "note": "Length, complexity, entropy bonuses + penalties",
-                "label": "Score",
-                "value": "0–100"
-              },
-              {
-                "note": "stdlib only (requests optional)",
-                "label": "Dependencies",
-                "value": "Zero required"
-              }
-            ],
-            "title": "Key Technical Choices"
-          }
-        ]
-      },
-      "fr": {
-        "title": "Analyseur de force de mot de passe (CLI Python)",
-        "heroSubtitle": "Analyseur de force de mot de passe — entropie, regex, HaveIBeenPwned (CLI Python)",
-        "sections": [
-          {
-            "body": "J'ai construit cet outil CLI personnel centré sur la sécurité : il évalue rigoureusement la force d'un mot de passe sans jamais le transmettre en clair. Je l'ai conçu pour explorer le moteur regex de Python, le calcul d'entropie et la conception d'API respectueuses de la vie privée (k-anonymat HaveIBeenPwned). L'outil fonctionne en mode interactif dans le terminal et produit un rapport structuré complet en une seule passe.",
-            "type": "text",
-            "title": "Contexte"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "J'ai implémenté le calcul d'entropie : log₂(pool^longueur) adapté au pool de caractères — score composite 0-100",
-              "J'ai compilé 6 règles regex : caractères répétés, séquences numériques/alphabétiques, walks clavier (qwerty/azerty), années intégrées",
-              "J'ai ajouté une correspondance dictionnaire : 30+ mots de passe courants et mots de base",
-              "J'ai construit l'estimation du temps de crack à 3 vitesses d'attaque (10k/s, 1M/s, 1 milliard/s)",
-              "J'ai intégré HaveIBeenPwned par k-anonymat : seuls les 5 premiers caractères du hash SHA-1 envoyés — le mot de passe ne quitte jamais la machine",
-              "J'ai construit une sortie terminal ANSI colorée avec barre de progression, checklist par critère et suggestions d'amélioration"
-            ],
-            "title": "Fonctionnalités développées"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Python 3 stdlib — re, hashlib (SHA-1), math, getpass (masquage saisie)",
-              "Regex compilés — 6 règles (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...)",
-              "k-anonymat HIBP — seul le préfixe SHA-1 de 5 caractères envoyé à l'API",
-              "requests (optionnel) — appel API HaveIBeenPwned",
-              "ANSI escape codes — sortie colorée et barre de progression en terminal",
-              "Aucune dépendance obligatoire — fonctionne avec la stdlib seule"
-            ],
-            "title": "Stack & Technologies"
-          },
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "label": "Saisie sécurisée",
-                "description": "getpass.getpass() utilisé pour masquer la saisie du mot de passe dans le terminal — jamais affiché en clair."
-              },
-              {
-                "label": "Calcul d'entropie & score",
-                "description": "Pool de caractères détecté (minuscules, majuscules, chiffres, spéciaux). Entropie calculée : log₂(pool^longueur). Score composite 0-100 avec bonus longueur et complexité."
-              },
-              {
-                "label": "Analyse de patterns",
-                "description": "6 règles regex compilées appliquées : répétitions, séquences, walks clavier, années intégrées. Chaque pattern détecté pénalise le score."
-              },
-              {
-                "label": "Vérification HIBP",
-                "description": "Hash SHA-1 du mot de passe calculé. Seuls les 5 premiers caractères envoyés à l'API HIBP (k-anonymat). Réponse analysée pour détecter une compromission sans révéler le mot de passe."
-              },
-              {
-                "label": "Rapport terminal",
-                "description": "Sortie ANSI colorée : score, barre de progression, checklist des critères, estimation du temps de crack, suggestions d'amélioration ciblées."
-              }
-            ],
-            "title": "Fonctionnement"
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Adapté au pool de caractères",
-                "label": "Modèle d'entropie",
-                "value": "log₂(pool^longueur)"
-              },
-              {
-                "note": "5 chars SHA-1 seulement envoyés",
-                "label": "Confidentialité HIBP",
-                "value": "k-anonymat"
-              },
-              {
-                "note": "RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD...",
-                "label": "Moteur de patterns",
-                "value": "6 règles regex"
-              },
-              {
-                "note": "Bonus longueur, complexité, entropie + pénalités",
-                "label": "Score",
-                "value": "0–100"
-              },
-              {
-                "note": "stdlib uniquement (requests optionnel)",
-                "label": "Dépendances",
-                "value": "Zéro obligatoire"
-              }
-            ],
-            "title": "Choix techniques clés"
-          }
-        ]
-      },
-      "es": {
-        "title": "Analizador de fortaleza de contraseñas (CLI Python)",
-        "heroSubtitle": "Analizador de fortaleza de contraseñas — entropía, regex, HaveIBeenPwned (CLI Python)",
+        "title": "Password Checker — strength & breach analyzer",
+        "heroSubtitle": "Zero-dependency Python CLI and bilingual web app: effective entropy, weak-pattern detection and a k-anonymity breach check where only 5 hash characters leave the device",
         "sections": [
           {
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "Construí esta herramienta de línea de comandos que evalúa rigurosamente la fortaleza de una contraseña sin transmitirla nunca en texto plano. Es un proyecto personal centrado en la seguridad, pensado para explorar el motor de regex de Python, el cálculo de entropía y el diseño de APIs respetuosas con la privacidad.",
-              "La herramienta funciona en modo interactivo en la terminal, enmascara la entrada y produce un informe estructurado completo en una sola pasada."
+            "title": "Context",
+            "body": "I rebuilt this project from scratch to show a defensive, privacy-first approach to a classic problem: how strong is a password really, and has it already leaked? Character-count formulas overrate human passwords, and most online checkers ask you to trust them with the password itself. Password Checker estimates what an attacker would actually try first, and checks Have I Been Pwned without ever sending the password."
+          },
+          {
+            "type": "bullets",
+            "title": "What I built",
+            "items": [
+              "A Python CLI (stdlib only): masked input, readable or JSON report, exit codes usable in scripts and CI",
+              "Effective entropy: dictionary words (including leet speak such as P@ssw0rd), AZERTY/QWERTY keyboard walks, sequences and repetitions are scored as an attacker would guess them",
+              "Thresholds sourced from France's CNIL (2022) and NIST SP 800-63B-4",
+              "Breach check through the Pwned Passwords k-anonymity API: SHA-1 computed locally, only the 5-character prefix is sent, response padding enabled",
+              "A bilingual (EN/FR) web interface on GitHub Pages: a TypeScript port of the engine, a pattern map that never reveals a character, and the SHA-1 hash drawn as 5 sent cells and 35 kept cells"
             ]
           },
           {
             "type": "bullets",
+            "title": "Security choices",
             "items": [
-              "Implementé un cálculo de entropía basado en el tamaño del conjunto de caracteres y la longitud de la contraseña (bits), con una puntuación compuesta de 0 a 100.",
-              "Construí una detección de patrones mediante regex: caracteres repetidos, secuencias numéricas/alfabéticas, patrones de teclado (qwerty/azerty), años incluidos, largas series numéricas.",
-              "Añadí una comparación con un diccionario de 30+ contraseñas comunes.",
-              "Implementé una estimación del tiempo de crackeo a tres velocidades de ataque (10k/s, 1M/s, 1.000M/s) mediante la fórmula del espacio de búsqueda.",
-              "Integré HaveIBeenPwned mediante k-anonimato: solo envío a la API los 5 primeros caracteres del hash SHA-1 — la contraseña nunca sale de la máquina.",
-              "Construí una salida de terminal coloreada con ANSI, barra de progreso, checklist por criterio y sugerencias de mejora accionables."
-            ],
-            "title": "Lo que construí"
+              "The password is never displayed, logged or stored; tests assert it never appears in any output",
+              "No --password option: it would leak into shell history and process arguments",
+              "Web: strict Content Security Policy allowing a single destination (api.pwnedpasswords.com), no analytics, no third-party scripts or fonts, no cookies sent",
+              "Breach check on click only — checking on every keystroke would send the prefix of every partial password",
+              "Repository hardening: protected main branch (PR + green CI required), secret scanning with push protection, Dependabot, private vulnerability reporting, Gitleaks scan of the full history"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Engineering quality",
             "items": [
               {
-                "label": "Modelo de entropía",
-                "value": "log₂(pool^longitud) — adaptado al conjunto de caracteres"
+                "label": "Python tests",
+                "value": "77"
               },
               {
-                "label": "Privacidad HIBP",
-                "value": "k-anonimato — solo se envían 5 caracteres del hash SHA-1"
+                "label": "TypeScript tests",
+                "value": "48"
               },
               {
-                "label": "Motor de patrones",
-                "value": "6 reglas regex compiladas (RE_REPEAT, RE_SEQ_NUM, RE_KEYBOARD…)"
+                "label": "Shared test cases",
+                "value": "22",
+                "note": "both engines must return identical results"
               },
               {
-                "label": "Rango de puntuación",
-                "value": "0–100 con bonificaciones de longitud, complejidad, entropía y penalizaciones"
+                "label": "CI matrix",
+                "value": "5 jobs",
+                "note": "Windows + Linux, Python 3.11/3.14, Node 24"
               },
               {
-                "label": "Dependencias",
-                "value": "solo stdlib (re, hashlib, math, getpass) + requests opcional"
+                "label": "Runtime dependencies",
+                "value": "0"
               }
-            ],
-            "title": "Decisiones técnicas clave"
+            ]
           },
           {
-            "code": "# No requiere instalación — solo stdlib (requests opcional para HIBP)\npython password_checker.py",
-            "type": "code",
-            "title": "Ejecutar la herramienta",
-            "language": "bash"
+            "type": "timeline",
+            "title": "How it works",
+            "steps": [
+              {
+                "label": "Local analysis",
+                "description": "Length and character classes give the theoretical entropy (L × log2 N)."
+              },
+              {
+                "label": "Pattern detection",
+                "description": "Common words, keyboard walks, sequences and repetitions are located — by type and position only, never by text."
+              },
+              {
+                "label": "Effective entropy",
+                "description": "Predictable parts are re-scored (about 12.9 bits per common word) and the score follows CNIL thresholds."
+              },
+              {
+                "label": "Breach check",
+                "description": "SHA-1 is hashed locally; only its first 5 characters are sent, and the matching suffix is searched locally."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Links",
+            "items": [
+              {
+                "label": "Live demo",
+                "href": "https://aiyeesha.github.io/password-checker/"
+              },
+              {
+                "label": "Source code",
+                "href": "https://github.com/Aiyeesha/password-checker"
+              }
+            ]
+          }
+        ]
+      },
+      "fr": {
+        "title": "Password Checker — robustesse et fuites",
+        "heroSubtitle": "CLI Python sans dépendance et application web bilingue : entropie effective, détection des motifs faibles et vérification des fuites par k-anonymité, où seuls 5 caractères d'empreinte quittent l'appareil",
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexte",
+            "body": "J'ai reconstruit ce projet de zéro pour montrer une approche défensive et respectueuse de la vie privée d'un problème classique : quelle est la robustesse réelle d'un mot de passe, et a-t-il déjà fuité ? Les formules fondées sur le nombre de caractères surestiment les mots de passe humains, et la plupart des vérificateurs en ligne demandent qu'on leur confie le mot de passe lui-même. Password Checker estime ce qu'un attaquant essaierait en premier, et interroge Have I Been Pwned sans jamais envoyer le mot de passe."
+          },
+          {
+            "type": "bullets",
+            "title": "Ce que j'ai construit",
+            "items": [
+              "Une CLI Python (bibliothèque standard uniquement) : saisie masquée, rapport lisible ou JSON, codes de sortie exploitables dans un script ou une CI",
+              "L'entropie effective : mots courants (y compris en leet speak, comme P@ssw0rd), suites de touches AZERTY/QWERTY, suites logiques et répétitions sont évalués comme un attaquant les devinerait",
+              "Des seuils sourcés : CNIL (2022) et NIST SP 800-63B-4",
+              "La vérification des fuites via l'API Pwned Passwords (k-anonymité) : SHA-1 calculé localement, seul le préfixe de 5 caractères est envoyé, padding activé",
+              "Une interface web bilingue (FR/EN) sur GitHub Pages : portage TypeScript du moteur, carte des motifs qui ne révèle aucun caractère, empreinte SHA-1 dessinée en 5 cases envoyées et 35 cases gardées"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Choix de sécurité",
+            "items": [
+              "Le mot de passe n'est jamais affiché, journalisé ni stocké ; des tests vérifient qu'il n'apparaît dans aucune sortie",
+              "Aucune option --password : elle ferait fuiter le mot de passe dans l'historique du terminal et les arguments du processus",
+              "Web : politique de sécurité du contenu stricte n'autorisant qu'une destination (api.pwnedpasswords.com), aucune mesure d'audience, aucun script ni police tiers, aucun cookie envoyé",
+              "Vérification des fuites uniquement sur clic : vérifier à chaque frappe enverrait le préfixe de chaque début de mot de passe",
+              "Durcissement du dépôt : branche main protégée (PR et CI verte obligatoires), analyse des secrets avec blocage des push, Dependabot, signalement privé des vulnérabilités, analyse Gitleaks de tout l'historique"
+            ]
+          },
+          {
+            "type": "metrics",
+            "title": "Qualité logicielle",
+            "items": [
+              {
+                "label": "Tests Python",
+                "value": "77"
+              },
+              {
+                "label": "Tests TypeScript",
+                "value": "48"
+              },
+              {
+                "label": "Cas de test partagés",
+                "value": "22",
+                "note": "les deux moteurs doivent donner des résultats identiques"
+              },
+              {
+                "label": "Matrice CI",
+                "value": "5 tâches",
+                "note": "Windows + Linux, Python 3.11/3.14, Node 24"
+              },
+              {
+                "label": "Dépendances d'exécution",
+                "value": "0"
+              }
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Fonctionnement",
+            "steps": [
+              {
+                "label": "Analyse locale",
+                "description": "La longueur et les familles de caractères donnent l'entropie théorique (L × log2 N)."
+              },
+              {
+                "label": "Détection des motifs",
+                "description": "Mots courants, suites de touches, suites logiques et répétitions sont repérés — par type et position uniquement, jamais par leur texte."
+              },
+              {
+                "label": "Entropie effective",
+                "description": "Les parties prévisibles sont réévaluées (environ 12,9 bits par mot courant) et le score suit les seuils de la CNIL."
+              },
+              {
+                "label": "Vérification des fuites",
+                "description": "L'empreinte SHA-1 est calculée localement ; seuls ses 5 premiers caractères sont envoyés, et le suffixe est recherché localement."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Liens",
+            "items": [
+              {
+                "label": "Démo en ligne",
+                "href": "https://aiyeesha.github.io/password-checker/?lang=fr"
+              },
+              {
+                "label": "Code source",
+                "href": "https://github.com/Aiyeesha/password-checker"
+              }
+            ]
+          }
+        ]
+      },
+      "es": {
+        "title": "Password Checker — robustez y filtraciones",
+        "heroSubtitle": "CLI en Python sin dependencias y aplicación web bilingüe: entropía efectiva, detección de patrones débiles y comprobación de filtraciones por k-anonimato, donde solo 5 caracteres del hash salen del dispositivo",
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "body": "Reconstruí este proyecto desde cero para mostrar un enfoque defensivo y respetuoso con la privacidad de un problema clásico: ¿qué tan robusta es realmente una contraseña y se ha filtrado ya? Las fórmulas basadas en el número de caracteres sobrestiman las contraseñas humanas, y la mayoría de los verificadores en línea piden que se les confíe la propia contraseña. Password Checker estima lo que un atacante probaría primero y consulta Have I Been Pwned sin enviar nunca la contraseña."
+          },
+          {
+            "type": "bullets",
+            "title": "Lo que construí",
+            "items": [
+              "Una CLI en Python (solo biblioteca estándar): entrada oculta, informe legible o JSON, códigos de salida útiles en scripts y CI",
+              "Entropía efectiva: palabras comunes (incluido leet speak, como P@ssw0rd), recorridos de teclado AZERTY/QWERTY, secuencias y repeticiones se evalúan como los adivinaría un atacante",
+              "Umbrales basados en la CNIL francesa (2022) y NIST SP 800-63B-4",
+              "Comprobación de filtraciones con la API Pwned Passwords (k-anonimato): SHA-1 calculado localmente, solo se envía el prefijo de 5 caracteres, con relleno activado",
+              "Una interfaz web bilingüe (EN/FR) en GitHub Pages: port del motor a TypeScript, mapa de patrones que nunca revela un carácter y el hash SHA-1 dibujado como 5 celdas enviadas y 35 conservadas"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Decisiones de seguridad",
+            "items": [
+              "La contraseña nunca se muestra, registra ni almacena; las pruebas verifican que no aparece en ninguna salida",
+              "Sin opción --password: se filtraría en el historial de la terminal y en los argumentos del proceso",
+              "Web: política de seguridad de contenido estricta con un único destino (api.pwnedpasswords.com), sin analítica, sin scripts ni fuentes de terceros, sin cookies enviadas",
+              "Comprobación de filtraciones solo al hacer clic: comprobar en cada pulsación enviaría el prefijo de cada contraseña parcial",
+              "Repositorio reforzado: rama main protegida (PR y CI en verde obligatorios), escaneo de secretos con bloqueo de push, Dependabot, notificación privada de vulnerabilidades, análisis Gitleaks de todo el historial"
+            ]
+          },
+          {
+            "type": "metrics",
+            "title": "Calidad de ingeniería",
+            "items": [
+              {
+                "label": "Pruebas Python",
+                "value": "77"
+              },
+              {
+                "label": "Pruebas TypeScript",
+                "value": "48"
+              },
+              {
+                "label": "Casos de prueba compartidos",
+                "value": "22",
+                "note": "ambos motores deben dar resultados idénticos"
+              },
+              {
+                "label": "Matriz CI",
+                "value": "5 tareas",
+                "note": "Windows + Linux, Python 3.11/3.14, Node 24"
+              },
+              {
+                "label": "Dependencias de ejecución",
+                "value": "0"
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Enlaces",
+            "items": [
+              {
+                "label": "Demo en línea",
+                "href": "https://aiyeesha.github.io/password-checker/?lang=en"
+              },
+              {
+                "label": "Código fuente",
+                "href": "https://github.com/Aiyeesha/password-checker"
+              }
+            ]
           }
         ]
       }
