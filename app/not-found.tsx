@@ -1,28 +1,23 @@
 // app/not-found.tsx
 // -----------------
-// Root 404, for URLs outside the locale segments (unknown URLs under a locale
-// go to app/[locale]/not-found.tsx through the [...rest] catch-all). It must
-// be self-contained (app/layout.tsx provides no Navbar/Footer) but still
-// offers a contact link and a full language switcher (EN/FR/ES). Language
-// comes from navigator.language on the client; a brief flash is acceptable
-// on this rare fallback.
+// 404 for every unmatched URL, including unknown URLs under /fr, /en and /es
+// (e.g. /fr/page-inexistante). Server component: the page is in the HTML
+// sent by the server, in the request's language (getLocale() reads the
+// locale the next-intl proxy resolved from the URL), with a working home
+// link, contact link and language switcher even without JavaScript.
+//
+// Why not a [locale]/[...rest] catch-all calling notFound(): in Next.js 16,
+// notFound() thrown by a page is not rendered on the server; the response
+// is an empty error shell (<html id="__next_error__">) and the 404 only
+// appears once client JavaScript runs. An unmatched route renders this file
+// on the server instead. app/[locale]/not-found.tsx still serves notFound()
+// calls from locale pages (unknown blog post or project).
 
-"use client";
-
-import { useSyncExternalStore } from "react";
+import { getLocale } from "next-intl/server";
 
 type Locale = "fr" | "en" | "es";
 
-// The browser language does not change during the page's life.
-const subscribeNoop = () => () => {};
-
-function getPreferredLocale(): Locale {
-  if (typeof window === "undefined") return "en";
-  const lang = navigator.language?.toLowerCase() ?? "";
-  if (lang.startsWith("fr")) return "fr";
-  if (lang.startsWith("es")) return "es";
-  return "en";
-}
+const toLocale = (l: string): Locale => (l === "fr" || l === "es" ? l : "en");
 
 const content = {
   fr: {
@@ -88,10 +83,15 @@ function Icon404() {
   );
 }
 
-export default function NotFound() {
-  // Browser language read after hydration; "en" on the server and during
-  // hydration.
-  const locale = useSyncExternalStore<Locale>(subscribeNoop, getPreferredLocale, () => "en");
+export default async function NotFound() {
+  // Locale of the request (URL segment, resolved by the next-intl proxy);
+  // "en" for URLs outside any locale.
+  let locale: Locale = "en";
+  try {
+    locale = toLocale(await getLocale());
+  } catch {
+    // No locale resolved for this request: keep the English default.
+  }
 
   const c = content[locale];
 
@@ -99,8 +99,8 @@ export default function NotFound() {
     <div className="min-h-screen grid place-items-center px-6 bg-white dark:bg-[#070B1A] text-slate-900 dark:text-white">
       <div className="w-full max-w-md text-center animate-[fadeIn_0.4s_ease_forwards]">
 
-        {/* React 19 hoists <title> into <head>: a client component cannot
-            export metadata, and axe requires a title (document-title). */}
+        {/* React 19 hoists <title> into <head> (axe requires a title:
+            document-title). */}
         <title>{`${c.title} — 404`}</title>
 
         <Icon404 />

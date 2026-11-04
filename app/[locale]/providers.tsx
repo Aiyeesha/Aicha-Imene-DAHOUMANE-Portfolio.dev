@@ -110,8 +110,10 @@ document.cookie = `track=${t}; Path=/; Max-Age=31536000; SameSite=Lax${
 
   const value = useMemo(() => ({ track, setTrack }), [track]);
 
+  // defaultTheme="system": a first visit follows the OS preference (light
+  // or dark); the visitor's toggle choice is then remembered.
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem nonce={nonce}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
       <TrackContext.Provider value={value}>{children}</TrackContext.Provider>
     </ThemeProvider>
   );

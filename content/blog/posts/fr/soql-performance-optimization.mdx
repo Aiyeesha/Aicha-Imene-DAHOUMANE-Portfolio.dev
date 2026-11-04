@@ -2,7 +2,7 @@
 title: "Optimisation des performances SOQL : des requêtes lentes aux résultats en moins d'une seconde"
 excerpt: "Techniques concrètes pour écrire des requêtes SOQL plus rapides dans Salesforce — index, filtres sélectifs, Query Plan et anti-patterns à éliminer."
 date: "2025-05-05"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "SOQL", "Performance", "Base de données", "Bonnes pratiques"]
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
@@ -11,7 +11,7 @@ Les requêtes SOQL lentes sont l'un des goulots d'étranglement de performance l
 
 ## Comment Salesforce exécute les requêtes
 
-Avant d'optimiser, comprendre le modèle d'exécution. Salesforce utilise une base **Oracle** sous le capot avec une architecture multi-tenant. Concepts clés :
+Avant d'optimiser, comprendre le modèle d'exécution. Salesforce repose sur une base relationnelle (historiquement **Oracle**) partagée entre les orgs, dans une architecture multi-tenant. Concepts clés :
 
 - **Sélectivité** : une requête est « sélective » si son filtre correspond à un petit pourcentage du total des enregistrements. Salesforce exige la sélectivité pour utiliser un index.
 - **Types d'index** : les champs standards (Id, Name, SystemModstamp, etc.) sont auto-indexés. Les champs personnalisés peuvent être indexés sur demande.
@@ -99,9 +99,9 @@ List<Account> accounts = [
 ```
 
 **Limites à connaître :**
-- Max 1 niveau d'imbrication de sous-requête
-- La sous-requête retourne max 200 enregistrements par parent
-- Max 20 sous-requêtes par requête de niveau supérieur
+- Jusqu'à 5 niveaux de relations parent-enfant (le parent, puis 4 niveaux d'enfants) : depuis l'API 58.0 en REST et SOAP, depuis l'API 61.0 (Summer '24) en Apex ; auparavant, un seul niveau de sous-requête
+- Au-delà de 200 enregistrements enfants pour un parent, parcourez la sous-requête dans une boucle `for` SOQL : l'affecter directement à une liste lève « Aggregate query has too many rows for direct assignment »
+- Max 20 sous-requêtes parent-enfant par requête
 
 ## 5. Limiter les résultats
 
@@ -123,7 +123,7 @@ List<Account> recent = [
 
 ## 6. Les littéraux de date vs. les dates dynamiques
 
-Les littéraux de date sont plus performants car ils sont optimisés par le moteur de requête :
+Côté performance, un littéral de date et une variable de date liée sont équivalents : les deux restent sélectifs sur un champ indexé. Les littéraux sont toutefois plus lisibles, et ils tiennent compte du fuseau horaire de l'utilisateur et de l'exercice fiscal de l'org :
 
 ```apex
 // ✅ Utiliser les littéraux de date
@@ -131,7 +131,7 @@ WHERE CreatedDate = LAST_N_DAYS:30
 WHERE CloseDate = THIS_QUARTER
 WHERE SystemModstamp > LAST_MONTH  // indexé, contrairement à LastModifiedDate
 
-// ⚠️ Dates dynamiques — fonctionne mais légèrement plus lourd
+// ✅ Aussi valable — utile quand la borne est calculée
 WHERE CreatedDate > :Date.today().addDays(-30)
 ```
 
@@ -143,7 +143,7 @@ WHERE CreatedDate > :Date.today().addDays(-30)
 
 ## 7. Requêtes agrégées et GROUP BY
 
-Les agrégations SOQL réduisent considérablement le volume de données récupérées :
+Les agrégations SOQL réduisent considérablement le volume de données transférées vers Apex. Attention : chaque ligne agrégée compte toujours dans la limite des 50 000 lignes de requête, sauf avec `COUNT()` sans `GROUP BY`, qui ne compte que pour une ligne.
 
 ```apex
 // ❌ Récupérer toutes les opportunités pour compter en Apex
@@ -179,12 +179,11 @@ WHERE StageName IN ('Prospecting', 'Qualification', 'Proposal')
 
 ## 9. Demander des index personnalisés pour les filtres à fort volume
 
-Si vous filtrez fréquemment sur un champ personnalisé avec des millions d'enregistrements, demandez un **index personnalisé** via le Support Salesforce.
+Si vous filtrez fréquemment sur un champ personnalisé avec des millions d'enregistrements, demandez un **index personnalisé** via le Support Salesforce. Inutile pour les champs marqués *External ID* ou *Unique* : ils sont indexés automatiquement.
 
 Candidats à l'indexation personnalisée :
 - Champs filtrés dans des batch jobs traitant > 100k enregistrements
 - Champs utilisés dans les WHERE de composants LWC sur des objets à fort volume
-- Champs External ID utilisés pour les upserts d'intégration
 
 ## Checklist de performance
 

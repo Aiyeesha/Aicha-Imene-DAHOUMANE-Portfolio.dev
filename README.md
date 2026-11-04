@@ -111,7 +111,7 @@ Browser
 - **Security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP; `X-Powered-By` suppressed
 - **RSS feeds** — `/feed.xml` (EN), `/feed-fr.xml` (FR), `/feed-es.xml` (ES)
 - **PWA** — Web App Manifest (installable), service worker with offline fallback (`/admin` and the testimonial form are never cached)
-- **Localized 404** — unknown URLs under `/fr`, `/en`, `/es` render the 404 in the URL's language (`app/[locale]/[...rest]`)
+- **Localized 404** — unknown URLs under `/fr`, `/en`, `/es` render the 404 in the URL's language, server-side (`app/not-found.tsx`, locale from the next-intl proxy)
 - **Accessibility** — skip link, keyboard nav, focus rings, ARIA landmarks, WCAG 2.2 AA
 - **SEO** — JSON-LD (WebSite + Person, BlogPosting, FAQPage, BreadcrumbList), sitemap of indexable pages only, robots.txt, hreflang EN / FR / ES + x-default
 - **No analytics** — no audience measurement, no visitor tracking, no third-party script
@@ -192,7 +192,6 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 ├── app/
 │   ├── [locale]/               # Locale-scoped pages (App Router)
 │   │   ├── page.tsx            # One-page landing (home)
-│   │   ├── [...rest]/          # Catch-all → notFound() — localized 404
 │   │   ├── about/              # About page + opengraph-image.tsx
 │   │   ├── hybride/            # Hybrid Salesforce × IT Ops profile + opengraph-image.tsx
 │   │   ├── work-with-me/       # Recruiter page (services, contract types, FAQ, booking link)
