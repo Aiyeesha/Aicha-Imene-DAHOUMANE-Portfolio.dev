@@ -2,7 +2,7 @@
 title: "Governor Limits en Salesforce: entenderlos, monitorearlos y evitarlos"
 excerpt: "Una guía práctica sobre los governor limits de Salesforce — los más críticos, cómo monitorear tu consumo y patrones para mantenerte holgadamente dentro de los límites."
 date: "2025-11-03"
-updatedDate: "2026-09-26"
+updatedDate: "2026-11-04"
 tags: ["Salesforce", "Apex", "Rendimiento", "Governor Limits", "Buenas prácticas"]
 projects: ["fasha-apex-backend-optimization"]
 ---
@@ -34,17 +34,18 @@ Salesforce es una plataforma multi-tenant. Tu org comparte cómputo, base de dat
 | Consultas SOQL | 200 |
 | Sentencias DML | 150 |
 | Filas DML | 10.000 |
-| Tamaño del heap | 12 MB (batch) |
+| Tamaño del heap | 12 MB (todo el Apex asíncrono) |
 | Tiempo de CPU | 60.000 ms |
 
 ### Límites diarios a nivel de org
 
 | Límite | Valor |
 |-------|-------|
-| Ejecuciones de Apex asíncronas | 250.000 |
-| Alertas de email | 1.000 por usuario al día |
-| Mensajes salientes | 10.000 |
+| Ejecuciones de Apex asíncronas (Batch, Future, Queueable, Scheduled) | 250.000 o 200 × el número de licencias de usuario, el valor más alto, en 24 h móviles |
+| Alertas de email (reglas de flujo de trabajo, aprobaciones, flows) | 1.000 por licencia estándar de Salesforce (15 en Developer Edition), con un máximo de 2.000.000 por org |
 | Llamadas a la API | Varía según la edición (Developer: 15.000/día) |
+
+Estos límites de org se consultan en cualquier momento con `OrgLimits.getMap()` en Apex o el recurso REST `/limits`.
 
 ## Monitorear tus límites
 
@@ -133,7 +134,7 @@ if (!toUpdate.isEmpty()) update toUpdate; // 1 DML en total
 
 ### 3. Usa `@future` o Queueable para los callouts
 
-Los callouts no pueden hacerse desde transacciones con DML abierto de forma síncrona en algunos contextos. Descárgalos:
+Un trigger no puede hacer un callout síncrono, y un callout después de un DML no confirmado en la misma transacción falla («You have uncommitted work pending»). Descárgalos:
 
 ```apex
 public class ExternalSyncService {
@@ -261,7 +262,7 @@ Verás un gráfico del consumo de governor limits a lo largo de la transacción 
 | DML en loop | Límite de 150 DML | Recolectar registros, DML una sola vez |
 | SOQL grande sin LIMIT | Límite de 50.000 filas | Añadir WHERE, LIMIT, o usar agregación |
 | Recursión de trigger | Loop infinito | Guarda de recursión basada en los Id procesados |
-| Callout síncrono | Límite de CPU/callout | @future o Queueable + AllowsCallouts |
+| Callout desde un trigger | Los callouts síncronos no están permitidos en triggers y fallan tras un DML no confirmado («uncommitted work pending») | @future(callout=true) o Queueable + AllowsCallouts |
 | Almacenar listas completas de SObject | Heap de 6MB | Usar sets/maps de IDs en su lugar |
 
 ## Conclusión
