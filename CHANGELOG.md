@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Liens « Voir le code » cassés retirés de 6 fiches publiées** — Les anciens dépôts de `cve-watchlist`, `incident-response-tracker`, `log-anomaly-detector`, `security-monitoring-dashboard`, `vulnerability-assessment-report` et `risque360` sont passés en privé le 4 novembre 2026, en vue de leur refonte : leurs liens menaient à une page 404. Le champ `repoUrl` est retiré de ces 6 fiches dans `content/projects.ts` (les fiches restent publiées) ; chaque lien sera rétabli à la publication du dépôt refait. La démo `risque360` sur GitHub Pages, toujours en ligne, est conservée.
 - **Page « Password Checker » redirigée vers un autre projet** — `python-password-checker` était resté dans `UNPUBLISHED_PROJECTS` (`next.config.mjs`) après sa republication : la carte s'affichait, mais la page redirigeait vers `homelab-password-cracking-lab`. Redirection retirée ; nouveau test `__tests__/unpublished-redirects.test.ts` qui échoue si un projet publié figure dans cette liste ou si une redirection vise un projet non publié.
 
 ### Added
