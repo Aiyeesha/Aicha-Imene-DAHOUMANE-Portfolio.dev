@@ -4014,7 +4014,7 @@ export const projectDetails: ProjectDetails[] = [
     "slug": "python-password-checker",
     "gallery": [
       {
-        "alt": "Cover",
+        "alt": "Command-line analysis: effective entropy and breach check",
         "src": "/projects/python-password-checker/cover.svg"
       },
       {
