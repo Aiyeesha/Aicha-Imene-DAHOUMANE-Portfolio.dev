@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Page « Password Checker » redirigée vers un autre projet** — `python-password-checker` était resté dans `UNPUBLISHED_PROJECTS` (`next.config.mjs`) après sa republication : la carte s'affichait, mais la page redirigeait vers `homelab-password-cracking-lab`. Redirection retirée ; nouveau test `__tests__/unpublished-redirects.test.ts` qui échoue si un projet publié figure dans cette liste ou si une redirection vise un projet non publié.
+
 ### Added
 
 - **Projet « Port Scanner » réécrit pour le nouveau dépôt `port-scanner`** — La carte et la fiche `python-network-scanner` (slug conservé pour ne casser aucun lien) décrivaient un ancien projet FastAPI + React sans dépôt public. Elles présentent désormais [Aiyeesha/port-scanner](https://github.com/Aiyeesha/port-scanner) (v1.1.0) : scanner TCP asynchrone sans dépendance, sécurisé par défaut (réseaux privés uniquement), fiches de risque et recommandations, interface web locale durcie (jeton, contrôles Host/Origin, CSP stricte) et volet détection Blue Team (Wireshark, deux règles Suricata, une corrélation Sigma, rejouées en CI ; MITRE ATT&CK T1046). Contenu EN/FR/ES (`content/projects.ts`, `content/projectDetails.ts`), points forts traduits (`content/projectHighlights.ts`), nouvelle couverture SVG tirée d'une sortie réelle de l'outil et deux captures de l'interface ; l'ancienne capture `screenshot-1.svg` est supprimée.
