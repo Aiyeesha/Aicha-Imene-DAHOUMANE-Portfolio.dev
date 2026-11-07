@@ -22,6 +22,20 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
       "Reglas Suricata y Sigma reproducidas sobre capturas de laboratorio en la CI (MITRE ATT&CK T1046)"
     ]
   },
+  "incident-response-playbook": {
+    "fr": [
+      "7 playbooks en 8 phases numérotées, 219 actions à cocher par langue (FR/EN)",
+      "Chaque technique MITRE ATT&CK vérifiée sur les données officielles 20.1 — les révoquées sont refusées",
+      "Délais RGPD, NIS 2 et plainte pour l'assurance intégrés aux procédures",
+      "Export JSON refusé au moindre problème de validation, joint à chaque version"
+    ],
+    "es": [
+      "7 playbooks en 8 fases numeradas, 219 acciones verificables por idioma (FR/EN)",
+      "Cada técnica MITRE ATT&CK comprobada con los datos oficiales 20.1 — las revocadas se rechazan",
+      "Plazos del RGPD, NIS 2 y denuncia para el seguro integrados en los procedimientos",
+      "Exportación JSON rechazada ante cualquier problema de validación, adjunta a cada versión"
+    ]
+  },
   "homelab-cowrie-honeypot": {
     "fr": [
       "Honeypot Cowrie déployé et isolé sur un réseau VMnet2 dédié",
