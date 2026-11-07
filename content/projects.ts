@@ -953,7 +953,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "Personal — In Progress"
     },
-    "repoUrl": "https://github.com/Aiyeesha/playbook-reponse-incidents",
     "techStack": [
       "Next.js 16",
       "Supabase",
@@ -1281,37 +1280,48 @@ export const projects: Project[] = [
   {
     "slug": "incident-response-playbook",
     "nature": "personal",
-    "title": "Incident Response Playbook (SOC)",
-    "excerpt": "A set of structured playbooks designed for SOC teams and IT admins covering the 6 most common cybersecurity incidents. Each playbook follows the full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned.",
+    "title": "Incident Response Playbook — Bilingual SOC Procedures & Checks",
+    "excerpt": "Seven step-by-step incident response playbooks (ransomware, data breach, phishing, compromised account…) in French and English, aligned with NIST SP 800-61r3, MITRE ATT&CK and EU/French legal deadlines — validated in CI by a zero-dependency Python tool and exported as JSON checklists.",
     "track": "itops",
     "categories": [
       "Incident Response",
-      "Security"
+      "Security",
+      "Development"
     ],
-    "tags": [],
+    "tags": [
+      "Incident Response",
+      "Blue Team",
+      "NIST SP 800-61",
+      "MITRE ATT&CK",
+      "GDPR",
+      "NIS 2",
+      "Python",
+      "GitHub Actions"
+    ],
     "badge": {
       "tone": "personal",
-      "label": "Personal — In Progress"
+      "label": "PERSONAL PROJECT"
     },
     "repoUrl": "https://github.com/Aiyeesha/incident-response-playbook",
     "techStack": [
-      "Incident Response",
-      "SOC",
-      "ITIL",
       "Markdown",
-      "Cybersecurity",
-      "Documentation"
+      "Python",
+      "pytest",
+      "Ruff",
+      "MITRE ATT&CK",
+      "JSON",
+      "GitHub Actions"
     ],
+    "updatedAt": "2026-11-07",
     "highlights": [
-      "6 playbooks covering malware, ransomware, data breach, phishing, unauthorized access, and denial of service",
-      "Full IR lifecycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned",
-      "Severity classification and escalation procedures included",
-      "Reusable incident report and post-mortem templates, plus a RACI matrix and crisis communication template",
-      "Designed for SMB to mid-market SOC environments"
+      "7 playbooks in 8 numbered phases, 219 checklist actions per language (FR/EN)",
+      "Every MITRE ATT&CK technique checked against the official 20.1 data — revoked ones rejected",
+      "GDPR, NIS 2 and insurance-complaint deadlines built into the procedures",
+      "JSON export refused on any validation problem; attached to each release"
     ],
     "featured": false,
     "sortOrder": 270,
-    "status": "draft",
+    "status": "published",
     "isSecurity": true
   },
   {

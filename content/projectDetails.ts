@@ -9565,218 +9565,342 @@ export const projectDetails: ProjectDetails[] = [
   },
   {
     "slug": "incident-response-playbook",
-    "gallery": [],
+    "gallery": [
+      {
+        "alt": "playbook-check catching a revoked MITRE ATT&CK technique and a broken link, then the JSON export",
+        "src": "/projects/incident-response-playbook/cover.svg"
+      },
+      {
+        "alt": "Ransomware playbook rendered on GitHub, with its front matter table (French)",
+        "src": "/projects/incident-response-playbook/github-playbook-fr.png"
+      },
+      {
+        "alt": "Release v1.0.0 on GitHub with the JSON exports attached",
+        "src": "/projects/incident-response-playbook/github-release-fr.png"
+      }
+    ],
     "locales": {
       "en": {
-        "title": "Incident Response Playbook (SOC)",
-        "heroSubtitle": "Structured incident response procedures for malware, ransomware, data breaches, phishing, and unauthorized access",
+        "title": "Incident Response Playbook — bilingual SOC procedures",
+        "heroSubtitle": "Seven incident response playbooks a team can follow under pressure, in French and English — with legal deadlines, evidence handling and MITRE ATT&CK mapping, all checked automatically in CI",
         "sections": [
           {
             "type": "text",
             "title": "Context",
-            "paragraphs": [
-              "I built this playbook on top of incident-response-playbook, an open-source repository of incident response procedures. My goal: a set of structured procedures for the 6 most common cybersecurity threats, designed for SOC teams and IT admins at SMBs and mid-market companies alike — beyond theory, with documents a team can actually use."
+            "body": "I rebuilt this project from scratch by merging my two older repositories (one English, one French) into a single bilingual reference. The aim is practical: when an incident starts, a SOC analyst or an IT admin in a small or mid-sized company should know who does what, in which order, which evidence to keep and which deadlines apply — without having to interpret a framework. The procedures follow NIST SP 800-61 Rev. 3 (April 2025, aligned with CSF 2.0) and map every attacker behaviour to MITRE ATT&CK."
+          },
+          {
+            "type": "bullets",
+            "title": "What the repository contains",
+            "items": [
+              "7 playbooks: malware, ransomware, data breach, phishing, unauthorised access, denial of service, and compromised account with payment fraud",
+              "The same 8 numbered phases in each: detection, triage, containment, evidence, eradication, recovery, obligations and communication, closure — with checklist actions",
+              "6 reference documents: severity levels S1–S4 and timelines, escalation, RACI matrix, regulatory context, evidence preservation, and a ransomware tabletop exercise",
+              "4 templates: incident report, blameless post-mortem, crisis communication (staff, customers, GDPR article 34, press) and evidence log with chain of custody",
+              "Everything in French and English, with the same metadata in both languages"
             ]
           },
           {
             "type": "bullets",
+            "title": "Legal and evidence choices",
             "items": [
-              "P01 — Malware infection (High to Critical severity)",
-              "P02 — Ransomware attack (Critical)",
-              "P03 — Data breach (High to Critical)",
-              "P04 — Phishing (Medium to High)",
-              "P05 — Unauthorized access (High to Critical)",
-              "P06 — Denial of service, DoS/DDoS (Medium to Critical) — playbook added on top of the original"
-            ],
-            "title": "6 available playbooks"
-          },
-          {
-            "type": "text",
-            "title": "Incident response lifecycle",
-            "paragraphs": [
-              "Every playbook follows the same cycle: Detection → Triage → Containment → Eradication → Recovery → Lessons Learned, with concrete, checkable actions as checklists — not a theoretical description of the NIST SP 800-61 process, but documents actually usable during a live response."
+              "GDPR articles 33 and 34: notification to the CNIL within 72 hours and information of the people affected when the risk is high",
+              "NIS 2 article 23: early warning within 24 hours, notification within 72 hours, final report within one month — the French transposition flagged as still in progress",
+              "French Insurance Code article L. 12-10-1: police complaint within 72 hours to be compensated for a cyberattack",
+              "Evidence collected in order of volatility (RFC 3227), SHA-256 hashes and a chain of custody; machines isolated, never switched off",
+              "Public contacts verified on official sources: 17Cyber, Cybermalveillance.gouv.fr, CERT-FR, CNIL, Signal Spam and 33700"
             ]
           },
           {
             "type": "bullets",
+            "title": "Automated checks",
             "items": [
-              "Identify the incident type using the severity matrix",
-              "Open the matching playbook and follow the steps in order",
-              "Check the RACI matrix to know who does what",
-              "Document every action in real time with the incident report",
-              "Escalate per the defined escalation procedures",
-              "Communicate internally/externally with the crisis communication template",
-              "Capitalize on lessons learned with the post-mortem"
-            ],
-            "title": "How to use this playbook"
+              "Every document starts with a structured front matter (strict YAML subset) rendered as a table on GitHub",
+              "playbook-check verifies required fields, FR/EN parity of severities and techniques, the 8-phase structure with actions to tick, and every internal link",
+              "Each MITRE ATT&CK technique is checked against the official 20.1 data bundled with the tool: unknown or revoked techniques are rejected with their replacement, and each one must be explained in the text",
+              "playbook-export turns the checklists into JSON for a ticketing tool or SOC dashboard — and refuses to export anything if a single problem remains"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Engineering quality",
             "items": [
               {
-                "note": "Malware, ransomware, data breach, phishing, unauthorized access, denial of service",
-                "label": "Playbooks",
-                "value": "6"
+                "label": "Checklist actions",
+                "value": "219",
+                "note": "per language, across 7 playbooks"
               },
               {
-                "note": "Added on top of the original",
-                "label": "Supporting deliverables",
-                "value": "RACI matrix + crisis communication template"
+                "label": "Automated tests",
+                "value": "85",
+                "note": "validator and export"
               },
               {
-                "note": "Detection → Containment → Eradication → Recovery cycle",
-                "label": "Framework",
-                "value": "NIST SP 800-61"
+                "label": "CI jobs",
+                "value": "6",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentation"
               },
               {
-                "note": "SMB to mid-market",
-                "label": "Target audience",
-                "value": "SOC & IT admin teams"
+                "label": "Runtime dependencies",
+                "value": "0"
               }
-            ],
-            "title": "Outcomes"
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "How it is used",
+            "steps": [
+              {
+                "label": "Qualify",
+                "description": "The severity grid (S1 to S4) and the decision table point to the right playbook and the right people to notify."
+              },
+              {
+                "label": "Respond",
+                "description": "The team follows the 8 phases and ticks each action, preserving evidence before anything is cleaned."
+              },
+              {
+                "label": "Report",
+                "description": "Legal deadlines are tracked from the moment of awareness; templates cover the report, the communication and the evidence log."
+              },
+              {
+                "label": "Improve",
+                "description": "A blameless post-mortem and a yearly tabletop exercise feed the next version of the playbooks."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Links",
+            "items": [
+              {
+                "label": "Source code",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook"
+              },
+              {
+                "label": "Ransomware playbook (English)",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/blob/main/en/playbooks/P02-ransomware.md"
+              },
+              {
+                "label": "Release v1.0.0 and JSON exports",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.0.0"
+              }
+            ]
           }
         ]
       },
       "fr": {
-        "title": "Playbook de réponse aux incidents (SOC)",
-        "heroSubtitle": "Procédures structurées de réponse aux incidents : malware, ransomware, violations de données, phishing et accès non autorisés",
+        "title": "Playbook de réponse aux incidents — procédures SOC bilingues",
+        "heroSubtitle": "Sept playbooks de réponse aux incidents qu'une équipe peut suivre sous pression, en français et en anglais — avec délais légaux, gestion des preuves et correspondance MITRE ATT&CK, le tout vérifié automatiquement en CI",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
-            "paragraphs": [
-              "J'ai construit ce playbook à partir de incident-response-playbook, un dépôt open source de procédures de réponse aux incidents. Mon objectif : un ensemble de procédures structurées pour les 6 menaces de cybersécurité les plus courantes, conçu pour des équipes SOC et administrateurs IT en PME comme en ETI — au-delà de la théorie, avec des documents directement utilisables par une équipe."
+            "body": "J'ai reconstruit ce projet de zéro en fusionnant mes deux anciens dépôts (l'un en anglais, l'autre en français) en une seule référence bilingue. L'objectif est concret : quand un incident commence, un analyste SOC ou un administrateur IT de PME ou d'ETI doit savoir qui fait quoi, dans quel ordre, quelles preuves conserver et quels délais s'appliquent — sans avoir à interpréter un référentiel. Les procédures suivent le NIST SP 800-61 Rev. 3 (avril 2025, aligné sur le CSF 2.0) et rattachent chaque comportement d'attaquant à MITRE ATT&CK."
+          },
+          {
+            "type": "bullets",
+            "title": "Ce que contient le dépôt",
+            "items": [
+              "7 playbooks : logiciel malveillant, rançongiciel, fuite de données, hameçonnage, accès non autorisé, déni de service, compte compromis et fraude au virement",
+              "Les mêmes 8 phases numérotées dans chacun : détection, triage, confinement, preuves, éradication, restauration, obligations et communication, clôture — avec des actions à cocher",
+              "6 documents de référence : niveaux de gravité S1–S4 et délais, escalade, matrice RACI, cadre réglementaire, préservation des preuves et exercice sur table de rançongiciel",
+              "4 modèles : rapport d'incident, post-mortem sans recherche de coupable, communication de crise (salariés, clients, article 34 du RGPD, presse) et registre de preuves avec chaîne de custody",
+              "Tout en français et en anglais, avec les mêmes métadonnées dans les deux langues"
             ]
           },
           {
             "type": "bullets",
+            "title": "Choix juridiques et preuves",
             "items": [
-              "P01 — Infection par malware (sévérité Élevée à Critique)",
-              "P02 — Attaque par ransomware (Critique)",
-              "P03 — Fuite de données (Élevée à Critique)",
-              "P04 — Hameçonnage / phishing (Moyenne à Élevée)",
-              "P05 — Accès non autorisé (Élevée à Critique)",
-              "P06 — Déni de service, DoS/DDoS (Moyenne à Critique) — playbook ajouté par rapport à l'original"
-            ],
-            "title": "6 playbooks disponibles"
-          },
-          {
-            "type": "text",
-            "title": "Cycle de vie de la réponse à incident",
-            "paragraphs": [
-              "Chaque playbook suit le même cycle : Détection → Triage → Confinement → Éradication → Récupération → Retour d'expérience, avec des actions concrètes et vérifiables sous forme de checklists — pas une description théorique du processus NIST SP 800-61, mais des documents réellement exploitables en intervention."
+              "RGPD, articles 33 et 34 : notification à la CNIL sous 72 heures et information des personnes concernées en cas de risque élevé",
+              "NIS 2, article 23 : alerte précoce sous 24 heures, notification sous 72 heures, rapport final sous un mois — transposition française signalée comme en cours",
+              "Code des assurances, article L. 12-10-1 : plainte sous 72 heures pour être indemnisé d'une cyberattaque",
+              "Preuves collectées par ordre de volatilité (RFC 3227), empreintes SHA-256 et chaîne de custody ; machines isolées, jamais éteintes",
+              "Contacts publics vérifiés sur les sources officielles : 17Cyber, Cybermalveillance.gouv.fr, CERT-FR, CNIL, Signal Spam et 33700"
             ]
           },
           {
             "type": "bullets",
+            "title": "Vérifications automatiques",
             "items": [
-              "Identifier le type d'incident à l'aide de la matrice de sévérité",
-              "Ouvrir le playbook correspondant et suivre les étapes dans l'ordre",
-              "Consulter la matrice RACI pour savoir qui fait quoi",
-              "Documenter toutes les actions en temps réel avec le rapport d'incident",
-              "Escalader selon les procédures d'escalade définies",
-              "Communiquer en interne/externe avec le template de communication de crise",
-              "Capitaliser avec le post-mortem"
-            ],
-            "title": "Comment utiliser ce playbook"
+              "Chaque document commence par une fiche structurée (sous-ensemble strict de YAML), affichée sous forme de tableau sur GitHub",
+              "playbook-check vérifie les champs obligatoires, la parité FR/EN des gravités et des techniques, la structure en 8 phases avec actions à cocher et chaque lien interne",
+              "Chaque technique MITRE ATT&CK est contrôlée sur les données officielles 20.1 embarquées dans l'outil : les techniques inconnues ou révoquées sont refusées avec leur remplaçante, et chacune doit être expliquée dans le texte",
+              "playbook-export transforme les actions à cocher en JSON pour un outil de ticketing ou un tableau de bord SOC — et refuse tout export tant qu'il reste un seul problème"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Qualité logicielle",
             "items": [
               {
-                "note": "Malware, ransomware, fuite de données, phishing, accès non autorisé, déni de service",
-                "label": "Playbooks",
-                "value": "6"
+                "label": "Actions à cocher",
+                "value": "219",
+                "note": "par langue, sur 7 playbooks"
               },
               {
-                "note": "Ajoutés par rapport à l'original",
-                "label": "Livrables complémentaires",
-                "value": "Matrice RACI + template de communication de crise"
+                "label": "Tests automatisés",
+                "value": "85",
+                "note": "validateur et export"
               },
               {
-                "note": "Cycle Détection → Confinement → Éradication → Récupération",
-                "label": "Cadre",
-                "value": "NIST SP 800-61"
+                "label": "Jobs de CI",
+                "value": "6",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentation"
               },
               {
-                "note": "PME comme ETI",
-                "label": "Public visé",
-                "value": "Équipes SOC & admin IT"
+                "label": "Dépendances d'exécution",
+                "value": "0"
               }
-            ],
-            "title": "Résultats"
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Utilisation",
+            "steps": [
+              {
+                "label": "Qualifier",
+                "description": "La grille de gravité (S1 à S4) et le tableau de décision orientent vers le bon playbook et les bonnes personnes à prévenir."
+              },
+              {
+                "label": "Répondre",
+                "description": "L'équipe suit les 8 phases et coche chaque action, en préservant les preuves avant tout nettoyage."
+              },
+              {
+                "label": "Déclarer",
+                "description": "Les délais légaux courent dès la prise de connaissance ; les modèles couvrent le rapport, la communication et le registre de preuves."
+              },
+              {
+                "label": "Améliorer",
+                "description": "Un post-mortem sans recherche de coupable et un exercice sur table annuel alimentent la version suivante des playbooks."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Liens",
+            "items": [
+              {
+                "label": "Code source",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook"
+              },
+              {
+                "label": "Playbook rançongiciel (français)",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/blob/main/fr/playbooks/P02-rancongiciel.md"
+              },
+              {
+                "label": "Version v1.0.0 et exports JSON",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.0.0"
+              }
+            ]
           }
         ]
       },
       "es": {
-        "title": "Playbook de respuesta a incidentes (SOC)",
-        "heroSubtitle": "Procedimientos estructurados de respuesta a incidentes: malware, ransomware, filtraciones de datos, phishing y accesos no autorizados",
+        "title": "Incident Response Playbook — procedimientos SOC bilingües",
+        "heroSubtitle": "Siete playbooks de respuesta a incidentes que un equipo puede seguir bajo presión, en francés e inglés — con plazos legales, gestión de evidencias y correspondencia con MITRE ATT&CK, todo verificado automáticamente en la CI",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
-            "paragraphs": [
-              "Construí este playbook a partir de incident-response-playbook, un repositorio open source de procedimientos de respuesta a incidentes. Mi objetivo: un conjunto de procedimientos estructurados para las 6 amenazas de ciberseguridad más comunes, diseñado para equipos SOC y administradores IT tanto en pymes como en empresas medianas — más allá de la teoría, con documentos que un equipo puede usar directamente."
+            "body": "Reconstruí este proyecto desde cero fusionando mis dos repositorios anteriores (uno en inglés y otro en francés) en una única referencia bilingüe. El objetivo es práctico: cuando empieza un incidente, un analista SOC o un administrador IT de una pyme o empresa mediana debe saber quién hace qué, en qué orden, qué evidencias conservar y qué plazos se aplican, sin tener que interpretar un marco de referencia. Los procedimientos siguen el NIST SP 800-61 Rev. 3 (abril de 2025, alineado con el CSF 2.0) y vinculan cada comportamiento del atacante con MITRE ATT&CK."
+          },
+          {
+            "type": "bullets",
+            "title": "Qué contiene el repositorio",
+            "items": [
+              "7 playbooks: malware, ransomware, fuga de datos, phishing, acceso no autorizado, denegación de servicio y cuenta comprometida con fraude en transferencias",
+              "Las mismas 8 fases numeradas en cada uno: detección, triaje, contención, evidencias, erradicación, recuperación, obligaciones y comunicación, cierre — con acciones verificables",
+              "6 documentos de referencia: niveles de gravedad S1–S4 y plazos, escalado, matriz RACI, marco normativo, preservación de evidencias y un ejercicio de mesa sobre ransomware",
+              "4 plantillas: informe de incidente, post-mortem sin culpables, comunicación de crisis (empleados, clientes, artículo 34 del RGPD, prensa) y registro de evidencias con cadena de custodia",
+              "Todo en francés e inglés, con los mismos metadatos en ambos idiomas"
             ]
           },
           {
             "type": "bullets",
+            "title": "Decisiones legales y de evidencias",
             "items": [
-              "P01 — Infección por malware (Severidad Alta a Crítica)",
-              "P02 — Ataque de ransomware (Crítica)",
-              "P03 — Fuga de datos (Alta a Crítica)",
-              "P04 — Phishing (Media a Alta)",
-              "P05 — Acceso no autorizado (Alta a Crítica)",
-              "P06 — Denegación de servicio, DoS/DDoS (Media a Crítica) — playbook añadido respecto al original"
-            ],
-            "title": "6 playbooks disponibles"
-          },
-          {
-            "type": "text",
-            "title": "Ciclo de vida de la respuesta a incidentes",
-            "paragraphs": [
-              "Cada playbook sigue el mismo ciclo: Detección → Triaje → Contención → Erradicación → Recuperación → Lecciones aprendidas, con acciones concretas y verificables en forma de checklists — no una descripción teórica del proceso NIST SP 800-61, sino documentos realmente utilizables durante una intervención."
+              "RGPD, artículos 33 y 34: notificación a la autoridad de control (la CNIL en Francia) en 72 horas e información a las personas afectadas si el riesgo es alto",
+              "NIS 2, artículo 23: alerta temprana en 24 horas, notificación en 72 horas, informe final en un mes — la transposición francesa señalada como en curso",
+              "Código de Seguros francés, artículo L. 12-10-1: denuncia en 72 horas para ser indemnizado por un ciberataque",
+              "Evidencias recogidas por orden de volatilidad (RFC 3227), huellas SHA-256 y cadena de custodia; equipos aislados, nunca apagados",
+              "Contactos públicos franceses verificados en fuentes oficiales: 17Cyber, Cybermalveillance.gouv.fr, CERT-FR, CNIL, Signal Spam y 33700"
             ]
           },
           {
             "type": "bullets",
+            "title": "Verificaciones automáticas",
             "items": [
-              "Identificar el tipo de incidente con la matriz de severidad",
-              "Abrir el playbook correspondiente y seguir los pasos en orden",
-              "Consultar la matriz RACI para saber quién hace qué",
-              "Documentar todas las acciones en tiempo real con el informe de incidente",
-              "Escalar según los procedimientos de escalado definidos",
-              "Comunicar interna/externamente con la plantilla de comunicación de crisis",
-              "Capitalizar con el post-mortem"
-            ],
-            "title": "Cómo usar este playbook"
+              "Cada documento empieza con una ficha estructurada (subconjunto estricto de YAML) que GitHub muestra como tabla",
+              "playbook-check verifica los campos obligatorios, la paridad FR/EN de gravedades y técnicas, la estructura en 8 fases con acciones verificables y cada enlace interno",
+              "Cada técnica MITRE ATT&CK se contrasta con los datos oficiales 20.1 incluidos en la herramienta: las técnicas desconocidas o revocadas se rechazan indicando su sustituta, y cada una debe explicarse en el texto",
+              "playbook-export convierte las acciones en JSON para una herramienta de tickets o un panel SOC — y se niega a exportar mientras quede un solo problema"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Calidad de ingeniería",
             "items": [
               {
-                "note": "Malware, ransomware, fuga de datos, phishing, acceso no autorizado, denegación de servicio",
-                "label": "Playbooks",
-                "value": "6"
+                "label": "Acciones verificables",
+                "value": "219",
+                "note": "por idioma, en 7 playbooks"
               },
               {
-                "note": "Añadidos respecto al original",
-                "label": "Entregables complementarios",
-                "value": "Matriz RACI + plantilla de comunicación de crisis"
+                "label": "Pruebas automatizadas",
+                "value": "85",
+                "note": "validador y exportación"
               },
               {
-                "note": "Ciclo Detección → Contención → Erradicación → Recuperación",
-                "label": "Marco",
-                "value": "NIST SP 800-61"
+                "label": "Jobs de CI",
+                "value": "6",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentación"
               },
               {
-                "note": "Pymes y empresas medianas",
-                "label": "Público objetivo",
-                "value": "Equipos SOC y admin IT"
+                "label": "Dependencias de ejecución",
+                "value": "0"
               }
-            ],
-            "title": "Resultados"
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Cómo se usa",
+            "steps": [
+              {
+                "label": "Calificar",
+                "description": "La escala de gravedad (S1 a S4) y la tabla de decisión llevan al playbook adecuado y a las personas que hay que avisar."
+              },
+              {
+                "label": "Responder",
+                "description": "El equipo sigue las 8 fases y marca cada acción, preservando las evidencias antes de cualquier limpieza."
+              },
+              {
+                "label": "Notificar",
+                "description": "Los plazos legales cuentan desde que se tiene conocimiento; las plantillas cubren el informe, la comunicación y el registro de evidencias."
+              },
+              {
+                "label": "Mejorar",
+                "description": "Un post-mortem sin culpables y un ejercicio de mesa anual alimentan la siguiente versión de los playbooks."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Enlaces",
+            "items": [
+              {
+                "label": "Código fuente",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook"
+              },
+              {
+                "label": "Playbook de ransomware (inglés)",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/blob/main/en/playbooks/P02-ransomware.md"
+              },
+              {
+                "label": "Versión v1.0.0 y exportaciones JSON",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.0.0"
+              }
+            ]
           }
         ]
       }
