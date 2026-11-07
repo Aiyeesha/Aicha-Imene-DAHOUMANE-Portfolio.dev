@@ -9571,8 +9571,16 @@ export const projectDetails: ProjectDetails[] = [
         "src": "/projects/incident-response-playbook/cover.svg"
       },
       {
-        "alt": "Ransomware playbook rendered on GitHub, with its front matter table (French)",
-        "src": "/projects/incident-response-playbook/github-playbook-fr.png"
+        "alt": "Repository README on GitHub with CI, Python, dependency, ATT&CK and licence badges",
+        "src": "/projects/incident-response-playbook/github-readme-en.png"
+      },
+      {
+        "alt": "Ransomware playbook front matter rendered as a table on GitHub, with its MITRE ATT&CK techniques",
+        "src": "/projects/incident-response-playbook/github-playbook-en.png"
+      },
+      {
+        "alt": "Triage and containment checklists of the ransomware playbook on GitHub",
+        "src": "/projects/incident-response-playbook/github-checklist-en.png"
       },
       {
         "alt": "Release v1.0.0 on GitHub with the JSON exports attached",
