@@ -1,7 +1,7 @@
 // lib/incidentPlaybooks.ts
 // ------------------------
 // Incident response checklists, condensed from the detailed playbooks in
-// github.com/Aiyeesha/playbook-reponse-incidents (playbooks/P01…P06). Used to
+// github.com/Aiyeesha/incident-response-playbook (fr/playbooks/P01…P06). Used to
 // prefill incident_checklist_items when an incident is created (see
 // createIncident() in lib/incidents.ts).
 

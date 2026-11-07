@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-label="playbook-check signale une technique MITRE ATT&amp;CK révoquée et un lien cassé, l'export JSON est refusé, puis tout passe après correction">
+  <!-- Couverture de la carte portfolio : sortie réelle de playbook-check et playbook-export 1.0.0 -->
+  <rect width="1280" height="800" rx="12" fill="#0d1117"/>
+  <rect width="1280" height="44" rx="12" fill="#161b22"/>
+  <rect y="30" width="1280" height="14" fill="#161b22"/>
+  <circle cx="24" cy="22" r="7" fill="#ff5f57"/><circle cx="48" cy="22" r="7" fill="#febc2e"/><circle cx="72" cy="22" r="7" fill="#28c840"/>
+  <text x="640" y="28" font-family="ui-monospace,'Cascadia Code',Consolas,'Courier New',monospace" font-size="15" fill="#8b949e" text-anchor="middle">incident-response-playbook 1.0.0 — FR/EN · MITRE ATT&amp;CK 20.1 · export JSON</text>
+  <g font-family="ui-monospace,'Cascadia Code',Consolas,'Courier New',monospace" font-size="14.5">
+    <text x="30" y="96"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">playbook-check</tspan></text>
+    <text x="30" y="130"><tspan fill="#79c0ff">en/playbooks/P02-ransomware.md:1:&#160;</tspan><tspan fill="#e6edf3">technique&#160;«&#160;T1562.001&#160;»&#160;(Disable&#160;or&#160;Modify&#160;Tools)&#160;révoquée&#160;dans&#160;ATT&amp;CK&#160;20.1,&#160;remplacée&#160;par&#160;T1685</tspan></text>
+    <text x="30" y="164"><tspan fill="#79c0ff">en/playbooks/P04-phishing.md:75:&#160;</tspan><tspan fill="#e6edf3">lien&#160;cassé&#160;:&#160;../docs/D04-regulatory.md</tspan></text>
+    <text x="30" y="198"><tspan fill="#79c0ff">fr/playbooks/P02-rancongiciel.md:1:&#160;</tspan><tspan fill="#e6edf3">technique&#160;«&#160;T1562.001&#160;»&#160;(Disable&#160;or&#160;Modify&#160;Tools)&#160;révoquée&#160;dans&#160;ATT&amp;CK&#160;20.1,&#160;remplacée&#160;par&#160;T1685</tspan></text>
+    <text x="30" y="232"><tspan fill="#ff7b72" font-weight="bold">34&#160;document(s)&#160;vérifié(s)&#160;—&#160;3&#160;problème(s)</tspan></text>
+    <text x="30" y="266"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">playbook-export&#160;--lang&#160;fr&#160;-o&#160;playbooks.fr.json</tspan></text>
+    <text x="30" y="300"><tspan fill="#ff7b72" font-weight="bold">Erreur&#160;:&#160;3&#160;problème(s)&#160;détecté(s)&#160;par&#160;playbook-check&#160;:&#160;export&#160;refusé.&#160;Lancez&#160;playbook-check&#160;pour&#160;le&#160;détail.</tspan></text>
+    <text x="30" y="368"><tspan fill="#8b949e">#&#160;T1562.001&#160;remplacée&#160;par&#160;T1685,&#160;lien&#160;réparé</tspan></text>
+    <text x="30" y="402"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">playbook-check</tspan></text>
+    <text x="30" y="436"><tspan fill="#7ee787" font-weight="bold">34&#160;document(s)&#160;vérifié(s)&#160;—&#160;OK</tspan></text>
+    <text x="30" y="470"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">playbook-export&#160;--lang&#160;fr&#160;-o&#160;playbooks.fr.json</tspan></text>
+    <text x="30" y="504"><tspan fill="#7ee787" font-weight="bold">7&#160;playbook(s),&#160;219&#160;action(s)&#160;→&#160;playbooks.fr.json</tspan></text>
+    <text x="30" y="572"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3"></tspan><tspan fill="#7ee787">█</tspan></text>
+  </g>
+</svg>

@@ -1,7 +1,7 @@
 // app/admin/incidents/page.tsx
 // -----------------------------
 // Incident list: incident management dashboard, operationalising the
-// playbooks of github.com/Aiyeesha/playbook-reponse-incidents.
+// playbooks of github.com/Aiyeesha/incident-response-playbook.
 
 import Link from "next/link";
 import { listIncidents, getIncidentWithChecklist, computeChecklistProgress } from "@/lib/incidents";
@@ -66,12 +66,12 @@ export default async function IncidentsPage() {
           <p className="mt-1 text-sm text-slate-500">
             Opérationnalise les playbooks{" "}
             <a
-              href="https://github.com/Aiyeesha/playbook-reponse-incidents"
+              href="https://github.com/Aiyeesha/incident-response-playbook"
               target="_blank"
               rel="noreferrer"
               className="text-cyan-400 hover:underline"
             >
-              playbook-reponse-incidents
+              incident-response-playbook
             </a>
             .
           </p>
