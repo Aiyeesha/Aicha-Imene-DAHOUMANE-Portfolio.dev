@@ -105,7 +105,6 @@ const UNPUBLISHED_PROJECTS = [
   ["it-ops-disk-backup", null],
   ["it-ops-workstation-setup", "workstation-mass-deployment"],
   ["it-ops-roaming-profiles", "it-ops-virtualization-lab"],
-  ["incident-response-playbook", "incident-response-tracker"],
   ["hemebiotech-java-debug", null],
   ["pochlib-ui", null],
   ["parkit-java-testing", null],
