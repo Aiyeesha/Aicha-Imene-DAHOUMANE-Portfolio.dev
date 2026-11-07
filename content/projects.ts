@@ -638,7 +638,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/security-monitoring-dashboard",
     "techStack": [
       "Python",
       "FastAPI",
@@ -1103,7 +1102,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "Personal — In Progress"
     },
-    "repoUrl": "https://github.com/Aiyeesha/vulnerability-assessment-report",
     "techStack": [
       "Python",
       "Jinja2",
@@ -1145,7 +1143,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/incident-response-tracker",
     "techStack": [
       "Python",
       "FastAPI",
@@ -1190,7 +1187,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/cve-watchlist",
     "techStack": [
       "Python",
       "FastAPI",
@@ -1235,7 +1231,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/log-anomaly-detector",
     "techStack": [
       "Python",
       "FastAPI",
@@ -1340,7 +1335,6 @@ export const projects: Project[] = [
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/risque360",
     "liveUrl": "https://aiyeesha.github.io/risque360/",
     "techStack": [
       "JavaScript",
