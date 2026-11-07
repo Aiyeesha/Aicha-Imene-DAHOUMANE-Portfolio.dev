@@ -483,33 +483,45 @@ export const projects: Project[] = [
   {
     "slug": "python-network-scanner",
     "nature": "personal",
-    "title": "Network Scanner (FastAPI + React)",
-    "excerpt": "Real-time local network scanner: FastAPI backend with WebSocket streaming, concurrent port scanning, service & risk detection, and a React/Vite frontend.",
+    "title": "Port Scanner — Async TCP Scanner & Detection Lab",
+    "excerpt": "Zero-dependency asyncio TCP port scanner, secure by default (private networks only), that rates every open service by risk with a defensive recommendation — plus a hardened local web UI and a Blue Team detection kit (Wireshark, Suricata, Sigma) replayed in CI.",
     "track": "itops",
     "categories": [
-      "Network",
       "Security",
+      "Network",
       "Development"
     ],
     "tags": [
       "Python",
-      "FastAPI",
-      "WebSocket",
-      "React",
-      "Vite",
-      "Network Security"
+      "asyncio",
+      "Network Security",
+      "Blue Team",
+      "Suricata",
+      "Sigma",
+      "MITRE ATT&CK",
+      "GitHub Actions"
     ],
     "badge": {
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
+    "repoUrl": "https://github.com/Aiyeesha/port-scanner",
     "techStack": [
       "Python",
-      "FastAPI",
-      "WebSocket",
-      "React",
-      "Vite",
-      "Network Security"
+      "asyncio",
+      "pytest",
+      "Ruff",
+      "Suricata",
+      "Sigma",
+      "Wireshark",
+      "GitHub Actions"
+    ],
+    "updatedAt": "2026-11-04",
+    "highlights": [
+      "Async TCP connect scan with bounded concurrency and a secure-by-default target guard",
+      "~50 service profiles with risk level and defensive recommendation",
+      "Hardened local web UI: per-launch token, Host/Origin checks, strict CSP",
+      "Suricata and Sigma rules replayed on lab captures in CI (MITRE ATT&CK T1046)"
     ],
     "featured": false,
     "sortOrder": 240,
