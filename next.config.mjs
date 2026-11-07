@@ -109,7 +109,6 @@ const UNPUBLISHED_PROJECTS = [
   ["hemebiotech-java-debug", null],
   ["pochlib-ui", null],
   ["parkit-java-testing", null],
-  ["python-password-checker", "homelab-password-cracking-lab"],
   ["risk-assessment-matrix", "risque360"],
   ["nextjs-admin-dashboard", null],
 ];
