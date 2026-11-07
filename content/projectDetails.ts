@@ -3680,280 +3680,331 @@ export const projectDetails: ProjectDetails[] = [
     "slug": "python-network-scanner",
     "gallery": [
       {
-        "alt": "Cover",
+        "alt": "Command-line scan with risk levels and recommendations",
         "src": "/projects/python-network-scanner/cover.svg"
       },
       {
-        "alt": "Screenshot 1",
-        "src": "/projects/python-network-scanner/screenshot-1.svg"
+        "alt": "Local web interface — light theme (French)",
+        "src": "/projects/python-network-scanner/web-light-fr.png"
+      },
+      {
+        "alt": "Local web interface — dark theme (English)",
+        "src": "/projects/python-network-scanner/web-dark-en.png"
       }
     ],
     "locales": {
       "en": {
-        "title": "Network Scanner (FastAPI + React)",
-        "heroSubtitle": "Real-time network scanner — FastAPI backend + WebSocket + React/Vite UI",
-        "sections": [
-          {
-            "body": "I built this personal network security project: a full-stack local network scanner capable of identifying live hosts and open ports on a LAN segment, streaming results in real time via WebSocket, and classifying each service by risk level. I built it in two layers: a Python FastAPI backend with concurrent threads, and a React/Vite frontend displaying results live.",
-            "type": "text",
-            "title": "Context"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "I built host discovery: local subnet resolution and a ping sweep to list all live hosts",
-              "I implemented concurrent port scanning via ThreadPoolExecutor — all top ports probed in parallel per host",
-              "I built a 45-service detection table (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
-              "I implemented risk classification (high / medium / low) per port via RISK_MAP (Telnet, RDP, exposed DBs...)",
-              "I wired up real-time WebSocket streaming — results pushed to the frontend as each host completes",
-              "I built the React/Vite frontend: live host cards, risk-colour-coded port badges, scan progress indicator"
-            ],
-            "title": "Features Built"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Python 3 + FastAPI — REST API and WebSocket backend",
-              "uvicorn — ASGI server for FastAPI",
-              "ThreadPoolExecutor — Concurrent port scanning (stdlib concurrent.futures)",
-              "WebSockets — Real-time backend → frontend streaming",
-              "React 18 + Vite — Live-updating SPA frontend",
-              "CORS middleware — Cross-origin backend/frontend integration"
-            ],
-            "title": "Stack & Technologies"
-          },
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "label": "Host discovery",
-                "description": "Backend resolves the local subnet and pings each IP to build the list of live hosts."
-              },
-              {
-                "label": "Concurrent port scan",
-                "description": "For each live host, a ThreadPoolExecutor probes the TOP_PORTS list in parallel — open ports and service names collected."
-              },
-              {
-                "label": "Risk classification",
-                "description": "Each open port is looked up in RISK_MAP and tagged high / medium / low based on known exposure risk."
-              },
-              {
-                "label": "WebSocket streaming",
-                "description": "Results pushed to frontend in real time as each host finishes scanning — no need to wait for the full scan."
-              },
-              {
-                "label": "React rendering",
-                "description": "Frontend receives JSON events via WebSocket and renders host cards with colour-coded port badges on the fly."
-              }
-            ],
-            "title": "How It Works"
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Real-time streaming",
-                "label": "Transport",
-                "value": "WebSocket (FastAPI + uvicorn)"
-              },
-              {
-                "note": "Parallel port probing per host",
-                "label": "Concurrency",
-                "value": "ThreadPoolExecutor"
-              },
-              {
-                "note": "KNOWN_SERVICES dict",
-                "label": "Port coverage",
-                "value": "45 services"
-              },
-              {
-                "note": "High / Medium / Low via RISK_MAP",
-                "label": "Risk levels",
-                "value": "3 levels"
-              },
-              {
-                "note": "fastapi, uvicorn, websockets + React/Vite",
-                "label": "Dependencies",
-                "value": "Minimal"
-              }
-            ],
-            "title": "Technical Highlights"
-          }
-        ]
-      },
-      "fr": {
-        "title": "Scanner Réseau (FastAPI + React)",
-        "heroSubtitle": "Scanner réseau temps réel — backend FastAPI + WebSocket + interface React/Vite",
-        "sections": [
-          {
-            "body": "J'ai construit ce projet personnel de sécurité réseau : un scanner de réseau local full-stack capable d'identifier les hôtes actifs et les ports ouverts sur un segment LAN, de diffuser les résultats en temps réel via WebSocket, et de classifier chaque service par niveau de risque. Je l'ai conçu en deux couches : un backend Python FastAPI avec threads concurrents, et un frontend React/Vite affichant les résultats en direct.",
-            "type": "text",
-            "title": "Contexte"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "J'ai développé la découverte d'hôtes : résolution du sous-réseau local et ping de chaque IP pour lister les hôtes actifs",
-              "J'ai implémenté le scan de ports concurrent via ThreadPoolExecutor — tous les top ports scannés en parallèle par hôte",
-              "J'ai construit une table de détection de 45 services connus (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s...)",
-              "J'ai implémenté la classification des risques (élevé / moyen / faible) par port via RISK_MAP (Telnet, RDP, BDD exposées...)",
-              "J'ai mis en place le streaming WebSocket en temps réel — résultats envoyés au frontend dès que chaque hôte termine",
-              "J'ai développé le frontend React/Vite : cartes d'hôtes en live, badges de ports colorés par risque, indicateur de progression"
-            ],
-            "title": "Fonctionnalités développées"
-          },
-          {
-            "type": "bullets",
-            "items": [
-              "Python 3 + FastAPI — Backend API REST et WebSocket",
-              "uvicorn — Serveur ASGI pour FastAPI",
-              "ThreadPoolExecutor — Scan de ports concurrent (stdlib concurrent.futures)",
-              "WebSockets — Streaming temps réel backend → frontend",
-              "React 18 + Vite — Frontend SPA avec mise à jour live",
-              "CORS middleware — Intégration backend/frontend cross-origin"
-            ],
-            "title": "Stack & Technologies"
-          },
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "label": "Découverte des hôtes",
-                "description": "Le backend résout le sous-réseau local et pinge chaque IP pour construire la liste des hôtes actifs."
-              },
-              {
-                "label": "Scan de ports concurrent",
-                "description": "Pour chaque hôte actif, un ThreadPoolExecutor sonde la liste TOP_PORTS en parallèle — ports ouverts et noms de services collectés."
-              },
-              {
-                "label": "Classification des risques",
-                "description": "Chaque port ouvert est recherché dans RISK_MAP et étiqueté élevé / moyen / faible selon le risque d'exposition connu."
-              },
-              {
-                "label": "Streaming WebSocket",
-                "description": "Résultats envoyés au frontend en temps réel dès que chaque hôte termine son scan — sans attendre la fin du scan complet."
-              },
-              {
-                "label": "Rendu React",
-                "description": "Le frontend reçoit les événements JSON via WebSocket et affiche des cartes d'hôtes avec badges de ports colorés à la volée."
-              }
-            ],
-            "title": "Fonctionnement"
-          },
-          {
-            "type": "metrics",
-            "items": [
-              {
-                "note": "Streaming temps réel",
-                "label": "Transport",
-                "value": "WebSocket (FastAPI + uvicorn)"
-              },
-              {
-                "note": "Sondage parallèle par hôte",
-                "label": "Concurrence",
-                "value": "ThreadPoolExecutor"
-              },
-              {
-                "note": "Dict KNOWN_SERVICES",
-                "label": "Couverture ports",
-                "value": "45 services"
-              },
-              {
-                "note": "Élevé / Moyen / Faible via RISK_MAP",
-                "label": "Niveaux de risque",
-                "value": "3 niveaux"
-              },
-              {
-                "note": "fastapi, uvicorn, websockets + React/Vite",
-                "label": "Dépendances",
-                "value": "Minimales"
-              }
-            ],
-            "title": "Points techniques clés"
-          }
-        ]
-      },
-      "es": {
-        "title": "Escáner de red (FastAPI + React)",
-        "heroSubtitle": "Escáner de red en tiempo real — backend FastAPI + WebSocket + interfaz React/Vite",
+        "title": "Port Scanner — async TCP scanner & detection lab",
+        "heroSubtitle": "Zero-dependency asyncio port scanner, secure by default, that explains the risk of every open service — and the Blue Team side: how to detect that very scan with Wireshark, Suricata and Sigma",
         "sections": [
           {
             "type": "text",
-            "title": "Contexto",
-            "paragraphs": [
-              "Construí este escáner de red local full-stack como proyecto personal de seguridad. Mi objetivo era producir una herramienta capaz de identificar los hosts activos y los puertos abiertos en un segmento LAN, transmitir los resultados en tiempo real y clasificar cada servicio por nivel de riesgo.",
-              "Lo diseñé en dos capas: un backend Python FastAPI que realiza el escaneo real con hilos concurrentes, y un frontend React/Vite que se conecta vía WebSocket y muestra los resultados en directo."
+            "title": "Context",
+            "body": "I rebuilt this project from scratch with a defender's mindset. A port scanner is usually shown from the attacker's side; I wanted the opposite: a tool that is safe to run on a home or company network, tells you why an open port matters and what to do about it, and then teaches how a SOC detects the scan it just performed (MITRE ATT&CK T1046 — Network Service Discovery)."
+          },
+          {
+            "type": "bullets",
+            "title": "What I built",
+            "items": [
+              "An asynchronous TCP connect scanner (asyncio, standard library only): open / closed / filtered states, latency, bounded concurrency and memory",
+              "Target and port parsing (IP, CIDR, hostnames; 22, 20-25, top100, all) with strict validation",
+              "About 50 service profiles: risk level from info to critical and a defensive recommendation for each open port",
+              "Optional passive banner grabbing, with every non-printable character escaped",
+              "Text, JSON and CSV outputs, stable exit codes and --fail-on high for CI pipelines",
+              "A bilingual local web UI (port-scanner-web) driving the same engine"
             ]
           },
           {
             "type": "bullets",
+            "title": "Security choices",
             "items": [
-              "Construí un backend FastAPI con un endpoint WebSocket que transmite los resultados a medida que se obtienen — sin polling ni recarga de página.",
-              "Implementé un escáner de puertos concurrente mediante ThreadPoolExecutor: recorre todos los puertos principales de una subred en paralelo, y luego agrega los resultados por host.",
-              "Construí una tabla de detección de servicios que cubre 45 puertos conocidos (HTTP, SSH, RDP, MSSQL, Redis, MongoDB, Docker, K8s API…).",
-              "Implementé una clasificación de riesgo (alto / medio / bajo) por puerto abierto basada en un RISK_MAP curado (Telnet, RDP, listener de Metasploit, bases de datos expuestas…).",
-              "Añadí una API REST con CORS habilitado en paralelo al endpoint WebSocket para facilitar la integración.",
-              "Construí un frontend React/Vite con tarjetas de host actualizadas en tiempo real, badges de puertos coloreados por riesgo e indicador de progreso del escaneo."
-            ],
-            "title": "Lo que construí"
+              "Secure by default: only private networks (RFC 1918, IPv6 ULA) and loopback; IPv4-mapped IPv6, every DNS answer and ambiguous shorthand IPs (127.1, 0x7f.1) are checked",
+              "Hard caps checked before any packet is sent: 1,024 addresses, 262,144 probes, 500 concurrent connections, 30 s timeout",
+              "Banners treated as hostile input: terminal escape sequences and invisible bidirectional characters (Trojan Source) neutralised",
+              "CSV formula injection prevented (OWASP); reports never overwrite an existing file without --force",
+              "Local web server protected like an exposed service: loopback only, random 256-bit token in the URL fragment, Host check against DNS rebinding, Origin check against CSRF, strict CSP, textContent-only rendering",
+              "Repository hardening: protected main branch, secret scanning with push protection, Dependabot, Ruff with Bandit rules, private vulnerability reporting"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Detection side (Blue Team)",
+            "items": [
+              "Lab captures of a real scan, normal traffic and a very busy legitimate client",
+              "Step-by-step Wireshark and tshark guide: the filters that reveal a scan",
+              "Two Suricata rules (SYN burst, RST burst) and a Sigma value_count correlation (distinct ports per source)",
+              "A CI job replays the captures through Suricata and checks the expected alerts — including no alert on normal traffic and a documented false positive"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Engineering quality",
             "items": [
               {
-                "label": "Transporte",
-                "value": "WebSocket (FastAPI + uvicorn) — streaming en tiempo real"
+                "label": "Automated tests",
+                "value": "250+",
+                "note": "real sockets on loopback, network simulated otherwise"
               },
               {
-                "label": "Concurrencia",
-                "value": "ThreadPoolExecutor — sondeo paralelo de puertos por host"
+                "label": "CI jobs",
+                "value": "6",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, Suricata + Sigma"
               },
               {
-                "label": "Cobertura de puertos",
-                "value": "45 servicios conocidos en el dict KNOWN_SERVICES"
+                "label": "Runtime dependencies",
+                "value": "0"
               },
               {
-                "label": "Niveles de riesgo",
-                "value": "alto / medio / bajo por puerto (Telnet, RDP, BD expuestas…)"
-              },
-              {
-                "label": "Stack",
-                "value": "Python 3, FastAPI, uvicorn, websockets · React 18, Vite"
+                "label": "Releases",
+                "value": "v1.0.0 → v1.1.0"
               }
-            ],
-            "title": "Puntos técnicos clave"
+            ]
           },
           {
             "type": "timeline",
+            "title": "How it works",
             "steps": [
               {
-                "title": "Descubrimiento de hosts",
-                "description": "El backend resuelve la subred local y hace ping a cada IP para construir la lista de hosts activos."
+                "label": "Validate",
+                "description": "Targets and ports are parsed and checked against the private-network guard and the size caps before anything is sent."
               },
               {
-                "title": "Escaneo de puertos concurrente",
-                "description": "Para cada host activo, un ThreadPoolExecutor sondea la lista TOP_PORTS en paralelo, recopilando los puertos abiertos y los nombres de servicios."
+                "label": "Scan",
+                "description": "A fixed pool of asyncio workers opens and immediately closes one TCP connection per (address, port)."
               },
               {
-                "title": "Clasificación de riesgos",
-                "description": "Cada puerto abierto se busca en RISK_MAP y se etiqueta como alto / medio / bajo según el riesgo de exposición conocido."
+                "label": "Explain",
+                "description": "Each open port gets its probable service, a risk level and a defensive recommendation; banners are read and sanitised on request."
               },
               {
-                "title": "Streaming WebSocket",
-                "description": "Los resultados se envían al frontend en tiempo real en cuanto cada host termina su escaneo — sin esperar a que finalice el escaneo completo."
-              },
-              {
-                "title": "Renderizado de la UI React",
-                "description": "El frontend Vite/React recibe eventos JSON vía WebSocket y muestra tarjetas de host con badges de puertos coloreados al vuelo."
+                "label": "Detect",
+                "description": "The same scan is captured and caught by Suricata and Sigma rules, verified automatically in CI."
               }
-            ],
-            "title": "Funcionamiento"
+            ]
           },
           {
-            "code": "# Backend\npip install fastapi uvicorn websockets\npython backend.py\n\n# Frontend (terminal separada)\ncd scanner-ui\nnpm install && npm run dev",
-            "type": "code",
-            "title": "Ejecutar el proyecto",
-            "language": "bash"
+            "type": "resources",
+            "title": "Links",
+            "items": [
+              {
+                "label": "Source code",
+                "href": "https://github.com/Aiyeesha/port-scanner"
+              },
+              {
+                "label": "Detection guide",
+                "href": "https://github.com/Aiyeesha/port-scanner/tree/main/detection"
+              }
+            ]
+          }
+        ]
+      },
+      "fr": {
+        "title": "Port Scanner — scanner TCP asynchrone et labo de détection",
+        "heroSubtitle": "Scanner de ports asyncio sans dépendance, sécurisé par défaut, qui explique le risque de chaque service ouvert — et le versant Blue Team : comment détecter ce même scan avec Wireshark, Suricata et Sigma",
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexte",
+            "body": "J'ai reconstruit ce projet de zéro avec un regard de défenseuse. Un scanner de ports se présente d'habitude du côté de l'attaquant ; je voulais l'inverse : un outil sans danger sur un réseau domestique ou d'entreprise, qui explique pourquoi un port ouvert compte et ce qu'il faut faire, puis qui montre comment un SOC détecte le scan qu'il vient d'effectuer (MITRE ATT&CK T1046 — Network Service Discovery)."
+          },
+          {
+            "type": "bullets",
+            "title": "Ce que j'ai construit",
+            "items": [
+              "Un scanner TCP « connect » asynchrone (asyncio, bibliothèque standard uniquement) : états ouvert / fermé / filtré, latence, concurrence et mémoire bornées",
+              "L'analyse des cibles et des ports (IP, CIDR, noms d'hôte ; 22, 20-25, top100, all) avec une validation stricte",
+              "Une cinquantaine de fiches de services : niveau de risque d'« info » à « critique » et recommandation de défense pour chaque port ouvert",
+              "Une lecture de bannières optionnelle et passive, avec échappement de tout caractère non imprimable",
+              "Des sorties texte, JSON et CSV, des codes de retour stables et --fail-on high pour l'intégration continue",
+              "Une interface web locale bilingue (port-scanner-web) qui pilote le même moteur"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Choix de sécurité",
+            "items": [
+              "Sécurisé par défaut : réseaux privés (RFC 1918, IPv6 ULA) et boucle locale uniquement ; IPv6 mappées, chaque réponse DNS et IP abrégées ambiguës (127.1, 0x7f.1) contrôlées",
+              "Plafonds vérifiés avant tout envoi : 1 024 adresses, 262 144 tentatives, 500 connexions simultanées, délai de 30 s",
+              "Bannières traitées comme des données hostiles : séquences d'échappement de terminal et caractères bidirectionnels invisibles (Trojan Source) neutralisés",
+              "Injection de formules CSV empêchée (OWASP) ; aucun rapport existant écrasé sans --force",
+              "Serveur web local protégé comme un service exposé : boucle locale uniquement, jeton aléatoire de 256 bits dans le fragment d'URL, contrôle Host contre le DNS rebinding, contrôle Origin contre le CSRF, CSP stricte, affichage par textContent uniquement",
+              "Dépôt durci : branche main protégée, détection des secrets avec blocage à l'envoi, Dependabot, Ruff avec règles Bandit, signalement privé de vulnérabilités"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Volet détection (Blue Team)",
+            "items": [
+              "Captures de laboratoire d'un vrai scan, de trafic normal et d'un client légitime très actif",
+              "Guide Wireshark et tshark pas à pas : les filtres qui révèlent un scan",
+              "Deux règles Suricata (rafale de SYN, rafale de RST) et une corrélation Sigma value_count (ports distincts par source)",
+              "Un job de CI rejoue les captures dans Suricata et vérifie les alertes attendues — y compris l'absence d'alerte sur le trafic normal et un faux positif documenté"
+            ]
+          },
+          {
+            "type": "metrics",
+            "title": "Qualité logicielle",
+            "items": [
+              {
+                "label": "Tests automatisés",
+                "value": "250+",
+                "note": "vrais sockets en boucle locale, réseau simulé sinon"
+              },
+              {
+                "label": "Jobs de CI",
+                "value": "6",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, Suricata + Sigma"
+              },
+              {
+                "label": "Dépendances d'exécution",
+                "value": "0"
+              },
+              {
+                "label": "Versions",
+                "value": "v1.0.0 → v1.1.0"
+              }
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Fonctionnement",
+            "steps": [
+              {
+                "label": "Valider",
+                "description": "Cibles et ports sont analysés puis confrontés au garde-fou réseaux privés et aux plafonds avant tout envoi."
+              },
+              {
+                "label": "Scanner",
+                "description": "Un pool fixe de travailleurs asyncio ouvre puis referme aussitôt une connexion TCP par couple (adresse, port)."
+              },
+              {
+                "label": "Expliquer",
+                "description": "Chaque port ouvert reçoit son service probable, un niveau de risque et une recommandation ; les bannières sont lues et nettoyées sur demande."
+              },
+              {
+                "label": "Détecter",
+                "description": "Le même scan est capturé puis repéré par les règles Suricata et Sigma, vérifiées automatiquement en CI."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Liens",
+            "items": [
+              {
+                "label": "Code source",
+                "href": "https://github.com/Aiyeesha/port-scanner"
+              },
+              {
+                "label": "Guide de détection",
+                "href": "https://github.com/Aiyeesha/port-scanner/tree/main/detection"
+              }
+            ]
+          }
+        ]
+      },
+      "es": {
+        "title": "Port Scanner — escáner TCP asíncrono y laboratorio de detección",
+        "heroSubtitle": "Escáner de puertos asyncio sin dependencias, seguro por defecto, que explica el riesgo de cada servicio abierto — y la parte Blue Team: cómo detectar ese mismo escaneo con Wireshark, Suricata y Sigma",
+        "sections": [
+          {
+            "type": "text",
+            "title": "Contexto",
+            "body": "Reconstruí este proyecto desde cero con mentalidad defensiva. Un escáner de puertos suele presentarse desde el lado del atacante; yo quería lo contrario: una herramienta segura en una red doméstica o empresarial, que explique por qué importa un puerto abierto y qué hacer al respecto, y que luego enseñe cómo un SOC detecta el escaneo que acaba de realizar (MITRE ATT&CK T1046 — Network Service Discovery)."
+          },
+          {
+            "type": "bullets",
+            "title": "Lo que construí",
+            "items": [
+              "Un escáner TCP «connect» asíncrono (asyncio, solo biblioteca estándar): estados abierto / cerrado / filtrado, latencia, concurrencia y memoria acotadas",
+              "El análisis de objetivos y puertos (IP, CIDR, nombres de host; 22, 20-25, top100, all) con validación estricta",
+              "Unas cincuenta fichas de servicios: nivel de riesgo de «info» a «crítico» y recomendación defensiva para cada puerto abierto",
+              "Lectura de banners opcional y pasiva, con escape de todo carácter no imprimible",
+              "Salidas en texto, JSON y CSV, códigos de salida estables y --fail-on high para la integración continua",
+              "Una interfaz web local bilingüe (port-scanner-web) que usa el mismo motor"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Decisiones de seguridad",
+            "items": [
+              "Seguro por defecto: solo redes privadas (RFC 1918, IPv6 ULA) y loopback; se comprueban las IPv6 mapeadas, cada respuesta DNS y las IP abreviadas ambiguas (127.1, 0x7f.1)",
+              "Límites comprobados antes de cualquier envío: 1024 direcciones, 262 144 intentos, 500 conexiones simultáneas, 30 s de espera",
+              "Banners tratados como datos hostiles: secuencias de escape de terminal y caracteres bidireccionales invisibles (Trojan Source) neutralizados",
+              "Inyección de fórmulas CSV evitada (OWASP); ningún informe existente se sobrescribe sin --force",
+              "Servidor web local protegido como un servicio expuesto: solo loopback, token aleatorio de 256 bits en el fragmento de la URL, control de Host contra DNS rebinding, control de Origin contra CSRF, CSP estricta, renderizado solo con textContent",
+              "Repositorio reforzado: rama main protegida, detección de secretos con bloqueo en el push, Dependabot, Ruff con reglas Bandit, notificación privada de vulnerabilidades"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Detección (Blue Team)",
+            "items": [
+              "Capturas de laboratorio de un escaneo real, de tráfico normal y de un cliente legítimo muy activo",
+              "Guía paso a paso de Wireshark y tshark: los filtros que revelan un escaneo",
+              "Dos reglas Suricata (ráfaga de SYN, ráfaga de RST) y una correlación Sigma value_count (puertos distintos por origen)",
+              "Un job de CI reproduce las capturas en Suricata y verifica las alertas esperadas — incluida la ausencia de alertas en tráfico normal y un falso positivo documentado"
+            ]
+          },
+          {
+            "type": "metrics",
+            "title": "Calidad de ingeniería",
+            "items": [
+              {
+                "label": "Pruebas automatizadas",
+                "value": "250+",
+                "note": "sockets reales en loopback, red simulada en el resto"
+              },
+              {
+                "label": "Jobs de CI",
+                "value": "6",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, Suricata + Sigma"
+              },
+              {
+                "label": "Dependencias de ejecución",
+                "value": "0"
+              },
+              {
+                "label": "Versiones",
+                "value": "v1.0.0 → v1.1.0"
+              }
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Cómo funciona",
+            "steps": [
+              {
+                "label": "Validar",
+                "description": "Objetivos y puertos se analizan y se contrastan con la protección de redes privadas y los límites antes de enviar nada."
+              },
+              {
+                "label": "Escanear",
+                "description": "Un grupo fijo de trabajadores asyncio abre y cierra de inmediato una conexión TCP por cada par (dirección, puerto)."
+              },
+              {
+                "label": "Explicar",
+                "description": "Cada puerto abierto recibe su servicio probable, un nivel de riesgo y una recomendación; los banners se leen y se limpian bajo demanda."
+              },
+              {
+                "label": "Detectar",
+                "description": "El mismo escaneo se captura y lo detectan las reglas Suricata y Sigma, verificadas automáticamente en la CI."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Enlaces",
+            "items": [
+              {
+                "label": "Código fuente",
+                "href": "https://github.com/Aiyeesha/port-scanner"
+              },
+              {
+                "label": "Guía de detección",
+                "href": "https://github.com/Aiyeesha/port-scanner/tree/main/detection"
+              }
+            ]
           }
         ]
       }

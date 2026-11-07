@@ -8,6 +8,20 @@
 export type LocalizedHighlights = { fr: string[]; es: string[] };
 
 export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
+  "python-network-scanner": {
+    "fr": [
+      "Scan TCP « connect » asynchrone à concurrence bornée, garde-fou de cibles sécurisé par défaut",
+      "~50 fiches de services avec niveau de risque et recommandation de défense",
+      "Interface web locale durcie : jeton par lancement, contrôles Host/Origin, CSP stricte",
+      "Règles Suricata et Sigma rejouées sur des captures de labo en CI (MITRE ATT&CK T1046)"
+    ],
+    "es": [
+      "Escaneo TCP «connect» asíncrono con concurrencia acotada y protección de objetivos segura por defecto",
+      "~50 fichas de servicios con nivel de riesgo y recomendación defensiva",
+      "Interfaz web local reforzada: token por arranque, controles Host/Origin, CSP estricta",
+      "Reglas Suricata y Sigma reproducidas sobre capturas de laboratorio en la CI (MITRE ATT&CK T1046)"
+    ]
+  },
   "homelab-cowrie-honeypot": {
     "fr": [
       "Honeypot Cowrie déployé et isolé sur un réseau VMnet2 dédié",
