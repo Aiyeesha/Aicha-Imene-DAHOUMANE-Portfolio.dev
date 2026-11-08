@@ -27,13 +27,13 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
       "7 playbooks en 8 phases numérotées, 219 actions à cocher par langue (FR/EN)",
       "Chaque technique MITRE ATT&CK vérifiée sur les données officielles 20.1 — les révoquées sont refusées",
       "Délais RGPD, NIS 2 et plainte pour l'assurance intégrés aux procédures",
-      "Export JSON refusé au moindre problème de validation, joint à chaque version"
+      "Interface web : triage de gravité, comptes à rebours des délais légaux, actions horodatées, rapport Markdown"
     ],
     "es": [
       "7 playbooks en 8 fases numeradas, 219 acciones verificables por idioma (FR/EN)",
       "Cada técnica MITRE ATT&CK comprobada con los datos oficiales 20.1 — las revocadas se rechazan",
       "Plazos del RGPD, NIS 2 y denuncia para el seguro integrados en los procedimientos",
-      "Exportación JSON rechazada ante cualquier problema de validación, adjunta a cada versión"
+      "Interfaz web: triaje de gravedad, cuentas atrás de plazos legales, acciones con hora, informe Markdown"
     ]
   },
   "homelab-cowrie-honeypot": {

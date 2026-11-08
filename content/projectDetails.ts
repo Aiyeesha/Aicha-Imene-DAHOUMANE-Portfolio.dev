@@ -9571,6 +9571,14 @@ export const projectDetails: ProjectDetails[] = [
         "src": "/projects/incident-response-playbook/cover.svg"
       },
       {
+        "alt": "Web interface: estimated severity S1 with its deciding criterion and the internal timelines for that level (French)",
+        "src": "/projects/incident-response-playbook/web-triage-fr.png"
+      },
+      {
+        "alt": "Web interface in dark theme: legal deadline countdowns sorted by urgency (English)",
+        "src": "/projects/incident-response-playbook/web-deadlines-en.png"
+      },
+      {
         "alt": "Repository README on GitHub with CI, Python, dependency, ATT&CK and licence badges",
         "src": "/projects/incident-response-playbook/github-readme-en.png"
       },
@@ -9626,7 +9634,18 @@ export const projectDetails: ProjectDetails[] = [
               "Every document starts with a structured front matter (strict YAML subset) rendered as a table on GitHub",
               "playbook-check verifies required fields, FR/EN parity of severities and techniques, the 8-phase structure with actions to tick, and every internal link",
               "Each MITRE ATT&CK technique is checked against the official 20.1 data bundled with the tool: unknown or revoked techniques are rejected with their replacement, and each one must be explained in the text",
-              "playbook-export turns the checklists into JSON for a ticketing tool or SOC dashboard — and refuses to export anything if a single problem remains"
+              "playbook-export turns the documentation into JSON — checklists, severity grid and legal deadlines read from the Markdown tables — and refuses to export anything if a single problem remains"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Web interface",
+            "items": [
+              "Severity triage on the five criteria of the severity grid: the most severe wins, a playbook can raise the level but never lower it",
+              "Playbook choice from each playbook's \"when to use it\" paragraph",
+              "Legal deadline countdowns from the time the incident became known: GDPR 72 h, NIS 2 24 h and 72 h, police complaint 72 h",
+              "Timestamped checklist of the 8 phases and a Markdown report in UTC, ready for the incident report",
+              "Strict content security policy, no analytics or cookies, nothing kept by default; published on GitHub Pages from the same commit as the playbooks"
             ]
           },
           {
@@ -9640,13 +9659,13 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Automated tests",
-                "value": "85",
-                "note": "validator and export"
+                "value": "142",
+                "note": "108 Python (validator, export) + 34 web"
               },
               {
                 "label": "CI jobs",
-                "value": "6",
-                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentation"
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentation, web interface"
               },
               {
                 "label": "Runtime dependencies",
@@ -9681,6 +9700,10 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Links",
             "items": [
               {
+                "label": "Live interface",
+                "href": "https://aiyeesha.github.io/incident-response-playbook/"
+              },
+              {
                 "label": "Source code",
                 "href": "https://github.com/Aiyeesha/incident-response-playbook"
               },
@@ -9689,8 +9712,8 @@ export const projectDetails: ProjectDetails[] = [
                 "href": "https://github.com/Aiyeesha/incident-response-playbook/blob/main/en/playbooks/P02-ransomware.md"
               },
               {
-                "label": "Release v1.0.0 and JSON exports",
-                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.0.0"
+                "label": "Release v1.1.0 and JSON exports",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.1.0"
               }
             ]
           }
@@ -9734,7 +9757,18 @@ export const projectDetails: ProjectDetails[] = [
               "Chaque document commence par une fiche structurée (sous-ensemble strict de YAML), affichée sous forme de tableau sur GitHub",
               "playbook-check vérifie les champs obligatoires, la parité FR/EN des gravités et des techniques, la structure en 8 phases avec actions à cocher et chaque lien interne",
               "Chaque technique MITRE ATT&CK est contrôlée sur les données officielles 20.1 embarquées dans l'outil : les techniques inconnues ou révoquées sont refusées avec leur remplaçante, et chacune doit être expliquée dans le texte",
-              "playbook-export transforme les actions à cocher en JSON pour un outil de ticketing ou un tableau de bord SOC — et refuse tout export tant qu'il reste un seul problème"
+              "playbook-export transforme la documentation en JSON — actions à cocher, grille de gravité et délais légaux lus dans les tableaux Markdown — et refuse tout export tant qu'il reste un seul problème"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Interface web",
+            "items": [
+              "Qualification de la gravité sur les cinq critères de la grille : le plus grave l'emporte, un playbook peut relever le niveau mais jamais l'abaisser",
+              "Choix du playbook grâce au paragraphe « Quand l'utiliser » de chacun",
+              "Comptes à rebours des délais légaux depuis la prise de connaissance : RGPD 72 h, NIS 2 24 h et 72 h, plainte 72 h",
+              "Actions des 8 phases cochées et horodatées, rapport Markdown en UTC prêt pour le rapport d'incident",
+              "Politique de sécurité du contenu stricte, ni mesure d'audience ni cookie, rien de conservé par défaut ; publiée sur GitHub Pages à partir du même commit que les playbooks"
             ]
           },
           {
@@ -9748,13 +9782,13 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Tests automatisés",
-                "value": "85",
-                "note": "validateur et export"
+                "value": "142",
+                "note": "108 Python (validateur, export) + 34 web"
               },
               {
                 "label": "Jobs de CI",
-                "value": "6",
-                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentation"
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentation, interface web"
               },
               {
                 "label": "Dépendances d'exécution",
@@ -9789,6 +9823,10 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Liens",
             "items": [
               {
+                "label": "Interface en ligne",
+                "href": "https://aiyeesha.github.io/incident-response-playbook/?lang=fr"
+              },
+              {
                 "label": "Code source",
                 "href": "https://github.com/Aiyeesha/incident-response-playbook"
               },
@@ -9797,8 +9835,8 @@ export const projectDetails: ProjectDetails[] = [
                 "href": "https://github.com/Aiyeesha/incident-response-playbook/blob/main/fr/playbooks/P02-rancongiciel.md"
               },
               {
-                "label": "Version v1.0.0 et exports JSON",
-                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.0.0"
+                "label": "Version v1.1.0 et exports JSON",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.1.0"
               }
             ]
           }
@@ -9842,7 +9880,18 @@ export const projectDetails: ProjectDetails[] = [
               "Cada documento empieza con una ficha estructurada (subconjunto estricto de YAML) que GitHub muestra como tabla",
               "playbook-check verifica los campos obligatorios, la paridad FR/EN de gravedades y técnicas, la estructura en 8 fases con acciones verificables y cada enlace interno",
               "Cada técnica MITRE ATT&CK se contrasta con los datos oficiales 20.1 incluidos en la herramienta: las técnicas desconocidas o revocadas se rechazan indicando su sustituta, y cada una debe explicarse en el texto",
-              "playbook-export convierte las acciones en JSON para una herramienta de tickets o un panel SOC — y se niega a exportar mientras quede un solo problema"
+              "playbook-export convierte la documentación en JSON — acciones, escala de gravedad y plazos legales leídos en las tablas Markdown — y se niega a exportar mientras quede un solo problema"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Interfaz web",
+            "items": [
+              "Calificación de la gravedad con los cinco criterios de la escala: el más grave prevalece, un playbook puede elevar el nivel pero nunca bajarlo",
+              "Elección del playbook gracias al párrafo «Cuándo usarlo» de cada uno",
+              "Cuentas atrás de los plazos legales desde que se tiene conocimiento: RGPD 72 h, NIS 2 24 h y 72 h, denuncia 72 h",
+              "Acciones de las 8 fases marcadas con hora e informe Markdown en UTC, listo para el informe del incidente",
+              "Política de seguridad de contenido estricta, sin analítica ni cookies, nada guardado por defecto; publicada en GitHub Pages desde el mismo commit que los playbooks"
             ]
           },
           {
@@ -9856,13 +9905,13 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Pruebas automatizadas",
-                "value": "85",
-                "note": "validador y exportación"
+                "value": "142",
+                "note": "108 Python (validador, exportación) + 34 web"
               },
               {
                 "label": "Jobs de CI",
-                "value": "6",
-                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentación"
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, documentación, interfaz web"
               },
               {
                 "label": "Dependencias de ejecución",
@@ -9897,6 +9946,10 @@ export const projectDetails: ProjectDetails[] = [
             "title": "Enlaces",
             "items": [
               {
+                "label": "Interfaz en línea",
+                "href": "https://aiyeesha.github.io/incident-response-playbook/"
+              },
+              {
                 "label": "Código fuente",
                 "href": "https://github.com/Aiyeesha/incident-response-playbook"
               },
@@ -9905,8 +9958,8 @@ export const projectDetails: ProjectDetails[] = [
                 "href": "https://github.com/Aiyeesha/incident-response-playbook/blob/main/en/playbooks/P02-ransomware.md"
               },
               {
-                "label": "Versión v1.0.0 y exportaciones JSON",
-                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.0.0"
+                "label": "Versión v1.1.0 y exportaciones JSON",
+                "href": "https://github.com/Aiyeesha/incident-response-playbook/releases/tag/v1.1.0"
               }
             ]
           }
