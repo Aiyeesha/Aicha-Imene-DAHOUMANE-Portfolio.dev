@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-label="risk-check signale une revue trop éloignée et une acceptation signée par la mauvaise autorité, puis valide le registre ; risk-report et risk-export produisent le rapport et le CSV">
+  <!-- Couverture de la carte portfolio : sortie réelle de risk-check 1.1.0 sur le registre d'exemple d'Atelier Lumen -->
+  <rect width="1280" height="800" rx="12" fill="#0d1117"/>
+  <rect width="1280" height="44" rx="12" fill="#161b22"/>
+  <rect y="30" width="1280" height="14" fill="#161b22"/>
+  <circle cx="24" cy="22" r="7" fill="#ff5f57"/><circle cx="48" cy="22" r="7" fill="#febc2e"/><circle cx="72" cy="22" r="7" fill="#28c840"/>
+  <text x="640" y="28" font-family="ui-monospace,'Cascadia Code',Consolas,'Courier New',monospace" font-size="15" fill="#8b949e" text-anchor="middle">risk-assessment-matrix 1.1.0 — ISO/IEC 27005:2022 · EBIOS RM · méthode 5×5</text>
+  <g font-family="ui-monospace,'Cascadia Code',Consolas,'Courier New',monospace" font-size="14.5">
+    <text x="30" y="96"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">risk-check&#160;registre.prive.toml</tspan></text>
+    <text x="30" y="130"><tspan fill="#79c0ff">registre.prive.toml:&#160;</tspan><tspan fill="#e6edf3">R01.review.next&#160;:&#160;trop&#160;éloignée&#160;:&#160;un&#160;risque&#160;«&#160;high&#160;»&#160;se&#160;revoit&#160;tous&#160;les&#160;3&#160;mois&#160;au&#160;plus</tspan></text>
+    <text x="30" y="164"><tspan fill="#79c0ff">registre.prive.toml:&#160;</tspan><tspan fill="#e6edf3">R02.acceptance.role&#160;:&#160;«&#160;Responsable&#160;du&#160;risque&#160;»&#160;attendu&#160;pour&#160;un&#160;risque&#160;«&#160;moderate&#160;»</tspan></text>
+    <text x="30" y="198"><tspan fill="#79c0ff">registre.prive.toml:&#160;</tspan><tspan fill="#e3b341" font-weight="bold">attention&#160;:&#160;</tspan><tspan fill="#e6edf3">R03.measures[1]&#160;:&#160;mesure&#160;en&#160;retard&#160;(échéance&#160;2026-10-31)</tspan></text>
+    <text x="30" y="232"><tspan fill="#ff7b72" font-weight="bold">1&#160;fichier(s)&#160;vérifié(s)&#160;—&#160;2&#160;problème(s),&#160;1&#160;avertissement(s)</tspan></text>
+    <text x="30" y="300"><tspan fill="#8b949e">#&#160;revue&#160;ramenée&#160;au&#160;2027-01-15,&#160;acceptation&#160;signée&#160;par&#160;le&#160;responsable&#160;du&#160;risque</tspan></text>
+    <text x="30" y="334"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">risk-check&#160;registre.prive.toml</tspan></text>
+    <text x="30" y="368"><tspan fill="#79c0ff">registre.prive.toml:&#160;</tspan><tspan fill="#e3b341" font-weight="bold">attention&#160;:&#160;</tspan><tspan fill="#e6edf3">R03.measures[1]&#160;:&#160;mesure&#160;en&#160;retard&#160;(échéance&#160;2026-10-31)</tspan></text>
+    <text x="30" y="402"><tspan fill="#7ee787" font-weight="bold">1&#160;fichier(s)&#160;vérifié(s)&#160;—&#160;OK,&#160;1&#160;avertissement(s)</tspan></text>
+    <text x="30" y="436"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">risk-report&#160;registre.prive.toml&#160;--format&#160;html&#160;-o&#160;rapports/risques.html</tspan></text>
+    <text x="30" y="470"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3">risk-export&#160;registre.prive.toml&#160;--format&#160;csv&#160;-o&#160;risques.csv&#160;--measures&#160;mesures.csv</tspan></text>
+    <text x="30" y="538"><tspan fill="#7ee787" font-weight="bold">$&#160;</tspan><tspan fill="#e6edf3"></tspan><tspan fill="#7ee787">█</tspan></text>
+  </g>
+  <g font-family="system-ui,'Segoe UI',sans-serif" font-size="13" text-anchor="middle">
+    <text x="860" y="548" text-anchor="start" fill="#8b949e">Cartographie du risque résiduel</text>
+    <rect x="860" y="560" width="74" height="38" rx="3" fill="#8a6d00"/>
+    <rect x="936" y="560" width="74" height="38" rx="3" fill="#b85300"/>
+    <rect x="1012" y="560" width="74" height="38" rx="3" fill="#b85300"/>
+    <rect x="1088" y="560" width="74" height="38" rx="3" fill="#b3261e"/>
+    <rect x="1164" y="560" width="74" height="38" rx="3" fill="#b3261e"/>
+    <rect x="860" y="600" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <rect x="936" y="600" width="74" height="38" rx="3" fill="#8a6d00"/>
+    <rect x="1012" y="600" width="74" height="38" rx="3" fill="#b85300"/>
+    <rect x="1088" y="600" width="74" height="38" rx="3" fill="#b85300"/>
+    <rect x="1164" y="600" width="74" height="38" rx="3" fill="#b3261e"/>
+    <rect x="860" y="640" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <text x="897.0" y="665" fill="#ffffff" font-weight="bold">R06</text>
+    <rect x="936" y="640" width="74" height="38" rx="3" fill="#8a6d00"/>
+    <text x="973.0" y="665" fill="#ffffff" font-weight="bold">R05</text>
+    <rect x="1012" y="640" width="74" height="38" rx="3" fill="#8a6d00"/>
+    <rect x="1088" y="640" width="74" height="38" rx="3" fill="#b85300"/>
+    <text x="1125.0" y="665" fill="#ffffff" font-weight="bold">R01</text>
+    <rect x="1164" y="640" width="74" height="38" rx="3" fill="#b85300"/>
+    <rect x="860" y="680" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <rect x="936" y="680" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <rect x="1012" y="680" width="74" height="38" rx="3" fill="#8a6d00"/>
+    <text x="1049.0" y="705" fill="#ffffff" font-weight="bold">R04</text>
+    <rect x="1088" y="680" width="74" height="38" rx="3" fill="#8a6d00"/>
+    <text x="1125.0" y="705" fill="#ffffff" font-weight="bold">R02 R03</text>
+    <rect x="1164" y="680" width="74" height="38" rx="3" fill="#b85300"/>
+    <rect x="860" y="720" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <rect x="936" y="720" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <rect x="1012" y="720" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <rect x="1088" y="720" width="74" height="38" rx="3" fill="#2e7d4f"/>
+    <text x="1125.0" y="745" fill="#ffffff" font-weight="bold">R07</text>
+    <rect x="1164" y="720" width="74" height="38" rx="3" fill="#8a6d00"/>
+  </g>
+</svg>

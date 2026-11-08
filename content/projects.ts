@@ -578,43 +578,49 @@ export const projects: Project[] = [
   {
     "slug": "risk-assessment-matrix",
     "nature": "personal",
-    "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
-    "excerpt": "Ground-up rebuild of an earlier risk-matrix prototype: a vanilla-JS risk register with a live 5×5 Likelihood × Impact heat map, persisted client-side via localStorage, plus a tested Python CLI for bulk import and HTML report generation.",
+    "title": "Risk Assessment Matrix — ISO 27005 & EBIOS RM Risk Register",
+    "excerpt": "A methodical risk register for small and mid-sized organisations, aligned with ISO/IEC 27005:2022 and EBIOS Risk Manager: a configurable, CI-checked method (5×5 and EBIOS RM 4×4 presets), inherent and residual risk, formal acceptance by the right authority, reviews — with self-contained HTML reports, safe CSV import/export and a web interface.",
     "track": "itops",
     "categories": [
+      "Risk Management",
       "Security",
-      "Risk Management"
+      "Development"
     ],
     "tags": [
       "Risk Assessment",
       "GRC",
-      "Python CLI",
-      "localStorage"
+      "ISO/IEC 27005",
+      "ISO/IEC 27001",
+      "EBIOS RM",
+      "MITRE ATT&CK",
+      "Python",
+      "TypeScript"
     ],
     "badge": {
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
-    "repoUrl": "https://github.com/Aiyeesha/matrice-risques",
-    "liveUrl": "https://aiyeesha.github.io/matrice-risques/",
+    "repoUrl": "https://github.com/Aiyeesha/risk-assessment-matrix",
+    "liveUrl": "https://aiyeesha.github.io/risk-assessment-matrix/",
     "techStack": [
-      "JavaScript",
-      "HTML",
-      "CSS",
       "Python",
-      "Jinja2",
-      "Pytest"
+      "TOML",
+      "pytest",
+      "TypeScript",
+      "Node.js test runner",
+      "GitHub Actions",
+      "GitHub Pages"
     ],
+    "updatedAt": "2026-11-08",
     "highlights": [
-      "5×5 Likelihood × Impact heat map with automatic scoring (1-25) — click a cell to filter the register",
-      "Client-side persistence via localStorage — the register survives a page reload",
-      "In-place editing of existing risks, not just add/remove",
-      "Python CLI (argparse + Jinja2) generates a standalone HTML report from a JSON risk register, or scores a single risk on demand",
-      "6 pytest tests covering the scoring engine, level boundaries, and example-data validation"
+      "Configurable method in TOML, validated in CI: 5×5 (ISO/IEC 27005) and EBIOS RM 4×4 presets",
+      "Formal acceptance enforced: right authority, maximum duration, expiry warnings",
+      "Self-contained HTML reports under a strict CSP, CSV import/export protected against formula injection",
+      "Web interface: clickable inherent/residual heat maps, filters, action plan and review schedule"
     ],
     "featured": false,
-    "sortOrder": 290,
-    "status": "draft",
+    "sortOrder": 275,
+    "status": "published",
     "isSecurity": true
   },
   {

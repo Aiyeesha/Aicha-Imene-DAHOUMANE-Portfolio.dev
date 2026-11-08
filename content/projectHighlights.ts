@@ -36,6 +36,20 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
       "Interfaz web: triaje de gravedad, cuentas atrás de plazos legales, acciones con hora, informe Markdown"
     ]
   },
+  "risk-assessment-matrix": {
+    "fr": [
+      "Méthode configurable en TOML, vérifiée en CI : préréglages 5×5 (ISO/IEC 27005) et EBIOS RM 4×4",
+      "Acceptation formelle exigée : bonne autorité, durée maximale, alertes à l'expiration",
+      "Rapports HTML autonomes sous CSP stricte, import/export CSV protégé contre l'injection de formules",
+      "Interface web : cartographies inhérente/résiduelle cliquables, filtres, plan d'action et revues"
+    ],
+    "es": [
+      "Método configurable en TOML, verificado en la CI: preajustes 5×5 (ISO/IEC 27005) y EBIOS RM 4×4",
+      "Aceptación formal obligatoria: autoridad correcta, duración máxima, avisos al vencer",
+      "Informes HTML autónomos con CSP estricta, importación/exportación CSV protegida contra la inyección de fórmulas",
+      "Interfaz web: mapas de calor inherente/residual interactivos, filtros, plan de acción y revisiones"
+    ]
+  },
   "homelab-cowrie-honeypot": {
     "fr": [
       "Honeypot Cowrie déployé et isolé sur un réseau VMnet2 dédié",

@@ -108,7 +108,6 @@ const UNPUBLISHED_PROJECTS = [
   ["hemebiotech-java-debug", null],
   ["pochlib-ui", null],
   ["parkit-java-testing", null],
-  ["risk-assessment-matrix", "risque360"],
   ["nextjs-admin-dashboard", null],
 ];
 const UNPUBLISHED_PROJECT_REDIRECTS = UNPUBLISHED_PROJECTS.map(([slug, target]) => ({
