@@ -4302,315 +4302,390 @@ export const projectDetails: ProjectDetails[] = [
     "slug": "risk-assessment-matrix",
     "gallery": [
       {
-        "alt": "Risk heat map and add-risk form",
-        "src": "/projects/risk-assessment-matrix/screenshot-1.png"
+        "alt": "risk-check catching a review set too far away and an acceptance signed by the wrong authority, then validating the register",
+        "src": "/projects/risk-assessment-matrix/cover.svg"
       },
       {
-        "alt": "Risk register table with scored entries",
-        "src": "/projects/risk-assessment-matrix/screenshot-2.png"
+        "alt": "Web interface in French: summary cards and residual risk heat map",
+        "src": "/projects/risk-assessment-matrix/web-fr.png"
+      },
+      {
+        "alt": "Web interface in dark theme: a heat map cell selected and the filtered list of risks (English)",
+        "src": "/projects/risk-assessment-matrix/web-en-dark.png"
+      },
+      {
+        "alt": "HTML report in French: summary and inherent and residual heat maps",
+        "src": "/projects/risk-assessment-matrix/report-fr.png"
+      },
+      {
+        "alt": "HTML report in dark theme (English)",
+        "src": "/projects/risk-assessment-matrix/report-en-dark.png"
       }
     ],
     "locales": {
       "en": {
-        "title": "Matrice de Risques — Interactive Risk Register (Rebuilt)",
-        "heroSubtitle": "Interactive 5×5 likelihood/impact risk matrix — localStorage persistence, in-place editing, and a tested Python CLI for report generation",
+        "title": "Risk Assessment Matrix — methodical risk register",
+        "heroSubtitle": "A risk register that follows a written method — ISO/IEC 27005:2022 or EBIOS Risk Manager — and checks itself: scores, treatment, formal acceptance by the right authority and reviews, with reports, safe CSV import/export and a web interface",
         "sections": [
           {
             "type": "text",
             "title": "Context",
-            "paragraphs": [
-              "I rebuilt and extended matrice-risques from risk-assessment-matrix, an open-source risk assessment project. My goal: an interactive risk register with a live Likelihood × Impact heat map (5×5), paired with a Python CLI for automation (bulk import, HTML report generation) — while fixing several blocking limitations of the original along the way."
+            "body": "I rebuilt this project from scratch, replacing two older prototypes (an English risk matrix and its French rebuild). The aim: a risk register a small or mid-sized organisation can defend in front of management or an ISO/IEC 27001 auditor. The method — scales, grid, appetite, acceptance authorities — is written in a file and validated; every risk is then checked against it automatically. Atelier Lumen, the fictional company of my incident response tabletop exercise, provides the example registers."
+          },
+          {
+            "type": "bullets",
+            "title": "What the repository contains",
+            "items": [
+              "A method format in TOML, bilingual, with two presets: 5×5 likelihood × impact (ISO/IEC 27005:2022) and EBIOS RM 4×4 (likelihood V1–V4 × severity G1–G4, ANSSI 1.5)",
+              "A register format: assets, threat, vulnerability, inherent and residual risk, planned measures, treatment (reduce, accept, transfer, avoid), formal acceptance, review, history",
+              "References on each risk and measure: ISO/IEC 27001:2022 Annex A controls (numbers only), MITRE ATT&CK techniques, and the matching incident response playbook",
+              "Four commands: risk-check (validation), risk-report (Markdown and HTML), risk-export (JSON, CSV) and risk-import (CSV to TOML)",
+              "An assessment guide and Atelier Lumen example registers, in French and English"
             ]
           },
           {
             "type": "bullets",
+            "title": "Rules checked automatically",
             "items": [
-              "Likelihood × Impact matrix (5×5) with automatic scoring and color coding (Critical / High / Moderate / Low)",
-              "Risk register: categories, owners, mitigations, due dates, statuses",
-              "Client-side persistence (localStorage) — the register survives a page reload",
-              "In-place editing of existing risks (not just add/remove)",
-              "Search and filtering, including click-to-filter on a matrix cell (drill-down)",
-              "JSON and CSV export (UTF-8 BOM for Excel compatibility)",
-              "Python CLI: HTML report generation from a JSON register, on-demand risk scoring",
-              "pytest test suite covering the scoring engine"
-            ],
-            "title": "Features"
+              "A consistent method: monotonic grid, every level used, an acceptance authority for each level above the appetite, shorter reviews for more severe risks",
+              "Residual risk never above inherent risk without a justification",
+              "Formal acceptance required when the residual risk stays above the appetite and nothing is under way to reduce it (ISO/IEC 27001, 6.1.3) — signed by the authority set by the method, for its maximum duration",
+              "Next review within the frequency of the residual level; chronological history",
+              "Errors (invalid data) are kept apart from warnings (overdue measure or review, expired acceptance); --strict makes warnings blocking"
+            ]
           },
           {
             "type": "bullets",
+            "title": "Security choices",
             "items": [
-              "No persistence, the register was lost on page reload → I added persistence via localStorage, with full register serialization/deserialization",
-              "The README documented a flat CLI (--input, --risk) but the code required undocumented subcommands (report, eval) → I rewrote the CLI to match exactly what's documented",
-              "The register class's update() method was never called by the UI → I built a full \"Edit\" button, a pre-filled form, and in-place save",
-              "Likelihood/impact labels were hardcoded in JS despite already existing in JSON → I made the JS load categories_risques.json dynamically (single source of truth)",
-              "No automated tests → I wrote 6 pytest tests covering scoring, level boundaries, sorting, and example-data validation",
-              "Windows CLI output was mis-encoded (cp1252) → I fixed it with sys.stdout.reconfigure(encoding=\"utf-8\") — correct accented characters in console"
-            ],
-            "title": "What was fixed vs. the original"
+              "CSV export protected against formula injection (CWE-1236): cells starting with =, +, -, @ are neutralised, and the protection is removed on import",
+              "Imports limited in size and rows, UTF-8 required, no file overwritten without --force",
+              "HTML report as a single file with no script: every text escaped, CSP allowing only its own stylesheet through a SHA-256 hash",
+              "Real registers excluded from Git by naming convention; the web interface reads a file locally and never sends or keeps it"
+            ]
           },
           {
             "type": "bullets",
+            "title": "Web interface",
             "items": [
-              "Vanilla HTML/CSS/JS (ES modules, zero dependencies) — standalone browser app",
-              "Python CLI (argparse, Jinja2, pytest) — automation and reporting",
-              "localStorage — client-side persistence",
-              "JSON / CSV export with UTF-8 BOM"
-            ],
-            "title": "Stack & Technologies"
+              "Loads the example registers or a local JSON export, fully validated before display (types, dates, colours, consistency with the grid)",
+              "Summary of active risks, risks above the appetite, overdue measures and reviews, expired acceptances",
+              "Clickable inherent and residual heat maps, filters (level, owner, treatment, accent-insensitive search) and a detailed sheet per risk",
+              "Action plan and review schedule; French and English, light and dark themes, keyboard and mobile friendly, strict CSP"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Engineering quality",
             "items": [
               {
-                "note": "Immediate remediation",
-                "label": "Critical",
-                "value": "Score 20-25"
+                "label": "Automated tests",
+                "value": "240",
+                "note": "216 Python + 24 web"
               },
               {
-                "note": "Remediation within 30 days",
-                "label": "High",
-                "value": "Score 12-19"
+                "label": "CI jobs",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, registers, web interface"
               },
               {
-                "note": "Remediation within 90 days",
-                "label": "Moderate",
-                "value": "Score 6-11"
+                "label": "Method presets",
+                "value": "2",
+                "note": "5×5 and EBIOS RM 4×4"
               },
               {
-                "note": "Acceptance or monitoring",
-                "label": "Low",
-                "value": "Score 1-5"
+                "label": "Runtime dependencies",
+                "value": "0"
               }
-            ],
-            "title": "Risk scoring"
+            ]
           },
           {
-            "type": "metrics",
+            "type": "timeline",
+            "title": "How it is used",
+            "steps": [
+              {
+                "label": "Prepare",
+                "description": "Pick a preset, adapt the scales and the appetite with management, and let risk-check validate the method."
+              },
+              {
+                "label": "Assess",
+                "description": "Describe each risk (cause → event → consequence) and score its inherent risk; the level is read from the method's grid."
+              },
+              {
+                "label": "Treat and accept",
+                "description": "Plan measures with owners and due dates, score the residual risk, and have the designated authority accept what remains."
+              },
+              {
+                "label": "Review",
+                "description": "Reviews and acceptances expire on their own schedule; risk-check --strict and the report flag what is overdue."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Links",
             "items": [
               {
-                "note": "argparse, Jinja2, pytest",
-                "label": "Stack",
-                "value": "Vanilla HTML/CSS/JS + Python CLI"
+                "label": "Live interface",
+                "href": "https://aiyeesha.github.io/risk-assessment-matrix/"
               },
               {
-                "note": "Scoring, level boundaries, sorting, data validation",
-                "label": "Tests",
-                "value": "6 pytest tests"
+                "label": "Source code",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix"
               },
               {
-                "note": "Fixes the original's main limitation",
-                "label": "Persistence",
-                "value": "localStorage"
+                "label": "Assessment guide (English)",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix/blob/main/docs/en/assessment-guide.md"
               },
               {
-                "note": "matrice-risques later became the base for a platform combining STRIDE, vendor risk, and incident-driven recalibration",
-                "label": "Foundation for",
-                "value": "risque360"
+                "label": "Release v1.1.0",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix/releases/tag/v1.1.0"
               }
-            ],
-            "title": "Outcomes"
+            ]
           }
         ]
       },
       "fr": {
-        "title": "Matrice de Risques — Registre de Risques Interactif (Reconstruit)",
-        "heroSubtitle": "Matrice de risque interactive 5×5 Probabilité/Impact — persistance localStorage, édition en place, et CLI Python testée pour la génération de rapports",
+        "title": "Matrice d'évaluation des risques — registre méthodique",
+        "heroSubtitle": "Un registre de risques qui suit une méthode écrite — ISO/IEC 27005:2022 ou EBIOS Risk Manager — et se vérifie lui-même : notes, traitement, acceptation formelle par la bonne autorité et revues, avec rapports, import/export CSV sûrs et interface web",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
-            "paragraphs": [
-              "J'ai reconstruit et enrichi matrice-risques à partir de risk-assessment-matrix, un projet open source d'évaluation des risques. Mon objectif : un registre de risques interactif avec matrice de chaleur Probabilité × Impact (5×5) en direct, assorti d'une CLI Python pour l'automatisation (import en masse, génération de rapport HTML) — et corriger au passage plusieurs limites bloquantes de l'original."
+            "body": "J'ai reconstruit ce projet de zéro, en remplacement de deux anciens prototypes (une matrice de risques en anglais et sa reconstruction en français). L'objectif : un registre de risques qu'une PME ou une ETI peut défendre devant sa direction ou un auditeur ISO/IEC 27001. La méthode — échelles, grille, appétence, autorités d'acceptation — est écrite dans un fichier et vérifiée ; chaque risque est ensuite contrôlé automatiquement par rapport à elle. Atelier Lumen, l'entreprise fictive de mon exercice sur table de réponse aux incidents, fournit les registres d'exemple."
+          },
+          {
+            "type": "bullets",
+            "title": "Contenu du dépôt",
+            "items": [
+              "Un format de méthode en TOML, bilingue, avec deux préréglages : 5×5 vraisemblance × impact (ISO/IEC 27005:2022) et EBIOS RM 4×4 (vraisemblance V1–V4 × gravité G1–G4, ANSSI 1.5)",
+              "Un format de registre : actifs, menace, vulnérabilité, risque inhérent et résiduel, mesures prévues, traitement (réduire, accepter, transférer, éviter), acceptation formelle, revue, historique",
+              "Des références sur chaque risque et chaque mesure : mesures de l'annexe A d'ISO/IEC 27001:2022 (numéros seulement), techniques MITRE ATT&CK et playbook de réponse aux incidents correspondant",
+              "Quatre commandes : risk-check (vérification), risk-report (Markdown et HTML), risk-export (JSON, CSV) et risk-import (CSV vers TOML)",
+              "Un guide d'évaluation et les registres d'exemple d'Atelier Lumen, en français et en anglais"
             ]
           },
           {
             "type": "bullets",
+            "title": "Règles vérifiées automatiquement",
             "items": [
-              "Matrice Probabilité × Impact (5×5) avec scoring automatique et code couleur (Critique / Élevé / Modéré / Faible)",
-              "Registre de risques : catégories, responsables, mitigations, échéances, statuts",
-              "Persistance locale (localStorage) — le registre survit au rechargement de page",
-              "Modification en place des risques existants (pas seulement ajout/suppression)",
-              "Recherche et filtrage, y compris par clic sur une cellule de la matrice (drill-down)",
-              "Export JSON et CSV (BOM UTF-8 pour compatibilité Excel)",
-              "CLI Python : génération de rapport HTML à partir d'un registre JSON, évaluation ponctuelle d'un risque",
-              "Suite de tests pytest sur le moteur de scoring"
-            ],
-            "title": "Fonctionnalités"
+              "Une méthode cohérente : grille monotone, chaque niveau utilisé, une autorité d'acceptation pour chaque niveau au-dessus de l'appétence, revues plus fréquentes pour les risques plus graves",
+              "Risque résiduel jamais supérieur à l'inhérent sans justification",
+              "Acceptation formelle exigée quand le risque résiduel reste au-dessus de l'appétence et que plus rien n'est en cours pour le réduire (ISO/IEC 27001, 6.1.3) — signée par l'autorité prévue par la méthode, pour sa durée maximale",
+              "Prochaine revue dans la fréquence du niveau résiduel ; historique chronologique",
+              "Erreurs (données invalides) distinctes des avertissements (mesure ou revue en retard, acceptation expirée) ; --strict rend les avertissements bloquants"
+            ]
           },
           {
             "type": "bullets",
+            "title": "Choix de sécurité",
             "items": [
-              "Aucune persistance, le registre était perdu au rechargement de la page → j'ai ajouté la persistance via localStorage, avec sérialisation/désérialisation complète du registre",
-              "Le README documentait une CLI à plat (--input, --risk) mais le code exigeait des sous-commandes non documentées (report, eval) → j'ai réécrit la CLI pour correspondre exactement à ce qui est documenté",
-              "La méthode update() de la classe de registre n'était jamais appelée par l'interface → j'ai construit un bouton « Modifier » complet, un formulaire pré-rempli et une sauvegarde en place",
-              "Les libellés probabilité/impact étaient codés en dur en JS alors qu'ils existaient déjà en JSON → j'ai fait en sorte que le JS charge dynamiquement categories_risques.json (source unique)",
-              "Aucun test automatisé → j'ai écrit 6 tests pytest sur le scoring, les bornes de niveaux, le tri et la validation des données d'exemple",
-              "La sortie CLI Windows était mal encodée (cp1252) → j'ai corrigé cela avec sys.stdout.reconfigure(encoding=\"utf-8\") — accents corrects en console"
-            ],
-            "title": "Ce qui a été corrigé par rapport à l'original"
+              "Export CSV protégé contre l'injection de formules (CWE-1236) : les cellules commençant par =, +, -, @ sont neutralisées, et la protection est retirée à l'import",
+              "Imports limités en taille et en lignes, UTF-8 exigé, aucun fichier écrasé sans --force",
+              "Rapport HTML en un seul fichier sans script : tout texte échappé, CSP n'autorisant que sa propre feuille de style par empreinte SHA-256",
+              "Registres réels exclus de Git par convention de nommage ; l'interface web lit un fichier localement, sans jamais l'envoyer ni le conserver"
+            ]
           },
           {
             "type": "bullets",
+            "title": "Interface web",
             "items": [
-              "HTML/CSS/JS vanilla (ES modules, aucune dépendance) — application navigateur autonome",
-              "CLI Python (argparse, Jinja2, pytest) — automatisation et rapports",
-              "localStorage — persistance côté client",
-              "Export JSON / CSV avec BOM UTF-8"
-            ],
-            "title": "Stack & Technologies"
+              "Chargement des registres d'exemple ou d'un export JSON local, entièrement validé avant affichage (types, dates, couleurs, cohérence avec la grille)",
+              "Synthèse des risques actifs, au-dessus de l'appétence, des mesures et revues en retard, des acceptations expirées",
+              "Cartographies cliquables du risque inhérent et résiduel, filtres (niveau, responsable, traitement, recherche sans accents) et fiche détaillée par risque",
+              "Plan d'action et calendrier des revues ; français et anglais, thèmes clair et sombre, clavier et mobile, CSP stricte"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Qualité d'ingénierie",
             "items": [
               {
-                "note": "Remédiation immédiate",
-                "label": "Critique",
-                "value": "Score 20-25"
+                "label": "Tests automatisés",
+                "value": "240",
+                "note": "216 Python + 24 web"
               },
               {
-                "note": "Remédiation sous 30 jours",
-                "label": "Élevé",
-                "value": "Score 12-19"
+                "label": "Jobs de CI",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, registres, interface web"
               },
               {
-                "note": "Remédiation sous 90 jours",
-                "label": "Modéré",
-                "value": "Score 6-11"
+                "label": "Préréglages de méthode",
+                "value": "2",
+                "note": "5×5 et EBIOS RM 4×4"
               },
               {
-                "note": "Acceptation ou surveillance",
-                "label": "Faible",
-                "value": "Score 1-5"
+                "label": "Dépendances d'exécution",
+                "value": "0"
               }
-            ],
-            "title": "Scoring des risques"
+            ]
           },
           {
-            "type": "metrics",
+            "type": "timeline",
+            "title": "Utilisation",
+            "steps": [
+              {
+                "label": "Préparer",
+                "description": "Choisir un préréglage, adapter les échelles et l'appétence avec la direction, puis faire valider la méthode par risk-check."
+              },
+              {
+                "label": "Apprécier",
+                "description": "Décrire chaque risque (cause → événement → conséquence) et coter le risque inhérent ; le niveau est lu dans la grille de la méthode."
+              },
+              {
+                "label": "Traiter et accepter",
+                "description": "Planifier les mesures avec responsables et échéances, coter le risque résiduel, et faire accepter ce qui reste par l'autorité désignée."
+              },
+              {
+                "label": "Revoir",
+                "description": "Revues et acceptations expirent à leur rythme ; risk-check --strict et le rapport signalent ce qui est en retard."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Liens",
             "items": [
               {
-                "note": "argparse, Jinja2, pytest",
-                "label": "Stack",
-                "value": "HTML/CSS/JS vanilla + CLI Python"
+                "label": "Interface en ligne",
+                "href": "https://aiyeesha.github.io/risk-assessment-matrix/"
               },
               {
-                "note": "Scoring, bornes de niveaux, tri, validation des données",
-                "label": "Tests",
-                "value": "6 tests pytest"
+                "label": "Code source",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix"
               },
               {
-                "note": "Corrige la principale limite de l'original",
-                "label": "Persistance",
-                "value": "localStorage"
+                "label": "Guide d'évaluation (français)",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix/blob/main/docs/fr/guide-evaluation.md"
               },
               {
-                "note": "matrice-risques a ensuite servi de socle à une plateforme combinant STRIDE, risques fournisseurs et recalibration par incidents",
-                "label": "Base de",
-                "value": "risque360"
+                "label": "Version v1.1.0",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix/releases/tag/v1.1.0"
               }
-            ],
-            "title": "Résultats"
+            ]
           }
         ]
       },
       "es": {
-        "title": "Matriz de Riesgos — Registro de Riesgos Interactivo (Reconstruido)",
-        "heroSubtitle": "Matriz de riesgos interactiva 5×5 probabilidad/impacto — persistencia localStorage, edición en línea, y CLI Python probada para generación de informes.",
+        "title": "Matriz de evaluación de riesgos — registro metódico",
+        "heroSubtitle": "Un registro de riesgos que sigue un método escrito — ISO/IEC 27005:2022 o EBIOS Risk Manager — y se verifica a sí mismo: puntuaciones, tratamiento, aceptación formal por la autoridad correcta y revisiones, con informes, importación/exportación CSV segura e interfaz web",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
-            "paragraphs": [
-              "Reconstruí y amplié matrice-risques a partir de risk-assessment-matrix, un proyecto open source de evaluación de riesgos. Mi objetivo: un registro de riesgos interactivo con un mapa de calor Probabilidad × Impacto (5×5) en vivo, junto con una CLI de Python para automatización (importación masiva, generación de informes HTML) — corrigiendo de paso varias limitaciones bloqueantes del original."
+            "body": "Reconstruí este proyecto desde cero, en sustitución de dos prototipos anteriores (una matriz de riesgos en inglés y su reconstrucción en francés). El objetivo: un registro de riesgos que una pyme pueda defender ante su dirección o un auditor ISO/IEC 27001. El método — escalas, matriz, apetito, autoridades de aceptación — se escribe en un archivo y se valida; después, cada riesgo se comprueba automáticamente con él. Atelier Lumen, la empresa ficticia de mi ejercicio de simulación de respuesta a incidentes, aporta los registros de ejemplo."
+          },
+          {
+            "type": "bullets",
+            "title": "Contenido del repositorio",
+            "items": [
+              "Un formato de método en TOML, bilingüe, con dos preajustes: 5×5 probabilidad × impacto (ISO/IEC 27005:2022) y EBIOS RM 4×4 (probabilidad V1–V4 × gravedad G1–G4, ANSSI 1.5)",
+              "Un formato de registro: activos, amenaza, vulnerabilidad, riesgo inherente y residual, medidas previstas, tratamiento (reducir, aceptar, transferir, evitar), aceptación formal, revisión, historial",
+              "Referencias en cada riesgo y medida: controles del anexo A de ISO/IEC 27001:2022 (solo números), técnicas MITRE ATT&CK y el playbook de respuesta a incidentes correspondiente",
+              "Cuatro comandos: risk-check (verificación), risk-report (Markdown y HTML), risk-export (JSON, CSV) y risk-import (CSV a TOML)",
+              "Una guía de evaluación y los registros de ejemplo de Atelier Lumen, en francés e inglés"
             ]
           },
           {
             "type": "bullets",
+            "title": "Reglas verificadas automáticamente",
             "items": [
-              "Matriz Probabilidad × Impacto (5×5) con puntuación automática y código de colores (Crítico / Alto / Moderado / Bajo)",
-              "Registro de riesgos: categorías, responsables, mitigaciones, plazos, estados",
-              "Persistencia local (localStorage) — el registro sobrevive a la recarga de la página",
-              "Edición en línea de riesgos existentes (no solo añadir/eliminar)",
-              "Búsqueda y filtrado, incluido el filtrado por clic en una celda de la matriz (drill-down)",
-              "Exportación JSON y CSV (BOM UTF-8 para compatibilidad con Excel)",
-              "CLI Python: generación de informe HTML a partir de un registro JSON, evaluación puntual de un riesgo",
-              "Suite de tests pytest sobre el motor de puntuación"
-            ],
-            "title": "Funcionalidades"
+              "Un método coherente: matriz monótona, todos los niveles usados, una autoridad de aceptación para cada nivel por encima del apetito, revisiones más frecuentes para los riesgos más graves",
+              "Riesgo residual nunca superior al inherente sin justificación",
+              "Aceptación formal obligatoria cuando el riesgo residual sigue por encima del apetito y ya nada está en curso para reducirlo (ISO/IEC 27001, 6.1.3) — firmada por la autoridad prevista en el método, por su duración máxima",
+              "Próxima revisión dentro de la frecuencia del nivel residual; historial cronológico",
+              "Errores (datos no válidos) separados de los avisos (medida o revisión atrasada, aceptación vencida); --strict hace que los avisos bloqueen"
+            ]
           },
           {
             "type": "bullets",
+            "title": "Decisiones de seguridad",
             "items": [
-              "Sin persistencia, el registro se perdía al recargar la página → añadí persistencia mediante localStorage, con serialización/deserialización completa del registro",
-              "El README documentaba una CLI plana (--input, --risk) pero el código exigía subcomandos no documentados (report, eval) → reescribí la CLI para que coincidiera exactamente con lo documentado",
-              "El método update() de la clase de registro nunca era llamado por la interfaz → construí un botón «Modificar» completo, un formulario precargado y guardado en línea",
-              "Las etiquetas de probabilidad/impacto estaban codificadas en JS aunque ya existían en JSON → hice que el JS cargara dinámicamente categories_risques.json (fuente única)",
-              "Sin tests automatizados → escribí 6 tests pytest sobre la puntuación, los límites de nivel, el ordenamiento y la validación de datos de ejemplo",
-              "La salida de la CLI de Windows estaba mal codificada (cp1252) → lo corregí con sys.stdout.reconfigure(encoding=\"utf-8\") — acentos correctos en consola"
-            ],
-            "title": "Qué se corrigió respecto al original"
+              "Exportación CSV protegida contra la inyección de fórmulas (CWE-1236): las celdas que empiezan por =, +, -, @ se neutralizan, y la protección se retira al importar",
+              "Importaciones limitadas en tamaño y filas, UTF-8 obligatorio, ningún archivo sobrescrito sin --force",
+              "Informe HTML en un solo archivo sin script: todo el texto escapado, CSP que solo autoriza su propia hoja de estilo mediante un hash SHA-256",
+              "Registros reales excluidos de Git por convención de nombres; la interfaz web lee un archivo en local, sin enviarlo ni conservarlo nunca"
+            ]
           },
           {
             "type": "bullets",
+            "title": "Interfaz web",
             "items": [
-              "HTML/CSS/JS vanilla (módulos ES, sin dependencias) — aplicación de navegador autónoma",
-              "CLI Python (argparse, Jinja2, pytest) — automatización e informes",
-              "localStorage — persistencia del lado del cliente",
-              "Exportación JSON / CSV con BOM UTF-8"
-            ],
-            "title": "Stack y tecnologías"
+              "Carga de los registros de ejemplo o de una exportación JSON local, validada por completo antes de mostrarse (tipos, fechas, colores, coherencia con la matriz)",
+              "Resumen de riesgos activos, por encima del apetito, medidas y revisiones atrasadas, aceptaciones vencidas",
+              "Mapas de calor interactivos del riesgo inherente y residual, filtros (nivel, responsable, tratamiento, búsqueda sin acentos) y ficha detallada de cada riesgo",
+              "Plan de acción y calendario de revisiones; francés e inglés, temas claro y oscuro, teclado y móvil, CSP estricta"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Calidad de ingeniería",
             "items": [
               {
-                "note": "Remediación inmediata",
-                "label": "Crítico",
-                "value": "Puntuación 20-25"
+                "label": "Pruebas automatizadas",
+                "value": "240",
+                "note": "216 Python + 24 web"
               },
               {
-                "note": "Remediación en 30 días",
-                "label": "Alto",
-                "value": "Puntuación 12-19"
+                "label": "Jobs de CI",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, registros, interfaz web"
               },
               {
-                "note": "Remediación en 90 días",
-                "label": "Moderado",
-                "value": "Puntuación 6-11"
+                "label": "Preajustes de método",
+                "value": "2",
+                "note": "5×5 y EBIOS RM 4×4"
               },
               {
-                "note": "Aceptación o supervisión",
-                "label": "Bajo",
-                "value": "Puntuación 1-5"
+                "label": "Dependencias de ejecución",
+                "value": "0"
               }
-            ],
-            "title": "Puntuación de riesgos"
+            ]
           },
           {
-            "type": "metrics",
+            "type": "timeline",
+            "title": "Uso",
+            "steps": [
+              {
+                "label": "Preparar",
+                "description": "Elegir un preajuste, adaptar las escalas y el apetito con la dirección y hacer validar el método por risk-check."
+              },
+              {
+                "label": "Evaluar",
+                "description": "Describir cada riesgo (causa → evento → consecuencia) y puntuar su riesgo inherente; el nivel se lee en la matriz del método."
+              },
+              {
+                "label": "Tratar y aceptar",
+                "description": "Planificar las medidas con responsables y plazos, puntuar el riesgo residual y hacer aceptar lo que queda por la autoridad designada."
+              },
+              {
+                "label": "Revisar",
+                "description": "Revisiones y aceptaciones vencen a su ritmo; risk-check --strict y el informe señalan lo atrasado."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Enlaces",
             "items": [
               {
-                "note": "argparse, Jinja2, pytest",
-                "label": "Stack",
-                "value": "HTML/CSS/JS vanilla + CLI Python"
+                "label": "Interfaz en línea",
+                "href": "https://aiyeesha.github.io/risk-assessment-matrix/"
               },
               {
-                "note": "Puntuación, límites de nivel, ordenamiento, validación de datos",
-                "label": "Tests",
-                "value": "6 tests pytest"
+                "label": "Código fuente",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix"
               },
               {
-                "note": "Corrige la principal limitación del original",
-                "label": "Persistencia",
-                "value": "localStorage"
+                "label": "Guía de evaluación (inglés)",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix/blob/main/docs/en/assessment-guide.md"
               },
               {
-                "note": "matrice-risques sirvió después de base para una plataforma que combina STRIDE, riesgo de proveedores y recalibración por incidentes",
-                "label": "Base de",
-                "value": "risque360"
+                "label": "Versión v1.1.0",
+                "href": "https://github.com/Aiyeesha/risk-assessment-matrix/releases/tag/v1.1.0"
               }
-            ],
-            "title": "Resultados"
+            ]
           }
         ]
       }
@@ -9978,13 +10053,13 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "I built risque360 to extend matrice-risques (itself a French rebuild of the open-source risk-assessment-matrix project): a classic risk register poorly captures threats specific to an application's architecture, risks carried by vendors/third parties, and how a history of incidents should shift a probability declared \"in the abstract\". I brought these three angles together in a single register, with a data-driven probability recalibration mechanism — the most differentiating part of the project."
+              "I built risque360 as a complement to my risk-assessment-matrix register (ISO/IEC 27005, EBIOS RM): a classic risk register poorly captures threats specific to an application's architecture, risks carried by vendors/third parties, and how a history of incidents should shift a probability declared \"in the abstract\". I brought these three angles together in a single register, with a data-driven probability recalibration mechanism — the most differentiating part of the project."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Organizational risk register — same spirit as matrice-risques (manual form, business categories)",
+              "Organizational risk register — same spirit as risk-assessment-matrix (manual form, business categories)",
               "Application threat modeling (STRIDE) — for a given component (API Gateway, auth service, database...), generates one risk per STRIDE category: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
               "Vendor/third-party risk register — a vendor (access level, security questionnaire status, known incident) automatically generates a risk, with an initial probability estimated by a transparent heuristic — never enforced, always editable",
               "Incident log & recalibration — each risk carries a correlation key; incidents logged under that same key are used to compute a suggested probability over a rolling 12-month window. The suggestion is never auto-applied — an explicit \"Apply\" button is required"
@@ -10078,13 +10153,13 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "J'ai construit risque360 pour étendre matrice-risques (elle-même une reconstruction française du projet open source risk-assessment-matrix) : un registre de risques classique capture mal les menaces propres à une architecture applicative, les risques portés par les fournisseurs/tiers, et la façon dont un historique d'incidents devrait faire évoluer une probabilité déclarée « à froid ». J'ai réuni ces trois angles dans un registre unique, avec un mécanisme de recalibration de probabilité piloté par les données — la partie la plus différenciante du projet."
+              "J'ai construit risque360 en complément de mon registre risk-assessment-matrix (ISO/IEC 27005, EBIOS RM) : un registre de risques classique capture mal les menaces propres à une architecture applicative, les risques portés par les fournisseurs/tiers, et la façon dont un historique d'incidents devrait faire évoluer une probabilité déclarée « à froid ». J'ai réuni ces trois angles dans un registre unique, avec un mécanisme de recalibration de probabilité piloté par les données — la partie la plus différenciante du projet."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Registre de risques organisationnels — identique dans l'esprit à matrice-risques (formulaire manuel, catégories métier)",
+              "Registre de risques organisationnels — dans l'esprit de risk-assessment-matrix (formulaire manuel, catégories métier)",
               "Modélisation de menaces applicatives (STRIDE) — pour un composant donné (API Gateway, service d'auth, base de données...), génère un risque par catégorie STRIDE : Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
               "Registre des risques fournisseurs/tiers — un fournisseur (niveau d'accès, statut du questionnaire de sécurité, incident connu) génère automatiquement un risque, avec une probabilité initiale estimée par une heuristique transparente, jamais imposée, toujours modifiable",
               "Journal d'incidents & recalibration — chaque risque porte une clé de corrélation ; les incidents journalisés partageant cette clé permettent de calculer une probabilité suggérée sur une fenêtre glissante de 12 mois. La suggestion n'est jamais appliquée automatiquement : un bouton « Appliquer » explicite est requis"
@@ -10178,13 +10253,13 @@ export const projectDetails: ProjectDetails[] = [
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "Construí risque360 para ampliar matrice-risques (a su vez una reconstrucción francesa del proyecto open source risk-assessment-matrix): un registro de riesgos clásico capta mal las amenazas propias de una arquitectura de aplicación, los riesgos que aportan los proveedores/terceros, y cómo un historial de incidentes debería modificar una probabilidad declarada «en frío». Reuní estos tres ángulos en un único registro, con un mecanismo de recalibración de probabilidad impulsado por datos — la parte más diferenciadora del proyecto."
+              "Construí risque360 como complemento de mi registro risk-assessment-matrix (ISO/IEC 27005, EBIOS RM): un registro de riesgos clásico capta mal las amenazas propias de una arquitectura de aplicación, los riesgos que aportan los proveedores/terceros, y cómo un historial de incidentes debería modificar una probabilidad declarada «en frío». Reuní estos tres ángulos en un único registro, con un mecanismo de recalibración de probabilidad impulsado por datos — la parte más diferenciadora del proyecto."
             ]
           },
           {
             "type": "bullets",
             "items": [
-              "Registro de riesgos organizacionales — mismo espíritu que matrice-risques (formulario manual, categorías de negocio)",
+              "Registro de riesgos organizacionales — mismo espíritu que risk-assessment-matrix (formulario manual, categorías de negocio)",
               "Modelado de amenazas de aplicación (STRIDE) — para un componente dado (API Gateway, servicio de autenticación, base de datos...), genera un riesgo por categoría STRIDE: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
               "Registro de riesgos de proveedores/terceros — un proveedor (nivel de acceso, estado del cuestionario de seguridad, incidente conocido) genera automáticamente un riesgo, con una probabilidad inicial estimada mediante una heurística transparente — nunca impuesta, siempre editable",
               "Registro de incidentes y recalibración — cada riesgo lleva una clave de correlación; los incidentes registrados bajo esa misma clave permiten calcular una probabilidad sugerida en una ventana móvil de 12 meses. La sugerencia nunca se aplica automáticamente — se requiere un botón «Aplicar» explícito"
