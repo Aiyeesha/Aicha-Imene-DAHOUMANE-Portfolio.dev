@@ -1281,7 +1281,7 @@ export const projects: Project[] = [
     "slug": "incident-response-playbook",
     "nature": "personal",
     "title": "Incident Response Playbook — Bilingual SOC Procedures & Checks",
-    "excerpt": "Seven step-by-step incident response playbooks (ransomware, data breach, phishing, compromised account…) in French and English, aligned with NIST SP 800-61r3, MITRE ATT&CK and EU/French legal deadlines — validated in CI by a zero-dependency Python tool and exported as JSON checklists.",
+    "excerpt": "Seven step-by-step incident response playbooks (ransomware, data breach, phishing, compromised account…) in French and English, aligned with NIST SP 800-61r3, MITRE ATT&CK and EU/French legal deadlines — validated in CI by a zero-dependency Python tool, with a web interface for triage, legal deadline countdowns and checklists.",
     "track": "itops",
     "categories": [
       "Incident Response",
@@ -1296,28 +1296,30 @@ export const projects: Project[] = [
       "GDPR",
       "NIS 2",
       "Python",
-      "GitHub Actions"
+      "TypeScript"
     ],
     "badge": {
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
     "repoUrl": "https://github.com/Aiyeesha/incident-response-playbook",
+    "liveUrl": "https://aiyeesha.github.io/incident-response-playbook/",
     "techStack": [
       "Markdown",
       "Python",
       "pytest",
-      "Ruff",
+      "TypeScript",
+      "Node.js test runner",
       "MITRE ATT&CK",
-      "JSON",
-      "GitHub Actions"
+      "GitHub Actions",
+      "GitHub Pages"
     ],
-    "updatedAt": "2026-11-07",
+    "updatedAt": "2026-11-08",
     "highlights": [
       "7 playbooks in 8 numbered phases, 219 checklist actions per language (FR/EN)",
       "Every MITRE ATT&CK technique checked against the official 20.1 data — revoked ones rejected",
       "GDPR, NIS 2 and insurance-complaint deadlines built into the procedures",
-      "JSON export refused on any validation problem; attached to each release"
+      "Web interface: severity triage, legal deadline countdowns, timestamped checklist, Markdown report"
     ],
     "featured": false,
     "sortOrder": 270,
