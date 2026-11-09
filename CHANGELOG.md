@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Examens Salesforce reprogrammés** — Platform Foundations passe du 3 au 29 décembre 2026 et Platform Administrator du 17 au 30 décembre 2026. Dates mises à jour dans `SCHEDULED_EXAMS` et `upcomingCertifications` (`content/certifications.ts`), dans le paragraphe de positionnement Salesforce (`profile.p4_salesforce`) et dans la réponse de la FAQ sur les certifications, en FR/EN/ES.
+
 ### Fixed
 
 - **Couverture « Password Checker » périmée** — L'image de couverture de `python-password-checker` (vignette des cartes et image principale de la fiche) montrait une maquette de l'ancien script : score sur 100, critères cochés, temps de cassage par force brute, autant d'éléments absents de la version reconstruite. Elle est remplacée par la sortie réelle de `password-checker` 1.1.0 sur un mot de passe d'exemple (niveau, entropie théorique et effective, vérification des fuites par k-anonymité, conseils NIST et CNIL), dans le même gabarit que la couverture de `port-scanner`, avec un texte alternatif descriptif. L'ancienne maquette `screenshot-1.svg`, qui n'était plus utilisée, est supprimée. Les deux captures de l'interface web, conformes à la page en ligne, sont conservées.
