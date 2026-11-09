@@ -600,7 +600,11 @@
     "itopsTitle": "Systems, network & DevOps role",
     "itopsBody": "Windows Server and Active Directory administration, monitoring, backups, automation and CI/CD.",
     "showProfile": "Show this profile",
-    "cv": "Résumé (PDF)"
+    "cv": "Résumé (PDF)",
+    "aboutCta": "Full background",
+    "teaserSalesforce": "Three years of production Salesforce at LD Digitales, approached with an operations mindset: observability, risk management and automation.",
+    "teaserItops": "Windows Server, Active Directory, monitoring and backups: skills built during internships at MIDRANGE GROUP and TSSR training, documented as runbooks.",
+    "teaserCta": "Read my full background"
   },
   "commandPalette": {
     "title": "Command palette",

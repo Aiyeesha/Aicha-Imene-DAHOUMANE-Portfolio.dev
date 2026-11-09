@@ -52,4 +52,25 @@ describe("RecruiterPaths", () => {
     await user.click(buttons[1]);
     expect(setTrack).toHaveBeenCalledWith("itops");
   });
+
+  it("renvoie les cartes Salesforce et IT Ops vers /about en fixant le track", async () => {
+    const user = userEvent.setup();
+    render(<RecruiterPaths />);
+    // One link per non-hybrid card, named after its profile.
+    const aboutLinks = screen.getAllByRole("link", { name: /^aboutCta — / });
+    expect(aboutLinks).toHaveLength(2);
+    aboutLinks.forEach((a) => expect(a).toHaveAttribute("href", "/fr/about"));
+    expect(aboutLinks[1]).toHaveAccessibleName("aboutCta — itopsTitle");
+    // jsdom does not implement navigation: block it, only the click handler matters.
+    aboutLinks[1].addEventListener("click", (e) => e.preventDefault());
+    await user.click(aboutLinks[1]);
+    expect(setTrack).toHaveBeenCalledWith("itops");
+  });
+
+  it("affiche l'accroche du track actif avec un lien vers /about", () => {
+    render(<RecruiterPaths />);
+    expect(screen.getByText("teaserSalesforce")).toBeInTheDocument();
+    expect(screen.queryByText("teaserItops")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /teaserCta/ })).toHaveAttribute("href", "/fr/about");
+  });
 });

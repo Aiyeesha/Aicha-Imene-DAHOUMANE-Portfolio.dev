@@ -600,7 +600,11 @@
     "itopsTitle": "Poste systèmes, réseaux & DevOps",
     "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et CI/CD.",
     "showProfile": "Afficher ce profil",
-    "cv": "CV (PDF)"
+    "cv": "CV (PDF)",
+    "aboutCta": "Parcours complet",
+    "teaserSalesforce": "Trois ans de Salesforce en production chez LD Digitales, abordés avec une logique d'exploitation : observabilité, gestion des risques et automatisation.",
+    "teaserItops": "Windows Server, Active Directory, supervision et sauvegardes : des compétences acquises en stages chez MIDRANGE GROUP et en formation TSSR, documentées sous forme de runbooks.",
+    "teaserCta": "Lire mon parcours complet"
   },
   "commandPalette": {
     "title": "Palette de commandes",
