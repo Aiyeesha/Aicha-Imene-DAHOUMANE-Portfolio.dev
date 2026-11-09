@@ -54,13 +54,13 @@ export const certifications: Certification[] = [
 // Booked exam sessions (Salesforce test center, Europe/Paris). Update after
 // each result: move the certification to `certifications` once earned.
 export const SCHEDULED_EXAMS = {
-  platformFoundations:   { fr: "3 déc. 2026",  en: "Dec 3, 2026",  es: "3 dic. 2026" },
-  platformAdministrator: { fr: "17 déc. 2026", en: "Dec 17, 2026", es: "17 dic. 2026" },
+  platformFoundations:   { fr: "29 déc. 2026", en: "Dec 29, 2026", es: "29 dic. 2026" },
+  platformAdministrator: { fr: "30 déc. 2026", en: "Dec 30, 2026", es: "30 dic. 2026" },
 } as const;
 
 export const upcomingCertifications: string[] = [
-  'Salesforce Platform Foundations — examen le 3 déc. 2026',
-  'Salesforce Platform Administrator — examen le 17 déc. 2026',
+  'Salesforce Platform Foundations — examen le 29 déc. 2026',
+  'Salesforce Platform Administrator — examen le 30 déc. 2026',
   'Salesforce Platform App Builder — 2027',
   'Salesforce Platform Developer (ex-Platform Developer I) — 2027',
   'CompTIA Security+ (SY0-701) — 2027',
