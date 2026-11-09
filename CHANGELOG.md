@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Fin du CDI chez LD Digitales le 30 novembre 2026** — Le poste n'est plus présenté comme en cours : période « Oct. 2025 — Nov. 2026 » et note « Fin de contrat prévue le 30 novembre 2026 » dans la frise Expérience (`content/experience.tsx`), « 2025 – 2026 » dans la frise de carrière (`components/CareerTimeline.tsx`), formulations sans « actuellement » ni « depuis » dans les paragraphes Salesforce et IT Ops de la page À propos (`profile.p4_*`), le parcours de secours (`content/about.ts`), la FAQ sur la disponibilité et la page « Me recruter ». En anglais et en espagnol, « remain fully available / siguen plenamente disponibles » devient « transferable / aplicables », pour ne pas être confondu avec la date de disponibilité (`__tests__/availability.test.ts`). Les 18 CV (`public/cv/*.html`) affichent la même période ; PDF régénérés avec `npm run content:cv`, nombre de pages inchangé.
 - **Examens Salesforce reprogrammés** — Platform Foundations passe du 3 au 29 décembre 2026 et Platform Administrator du 17 au 30 décembre 2026. Dates mises à jour dans `SCHEDULED_EXAMS` et `upcomingCertifications` (`content/certifications.ts`), dans le paragraphe de positionnement Salesforce (`profile.p4_salesforce`) et dans la réponse de la FAQ sur les certifications, en FR/EN/ES.
 
 ### Fixed

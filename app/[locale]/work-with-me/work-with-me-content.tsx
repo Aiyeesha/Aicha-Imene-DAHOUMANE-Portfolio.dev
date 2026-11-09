@@ -50,10 +50,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
     subtitle:       isFr
-      ? `Développeuse Salesforce en CDI chez LD Digitales, je recherche mon prochain poste, disponible ${START_DATE.fr.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
+      ? `Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${START_DATE.fr.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
       : isEs
-      ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales, busco mi próximo puesto, disponible ${START_DATE.es.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
-      : `A full-time Salesforce Developer at LD Digitales, I'm looking for my next role, available ${START_DATE.en.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`,
+      ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${START_DATE.es.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
+      : `A full-time Salesforce Developer at LD Digitales until November 30, 2026, I'm looking for my next role, available ${START_DATE.en.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`,
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
