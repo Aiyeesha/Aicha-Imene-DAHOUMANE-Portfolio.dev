@@ -149,7 +149,7 @@ const MILESTONES: Milestone[] = [
     ],
   },
   {
-    period: "2025 →",
+    period: "2025 – 2026",
     type: "emploi",
     title: {
       en: "Salesforce Developer (Full-time)",

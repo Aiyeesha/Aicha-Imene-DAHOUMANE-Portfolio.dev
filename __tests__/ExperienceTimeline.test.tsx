@@ -54,7 +54,7 @@ describe("ExperienceTimeline", () => {
 
     const meta = screen.getByText((_, el) => el?.tagName === "P" && /CDI/.test(el.textContent ?? ""));
     expect(meta).toHaveTextContent("CDI");
-    expect(meta).toHaveTextContent("Oct. 2025 — Aujourd’hui");
+    expect(meta).toHaveTextContent("Oct. 2025 — Nov. 2026");
     expect(meta).toHaveTextContent("Télétravail");
   });
 
