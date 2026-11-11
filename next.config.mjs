@@ -265,6 +265,19 @@ const nextConfig = {
           },
         ],
       },
+      // ── Static HTML outside proxy.ts (CV pages, offline fallback) ─────────
+      // proxy.ts (per-request nonce CSP) skips them; they only use an inline
+      // <style> (no script, image, font or external stylesheet), so a strict
+      // static policy fits.
+      {
+        source: "/:file((?:cv/.*|offline)\\.html)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+          },
+        ],
+      },
       {
         // Security headers on every route
         source: "/(.*)",

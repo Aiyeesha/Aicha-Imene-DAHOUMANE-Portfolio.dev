@@ -11,6 +11,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 import ProjectsSection from "@/components/ProjectsSection";
+import { toProjectCards } from "@/lib/data/projectCards";
 
 export const revalidate = 300;
 
@@ -131,7 +132,7 @@ export default async function ProjectsPage({ params }: PageProps) {
               Suspense boundary on this route, or the build fails. */}
           <Suspense fallback={null}>
             <ProjectsSection
-              projects={projects}
+              projects={toProjectCards(projects)}
               locale={uiLocale}
               includeFeatured
             />

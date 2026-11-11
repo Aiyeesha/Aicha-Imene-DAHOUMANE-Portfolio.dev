@@ -63,8 +63,9 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(publicReport, {
     status: httpStatus,
     headers: {
-      // CORS limited to the site origin (monitoring tools need none).
-      "Access-Control-Allow-Origin": siteOrigin,
+      // CORS limited to the site origin (monitoring tools need none); no
+      // header at all rather than an invalid empty one when it is unset.
+      ...(siteOrigin ? { "Access-Control-Allow-Origin": siteOrigin } : {}),
       // Never cached
       "Cache-Control": "no-store, no-cache, must-revalidate",
     },

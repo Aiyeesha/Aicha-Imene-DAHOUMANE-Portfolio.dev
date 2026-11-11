@@ -97,3 +97,12 @@ export function getClientIp(req: { headers: { get(name: string): string | null }
     "unknown"
   );
 }
+
+/**
+ * Trims a single-line field and replaces control characters (CR, LF, NUL…)
+ * with spaces: forwarded to Formhook, such a value may become an e-mail
+ * header (Subject, Reply-To), where a newline would inject another header.
+ */
+export function singleLine(value: string): string {
+  return value.replace(/[\u0000-\u001F\u007F]/g, " ").trim();
+}

@@ -12,8 +12,9 @@
 // survives serverless cold starts unlike an in-memory counter.
 
 import { after, type NextRequest, NextResponse } from "next/server";
-import { cspAlertRatelimit, cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
-import { parseCspReports } from "@/lib/security/cspReport";
+import { cspAlertGlobalRatelimit, cspAlertRatelimit, cspReportRatelimit, safeLimit } from "@/lib/ratelimit";
+import { normaliseBlocked, normaliseDirective, parseCspReports } from "@/lib/security/cspReport";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export const dynamic = "force-dynamic";
 
@@ -51,9 +52,27 @@ function getSeverity(violatedDirective: string | undefined): "critical" | "high"
   return "low";
 }
 
+// Reports are capped at 16 KB before parsing (same bound as /api/cache/invalidate).
+const MAX_BODY_BYTES = 16 * 1024;
+
+// ── Alert payload normalisation ───────────────────────────────────────────
+// This endpoint is public: anyone can POST a forged "critical" report. Only
+// normalised values reach the webhook, so a report cannot inject @everyone,
+// Markdown or phishing links into the alert channel.
+/** True when the report claims to come from one of this site's pages. */
+function isOwnDocument(documentUri: string): boolean {
+  try {
+    return new URL(documentUri).origin === new URL(getSiteUrl()).origin;
+  } catch {
+    return false;
+  }
+}
+
 // ── Webhook alert on critical violations ──────────────────────────────────
-// Non-blocking: an error here never fails the 204. Globally rate limited
-// (5 / 10 min) to avoid webhook spam.
+// Non-blocking: an error here never fails the 204. One alert per
+// (directive, blocked origin) fingerprint per window: a flood of forged
+// reports with the same fingerprint cannot use up the budget, so a real
+// script-src violation with another fingerprint still alerts.
 async function sendCriticalAlert(data: {
   violatedDirective: string;
   blockedUri: string;
@@ -61,18 +80,25 @@ async function sendCriticalAlert(data: {
 }) {
   const webhookUrl = process.env.CSP_ALERT_WEBHOOK_URL;
   if (!webhookUrl) return;
+  if (!isOwnDocument(data.documentUri)) return;
 
-  const { success } = await safeLimit(cspAlertRatelimit, "global");
+  const directive = normaliseDirective(data.violatedDirective);
+  const blocked = normaliseBlocked(data.blockedUri);
+  const { success } = await safeLimit(cspAlertRatelimit, `fp:${directive}|${blocked}`);
   if (!success) return;
+  const { success: underGlobalCap } = await safeLimit(cspAlertGlobalRatelimit, "global");
+  if (!underGlobalCap) return;
 
-  const msg = `🚨 CSP Critical Violation\nDirective: ${data.violatedDirective}\nBlocked: ${data.blockedUri}\nDocument: ${data.documentUri}`;
+  const page = (() => { try { return new URL(data.documentUri).pathname.slice(0, 120); } catch { return "/"; } })();
+  const msg = `🚨 CSP Critical Violation\nDirective: ${directive}\nBlocked: ${blocked}\nPage: ${page}`;
   // after(): sent once the response is out, but the function stays alive
   // until it completes (a bare un-awaited fetch can be cut off by Vercel).
   after(() =>
     fetch(webhookUrl, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ content: msg, text: msg, message: msg }),
+      // allowed_mentions: Discord never pings anyone from this message.
+      body:    JSON.stringify({ content: msg, text: msg, message: msg, allowed_mentions: { parse: [] } }),
     })
       .then(() => undefined)
       .catch((e) => console.warn("[CSP-VIOLATION] Alert webhook failed:", String(e)))
@@ -102,7 +128,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const reports = parseCspReports(await req.json());
+    const declared = Number(req.headers.get("content-length") ?? "0");
+    if (declared > MAX_BODY_BYTES) return new NextResponse(null, { status: 204 });
+    const text = await req.text();
+    if (text.length > MAX_BODY_BYTES) return new NextResponse(null, { status: 204 });
+    const reports = parseCspReports(JSON.parse(text));
 
     for (const report of reports) {
       // Query string and fragment stripped before logging: they may carry a

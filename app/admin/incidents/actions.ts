@@ -32,6 +32,9 @@ export async function createIncidentAction(formData: FormData): Promise<void> {
   const description = String(formData.get("description") ?? "").trim();
 
   if (!title) throw new Error("Le titre est requis.");
+  // Bounded sizes: the incident is stored as-is in Redis.
+  if (title.length > 200) throw new Error("Le titre dépasse 200 caractères.");
+  if (description.length > 5000) throw new Error("La description dépasse 5 000 caractères.");
   if (!INCIDENT_TYPES.includes(incidentType as IncidentType)) {
     throw new Error("Type d'incident invalide.");
   }

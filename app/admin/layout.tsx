@@ -36,7 +36,7 @@ export default async function AdminLayout({
           </span>
         </div>
         <span className="text-xs text-slate-500">
-          Supabase · service_role
+          Upstash Redis · contenu du dépôt
         </span>
       </header>
 
