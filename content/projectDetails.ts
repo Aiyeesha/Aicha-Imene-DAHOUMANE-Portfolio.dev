@@ -5066,13 +5066,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Infrastructure Monitoring with Datto RMM",
-        "heroSubtitle": "Daily Datto RMM monitoring triage across 550+ client endpoints at MIDRANGE GROUP: alerts, antivirus coverage and Splashtop remote access.",
+        "heroSubtitle": "Daily Datto RMM monitoring triage across 550+ client endpoints at MIDRANGE Group: alerts, antivirus coverage and Splashtop remote access.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside the team's systems & network administrator. The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
+              "At MIDRANGE Group, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside the team's systems & network administrator. The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
             ]
           },
           {
@@ -5102,7 +5102,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Reference site",
-                "value": "MID-S0A (MIDRANGE GROUP internal site)"
+                "value": "MID-S0A (MIDRANGE Group internal site)"
               },
               {
                 "label": "Agent version",
@@ -5222,13 +5222,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision d'infrastructure avec Datto RMM",
-        "heroSubtitle": "Triage quotidien de la supervision Datto RMM sur plus de 550 postes clients chez MIDRANGE GROUP : alertes, couverture antivirus et accès distant Splashtop.",
+        "heroSubtitle": "Triage quotidien de la supervision Datto RMM sur plus de 550 postes clients chez MIDRANGE Group : alertes, couverture antivirus et accès distant Splashtop.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe. Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
+              "Chez MIDRANGE Group, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe. Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
             ]
           },
           {
@@ -5258,7 +5258,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Site de référence",
-                "value": "MID-S0A (site interne MIDRANGE GROUP)"
+                "value": "MID-S0A (site interne MIDRANGE Group)"
               },
               {
                 "label": "Version agent",
@@ -5378,13 +5378,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Supervisión de infraestructura con Datto RMM",
-        "heroSubtitle": "Triaje diario de la supervisión Datto RMM en más de 550 equipos de clientes en MIDRANGE GROUP: alertas, cobertura antivirus y acceso remoto Splashtop.",
+        "heroSubtitle": "Triaje diario de la supervisión Datto RMM en más de 550 equipos de clientes en MIDRANGE Group: alertas, cobertura antivirus y acceso remoto Splashtop.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto al administrador de sistemas y redes del equipo. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
+              "En MIDRANGE Group, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto al administrador de sistemas y redes del equipo. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
             ]
           },
           {
@@ -5414,7 +5414,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Sitio de referencia",
-                "value": "MID-S0A (sitio interno de MIDRANGE GROUP)"
+                "value": "MID-S0A (sitio interno de MIDRANGE Group)"
               },
               {
                 "label": "Versión del agente",
@@ -5605,13 +5605,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Mass Workstation Deployment — 264 Dell Devices",
-        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed at MIDRANGE GROUP.",
+        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed at MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
+              "At MIDRANGE Group (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
               "The two fleets required completely different workflows: the Optiplex machines were repurposed hardware that needed certified wiping before reuse, while the Latitude laptops were brand-new units destined for zero-touch remote deployment via Windows Autopilot."
             ]
           },
@@ -5722,13 +5722,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Déploiement en masse de postes de travail — 264 appareils Dell",
-        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés chez MIDRANGE GROUP.",
+        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés chez MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
+              "Chez MIDRANGE Group (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
               "Les deux flottes nécessitaient des workflows entièrement différents : les machines Optiplex étaient du matériel reconditionné qui devait être effacé de manière certifiée avant réutilisation, tandis que les laptops Latitude étaient du matériel neuf destiné à un déploiement zero-touch à distance via Windows Autopilot."
             ]
           },
@@ -5839,13 +5839,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Despliegue masivo de puestos de trabajo — 264 dispositivos Dell",
-        "heroSubtitle": "Borrado certificado, imagen Sysprep y Autopilot zero-touch: 264 dispositivos Dell desplegados en MIDRANGE GROUP.",
+        "heroSubtitle": "Borrado certificado, imagen Sysprep y Autopilot zero-touch: 264 dispositivos Dell desplegados en MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
+              "En MIDRANGE Group (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
               "Las dos flotas requerían flujos de trabajo completamente distintos: las máquinas Optiplex eran hardware reacondicionado que debía borrarse de forma certificada antes de su reutilización, mientras que los portátiles Latitude eran unidades nuevas destinadas a un despliegue remoto zero-touch vía Windows Autopilot."
             ]
           },
@@ -5983,13 +5983,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
-        "heroSubtitle": "Live incident triage at MIDRANGE GROUP: Autotask ticketing, Datto RMM remote access, and Webroot false-positive resolution.",
+        "heroSubtitle": "Live incident triage at MIDRANGE Group: Autotask ticketing, Datto RMM remote access, and Webroot false-positive resolution.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP, within the Support Technique team alongside the team's systems & network administrator, I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
+              "At MIDRANGE Group, within the Support Technique team alongside the team's systems & network administrator, I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
               "Once a ticket is opened in Autotask, it is routed either to the Support Technique team (user-facing incidents) or to the Exploitation team (infrastructure and monitoring). Here's how I handled a live client ticket from intake to resolution."
             ]
           },
@@ -6113,13 +6113,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Gestion d'incidents IT — Autotask, Webroot & Datto RMM",
-        "heroSubtitle": "Triage d'incidents en production chez MIDRANGE GROUP : ticketing Autotask, accès distant Datto RMM et résolution d'un faux positif Webroot.",
+        "heroSubtitle": "Triage d'incidents en production chez MIDRANGE Group : ticketing Autotask, accès distant Datto RMM et résolution d'un faux positif Webroot.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP, au sein de l'équipe Support Technique aux côtés de l'administrateur systèmes & réseaux de l'équipe, je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
+              "Chez MIDRANGE Group, au sein de l'équipe Support Technique aux côtés de l'administrateur systèmes & réseaux de l'équipe, je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
               "Une fois un ticket ouvert dans Autotask, il est routé soit vers l'équipe Support Technique (incidents utilisateurs), soit vers l'équipe Exploitation (infrastructure et supervision). Voici le traitement d'un ticket client en production, de la prise en charge à la résolution."
             ]
           },
@@ -6243,13 +6243,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Gestión de incidencias IT — Autotask, Webroot y Datto RMM",
-        "heroSubtitle": "Triaje de incidencias en producción en MIDRANGE GROUP: ticketing Autotask, acceso remoto Datto RMM y resolución de un falso positivo de Webroot.",
+        "heroSubtitle": "Triaje de incidencias en producción en MIDRANGE Group: ticketing Autotask, acceso remoto Datto RMM y resolución de un falso positivo de Webroot.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP, dentro del equipo de Soporte Técnico junto al administrador de sistemas y redes del equipo, atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
+              "En MIDRANGE Group, dentro del equipo de Soporte Técnico junto al administrador de sistemas y redes del equipo, atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
               "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). A continuación, el tratamiento de un ticket real de cliente, de la recepción a la resolución."
             ]
           },
@@ -6404,13 +6404,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-        "heroSubtitle": "Triage of 85 backup alerts across 105 protected devices at MIDRANGE GROUP: root causes (NAS, server, plan, network) and data-loss risk prioritisation.",
+        "heroSubtitle": "Triage of 85 backup alerts across 105 protected devices at MIDRANGE Group: root causes (NAS, server, plan, network) and data-loss risk prioritisation.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP (a French IT services / MSP firm), within the Operations team alongside the team's systems & network administrator, I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
+              "At MIDRANGE Group (a French IT services / MSP firm), within the Operations team alongside the team's systems & network administrator, I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
             ]
           },
           {
@@ -6590,13 +6590,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision des sauvegardes Cloud avec Acronis Cyber Backup",
-        "heroSubtitle": "Triage de 85 alertes de sauvegarde sur 105 postes protégés chez MIDRANGE GROUP : causes racines (NAS, serveur, plan, réseau) et priorisation du risque de perte de données.",
+        "heroSubtitle": "Triage de 85 alertes de sauvegarde sur 105 postes protégés chez MIDRANGE Group : causes racines (NAS, serveur, plan, réseau) et priorisation du risque de perte de données.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP (ESN/MSP), au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe, j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
+              "Chez MIDRANGE Group (ESN/MSP), au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe, j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
             ]
           },
           {
@@ -6776,13 +6776,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Supervisión de copias de seguridad en la nube con Acronis Cyber Backup",
-        "heroSubtitle": "Triaje de 85 alertas de copia de seguridad en 105 equipos protegidos en MIDRANGE GROUP: causas raíz (NAS, servidor, plan, red) y priorización del riesgo de pérdida de datos.",
+        "heroSubtitle": "Triaje de 85 alertas de copia de seguridad en 105 equipos protegidos en MIDRANGE Group: causas raíz (NAS, servidor, plan, red) y priorización del riesgo de pérdida de datos.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP (ESN/MSP francesa), dentro del equipo de Operaciones junto al administrador de sistemas y redes del equipo, me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
+              "En MIDRANGE Group (ESN/MSP francesa), dentro del equipo de Operaciones junto al administrador de sistemas y redes del equipo, me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
             ]
           },
           {

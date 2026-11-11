@@ -60,7 +60,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       {
         id: "exp-midrange",
         role: "Administratrice systèmes & réseaux junior",
-        company: "MIDRANGE GROUP",
+        company: "MIDRANGE Group",
         contract: "2 stages d'un mois",
         period: "Fév. 2023 — Mai 2023",
         location: "France · Présentiel",
@@ -113,7 +113,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       {
         id: "exp-midrange-es",
         role: "Administradora júnior de sistemas y redes",
-        company: "MIDRANGE GROUP",
+        company: "MIDRANGE Group",
         contract: "2 prácticas de un mes",
         period: "feb. 2023 — may. 2023",
         location: "Francia · Presencial",
@@ -166,7 +166,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
     {
       id: "exp-midrange-intern",
       role: "Junior Systems & Network Administrator",
-      company: "MIDRANGE GROUP",
+      company: "MIDRANGE Group",
       contract: "Two 1-month internships",
       period: "Feb 2023 — May 2023",
       location: "France · On-site",

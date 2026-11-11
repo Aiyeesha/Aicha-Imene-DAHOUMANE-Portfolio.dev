@@ -15,7 +15,7 @@ export type ProjectNature =
   | "openclassrooms"  // other OpenClassrooms training projects
   | "greta_tai"       // TAI programme exercises (Greta du Val d'Oise)
   | "greta_tssr"      // TSSR programme exercises (Greta du Val d'Oise)
-  | "internship"      // MIDRANGE GROUP internships
+  | "internship"      // MIDRANGE Group internships
   | "personal"        // personal project
   | "reconstructed";  // reconstructed case study (fictional scenario)
 
@@ -34,10 +34,12 @@ type NatureInfo = {
   note: Localized;
 };
 
+// Training and work-study both ended in late September 2025 (the permanent
+// contract started in October 2025), as in the Experience timeline.
 const RNCP_PERIOD: Localized = {
-  fr: "oct. 2023 – oct. 2025",
-  en: "Oct 2023 – Oct 2025",
-  es: "oct. 2023 – oct. 2025",
+  fr: "oct. 2023 – sept. 2025",
+  en: "Oct 2023 – Sep 2025",
+  es: "oct. 2023 – sept. 2025",
 };
 
 const NATURES: Record<ProjectNature, NatureInfo> = {
@@ -107,9 +109,9 @@ const NATURES: Record<ProjectNature, NatureInfo> = {
   },
   internship: {
     label: {
-      fr: "Stage en entreprise — MIDRANGE GROUP (ESN / MSP)",
-      en: "Company internship — MIDRANGE GROUP (IT services / MSP)",
-      es: "Prácticas en empresa — MIDRANGE GROUP (servicios IT / MSP)",
+      fr: "Stage en entreprise — MIDRANGE Group (ESN / MSP)",
+      en: "Company internship — MIDRANGE Group (IT services / MSP)",
+      es: "Prácticas en empresa — MIDRANGE Group (servicios IT / MSP)",
     },
     period: { fr: "févr. – mai 2023", en: "Feb – May 2023", es: "feb. – may. 2023" },
     note: {

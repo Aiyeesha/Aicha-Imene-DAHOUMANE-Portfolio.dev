@@ -36,9 +36,12 @@ Les Change Sets fonctionnent entièrement au clic : vous ajoutez les composants 
 - Aucune vue des différences — vous ne savez pas ce qui change par rapport à la cible
 - Impossible de déployer des changements destructifs (suppression de champs/objets)
 - Aucune automatisation — chaque déploiement est manuel
+- Aucune gestion de version (pas de Git)
+- Dépendances non résolues automatiquement → erreurs de déploiement fréquentes
 
 ```bash
-# Pas d'équivalent CLI — les Change Sets se gèrent uniquement dans l'interface, Setup > Deployment
+# Pas d'équivalent CLI — les Change Sets se gèrent uniquement dans l'interface :
+# Setup → Deploy → Outbound Change Sets → New
 ```
 
 > **Astuce :** si vous faites plus d'un déploiement par sprint, les Change Sets vont vous ralentir. Il est temps de passer à SFDX.
@@ -66,6 +69,22 @@ sf project deploy start --target-org my-sandbox
 
 # Valider sans déployer (simulation)
 sf project deploy validate --target-org my-sandbox --test-level RunLocalTests
+```
+
+**Récupérer et déployer de façon ciblée :**
+
+```bash
+# Ne récupérer que certains types de métadonnées
+sf project retrieve start \
+  --metadata ApexClass,CustomObject,Layout \
+  --target-org my-sandbox
+
+# Simuler le déploiement avec exécution des tests, sans rien enregistrer
+sf project deploy start \
+  --source-dir force-app \
+  --target-org production \
+  --test-level RunLocalTests \
+  --dry-run
 ```
 
 **Structure du projet :**
@@ -113,6 +132,12 @@ DevOps Center est l'outil de pipeline intégré à Salesforce (disponible depuis
 - Vous voulez l'intégration GitHub sans écrire de YAML
 - Plusieurs sandboxes avec un processus de promotion formel
 
+**Flux typique :**
+1. Créer un Work Item dans DevOps Center
+2. Associer les modifications à ce Work Item
+3. Promouvoir vers l'environnement suivant (Dev → UAT → Prod)
+4. DevOps Center gère automatiquement les commits Git
+
 **Limite :** il ne remplace pas un pipeline CI/CD complet — aucune barrière de tests automatisés n'est intégrée. Il vous faut toujours GitHub Actions ou un équivalent pour imposer les tests.
 
 ---
@@ -159,6 +184,9 @@ jobs:
 - **Conflits de profils** : les profils sont notoirement difficiles à fusionner ; utilisez plutôt des Permission Sets et excluez les profils des déploiements quand c'est possible
 - **Déployer trop de choses** : limitez vos déploiements aux seuls composants modifiés avec `--manifest package.xml`, et non à tout `force-app/`
 - **Aucun plan de rollback** : documentez un script de rollback avant chaque déploiement en production. Salesforce ne propose pas de rollback en un clic
+- **Oublier les tests** : ne déployez jamais en production avec `--test-level NoTestRun`
+- **Change Sets pour des projets complexes** : les dépendances non résolues provoquent des erreurs en cascade
+- **Ignorer le `.forceignore`** : comme `.gitignore`, il exclut du déploiement les fichiers non pertinents
 
 ---
 
@@ -169,6 +197,18 @@ jobs:
 - [ ] Équipe aux niveaux techniques variés, étapes formelles → **DevOps Center**
 - [ ] Tout déploiement en production → lancer au minimum `--test-level RunLocalTests`
 - [ ] Grandes équipes → imposer `RunAllTestsInOrg` dans la CI
+
+---
+
+## Récapitulatif
+
+| Critère | Change Sets | CLI | DevOps Center |
+|---------|------------|-----|---------------|
+| Git natif | ❌ | ✅ | ✅ |
+| Automatisable | ❌ | ✅ | Partiel |
+| Adapté aux admins | ✅ | ❌ | ✅ |
+| Rollback | Manuel | Manuel | Via Git |
+| Coût | Inclus | Inclus | Inclus |
 
 ---
 
