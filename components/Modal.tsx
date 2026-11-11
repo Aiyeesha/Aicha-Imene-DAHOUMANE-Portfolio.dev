@@ -111,7 +111,10 @@ export default function Modal({
           // Capped at the viewport height (dvh: follows the mobile browser
           // bars) minus the p-4 gutter; the header stays put and the body
           // scrolls, so every action stays reachable on small screens.
-          className="card flex max-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col overflow-hidden"
+          // Opaque panel, same surface as the mobile menu drawer: the
+          // translucent .card (5 % background, lift on hover) let the hero
+          // show through the text in the light theme.
+          className="flex max-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-black/10 bg-white text-slate-900 shadow-2xl dark:border-white/10 dark:bg-[#070B1A] dark:text-white"
         >
           <div className="flex shrink-0 items-center justify-between border-b border-black/10 px-5 py-4 dark:border-white/10">
             <div className="font-semibold">{title}</div>

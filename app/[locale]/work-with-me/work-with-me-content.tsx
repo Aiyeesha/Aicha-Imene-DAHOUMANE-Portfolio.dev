@@ -27,7 +27,7 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
   // ── Track accent colours ──────────────────────────────────────────────────
   const accent = isSf
     ? {
-        kicker:     "text-cyan-600 dark:text-cyan-400",
+        kicker:     "text-cyan-700 dark:text-cyan-400", // cyan-600 on white is 3.68:1
         domainBadge:"bg-cyan-500/10 border-cyan-200 dark:border-cyan-800 text-cyan-700 dark:text-cyan-300",
         stepNum:    "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
         stepBadge:  "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
