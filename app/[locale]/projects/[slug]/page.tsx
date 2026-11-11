@@ -50,7 +50,7 @@ const sectionAccent: Record<string, string> = {
   code:      "bg-slate-500",
 };
 
-function renderSection(section: ProjectSection, idx: number) {
+function renderSection(section: ProjectSection, idx: number, locale: string) {
   const accent = sectionAccent[section.type] ?? "bg-cyan-500";
 
   const wrapper = (children: React.ReactNode) => (
@@ -180,7 +180,7 @@ function renderSection(section: ProjectSection, idx: number) {
           {dlUrl ? (
             <a href={dlUrl} className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted underline underline-offset-4 hover:opacity-70 transition-opacity"
               target="_blank" rel="noreferrer">
-              ↓ Télécharger
+              ↓ {locale === "fr" ? "Télécharger" : locale === "es" ? "Descargar" : "Download"}
             </a>
           ) : null}
         </>
@@ -452,7 +452,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 <MdxBody />
               </div>
             ) : (
-              sections.map((section, idx) => renderSection(section, idx))
+              sections.map((section, idx) => renderSection(section, idx, locale))
             )}
 
             {/* Gallery viewer — remaining screenshots */}

@@ -175,7 +175,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const post of enPosts) {
     const hasFr = frSlugSet.has(post.slug);
     const hasEs = esSlugSet.has(post.slug);
-    const lastModified = new Date(post.date);
+    // Latest edit across the existing translations (updatedDate, else the
+    // publication date): it is what the page and its JSON-LD dateModified show.
+    const versions = [post, frPosts.find((p) => p.slug === post.slug), esPosts.find((p) => p.slug === post.slug)];
+    const lastModified = new Date(
+      Math.max(...versions.map((v) => (v ? new Date(v.updatedDate ?? v.date).getTime() : 0)))
+    );
 
     const languages: Record<string, string> = {
       "x-default": `${base}/en/blog/${post.slug}`,

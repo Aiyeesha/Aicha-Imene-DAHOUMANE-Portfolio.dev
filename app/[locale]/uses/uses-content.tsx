@@ -146,7 +146,7 @@ export default function UsesContent({ locale }: { locale: string }) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
 
-      <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+      <nav aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">
           {isFr ? "Accueil" : isEs ? "Inicio" : "Home"}
         </Link>

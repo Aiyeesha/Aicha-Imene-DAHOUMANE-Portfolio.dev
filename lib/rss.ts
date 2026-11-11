@@ -1,5 +1,6 @@
 import { readAllPosts, type BlogLocale } from "@/content/blog/fs";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { translateTag } from "@/lib/blog-utils";
 
 function escapeXml(text: string): string {
   return text
@@ -66,7 +67,7 @@ export function buildRssFeed(opts: RssOptions = {}): string {
       <guid isPermaLink="true">${url}</guid>
       <description>${escapeXml(post.excerpt)}</description>
       <pubDate>${toRfc822(post.date)}</pubDate>
-      ${post.tags.map((t) => `<category>${escapeXml(t)}</category>`).join("\n      ")}
+      ${post.tags.map((t) => `<category>${escapeXml(translateTag(t, locale))}</category>`).join("\n      ")}
     </item>`;
     })
     .join("");

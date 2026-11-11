@@ -2,7 +2,7 @@
 title: "Active Directory et GPO : administration et bonnes pratiques de sécurité"
 excerpt: "Guide pratique pour structurer la hiérarchie d'OU de votre AD, concevoir des GPO maintenables et sécurisées, et éviter les erreurs d'administration les plus fréquentes."
 date: "2025-07-07"
-tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Sécurité"]
+tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Security"]
 projects: ["it-ops-virtualization-lab"]
 ---
 
@@ -52,9 +52,9 @@ domain.local
 **Pourquoi ça fonctionne :**
 - Les GPO sur `_Ordinateurs\Postes` s'appliquent à tous les postes quel que soit le bureau
 - Les comptes de service sont séparés → audit plus facile
-- L'OU Admins peut avoir des GPO plus strictes
+- L'OU Admins peut avoir des GPO plus strictes (pas de scripts d'ouverture de session, pas d'applications personnelles)
 
-**Convention de nommage :** Utilisez un préfixe comme `_` pour distinguer les OU des autres objets AD dans les requêtes.
+**Convention de nommage des OU :** Utilisez un préfixe comme `_` ou `OU-` pour distinguer les OU des autres objets AD dans les requêtes.
 
 ## Principes de conception des GPO
 
@@ -80,7 +80,7 @@ Les GPO ont deux volets — Configuration ordinateur et Configuration utilisateu
 |--|----------------------|----------------------|
 | Appliqué au | Démarrage de la machine | Ouverture de session |
 | S'applique à | Compte ordinateur | Compte utilisateur |
-| Lié à | OU Ordinateurs | OU Utilisateurs |
+| Lié à | OU Ordinateurs | OU Utilisateurs (ou même OU) |
 | Exemples | Pare-feu, BitLocker, Windows Update | Lecteurs réseau, proxy, restrictions bureau |
 
 **Bonne pratique :** Désactivez le volet inutilisé de chaque GPO.
@@ -91,7 +91,7 @@ Les GPO ont deux volets — Configuration ordinateur et Configuration utilisateu
 
 Par défaut, les GPO des OU parents s'appliquent aux OU enfants. Vous pouvez contrôler cela avec :
 
-- **Bloquer l'héritage** sur une OU : l'OU enfant ignore les GPO parents. À utiliser avec parcimonie.
+- **Bloquer l'héritage** sur une OU : l'OU enfant ignore les GPO parents. À utiliser avec parcimonie — source de confusion.
 - **Appliquée** sur un lien GPO : force la GPO à s'appliquer même si l'enfant bloque l'héritage. Pour les stratégies critiques de sécurité.
 - **Filtrage de sécurité** : par défaut, les GPO s'appliquent aux « Utilisateurs authentifiés ». Remplacer par un groupe spécifique pour une application ciblée.
 
@@ -123,29 +123,54 @@ Durée de vie minimale : 1 jour
 Historique des mots de passe : 24
 ```
 
-**Stratégie affinée pour les admins (PSO) :**
+**Stratégie affinée pour les admins (PSO)** (plus stricte) :
 ```powershell
+# Créer une PSO (Password Settings Object) pour les admins
 New-ADFineGrainedPasswordPolicy -Name "PSO-Admins" `
     -Precedence 10 `
     -MinPasswordLength 16 `
     -PasswordHistoryCount 24 `
     -MaxPasswordAge "60.00:00:00" `
-    -ComplexityEnabled $true
+    -ComplexityEnabled $true `
+    -ReversibleEncryptionEnabled $false
 
+# Appliquer au groupe Admins du domaine
 Add-ADFineGrainedPasswordPolicySubject "PSO-Admins" -Subjects "Admins du domaine"
 ```
 
 ### GPO : Verrouillage de compte
 
 ```
+Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
+    → Stratégies de compte → Stratégie de verrouillage du compte
+
 Seuil de verrouillage : 5 tentatives
 Durée de verrouillage : 30 minutes
 Réinitialiser le compteur après : 30 minutes
 ```
 
+### GPO : Baseline du pare-feu Windows
+
+```
+Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
+    → Pare-feu Windows Defender
+
+Profil de domaine : Activé
+Profil privé : Activé
+Profil public : Activé (bloquer tout le trafic entrant par défaut)
+
+Règles de trafic entrant :
+- Autoriser : RDP depuis le VLAN de management uniquement (filtre IP)
+- Autoriser : ICMP (ping) depuis le VLAN de management
+- Bloquer : SMB depuis l'extérieur (port 445)
+```
+
 ### GPO : Désactiver les protocoles obsolètes
 
 ```
+Configuration ordinateur → Modèles d'administration → Réseau → Station de travail Lanman
+    → Activer les ouvertures de session invité non sécurisées : Désactivé
+
 Configuration ordinateur → Paramètres Windows → Paramètres de sécurité
     → Stratégies locales → Options de sécurité
 
@@ -160,6 +185,8 @@ Configuration ordinateur → Modèles d'administration → Système
     → Accès au stockage amovible
 
 Toutes les classes de stockage amovible : Refuser tout accès : Activé
+
+(Si des exceptions USB sont nécessaires, utilisez les stratégies d'installation de périphériques ou une liste blanche par ID matériel)
 ```
 
 ## Gestion des droits et des accès privilégiés
@@ -193,8 +220,14 @@ Connexion/Déconnexion :
   Ouverture de session : Succès, Échec
   Fermeture de session : Succès
 
+Accès aux objets :
+  Système de fichiers : Échec (uniquement sur les partages sensibles)
+
 Utilisation des privilèges :
   Utilisation de privilèges sensibles : Succès, Échec
+
+Système :
+  Modification de l'état de la sécurité : Succès, Échec
 ```
 
 ## Scripts d'administration AD
@@ -246,12 +279,13 @@ Get-ADComputer -Filter {LastLogonDate -lt $cutoff -and Enabled -eq $true} `
 - [ ] Les GPO sont nommées clairement : `[Portée]-[Objectif]-[Cible]`
 - [ ] Le volet inutilisé (ordinateur ou utilisateur) est désactivé dans les propriétés GPO
 - [ ] La stratégie de mot de passe est dans la Default Domain Policy ou dans une PSO
+- [ ] La stratégie d'audit capture les succès/échecs d'ouverture de session
 
 **Sécurité :**
 - [ ] Les comptes d'administration sont séparés des comptes du quotidien
 - [ ] LM/NTLM v1 désactivés — NTLMv2 ou Kerberos uniquement
 - [ ] Restrictions USB en place pour le personnel non-IT
-- [ ] Groupe d'admins locaux contrôlé par GPO
+- [ ] Groupe d'admins locaux contrôlé par GPO (pas d'exceptions individuelles)
 
 ## Conclusion
 

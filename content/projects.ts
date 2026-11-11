@@ -563,7 +563,7 @@ export const projects: Project[] = [
       "GitHub Actions",
       "GitHub Pages"
     ],
-    "updatedAt": "2026-11-04",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "Effective entropy: dictionary, leet speak, keyboard walks, sequences",
       "k-anonymity breach check: only 5 SHA-1 characters sent",
@@ -1428,7 +1428,7 @@ export const projects: Project[] = [
       "Scrum",
       "Jira"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "20 costed and prioritized user stories (SIREN webservice validation, real-time DeviQo quotes <2s, auto PDF + email generation, GDPR purge)",
       "Test plan with 20 test classes and an Apex best-practices reference (bulkification, one trigger per object, ≥75% coverage)",
@@ -1547,7 +1547,7 @@ export const projects: Project[] = [
       "Integration",
       "Web Services"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "3 business rules (RG-01/02/03) implemented via a strict trigger-handler pattern, zero logic in the trigger",
       "Batch + Scheduler for the monthly automatic re-engagement of dormant accounts, with configurable deduplication",
@@ -1628,7 +1628,7 @@ export const projects: Project[] = [
       "CRM",
       "Triggers"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "Real-time architecture: Apex REST webhook (DeliveryWebhook) + Platform Event + limit-aware Queueable (RefreshStatusQueueable) + deliveryTracker LWC",
       "Batch integration: Talend + Bulk API v2, 500,000 lines/hour, upsert on External Id (Tracking_Number__c)",
@@ -1709,7 +1709,7 @@ export const projects: Project[] = [
       "CI/CD",
       "Git"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "🔗 Proof point: Salesforce dev + Heroku infra delivered together, not two separate skillsets",
       "Security: scoped OAuth tokens, no secrets in code, GDPR-safe intra-EU data flow",

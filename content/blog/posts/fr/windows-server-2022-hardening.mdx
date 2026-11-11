@@ -2,7 +2,7 @@
 title: "Durcissement de Windows Server 2022 : checklist pratique"
 excerpt: "Guide de durcissement pas à pas pour Windows Server 2022 — désactivation des protocoles obsolètes, configuration des stratégies d'audit, pare-feu local et gestion des accès privilégiés."
 date: "2025-09-08"
-tags: ["IT Ops", "Windows Server", "Sécurité", "Durcissement", "Runbook"]
+tags: ["IT Ops", "Windows Server", "Security", "Hardening", "Runbook"]
 projects: ["it-ops-virtualization-lab"]
 ---
 
@@ -126,12 +126,20 @@ New-NetFirewallRule `
     -RemoteAddress "192.168.10.0/24" `
     -Action Allow
 
-# Autoriser WinRM depuis le management
+# Autoriser WinRM (administration PowerShell à distance) depuis le management uniquement
 New-NetFirewallRule `
     -DisplayName "Autoriser WinRM - Management uniquement" `
     -Direction Inbound `
     -Protocol TCP `
     -LocalPort 5985,5986 `
+    -RemoteAddress "192.168.10.0/24" `
+    -Action Allow
+
+# Autoriser ICMP (ping) depuis le management
+New-NetFirewallRule `
+    -DisplayName "Autoriser ICMP - Management" `
+    -Direction Inbound `
+    -Protocol ICMPv4 `
     -RemoteAddress "192.168.10.0/24" `
     -Action Allow
 ```
@@ -163,6 +171,17 @@ Disable-LocalUser -Name "srv-admin"
 Disable-LocalUser -Name "Guest"
 ```
 
+### Configurer la stratégie de sécurité locale
+
+```powershell
+# Interdire l'ouverture de session réseau aux comptes locaux (imposer l'authentification de domaine)
+# Via GPO : Attribution des droits utilisateur → Interdire l'accès à cet ordinateur à partir du réseau
+# Ajouter : Compte local (groupe intégré)
+
+# Exiger CTRL+ALT+SUPPR pour l'ouverture de session interactive
+# GPO : Options de sécurité → Ouverture de session interactive : ne pas demander la combinaison de touches Ctrl+Alt+Suppr → Désactivé
+```
+
 ## 5. Configuration de la stratégie d'audit
 
 Un serveur sans journaux d'audit est une impasse forensique. Configurez un audit complet :
@@ -175,7 +194,9 @@ auditpol /set /subcategory:"Verrouillage du compte" /failure:enable
 auditpol /set /subcategory:"Gestion des comptes d'utilisateurs" /success:enable /failure:enable
 auditpol /set /subcategory:"Gestion des groupes de sécurité" /success:enable
 auditpol /set /subcategory:"Création de processus" /success:enable
+auditpol /set /subcategory:"Partage de fichiers détaillé" /failure:enable
 auditpol /set /subcategory:"Utilisation de privilèges sensibles" /success:enable /failure:enable
+auditpol /set /subcategory:"Intégrité du système" /success:enable /failure:enable
 
 # Vérifier
 auditpol /get /category:*
@@ -197,7 +218,8 @@ Limit-EventLog -LogName Application -MaximumSize 268435456
 ```powershell
 # Vérifier que Defender est actif et à jour
 Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, `
-    RealTimeProtectionEnabled, AntivirusSignatureLastUpdated
+    RealTimeProtectionEnabled, AntispywareEnabled, `
+    AntivirusSignatureLastUpdated
 
 # Activer la protection cloud et la soumission automatique d'échantillons
 Set-MpPreference -MAPSReporting Advanced
@@ -211,7 +233,7 @@ Set-MpPreference -PUAProtection Enabled
 
 # Règles ASR (Attack Surface Reduction)
 Add-MpPreference -AttackSurfaceReductionRules_Ids `
-    "d4f940ab-401b-4efc-aadc-ad5f3c50688a" `
+    "d4f940ab-401b-4efc-aadc-ad5f3c50688a" `  # Empêcher Office de créer des processus enfants
     -AttackSurfaceReductionRules_Actions Enabled
 ```
 
@@ -225,6 +247,22 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\W
 # Définir le niveau de chiffrement sur Élevé
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
     -Name "MinEncryptionLevel" -Value 3
+
+# Changer le port RDP (sécurité par l'obscurité — optionnel mais réduit le bruit)
+# Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
+#     -Name "PortNumber" -Value 33899
+# (mettre à jour la règle de pare-feu en conséquence)
+```
+
+## 8. Mises à jour automatiques
+
+```powershell
+# Via GPO pour les serveurs joints au domaine :
+# Configuration ordinateur → Modèles d'administration → Composants Windows → Windows Update
+
+# Pour les serveurs autonomes :
+# Activer les mises à jour automatiques via Paramètres → Windows Update → Options avancées
+# Ou configurer WSUS s'il est disponible
 ```
 
 ## Checklist de durcissement complète
