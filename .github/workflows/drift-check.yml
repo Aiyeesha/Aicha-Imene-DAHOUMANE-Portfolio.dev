@@ -74,7 +74,9 @@ jobs:
             -H "Authorization: Bearer ${VERCEL_TOKEN}")
 
           if [ "${DEBUG_OUTPUT}" = "true" ]; then
-            echo "Vercel API response: $RESPONSE"
+            # Selected fields only: the raw response also holds the deployment
+            # author's e-mail, aliases and metadata, and Actions logs are public.
+            echo "$RESPONSE" | jq -c '.deployments[0] | {uid, state, created, ref: .meta.githubCommitRef, sha: .meta.githubCommitSha}'
           fi
 
           SHA=$(echo "$RESPONSE" | jq -r '.deployments[0].meta.githubCommitSha // empty')

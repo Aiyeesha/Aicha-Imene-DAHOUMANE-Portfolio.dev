@@ -19,7 +19,8 @@ export const revalidate = 300;
 function safeHref(url: string | null | undefined): string | null {
   if (!url) return null;
   const trimmed = url.trim();
-  if (/^(https?:\/\/|\/)/i.test(trimmed)) return trimmed;
+  // "/path" allowed, protocol-relative "//host" refused (would leave the site).
+  if (/^(https?:\/\/|\/(?!\/))/i.test(trimmed)) return trimmed;
   return null;
 }
 

@@ -10,6 +10,7 @@
 
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { normalizeIpInKey } from "@/lib/security/ipBucket";
 
 // ── Upstash configuration ─────────────────────────────────────────────
 const url   = process.env.UPSTASH_REDIS_REST_URL;
@@ -124,12 +125,19 @@ export const revalidateRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:revalidate")
   : createNoOpRatelimit(10, 60_000);
 
-// ── Global limiter for critical CSP alerts ────────────────────────────
-// 5 alerts / 10 minutes with a GLOBAL key (not per IP), so the same violation
-// from many origins does not spam the webhook.
+// ── Limiters for critical CSP alerts ──────────────────────────────────
+// Keyed by fingerprint (directive + blocked origin), not per IP: 1 alert per
+// fingerprint per 10 minutes, so a flood of forged reports with one
+// fingerprint cannot use up the budget of a real violation (another
+// fingerprint). The global cap bounds webhook traffic when an attacker
+// varies the fingerprint.
 export const cspAlertRatelimit = redis
-  ? createRatelimit(redis, 5, 600, "portfolio:rl:csp-alert")
-  : createNoOpRatelimit(5, 600_000);
+  ? createRatelimit(redis, 1, 600, "portfolio:rl:csp-alert")
+  : createNoOpRatelimit(1, 600_000);
+
+export const cspAlertGlobalRatelimit = redis
+  ? createRatelimit(redis, 30, 600, "portfolio:rl:csp-alert-global")
+  : createNoOpRatelimit(30, 600_000);
 
 // ── Identifier pseudonymisation ───────────────────────────────────────
 // Limiter identifiers contain the visitor's IP ("contact:ip:1.2.3.4"). They
@@ -142,6 +150,7 @@ let hmacKey: Promise<CryptoKey> | null = null;
 let hmacSalt = "";
 
 export async function pseudonymizeKey(key: string): Promise<string> {
+  key = normalizeIpInKey(key);
   const salt = process.env.IP_HASH_SALT ?? "";
   if (!salt) return key;
   if (!hmacKey || hmacSalt !== salt) {

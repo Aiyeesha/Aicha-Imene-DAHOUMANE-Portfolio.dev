@@ -28,16 +28,42 @@ export default function Modal({
 }) {
   const t = useTranslations();
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const prevFocusRef = useRef<HTMLElement | null>(null);
+  // Latest onClose, read by the effects below. Parents often pass an inline
+  // arrow: depending on it re-ran the focus effect on every parent render,
+  // whose cleanup sent focus back to the trigger and then into the panel
+  // again (a focus jump announced by screen readers).
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  // Declared before the focus effect on purpose: cleanups run in declaration
+  // order, so the page is no longer inert when focus returns to the trigger.
+  // Everything outside the dialog is made inert while it is open (no focus,
+  // no clicks, hidden from the accessibility tree): aria-modal alone is not
+  // honoured by every screen reader / browser pair.
+  useEffect(() => {
+    if (!open) return;
+    // Remember the active element to restore focus on close (ARIA pattern).
+    // Captured here, before the page turns inert: an inert ancestor can make
+    // the browser drop focus from the trigger.
+    prevFocusRef.current = document.activeElement as HTMLElement;
+    const root = rootRef.current;
+    if (!root) return;
+    const siblings = Array.from(document.body.children).filter(
+      (el): el is HTMLElement => el instanceof HTMLElement && !el.contains(root) && !el.inert
+    );
+    siblings.forEach((el) => { el.inert = true; });
+    return () => siblings.forEach((el) => { el.inert = false; });
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
 
-    // Remember the active element to restore focus on close (ARIA pattern)
-    prevFocusRef.current = document.activeElement as HTMLElement;
-
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
       // Minimal focus trap: keep focus inside panel
       if (e.key === "Tab" && panelRef.current) {
         const focusables = panelRef.current.querySelectorAll<HTMLElement>(
@@ -75,7 +101,8 @@ export default function Modal({
       // Restore focus to the trigger when the modal closes
       prevFocusRef.current?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
+
 
   // Lock background scroll while the modal is open (as the mobile menu does),
   // restoring the original value on close. Separate effect depending on
@@ -95,7 +122,7 @@ export default function Modal({
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-80">
+    <div ref={rootRef} className="fixed inset-0 z-80">
       <button
         type="button"
         aria-label={t("a11y.closeModal")}

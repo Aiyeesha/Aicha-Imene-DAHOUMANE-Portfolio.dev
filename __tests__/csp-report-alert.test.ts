@@ -14,6 +14,7 @@ jest.mock("next/server", () => ({
 jest.mock("@/lib/ratelimit", () => ({
   cspReportRatelimit: { limit: async () => ({ success: true, reset: Date.now() + 60_000 }) },
   cspAlertRatelimit:  { limit: async () => ({ success: true, reset: Date.now() + 60_000 }) },
+  cspAlertGlobalRatelimit: { limit: async () => ({ success: true, reset: Date.now() + 60_000 }) },
   safeLimit: async (limiter: { limit: (k: string) => Promise<{ success: boolean; reset?: number }> }, key: string) => {
     const r = await limiter.limit(key);
     return { success: r.success, reset: r.reset ?? Date.now() + 10_000 };
@@ -37,6 +38,8 @@ describe("CSP report — webhook alert (SEC-02)", () => {
 
   beforeEach(() => {
     process.env.CSP_ALERT_WEBHOOK_URL = WEBHOOK_URL;
+    // Alerts only fire for reports about this site's own pages.
+    process.env.NEXT_PUBLIC_SITE_URL = "https://myportfolio.dev";
     fetchMock = jest.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 204 }) as Response
     );
@@ -44,6 +47,7 @@ describe("CSP report — webhook alert (SEC-02)", () => {
 
   afterEach(() => {
     delete process.env.CSP_ALERT_WEBHOOK_URL;
+    delete process.env.NEXT_PUBLIC_SITE_URL;
     fetchMock.mockRestore();
   });
 
@@ -139,5 +143,65 @@ describe("CSP report — webhook alert (SEC-02)", () => {
     };
     const res = await POST(makeRequest(body));
     expect(res.status).toBe(204);
+  });
+});
+
+describe("CSP report — forged reports", () => {
+  const WEBHOOK_URL = "https://hooks.example.com/csp-alert";
+  let fetchMock: jest.SpyInstance;
+  beforeEach(() => {
+    process.env.CSP_ALERT_WEBHOOK_URL = WEBHOOK_URL;
+    process.env.NEXT_PUBLIC_SITE_URL = "https://myportfolio.dev";
+    fetchMock = jest.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status: 204 }) as Response);
+  });
+  afterEach(() => {
+    delete process.env.CSP_ALERT_WEBHOOK_URL;
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    fetchMock.mockRestore();
+  });
+  const webhookBody = () => {
+    const call = fetchMock.mock.calls.find(([url]: [string]) => url === WEBHOOK_URL);
+    return call ? JSON.parse(call[1].body as string) : undefined;
+  };
+
+  it("n'inclut que des valeurs normalisées et désactive les mentions", async () => {
+    await POST(makeRequest({ "csp-report": {
+      "violated-directive": "script-src @everyone",
+      "blocked-uri": "https://evil.example.com/x.js?token=1 @here [click](https://phish.example)",
+      "document-uri": "https://myportfolio.dev/fr/blog",
+    } }));
+    const body = webhookBody();
+    expect(body).toBeDefined();
+    expect(body.content).not.toMatch(/@everyone|@here|phish|token/);
+    expect(body.content).toContain("Blocked: https://evil.example.com\nPage: /fr/blog");
+    expect(body.allowed_mentions).toEqual({ parse: [] });
+  });
+
+  it("réduit l'URI bloquée à son origine", async () => {
+    await POST(makeRequest({ "csp-report": {
+      "violated-directive": "script-src-elem",
+      "blocked-uri": "https://evil.example.com/path/x.js",
+      "document-uri": "https://myportfolio.dev/en",
+    } }));
+    expect(webhookBody().content).toContain("Blocked: https://evil.example.com\n");
+  });
+
+  it("n'alerte pas pour un document d'une autre origine", async () => {
+    await POST(makeRequest({ "csp-report": {
+      "violated-directive": "script-src",
+      "blocked-uri": "https://evil.example.com/x.js",
+      "document-uri": "https://attacker.example/page",
+    } }));
+    expect(webhookBody()).toBeUndefined();
+  });
+
+  it("ignore un corps de plus de 16 Ko", async () => {
+    await POST(makeRequest({ "csp-report": {
+      "violated-directive": "script-src",
+      "blocked-uri": "https://evil.example.com/x.js",
+      "document-uri": "https://myportfolio.dev/en",
+      "original-policy": "x".repeat(20_000),
+    } }));
+    expect(webhookBody()).toBeUndefined();
   });
 });

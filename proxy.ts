@@ -21,6 +21,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 import { adminRatelimit, pseudonymizeKey } from "./lib/ratelimit";
 import { timingSafeStringEqual } from "./lib/security/timingSafeEqual";
+import { decodeBasicCredentials } from "./lib/security/basicAuth";
 
 const intlHandler = createMiddleware({
   locales: routing.locales,
@@ -96,7 +97,7 @@ async function adminAuth(request: NextRequest): Promise<NextResponse | null> {
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Basic ")) {
     try {
-      const decoded = atob(authHeader.slice(6));
+      const decoded = decodeBasicCredentials(authHeader.slice(6));
       const colonIdx = decoded.indexOf(":");
       if (colonIdx !== -1) {
         const user = decoded.slice(0, colonIdx);
@@ -159,6 +160,11 @@ export async function proxy(request: NextRequest) {
     if (remaining <= 0) return tooManyRequests();
 
     const deny = await adminAuth(request);
+    // Only an attempt with credentials counts as a failure: the first 401
+    // challenge every browser receives (no Authorization header yet) must not
+    // consume the quota, or a few visits plus a typo lock the owner out.
+    const attempted = request.headers.get("authorization")?.startsWith("Basic ") ?? false;
+    if (deny && !attempted) return deny;
     if (deny) {
       try {
         const { success } = await adminRatelimit.limit(rlKey);
@@ -177,6 +183,9 @@ export async function proxy(request: NextRequest) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-nonce", nonce);
     requestHeaders.set("Content-Security-Policy", csp);
+    // /admin is outside the i18n routing and written in French: without this
+    // header getLocale() fell back to the default locale (<html lang="en">).
+    requestHeaders.set("x-next-intl-locale", "fr");
 
     const response = NextResponse.next({
       request: { headers: requestHeaders },

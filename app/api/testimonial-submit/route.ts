@@ -20,6 +20,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { log } from "@/lib/logger";
+import { singleLine } from "@/lib/contactValidation";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
 import {
@@ -92,10 +93,12 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 5. Required fields ──────────────────────────────────────────────────────
-  const full_name             = typeof body.full_name === "string" ? body.full_name.trim() : "";
-  const role                  = typeof body.role === "string" ? body.role.trim() : "";
-  const company               = typeof body.company === "string" ? body.company.trim() : null;
-  const relation_type         = typeof body.relation_type === "string" ? body.relation_type.trim() : "";
+  // Single-line fields: control characters removed (full_name is also used in
+  // the e-mail subject sent through Formhook).
+  const full_name             = typeof body.full_name === "string" ? singleLine(body.full_name) : "";
+  const role                  = typeof body.role === "string" ? singleLine(body.role) : "";
+  const company               = typeof body.company === "string" ? singleLine(body.company) : null;
+  const relation_type         = typeof body.relation_type === "string" ? singleLine(body.relation_type) : "";
   const collaboration_context = typeof body.collaboration_context === "string"
     ? body.collaboration_context.trim() || null
     : null;

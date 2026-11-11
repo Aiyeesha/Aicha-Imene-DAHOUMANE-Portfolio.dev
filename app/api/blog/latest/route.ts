@@ -38,7 +38,8 @@ export async function GET(req: Request) {
   // (e.g. "../unpublished/fr") are never accepted. Same rule as /api/search.
   const rawLocale = searchParams.get("locale");
   const locale = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
-  const limit = Math.min(6, Math.max(1, Number(searchParams.get("limit") || "2")));
+  // parseInt + fallback: "?limit=abc" gave NaN, and slice(0, NaN) an empty list.
+  const limit = Math.min(6, Math.max(1, Number.parseInt(searchParams.get("limit") ?? "", 10) || 2));
 
   const posts = readAllPosts(locale).slice(0, limit).map((p) => ({
     slug: p.slug,

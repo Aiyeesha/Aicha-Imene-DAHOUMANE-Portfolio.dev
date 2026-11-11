@@ -1,9 +1,9 @@
-import { cacheGetOrSet } from "@/lib/cache";
+import { cacheGetOrSet, contentCacheKey } from "@/lib/cache";
 import { getAboutPage } from "@/lib/data/about";
 import type { AboutPageRow } from "@/lib/data/about";
 
 export async function getAboutPageCached(locale: "fr" | "en" | "es") {
-  const key = `about:${locale}`;
+  const key = contentCacheKey(`about:${locale}`);
   const ttl = 300; // 5 minutes
 
   return cacheGetOrSet<AboutPageRow | null>(key, ttl, () => getAboutPage(locale));

@@ -9,7 +9,20 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- **Alertes CSP non falsifiables** — `/api/csp-report` est public : un rapport forgé pouvait injecter `@everyone`, du Markdown ou des liens dans le canal d'alerte, et épuiser le budget global (5 / 10 min) pour masquer une vraie violation. L'alerte ne transporte plus que des valeurs normalisées (directive, origine bloquée ou mot-clé, chemin de page), désactive les mentions (`allowed_mentions`), ne part que pour les pages du site, est dédupliquée par empreinte (1 / 10 min) sous un plafond global (30 / 10 min) ; corps limité à 16 Ko.
+- **Cache Redis du contenu durci** — Un slug inventé ne touche plus Redis (validation + existence en mémoire) et un résultat `null` n'est jamais stocké (auparavant : une clé et un GET + SET par URL inventée, épuisement possible du quota → limiteurs en fail-open). Les clés de contenu sont préfixées par environnement et commit (`content:<env>:<sha>:…`) : une preview ne peut plus alimenter la production, ni un ancien déploiement servir son contenu au nouveau.
+- **Limiteurs de débit et IPv6** — Les clés IPv6 sont regroupées par /64 (`lib/security/ipBucket.ts`) : un client ne peut plus contourner les limites en changeant d'adresse dans son préfixe.
+- **`/admin`** — Le défi 401 initial (sans identifiants) ne consomme plus le quota anti brute-force ; identifiants Basic décodés en UTF-8 (`lib/security/basicAuth.ts`) ; `<html lang="fr">` ; longueur maximale des champs d'incident ; libellé « Supabase · service_role » obsolète remplacé.
+- **Formulaires** — Caractères de contrôle retirés des champs d'une ligne avant Formhook (contact et témoignages : pas d'injection d'en-tête e-mail possible) ; la réponse d'erreur de Formhook n'est plus journalisée (elle pouvait contenir les données saisies).
+- **Divers** — `/api/errors` exige l'`Origin` du site ; CSP statique stricte sur les CV HTML et `offline.html` (hors proxy) ; `safeHref` refuse les URL `//hôte` ; pas d'en-tête CORS vide sur `/api/health` ; CI : `persist-credentials: false` sur les checkouts, sortie de débogage du drift-check réduite à quelques champs.
+
 ### Fixed
+
+- **Poids de `/projects`** — La grille recevait les objets projet complets (études de cas, galeries) sérialisés dans le HTML ; elle ne reçoit plus que les champs des cartes (`lib/data/projectCards.ts`) : ~320 Ko → ~180 Ko de HTML.
+- **Modale accessible** — Le reste de la page est rendu `inert` pendant l'ouverture, et le focus ne saute plus quand le parent se re-rend (`onClose` lu via une ref).
+- **Robustesse** — `app/global-error.tsx` (une erreur du layout racine affichait la page brute de Next, en anglais) ; accès `localStorage` protégés ; `/api/blog/latest?limit=abc` renvoie la valeur par défaut.
 
 - **Articles de blog FR incomplets** — 8 articles français avaient des sections en moins que leurs versions EN/ES (ex. « 8. Mises à jour automatiques » dans le durcissement Windows Server 2022, 9 conseils sur 10 dans l'optimisation SOQL). Les sections manquantes sont traduites ; « Stratégies de déploiement Salesforce » suit désormais la structure EN (checklist de décision). Section « Funcionamiento » ajoutée à la fiche ES de `python-password-checker`.
 - **Limite Queueable erronée** — L'encadré de « Governor limits » (EN/FR) annonçait « 2 jobs Queueable au maximum depuis une transaction synchrone » : c'est 50 en synchrone, 1 en asynchrone (chaînage), profondeur illimitée hors Developer Edition / orgs d'essai.
@@ -33,6 +46,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Meta descriptions** — Accueil, profil hybride et « Me recruter » ramenées sous ~165 caractères (elles étaient tronquées par les moteurs) ; mentions légales et confidentialité étoffées.
 - **JSON-LD Person localisé** — `jobTitle` et `description` suivent la langue de la page (ils restaient en anglais sur `/fr` et `/es`) ; description du manifeste alignée sur sa langue (`en`).
 - **Harmonisations** — « Aïcha Imène DAHOUMANE » et « MIDRANGE GROUP » partout (mentions légales, JSON-LD auteur, frises, logos) ; positionnement actuel dans les mentions légales ; mois en minuscules en espagnol ; « Entrevistas desde ya » partout ; description des flux RSS sans « développement web » ; `/privacy` au conditionnel pour les témoignages (fonctionnalité désactivée).
+- **Dépendances** — `@next/bundle-analyzer` et `@types/mdx` déplacés en `devDependencies` (outils de build uniquement) ; `SECURITY.md` aligné sur l'état réel (Permissions-Policy, démarrage en production, tableau RLS réparé, plus de client Supabase).
 - **Flèche « ↗ » retirée des liens internes de la navigation** — Elle signale par convention un lien externe ; elle reste sur les vrais liens externes. Clé `a11y.opensPage` supprimée (FR/EN/ES).
 
 ### Changed
