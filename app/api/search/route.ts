@@ -13,6 +13,7 @@ import { parseFrontmatter } from "@/lib/frontmatter";
 import type { BlogLocale } from "@/content/blog/fs";
 import { searchRatelimit, safeLimit } from "@/lib/ratelimit";
 import { getClientIp } from "@/lib/contactValidation";
+import { translateTag } from "@/lib/blog-utils";
 
 export const revalidate = 86400;
 
@@ -21,7 +22,10 @@ type SearchDoc = {
   slug: string;
   title: string;
   excerpt: string;
+  /** Searchable text: canonical tags plus their translation. */
   tags: string;
+  /** Display tags, translated, kept whole ("Best Practices", not "Best"/"Practices"). */
+  tagList: string[];
   content: string;
   date: string;
   readingTime: number;
@@ -74,7 +78,8 @@ function buildIndex(locale: BlogLocale): { index: MiniSearch<SearchDoc>; docs: S
       slug: post.slug,
       title: post.title,
       excerpt: post.excerpt,
-      tags: post.tags.join(" "),
+      tags: [...post.tags, ...post.tags.map((t) => translateTag(t, locale))].join(" "),
+      tagList: post.tags.map((t) => translateTag(t, locale)),
       content: rawContent.slice(0, 10_000), // cap to avoid memory bloat
       date: post.date,
       readingTime: post.readingTime,
@@ -83,7 +88,7 @@ function buildIndex(locale: BlogLocale): { index: MiniSearch<SearchDoc>; docs: S
 
   const ms = new MiniSearch<SearchDoc>({
     fields: ["title", "excerpt", "tags", "content"],
-    storeFields: ["slug", "title", "excerpt", "tags", "date", "readingTime"],
+    storeFields: ["slug", "title", "excerpt", "tagList", "date", "readingTime"],
     searchOptions: {
       boost: { title: 3, tags: 2, excerpt: 1.5 },
       prefix: true,
@@ -129,7 +134,7 @@ export async function GET(request: NextRequest) {
     slug: r.slug as string,
     title: r.title as string,
     excerpt: r.excerpt as string,
-    tags: (r.tags as string).split(" ").filter(Boolean),
+    tags: (r.tagList as string[]) ?? [],
     date: r.date as string,
     readingTime: r.readingTime as number,
   }));

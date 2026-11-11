@@ -3,7 +3,7 @@ title: "Optimisation des performances SOQL : des requêtes lentes aux résultats
 excerpt: "Techniques concrètes pour écrire des requêtes SOQL plus rapides dans Salesforce — index, filtres sélectifs, Query Plan et anti-patterns à éliminer."
 date: "2025-05-05"
 updatedDate: "2026-11-04"
-tags: ["Salesforce", "SOQL", "Performance", "Base de données", "Bonnes pratiques"]
+tags: ["Salesforce", "SOQL", "Performance", "Database", "Best Practices"]
 projects: ["fasha-apex-backend-optimization", "idemconnect-apex-backend"]
 ---
 
@@ -36,12 +36,29 @@ Le Query Plan Tool dans la Developer Console est votre premier outil :
 - index standard : 30 % du premier million d'enregistrements, puis 15 % au-delà, plafonné à 1 million ;
 - index personnalisé : 10 % du premier million, puis 5 % au-delà, plafonné à 333 333.
 
+**Exemple de mauvais plan :**
+```
+Query: SELECT Id FROM Account WHERE Industry = 'Technology'
+Plan: TableScan — Cost: 1.35 (≥ 1 : non sélectif)
+```
+
+**Après ajout d'un filtre sélectif :**
+```
+Query: SELECT Id FROM Account WHERE Industry = 'Technology' AND OwnerId = :currentUserId
+Plan: Index on OwnerId — Cost: 0.04 (< 1 : sélectif)
+```
+
 ## 2. Toujours filtrer sur des champs indexés
 
 **Champs standards toujours indexés :**
 - `Id`, `Name`, `OwnerId`, `RecordTypeId`
 - `CreatedDate` / `SystemModstamp` (et non `LastModifiedDate`, qui n'est pas indexé)
 - Champs de relation lookup/Master-Detail
+
+**Comment vérifier si un champ est indexé :**
+Setup → Object Manager → [Objet] → Fields & Relationships → cliquer sur le champ → « Unique » ou « External ID » = indexé.
+
+**Bonne pratique :** incluez toujours au moins un champ indexé dans votre clause `WHERE`.
 
 ```apex
 // ❌ Non sélectif — full table scan
@@ -64,6 +81,7 @@ C'est la cause n°1 de violations des governor limits — et c'est lent.
 // ❌ SOQL dans une boucle — 1 requête par enregistrement
 for (Account acc : accounts) {
     List<Contact> contacts = [SELECT Id FROM Contact WHERE AccountId = :acc.Id];
+    // traite les contacts...
 }
 
 // ✅ Requête en masse — 1 requête pour tous les enregistrements
@@ -89,7 +107,7 @@ List<Account> accounts = [SELECT Id, Name FROM Account WHERE OwnerId = :userId];
 Set<Id> ids = new Map<Id, Account>(accounts).keySet();
 List<Contact> contacts = [SELECT Id, AccountId FROM Contact WHERE AccountId IN :ids];
 
-// ✅ Une seule requête avec sous-sélection
+// ✅ Une seule requête avec sous-sélection (enfant-parent)
 List<Account> accounts = [
     SELECT Id, Name,
            (SELECT Id, FirstName, LastName, Email FROM Contacts WHERE IsActive__c = true)
@@ -121,7 +139,25 @@ List<Account> recent = [
 ];
 ```
 
-## 6. Les littéraux de date vs. les dates dynamiques
+Utilisez `LIMIT 1` (l'équivalent d'un `.maybeSingle()`) lorsque vous attendez un seul résultat :
+```apex
+Account acc = [SELECT Id FROM Account WHERE Name = 'Acme Corp' LIMIT 1];
+```
+
+## 6. Utiliser `FOR UPDATE` avec prudence
+
+```apex
+// Verrouille les enregistrements pendant toute la durée de la transaction
+List<Account> accounts = [
+    SELECT Id, AnnualRevenue FROM Account
+    WHERE Id IN :accountIds
+    FOR UPDATE
+];
+```
+
+N'utilisez `FOR UPDATE` que lorsque vous avez besoin d'un verrouillage au niveau ligne pour empêcher des mises à jour concurrentes. Évitez-le dans les flux à forte lecture — il bloque les autres transactions.
+
+## 7. Les littéraux de date vs. les dates dynamiques
 
 Côté performance, un littéral de date et une variable de date liée sont équivalents : les deux restent sélectifs sur un champ indexé. Les littéraux sont toutefois plus lisibles, et ils tiennent compte du fuseau horaire de l'utilisateur et de l'exercice fiscal de l'org :
 
@@ -137,11 +173,12 @@ WHERE CreatedDate > :Date.today().addDays(-30)
 
 **Littéraux de date courants :**
 - `TODAY`, `YESTERDAY`, `TOMORROW`
-- `THIS_WEEK`, `LAST_WEEK`, `THIS_MONTH`, `LAST_MONTH`
-- `THIS_QUARTER`, `THIS_YEAR`, `LAST_YEAR`
+- `THIS_WEEK`, `LAST_WEEK`, `NEXT_WEEK`
+- `THIS_MONTH`, `LAST_MONTH`, `THIS_QUARTER`
 - `LAST_N_DAYS:n`, `NEXT_N_DAYS:n`
+- `THIS_YEAR`, `LAST_YEAR`
 
-## 7. Requêtes agrégées et GROUP BY
+## 8. Requêtes agrégées et GROUP BY
 
 Les agrégations SOQL réduisent considérablement le volume de données transférées vers Apex. Attention : chaque ligne agrégée compte toujours dans la limite des 50 000 lignes de requête, sauf avec `COUNT()` sans `GROUP BY`, qui ne compte que pour une ligne.
 
@@ -165,7 +202,7 @@ for (AggregateResult r : results) {
 }
 ```
 
-## 8. Éviter `!=` et `NOT IN` sur les grands volumes
+## 9. Éviter `!=` et `NOT IN` sur les grands volumes
 
 Les conditions négatives (`!=`, `NOT IN`, `NOT LIKE`) empêchent l'utilisation des index et forcent un scan complet.
 
@@ -177,13 +214,13 @@ WHERE StageName != 'Closed Won'
 WHERE StageName IN ('Prospecting', 'Qualification', 'Proposal')
 ```
 
-## 9. Demander des index personnalisés pour les filtres à fort volume
+## 10. Demander des index personnalisés pour les filtres à fort volume
 
 Si vous filtrez fréquemment sur un champ personnalisé avec des millions d'enregistrements, demandez un **index personnalisé** via le Support Salesforce. Inutile pour les champs marqués *External ID* ou *Unique* : ils sont indexés automatiquement.
 
 Candidats à l'indexation personnalisée :
 - Champs filtrés dans des batch jobs traitant > 100k enregistrements
-- Champs utilisés dans les WHERE de composants LWC sur des objets à fort volume
+- Champs utilisés dans les clauses WHERE des requêtes SOSL/SOQL de composants LWC sur des objets à fort volume
 
 ## Checklist de performance
 

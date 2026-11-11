@@ -161,7 +161,7 @@ export const projectDetails: ProjectDetails[] = [
               "Tournevis cruciforme + spudger plastique — démontage sans endommager le châssis",
               "Windows Task Manager & Disk Management — validation post-swap (RAM détectée, capacité SSD)"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -468,7 +468,7 @@ export const projectDetails: ProjectDetails[] = [
               "Git — workflow dev → main, commits atomiques par étape",
               "IntelliJ IDEA — environnement de développement"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -1729,7 +1729,7 @@ export const projectDetails: ProjectDetails[] = [
               "VirtualBox — hyperviseur de type 2 pour l'environnement de formation",
               "Windows 10 / Windows Server 2012 — systèmes d'exploitation des VM"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -2045,7 +2045,7 @@ export const projectDetails: ProjectDetails[] = [
               "Variable %username% — personnalisation automatique du chemin par utilisateur",
               "VirtualBox — hyperviseur de type 2 pour l'environnement de formation"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -2437,7 +2437,7 @@ export const projectDetails: ProjectDetails[] = [
               "WDS (Windows Deployment Services) — Déploiement OS via réseau (PXE/TFTP)",
               "Group Policy (GPO) — Profils itinérants et mappage de lecteurs réseau"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -2774,7 +2774,7 @@ export const projectDetails: ProjectDetails[] = [
               "Office 2016 Professionnel Plus — suite bureautique",
               "Sauvegarde Windows — configuration post-installation"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -3151,7 +3151,7 @@ export const projectDetails: ProjectDetails[] = [
               "MySQL — base de données pour les tests d'intégration",
               "Git — versionning avec branches feature/fix"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -3521,7 +3521,7 @@ export const projectDetails: ProjectDetails[] = [
               "Media queries — responsive 3 breakpoints (mobile, tablette, bureau)",
               "Git — versionning et livraison"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -4277,6 +4277,28 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "label": "Dependencias de ejecución",
                 "value": "0"
+              }
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Funcionamiento",
+            "steps": [
+              {
+                "label": "Análisis local",
+                "description": "La longitud y las familias de caracteres dan la entropía teórica (L × log2 N)."
+              },
+              {
+                "label": "Detección de patrones",
+                "description": "Palabras comunes, secuencias de teclado, secuencias lógicas y repeticiones se localizan — solo por tipo y posición, nunca por su texto."
+              },
+              {
+                "label": "Entropía efectiva",
+                "description": "Las partes predecibles se reevalúan (unos 12,9 bits por palabra común) y la puntuación sigue los umbrales de la CNIL."
+              },
+              {
+                "label": "Comprobación de filtraciones",
+                "description": "La huella SHA-1 se calcula localmente; solo se envían sus 5 primeros caracteres y el sufijo se busca localmente."
               }
             ]
           },
@@ -7133,7 +7155,7 @@ export const projectDetails: ProjectDetails[] = [
               "VMware Workstation Pro 17 — Hyperviseur de type 2",
               "PKI / CA Manager pfSense — Autorité de certification interne pour HTTPS"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -7807,7 +7829,7 @@ export const projectDetails: ProjectDetails[] = [
               "RJ45 / Switch LAN — infrastructure filaire de connexion du PA",
               "Ping / test réseau — validation de la connectivité Internet"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -8119,7 +8141,7 @@ export const projectDetails: ProjectDetails[] = [
               "LDLC Pro / Materiel.net / Inmac Wstore — catalogues fournisseurs B2B",
               "Excel — formalisation du devis avec calculs HT/TTC"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -8414,7 +8436,7 @@ export const projectDetails: ProjectDetails[] = [
               "Windows 10 — système d'exploitation du poste provisionné",
               "Office 2016 — suite bureautique préinstallée"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -11192,7 +11214,7 @@ export const projectDetails: ProjectDetails[] = [
               "Apex Test Run — exécution automatisée des tests unitaires",
               "SFDX Source Format — versionning des métadonnées Salesforce"
             ],
-            "title": "Outils & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -11684,7 +11706,7 @@ export const projectDetails: ProjectDetails[] = [
               "Permission Set Groups, Named Credentials",
               "Salesforce Security Model — CRUD/FLS, WITH SECURITY_ENFORCED, stripInaccessible()"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "metrics",

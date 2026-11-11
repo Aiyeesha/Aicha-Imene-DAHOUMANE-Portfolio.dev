@@ -10,7 +10,7 @@
 
 import { readAllPosts, type BlogLocale } from "@/content/blog/fs";
 import { allPublished } from "@/lib/data/projectsSource";
-import { formatDate } from "@/lib/blog-utils";
+import { formatDate, translateTag } from "@/lib/blog-utils";
 import { certifications } from "@/content/certifications";
 
 export type PaletteLocale = "fr" | "en" | "es";
@@ -163,7 +163,8 @@ export function buildPaletteIndex(rawLocale: string): PaletteIndex {
     // Same long format as the blog cards ("15 février 2026"), not ISO.
     hint: formatDate(post.date.slice(0, 10), locale),
     href: `/${locale}/blog/${post.slug}`,
-    keywords: keywords(post.tags),
+    // Canonical and translated tags, so "sécurité" finds a Security post.
+    keywords: keywords(post.tags, post.tags.map((t) => translateTag(t, locale))),
   }));
 
   return { projects, posts, certifications: certEntries(locale) };
