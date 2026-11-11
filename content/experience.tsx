@@ -30,7 +30,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         contract: "CDI",
         period: "Oct. 2025 — Nov. 2026",
         location: "Télétravail",
-        note: "CDI proposé à l'issue de l'alternance, sans période d'essai. Fin de contrat prévue le 30 novembre 2026.",
+        note: "CDI proposé à l'issue de l'alternance, sans période d'essai. Départ prévu le 30 novembre 2026.",
         highlights: [
           "Conception et mise en œuvre de solutions Salesforce avancées en collaboration avec les équipes métier.",
           "Optimisation et refactoring du code Apex existant pour améliorer la qualité, la performance et la maintenabilité.",
@@ -60,7 +60,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       {
         id: "exp-midrange",
         role: "Administratrice systèmes & réseaux junior",
-        company: "Midrange Group",
+        company: "MIDRANGE GROUP",
         contract: "2 stages d'un mois",
         period: "Fév. 2023 — Mai 2023",
         location: "France · Présentiel",
@@ -81,9 +81,9 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         role: "Desarrolladora Salesforce",
         company: "LD Digitales",
         contract: "Contrato indefinido",
-        period: "Oct. 2025 — Nov. 2026",
+        period: "oct. 2025 — nov. 2026",
         location: "Remoto",
-        note: "Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba. Fin de contrato prevista el 30 de noviembre de 2026.",
+        note: "Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba. Salida prevista el 30 de noviembre de 2026.",
         highlights: [
           "Diseño e implementación de soluciones Salesforce avanzadas en estrecha colaboración con las áreas de negocio.",
           "Refactorización del código Apex existente para mejorar la calidad, el rendimiento y la mantenibilidad.",
@@ -97,7 +97,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         role: "Desarrolladora Salesforce",
         company: "LD Digitales",
         contract: "Formación en alternancia",
-        period: "Oct. 2023 — Sept. 2025",
+        period: "oct. 2023 — sept. 2025",
         location: "Remoto",
         highlights: [
           "Desarrollo y mantenimiento de más de 10 clases Apex y batch jobs para automatizar el procesamiento de datos y los informes.",
@@ -113,9 +113,9 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       {
         id: "exp-midrange-es",
         role: "Administradora júnior de sistemas y redes",
-        company: "Midrange Group",
+        company: "MIDRANGE GROUP",
         contract: "2 prácticas de un mes",
-        period: "Feb. 2023 — May. 2023",
+        period: "feb. 2023 — may. 2023",
         location: "Francia · Presencial",
         highlights: [
           "Soporte presencial y remoto de un parque de más de 50 puestos de trabajo y portátiles.",
@@ -136,7 +136,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       contract: "Full-time",
       period: "Oct 2025 — Nov 2026",
       location: "Remote",
-      note: "Direct conversion from apprenticeship — no probation period. Contract ends on November 30, 2026.",
+      note: "Direct conversion from apprenticeship — no probation period. Leaving on November 30, 2026.",
       highlights: [
         "Designed and delivered advanced Salesforce solutions in close collaboration with business stakeholders.",
         "Refactored existing Apex codebases to improve quality, performance and maintainability.",
@@ -166,7 +166,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
     {
       id: "exp-midrange-intern",
       role: "Junior Systems & Network Administrator",
-      company: "Midrange Group",
+      company: "MIDRANGE GROUP",
       contract: "Two 1-month internships",
       period: "Feb 2023 — May 2023",
       location: "France · On-site",

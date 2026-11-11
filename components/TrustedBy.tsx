@@ -35,7 +35,7 @@ const companies: {
   },
   {
     id: "midrange",
-    name: "Midrange Group",
+    name: "MIDRANGE GROUP",
     logo: "/companies/midrange.webp",
     width: 120,
     height: 40,

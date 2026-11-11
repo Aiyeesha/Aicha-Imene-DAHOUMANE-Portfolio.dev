@@ -17,7 +17,7 @@ export default function manifest(): MetadataRoute.Manifest {
     id:          "/",
     name:        siteName,
     short_name:  "AID",
-    description: "Salesforce · Systèmes & Réseaux · DevOps — Portfolio professionnel d'Aïcha Imène DAHOUMANE.",
+    description: "Salesforce · Systems & Networks · DevOps — Professional portfolio of Aïcha Imène DAHOUMANE.", // matches lang: "en"
 
     // ── Navigation ──────────────────────────────────────────────────────────
     start_url: "/",            // root: the proxy detects the language

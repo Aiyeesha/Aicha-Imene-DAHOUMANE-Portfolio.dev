@@ -53,10 +53,33 @@ export const certifications: Certification[] = [
 
 // Booked exam sessions (Salesforce test center, Europe/Paris). Update after
 // each result: move the certification to `certifications` once earned.
+// `iso` drives the label: once the day is over, /certifications shows
+// "exam taken, result pending" instead of a date in the past, and
+// __tests__/scheduled-exams.test.ts fails a week later as a reminder to
+// record the result (FAQ, About page, this file).
 export const SCHEDULED_EXAMS = {
-  platformFoundations:   { fr: "29 déc. 2026", en: "Dec 29, 2026", es: "29 dic. 2026" },
-  platformAdministrator: { fr: "30 déc. 2026", en: "Dec 30, 2026", es: "30 dic. 2026" },
+  platformFoundations:   { iso: "2026-12-29", fr: "29 déc. 2026", en: "Dec 29, 2026", es: "29 dic. 2026" },
+  platformAdministrator: { iso: "2026-12-30", fr: "30 déc. 2026", en: "Dec 30, 2026", es: "30 dic. 2026" },
 } as const;
+
+export type ScheduledExam = (typeof SCHEDULED_EXAMS)[keyof typeof SCHEDULED_EXAMS];
+
+/** True once the exam day is over in Paris time (the exam centre's zone). */
+export function isExamPast(exam: ScheduledExam, now: Date = new Date()): boolean {
+  // Day after the exam, 00:00 Europe/Paris. CET (UTC+1) applies in December;
+  // a fixed offset is enough for winter dates and avoids a timezone library.
+  const dayAfter = new Date(`${exam.iso}T00:00:00+01:00`);
+  dayAfter.setUTCDate(dayAfter.getUTCDate() + 1);
+  return now.getTime() >= dayAfter.getTime();
+}
+
+/** "Examen le 29 déc. 2026", or "Examen passé le …, résultat à venir" afterwards. */
+export function examTargetLabel(exam: ScheduledExam, locale: string, now: Date = new Date()): string {
+  const past = isExamPast(exam, now);
+  if (locale === "fr") return past ? `Examen passé le ${exam.fr} — résultat à venir` : `Examen le ${exam.fr}`;
+  if (locale === "es") return past ? `Examen realizado el ${exam.es} — resultado pendiente` : `Examen el ${exam.es}`;
+  return past ? `Exam taken on ${exam.en} — result pending` : `Exam on ${exam.en}`;
+}
 
 export const upcomingCertifications: string[] = [
   'Salesforce Platform Foundations — examen le 29 déc. 2026',
