@@ -97,7 +97,7 @@ const MILESTONES: Milestone[] = [
       fr: "Stages Systèmes & Réseaux",
       es: "Prácticas de Sistemas y Redes",
     },
-    org: "MIDRANGE GROUP",
+    org: "MIDRANGE Group",
     description: {
       en: "Two one-month internships as part of the TSSR program (GRETA du Val d'Oise). Deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
       fr: "Deux stages d'un mois dans le cadre de la formation TSSR (GRETA du Val d'Oise). Déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense, Acronis, Datto RMM.",
@@ -105,7 +105,7 @@ const MILESTONES: Milestone[] = [
     },
     tags: ["Windows Server 2022", "Autopilot", "PfSense", "Acronis", "Datto RMM"],
     logos: [
-      { src: "/companies/midrange.webp", alt: "MIDRANGE GROUP" },
+      { src: "/companies/midrange.webp", alt: "MIDRANGE Group" },
       { src: "/companies/greta.svg", alt: "GRETA du Val d'Oise" },
     ],
   },

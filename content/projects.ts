@@ -695,7 +695,7 @@ export const projects: Project[] = [
     "slug": "it-ops-rmm-supervision",
     "nature": "internship",
     "title": "Infrastructure Monitoring with Datto RMM",
-    "excerpt": "At MIDRANGE GROUP, I remotely supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
+    "excerpt": "At MIDRANGE Group, I remotely supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -735,7 +735,7 @@ export const projects: Project[] = [
     "slug": "workstation-mass-deployment",
     "nature": "internship",
     "title": "Mass Workstation Deployment — 264 Dell Devices",
-    "excerpt": "At MIDRANGE GROUP, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
+    "excerpt": "At MIDRANGE Group, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -778,7 +778,7 @@ export const projects: Project[] = [
     "slug": "it-ops-incident-management",
     "nature": "internship",
     "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
-    "excerpt": "At MIDRANGE GROUP MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
+    "excerpt": "At MIDRANGE Group MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -818,7 +818,7 @@ export const projects: Project[] = [
     "slug": "it-ops-acronis-backup",
     "nature": "internship",
     "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-    "excerpt": "At MIDRANGE GROUP, I monitored backups daily across 105 protected endpoints (NAS and Acronis Cloud), triaged 85 active alerts, identified root causes (NAS full, plan corruption, network issues) and restored continuity.",
+    "excerpt": "At MIDRANGE Group, I monitored backups daily across 105 protected endpoints (NAS and Acronis Cloud), triaged 85 active alerts, identified root causes (NAS full, plan corruption, network issues) and restored continuity.",
     "track": "itops",
     "categories": [
       "IT Ops",

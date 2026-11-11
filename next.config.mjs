@@ -164,7 +164,7 @@ const nextConfig = {
         destination: `${SITE_URL}/:path*`,
         permanent: true,
       })),
-      // Unpublished blog posts: the four MIDRANGE GROUP runbooks point to the
+      // Unpublished blog posts: the four MIDRANGE Group runbooks point to the
       // write-up that replaces them, the others to the blog index. Temporary
       // (307) so a post can be republished without a cached permanent redirect.
       ...UNPUBLISHED_BLOG_REDIRECTS,
