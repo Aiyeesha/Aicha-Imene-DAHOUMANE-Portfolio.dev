@@ -9,6 +9,18 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Popup « Mes disponibilités » illisible en thème clair** — Le panneau de `Modal.tsx` réutilisait `.card` (fond à 5 % d'opacité, léger décalage au survol) : le titre et l'avatar du hero transparaissaient derrière le texte. Le panneau est désormais opaque (même surface que le menu mobile) dans les deux thèmes.
+- **Indicateur de page active décalé dans la barre de navigation** — `.nav-pill { inset: 0 }`, déclaré hors couche CSS, écrasait l'utilitaire Tailwind `top-1/2` : la pastille remontait de 18 px et était tronquée sur toutes les pages internes (desktop). La règle ne garde que l'apparence.
+- **Sections vides à l'impression / export PDF** — Les blocs `Reveal` situés sous la ligne de flottaison restaient à `opacity: 0` à l'impression (16 blocs sur `/about`). La feuille d'impression les force visibles.
+- **Débordement horizontal sur mobile** — Des chaînes longues sans espace (noms de méthodes, noms d'hôtes) élargissaient la page de 31 à 39 px sur deux fiches projet. La fiche projet autorise désormais la césure (`overflow-wrap: anywhere`).
+- **Contrastes AA** — Petits textes en `cyan-600` (3,68:1) passés en `cyan-700` (bandeau de série du blog, surtitre de « Me recruter ») ; langue active du sélecteur en `cyan-800` sur fond teinté.
+
+### Changed
+
+- **Flèche « ↗ » retirée des liens internes de la navigation** — Elle signale par convention un lien externe ; elle reste sur les vrais liens externes. Clé `a11y.opensPage` supprimée (FR/EN/ES).
+
 ### Changed
 
 - **Fin du CDI chez LD Digitales le 30 novembre 2026** — Le poste n'est plus présenté comme en cours : période « Oct. 2025 — Nov. 2026 » et note « Fin de contrat prévue le 30 novembre 2026 » dans la frise Expérience (`content/experience.tsx`), « 2025 – 2026 » dans la frise de carrière (`components/CareerTimeline.tsx`), formulations sans « actuellement » ni « depuis » dans les paragraphes Salesforce et IT Ops de la page À propos (`profile.p4_*`), le parcours de secours (`content/about.ts`), la FAQ sur la disponibilité et la page « Me recruter ». En anglais et en espagnol, « remain fully available / siguen plenamente disponibles » devient « transferable / aplicables », pour ne pas être confondu avec la date de disponibilité (`__tests__/availability.test.ts`). Les 18 CV (`public/cv/*.html`) affichent la même période ; PDF régénérés avec `npm run content:cv`, nombre de pages inchangé.

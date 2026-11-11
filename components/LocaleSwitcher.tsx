@@ -48,7 +48,7 @@ export default function LocaleSwitcher({ current }: { current: AppLocale }) {
           className={`rounded-full border px-2 min-[1850px]:px-3 py-1.5 text-sm ${
             l === current
               ? track === "salesforce"
-                ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-200"
+                ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-800 dark:text-cyan-200"
                 : "border-violet-400/40 bg-violet-500/10 text-violet-700 dark:text-violet-200"
               : "border-black/10 dark:border-white/10 text-muted hover:text-slate-900 dark:hover:text-white"
           }`}

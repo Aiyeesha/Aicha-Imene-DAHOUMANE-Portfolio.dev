@@ -339,7 +339,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   return (
     // <article>, not <main>: the [locale] layout already renders
     // <main id="main">, and a project page is standalone content.
-    <article className="py-10 md:py-16">
+    // overflow-wrap: anywhere (inherited) lets long unbroken strings
+    // (method names, hostnames) wrap inside flex/grid cells instead of
+    // widening the page on mobile; <pre> blocks keep their own scroll.
+    <article className="py-10 md:py-16 [overflow-wrap:anywhere]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(breadcrumbSchema) }}
