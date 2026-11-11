@@ -296,7 +296,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     inLanguage: locale,
     author: {
       "@type": "Person",
-      name: "Aïcha Imène Dahoumane",
+      name: "Aïcha Imène DAHOUMANE",
       url: `${siteUrl}/${locale}/about`,
     },
     ...(projectCoverUrl && { image: projectCoverUrl }),

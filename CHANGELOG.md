@@ -19,6 +19,13 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Titre principal du parcours IT Ops** — En mode IT Ops, le h1 du hero affiche désormais « Ingénieure Systèmes & IT Ops » (EN « Systems & IT Ops Engineer », ES « Ingeniera de Sistemas & IT Ops »), aligné sur le titre d'onglet ; il était identique au mode Salesforce.
+- **Formulations valables avant et après le 30 novembre 2026** — « LD Digitales — depuis octobre 2023 » devient « oct. 2023 à nov. 2026 » ; la note de la frise passe de « Fin de contrat prévue » (impropre pour un CDI) à « Départ prévu le 30 novembre 2026 » ; la FAQ disponibilité n'emploie plus le présent « je suis en CDI ».
+- **Examens Salesforce : bascule automatique après la date** — `SCHEDULED_EXAMS` porte une date ISO ; `/certifications` et son image OG affichent « Examen passé le …, résultat à venir » / « examens passés » dès le lendemain (heure de Paris). `__tests__/scheduled-exams.test.ts` échoue une semaine après un examen pour rappeler d'enregistrer le résultat.
+- **Résumés de projets alignés sur les études de cas** — Les sous-titres FR/EN de 4 projets Salesforce (et ES de Legarant-AXG) reprennent ceux des fichiers MDX, plus récents ; les trois langues disent enfin la même chose. Les 5 projets IT Ops dont le sous-titre n'était qu'une liste d'outils (plus 2 en ES) ont une vraie phrase descriptive.
+- **Meta descriptions** — Accueil, profil hybride et « Me recruter » ramenées sous ~165 caractères (elles étaient tronquées par les moteurs) ; mentions légales et confidentialité étoffées.
+- **JSON-LD Person localisé** — `jobTitle` et `description` suivent la langue de la page (ils restaient en anglais sur `/fr` et `/es`) ; description du manifeste alignée sur sa langue (`en`).
+- **Harmonisations** — « Aïcha Imène DAHOUMANE » et « MIDRANGE GROUP » partout (mentions légales, JSON-LD auteur, frises, logos) ; positionnement actuel dans les mentions légales ; mois en minuscules en espagnol ; « Entrevistas desde ya » partout ; description des flux RSS sans « développement web » ; `/privacy` au conditionnel pour les témoignages (fonctionnalité désactivée).
 - **Flèche « ↗ » retirée des liens internes de la navigation** — Elle signale par convention un lien externe ; elle reste sur les vrais liens externes. Clé `a11y.opensPage` supprimée (FR/EN/ES).
 
 ### Changed

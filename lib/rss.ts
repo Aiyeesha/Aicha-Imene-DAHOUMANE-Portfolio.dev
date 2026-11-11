@@ -46,10 +46,10 @@ export function buildRssFeed(opts: RssOptions = {}): string {
     description: tag
       ? `Articles tagged "${tag}" — Salesforce, IT Ops, DevOps.`
       : locale === "fr"
-      ? "Tutoriels pratiques sur Salesforce, l'IT Ops et le développement web moderne."
+      ? "Tutoriels pratiques et retours d'expérience sur Salesforce, l'administration systèmes & réseaux et le DevOps."
       : locale === "es"
-      ? "Tutoriales prácticos sobre Salesforce, IT Ops y desarrollo web moderno."
-      : "Practical tutorials on Salesforce, IT Ops, and modern web development.",
+      ? "Tutoriales prácticos y experiencias sobre Salesforce, administración de sistemas y redes, y DevOps."
+      : "Practical tutorials and field notes on Salesforce, systems & network administration, and DevOps.",
     link: `${siteUrl}/${langPath}/blog${tag ? `?tag=${encodeURIComponent(tag)}` : ""}`,
     feedLink,
     language: locale,

@@ -977,7 +977,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Network Sniffing: tcpdump, Wireshark & Scapy",
-        "heroSubtitle": "tcpdump · Wireshark · Scapy · VMware Workstation Pro 17",
+        "heroSubtitle": "Traffic capture and analysis with tcpdump, Wireshark and Scapy in a homelab: reading a plaintext HTTP exchange and intercepting unencrypted FTP credentials.",
         "sections": [
           {
             "type": "text",
@@ -1067,7 +1067,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Sniffing réseau : tcpdump, Wireshark & Scapy",
-        "heroSubtitle": "tcpdump · Wireshark · Scapy · VMware Workstation Pro 17",
+        "heroSubtitle": "Capture et analyse de trafic avec tcpdump, Wireshark et Scapy en homelab : lecture d'une requête HTTP en clair et interception d'identifiants FTP non chiffrés.",
         "sections": [
           {
             "type": "text",
@@ -1157,7 +1157,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Sniffing de red: tcpdump, Wireshark y Scapy",
-        "heroSubtitle": "tcpdump · Wireshark · Scapy · VMware Workstation Pro 17",
+        "heroSubtitle": "Captura y análisis de tráfico con tcpdump, Wireshark y Scapy en un homelab: lectura de un intercambio HTTP en claro e interceptación de credenciales FTP sin cifrar.",
         "sections": [
           {
             "type": "text",
@@ -2289,7 +2289,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Maintaining a Virtualized IT Environment",
-        "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS / DNS / DHCP / WDS",
+        "heroSubtitle": "Windows Server 2022 lab on VMware Workstation: Active Directory domain, DNS, DHCP and automated OS deployment via WDS/PXE on a private NAT network.",
         "sections": [
           {
             "body": "Personal lab built as part of a Systems & Networks program. I deployed a complete Windows Server 2022 environment inside VMware Workstation Pro 17 to replicate a real enterprise IT infrastructure: Active Directory domain, DNS, DHCP, and automated OS deployment via WDS/PXE — all on a fully managed private VMware NAT network.",
@@ -2395,7 +2395,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Maintenir et exploiter un environnement virtualisé",
-        "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS / DNS / DHCP / WDS",
+        "heroSubtitle": "Lab Windows Server 2022 sous VMware Workstation : domaine Active Directory, DNS, DHCP et déploiement d'OS automatisé par WDS/PXE sur un réseau NAT privé.",
         "sections": [
           {
             "body": "Lab personnel réalisé dans le cadre d'une formation Systèmes & Réseaux. J ai déployé un environnement Windows Server 2022 complet sous VMware Workstation Pro 17 pour reproduire une infrastructure IT d'entreprise : domaine Active Directory, DNS, DHCP et déploiement automatisé d'OS via WDS/PXE — sur un réseau NAT VMware privé entièrement géré.",
@@ -2501,7 +2501,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Mantener un entorno IT virtualizado",
-        "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS",
+        "heroSubtitle": "Laboratorio Windows Server 2022 en VMware Workstation: dominio Active Directory, DNS, DHCP y despliegue automatizado de SO mediante WDS/PXE en una red NAT privada.",
         "sections": [
           {
             "type": "text",
@@ -5044,7 +5044,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Infrastructure Monitoring with Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
+        "heroSubtitle": "Daily Datto RMM monitoring triage across 550+ client endpoints at MIDRANGE GROUP: alerts, antivirus coverage and Splashtop remote access.",
         "sections": [
           {
             "type": "text",
@@ -5200,7 +5200,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision d'infrastructure avec Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
+        "heroSubtitle": "Triage quotidien de la supervision Datto RMM sur plus de 550 postes clients chez MIDRANGE GROUP : alertes, couverture antivirus et accès distant Splashtop.",
         "sections": [
           {
             "type": "text",
@@ -5356,7 +5356,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Supervisión de infraestructura con Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
+        "heroSubtitle": "Triaje diario de la supervisión Datto RMM en más de 550 equipos de clientes en MIDRANGE GROUP: alertas, cobertura antivirus y acceso remoto Splashtop.",
         "sections": [
           {
             "type": "text",
@@ -5817,7 +5817,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Despliegue masivo de puestos de trabajo — 264 dispositivos Dell",
-        "heroSubtitle": "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP",
+        "heroSubtitle": "Borrado certificado, imagen Sysprep y Autopilot zero-touch: 264 dispositivos Dell desplegados en MIDRANGE GROUP.",
         "sections": [
           {
             "type": "text",
@@ -6221,7 +6221,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Gestión de incidencias IT — Autotask, Webroot y Datto RMM",
-        "heroSubtitle": "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP",
+        "heroSubtitle": "Triaje de incidencias en producción en MIDRANGE GROUP: ticketing Autotask, acceso remoto Datto RMM y resolución de un falso positivo de Webroot.",
         "sections": [
           {
             "type": "text",
@@ -6382,7 +6382,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
+        "heroSubtitle": "Triage of 85 backup alerts across 105 protected devices at MIDRANGE GROUP: root causes (NAS, server, plan, network) and data-loss risk prioritisation.",
         "sections": [
           {
             "type": "text",
@@ -6568,7 +6568,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision des sauvegardes Cloud avec Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
+        "heroSubtitle": "Triage de 85 alertes de sauvegarde sur 105 postes protégés chez MIDRANGE GROUP : causes racines (NAS, serveur, plan, réseau) et priorisation du risque de perte de données.",
         "sections": [
           {
             "type": "text",
@@ -6754,7 +6754,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Supervisión de copias de seguridad en la nube con Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
+        "heroSubtitle": "Triaje de 85 alertas de copia de seguridad en 105 equipos protegidos en MIDRANGE GROUP: causas raíz (NAS, servidor, plan, red) y priorización del riesgo de pérdida de datos.",
         "sections": [
           {
             "type": "text",
@@ -6987,7 +6987,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Securing Internet Access with pfSense & Squid",
-        "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
+        "heroSubtitle": "A pfSense 2.6.0 gateway added to the Windows Server 2022 lab: Squid transparent proxy, SquidGuard filtering and LightSquid reports to secure the LAN's internet access.",
         "sections": [
           {
             "body": "Building on the virtualized lab (AD DS / DNS / DHCP / WDS on Windows Server 2022), I added a pfSense 2.6.0 firewall VM as the network gateway. Goal: secure outbound internet access for all LAN machines (192.168.100.0/24), filter web traffic through a Squid transparent proxy, and enforce access policies — replicating real-world enterprise perimeter security.",
@@ -7092,7 +7092,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Sécuriser les accès à Internet avec pfSense & Squid",
-        "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
+        "heroSubtitle": "Passerelle pfSense 2.6.0 ajoutée au lab Windows Server 2022 : proxy transparent Squid, filtrage SquidGuard et rapports LightSquid pour sécuriser les accès Internet du LAN.",
         "sections": [
           {
             "body": "En prolongement du lab virtualisé (AD DS / DNS / DHCP / WDS sur Windows Server 2022), j'ai ajouté une VM pfSense 2.6.0 pour jouer le rôle de passerelle réseau. Objectif : sécuriser les accès Internet sortants de toutes les machines du LAN privé (192.168.100.0/24), filtrer le trafic web via un proxy transparent Squid et appliquer des politiques d'accès — reproduisant la sécurité périmétrique d'une infrastructure d'entreprise réelle.",
@@ -7197,7 +7197,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Asegurar el acceso a Internet con pfSense y Squid",
-        "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
+        "heroSubtitle": "Pasarela pfSense 2.6.0 añadida al laboratorio Windows Server 2022: proxy transparente Squid, filtrado SquidGuard e informes LightSquid para asegurar el acceso a Internet de la LAN.",
         "sections": [
           {
             "body": "En continuidad con el laboratorio virtualizado (AD DS / DNS / DHCP / WDS en Windows Server 2022), añadí una VM pfSense 2.6.0 como firewall para actuar de pasarela de red. Objetivo: asegurar el acceso saliente a Internet de todas las máquinas de la LAN privada (192.168.100.0/24), filtrar el tráfico web mediante un proxy transparente Squid y aplicar políticas de acceso — reproduciendo la seguridad perimetral de una infraestructura empresarial real.",
@@ -10546,11 +10546,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Lightning app delivery & backlog (Avenir Télécom)",
-        "heroSubtitle": "Creation of a Lightning application for Avenir Télécom: backlog, testing and CRM interface migration."
+        "heroSubtitle": "Implementation strategy for a field-facing Salesforce Lightning app delivered by a 3-person team: a 20-story costed product backlog, a test plan + Apex reference standard, then a 3-month pilot (simulated by the scenario) → Kanban evolutions backlog loop."
       },
       "fr": {
         "title": "Livraison d'application Lightning & backlog Agile (Avenir Télécom)",
-        "heroSubtitle": "Création d'une application Lightning pour Avenir Télécom : backlog, tests et migration de l'interface CRM."
+        "heroSubtitle": "Stratégie d'implémentation d'une app Salesforce Lightning terrain pour une équipe de 3 développeurs : backlog produit de 20 user stories chiffrées, cahier de tests + référentiel Apex, puis boucle pilote de 3 mois (simulée par le scénario) → backlog d'évolutions Kanban."
       },
       "es": {
         "title": "Entrega de app Lightning y backlog (Avenir Télécom)",
@@ -10763,11 +10763,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Apex backend development (iDEM Connect)",
-        "heroSubtitle": "Development of an Apex backend for iDEM Connect: trigger, service classes and batch scheduler."
+        "heroSubtitle": "A full Apex backend for iDEM Connect's sales force: trigger + handlers, monthly batch, scheduler — 3 business rules, end-to-end CRUD/FLS security, 23 tests, 90% org-wide coverage."
       },
       "fr": {
         "title": "Développement backend Apex (iDEM Connect)",
-        "heroSubtitle": "Développement d'un backend Apex pour iDEM Connect : trigger, classes de service et batch scheduler."
+        "heroSubtitle": "Backend Apex complet pour la force de vente d'iDEM Connect : trigger + handlers, batch mensuel, scheduler — 3 règles métier, sécurité CRUD/FLS de bout en bout, 23 tests, 90 % de couverture org-wide."
       },
       "es": {
         "title": "Desarrollo backend Apex (iDEM Connect)",
@@ -10905,11 +10905,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Delivery tracking CRM design (LTP)",
-        "heroSubtitle": "Design of an Apex backend prototype for LTP (luxury & fashion): data model, security, import strategy."
+        "heroSubtitle": "Complete architecture of a multi-carrier Salesforce delivery-tracking backend for a bridal couture house: UML data model, zone-based security model, 2.1M-account import strategy, real-time + batch integration — designed before the first line of code."
       },
       "fr": {
         "title": "Conception CRM de suivi de livraison (LTP)",
-        "heroSubtitle": "Conception d'un prototype backend Apex pour LTP (luxe & mode) : modèle de données, sécurité, stratégie d'import."
+        "heroSubtitle": "Architecture complète d'un backend Salesforce de suivi de livraison multi-transporteurs pour une maison de couture nuptiale : modèle de données UML, modèle de sécurité par zone, stratégie d'import 2,1 M de comptes, intégration temps réel + batch — conçue avant la première ligne de code."
       },
       "es": {
         "title": "Diseño de CRM de seguimiento de entregas (LTP)",
@@ -11051,15 +11051,15 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Salesforce deployment with Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Salesforce deployment and integration for LEGARANT-AXG: REST API, Heroku synchronization and a staging → production release procedure."
+        "heroSubtitle": "Integrate AXG into Legarant's Salesforce CRM and deliver the integration layer for a mobile app — Apex REST API, Heroku Connect sync, traceable go-live."
       },
       "fr": {
         "title": "Déploiement Salesforce avec Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Déploiement et intégration Salesforce pour LEGARANT-AXG : API REST, synchronisation Heroku et procédure de mise en production staging → production."
+        "heroSubtitle": "Intégrer AXG dans le CRM Salesforce de Legarant et livrer la couche d'intégration d'une application mobile — API REST Apex, synchronisation Heroku Connect, mise en production tracée."
       },
       "es": {
         "title": "Despliegue de Salesforce con Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Integrar AXG en Salesforce (Legarant) y entregar una capa de integración lista para una app móvil (REST + Heroku)."
+        "heroSubtitle": "Integrar AXG en el CRM Salesforce de Legarant y entregar la capa de integración de una aplicación móvil — API REST Apex, sincronización con Heroku Connect, puesta en producción trazable."
       }
     }
   },

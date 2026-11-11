@@ -19,10 +19,10 @@ export async function generateMetadata({
     ? "Política de privacidad — Aïcha Imène DAHOUMANE"
     : "Privacy policy — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Données collectées, cookies, durée de conservation et vos droits RGPD."
+    ? "Politique de confidentialité du portfolio : données collectées par le formulaire de contact, cookies, durées de conservation et vos droits RGPD."
     : isEs
-    ? "Datos recopilados, cookies, plazo de conservación y sus derechos RGPD."
-    : "Data collected, cookies, retention period, and your GDPR rights.";
+    ? "Política de privacidad del portafolio: datos recogidos por el formulario de contacto, cookies, plazos de conservación y tus derechos RGPD."
+    : "Portfolio privacy policy: data collected through the contact form, cookies, retention periods and your GDPR rights.";
   return {
     title,
     description,

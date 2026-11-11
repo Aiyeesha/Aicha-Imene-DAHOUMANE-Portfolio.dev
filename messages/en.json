@@ -25,7 +25,7 @@
     "avatar_alt": "Profile photo of Aïcha Imène DAHOUMANE, Salesforce & Infrastructure Developer",
     "title_salesforce": "Salesforce & Infrastructure Developer",
     "subtitle_salesforce": "From the CRM to the servers, networks and pipelines around it.",
-    "title_itops": "Salesforce & Infrastructure Developer",
+    "title_itops": "Systems & IT Ops Engineer",
     "subtitle_itops": "From workstations and servers to networks and pipelines — all the way to the Salesforce CRM they run.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
     "value_itops": "Infrastructure · Automation · CI/CD — built to scale.",
@@ -291,9 +291,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps | Île-de-France",
-    "description": "Salesforce · Systems & Networks · DevOps (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Interviews now, available from December 2026. Permanent, fixed-term, temp or umbrella — any industry.",
+    "description": "Salesforce · Systems & Networks · DevOps in Île-de-France. Interviews now, available from December 2026 — permanent, fixed-term, temp or umbrella.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Île-de-France",
-    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, automation, CI/CD, Salesforce. Interviews now, available from December 2026. Permanent, fixed-term, temp or umbrella — any industry."
+    "descriptionItops": "Systems & IT Ops Engineer in Île-de-France: infrastructure, automation, CI/CD. Interviews now, available from December 2026."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -311,8 +311,8 @@
     "tickets": "IT tickets handled",
     "alerts": "Backup alerts triaged",
     "deployments": "Workstations deployed",
-    "periodSalesforce": "LD Digitales — October 2023 to present",
-    "periodItops": "Two one-month internships at Midrange Group — between February and May 2023"
+    "periodSalesforce": "LD Digitales — Oct 2023 to Nov 2026",
+    "periodItops": "Two one-month internships at MIDRANGE GROUP — between February and May 2023"
   },
   "services": {
     "discuss": "Discuss this for a role",
@@ -427,7 +427,7 @@
     "transfersTitle": "Transfers outside the European Union",
     "legalBasisCookie": "Functional \"track\" cookie: it only remembers the profile you chose to display; being strictly necessary for the service you request, it is exempt from consent (Article 82 of the French Data Protection Act).",
     "legalBasisSecurity": "Rate limiting (pseudonymised IP address, kept for a few minutes) and hosting technical logs: legitimate interest in securing the site and preventing abuse (Article 6(1)(f)).",
-    "legalBasisTestimonial": "Testimonial form: your consent (Article 6(1)(a)), which you may withdraw at any time; the testimonial is then removed from the site.",
+    "legalBasisTestimonial": "Testimonial form: your consent (Article 6(1)(a)), which you may withdraw at any time; the testimonial, if it has been published, is then removed from the site.",
     "legalBasisContact": "Contact form: legitimate interest in answering the requests sent to me (Article 6(1)(f) GDPR); when the exchange concerns recruitment, steps taken at your request prior to entering into a contract (Article 6(1)(b)).",
     "legalBasisTitle": "Legal bases for processing",
     "lastUpdated": "October 31, 2026",
@@ -439,7 +439,7 @@
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & administrator, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène DAHOUMANE (Salesforce · Systems & Networks · DevOps), as a personal portfolio. Publication director: Aïcha Imène DAHOUMANE. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
@@ -455,7 +455,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a start date from December 2026. I'm a full-time (permanent) Salesforce Developer at LD Digitales; my contract ends on November 30, 2026."
+        "a": "I'm available for interviews right away, with a start date from December 2026. I leave my Salesforce Developer role at LD Digitales (apprenticeship, then permanent contract, since October 2023) on November 30, 2026."
       },
       {
         "q": "What contract types are you looking for?",
@@ -512,7 +512,7 @@
   },
   "hybrid": {
     "metaTitle": "Hybrid Salesforce + Infrastructure profile — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Three concrete cases where solving the problem requires the combination of Salesforce + infrastructure — not their juxtaposition. Heroku↔Salesforce data migration, DevOps discipline applied to Apex releases, integration access control designed on the Salesforce side.",
+    "metaDescription": "Three cases where Salesforce and infrastructure must combine: Heroku↔Salesforce data migration, DevOps for Apex releases, access control for an integration.",
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Hybrid profile",
     "h1": "Where Salesforce and infrastructure are one head, not two",
