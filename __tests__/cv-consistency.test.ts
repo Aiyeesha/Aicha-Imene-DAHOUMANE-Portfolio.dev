@@ -2,8 +2,8 @@
 // The CVs in public/cv/*.html (sources of the PDFs, see
 // scripts/content/generate-cv-pdf.mjs) are hand-written HTML: nothing ties
 // them to the site. This test fails when a fact a recruiter can compare
-// drifts between the two: contract types, end of the work-study contract,
-// and how the workstation deployment is described.
+// drifts between the two: the contract sought, end of the work-study
+// contract, and how the workstation deployment is described.
 //
 // After changing a CV's HTML, regenerate the PDFs with `npm run content:cv`.
 
@@ -26,6 +26,16 @@ const WORK_STUDY_PERIOD: Record<Locale, { classic: string; ats: string }> = {
   es: { classic: "Oct. 2023 — Sept. 2025", ats: "Octubre 2023 a Septiembre 2025" },
 };
 
+// Contract sought, as written in the CV header (classic) and on the ATS
+// availability line. The CVs target a permanent contract only, while the site
+// (availModal.contractValues) may list more types: the CVs must not drift back
+// to that broader list.
+const CONTRACT_SOUGHT: Record<Locale, { classic: string; ats: string }> = {
+  fr: { classic: "<span>Recherche un CDI</span>", ats: "décembre 2026 — recherche un CDI" },
+  en: { classic: "<span>Seeking a permanent role</span>", ats: "December 2026 — seeking a permanent role" },
+  es: { classic: "<span>Busco un contrato indefinido</span>", ats: "diciembre de 2026 — busco un contrato indefinido" },
+};
+
 /** CV files of a locale, split by layout (classic one-pager / ATS). */
 function cvFiles(locale: Locale) {
   const all = fs.readdirSync(CV_DIR).filter((f) => f.includes(`-CV-${locale}-`) && f.endsWith(".html"));
@@ -41,18 +51,27 @@ describe("CV / site consistency", () => {
   for (const locale of Object.keys(MESSAGES) as Locale[]) {
     const { classic, ats } = cvFiles(locale);
     // Site wording of the contract types, e.g. "CDI · CDD · Intérim · Portage salarial"
-    const contracts = MESSAGES[locale].availModal.contractValues;
+    const siteContracts = MESSAGES[locale].availModal.contractValues;
 
     it(`${locale}: 3 classic and 3 ATS CVs are checked`, () => {
       expect(classic).toHaveLength(3);
       expect(ats).toHaveLength(3);
     });
 
-    it(`${locale}: contract types match the site`, () => {
-      for (const f of classic) expect({ f, ok: read(f).includes(contracts) }).toEqual({ f, ok: true });
-      // ATS CVs list the same types, comma-separated
-      const commaList = contracts.split(" · ").join(", ");
-      for (const f of ats) expect({ f, ok: read(f).includes(commaList) }).toEqual({ f, ok: true });
+    it(`${locale}: CVs state the permanent contract sought`, () => {
+      for (const f of classic) {
+        expect({ f, ok: read(f).includes(CONTRACT_SOUGHT[locale].classic) }).toEqual({ f, ok: true });
+      }
+      for (const f of ats) {
+        expect({ f, ok: read(f).includes(CONTRACT_SOUGHT[locale].ats) }).toEqual({ f, ok: true });
+      }
+      // ...and no longer list the site's broader set of contract types
+      // (dotted in the classic layout, comma-separated on the ATS one).
+      const lists = [siteContracts, siteContracts.split(" · ").join(", ")];
+      for (const f of [...classic, ...ats]) {
+        expect({ f, stale: lists.some((l) => l.includes(" · ") || l.includes(", ") ? read(f).includes(l) : false) })
+          .toEqual({ f, stale: false });
+      }
     });
 
     it(`${locale}: work-study period ends in September 2025`, () => {
