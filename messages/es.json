@@ -201,7 +201,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog y tutoriales — Aïcha Imène DAHOUMANE",
-      "description": "Tutoriales de Salesforce, IT Ops y desarrollo web — guías paso a paso, implementaciones concretas y experiencia real de una desarrolladora Salesforce."
+      "description": "Tutoriales de Salesforce, administración de sistemas y redes, y DevOps — guías paso a paso, implementaciones concretas y experiencia real de una desarrolladora Salesforce."
     },
     "kicker": "Blog y tutoriales",
     "title": "Artículos",
@@ -257,7 +257,7 @@
   "blogTags": {
     "meta": {
       "title": "Blog — Etiquetas | Aïcha Imène DAHOUMANE",
-      "description": "Explora todos los temas del blog — Salesforce, IT Ops, desarrollo web y más. Filtra los artículos por etiqueta."
+      "description": "Explora todos los temas del blog — Salesforce, IT Ops, seguridad, DevOps y más. Filtra los artículos por etiqueta."
     },
     "kicker": "Temas",
     "title": "Todas las etiquetas",
