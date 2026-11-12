@@ -40,6 +40,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Titre des CV Salesforce** — « Administratrice & Développeuse Salesforce » (EN « Salesforce Administrator & Developer », ES « Administradora & Desarrolladora Salesforce ») sur les 6 CV Salesforce, standard et ATS ; PDF régénérés.
 - **CV : recherche d'un CDI** — Les 18 CV (FR/EN/ES, standard et ATS) indiquent « Recherche un CDI » / « Seeking a permanent role » / « Busco un contrato indefinido » au lieu de « CDI · CDD · Intérim · Portage salarial », et la ligne de mobilité devient « Paris / Île-de-France, PACA ou international · Hybride ou sur site » (EN/ES équivalents) ; PDF régénérés, nombre de pages inchangé.
 - **Mobilité sans notion de priorité (site)** — Popup de disponibilité, page « À propos », FAQ et page « Me recruter », JSON-LD : « Paris / Île-de-France, PACA ou relocalisation internationale » remplace « priorité Paris / Île-de-France, puis relocalisation internationale » (FR/EN/ES), aligné sur les CV.
 - **Titre principal du parcours IT Ops** — En mode IT Ops, le h1 du hero affiche désormais « Ingénieure Systèmes & IT Ops » (EN « Systems & IT Ops Engineer », ES « Ingeniera de Sistemas & IT Ops »), aligné sur le titre d'onglet ; il était identique au mode Salesforce.
