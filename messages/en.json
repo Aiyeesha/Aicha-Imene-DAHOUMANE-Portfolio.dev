@@ -201,7 +201,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog & Tutorials — Aïcha Imène DAHOUMANE",
-      "description": "Salesforce, IT Ops and web development tutorials — step-by-step guides, concrete implementations and real-world experience from a Salesforce developer."
+      "description": "Salesforce, systems & network administration and DevOps tutorials — step-by-step guides, concrete implementations and real-world experience from a Salesforce developer."
     },
     "kicker": "Blog & tutorials",
     "title": "Posts",
@@ -257,7 +257,7 @@
   "blogTags": {
     "meta": {
       "title": "Blog — Tags | Aïcha Imène DAHOUMANE",
-      "description": "Browse all blog topics — Salesforce, IT Ops, web development and more. Filter articles by tag."
+      "description": "Browse all blog topics — Salesforce, IT Ops, security, DevOps and more. Filter articles by tag."
     },
     "kicker": "Topics",
     "title": "All tags",
