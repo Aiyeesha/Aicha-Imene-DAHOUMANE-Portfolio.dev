@@ -373,7 +373,7 @@
     "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026 — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE Group y en formación, siguen plenamente aplicables en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — prioridad París / Île-de-France y, después, traslado internacional · Híbrido · Presencial",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — París / Île-de-France, PACA o traslado internacional · Híbrido · Presencial",
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1 comprensión oral, B2 lectura), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
@@ -471,7 +471,7 @@
       },
       {
         "q": "¿Dónde estás ubicada? ¿Qué modalidad de trabajo?",
-        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Mi prioridad es París y la región de Île-de-France, y también estoy abierta a la reubicación internacional. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
+        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Busco en París y la región de Île-de-France, la región PACA (Provenza-Alpes-Costa Azul) o una reubicación internacional. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
       },
       {
         "q": "¿Qué pasa después de contactarme?",
@@ -500,14 +500,14 @@
     "workMode": "Modalidades de trabajo",
     "workModeValues": "Híbrido · Presencial",
     "mobility": "Movilidad",
-    "mobilityValues": "Prioridad París / Île-de-France y, después, traslado internacional",
+    "mobilityValues": "París / Île-de-France, PACA o traslado internacional",
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
     "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "location": "Ubicación",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France · Abierta a la reubicación internacional",
+    "locationValues": "Val-d'Oise (95), Île-de-France · París / Île-de-France, PACA · Abierta a la reubicación internacional",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
