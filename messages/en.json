@@ -373,7 +373,7 @@
     "p4_itops": "Full-time Salesforce Developer at LD Digitales until November 30, 2026 — my IT Ops & DevOps skills, built during my internships at MIDRANGE Group and in training, remain fully transferable in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — priority Paris / Île-de-France, then international relocation · Hybrid · On-site",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, PACA or international relocation · Hybrid · On-site",
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1 listening, B2 reading), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
@@ -471,7 +471,7 @@
       },
       {
         "q": "Where are you based? Which work mode?",
-        "a": "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, and I'm also open to international relocation. I work on-site or hybrid; I'm not looking for fully remote roles."
+        "a": "I'm based in Val-d'Oise (95), Île-de-France. I'm looking at Paris and the Île-de-France region, the PACA region (Provence-Alpes-Côte d'Azur) or international relocation. I work on-site or hybrid; I'm not looking for fully remote roles."
       },
       {
         "q": "What happens after you're contacted?",
@@ -500,14 +500,14 @@
     "workMode": "Work modes",
     "workModeValues": "Hybrid · On-site",
     "mobility": "Mobility",
-    "mobilityValues": "Priority Paris / Île-de-France, then international relocation",
+    "mobilityValues": "Paris / Île-de-France, PACA or international relocation",
     "sector": "Industries",
     "sectorValues": "Any industry",
     "roles": "Target roles",
     "rolesValuesSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
     "rolesValuesItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
     "location": "Location",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France · Open to international relocation",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, PACA · Open to international relocation",
     "cta": "Get in touch →"
   },
   "hybrid": {
