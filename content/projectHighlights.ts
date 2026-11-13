@@ -204,18 +204,16 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
   },
   "vulnerability-assessment-report": {
     "fr": [
-      "Système de contrôles modulaires : scans réseau, configuration système et applications web",
-      "Calcul automatique du score de base CVSS v3.1 pour chaque constat",
-      "Résultats classés par risque : critique, élevé, moyen, faible, informatif",
-      "Rapport HTML autonome avec CSS intégré, sans aucune dépendance externe",
-      "Export JSON compatible avec les plateformes SIEM et de ticketing"
+      "Autorisation écrite et périmètre vérifiés avant tout import ou connexion, avec protection contre le DNS rebinding",
+      "CVSS 4.0 et 3.1 calculés depuis le vecteur, validés sur 30 000 vecteurs et tout l'espace 3.1",
+      "Priorisation P1–P4 selon la gravité, l'exposition et le catalogue KEV de la CISA, avec échéances",
+      "Rapport HTML autonome sous CSP stricte, export JSON et interface web avec export CSV du plan"
     ],
     "es": [
-      "Sistema de comprobaciones modulares: análisis de red, de configuración del sistema y de aplicaciones web",
-      "Cálculo automático de la puntuación base CVSS v3.1 para cada hallazgo",
-      "Resultados ordenados por riesgo: crítico, alto, medio, bajo, informativo",
-      "Informe HTML autónomo con CSS integrado, sin dependencias externas",
-      "Exportación JSON compatible con plataformas SIEM y de ticketing"
+      "Autorización escrita y alcance verificados antes de cualquier importación o conexión, con protección contra DNS rebinding",
+      "CVSS 4.0 y 3.1 calculados desde el vector, validados con 30 000 vectores y todo el espacio 3.1",
+      "Priorización P1–P4 según la gravedad, la exposición y el catálogo KEV de la CISA, con plazos",
+      "Informe HTML autónomo con CSP estricta, exportación JSON e interfaz web con exportación CSV del plan"
     ]
   },
   "incident-response-tracker": {
