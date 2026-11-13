@@ -93,15 +93,17 @@ export default async function CodeBlockServer({
 
       {/* shiki attributes are passed through so its CSS variables apply.
           Wide code scrolls horizontally: tabIndex={0} makes it reachable and
-          scrollable from the keyboard (WCAG 2.1.1), role="region" +
+          scrollable from the keyboard (WCAG 2.1.1), role="group" +
           aria-label name it (aria-label is not allowed on a bare <pre>).
+          "group" rather than "region": every code block would otherwise be
+          a landmark, often with the same name (axe: landmark-unique).
           {...rest} comes first so rehype-pretty-code cannot override these. */}
       <pre
         className="mdx-code__pre soft-ring"
         data-language={dataLanguage}
         {...rest}
         tabIndex={0}
-        role="region"
+        role="group"
         aria-label={regionLabel}
       >
         {children}

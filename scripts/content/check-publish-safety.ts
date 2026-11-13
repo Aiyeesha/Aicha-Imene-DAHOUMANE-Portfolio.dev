@@ -2,12 +2,13 @@
  * Pre-publish safety check on content/ (projects are served from the
  * repository since Supabase was retired).
  *
- * Two rules, implemented in lib/contentChecks.ts and also enforced by
- * __tests__/content-checks.test.ts on every pull request:
+ * Three rules, also enforced by Jest on every pull request:
  *   1. SaaS embargo: the author's own SaaS products are neither published nor
- *      given a live URL before 2027;
+ *      given a live URL before 2027 (lib/contentChecks.ts);
  *   2. locale parity: a published project has a title in en, fr and es,
- *      otherwise the FR or ES site silently diverges.
+ *      otherwise the FR or ES site silently diverges (lib/contentChecks.ts);
+ *   3. retired terms: nothing removed on purpose comes back in messages,
+ *      content, components or pages (lib/retiredTerms.ts).
  *
  * Read-only, needs no secret. The former version, which read the Supabase
  * `projects` table, is kept in scripts/archive/check-publish-safety-supabase.ts.
@@ -22,6 +23,7 @@ import {
   localeParityGaps,
   saasEmbargoViolations,
 } from "../../lib/contentChecks";
+import { RETIRED_TERMS, retiredTermHits } from "../../lib/retiredTerms";
 
 let failed = false;
 
@@ -41,6 +43,15 @@ if (parity.length > 0) {
   for (const v of parity) console.error(`  - ${v.slug}: missing [${v.missing.join(", ")}]`);
 } else {
   console.log("✓ Locale parity: every published project covers en/fr/es.");
+}
+
+const retired = retiredTermHits();
+if (retired.length > 0) {
+  failed = true;
+  console.error("\n✗ Retired term found (see lib/retiredTerms.ts for the reason):");
+  for (const h of retired) console.error(`  - ${h.file}:${h.line} « ${h.term} » → ${h.text}`);
+} else {
+  console.log(`✓ Retired terms: none found (${RETIRED_TERMS.length} checked).`);
 }
 
 if (failed) {

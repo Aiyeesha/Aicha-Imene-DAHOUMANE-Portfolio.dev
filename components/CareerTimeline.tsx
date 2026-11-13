@@ -22,8 +22,9 @@ type Milestone = {
   type: MilestoneType;
   /** Job or programme title */
   title: { en: string; fr: string; es: string };
-  /** Organisation / company */
-  org: string;
+  /** Organisation / company, optionally per locale (when it carries words
+   *  that need translating, not just a proper noun). */
+  org: string | { en: string; fr: string; es: string };
   /** Short description */
   description: { en: string; fr: string; es: string };
   /** Skill or diploma tags */
@@ -62,7 +63,11 @@ const MILESTONES: Milestone[] = [
       fr: "Technicienne Assistance Informatique (stage)",
       es: "Técnica de Asistencia Informática (prácticas)",
     },
-    org: "Global Info — Back Market partner",
+    org: {
+      en: "Global Info — Back Market partner",
+      fr: "Global Info — partenaire Back Market",
+      es: "Global Info — socio de Back Market",
+    },
     description: {
       en: "End-of-training internship (TAI). Hardware and software support, IT asset management.",
       fr: "Stage de fin de formation TAI. Support matériel et logiciel, gestion de parc informatique.",
@@ -245,6 +250,12 @@ function TimelineItem({
       ? milestone.period
       : isFr ? milestone.period.fr : isEs ? milestone.period.es : milestone.period.en;
 
+  // Localised organisation (same rule as the period).
+  const orgLabel =
+    typeof milestone.org === "string"
+      ? milestone.org
+      : isFr ? milestone.org.fr : isEs ? milestone.org.es : milestone.org.en;
+
   return (
     <li ref={ref} className="flex gap-4 md:gap-6">
 
@@ -314,7 +325,7 @@ function TimelineItem({
             <h3 className="text-sm font-semibold leading-snug">
               {isFr ? milestone.title.fr : isEs ? milestone.title.es : milestone.title.en}
             </h3>
-            <p className="mt-0.5 text-xs font-medium text-muted-2">{milestone.org}</p>
+            <p className="mt-0.5 text-xs font-medium text-muted-2">{orgLabel}</p>
           </div>
 
           {/* Organisation logos */}

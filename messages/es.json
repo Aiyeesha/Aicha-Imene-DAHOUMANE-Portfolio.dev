@@ -290,9 +290,9 @@
     "salesforce": "Salesforce"
   },
   "metadata": {
-    "title": "Aïcha Imène DAHOUMANE — Salesforce · Sistemas y Redes · DevOps | Île-de-France",
+    "title": "Aïcha Imène DAHOUMANE — Salesforce · Sistemas y Redes · DevOps",
     "description": "Salesforce · Sistemas y Redes · DevOps en Île-de-France. Entrevistas desde ya, disponible a partir de diciembre de 2026 — indefinido, temporal, ETT o portage.",
-    "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Île-de-France",
+    "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops",
     "descriptionItops": "Ingeniera de Sistemas & IT Ops en Île-de-France: infraestructura, automatización, CI/CD. Entrevistas desde ya, disponible a partir de diciembre de 2026."
   },
   "testimonials": {
@@ -492,6 +492,8 @@
   },
   "availModal": {
     "badge": "Entrevistas desde ya — Disponible a partir de diciembre de 2026",
+    "badgeRoleSalesforce": "Administradora & Desarrolladora Salesforce",
+    "badgeRoleItops": "Administradora de Sistemas y Redes · Ingeniera DevOps",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
     "delayValue": "Entrevistas desde ya · Disponible a partir de diciembre de 2026",
@@ -499,15 +501,13 @@
     "contractValues": "Indefinido · Temporal · ETT · Portage salarial",
     "workMode": "Modalidades de trabajo",
     "workModeValues": "Híbrido · Presencial",
-    "mobility": "Movilidad",
-    "mobilityValues": "París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional",
+    "locationMobility": "Ubicación y movilidad",
+    "locationMobilityValues": "Con base en Val-d'Oise (95), Île-de-France · Movilidad: París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional",
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
     "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
-    "location": "Ubicación",
-    "locationValues": "Val-d'Oise (95), Île-de-France · París / Île-de-France, Provenza-Alpes-Costa Azul · Abierta a la reubicación internacional",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
