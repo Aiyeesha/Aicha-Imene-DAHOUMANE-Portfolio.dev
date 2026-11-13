@@ -376,7 +376,9 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                   badge ("Projet de formation — Titre RNCP 6") squeezed the title onto
                   3–4 lines. */}
               <div className="flex flex-col items-start gap-2">
-                <h3 className="min-w-0 text-lg font-semibold break-words">{p.title}</h3>
+                {/* h2: the cards sit directly under the /projects page's h1
+                    (an h3 skipped a level, axe: heading-order). Same look. */}
+                <h2 className="min-w-0 text-lg font-semibold break-words">{p.title}</h2>
                 {p.badge ? (
                   <span className={getBadgeClass(p.badge.tone)}>{tBadge(p.badge.label, locale)}</span>
                 ) : null}

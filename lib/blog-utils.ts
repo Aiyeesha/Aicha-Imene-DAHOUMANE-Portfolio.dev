@@ -76,6 +76,8 @@ const TAG_ES: Record<string, string> = {
   "Lessons learned":  "Retrospectiva",
   "Network":          "Red",
   "Support":          "Soporte",
+  // Same word in French, not in Spanish (shown on /es/blog/tags and feed-es.xml).
+  "Architecture":     "Arquitectura",
 };
 
 /** Translate a tag to the target locale (passthrough for EN, maps known tags for FR/ES). */
