@@ -9,6 +9,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { errorRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
+import { isAllowedOrigin } from "@/lib/contactValidation";
 
 // ── Client payload type ───────────────────────────────────────────────────────
 type ErrorReport = {
@@ -45,6 +46,12 @@ function isValidReport(body: unknown): body is ErrorReport {
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // ── Same-origin only ─────────────────────────────────────────────────────
+  // Reports come from GlobalErrorHandler (sendBeacon / fetch keepalive), which
+  // always sends this site's Origin. A script without it cannot flood the
+  // logs with fake "client-error" entries.
+  if (!isAllowedOrigin(req)) return new NextResponse(null, { status: 403 });
+
   // ── Rate-limit ───────────────────────────────────────────────────────────
   const ip =
     req.headers.get("x-real-ip") ??

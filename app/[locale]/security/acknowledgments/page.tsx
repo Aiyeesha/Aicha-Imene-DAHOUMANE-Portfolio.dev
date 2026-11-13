@@ -29,7 +29,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         en: `${siteUrl}/en/security/acknowledgments`,
         fr: `${siteUrl}/fr/security/acknowledgments`,
         es: `${siteUrl}/es/security/acknowledgments`,
+        "x-default": `${siteUrl}/en/security/acknowledgments`,
       },
+    },
+    // Same Open Graph shape as the other pages (og:locale and the localised
+    // share image were missing).
+    openGraph: {
+      title,
+      url: `${siteUrl}/${locale}/security/acknowledgments`,
+      type: "website",
+      locale: isFr ? "fr_FR" : isEs ? "es_ES" : "en_US",
+      alternateLocale: isFr ? ["en_US", "es_ES"] : isEs ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      images: [{ url: `${siteUrl}/${locale}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
   };
 }

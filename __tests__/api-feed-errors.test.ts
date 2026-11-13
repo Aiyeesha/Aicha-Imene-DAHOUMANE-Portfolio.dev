@@ -37,16 +37,22 @@ describe("GET /feed/[tag]", () => {
 });
 
 describe("POST /api/errors", () => {
-  const post = (body: unknown) =>
+  // The browser always sends this site's Origin (sendBeacon / fetch keepalive).
+  const post = (body: unknown, origin: string | null = "http://localhost") =>
     reportError(new NextRequest("http://localhost/api/errors", {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", host: "localhost", ...(origin ? { origin } : {}) },
       body: JSON.stringify(body),
     }));
   const base = { type: "uncaught", message: "boom" };
 
   it("accepte un rapport dans les limites du client", async () => {
     expect((await post({ ...base, stack: "s".repeat(1500), url: "u".repeat(300), line: 1 })).status).toBe(202);
+  });
+
+  it("refuse un rapport sans Origin du site (403)", async () => {
+    expect((await post(base, null)).status).toBe(403);
+    expect((await post(base, "https://evil.example")).status).toBe(403);
   });
 
   it("refuse une pile ou une URL trop longue", async () => {

@@ -19,7 +19,8 @@ export const revalidate = 300;
 function safeHref(url: string | null | undefined): string | null {
   if (!url) return null;
   const trimmed = url.trim();
-  if (/^(https?:\/\/|\/)/i.test(trimmed)) return trimmed;
+  // "/path" allowed, protocol-relative "//host" refused (would leave the site).
+  if (/^(https?:\/\/|\/(?!\/))/i.test(trimmed)) return trimmed;
   return null;
 }
 
@@ -50,7 +51,7 @@ const sectionAccent: Record<string, string> = {
   code:      "bg-slate-500",
 };
 
-function renderSection(section: ProjectSection, idx: number) {
+function renderSection(section: ProjectSection, idx: number, locale: string) {
   const accent = sectionAccent[section.type] ?? "bg-cyan-500";
 
   const wrapper = (children: React.ReactNode) => (
@@ -180,7 +181,7 @@ function renderSection(section: ProjectSection, idx: number) {
           {dlUrl ? (
             <a href={dlUrl} className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted underline underline-offset-4 hover:opacity-70 transition-opacity"
               target="_blank" rel="noreferrer">
-              ↓ Télécharger
+              ↓ {locale === "fr" ? "Télécharger" : locale === "es" ? "Descargar" : "Download"}
             </a>
           ) : null}
         </>
@@ -296,7 +297,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     inLanguage: locale,
     author: {
       "@type": "Person",
-      name: "Aïcha Imène Dahoumane",
+      name: "Aïcha Imène DAHOUMANE",
       url: `${siteUrl}/${locale}/about`,
     },
     ...(projectCoverUrl && { image: projectCoverUrl }),
@@ -339,7 +340,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   return (
     // <article>, not <main>: the [locale] layout already renders
     // <main id="main">, and a project page is standalone content.
-    <article className="py-10 md:py-16">
+    // overflow-wrap: anywhere (inherited) lets long unbroken strings
+    // (method names, hostnames) wrap inside flex/grid cells instead of
+    // widening the page on mobile; <pre> blocks keep their own scroll.
+    <article className="py-10 md:py-16 [overflow-wrap:anywhere]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdStringify(breadcrumbSchema) }}
@@ -449,7 +453,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 <MdxBody />
               </div>
             ) : (
-              sections.map((section, idx) => renderSection(section, idx))
+              sections.map((section, idx) => renderSection(section, idx, locale))
             )}
 
             {/* Gallery viewer — remaining screenshots */}

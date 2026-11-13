@@ -42,7 +42,7 @@ export default async function IncidentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
+  // Auth guard before any Redis read; see lib/security/adminAuth.ts for
   // why it runs in each page as well as in the layout.
   await assertAdminOrNotFound();
 

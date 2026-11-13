@@ -2,7 +2,7 @@
 title: "PfSense + Squid : accès internet sécurisé avec filtrage de contenu"
 excerpt: "Comment configurer PfSense comme pare-feu périmétrique avec Squid en proxy transparent — inspection HTTPS, ACL et filtrage SquidGuard."
 date: "2025-08-04"
-tags: ["IT Ops", "PfSense", "Réseau", "Sécurité", "Pare-feu", "Proxy"]
+tags: ["IT Ops", "PfSense", "Network", "Security", "Firewall", "Proxy"]
 projects: ["it-ops-network-security"]
 ---
 
@@ -27,7 +27,8 @@ Squid fonctionne en **proxy transparent** sur le port 3128 — les clients n'ont
 
 ### Interfaces
 
-Après installation :
+Après installation, configurez les interfaces :
+
 ```
 WAN : DHCP ou IP statique fournie par l'opérateur
 LAN : 192.168.1.1/24 (statique)
@@ -42,13 +43,19 @@ Naviguez vers **Interfaces → WAN** et **Interfaces → LAN** pour définir les
 | Protocole | Source | Destination | Port | Action | Description |
 |-----------|--------|-------------|------|--------|-------------|
 | TCP | Réseau LAN | tout | 80, 443 | Autoriser | HTTP/HTTPS via Squid |
+| TCP | Réseau LAN | tout | 25, 465, 587 | Autoriser | Email (si nécessaire) |
 | UDP | Réseau LAN | tout | 53 | Autoriser | DNS |
-| ICMP | Réseau LAN | tout | — | Autoriser | Ping |
+| ICMP | Réseau LAN | tout | — | Autoriser | Ping (optionnel) |
 | * | Réseau LAN | tout | * | Bloquer | Tout bloquer par défaut |
+
+```
+Pare-feu → Règles → LAN
+```
 
 **Bloquer les RFC 1918 sur WAN :**
 ```
 Pare-feu → Règles → WAN → Bloquer → Source : réseaux RFC 1918
+(empêche les paquets usurpant des IP privées depuis internet)
 ```
 
 ## Phase 2 : Installer et configurer Squid
@@ -73,8 +80,9 @@ Services → Serveur Proxy Squid → Général
 | Activer Squid | ✅ |
 | IP d'écoute | LAN |
 | Port proxy | 3128 |
-| Proxy HTTP transparent | ✅ |
-| Filtrage SSL Man In The Middle | ✅ |
+| Proxy HTTP transparent | ✅ (intercepte sans configuration côté client) |
+| Filtrage SSL Man In The Middle | ✅ (pour l'inspection HTTPS) |
+| Mode SSL/MITM | Splice All + Bump si nécessaire |
 | Certificat CA | Créer ou importer votre AC interne |
 
 ### Générer une AC interne pour l'inspection HTTPS
@@ -83,11 +91,12 @@ Services → Serveur Proxy Squid → Général
 Système → Gestionnaire de certificats → AC → Ajouter
 ```
 
+Créer une AC :
 - **Nom descriptif :** Squid-MITM-CA
 - **Méthode :** Créer une autorité de certification interne
 - **Longueur de clé :** 4096
 - **Algorithme de hachage :** SHA256
-- **Durée de vie :** 3650 jours
+- **Durée de vie :** 3650 jours (10 ans)
 
 **Distribuer ce certificat AC à toutes les machines clientes via GPO :**
 ```
@@ -140,6 +149,10 @@ Télécharger → Appliquer
 
 ### Définir les groupes ACL
 
+```
+Services → SquidGuard → ACL de groupes → Ajouter
+```
+
 **Exemple : Bloquer les réseaux sociaux pour tous les utilisateurs**
 ```
 Nom : TousUtilisateurs
@@ -184,9 +197,11 @@ Squid met en cache les objets web localement — réduit la bande passante et ac
 ```
 Services → Serveur Proxy Squid → Gestion du cache
 
-Taille du cache disque : 2000 Mo
+Taille du cache disque : 2000 Mo (à ajuster selon le disque)
 Emplacement du cache disque : /var/squid/cache
 Taille du cache mémoire : 256 Mo
+Taille minimale d'objet : 0 Ko
+Taille maximale d'objet : 4 Mo
 ```
 
 **Vérifier que le cache fonctionne :**
@@ -216,6 +231,33 @@ tail -f /var/squid/logs/access.log
 grep "192.168.1.100" /var/squid/logs/access.log | tail -50
 ```
 
+**Champs du format de journal :**
+```
+horodatage | durée | IP client | action/statut | taille | méthode | URL | pair | content-type
+```
+
+### Supervision via le tableau de bord PfSense
+
+Installez le paquet **Status Traffic Totals** pour superviser la bande passante :
+```
+Système → Gestionnaire de paquets → Status Traffic Totals → Installer
+```
+
+Ensuite : **État → Traffic Totals** affiche la consommation de bande passante par IP.
+
+### Alertes sur les événements de sécurité
+
+```
+État → Journaux système → Pare-feu
+```
+
+Configurez des alertes email :
+```
+Système → Avancé → Notifications
+Serveur SMTP : votre relais de messagerie
+Alerter sur les blocages pare-feu : ✅
+```
+
 ## Problèmes courants et solutions
 
 **Problème :** Les sites HTTPS affichent une erreur de certificat
@@ -236,7 +278,13 @@ Services → Squid → SSL/MITM → Splice (contournement) pour :
 **Problème :** SquidGuard ne bloque pas
 **Solution :** Activer SquidGuard dans `Services → SquidGuard → Général → Activer`. Appliquer les paramètres. La liste noire doit être téléchargée.
 
-## Checklist de sécurité
+**Problème :** CPU élevé sur PfSense
+**Solution :** Réduire le périmètre de l'inspection SSL. Contourner les téléchargements de gros fichiers (extensions `.iso`, `.exe`) :
+```
+Services → Squid → Général → Taille maximale de téléchargement : 100 Mo
+```
+
+## Checklist de durcissement sécurité
 
 - [ ] Squid écoute uniquement sur l'interface LAN (pas sur WAN)
 - [ ] Le certificat AC d'inspection HTTPS déployé sur tous les clients via GPO
@@ -247,6 +295,7 @@ Services → Squid → SSL/MITM → Splice (contournement) pour :
 - [ ] SSH désactivé sur PfSense (ou authentification par clé uniquement)
 - [ ] pfBlockerNG installé pour le blocage DNS des pubs/malwares
 - [ ] Politique par défaut : bloquer tout en entrée sur toutes les interfaces
+- [ ] Mises à jour automatiques planifiées (Système → Mise à jour → Mise à jour automatique)
 
 ## Conclusion
 

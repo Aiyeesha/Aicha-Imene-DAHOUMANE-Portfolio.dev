@@ -71,7 +71,7 @@ export default function SeriesBanner({ position, locale }: Props) {
               href={`/${locale}/blog/${prevSlug}`}
               className="flex flex-col gap-0.5 rounded-xl px-3 py-2 hover:bg-cyan-100/60 dark:hover:bg-cyan-900/30 transition-colors"
             >
-              <span className="text-xs text-cyan-600 dark:text-cyan-500">
+              <span className="text-xs text-cyan-700 dark:text-cyan-400">
                 ← {isFr ? "Précédent" : isEs ? "Anterior" : "Previous"}
               </span>
               <span className="font-medium text-cyan-900 dark:text-cyan-200 line-clamp-2 leading-snug">
@@ -88,7 +88,7 @@ export default function SeriesBanner({ position, locale }: Props) {
               href={`/${locale}/blog/${nextSlug}`}
               className="flex flex-col gap-0.5 rounded-xl px-3 py-2 text-right hover:bg-cyan-100/60 dark:hover:bg-cyan-900/30 transition-colors"
             >
-              <span className="text-xs text-cyan-600 dark:text-cyan-500">
+              <span className="text-xs text-cyan-700 dark:text-cyan-400">
                 {isFr ? "Suivant" : isEs ? "Siguiente" : "Next"} →
               </span>
               <span className="font-medium text-cyan-900 dark:text-cyan-200 line-clamp-2 leading-snug">

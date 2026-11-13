@@ -2,8 +2,25 @@ import { unstable_rethrow } from "next/navigation";
 import { redis } from "@/lib/redis";
 
 /**
+ * Key for cached *content* (projects, About page): prefixed with the Vercel
+ * environment and the deployment's commit, so that
+ *   - a preview deployment never writes content that production then serves
+ *     (both may share the same Upstash database);
+ *   - a new deployment never serves the previous deployment's content or
+ *     object shape for up to the TTL.
+ * Uptime keys are not prefixed: the cron job writes and purges them directly.
+ */
+export function contentCacheKey(key: string): string {
+  const env = process.env.VERCEL_ENV ?? "local";
+  const sha = (process.env.VERCEL_GIT_COMMIT_SHA ?? "dev").slice(0, 7);
+  return `content:${env}:${sha}:${key}`;
+}
+
+/**
  * Redis cache wrapper.
  * Falls back to no-cache mode if Redis is not configured.
+ * A null/undefined result is returned but never stored: caching "not found"
+ * let any invented URL create a key and cost a GET + SET on every request.
  */
 export async function cacheGetOrSet<T>(
   key: string,
@@ -23,7 +40,9 @@ export async function cacheGetOrSet<T>(
 
     if (process.env.NODE_ENV === "development") console.log("[CACHE MISS]", key);
     const fresh = await fetcher();
-    await redis.set(key, fresh, { ex: ttlSeconds }).catch(() => {});
+    if (fresh !== null && fresh !== undefined) {
+      await redis.set(key, fresh, { ex: ttlSeconds }).catch(() => {});
+    }
     return fresh;
   } catch (err) {
     // Next.js throws internal control-flow signals (DynamicServerError, redirect,

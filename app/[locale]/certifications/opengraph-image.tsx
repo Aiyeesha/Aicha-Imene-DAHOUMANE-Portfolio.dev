@@ -4,6 +4,7 @@
 
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { SCHEDULED_EXAMS, isExamPast } from "@/content/certifications";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -21,12 +22,14 @@ export default async function Image({ params }: Props) {
 
   const title    = isFr ? "Certifications & Diplômes"  : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas";
   // The Salesforce certifications are not obtained yet: the share image must
-  // say "exam scheduled" unambiguously.
+  // say "exam scheduled" unambiguously, then "exams taken" (result pending)
+  // once the last booked exam day is over.
+  const examsTaken = isExamPast(SCHEDULED_EXAMS.platformAdministrator);
   const subtitle = isFr
-    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Examens Salesforce Platform Foundations & Administrator planifiés (déc. 2026)"
+    ? `RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Examens Salesforce Platform Foundations & Administrator ${examsTaken ? "passés" : "planifiés"} (déc. 2026)`
     : isEs
-    ? "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Exámenes Salesforce Platform Foundations y Administrator programados (dic. 2026)"
-    : "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Platform Foundations & Administrator exams scheduled (Dec. 2026)";
+    ? `RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Exámenes Salesforce Platform Foundations y Administrator ${examsTaken ? "realizados" : "programados"} (dic. 2026)`
+    : `RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Platform Foundations & Administrator exams ${examsTaken ? "taken" : "scheduled"} (Dec. 2026)`;
 
   const badges = [
     { label: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",         color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },

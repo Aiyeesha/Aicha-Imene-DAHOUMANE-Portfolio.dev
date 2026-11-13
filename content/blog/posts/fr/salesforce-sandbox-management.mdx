@@ -3,7 +3,7 @@ title: "Gestion des sandboxes Salesforce : types, stratégie de rafraîchissemen
 excerpt: "Comment gérer efficacement les sandboxes Salesforce — choisir le bon type, planifier les rafraîchissements, anonymiser les données pour la conformité et mettre en place un workflow de déploiement propre de dev à production."
 date: "2025-12-08"
 updatedDate: "2026-09-26"
-tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Déploiement"]
+tags: ["Salesforce", "Sandbox", "DevOps", "CI/CD", "Deployment"]
 projects: ["cicd-pipeline-setup"]
 ---
 
@@ -41,18 +41,25 @@ Pour une équipe de 3+ développeurs, ce modèle de branchement fonctionne bien 
 
 1. **Configuration → Environnements → Bacs à sable → Nouveau bac à sable**
 2. Choisir le type, le nom (ex. `DEV-alice`, `INTEGRATION`, `UAT`)
-3. Pour Partial/Full : sélectionner la source de données
+3. Pour Partial/Full : sélectionner la source de données et la classe Apex d'alimentation des données
 
 ### Via la CLI Salesforce
 
 ```bash
-# Créer un sandbox via CLI
+# Créer un sandbox via CLI (nécessite un alias d'org avec accès administrateur)
 sf org create sandbox \
     --name DEV-feature-lwc \
     --license-type Developer \
     --target-org production \
     --alias dev-lwc
 
+# Attendre la création du sandbox (entre 5 et 30 minutes)
+sf org create sandbox --wait 60 --name DEV-feature-lwc ...
+```
+
+### Se connecter à un sandbox
+
+```bash
 # Authentifier un sandbox existant
 sf org login web --alias dev-lwc --instance-url https://test.salesforce.com
 
@@ -71,7 +78,7 @@ Un rafraîchissement efface le sandbox et le recrée depuis la production. Cela 
 
 **Déclencheurs de rafraîchissement :**
 - Grandes releases de production (rafraîchir l'UAT avant le cycle UAT)
-- Incidents de sécurité
+- Incidents de sécurité (rafraîchir pour supprimer des données potentiellement compromises)
 - Cadence planifiée (sandbox d'intégration : mensuel ; developer : selon besoin)
 
 ### Runbook post-rafraîchissement
@@ -98,6 +105,11 @@ Les sandboxes Partial et Full peuvent contenir des données de production. C'est
 ### Option 1 : Sandbox Data Mask (natif Salesforce)
 
 Disponible en option payante. Masque automatiquement les champs DCP lors de la copie sandbox.
+
+```
+Configuration → Sandbox → Sandbox Data Mask
+Définir les règles de masquage par champ → appliquer au prochain rafraîchissement
+```
 
 ### Option 2 : Script Apex d'anonymisation post-rafraîchissement
 
@@ -138,7 +150,7 @@ public class AnonymiserContactsBatch implements Database.Batchable<SObject> {
 
 ## Workflow de déploiement : dev → production
 
-### Avec la CLI Salesforce
+### Avec la CLI Salesforce + Change Sets
 
 **Étape 1 : Dans le sandbox dev — récupérer vos changements**
 ```bash
@@ -154,6 +166,7 @@ sf project retrieve start \
 
 **Étape 2 : Valider contre l'org cible (sans déploiement)**
 ```bash
+# Valider avant le déploiement effectif
 sf project deploy validate \
     --source-dir force-app/main/default \
     --target-org integration \
@@ -166,6 +179,12 @@ sf project deploy start \
     --source-dir force-app/main/default \
     --target-org integration \
     --test-level RunLocalTests
+```
+
+**Étape 4 : Promouvoir à travers les environnements**
+```
+dev-lwc → integration → uat → production
+         (validation)     (validation + RunLocalTests)   (RunAllTestsInOrg)
 ```
 
 ### Automatisé avec GitHub Actions
@@ -209,9 +228,18 @@ jobs:
 
 ## Gestion des utilisateurs sandbox
 
-Après un rafraîchissement, les noms d'utilisateur sandbox reçoivent un suffixe.
+Après un rafraîchissement, les noms d'utilisateur sandbox reçoivent un suffixe : `admin@company.com.integrationsandbox`.
 
-### Désactiver les utilisateurs non autorisés dans le sandbox
+### Réinitialiser le mot de passe de tous les utilisateurs du sandbox
+
+```apex
+// Réinitialisation rapide des mots de passe en masse (utile après un rafraîchissement)
+List<User> users = [SELECT Id FROM User WHERE IsActive = true AND Profile.Name != 'Chatter External User'];
+System.resetPassword(users[0].Id, true);
+// Remarque : à faire utilisateur par utilisateur ou via l'interface, par sécurité
+```
+
+### Geler/activer les utilisateurs dans le sandbox
 
 ```apex
 // Désactiver les utilisateurs dans le sandbox qui ne devraient pas avoir accès
@@ -249,7 +277,7 @@ update aDesactiver;
 
 ## Conclusion
 
-Une bonne gestion des sandboxes est la différence entre un processus de déploiement chaotique et un processus reproductible et fiable. Les habitudes clés : anonymiser les DCP immédiatement après chaque rafraîchissement, imposer un chemin de promotion linéaire (dev → intégration → UAT → production), valider avant de déployer, et maintenir un runbook post-rafraîchissement pour que la configuration ne soit jamais improvisée.
+Une bonne gestion des sandboxes est la différence entre un processus de déploiement chaotique et un processus reproductible et fiable. Les habitudes clés : anonymiser les DCP immédiatement après chaque rafraîchissement, imposer un chemin de promotion linéaire (dev → intégration → UAT → production), valider avant de déployer, et maintenir un runbook post-rafraîchissement pour que la configuration ne soit jamais improvisée. Maîtrisez ces points et votre pipeline CI/CD tournera sans accroc dès le premier jour.
 
 ---
 

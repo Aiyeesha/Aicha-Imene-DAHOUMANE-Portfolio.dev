@@ -22,7 +22,7 @@ export default async function Image({ params }: Props) {
     : isEs
     ? "Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
     : "Salesforce · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
-  const availLabel = isFr ? `Entretiens dès maintenant — Disponible ${AVAILABILITY.fr.from}` : isEs ? `Entrevistas ya — Disponible ${AVAILABILITY.es.from}` : `Interviews now — Available ${AVAILABILITY.en.from}`;
+  const availLabel = isFr ? `Entretiens dès maintenant — Disponible ${AVAILABILITY.fr.from}` : isEs ? `Entrevistas desde ya — Disponible ${AVAILABILITY.es.from}` : `Interviews now — Available ${AVAILABILITY.en.from}`;
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";

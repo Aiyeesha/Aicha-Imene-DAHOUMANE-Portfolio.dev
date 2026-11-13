@@ -16,9 +16,14 @@ export const revalidate = 3600;
 type Params = { locale: "en" | "fr" | "es" };
 
 export async function generateMetadata(
-  { params }: { params: Promise<Params> }
+  { params, searchParams }: { params: Promise<Params>; searchParams: Promise<{ tag?: string; page?: string }> }
 ): Promise<Metadata> {
   const { locale } = await params;
+  const sp = await searchParams;
+  // Paginated pages get their own canonical (Google indexes each page of a
+  // series); tag-filtered views stay canonicalised to the unfiltered index.
+  const pageNum = Math.max(1, Number(sp.page ?? "1") || 1);
+  const pageQuery = !sp.tag && pageNum > 1 ? `?page=${pageNum}` : "";
   const t = await getTranslations({ locale, namespace: "blogIndex" });
 
   const title = t("meta.title");
@@ -32,12 +37,12 @@ export async function generateMetadata(
     // Absolute URLs for hreflang: metadataBase only applies to the canonical,
     // not to <link rel="alternate">.
     alternates: {
-      canonical: urlPath,
+      canonical: `${urlPath}${pageQuery}`,
       languages: {
-        en: `${siteUrl}/en/blog`,
-        fr: `${siteUrl}/fr/blog`,
-        es: `${siteUrl}/es/blog`,
-        "x-default": `${siteUrl}/en/blog`,
+        en: `${siteUrl}/en/blog${pageQuery}`,
+        fr: `${siteUrl}/fr/blog${pageQuery}`,
+        es: `${siteUrl}/es/blog${pageQuery}`,
+        "x-default": `${siteUrl}/en/blog${pageQuery}`,
       },
       ...rssAlternates(locale),
     },

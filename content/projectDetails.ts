@@ -161,7 +161,7 @@ export const projectDetails: ProjectDetails[] = [
               "Tournevis cruciforme + spudger plastique — démontage sans endommager le châssis",
               "Windows Task Manager & Disk Management — validation post-swap (RAM détectée, capacité SSD)"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -468,7 +468,7 @@ export const projectDetails: ProjectDetails[] = [
               "Git — workflow dev → main, commits atomiques par étape",
               "IntelliJ IDEA — environnement de développement"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -977,7 +977,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Network Sniffing: tcpdump, Wireshark & Scapy",
-        "heroSubtitle": "tcpdump · Wireshark · Scapy · VMware Workstation Pro 17",
+        "heroSubtitle": "Traffic capture and analysis with tcpdump, Wireshark and Scapy in a homelab: reading a plaintext HTTP exchange and intercepting unencrypted FTP credentials.",
         "sections": [
           {
             "type": "text",
@@ -1067,7 +1067,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Sniffing réseau : tcpdump, Wireshark & Scapy",
-        "heroSubtitle": "tcpdump · Wireshark · Scapy · VMware Workstation Pro 17",
+        "heroSubtitle": "Capture et analyse de trafic avec tcpdump, Wireshark et Scapy en homelab : lecture d'une requête HTTP en clair et interception d'identifiants FTP non chiffrés.",
         "sections": [
           {
             "type": "text",
@@ -1157,7 +1157,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Sniffing de red: tcpdump, Wireshark y Scapy",
-        "heroSubtitle": "tcpdump · Wireshark · Scapy · VMware Workstation Pro 17",
+        "heroSubtitle": "Captura y análisis de tráfico con tcpdump, Wireshark y Scapy en un homelab: lectura de un intercambio HTTP en claro e interceptación de credenciales FTP sin cifrar.",
         "sections": [
           {
             "type": "text",
@@ -1729,7 +1729,7 @@ export const projectDetails: ProjectDetails[] = [
               "VirtualBox — hyperviseur de type 2 pour l'environnement de formation",
               "Windows 10 / Windows Server 2012 — systèmes d'exploitation des VM"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -2045,7 +2045,7 @@ export const projectDetails: ProjectDetails[] = [
               "Variable %username% — personnalisation automatique du chemin par utilisateur",
               "VirtualBox — hyperviseur de type 2 pour l'environnement de formation"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -2289,7 +2289,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Maintaining a Virtualized IT Environment",
-        "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS / DNS / DHCP / WDS",
+        "heroSubtitle": "Windows Server 2022 lab on VMware Workstation: Active Directory domain, DNS, DHCP and automated OS deployment via WDS/PXE on a private NAT network.",
         "sections": [
           {
             "body": "Personal lab built as part of a Systems & Networks program. I deployed a complete Windows Server 2022 environment inside VMware Workstation Pro 17 to replicate a real enterprise IT infrastructure: Active Directory domain, DNS, DHCP, and automated OS deployment via WDS/PXE — all on a fully managed private VMware NAT network.",
@@ -2395,7 +2395,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Maintenir et exploiter un environnement virtualisé",
-        "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS / DNS / DHCP / WDS",
+        "heroSubtitle": "Lab Windows Server 2022 sous VMware Workstation : domaine Active Directory, DNS, DHCP et déploiement d'OS automatisé par WDS/PXE sur un réseau NAT privé.",
         "sections": [
           {
             "body": "Lab personnel réalisé dans le cadre d'une formation Systèmes & Réseaux. J ai déployé un environnement Windows Server 2022 complet sous VMware Workstation Pro 17 pour reproduire une infrastructure IT d'entreprise : domaine Active Directory, DNS, DHCP et déploiement automatisé d'OS via WDS/PXE — sur un réseau NAT VMware privé entièrement géré.",
@@ -2437,7 +2437,7 @@ export const projectDetails: ProjectDetails[] = [
               "WDS (Windows Deployment Services) — Déploiement OS via réseau (PXE/TFTP)",
               "Group Policy (GPO) — Profils itinérants et mappage de lecteurs réseau"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -2501,7 +2501,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Mantener un entorno IT virtualizado",
-        "heroSubtitle": "VMware Workstation Pro 17 · Windows Server 2022 · AD DS · DNS · DHCP · WDS",
+        "heroSubtitle": "Laboratorio Windows Server 2022 en VMware Workstation: dominio Active Directory, DNS, DHCP y despliegue automatizado de SO mediante WDS/PXE en una red NAT privada.",
         "sections": [
           {
             "type": "text",
@@ -2774,7 +2774,7 @@ export const projectDetails: ProjectDetails[] = [
               "Office 2016 Professionnel Plus — suite bureautique",
               "Sauvegarde Windows — configuration post-installation"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -3151,7 +3151,7 @@ export const projectDetails: ProjectDetails[] = [
               "MySQL — base de données pour les tests d'intégration",
               "Git — versionning avec branches feature/fix"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -3521,7 +3521,7 @@ export const projectDetails: ProjectDetails[] = [
               "Media queries — responsive 3 breakpoints (mobile, tablette, bureau)",
               "Git — versionning et livraison"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -4277,6 +4277,28 @@ export const projectDetails: ProjectDetails[] = [
               {
                 "label": "Dependencias de ejecución",
                 "value": "0"
+              }
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Funcionamiento",
+            "steps": [
+              {
+                "label": "Análisis local",
+                "description": "La longitud y las familias de caracteres dan la entropía teórica (L × log2 N)."
+              },
+              {
+                "label": "Detección de patrones",
+                "description": "Palabras comunes, secuencias de teclado, secuencias lógicas y repeticiones se localizan — solo por tipo y posición, nunca por su texto."
+              },
+              {
+                "label": "Entropía efectiva",
+                "description": "Las partes predecibles se reevalúan (unos 12,9 bits por palabra común) y la puntuación sigue los umbrales de la CNIL."
+              },
+              {
+                "label": "Comprobación de filtraciones",
+                "description": "La huella SHA-1 se calcula localmente; solo se envían sus 5 primeros caracteres y el sufijo se busca localmente."
               }
             ]
           },
@@ -5044,13 +5066,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Infrastructure Monitoring with Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
+        "heroSubtitle": "Daily Datto RMM monitoring triage across 550+ client endpoints at MIDRANGE Group: alerts, antivirus coverage and Splashtop remote access.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside the team's systems & network administrator. The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
+              "At MIDRANGE Group, a managed service provider (MSP) based in the Île-de-France region, I worked within the Exploitation team alongside the team's systems & network administrator. The technical floor was split into two units: Technical Support (handling client calls, ticket creation, and L1/L2 resolution) and Exploitation (server maintenance, security, and L2/L3 escalation support). My role in Exploitation gave me direct hands-on access to the company's RMM platform."
             ]
           },
           {
@@ -5080,7 +5102,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Reference site",
-                "value": "MID-S0A (MIDRANGE GROUP internal site)"
+                "value": "MID-S0A (MIDRANGE Group internal site)"
               },
               {
                 "label": "Agent version",
@@ -5200,13 +5222,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision d'infrastructure avec Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
+        "heroSubtitle": "Triage quotidien de la supervision Datto RMM sur plus de 550 postes clients chez MIDRANGE Group : alertes, couverture antivirus et accès distant Splashtop.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe. Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
+              "Chez MIDRANGE Group, ESN/MSP basée en Île-de-France, j'intervenais au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe. Le plateau technique de l'entreprise se divise en deux pôles : Support Technique (gestion des appels clients, création de tickets, résolution N1/N2) et Exploitation (maintenance des serveurs, sécurité, renfort N2/N3). Mon rôle en Exploitation me donnait un accès opérationnel direct à la plateforme RMM de l'entreprise."
             ]
           },
           {
@@ -5236,7 +5258,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Site de référence",
-                "value": "MID-S0A (site interne MIDRANGE GROUP)"
+                "value": "MID-S0A (site interne MIDRANGE Group)"
               },
               {
                 "label": "Version agent",
@@ -5356,13 +5378,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Supervisión de infraestructura con Datto RMM",
-        "heroSubtitle": "Datto RMM · Splashtop · MalwareBytes · MIDRANGE GROUP",
+        "heroSubtitle": "Triaje diario de la supervisión Datto RMM en más de 550 equipos de clientes en MIDRANGE Group: alertas, cobertura antivirus y acceso remoto Splashtop.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto al administrador de sistemas y redes del equipo. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
+              "En MIDRANGE Group, proveedor de servicios gestionados (MSP) ubicado en la región de Île-de-France, trabajaba dentro del equipo de Explotación junto al administrador de sistemas y redes del equipo. El área técnica se dividía en dos unidades: Soporte Técnico (gestión de llamadas de clientes, creación de tickets y resolución N1/N2) y Explotación (mantenimiento de servidores, seguridad y refuerzo N2/N3). Mi rol en Explotación me daba acceso operativo directo a la plataforma RMM de la empresa."
             ]
           },
           {
@@ -5392,7 +5414,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "label": "Sitio de referencia",
-                "value": "MID-S0A (sitio interno de MIDRANGE GROUP)"
+                "value": "MID-S0A (sitio interno de MIDRANGE Group)"
               },
               {
                 "label": "Versión del agente",
@@ -5583,13 +5605,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Mass Workstation Deployment — 264 Dell Devices",
-        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed at MIDRANGE GROUP.",
+        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed at MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
+              "At MIDRANGE Group (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
               "The two fleets required completely different workflows: the Optiplex machines were repurposed hardware that needed certified wiping before reuse, while the Latitude laptops were brand-new units destined for zero-touch remote deployment via Windows Autopilot."
             ]
           },
@@ -5700,13 +5722,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Déploiement en masse de postes de travail — 264 appareils Dell",
-        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés chez MIDRANGE GROUP.",
+        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés chez MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
+              "Chez MIDRANGE Group (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
               "Les deux flottes nécessitaient des workflows entièrement différents : les machines Optiplex étaient du matériel reconditionné qui devait être effacé de manière certifiée avant réutilisation, tandis que les laptops Latitude étaient du matériel neuf destiné à un déploiement zero-touch à distance via Windows Autopilot."
             ]
           },
@@ -5817,13 +5839,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Despliegue masivo de puestos de trabajo — 264 dispositivos Dell",
-        "heroSubtitle": "Windows Autopilot · Dell Image Assist · Blancco · Intune · MIDRANGE GROUP",
+        "heroSubtitle": "Borrado certificado, imagen Sysprep y Autopilot zero-touch: 264 dispositivos Dell desplegados en MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
+              "En MIDRANGE Group (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
               "Las dos flotas requerían flujos de trabajo completamente distintos: las máquinas Optiplex eran hardware reacondicionado que debía borrarse de forma certificada antes de su reutilización, mientras que los portátiles Latitude eran unidades nuevas destinadas a un despliegue remoto zero-touch vía Windows Autopilot."
             ]
           },
@@ -5961,13 +5983,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
-        "heroSubtitle": "Live incident triage at MIDRANGE GROUP: Autotask ticketing, Datto RMM remote access, and Webroot false-positive resolution.",
+        "heroSubtitle": "Live incident triage at MIDRANGE Group: Autotask ticketing, Datto RMM remote access, and Webroot false-positive resolution.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP, within the Support Technique team alongside the team's systems & network administrator, I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
+              "At MIDRANGE Group, within the Support Technique team alongside the team's systems & network administrator, I handled support requests for managed clients, received across three intake channels: direct phone calls to the support line, email to the support address, and automatic alerts raised by the Datto RMM agent installed on client endpoints.",
               "Once a ticket is opened in Autotask, it is routed either to the Support Technique team (user-facing incidents) or to the Exploitation team (infrastructure and monitoring). Here's how I handled a live client ticket from intake to resolution."
             ]
           },
@@ -6091,13 +6113,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Gestion d'incidents IT — Autotask, Webroot & Datto RMM",
-        "heroSubtitle": "Triage d'incidents en production chez MIDRANGE GROUP : ticketing Autotask, accès distant Datto RMM et résolution d'un faux positif Webroot.",
+        "heroSubtitle": "Triage d'incidents en production chez MIDRANGE Group : ticketing Autotask, accès distant Datto RMM et résolution d'un faux positif Webroot.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP, au sein de l'équipe Support Technique aux côtés de l'administrateur systèmes & réseaux de l'équipe, je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
+              "Chez MIDRANGE Group, au sein de l'équipe Support Technique aux côtés de l'administrateur systèmes & réseaux de l'équipe, je traitais les demandes de support des clients gérés, réceptionnées via trois canaux : appels téléphoniques directs vers la ligne support, e-mails à l'adresse support, et alertes automatiques levées par l'agent Datto RMM installé sur les postes clients.",
               "Une fois un ticket ouvert dans Autotask, il est routé soit vers l'équipe Support Technique (incidents utilisateurs), soit vers l'équipe Exploitation (infrastructure et supervision). Voici le traitement d'un ticket client en production, de la prise en charge à la résolution."
             ]
           },
@@ -6221,13 +6243,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Gestión de incidencias IT — Autotask, Webroot y Datto RMM",
-        "heroSubtitle": "Autotask PSA · Splashtop · Webroot · Datto RMM · MIDRANGE GROUP",
+        "heroSubtitle": "Triaje de incidencias en producción en MIDRANGE Group: ticketing Autotask, acceso remoto Datto RMM y resolución de un falso positivo de Webroot.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP, dentro del equipo de Soporte Técnico junto al administrador de sistemas y redes del equipo, atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
+              "En MIDRANGE Group, dentro del equipo de Soporte Técnico junto al administrador de sistemas y redes del equipo, atendía las solicitudes de soporte de los clientes gestionados, recibidas a través de tres canales: llamadas telefónicas directas a la línea de soporte, correos electrónicos a la dirección de soporte y alertas automáticas generadas por el agente Datto RMM instalado en los equipos de los clientes.",
               "Una vez abierto un ticket en Autotask, se enruta al equipo de Soporte Técnico (incidencias de usuario) o al equipo de Explotación (infraestructura y supervisión). A continuación, el tratamiento de un ticket real de cliente, de la recepción a la resolución."
             ]
           },
@@ -6382,13 +6404,13 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
+        "heroSubtitle": "Triage of 85 backup alerts across 105 protected devices at MIDRANGE Group: root causes (NAS, server, plan, network) and data-loss risk prioritisation.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE GROUP (a French IT services / MSP firm), within the Operations team alongside the team's systems & network administrator, I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
+              "At MIDRANGE Group (a French IT services / MSP firm), within the Operations team alongside the team's systems & network administrator, I owned the daily monitoring of cloud and local backups for a managed client. The backup infrastructure relied on two distinct Acronis products: Acronis Cyber Backup (local/NAS backup solution) and Acronis Cyber Protect Cloud (MSP-oriented cloud backup platform). My mandate: check the Acronis dashboard daily, triage active alerts, and restore backup continuity on every failure detected."
             ]
           },
           {
@@ -6568,13 +6590,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Supervision des sauvegardes Cloud avec Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
+        "heroSubtitle": "Triage de 85 alertes de sauvegarde sur 105 postes protégés chez MIDRANGE Group : causes racines (NAS, serveur, plan, réseau) et priorisation du risque de perte de données.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE GROUP (ESN/MSP), au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe, j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
+              "Chez MIDRANGE Group (ESN/MSP), au sein de l'équipe Exploitation aux côtés de l'administrateur systèmes & réseaux de l'équipe, j'assurais la supervision quotidienne des sauvegardes cloud et locales pour un client géré. L'infrastructure de sauvegarde reposait sur deux produits Acronis distincts : Acronis Cyber Backup (solution de sauvegarde locale/NAS) et Acronis Cyber Protect Cloud (plateforme de sauvegarde cloud orientée MSP). Ma mission : contrôler quotidiennement le tableau de bord Acronis, trier les alertes actives et rétablir la continuité de sauvegarde à chaque échec détecté."
             ]
           },
           {
@@ -6754,13 +6776,13 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Supervisión de copias de seguridad en la nube con Acronis Cyber Backup",
-        "heroSubtitle": "Acronis Cyber Backup · Acronis Cyber Protect Cloud · MIDRANGE GROUP",
+        "heroSubtitle": "Triaje de 85 alertas de copia de seguridad en 105 equipos protegidos en MIDRANGE Group: causas raíz (NAS, servidor, plan, red) y priorización del riesgo de pérdida de datos.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE GROUP (ESN/MSP francesa), dentro del equipo de Operaciones junto al administrador de sistemas y redes del equipo, me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
+              "En MIDRANGE Group (ESN/MSP francesa), dentro del equipo de Operaciones junto al administrador de sistemas y redes del equipo, me encargué de la supervisión diaria de las copias de seguridad en la nube y locales de un cliente gestionado. La infraestructura de backup se apoyaba en dos productos Acronis distintos: Acronis Cyber Backup (solución de backup local/NAS) y Acronis Cyber Protect Cloud (plataforma de backup en la nube orientada a MSP). Mi misión: revisar a diario el panel de Acronis, triar las alertas activas y restablecer la continuidad de las copias de seguridad ante cada fallo detectado."
             ]
           },
           {
@@ -6987,7 +7009,7 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Securing Internet Access with pfSense & Squid",
-        "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
+        "heroSubtitle": "A pfSense 2.6.0 gateway added to the Windows Server 2022 lab: Squid transparent proxy, SquidGuard filtering and LightSquid reports to secure the LAN's internet access.",
         "sections": [
           {
             "body": "Building on the virtualized lab (AD DS / DNS / DHCP / WDS on Windows Server 2022), I added a pfSense 2.6.0 firewall VM as the network gateway. Goal: secure outbound internet access for all LAN machines (192.168.100.0/24), filter web traffic through a Squid transparent proxy, and enforce access policies — replicating real-world enterprise perimeter security.",
@@ -7092,7 +7114,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Sécuriser les accès à Internet avec pfSense & Squid",
-        "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
+        "heroSubtitle": "Passerelle pfSense 2.6.0 ajoutée au lab Windows Server 2022 : proxy transparent Squid, filtrage SquidGuard et rapports LightSquid pour sécuriser les accès Internet du LAN.",
         "sections": [
           {
             "body": "En prolongement du lab virtualisé (AD DS / DNS / DHCP / WDS sur Windows Server 2022), j'ai ajouté une VM pfSense 2.6.0 pour jouer le rôle de passerelle réseau. Objectif : sécuriser les accès Internet sortants de toutes les machines du LAN privé (192.168.100.0/24), filtrer le trafic web via un proxy transparent Squid et appliquer des politiques d'accès — reproduisant la sécurité périmétrique d'une infrastructure d'entreprise réelle.",
@@ -7133,7 +7155,7 @@ export const projectDetails: ProjectDetails[] = [
               "VMware Workstation Pro 17 — Hyperviseur de type 2",
               "PKI / CA Manager pfSense — Autorité de certification interne pour HTTPS"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -7197,7 +7219,7 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Asegurar el acceso a Internet con pfSense y Squid",
-        "heroSubtitle": "pfSense 2.6.0 · Squid · SquidGuard · LightSquid · VMware Workstation 17",
+        "heroSubtitle": "Pasarela pfSense 2.6.0 añadida al laboratorio Windows Server 2022: proxy transparente Squid, filtrado SquidGuard e informes LightSquid para asegurar el acceso a Internet de la LAN.",
         "sections": [
           {
             "body": "En continuidad con el laboratorio virtualizado (AD DS / DNS / DHCP / WDS en Windows Server 2022), añadí una VM pfSense 2.6.0 como firewall para actuar de pasarela de red. Objetivo: asegurar el acceso saliente a Internet de todas las máquinas de la LAN privada (192.168.100.0/24), filtrar el tráfico web mediante un proxy transparente Squid y aplicar políticas de acceso — reproduciendo la seguridad perimetral de una infraestructura empresarial real.",
@@ -7807,7 +7829,7 @@ export const projectDetails: ProjectDetails[] = [
               "RJ45 / Switch LAN — infrastructure filaire de connexion du PA",
               "Ping / test réseau — validation de la connectivité Internet"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -8119,7 +8141,7 @@ export const projectDetails: ProjectDetails[] = [
               "LDLC Pro / Materiel.net / Inmac Wstore — catalogues fournisseurs B2B",
               "Excel — formalisation du devis avec calculs HT/TTC"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -8414,7 +8436,7 @@ export const projectDetails: ProjectDetails[] = [
               "Windows 10 — système d'exploitation du poste provisionné",
               "Office 2016 — suite bureautique préinstallée"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -10546,11 +10568,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Lightning app delivery & backlog (Avenir Télécom)",
-        "heroSubtitle": "Creation of a Lightning application for Avenir Télécom: backlog, testing and CRM interface migration."
+        "heroSubtitle": "Implementation strategy for a field-facing Salesforce Lightning app delivered by a 3-person team: a 20-story costed product backlog, a test plan + Apex reference standard, then a 3-month pilot (simulated by the scenario) → Kanban evolutions backlog loop."
       },
       "fr": {
         "title": "Livraison d'application Lightning & backlog Agile (Avenir Télécom)",
-        "heroSubtitle": "Création d'une application Lightning pour Avenir Télécom : backlog, tests et migration de l'interface CRM."
+        "heroSubtitle": "Stratégie d'implémentation d'une app Salesforce Lightning terrain pour une équipe de 3 développeurs : backlog produit de 20 user stories chiffrées, cahier de tests + référentiel Apex, puis boucle pilote de 3 mois (simulée par le scénario) → backlog d'évolutions Kanban."
       },
       "es": {
         "title": "Entrega de app Lightning y backlog (Avenir Télécom)",
@@ -10763,11 +10785,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Apex backend development (iDEM Connect)",
-        "heroSubtitle": "Development of an Apex backend for iDEM Connect: trigger, service classes and batch scheduler."
+        "heroSubtitle": "A full Apex backend for iDEM Connect's sales force: trigger + handlers, monthly batch, scheduler — 3 business rules, end-to-end CRUD/FLS security, 23 tests, 90% org-wide coverage."
       },
       "fr": {
         "title": "Développement backend Apex (iDEM Connect)",
-        "heroSubtitle": "Développement d'un backend Apex pour iDEM Connect : trigger, classes de service et batch scheduler."
+        "heroSubtitle": "Backend Apex complet pour la force de vente d'iDEM Connect : trigger + handlers, batch mensuel, scheduler — 3 règles métier, sécurité CRUD/FLS de bout en bout, 23 tests, 90 % de couverture org-wide."
       },
       "es": {
         "title": "Desarrollo backend Apex (iDEM Connect)",
@@ -10905,11 +10927,11 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Delivery tracking CRM design (LTP)",
-        "heroSubtitle": "Design of an Apex backend prototype for LTP (luxury & fashion): data model, security, import strategy."
+        "heroSubtitle": "Complete architecture of a multi-carrier Salesforce delivery-tracking backend for a bridal couture house: UML data model, zone-based security model, 2.1M-account import strategy, real-time + batch integration — designed before the first line of code."
       },
       "fr": {
         "title": "Conception CRM de suivi de livraison (LTP)",
-        "heroSubtitle": "Conception d'un prototype backend Apex pour LTP (luxe & mode) : modèle de données, sécurité, stratégie d'import."
+        "heroSubtitle": "Architecture complète d'un backend Salesforce de suivi de livraison multi-transporteurs pour une maison de couture nuptiale : modèle de données UML, modèle de sécurité par zone, stratégie d'import 2,1 M de comptes, intégration temps réel + batch — conçue avant la première ligne de code."
       },
       "es": {
         "title": "Diseño de CRM de seguimiento de entregas (LTP)",
@@ -11051,15 +11073,15 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Salesforce deployment with Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Salesforce deployment and integration for LEGARANT-AXG: REST API, Heroku synchronization and a staging → production release procedure."
+        "heroSubtitle": "Integrate AXG into Legarant's Salesforce CRM and deliver the integration layer for a mobile app — Apex REST API, Heroku Connect sync, traceable go-live."
       },
       "fr": {
         "title": "Déploiement Salesforce avec Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Déploiement et intégration Salesforce pour LEGARANT-AXG : API REST, synchronisation Heroku et procédure de mise en production staging → production."
+        "heroSubtitle": "Intégrer AXG dans le CRM Salesforce de Legarant et livrer la couche d'intégration d'une application mobile — API REST Apex, synchronisation Heroku Connect, mise en production tracée."
       },
       "es": {
         "title": "Despliegue de Salesforce con Heroku (Legarant‑AXG)",
-        "heroSubtitle": "Integrar AXG en Salesforce (Legarant) y entregar una capa de integración lista para una app móvil (REST + Heroku)."
+        "heroSubtitle": "Integrar AXG en el CRM Salesforce de Legarant y entregar la capa de integración de una aplicación móvil — API REST Apex, sincronización con Heroku Connect, puesta en producción trazable."
       }
     }
   },
@@ -11192,7 +11214,7 @@ export const projectDetails: ProjectDetails[] = [
               "Apex Test Run — exécution automatisée des tests unitaires",
               "SFDX Source Format — versionning des métadonnées Salesforce"
             ],
-            "title": "Outils & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "timeline",
@@ -11684,7 +11706,7 @@ export const projectDetails: ProjectDetails[] = [
               "Permission Set Groups, Named Credentials",
               "Salesforce Security Model — CRUD/FLS, WITH SECURITY_ENFORCED, stripInaccessible()"
             ],
-            "title": "Stack & Technologies"
+            "title": "Stack et outils"
           },
           {
             "type": "metrics",

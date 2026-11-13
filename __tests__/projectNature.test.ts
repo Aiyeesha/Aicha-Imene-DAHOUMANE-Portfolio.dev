@@ -31,7 +31,7 @@ describe("nature des projets", () => {
   });
 
   it("présente la période héritée comme celle de la formation, pas du projet", () => {
-    expect(resolveNature("rncp", "fr")?.period).toBe("Période de formation : oct. 2023 – oct. 2025");
+    expect(resolveNature("rncp", "fr")?.period).toBe("Période de formation : oct. 2023 – sept. 2025");
     expect(resolveNature("greta_tssr", "en")?.period).toBe("Programme period: Oct 2022 – Jun 2023");
   });
 

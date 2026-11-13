@@ -19,7 +19,10 @@ export function detectTrack(tags: string[]): "salesforce" | "itops" | null {
 
 /**
  * Translations of the English tags used in MDX frontmatter, so tags display in
- * the reader's language without editing the source files.
+ * the reader's language without editing the source files. Frontmatter tags are
+ * canonical English in every locale (filters, /feed/<tag>, related posts and
+ * ?tag= links then match across languages); __tests__/blog-tags.test.ts
+ * enforces it.
  */
 const TAG_FR: Record<string, string> = {
   "Security":         "Sécurité",
@@ -40,11 +43,17 @@ const TAG_FR: Record<string, string> = {
   "Web":              "Web",
   "UI":               "Interface",
   "Scripts":          "Scripts",
+  "Integration":      "Intégration",
+  "Development":      "Développement",
+  "Data Integrity":   "Intégrité des données",
+  "Lessons learned":  "Retour d'expérience",
+  "Network":          "Réseau",
+  "Firewall":         "Pare-feu",
 };
 
 const TAG_ES: Record<string, string> = {
   "Security":         "Seguridad",
-  "Backup":           "Copia de seguridad",
+  "Backup":           "Copias de seguridad",
   "Monitoring":       "Supervisión",
   "Hardening":        "Bastionado",
   "Networking":       "Redes",
@@ -61,6 +70,12 @@ const TAG_ES: Record<string, string> = {
   "Web":              "Web",
   "UI":               "Interfaz",
   "Scripts":          "Scripts",
+  "Integration":      "Integración",
+  "Development":      "Desarrollo",
+  "Data Integrity":   "Integridad de datos",
+  "Lessons learned":  "Retrospectiva",
+  "Network":          "Red",
+  "Support":          "Soporte",
 };
 
 /** Translate a tag to the target locale (passthrough for EN, maps known tags for FR/ES). */

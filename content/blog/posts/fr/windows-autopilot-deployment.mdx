@@ -2,7 +2,7 @@
 title: "Windows Autopilot : déploiement en masse de 200+ postes, pas à pas"
 excerpt: "Guide éprouvé sur le terrain pour déployer des postes Dell à grande échelle avec Windows Autopilot et Intune — de la collecte des hashs matériels au premier login utilisateur."
 date: "2025-06-02"
-tags: ["IT Ops", "Windows Autopilot", "Intune", "Déploiement", "Windows"]
+tags: ["IT Ops", "Windows Autopilot", "Intune", "Deployment", "Windows"]
 projects: ["workstation-mass-deployment"]
 ---
 
@@ -91,6 +91,8 @@ Dans Endpoint Manager :
 | Paramètres de confidentialité | Masquer |
 | Modifier les options de compte | Masquer |
 | Type de compte utilisateur | Utilisateur standard |
+| Langue/région | Configurée selon le pays |
+| Clavier | Ignorer |
 | Modèle de nom d'appareil | Oui — ex. `CORP-%RAND:5%` |
 
 **Affecter le profil** à un groupe d'appareils (statique ou dynamique).
@@ -117,6 +119,10 @@ Avant que les utilisateurs démarrent, appliquez ces stratégies de base via Int
 - Protection PUA : Activée
 - Protection anti-altération : Activée
 
+**4. Droits d'administrateur local :**
+- Restrictions d'appareil → Bloquer la création de comptes administrateur local
+- Ajouter des utilisateurs précis au groupe des administrateurs locaux via Endpoint Security si nécessaire
+
 ### Applications requises (poussées avant le login) :
 
 ```
@@ -139,7 +145,7 @@ Quand un utilisateur reçoit son appareil et le démarre :
 5. Intune commence l'enrôlement de l'appareil
 6. Les applications et les stratégies se déploient en arrière-plan (10–30 min selon le volume)
 7. L'utilisateur atteint le **bureau Windows**
-8. Les applications continuent de s'installer en arrière-plan
+8. Les applications continuent de s'installer en arrière-plan ; l'utilisateur peut commencer à travailler
 
 ## Phase 6 : Validation et dépannage
 
@@ -155,6 +161,10 @@ dsregcmd /status
 # MDMUrl : https://enrollment.manage.microsoft.com/...
 ```
 
+### Vérifier la synchronisation Intune
+
+Dans Endpoint Manager → Appareils → sélectionner l'appareil → **Synchroniser** → vérifier l'heure de la dernière synchronisation.
+
 ### Problèmes courants et solutions
 
 **Problème :** Appareil introuvable dans Autopilot
@@ -165,19 +175,20 @@ dsregcmd /status
 ```
 *.manage.microsoft.com
 *.microsoftonline.com
+*.login.microsoftonline.com
 go.microsoft.com
 login.live.com
 ```
 
 **Problème :** Applications échouent à s'installer pendant l'ESP
-**Solution :** Vérifier que l'affectation des applications est **Requise** (pas Disponible). Consulter les logs Intune sur l'appareil :
+**Solution :** Vérifier que l'affectation des applications est **Requise** (pas Disponible). Vérifier que le package de l'application n'est pas corrompu. Consulter les logs Intune sur l'appareil :
 ```
 Observateur d'événements → Journaux des applications et des services
     → Microsoft → Windows → ModernDeployment-Diagnostics-Provider
 ```
 
 **Problème :** BitLocker ne chiffre pas
-**Solution :** Vérifier que l'appareil dispose du TPM 2.0. Contrôler que le Secure Boot est activé dans le BIOS. Valider que la stratégie BitLocker est affectée à l'appareil.
+**Solution :** Vérifier que l'appareil dispose du TPM 2.0. Contrôler que le Secure Boot est activé dans le BIOS. Valider que la stratégie BitLocker est affectée à l'appareil (et pas seulement à l'utilisateur).
 
 ### Collecter les logs de diagnostic
 
@@ -190,7 +201,7 @@ MdmDiagnosticsTool.exe -area Autopilot -zip C:\LogsAutopilot.zip
 
 ## Conseils pour les déploiements à grande échelle (100+ appareils)
 
-- **Groupes dynamiques d'appareils** dans AAD : `(device.deviceOSType -eq "Windows")` — affecte automatiquement tous les appareils Windows au profil Autopilot.
+- **Groupes dynamiques d'appareils** dans AAD : `(device.deviceOSType -eq "Windows")` — affecte automatiquement tous les appareils Windows au profil Autopilot, sans gestion manuelle.
 - **Pré-provisionnement (White Glove)** : l'IT exécute la phase de provisionnement en amont avant l'expédition. Le premier login utilisateur ne prend alors que quelques minutes.
 - **Expédition directe depuis le fabricant** : demander Dell ProDeploy ou HP Lifecycle Services pour uploader les hashs en usine — pas de collecte à faire.
 - **Échelonner les déploiements** : déployer 20–30 appareils par jour lors du démarrage pour détecter les problèmes avant qu'ils touchent des centaines d'utilisateurs.
@@ -205,6 +216,11 @@ MdmDiagnosticsTool.exe -area Autopilot -zip C:\LogsAutopilot.zip
 - [ ] Stratégie BitLocker validée sur un appareil de test
 - [ ] Page de statut d'enrôlement (ESP) configurée et testée
 
+**Pendant le déploiement :**
+- [ ] L'utilisateur reçoit l'appareil avec un guide de mise en route
+- [ ] L'appareil de test termine l'OOBE complète en moins de 30 minutes
+- [ ] Les applications sont installées avant que l'utilisateur n'atteigne le bureau (ou l'ESP est configurée pour attendre)
+
 **Post-déploiement :**
 - [ ] L'appareil apparaît dans Endpoint Manager avec le bon nom
 - [ ] Toutes les stratégies affichent « Réussi »
@@ -213,7 +229,7 @@ MdmDiagnosticsTool.exe -area Autopilot -zip C:\LogsAutopilot.zip
 
 ## Conclusion
 
-Windows Autopilot élimine l'effort manuel du déploiement par image tout en offrant une expérience homogène et prête pour l'entreprise à chaque utilisateur. Le déploiement des 200 postes Dell que j'ai réalisé a nécessité 3 semaines de configuration Intune, puis s'est exécuté sans aucune intervention physique de l'IT sur les bureaux des utilisateurs.
+Windows Autopilot élimine l'effort manuel du déploiement par image tout en offrant une expérience homogène et prête pour l'entreprise à chaque utilisateur. L'investissement dans la configuration Intune est rentabilisé à grande échelle : une fois votre profil de déploiement et vos stratégies bien en place, chaque machine supplémentaire ne demande aucun temps IT supplémentaire. Le déploiement des 200 postes Dell que j'ai réalisé a nécessité 3 semaines de configuration Intune, puis s'est exécuté sans aucune intervention physique de l'IT sur les bureaux des utilisateurs.
 
 ---
 

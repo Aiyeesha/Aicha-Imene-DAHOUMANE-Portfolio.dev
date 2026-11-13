@@ -79,7 +79,14 @@ export default function Providers({
   // cleared while localStorage persists, or on a very first visit before
   // setTrack() has set the cookie.
   useEffect(() => {
-    const saved = localStorage.getItem("track");
+    // Storage can throw (SecurityError) when site data is blocked: the
+    // fallback is then simply skipped.
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem("track");
+    } catch {
+      return;
+    }
     if (saved === "itops" || saved === "salesforce") {
       // One-off fallback on mount for state the user then changes (setTrack):
       // useSyncExternalStore does not fit, and reading localStorage in the
@@ -96,16 +103,19 @@ export default function Providers({
 
   const setTrack = (t: Track) => {
     setTrackState(t);
-    window.localStorage.setItem("track", t);
+    try {
+      window.localStorage.setItem("track", t);
+    } catch {
+      // Storage blocked: the cookie below still carries the choice.
+    }
 
     // Persist for SSR so the server can render the correct track immediately.
     const isHttps =
-  typeof window !== "undefined" && window.location.protocol === "https:";
+      typeof window !== "undefined" && window.location.protocol === "https:";
 
-document.cookie = `track=${t}; Path=/; Max-Age=31536000; SameSite=Lax${
-  isHttps ? "; Secure" : ""
-}`;
-
+    document.cookie = `track=${t}; Path=/; Max-Age=31536000; SameSite=Lax${
+      isHttps ? "; Secure" : ""
+    }`;
   };
 
   const value = useMemo(() => ({ track, setTrack }), [track]);
