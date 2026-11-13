@@ -20,6 +20,12 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Image de partage de « Me recruter » en erreur 500** — `/{fr,en,es}/work-with-me/opengraph-image` échouait en production (`FUNCTION_INVOCATION_FAILED`) : `next/og` (Satori) refuse `display: "inline-flex"`. Le badge de disponibilité utilise `display: "flex"` + `alignSelf: "flex-start"` (même rendu) ; les partages LinkedIn, Slack ou Teams de la page retrouvent leur visuel.
+- **Traductions manquantes** — « Global Info — Back Market partner » restait en anglais dans la frise de carrière FR/ES (`org` accepte désormais une valeur par langue : « partenaire Back Market », « socio de Back Market ») ; l'étiquette « Architecture » s'affichait en anglais sur `/es/blog/tags` et dans `feed-es.xml` (« Arquitectura »). « Firewall » reste volontairement inchangé en espagnol.
+- **Titres trop longs pour Google** — Les titres d'accueil (78–80 caractères) perdent « | Île-de-France », déjà en tête de la meta description : 49 à 65 caractères selon la langue et le parcours. `pageTitle` omet le suffixe « — Aïcha Imène DAHOUMANE » quand le titre complet dépasserait 65 caractères (articles et projets jusqu'à 124 caractères), au lieu de le laisser tronquer.
+- **404 de `/testimonial-submit` sans invitation** — La vérification du lien est aussi faite dans `generateMetadata`, avant l'envoi du HTML : la page 404 localisée (`lang`, `<title>`, lisible sans JavaScript) remplace l'enveloppe d'erreur brute de Next (`<html id="__next_error__">`).
+- **Accessibilité (axe)** — Les zones défilantes des tableaux et blocs de code MDX passent de `role="region"` à `role="group"` (toujours focalisables et nommées) : un article ne crée plus une série de points de repère homonymes (`landmark-unique`). Sur `/projects`, le titre des cartes passe de `h3` à `h2` sous le `h1` de la page (`heading-order`), même apparence.
+
 - **Poids de `/projects`** — La grille recevait les objets projet complets (études de cas, galeries) sérialisés dans le HTML ; elle ne reçoit plus que les champs des cartes (`lib/data/projectCards.ts`) : ~320 Ko → ~180 Ko de HTML.
 - **Modale accessible** — Le reste de la page est rendu `inert` pendant l'ouverture, et le focus ne saute plus quand le parent se re-rend (`onClose` lu via une ref).
 - **Robustesse** — `app/global-error.tsx` (une erreur du layout racine affichait la page brute de Next, en anglais) ; accès `localStorage` protégés ; `/api/blog/latest?limit=abc` renvoie la valeur par défaut.

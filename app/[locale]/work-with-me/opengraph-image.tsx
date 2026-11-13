@@ -78,10 +78,15 @@ export default async function Image({ params }: Props) {
 
         {/* TOP: availability badge + title */}
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Availability badge */}
+          {/* Availability badge.
+              next/og (Satori) only accepts display: flex | block | contents |
+              none | -webkit-box: "inline-flex" made this route fail with a
+              500. alignSelf keeps the pill as wide as its content inside the
+              column instead of stretching across the card. */}
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
+              alignSelf: "flex-start",
               alignItems: "center",
               gap: 10,
               padding: "10px 20px",

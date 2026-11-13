@@ -8,9 +8,23 @@
 
 export const TITLE_SUFFIX = "Aïcha Imène DAHOUMANE";
 
-/** Page title from the shared template: "{title} — Aïcha Imène DAHOUMANE". */
+/**
+ * Beyond about 60–65 characters Google truncates the title in its results,
+ * and the suffix is the first part lost. Long titles (some blog posts and
+ * projects reach 90–125 characters with the suffix) therefore drop it: the
+ * subject of the page stays readable and the name remains in og:site_name,
+ * the JSON-LD author and the page itself.
+ */
+export const TITLE_MAX = 65;
+
+/**
+ * Page title from the shared template: "{title} — Aïcha Imène DAHOUMANE",
+ * or the bare title when the full form would exceed TITLE_MAX characters.
+ */
 export function pageTitle(title: string): string {
-  return `${title} — ${TITLE_SUFFIX}`;
+  const full = `${title} — ${TITLE_SUFFIX}`;
+  // Count code points ("é", "—" count as 1), like clampDescription.
+  return [...full].length <= TITLE_MAX ? full : title;
 }
 
 const DESCRIPTION_MAX = 160;

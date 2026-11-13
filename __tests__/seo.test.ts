@@ -2,11 +2,32 @@
 // ---------------------
 // Title template and meta description cap (lib/seo.ts).
 
-import { clampDescription, pageTitle, TITLE_SUFFIX } from "@/lib/seo";
+import { clampDescription, pageTitle, TITLE_MAX, TITLE_SUFFIX } from "@/lib/seo";
 
 describe("pageTitle", () => {
   it("applique le gabarit unique « titre — suffixe »", () => {
     expect(pageTitle("Projets")).toBe(`Projets — ${TITLE_SUFFIX}`);
+  });
+
+  it("omet le suffixe quand le titre complet dépasserait TITLE_MAX caractères", () => {
+    const long = "Optimisation des performances SOQL : des requêtes lentes aux résultats";
+    expect(pageTitle(long)).toBe(long);
+  });
+
+  it("garde le suffixe à la limite exacte de TITLE_MAX caractères", () => {
+    const room = TITLE_MAX - [...` — ${TITLE_SUFFIX}`].length;
+    const title = "a".repeat(room);
+    expect(pageTitle(title)).toBe(`${title} — ${TITLE_SUFFIX}`);
+    expect(pageTitle(`${title}a`)).toBe(`${title}a`);
+  });
+});
+
+describe("titres de la page d'accueil", () => {
+  // Les deux variantes (parcours Salesforce et IT Ops) dans les trois langues.
+  it.each(["fr", "en", "es"])("%s : title et titleItops tiennent dans TITLE_MAX", (locale) => {
+    const { metadata } = require(`../messages/${locale}.json`);
+    expect([...metadata.title].length).toBeLessThanOrEqual(TITLE_MAX);
+    expect([...metadata.titleItops].length).toBeLessThanOrEqual(TITLE_MAX);
   });
 });
 
