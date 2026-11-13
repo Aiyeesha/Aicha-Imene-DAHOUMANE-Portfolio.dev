@@ -8772,266 +8772,380 @@ export const projectDetails: ProjectDetails[] = [
   },
   {
     "slug": "vulnerability-assessment-report",
-    "gallery": [],
+    "gallery": [
+      {
+        "alt": "vuln-plan output: the FortiOS vulnerability listed in CISA's KEV catalogue comes first in the remediation plan",
+        "src": "/projects/vulnerability-assessment-report/cover.svg"
+      },
+      {
+        "alt": "Web interface in French: summary, priority bars and the remediation plan with a finding record open",
+        "src": "/projects/vulnerability-assessment-report/web-fr.png"
+      },
+      {
+        "alt": "Web interface in dark theme (English): remediation plan, exposed services and engagement framework",
+        "src": "/projects/vulnerability-assessment-report/web-en-dark.png"
+      },
+      {
+        "alt": "HTML assessment report in French: summary, severity and priority tables",
+        "src": "/projects/vulnerability-assessment-report/report-fr.png"
+      },
+      {
+        "alt": "HTML assessment report in dark theme (English)",
+        "src": "/projects/vulnerability-assessment-report/report-en-dark.png"
+      }
+    ],
     "locales": {
       "en": {
-        "title": "Vulnerability Assessment Tool (Python + CVSS)",
-        "heroSubtitle": "CLI tool for structured vulnerability assessments with CVSS v3.1 scoring and HTML report generation",
+        "title": "Vulnerability Assessment Report — from engagement letter to report",
+        "heroSubtitle": "A vulnerability assessment toolkit that refuses to work outside its written authorisation: scoped scanner import, rate-limited non-intrusive checks with an audit log, CVSS 4.0 scoring, prioritisation with CISA's KEV catalogue, a self-contained report and a web interface",
         "sections": [
           {
             "type": "text",
             "title": "Context",
-            "paragraphs": [
-              "The initial plan called for a report based on a simulated Nessus scan against a fictional network. In practice, I built my own scanner instead of replaying an existing tool's output — a stronger signal for a SOC/Pentest/AppSec role: the ability to design and code a vulnerability assessment tool (check architecture, CVSS scoring engine, report generation), not just read Nessus output."
+            "body": "I rebuilt this project from scratch to replace a July 2026 prototype that scanned any target without a declared scope. The aim: an assessment a small company or an internal auditor can defend — every action traceable to a written authorisation, every score computed rather than typed, every priority explained. Atelier Lumen, the fictional company used across my security projects, provides a complete example engagement in French and English."
+          },
+          {
+            "type": "bullets",
+            "title": "What the repository contains",
+            "items": [
+              "An engagement format in TOML: written authorisation, targets (addresses, CIDR, exact host names), exclusions, rules of engagement (active checks, rate, hours, remediation delays)",
+              "A findings format: asset in scope, CVSS 4.0 and/or 3.1 vector, CWE, CVE, evidence, remediation, status (open, fixed, accepted or false positive with a justification)",
+              "Five commands: vuln-check (validation), vuln-import (Nmap, OpenVAS/Greenbone, Nuclei), vuln-scan (active checks), vuln-plan (prioritisation) and vuln-report (Markdown, HTML, JSON)",
+              "A step-by-step assessment guide mapped to ISO/IEC 27001 (8.8, 5.35), NIST SP 800-115, CIS Controls 7 and CISA BOD 22-01, in French and English"
             ]
           },
           {
             "type": "bullets",
+            "title": "Safeguards",
             "items": [
-              "Network: concurrent port scan (ThreadPoolExecutor, 1-1024), risky-service detection (SMB/445, Telnet/23, unauthenticated Redis/6379, RDP/3389), DNS zone transfer attempt (AXFR)",
-              "System: inspects the machine running the tool (not the target) — OS version, SSH configuration (sshd_config), world-writable files in /tmp",
-              "Web: missing security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), TLS certificate validity"
-            ],
-            "title": "Methodology — 3 check families"
-          },
-          {
-            "type": "text",
-            "title": "The CVSS v3.1 engine",
-            "paragraphs": [
-              "Each finding carries a CVSS vector (attack vector, complexity, privileges required, user interaction, confidentiality/integrity/availability impact). The score isn't a hand-picked constant — it's computed via the standard's official formula (Exploitability × Impact, with the CVSS spec's Roundup algorithm). Real example — an exposed, unauthenticated SMB service computes CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8 (Critical). Severity is then derived from the computed score, not assigned separately, which eliminates any risk of a mismatch between score and displayed severity."
+              "Nothing is imported or contacted without a valid engagement: authorisation dated before the start, today within the dates, local time within the authorised hours",
+              "Scope enforced on every result: out-of-scope scanner results are set aside and listed; an authorised name resolving to an unlisted address is refused (DNS rebinding), and connections go to the vetted address only",
+              "Active checks are non-intrusive (TLS versions, certificate, security headers, version disclosure, HTTPS redirect), capped at max_rate connections per second, confirmed explicitly, and written to a JSON Lines audit log",
+              "Scanner files read safely: XML entities and DTDs refused, size limits, UTF-8 required"
             ]
           },
           {
             "type": "bullets",
+            "title": "Scoring and prioritisation",
             "items": [
-              "TLS check never triggered: getpeercert() returns {} when verify_mode=CERT_NONE, so expired-certificate detection silently never worked. Fixed by reading the certificate in DER form (binary_form=True) and parsing via cryptography — verified against expired.badssl.com, correctly detecting a certificate expired since 2015",
-              "Sequential port scan: 1024 ports × 0.5s timeout, up to 8-9 minutes per scan. Fixed with ThreadPoolExecutor (concurrent scan) — 8.5 min → 6.4 sec measured live against localhost",
-              "Hardcoded CVSS score: the README advertised CVSS v3.1 scoring but the scores were hand-picked constants. Implemented the real formula (Exploitability, Impact, Roundup)",
-              "Scope confusion: system checks were analyzing the local machine, not the --target host, undocumented anywhere. IDs renamed to LOCAL-*, with explicit docstrings, README notes, and a console banner",
-              "No authorization guard: the tool scanned any target without confirmation. Added an interactive confirmation prompt plus an --i-am-authorized flag for non-interactive/CI use"
-            ],
-            "title": "Bugs found and fixed during code review"
+              "CVSS 4.0 implemented from the FIRST specification (macro-vectors and lookup table) and CVSS 3.1 with the official Roundup — scores are never typed by hand",
+              "Levels P1–P4 from the severity, one level lower for internally exposed assets, P1 for any CVE in CISA's Known Exploited Vulnerabilities catalogue, read offline",
+              "Due dates per level (7/30/90/180 days by default, or the client's own delays), closed findings kept apart"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Report and web interface",
+            "items": [
+              "Report in Markdown, a single-file HTML (no script, CSP with a SHA-256 hash, WCAG AA contrast, print-ready) and JSON",
+              "Web interface on GitHub Pages: summary, filterable remediation plan with a full record per finding, exposed services, CSV export protected against formula injection",
+              "The opened report is read locally and never sent or kept; every field is validated before display"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Engineering quality",
             "items": [
               {
-                "note": "SMB/445 → Critical (9.8), MSRPC/135 → Medium (5.3) — down from 8.5 min before the concurrency fix",
-                "label": "localhost scan",
-                "value": "6.4 sec"
+                "label": "Automated tests",
+                "value": "205",
+                "note": "183 Python + 22 web"
               },
               {
-                "note": "expired.badssl.com — expired since 2015-04-12",
-                "label": "Expired TLS certificate",
-                "value": "Correctly detected"
+                "label": "CI jobs",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, examples, web interface"
               },
               {
-                "note": "example.com — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy",
-                "label": "Security headers",
-                "value": "5 missing headers detected"
+                "label": "CVSS 4.0 vectors cross-checked",
+                "value": "30,000",
+                "note": "against an independent library; every difference is a documented half-decimal rounding case"
+              },
+              {
+                "label": "Runtime dependencies",
+                "value": "0"
               }
-            ],
-            "title": "Real test results"
+            ]
           },
           {
-            "type": "metrics",
+            "type": "timeline",
+            "title": "How it is used",
+            "steps": [
+              {
+                "label": "Frame",
+                "description": "Record the written authorisation, scope and rules in the engagement file; vuln-check refuses anything inconsistent."
+              },
+              {
+                "label": "Collect",
+                "description": "Import Nmap, OpenVAS and Nuclei results and run the active checks — only within scope, with an audit log."
+              },
+              {
+                "label": "Qualify and score",
+                "description": "Review each finding, mark false positives and accepted risks, and set CVSS vectors with the threat metric."
+              },
+              {
+                "label": "Prioritise and report",
+                "description": "vuln-plan ranks the findings with the KEV catalogue; vuln-report produces the report and the JSON for the web interface."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Links",
             "items": [
               {
-                "note": "No external scanner binaries (nmap, Nessus...)",
-                "label": "Stack",
-                "value": "Python 3.11+, Jinja2, cryptography"
+                "label": "Live interface",
+                "href": "https://aiyeesha.github.io/vulnerability-assessment-report/"
               },
               {
-                "note": "CVSS engine + data models",
-                "label": "Tests",
-                "value": "12 pytest tests"
+                "label": "Source code",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report"
               },
               {
-                "note": "SIEM/ticketing-compatible",
-                "label": "Output",
-                "value": "Self-contained HTML report + JSON export"
+                "label": "Assessment guide (English)",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report/blob/main/docs/en/assessment-guide.md"
               },
               {
-                "note": "Confirmation required, or --i-am-authorized",
-                "label": "Legal framework",
-                "value": "Built-in authorization guard"
+                "label": "Release v1.1.0",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report/releases/tag/v1.1.0"
               }
-            ],
-            "title": "Outcomes"
+            ]
           }
         ]
       },
       "fr": {
-        "title": "Outil d'évaluation de vulnérabilités (Python + CVSS)",
-        "heroSubtitle": "CLI Python pour des audits de vulnérabilités structurés avec scoring CVSS v3.1 et génération de rapports HTML",
+        "title": "Évaluation des vulnérabilités — de la lettre de mission au rapport",
+        "heroSubtitle": "Un outillage d'évaluation des vulnérabilités qui refuse de sortir de son autorisation écrite : import des scanners dans le périmètre, contrôles actifs non intrusifs à débit plafonné avec journal d'audit, notation CVSS 4.0, priorisation avec le catalogue KEV de la CISA, rapport autonome et interface web",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
-            "paragraphs": [
-              "Le plan initial prévoyait un rapport basé sur un scan Nessus simulé contre un réseau fictif. En pratique, j'ai construit mon propre scanner plutôt que de rejouer la sortie d'un outil existant — un signal plus fort pour un poste SOC/Pentest/AppSec : la capacité à concevoir et coder un outil d'évaluation de vulnérabilités (architecture des checks, moteur de scoring CVSS, génération de rapport), pas seulement à lire la sortie de Nessus."
+            "body": "J'ai reconstruit ce projet de zéro pour remplacer un prototype de juillet 2026 qui scannait n'importe quelle cible sans périmètre déclaré. L'objectif : une évaluation qu'une PME ou un auditeur interne peut défendre — chaque action rattachée à une autorisation écrite, chaque note calculée plutôt que saisie, chaque priorité expliquée. Atelier Lumen, l'entreprise fictive de mes projets de sécurité, fournit une mission d'exemple complète en français et en anglais."
+          },
+          {
+            "type": "bullets",
+            "title": "Ce que contient le dépôt",
+            "items": [
+              "Un format de mission en TOML : autorisation écrite, cibles (adresses, CIDR, noms d'hôte exacts), exclusions, règles d'engagement (contrôles actifs, débit, horaires, délais de remédiation)",
+              "Un format de constats : actif du périmètre, vecteur CVSS 4.0 et/ou 3.1, CWE, CVE, preuve, remédiation, statut (ouvert, corrigé, accepté ou faux positif avec justification)",
+              "Cinq commandes : vuln-check (vérification), vuln-import (Nmap, OpenVAS/Greenbone, Nuclei), vuln-scan (contrôles actifs), vuln-plan (priorisation) et vuln-report (Markdown, HTML, JSON)",
+              "Un guide d'évaluation pas à pas, rattaché à l'ISO/IEC 27001 (8.8, 5.35), au NIST SP 800-115, aux CIS Controls 7 et à la directive CISA BOD 22-01, en français et en anglais"
             ]
           },
           {
             "type": "bullets",
+            "title": "Garde-fous",
             "items": [
-              "Network : scan de ports concurrent (ThreadPoolExecutor, 1-1024), détection de services à risque (SMB/445, Telnet/23, Redis/6379 sans auth, RDP/3389), tentative de zone transfer DNS (AXFR)",
-              "System : inspecte la machine qui exécute l'outil (pas la cible) — version OS, configuration SSH (sshd_config), fichiers world-writable dans /tmp",
-              "Web : headers de sécurité manquants (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), validité du certificat TLS"
-            ],
-            "title": "Méthodologie — 3 familles de checks"
-          },
-          {
-            "type": "text",
-            "title": "Le moteur CVSS v3.1",
-            "paragraphs": [
-              "Chaque finding porte un vecteur CVSS (vecteur d'attaque, complexité, privilèges requis, interaction utilisateur, impact confidentialité/intégrité/disponibilité). Le score n'est pas une constante choisie à la main : il est calculé via la formule officielle du standard (Exploitability × Impact, algorithme Roundup du spec CVSS). Exemple réel — un SMB exposé sans authentification calcule CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8 (Critical). La sévérité est ensuite dérivée du score calculé, pas assignée séparément, ce qui élimine tout risque d'incohérence entre score et sévérité affichée."
+              "Rien n'est importé ni contacté sans mission valide : autorisation antérieure au début, date du jour dans la mission, heure locale dans la plage autorisée",
+              "Périmètre appliqué à chaque résultat : les résultats hors périmètre sont écartés et listés ; un nom autorisé qui se résout vers une adresse non listée est refusé (DNS rebinding), et les connexions visent la seule adresse vérifiée",
+              "Contrôles actifs non intrusifs (versions TLS, certificat, en-têtes de sécurité, version divulguée, redirection HTTPS), plafonnés à max_rate connexions par seconde, confirmés explicitement et inscrits dans un journal d'audit JSON Lines",
+              "Fichiers des scanners lus de façon sûre : entités XML et DTD refusées, tailles bornées, UTF-8 exigé"
             ]
           },
           {
             "type": "bullets",
+            "title": "Notation et priorisation",
             "items": [
-              "Check TLS jamais déclenché : getpeercert() retourne {} quand verify_mode=CERT_NONE, donc la détection de certificat expiré ne fonctionnait jamais, silencieusement. Corrigé par une lecture du certificat en DER (binary_form=True) + parsing via cryptography — vérifié contre expired.badssl.com, qui détecte bien un certificat expiré depuis 2015",
-              "Scan de ports séquentiel : 1024 ports × 0,5 s de timeout, jusqu'à 8-9 minutes par scan. Corrigé avec ThreadPoolExecutor (scan concurrent) — 8,5 min → 6,4 s mesuré en réel sur localhost",
-              "Score CVSS codé en dur : le README annonçait un calcul CVSS v3.1 mais les scores étaient des constantes choisies à la main. Implémentation de la vraie formule (Exploitability, Impact, Roundup)",
-              "Confusion de périmètre : les checks system analysaient la machine locale, pas la cible --target, sans que ce soit documenté nulle part. IDs renommés LOCAL-*, docstrings + README + bannière console explicites",
-              "Aucun garde-fou d'autorisation : l'outil scannait n'importe quelle cible sans confirmation. Ajout d'un prompt de confirmation interactif + flag --i-am-authorized pour usage non-interactif/CI"
-            ],
-            "title": "Bugs trouvés et corrigés pendant la revue de code"
+              "CVSS 4.0 implémenté depuis la spécification du FIRST (macro-vecteurs et table de correspondance) et CVSS 3.1 avec le Roundup officiel — les notes ne sont jamais saisies à la main",
+              "Niveaux P1–P4 selon la gravité, un niveau de moins pour un actif exposé seulement en interne, P1 pour toute CVE du catalogue Known Exploited Vulnerabilities de la CISA, lu hors ligne",
+              "Échéances par niveau (7/30/90/180 jours par défaut, ou les délais du client), constats clos tenus à part"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Rapport et interface web",
+            "items": [
+              "Rapport en Markdown, en HTML autonome (aucun script, CSP par empreinte SHA-256, contraste WCAG AA, prêt à imprimer) et en JSON",
+              "Interface web sur GitHub Pages : synthèse, plan de remédiation filtrable avec la fiche complète de chaque constat, services exposés, export CSV protégé contre l'injection de formules",
+              "Le rapport ouvert est lu localement, jamais envoyé ni conservé ; chaque champ est validé avant affichage"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Qualité d'ingénierie",
             "items": [
               {
-                "note": "SMB/445 → Critical (9.8), MSRPC/135 → Medium (5.3) — contre 8,5 min avant le fix de concurrence",
-                "label": "Scan localhost",
-                "value": "6,4 s"
+                "label": "Tests automatisés",
+                "value": "205",
+                "note": "183 Python + 22 web"
               },
               {
-                "note": "expired.badssl.com — expiré depuis le 12/04/2015",
-                "label": "Certificat TLS expiré",
-                "value": "Détecté correctement"
+                "label": "Jobs de CI",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, exemples, interface web"
               },
               {
-                "note": "example.com — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy",
-                "label": "Headers de sécurité",
-                "value": "5 headers manquants détectés"
+                "label": "Vecteurs CVSS 4.0 recoupés",
+                "value": "30 000",
+                "note": "avec une bibliothèque indépendante ; chaque écart est un cas d'arrondi documenté"
+              },
+              {
+                "label": "Dépendances d'exécution",
+                "value": "0"
               }
-            ],
-            "title": "Résultats de tests réels"
+            ]
           },
           {
-            "type": "metrics",
+            "type": "timeline",
+            "title": "Comment s'en servir",
+            "steps": [
+              {
+                "label": "Cadrer",
+                "description": "Consigner l'autorisation écrite, le périmètre et les règles dans le fichier de mission ; vuln-check refuse toute incohérence."
+              },
+              {
+                "label": "Collecter",
+                "description": "Importer les résultats Nmap, OpenVAS et Nuclei et lancer les contrôles actifs — seulement dans le périmètre, avec journal d'audit."
+              },
+              {
+                "label": "Qualifier et noter",
+                "description": "Relire chaque constat, marquer faux positifs et risques acceptés, renseigner les vecteurs CVSS avec la métrique de menace."
+              },
+              {
+                "label": "Prioriser et rendre compte",
+                "description": "vuln-plan classe les constats avec le catalogue KEV ; vuln-report produit le rapport et le JSON de l'interface web."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Liens",
             "items": [
               {
-                "note": "Aucun binaire de scan externe (nmap, Nessus...)",
-                "label": "Stack",
-                "value": "Python 3.11+, Jinja2, cryptography"
+                "label": "Interface en ligne",
+                "href": "https://aiyeesha.github.io/vulnerability-assessment-report/"
               },
               {
-                "note": "Moteur CVSS + modèles de données",
-                "label": "Tests",
-                "value": "12 tests pytest"
+                "label": "Code source",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report"
               },
               {
-                "note": "Compatible SIEM/ticketing",
-                "label": "Sortie",
-                "value": "Rapport HTML autonome + export JSON"
+                "label": "Guide d'évaluation (français)",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report/blob/main/docs/fr/guide-evaluation.md"
               },
               {
-                "note": "Confirmation requise ou --i-am-authorized",
-                "label": "Cadre légal",
-                "value": "Garde-fou d'autorisation intégré"
+                "label": "Version v1.1.0",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report/releases/tag/v1.1.0"
               }
-            ],
-            "title": "Résultats"
+            ]
           }
         ]
       },
       "es": {
-        "title": "Herramienta de evaluación de vulnerabilidades (Python + CVSS)",
-        "heroSubtitle": "Herramienta CLI para evaluaciones de vulnerabilidades estructuradas con puntuación CVSS v3.1 y generación de informes HTML",
+        "title": "Evaluación de vulnerabilidades — de la carta de encargo al informe",
+        "heroSubtitle": "Un conjunto de herramientas de evaluación de vulnerabilidades que se niega a salir de su autorización escrita: importación de escáneres dentro del alcance, comprobaciones activas no intrusivas con tasa limitada y registro de auditoría, puntuación CVSS 4.0, priorización con el catálogo KEV de la CISA, informe autónomo e interfaz web",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
-            "paragraphs": [
-              "El plan inicial preveía un informe basado en un escaneo Nessus simulado contra una red ficticia. En la práctica, construí mi propio escáner en lugar de reproducir la salida de una herramienta existente — una señal más fuerte para un puesto SOC/Pentest/AppSec: la capacidad de diseñar y programar una herramienta de evaluación de vulnerabilidades (arquitectura de checks, motor de puntuación CVSS, generación de informes), no solo leer la salida de Nessus."
+            "body": "Reconstruí este proyecto desde cero para sustituir un prototipo de julio de 2026 que escaneaba cualquier objetivo sin un alcance declarado. El objetivo: una evaluación que una pyme o un auditor interno pueda defender — cada acción vinculada a una autorización escrita, cada puntuación calculada en lugar de introducida a mano, cada prioridad explicada. Atelier Lumen, la empresa ficticia de mis proyectos de seguridad, aporta un encargo de ejemplo completo en francés y en inglés."
+          },
+          {
+            "type": "bullets",
+            "title": "Qué contiene el repositorio",
+            "items": [
+              "Un formato de encargo en TOML: autorización escrita, objetivos (direcciones, CIDR, nombres de host exactos), exclusiones, reglas de intervención (comprobaciones activas, tasa, horario, plazos de remediación)",
+              "Un formato de hallazgos: activo dentro del alcance, vector CVSS 4.0 y/o 3.1, CWE, CVE, evidencia, remediación, estado (abierto, corregido, aceptado o falso positivo con justificación)",
+              "Cinco comandos: vuln-check (validación), vuln-import (Nmap, OpenVAS/Greenbone, Nuclei), vuln-scan (comprobaciones activas), vuln-plan (priorización) y vuln-report (Markdown, HTML, JSON)",
+              "Una guía de evaluación paso a paso, vinculada a ISO/IEC 27001 (8.8, 5.35), NIST SP 800-115, CIS Controls 7 y la directiva CISA BOD 22-01, en francés y en inglés"
             ]
           },
           {
             "type": "bullets",
+            "title": "Salvaguardas",
             "items": [
-              "Network: escaneo de puertos concurrente (ThreadPoolExecutor, 1-1024), detección de servicios de riesgo (SMB/445, Telnet/23, Redis/6379 sin autenticación, RDP/3389), intento de transferencia de zona DNS (AXFR)",
-              "System: inspecciona la máquina que ejecuta la herramienta (no el objetivo) — versión del SO, configuración SSH (sshd_config), archivos con permisos de escritura global en /tmp",
-              "Web: cabeceras de seguridad ausentes (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), validez del certificado TLS"
-            ],
-            "title": "Metodología — 3 familias de checks"
-          },
-          {
-            "type": "text",
-            "title": "El motor CVSS v3.1",
-            "paragraphs": [
-              "Cada hallazgo lleva un vector CVSS (vector de ataque, complejidad, privilegios requeridos, interacción del usuario, impacto en confidencialidad/integridad/disponibilidad). La puntuación no es una constante elegida a mano: se calcula mediante la fórmula oficial del estándar (Exploitability × Impact, con el algoritmo Roundup de la especificación CVSS). Ejemplo real — un servicio SMB expuesto sin autenticación calcula CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8 (Crítico). La severidad se deriva después de la puntuación calculada, no se asigna por separado, lo que elimina cualquier riesgo de incoherencia entre la puntuación y la severidad mostrada."
+              "Nada se importa ni se contacta sin un encargo válido: autorización anterior al inicio, fecha actual dentro del encargo, hora local dentro del horario autorizado",
+              "Alcance aplicado a cada resultado: los resultados fuera del alcance se apartan y se listan; un nombre autorizado que resuelve a una dirección no listada se rechaza (DNS rebinding), y las conexiones van solo a la dirección verificada",
+              "Comprobaciones activas no intrusivas (versiones TLS, certificado, cabeceras de seguridad, versión expuesta, redirección HTTPS), limitadas a max_rate conexiones por segundo, confirmadas explícitamente y anotadas en un registro de auditoría JSON Lines",
+              "Archivos de los escáneres leídos de forma segura: entidades XML y DTD rechazadas, tamaños limitados, UTF-8 obligatorio"
             ]
           },
           {
             "type": "bullets",
+            "title": "Puntuación y priorización",
             "items": [
-              "El check TLS nunca se activaba: getpeercert() devuelve {} cuando verify_mode=CERT_NONE, por lo que la detección de certificados expirados nunca funcionaba, de forma silenciosa. Corregido leyendo el certificado en formato DER (binary_form=True) y analizándolo con cryptography — verificado contra expired.badssl.com, que detecta correctamente un certificado expirado desde 2015",
-              "Escaneo de puertos secuencial: 1024 puertos × 0,5 s de timeout, hasta 8-9 minutos por escaneo. Corregido con ThreadPoolExecutor (escaneo concurrente) — 8,5 min → 6,4 s medido en real contra localhost",
-              "Puntuación CVSS codificada a mano: el README anunciaba un cálculo CVSS v3.1 pero las puntuaciones eran constantes elegidas manualmente. Implementación de la fórmula real (Exploitability, Impact, Roundup)",
-              "Confusión de alcance: los checks system analizaban la máquina local, no el objetivo --target, sin documentarlo en ningún sitio. IDs renombrados a LOCAL-*, con docstrings, notas en el README y un aviso en consola explícitos",
-              "Sin garantía de autorización: la herramienta escaneaba cualquier objetivo sin confirmación. Se añadió un aviso de confirmación interactivo más un flag --i-am-authorized para uso no interactivo/CI"
-            ],
-            "title": "Errores encontrados y corregidos durante la revisión de código"
+              "CVSS 4.0 implementado a partir de la especificación del FIRST (macrovectores y tabla de correspondencia) y CVSS 3.1 con el Roundup oficial — las puntuaciones nunca se introducen a mano",
+              "Niveles P1–P4 según la gravedad, un nivel menos para un activo expuesto solo internamente, P1 para cualquier CVE del catálogo Known Exploited Vulnerabilities de la CISA, leído sin conexión",
+              "Plazos por nivel (7/30/90/180 días por defecto, o los del cliente), hallazgos cerrados aparte"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Informe e interfaz web",
+            "items": [
+              "Informe en Markdown, en HTML autónomo (sin scripts, CSP con hash SHA-256, contraste WCAG AA, listo para imprimir) y en JSON",
+              "Interfaz web en GitHub Pages: resumen, plan de remediación filtrable con la ficha completa de cada hallazgo, servicios expuestos, exportación CSV protegida contra la inyección de fórmulas",
+              "El informe abierto se lee localmente, nunca se envía ni se conserva; cada campo se valida antes de mostrarse"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Calidad de ingeniería",
             "items": [
               {
-                "note": "SMB/445 → Crítico (9.8), MSRPC/135 → Medio (5.3) — frente a 8,5 min antes de la corrección de concurrencia",
-                "label": "Escaneo de localhost",
-                "value": "6,4 s"
+                "label": "Pruebas automatizadas",
+                "value": "205",
+                "note": "183 Python + 22 web"
               },
               {
-                "note": "expired.badssl.com — expirado desde el 12/04/2015",
-                "label": "Certificado TLS expirado",
-                "value": "Detectado correctamente"
+                "label": "Jobs de CI",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, ejemplos, interfaz web"
               },
               {
-                "note": "example.com — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy",
-                "label": "Cabeceras de seguridad",
-                "value": "5 cabeceras ausentes detectadas"
+                "label": "Vectores CVSS 4.0 contrastados",
+                "value": "30 000",
+                "note": "con una biblioteca independiente; cada diferencia es un caso de redondeo documentado"
+              },
+              {
+                "label": "Dependencias en ejecución",
+                "value": "0"
               }
-            ],
-            "title": "Resultados de pruebas reales"
+            ]
           },
           {
-            "type": "metrics",
+            "type": "timeline",
+            "title": "Cómo se usa",
+            "steps": [
+              {
+                "label": "Enmarcar",
+                "description": "Registrar la autorización escrita, el alcance y las reglas en el archivo de encargo; vuln-check rechaza cualquier incoherencia."
+              },
+              {
+                "label": "Recopilar",
+                "description": "Importar los resultados de Nmap, OpenVAS y Nuclei y lanzar las comprobaciones activas — solo dentro del alcance, con registro de auditoría."
+              },
+              {
+                "label": "Calificar y puntuar",
+                "description": "Revisar cada hallazgo, marcar falsos positivos y riesgos aceptados, y fijar los vectores CVSS con la métrica de amenaza."
+              },
+              {
+                "label": "Priorizar e informar",
+                "description": "vuln-plan ordena los hallazgos con el catálogo KEV; vuln-report genera el informe y el JSON de la interfaz web."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Enlaces",
             "items": [
               {
-                "note": "Sin binarios de escaneo externos (nmap, Nessus...)",
-                "label": "Stack",
-                "value": "Python 3.11+, Jinja2, cryptography"
+                "label": "Interfaz en línea",
+                "href": "https://aiyeesha.github.io/vulnerability-assessment-report/"
               },
               {
-                "note": "Motor CVSS + modelos de datos",
-                "label": "Tests",
-                "value": "12 tests pytest"
+                "label": "Código fuente",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report"
               },
               {
-                "note": "Compatible con SIEM/ticketing",
-                "label": "Salida",
-                "value": "Informe HTML autónomo + exportación JSON"
+                "label": "Guía de evaluación (inglés)",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report/blob/main/docs/en/assessment-guide.md"
               },
               {
-                "note": "Confirmación requerida, o --i-am-authorized",
-                "label": "Marco legal",
-                "value": "Garantía de autorización integrada"
+                "label": "Versión v1.1.0",
+                "href": "https://github.com/Aiyeesha/vulnerability-assessment-report/releases/tag/v1.1.0"
               }
-            ],
-            "title": "Resultados"
+            ]
           }
         ]
       }
