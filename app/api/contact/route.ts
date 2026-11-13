@@ -131,6 +131,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true }, { status: 200 });
   }
 
+  // No Formhook endpoint in production: refuse rather than answer "sent" for
+  // a message that would go nowhere (same rule as /api/testimonial-submit).
+  // The visitor sees the "use another channel" error (upstream_failed).
+  if (process.env.NODE_ENV === "production") {
+    log.error("contact/formhook-not-configured", {});
+    return NextResponse.json({ ok: false, error: "upstream_failed" }, { status: 503 });
+  }
+
   // Dev fallback: log the topic only, no personal data
   log.info("contact/received", { topic, locale: clientLocale });
   return NextResponse.json({ ok: true }, { status: 200 });

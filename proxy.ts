@@ -195,6 +195,28 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
+  // ── Shareable profile link: ?track=itops | ?track=salesforce ─────────────
+  // The Salesforce / IT Ops choice lives in the `track` cookie, so a link
+  // could not open a given profile. With ?track=…, the cookie is set and the
+  // visitor is redirected to the same URL without the parameter: one
+  // canonical URL per page, and the page renders the right profile from the
+  // first paint. Unknown values are ignored (the parameter is just dropped).
+  const trackParam = request.nextUrl.searchParams.get("track");
+  if (trackParam !== null) {
+    const clean = request.nextUrl.clone();
+    clean.searchParams.delete("track");
+    const redirect = NextResponse.redirect(clean, 307);
+    if (trackParam === "itops" || trackParam === "salesforce") {
+      redirect.cookies.set("track", trackParam, {
+        path: "/",
+        maxAge: 31536000,
+        sameSite: "lax",
+        secure: request.nextUrl.protocol === "https:",
+      });
+    }
+    return redirect;
+  }
+
   // ── 3. i18n routing ───────────────────────────────────────────────────────
   const intlResponse = intlHandler(request);
 

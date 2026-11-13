@@ -30,7 +30,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         contract: "CDI",
         period: "Oct. 2025 — Nov. 2026",
         location: "Télétravail",
-        note: "CDI proposé à l'issue de l'alternance, sans période d'essai. Départ prévu le 30 novembre 2026.",
+        note: "CDI proposé à l'issue de l'alternance, sans période d'essai. Fin de contrat le 30 novembre 2026.",
         highlights: [
           "Conception et mise en œuvre de solutions Salesforce avancées en collaboration avec les équipes métier.",
           "Optimisation et refactoring du code Apex existant pour améliorer la qualité, la performance et la maintenabilité.",
@@ -83,7 +83,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         contract: "Contrato indefinido",
         period: "oct. 2025 — nov. 2026",
         location: "Remoto",
-        note: "Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba. Salida prevista el 30 de noviembre de 2026.",
+        note: "Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba. Fin del contrato el 30 de noviembre de 2026.",
         highlights: [
           "Diseño e implementación de soluciones Salesforce avanzadas en estrecha colaboración con las áreas de negocio.",
           "Refactorización del código Apex existente para mejorar la calidad, el rendimiento y la mantenibilidad.",
@@ -136,7 +136,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       contract: "Full-time",
       period: "Oct 2025 — Nov 2026",
       location: "Remote",
-      note: "Direct conversion from apprenticeship — no probation period. Leaving on November 30, 2026.",
+      note: "Direct conversion from apprenticeship — no probation period. Contract end date: November 30, 2026.",
       highlights: [
         "Designed and delivered advanced Salesforce solutions in close collaboration with business stakeholders.",
         "Refactored existing Apex codebases to improve quality, performance and maintainability.",

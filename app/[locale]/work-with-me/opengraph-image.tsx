@@ -1,7 +1,7 @@
 // app/[locale]/work-with-me/opengraph-image.tsx
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
-import { AVAILABILITY } from "@/lib/availability";
+import { availability } from "@/lib/availability";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -23,7 +23,8 @@ export default async function Image({ params }: Props) {
     : isEs
     ? "Administradora & Desarrolladora Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
     : "Salesforce Administrator & Developer · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
-  const availLabel = isFr ? `Entretiens dès maintenant — Disponible ${AVAILABILITY.fr.from}` : isEs ? `Entrevistas desde ya — Disponible ${AVAILABILITY.es.from}` : `Interviews now — Available ${AVAILABILITY.en.from}`;
+  // "Interviews now — available from …", then "available immediately".
+  const availLabel = availability(locale).summary.replace(" · ", " — ");
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
