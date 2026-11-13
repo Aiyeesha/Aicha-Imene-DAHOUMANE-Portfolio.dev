@@ -79,10 +79,18 @@ export default function Providers({
   // cleared while localStorage persists, or on a very first visit before
   // setTrack() has set the cookie.
   useEffect(() => {
+    // When the cookie exists it wins: it may have just been set by a shared
+    // ?track=… link (proxy.ts), and an older localStorage value must not
+    // flip the page back. localStorage is then aligned with it.
+    const cookieTrack = document.cookie.match(/(?:^|;\s*)track=(itops|salesforce)(?:;|$)/)?.[1];
     // Storage can throw (SecurityError) when site data is blocked: the
     // fallback is then simply skipped.
     let saved: string | null = null;
     try {
+      if (cookieTrack) {
+        localStorage.setItem("track", cookieTrack);
+        return;
+      }
       saved = localStorage.getItem("track");
     } catch {
       return;

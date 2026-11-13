@@ -4,6 +4,7 @@ import { getSiteUrl } from "@/lib/siteUrl";
 import { getTranslations } from "next-intl/server";
 import { jsonLdStringify } from "@/lib/security/jsonLdSafe";
 import WorkWithMeContent from "./work-with-me-content";
+import { isAvailableNow } from "@/lib/availability";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
@@ -83,7 +84,7 @@ export default async function WorkWithMePage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(jsonLdBreadcrumb) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdStringify(faqJsonLd) }} />
-      <WorkWithMeContent locale={locale} />
+      <WorkWithMeContent locale={locale} availableNow={isAvailableNow()} />
     </>
   );
 }

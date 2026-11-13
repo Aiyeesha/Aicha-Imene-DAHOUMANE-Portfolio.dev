@@ -280,11 +280,13 @@ export default async function StatusPage({
             return (
               <div
                 key={service.name}
-                className="flex items-center justify-between gap-2 bg-white dark:bg-white/2 px-4 py-4 sm:gap-4 sm:px-6"
+                // Below sm the name and description get their own line (they
+                // were cut to "Formul…" at 375px); one row from sm upwards.
+                className="flex flex-col items-start gap-2 bg-white dark:bg-white/2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{SERVICE_NAMES[service.name]?.[safeLocale] ?? service.name}</p>
-                  <p className="truncate text-xs text-muted-2">{desc}</p>
+                  <p className="text-sm font-medium sm:truncate">{SERVICE_NAMES[service.name]?.[safeLocale] ?? service.name}</p>
+                  <p className="text-xs text-muted-2 sm:truncate">{desc}</p>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 sm:gap-3">

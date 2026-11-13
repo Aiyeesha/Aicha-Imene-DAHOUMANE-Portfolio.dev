@@ -1,5 +1,7 @@
 import {getRequestConfig} from "next-intl/server";
 import {routing} from "./routing";
+import {isAvailableNow} from "../lib/availability";
+import {availableNowMessages} from "../lib/i18n/availableNowOverrides";
 
 /**
  * next-intl plugin will look for this file by default:
@@ -15,8 +17,12 @@ export default getRequestConfig(async ({requestLocale}) => {
     ? (locale as typeof routing.locales[number])
     : routing.defaultLocale;
 
+  const messages = (await import(`../messages/${safeLocale}.json`)).default;
+
   return {
     locale: safeLocale,
-    messages: (await import(`../messages/${safeLocale}.json`)).default
+    // From the start date on, dated "available from December" wordings are
+    // rewritten to "available immediately" (lib/availability.ts).
+    messages: isAvailableNow() ? availableNowMessages(safeLocale, messages) : messages
   };
 });

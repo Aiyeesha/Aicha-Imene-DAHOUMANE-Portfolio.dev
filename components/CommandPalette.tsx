@@ -199,7 +199,7 @@ export default function CommandPalette({ defaultOpen = false }: { defaultOpen?: 
     if (onHome) {
       run(() => scrollToSection(id));
     } else {
-      run(() => router.push(`/${locale}/#${id}`));
+      run(() => router.push(`/${locale}#${id}`));
     }
   };
 

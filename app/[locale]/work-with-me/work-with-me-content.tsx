@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
 import BookingLink from "@/components/BookingLink";
 import TrackAwareServices from "@/components/TrackAwareServicesLoader";
-import { AVAILABILITY as START_DATE } from "@/lib/availability";
+import { availabilityLabels } from "@/lib/availability";
 
 type AvailabilityStatus = "open" | "limited" | "unavailable";
 
@@ -13,7 +13,10 @@ const AVAILABILITY: { status: AvailabilityStatus } = {
   status: "open",
 };
 
-export default function WorkWithMeContent({ locale }: { locale: string }) {
+export default function WorkWithMeContent({ locale, availableNow }: { locale: string; availableNow: boolean }) {
+  // Phase computed by the server (page.tsx) so server and client render the
+  // same wording, even at the switch date.
+  const START = availabilityLabels(locale, availableNow);
   const { track } = useTrack();
   const isFr = locale === "fr";
   const isEs = locale === "es";
@@ -49,17 +52,23 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
   const labels = {
     kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
-    subtitle:       isFr
-      ? `Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${START_DATE.fr.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
-      : isEs
-      ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${START_DATE.es.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
-      : `A full-time Salesforce Developer at LD Digitales until November 30, 2026, I'm looking for my next role, available ${START_DATE.en.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`,
+    subtitle:       availableNow
+      ? (isFr
+        ? `Après trois ans de développement Salesforce chez LD Digitales (alternance puis CDI, d'octobre 2023 à novembre 2026), je recherche mon prochain poste, disponible ${START.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
+        : isEs
+        ? `Tras tres años de desarrollo Salesforce en LD Digitales (formación dual y después contrato indefinido, de octubre de 2023 a noviembre de 2026), busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
+        : `After three years of Salesforce development at LD Digitales (work-study, then full-time, October 2023 to November 2026), I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`)
+      : (isFr
+        ? `Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${START.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
+        : isEs
+        ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
+        : `A full-time Salesforce Developer at LD Digitales until November 30, 2026, I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`),
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
     availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
-    availSince:     isFr ? `Entretiens dès maintenant · Disponible ${START_DATE.fr.from}` : isEs ? `Entrevistas desde ya · Disponible ${START_DATE.es.from}` : `Interviews now · Available ${START_DATE.en.from}`,
+    availSince:     START.summary,
     availContracts: isFr
       ? "CDI · CDD · Intérim · Portage salarial — tous secteurs d'activité"
       : isEs
@@ -102,18 +111,18 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? [
           { n: "01", title: "Premier contact",      desc: "Par email, LinkedIn ou le formulaire recruteur. Je réponds sous 48 h, avec mon CV adapté au poste.",                        badge: "48 h" },
           { n: "02", title: "Entretiens",           desc: "Échange RH, entretien technique (Apex, SOQL, Flow, ou mise en situation systèmes et réseaux), rencontre de l'équipe.",       badge: "Dès maintenant" },
-          { n: "03", title: "Prise de poste",       desc: `Arrivée ${START_DATE.fr.from}, diplômes fournis sur demande.`,                                            badge: START_DATE.fr.badge },
+          { n: "03", title: "Prise de poste",       desc: `Arrivée ${START.from}, diplômes fournis sur demande.`,                                            badge: START.badge },
         ]
       : isEs
       ? [
           { n: "01", title: "Primer contacto",      desc: "Por email, LinkedIn o el formulario para reclutadores. Respondo en 48 h, con mi CV adaptado al puesto.",                     badge: "48 h" },
           { n: "02", title: "Entrevistas",          desc: "Entrevista de RR. HH., entrevista técnica (Apex, SOQL, Flow o caso práctico de sistemas y redes), encuentro con el equipo.", badge: "Desde ya" },
-          { n: "03", title: "Incorporación",        desc: `Incorporación ${START_DATE.es.from}; diplomas disponibles bajo petición.`,                             badge: START_DATE.es.badge },
+          { n: "03", title: "Incorporación",        desc: `Incorporación ${START.from}; diplomas disponibles bajo petición.`,                             badge: START.badge },
         ]
       : [
           { n: "01", title: "First contact",        desc: "By email, LinkedIn or the recruiter form. I reply within 48 hours, with a résumé tailored to the role.",                    badge: "48 h" },
           { n: "02", title: "Interviews",           desc: "HR screening, technical interview (Apex, SOQL, Flow, or a systems and network scenario), meeting the team.",                 badge: "Now" },
-          { n: "03", title: "Start",                desc: `Start ${START_DATE.en.from}; diplomas available on request.`,                                                  badge: START_DATE.en.badge },
+          { n: "03", title: "Start",                desc: `Start ${START.from}; diplomas available on request.`,                                                  badge: START.badge },
         ],
 
     ctaTitle:    isFr ? "Un poste à pourvoir ?" : isEs ? "¿Tienes un puesto por cubrir?" : "Hiring for a role?",
