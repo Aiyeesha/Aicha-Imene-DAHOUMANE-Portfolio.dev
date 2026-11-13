@@ -1187,45 +1187,48 @@ export const projects: Project[] = [
   {
     "slug": "cve-watchlist",
     "nature": "personal",
-    "title": "CVE Watchlist — Real-Time NVD Vulnerability Triage",
-    "excerpt": "Vulnerability triage dashboard syncing real CVE data from the public NVD API, ranked by a transparent priority-scoring engine that cross-references CVSS severity with CISA's Known Exploited Vulnerabilities (KEV) catalog.",
+    "title": "CVE Watchlist — daily vulnerability watch with NVD, CISA KEV & EPSS",
+    "excerpt": "A vulnerability watch for an inventory of products: precise CPE matching against the NVD, prioritisation driven by known exploitation (CISA KEV) and exploitation probability (FIRST EPSS) before CVSS severity, documented risk decisions, day-to-day change tracking — and a GitHub Action that runs the real watch every day and publishes it to a web interface.",
     "track": "itops",
     "categories": [
+      "Vulnerability Management",
       "Security",
-      "Vulnerability Management"
+      "Development"
     ],
     "tags": [
+      "CVE",
       "NVD API",
-      "CVSS",
+      "CPE 2.3",
       "CISA KEV",
-      "FastAPI",
-      "React"
+      "EPSS",
+      "CVSS",
+      "Python",
+      "TypeScript"
     ],
     "badge": {
       "tone": "personal",
       "label": "PERSONAL PROJECT"
     },
+    "repoUrl": "https://github.com/Aiyeesha/cve-watchlist",
+    "liveUrl": "https://aiyeesha.github.io/cve-watchlist/",
     "techStack": [
       "Python",
-      "FastAPI",
-      "SQLAlchemy",
-      "httpx",
-      "React",
+      "TOML",
+      "pytest",
       "TypeScript",
-      "Vite",
-      "SQLite",
-      "Docker",
-      "Pytest"
+      "Node.js test runner",
+      "GitHub Actions",
+      "GitHub Pages"
     ],
+    "updatedAt": "2026-11-13",
     "highlights": [
-      "Live sync against the public NVD REST API v2.0 — no mock data",
-      "Transparent 0-100 priority score: CVSS base score + CISA KEV exploitation flag + attack vector + recency",
-      "Cross-references NVD's cisaExploitAdd field to flag actively-exploited CVEs with remediation deadlines",
-      "13 automated tests, including a fully mocked NVD client for deterministic CI runs",
-      "Verified live: synced 100 real CVEs including a Spring Data RCE scored 89/100"
+      "CPE 2.3 matching against NVD configurations, cross-checked with the NVD's own cpeName results on real products",
+      "Priority P1–P4 driven by exploitation first (CISA KEV, FIRST EPSS), then CVSS severity and exposure",
+      "Risk decisions (not affected, mitigated, accepted) that must be justified and expire",
+      "Daily GitHub Action: real NVD, KEV and EPSS data, changes since the last run, published web interface"
     ],
     "featured": false,
-    "sortOrder": 262,
+    "sortOrder": 271,
     "status": "published",
     "isSecurity": true
   },
