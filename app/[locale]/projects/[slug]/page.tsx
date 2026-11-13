@@ -207,12 +207,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const description = clampDescription(project.hero_subtitle ?? project.summary ?? project.title);
   const canonical = `${siteUrl}/${locale}/projects/${slug}`;
 
-  const firstGalleryImg = project.gallery?.[0]?.src;
-  const ogImage = firstGalleryImg
-    ? firstGalleryImg.startsWith("http")
-      ? firstGalleryImg                      // already an absolute URL
-      : `${siteUrl}${firstGalleryImg}`       // local path: prefix with siteUrl
-    : `${siteUrl}/opengraph-image`;
+  // Share image: the project's own 1200×630 card (./opengraph-image.tsx:
+  // title, summary, stack, track colour). The first gallery screenshot used
+  // to be advertised instead, declared as 1200×630 although the covers range
+  // from 108×126 to 1191×1684 (WebP): LinkedIn and Facebook then cropped
+  // them badly or dropped the preview (Facebook needs at least 200×200).
+  const ogImage = `${siteUrl}/${locale}/projects/${slug}/opengraph-image`;
 
   const languages: Record<string, string> = {
     en: `${siteUrl}/en/projects/${slug}`,
