@@ -18,6 +18,8 @@ import { AVATAR_OG_DATA_URL } from "@/lib/og/avatarData";
 import fr from "@/messages/fr.json";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
+import { isAvailableNow } from "@/lib/availability";
+import { availableNowMessages } from "@/lib/i18n/availableNowOverrides";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 
@@ -40,11 +42,12 @@ const LOCATION: Record<OgLocale, string> = {
 
 // Availability: the hero badge text, so the image never drifts from the site
 // (its date is checked against lib/availability.ts by availability.test.ts).
-const BADGE: Record<OgLocale, string> = {
-  fr: fr.availModal.badge,
-  en: en.availModal.badge,
-  es: es.availModal.badge,
-};
+// Read per render: the wording switches on AVAILABLE_FROM.
+const MESSAGES = { fr, en, es } as const;
+function badge(l: OgLocale): string {
+  const messages = isAvailableNow() ? availableNowMessages(l, MESSAGES[l]) : MESSAGES[l];
+  return messages.availModal.badge;
+}
 
 const SALESFORCE_TAGS = ["Apex", "LWC", "Flows", "SOQL", "CI/CD"];
 const ITOPS_TAGS = ["Windows Server", "AD DS", "Linux", "PfSense", "Docker"];
@@ -114,7 +117,7 @@ export function renderHomeOgImage(locale: string): ImageResponse {
               }}
             >
               <div style={{ display: "flex", width: 12, height: 12, borderRadius: 999, background: "#10b981" }} />
-              {BADGE[l]}
+              {badge(l)}
             </div>
 
             <div style={{ display: "flex", fontSize: 60, fontWeight: 800, lineHeight: 1.05, letterSpacing: -1 }}>

@@ -58,6 +58,32 @@ describe("POST /api/contact — délai Formhook", () => {
     jest.resetModules();
   });
 
+  it("répond 503 en production si Formhook n'est pas configuré (pas de faux succès)", async () => {
+    delete process.env.FORMHOOK_ENDPOINT;
+    const env = process.env as Record<string, string | undefined>;
+    const previous = env.NODE_ENV;
+    env.NODE_ENV = "production";
+    try {
+      jest.resetModules();
+      const { POST } = await import("@/app/api/contact/route");
+      const fetchMock = jest.fn();
+      globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+      // Same-origin request, as sent by the site's own form.
+      const req = new Request("http://localhost/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: "http://localhost", host: "localhost" },
+        body: JSON.stringify(valid),
+      });
+      const res = await POST(req);
+      expect(res.status).toBe(503);
+      expect(await res.json()).toEqual({ ok: false, error: "upstream_failed" });
+      expect(fetchMock).not.toHaveBeenCalled();
+    } finally {
+      env.NODE_ENV = previous;
+    }
+  });
+
   it("répond 502 si Formhook ne répond pas à temps", async () => {
     process.env.FORMHOOK_ENDPOINT = "https://formhook.example/submit";
     jest.resetModules();
