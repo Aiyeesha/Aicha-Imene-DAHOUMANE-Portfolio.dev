@@ -1095,35 +1095,48 @@ export const projects: Project[] = [
   {
     "slug": "vulnerability-assessment-report",
     "nature": "personal",
-    "title": "Vulnerability Assessment Tool (Python + CVSS)",
-    "excerpt": "Python CLI tool that runs modular vulnerability assessments (network, system, web) and generates self-contained HTML reports with CVSS v3.1 base scores, risk-prioritized findings, and JSON export for SIEM/ticketing integration.",
+    "title": "Vulnerability Assessment Report — scoped audit, CVSS 4.0 & CISA KEV",
+    "excerpt": "An end-to-end vulnerability assessment toolkit: a written, authorised scope checked before anything runs, Nmap/OpenVAS/Nuclei import, rate-limited non-intrusive checks with an audit log, CVSS 4.0 scoring, prioritisation with CISA's KEV catalogue, and a self-contained report — plus a web interface to explore the remediation plan.",
     "track": "itops",
     "categories": [
       "Vulnerability Management",
-      "Security"
+      "Security",
+      "Development"
     ],
-    "tags": [],
+    "tags": [
+      "Vulnerability Assessment",
+      "CVSS 4.0",
+      "CISA KEV",
+      "Nmap",
+      "OpenVAS",
+      "Nuclei",
+      "Python",
+      "TypeScript"
+    ],
     "badge": {
       "tone": "personal",
-      "label": "Personal — In Progress"
+      "label": "PERSONAL PROJECT"
     },
+    "repoUrl": "https://github.com/Aiyeesha/vulnerability-assessment-report",
+    "liveUrl": "https://aiyeesha.github.io/vulnerability-assessment-report/",
     "techStack": [
       "Python",
-      "Jinja2",
-      "CVSS v3.1",
-      "JSON",
-      "HTML/CSS",
-      "subprocess"
+      "TOML",
+      "pytest",
+      "TypeScript",
+      "Node.js test runner",
+      "GitHub Actions",
+      "GitHub Pages"
     ],
+    "updatedAt": "2026-11-13",
     "highlights": [
-      "Modular check system: network, system configuration, and web application scans",
-      "Automatic CVSS v3.1 base score calculation per finding",
-      "Risk-prioritized output: Critical / High / Medium / Low / Informational",
-      "Self-contained HTML report with inline CSS — no external dependencies",
-      "JSON export compatible with SIEM and ticketing platforms"
+      "Written authorisation and scope checked before any import or connection, with DNS rebinding protection",
+      "CVSS 4.0 and 3.1 computed from the vector, validated against 30,000 vectors and the full 3.1 space",
+      "Prioritisation P1–P4 from severity, exposure and CISA's KEV catalogue, with due dates",
+      "Self-contained HTML report under a strict CSP, JSON export and a web interface with CSV plan export"
     ],
     "featured": false,
-    "sortOrder": 260,
+    "sortOrder": 270,
     "status": "published",
     "isSecurity": true
   },
