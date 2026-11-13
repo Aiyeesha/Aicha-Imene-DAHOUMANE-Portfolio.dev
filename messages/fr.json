@@ -499,15 +499,13 @@
     "contractValues": "CDI · CDD · Intérim · Portage salarial",
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site",
-    "mobility": "Mobilité",
-    "mobilityValues": "Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale",
+    "locationMobility": "Localisation et mobilité",
+    "locationMobilityValues": "Basée dans le Val-d'Oise (95), Île-de-France · Mobile : Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
     "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
-    "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur · Ouverte à la relocalisation internationale",
     "cta": "Prendre contact →"
   },
   "hybrid": {

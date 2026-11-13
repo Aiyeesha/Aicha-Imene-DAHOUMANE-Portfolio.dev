@@ -499,15 +499,13 @@
     "contractValues": "Indefinido · Temporal · ETT · Portage salarial",
     "workMode": "Modalidades de trabajo",
     "workModeValues": "Híbrido · Presencial",
-    "mobility": "Movilidad",
-    "mobilityValues": "París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional",
+    "locationMobility": "Ubicación y movilidad",
+    "locationMobilityValues": "Con base en Val-d'Oise (95), Île-de-France · Movilidad: París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional",
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
     "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
-    "location": "Ubicación",
-    "locationValues": "Val-d'Oise (95), Île-de-France · París / Île-de-France, Provenza-Alpes-Costa Azul · Abierta a la reubicación internacional",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
