@@ -234,18 +234,16 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
   },
   "cve-watchlist": {
     "fr": [
-      "Synchronisation en direct avec l'API REST publique NVD v2.0, sans données fictives",
-      "Score de priorité transparent de 0 à 100 : score de base CVSS, exploitation connue (CISA KEV), vecteur d'attaque et fraîcheur",
-      "Croisement avec le champ cisaExploitAdd de la NVD pour signaler les CVE activement exploitées et leurs échéances de correction",
-      "13 tests automatisés, dont un client NVD entièrement simulé pour des exécutions de CI déterministes",
-      "Vérifié en direct : 100 CVE réelles synchronisées, dont une RCE Spring Data notée 89/100"
+      "Correspondance CPE 2.3 avec les configurations du NVD, recoupée avec la recherche cpeName du NVD sur des produits réels",
+      "Priorité P1–P4 guidée d'abord par l'exploitation (CISA KEV, FIRST EPSS), puis par la gravité CVSS et l'exposition",
+      "Décisions de risque (non concerné, mesure compensatoire, accepté) obligatoirement justifiées et datées",
+      "GitHub Action quotidienne : vraies données NVD, KEV et EPSS, changements depuis la veille précédente, interface web publiée"
     ],
     "es": [
-      "Sincronización en directo con la API REST pública NVD v2.0, sin datos simulados",
-      "Puntuación de prioridad transparente de 0 a 100: puntuación base CVSS, explotación conocida (CISA KEV), vector de ataque y antigüedad",
-      "Cruce con el campo cisaExploitAdd de la NVD para señalar las CVE explotadas activamente y sus plazos de corrección",
-      "13 pruebas automatizadas, incluido un cliente NVD totalmente simulado para ejecuciones de CI deterministas",
-      "Verificado en directo: 100 CVE reales sincronizadas, entre ellas una RCE de Spring Data puntuada con 89/100"
+      "Correspondencia CPE 2.3 con las configuraciones de la NVD, contrastada con la búsqueda cpeName de la NVD en productos reales",
+      "Prioridad P1–P4 guiada primero por la explotación (CISA KEV, FIRST EPSS), después por la gravedad CVSS y la exposición",
+      "Decisiones de riesgo (no afectado, mitigado, aceptado) siempre justificadas y con caducidad",
+      "GitHub Action diaria: datos reales de NVD, KEV y EPSS, cambios desde la vigilancia anterior, interfaz web publicada"
     ]
   },
   "log-anomaly-detector": {
