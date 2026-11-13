@@ -492,6 +492,8 @@
   },
   "availModal": {
     "badge": "Entrevistas desde ya — Disponible a partir de diciembre de 2026",
+    "badgeRoleSalesforce": "Administradora & Desarrolladora Salesforce",
+    "badgeRoleItops": "Administradora de Sistemas y Redes · Ingeniera DevOps",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
     "delayValue": "Entrevistas desde ya · Disponible a partir de diciembre de 2026",
