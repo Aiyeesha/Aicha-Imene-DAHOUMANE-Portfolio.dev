@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { redis } from "@/lib/redis";
+import { contentCacheKey } from "@/lib/cache";
 import { cacheInvalidateRatelimit, safeLimit } from "@/lib/ratelimit";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
 import { isValidSlug } from "@/lib/security/slug";
@@ -114,16 +115,16 @@ export async function POST(req: Request) {
 
   if (locale && slug) {
     const keys = [
-      `projects_with_assets:${locale}`,
-      `project:${locale}:${slug}`,
+      contentCacheKey(`projects_with_assets:${locale}`),
+      contentCacheKey(`project:${locale}:${slug}`),
     ];
     await redis.del(...keys);
     deleted.push(...keys);
   } else if (locale) {
     const keys = [
-      `projects_with_assets:${locale}`,
-      `about:${locale}`,
-      `certifications:${locale}`,
+      contentCacheKey(`projects_with_assets:${locale}`),
+      contentCacheKey(`about:${locale}`),
+      contentCacheKey(`certifications:${locale}`),
     ];
     await redis.del(...keys);
     deleted.push(...keys);
@@ -131,15 +132,15 @@ export async function POST(req: Request) {
     // All three locales (en/fr/es) must be listed: a flush that misses one
     // leaves stale content until the TTL expires.
     const staticKeys = [
-      "projects_with_assets:fr",
-      "projects_with_assets:en",
-      "projects_with_assets:es",
-      "about:fr",
-      "about:en",
-      "about:es",
-      "certifications:fr",
-      "certifications:en",
-      "certifications:es",
+      contentCacheKey("projects_with_assets:fr"),
+      contentCacheKey("projects_with_assets:en"),
+      contentCacheKey("projects_with_assets:es"),
+      contentCacheKey("about:fr"),
+      contentCacheKey("about:en"),
+      contentCacheKey("about:es"),
+      contentCacheKey("certifications:fr"),
+      contentCacheKey("certifications:en"),
+      contentCacheKey("certifications:es"),
       "portfolio:uptime:latest",
       "portfolio:uptime:stats:30d",
       "portfolio:uptime:latency:7d",
@@ -153,7 +154,7 @@ export async function POST(req: Request) {
     let cursor = "0";
     for (let i = 0; i < SCAN_MAX_ITERATIONS; i++) {
       const [nextCursor, keys] = await redis.scan(cursor, {
-        match: "project:*",
+        match: contentCacheKey("project:*"),
         count: SCAN_COUNT,
       });
       projectKeys.push(...keys);

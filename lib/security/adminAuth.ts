@@ -14,6 +14,7 @@ import "server-only";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { timingSafeStringEqual } from "@/lib/security/timingSafeEqual";
+import { decodeBasicCredentials } from "@/lib/security/basicAuth";
 
 /**
  * Whether the given Authorization header holds valid admin credentials.
@@ -35,8 +36,7 @@ export async function isAdminAuthorizationValid(
 
   let decoded: string;
   try {
-    // atob works in Node.js and the Edge runtime (no Buffer).
-    decoded = atob(authHeader.slice(6));
+    decoded = decodeBasicCredentials(authHeader.slice(6));
   } catch {
     return false; // invalid base64
   }

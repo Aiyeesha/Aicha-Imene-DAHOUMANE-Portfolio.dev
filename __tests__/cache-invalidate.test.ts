@@ -50,8 +50,8 @@ describe("POST /api/cache/invalidate", () => {
     mockKeys.mockClear();
     mockScan.mockReset();
     mockScan
-      .mockResolvedValueOnce(["42", ["project:fr:a", "project:en:b"]])
-      .mockResolvedValueOnce(["0", ["project:es:c", "project:fr:a"]]);
+      .mockResolvedValueOnce(["42", ["content:local:dev:project:fr:a", "content:local:dev:project:en:b"]])
+      .mockResolvedValueOnce(["0", ["content:local:dev:project:es:c", "content:local:dev:project:fr:a"]]);
   });
 
   afterAll(() => {
@@ -68,7 +68,7 @@ describe("POST /api/cache/invalidate", () => {
     const res = await POST(makeRequest(JSON.stringify({ locale: "fr", slug: "idemconnect-apex-backend" })));
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.deleted).toEqual(["projects_with_assets:fr", "project:fr:idemconnect-apex-backend"]);
+    expect(body.deleted).toEqual(["content:local:dev:projects_with_assets:fr", "content:local:dev:project:fr:idemconnect-apex-backend"]);
     expect(mockScan).not.toHaveBeenCalled();
   });
 
@@ -76,9 +76,9 @@ describe("POST /api/cache/invalidate", () => {
     const res = await POST(makeRequest(JSON.stringify({ locale: "es" })));
     expect(res.status).toBe(200);
     expect((await res.json()).deleted).toEqual([
-      "projects_with_assets:es",
-      "about:es",
-      "certifications:es",
+      "content:local:dev:projects_with_assets:es",
+      "content:local:dev:about:es",
+      "content:local:dev:certifications:es",
     ]);
   });
 
@@ -132,17 +132,32 @@ describe("POST /api/cache/invalidate", () => {
     const res = await POST(makeRequest(body));
     expect(res.status).toBe(200);
 
-    // SCAN follows the cursor: 2 calls ("0" then "42"), pattern project:*.
+    // SCAN follows the cursor: 2 calls ("0" then "42"), pattern content:<env>:<sha>:project:*
+    // (content keys are prefixed by contentCacheKey; "local:dev" outside Vercel).
     expect(mockScan).toHaveBeenCalledTimes(2);
     expect(mockScan.mock.calls[0][0]).toBe("0");
     expect(mockScan.mock.calls[1][0]).toBe("42");
-    expect(mockScan.mock.calls[0][1]).toMatchObject({ match: "project:*" });
+    expect(mockScan.mock.calls[0][1]).toMatchObject({ match: "content:local:dev:project:*" });
     expect(mockKeys).not.toHaveBeenCalled();
 
     const { deleted } = await res.json();
-    expect(deleted).toEqual(expect.arrayContaining(["about:es", "portfolio:uptime:latest"]));
+    expect(deleted).toEqual(expect.arrayContaining(["content:local:dev:about:es", "portfolio:uptime:latest"]));
     // Project keys deduplicated (project:fr:a returned twice by SCAN).
-    const projectKeys = deleted.filter((k: string) => k.startsWith("project:"));
-    expect(projectKeys.sort()).toEqual(["project:en:b", "project:es:c", "project:fr:a"]);
+    const projectKeys = deleted.filter((k: string) => k.startsWith("content:local:dev:project:"));
+    expect(projectKeys.sort()).toEqual(["content:local:dev:project:en:b", "content:local:dev:project:es:c", "content:local:dev:project:fr:a"]);
+  });
+});
+
+// Content cache hardening (lib/cache.ts): null results are not stored, and
+// keys carry the environment + commit so previews never feed production.
+describe("contentCacheKey", () => {
+  const env = { ...process.env };
+  afterEach(() => { process.env = { ...env }; });
+
+  it("prefixes with VERCEL_ENV and the short commit SHA", () => {
+    process.env.VERCEL_ENV = "preview";
+    process.env.VERCEL_GIT_COMMIT_SHA = "0123456789abcdef";
+    const { contentCacheKey } = require("@/lib/cache");
+    expect(contentCacheKey("about:fr")).toBe("content:preview:0123456:about:fr");
   });
 });

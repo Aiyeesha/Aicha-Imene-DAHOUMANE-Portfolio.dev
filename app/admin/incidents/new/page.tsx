@@ -17,7 +17,7 @@ const SEVERITY_HINTS: Record<string, string> = {
 };
 
 export default async function NewIncidentPage() {
-  // Auth guard before any service_role read; see lib/security/adminAuth.ts for
+  // Auth guard before any Redis read; see lib/security/adminAuth.ts for
   // why it runs in each page as well as in the layout.
   await assertAdminOrNotFound();
 

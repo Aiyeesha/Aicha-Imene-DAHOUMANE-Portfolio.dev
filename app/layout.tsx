@@ -77,7 +77,23 @@ function buildJsonLd(locale: string) {
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const personName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const headline = process.env.NEXT_PUBLIC_OG_HEADLINE || "Salesforce · Systems & Networks · DevOps";
+  // Person jobTitle/description follow the page locale (they were English on
+  // /fr and /es). NEXT_PUBLIC_OG_HEADLINE still drives the OG images only.
+  const PERSON_TEXT = {
+    fr: {
+      jobTitle: "Salesforce · Systèmes & Réseaux · DevOps",
+      description: "Développeuse Salesforce et ingénieure IT Ops en Île-de-France, à la recherche d'un poste en CDI, CDD, intérim ou portage salarial, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale.",
+    },
+    es: {
+      jobTitle: "Salesforce · Sistemas y Redes · DevOps",
+      description: "Desarrolladora Salesforce e ingeniera IT Ops en Île-de-France (Francia), en búsqueda de un puesto indefinido, temporal, interino o en portage salarial, en cualquier sector — presencial o híbrido; París / Île-de-France, Provenza-Alpes-Costa Azul o reubicación internacional.",
+    },
+    en: {
+      jobTitle: "Salesforce · Systems & Networks · DevOps",
+      description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation.",
+    },
+  } as const;
+  const personText = PERSON_TEXT[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
 
   // Social and professional profiles (LinkedIn, GitHub…), comma-separated.
   // URLs must already be ASCII in the env var: new URL().href would
@@ -110,8 +126,8 @@ function buildJsonLd(locale: string) {
         "@id": personId,
         name: personName,
         url: siteUrl,
-        jobTitle: headline,
-        description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; priority Paris / Île-de-France, then international relocation.",
+        jobTitle: personText.jobTitle,
+        description: personText.description,
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",

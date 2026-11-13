@@ -563,7 +563,7 @@ export const projects: Project[] = [
       "GitHub Actions",
       "GitHub Pages"
     ],
-    "updatedAt": "2026-11-04",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "Effective entropy: dictionary, leet speak, keyboard walks, sequences",
       "k-anonymity breach check: only 5 SHA-1 characters sent",
@@ -695,7 +695,7 @@ export const projects: Project[] = [
     "slug": "it-ops-rmm-supervision",
     "nature": "internship",
     "title": "Infrastructure Monitoring with Datto RMM",
-    "excerpt": "At MIDRANGE GROUP, I remotely supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
+    "excerpt": "At MIDRANGE Group, I remotely supervised a fleet of 550+ devices daily in Datto RMM, closed antivirus coverage gaps via Quick Jobs, and delivered remote client support through Splashtop.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -735,7 +735,7 @@ export const projects: Project[] = [
     "slug": "workstation-mass-deployment",
     "nature": "internship",
     "title": "Mass Workstation Deployment — 264 Dell Devices",
-    "excerpt": "At MIDRANGE GROUP, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
+    "excerpt": "At MIDRANGE Group, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -778,7 +778,7 @@ export const projects: Project[] = [
     "slug": "it-ops-incident-management",
     "nature": "internship",
     "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
-    "excerpt": "At MIDRANGE GROUP MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
+    "excerpt": "At MIDRANGE Group MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -818,7 +818,7 @@ export const projects: Project[] = [
     "slug": "it-ops-acronis-backup",
     "nature": "internship",
     "title": "Cloud Backup Supervision with Acronis Cyber Backup",
-    "excerpt": "At MIDRANGE GROUP, I monitored backups daily across 105 protected endpoints (NAS and Acronis Cloud), triaged 85 active alerts, identified root causes (NAS full, plan corruption, network issues) and restored continuity.",
+    "excerpt": "At MIDRANGE Group, I monitored backups daily across 105 protected endpoints (NAS and Acronis Cloud), triaged 85 active alerts, identified root causes (NAS full, plan corruption, network issues) and restored continuity.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -1428,7 +1428,7 @@ export const projects: Project[] = [
       "Scrum",
       "Jira"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "20 costed and prioritized user stories (SIREN webservice validation, real-time DeviQo quotes <2s, auto PDF + email generation, GDPR purge)",
       "Test plan with 20 test classes and an Apex best-practices reference (bulkification, one trigger per object, ≥75% coverage)",
@@ -1547,7 +1547,7 @@ export const projects: Project[] = [
       "Integration",
       "Web Services"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "3 business rules (RG-01/02/03) implemented via a strict trigger-handler pattern, zero logic in the trigger",
       "Batch + Scheduler for the monthly automatic re-engagement of dormant accounts, with configurable deduplication",
@@ -1628,7 +1628,7 @@ export const projects: Project[] = [
       "CRM",
       "Triggers"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "Real-time architecture: Apex REST webhook (DeliveryWebhook) + Platform Event + limit-aware Queueable (RefreshStatusQueueable) + deliveryTracker LWC",
       "Batch integration: Talend + Bulk API v2, 500,000 lines/hour, upsert on External Id (Tracking_Number__c)",
@@ -1709,7 +1709,7 @@ export const projects: Project[] = [
       "CI/CD",
       "Git"
     ],
-    "updatedAt": "2025-02-04T00:00:00+00:00",
+    "updatedAt": "2026-11-11",
     "highlights": [
       "🔗 Proof point: Salesforce dev + Heroku infra delivered together, not two separate skillsets",
       "Security: scoped OAuth tokens, no secrets in code, GDPR-safe intra-EU data flow",

@@ -164,7 +164,7 @@ const nextConfig = {
         destination: `${SITE_URL}/:path*`,
         permanent: true,
       })),
-      // Unpublished blog posts: the four MIDRANGE GROUP runbooks point to the
+      // Unpublished blog posts: the four MIDRANGE Group runbooks point to the
       // write-up that replaces them, the others to the blog index. Temporary
       // (307) so a post can be republished without a cached permanent redirect.
       ...UNPUBLISHED_BLOG_REDIRECTS,
@@ -262,6 +262,19 @@ const nextConfig = {
           {
             key: "Cache-Control",
             value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      // ── Static HTML outside proxy.ts (CV pages, offline fallback) ─────────
+      // proxy.ts (per-request nonce CSP) skips them; they only use an inline
+      // <style> (no script, image, font or external stylesheet), so a strict
+      // static policy fits.
+      {
+        source: "/:file((?:cv/.*|offline)\\.html)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
           },
         ],
       },

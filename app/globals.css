@@ -422,10 +422,11 @@ html.dark[data-track="itops"] .page-gradient {
     radial-gradient(700px 450px at 90% 20%, rgba(168,85,247,0.16), transparent 60%);
 }
 
-/* Navbar "pill" indicator */
+/* Navbar "pill" indicator. Position and size come from the Tailwind
+   utilities on the element (absolute top-1/2 -translate-y-1/2 h-9) and the
+   inline left/width: an unlayered `inset: 0` here overrode `top-1/2` (Tailwind
+   4 utilities live in a cascade layer) and lifted the pill 18 px too high. */
 .nav-pill {
-  position: absolute;
-  inset: 0;
   border-radius: 9999px;
   background: rgba(34, 211, 238, 0.10);
   border: 1px solid rgba(34, 211, 238, 0.22);
@@ -727,6 +728,14 @@ html.dark .section-stripe {
   [aria-hidden="true"],
   .fixed.bottom-6 {
     display: none !important;
+  }
+
+  /* Scroll-reveal blocks not yet scrolled into view are at opacity 0:
+     without this rule they printed (and exported to PDF) as blank areas. */
+  [data-animating] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 
   /* Main content: full width */

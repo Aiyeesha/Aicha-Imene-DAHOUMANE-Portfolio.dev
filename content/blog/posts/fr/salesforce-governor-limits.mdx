@@ -3,7 +3,7 @@ title: "Governor Limits Salesforce : comprendre, surveiller et les éviter"
 excerpt: "Guide pratique sur les governor limits Salesforce — les plus critiques, comment surveiller votre consommation et les patterns pour rester bien en dessous des seuils."
 date: "2025-11-03"
 updatedDate: "2026-11-04"
-tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Bonnes pratiques"]
+tags: ["Salesforce", "Apex", "Performance", "Governor Limits", "Best Practices"]
 projects: ["fasha-apex-backend-optimization"]
 ---
 
@@ -43,7 +43,7 @@ Salesforce est une plateforme multi-tenant. Votre org partage les ressources de 
 |--------|--------|
 | Exécutions Apex asynchrones (Batch, Future, Queueable, Scheduled) | 250 000 ou 200 × le nombre de licences utilisateur, la valeur la plus élevée, sur 24 h glissantes |
 | Alertes email (règles de workflow, approbations, flows) | 1 000 par licence Salesforce standard (15 en Developer Edition), plafonné à 2 000 000 pour l'org |
-| Appels API | Varie selon l'édition |
+| Appels API | Varie selon l'édition (Developer : 15 000/jour) |
 
 Ces limites d'org se consultent à tout moment avec `OrgLimits.getMap()` en Apex ou la ressource REST `/limits`.
 
@@ -71,6 +71,10 @@ public class LimitGuard {
     public static Boolean hasDmlCapacity(Integer needed) {
         return (Limits.getLimitDmlStatements() - Limits.getDmlStatements()) >= needed;
     }
+
+    public static Boolean isHeapSafe(Integer safetyMarginBytes) {
+        return (Limits.getLimitHeapSize() - Limits.getHeapSize()) > safetyMarginBytes;
+    }
 }
 
 // System.LimitException ne peut être ni instanciée ni interceptée :
@@ -93,6 +97,7 @@ C'est la cause n°1 de violations des governor limits. Une requête par enregist
 // ❌ SOQL dans une boucle — dépasse la limite à l'enregistrement 101
 for (Opportunity opp : opportunities) {
     Account acc = [SELECT Name FROM Account WHERE Id = :opp.AccountId];
+    // ... utiliser acc
 }
 
 // ✅ Pattern bulkifié
@@ -129,6 +134,8 @@ if (!aMettre.isEmpty()) update aMettre; // 1 DML total
 
 ### 3. Utiliser `@future` ou Queueable pour les callouts
 
+Un trigger ne peut pas faire de callout synchrone, et un callout après un DML non validé dans la même transaction échoue (« You have uncommitted work pending »). Déportez-les :
+
 ```apex
 public class SyncExterneService {
 
@@ -137,6 +144,13 @@ public class SyncExterneService {
         List<Account> accounts = [SELECT Id, Name FROM Account WHERE Id IN :accountIds];
         // ... faire les appels HTTP
     }
+}
+
+// Appel depuis le trigger
+trigger AccountTrigger on Account (after insert) {
+    SyncExterneService.syncVersERP(
+        new List<Id>(new Map<Id, Account>(Trigger.new).keySet())
+    );
 }
 ```
 
@@ -149,6 +163,22 @@ Integer count = all.size(); // consomme 50k de votre limite de 50k lignes !
 
 // ✅ Agréger au niveau de la base de données
 Integer count = [SELECT COUNT() FROM Opportunity WHERE AccountId = :accId];
+```
+
+### 5. Gérer le heap en libérant les références (null)
+
+```apex
+public void execute(Database.BatchableContext bc, List<Account> scope) {
+    // Traiter la première moitié
+    processPhaseOne(scope);
+
+    // Mettre explicitement à null les grosses données intermédiaires pour libérer du heap avant la phase 2
+    // (le GC Salesforce les récupérera lors de la prochaine allocation)
+    List<Account> processed = null;
+
+    // Traiter la seconde phase avec davantage de heap disponible
+    processPhaseTwo(scope);
+}
 ```
 
 ## Queueable Apex : mieux que `@future`
@@ -164,6 +194,7 @@ public class SyncQueueable implements Queueable, Database.AllowsCallouts {
     }
 
     public void execute(QueueableContext ctx) {
+        // Effectuer le travail — callouts possibles (Database.AllowsCallouts)
         List<Account> accounts = [SELECT Id, Name FROM Account WHERE Id IN :recordIds];
         // ... traitement
 
@@ -177,6 +208,8 @@ public class SyncQueueable implements Queueable, Database.AllowsCallouts {
 // Enqueue
 System.enqueueJob(new SyncQueueable(accountIds));
 ```
+
+> **Limite :** jusqu'à 50 jobs Queueable peuvent être mis en file avec `System.enqueueJob` depuis une transaction synchrone, mais un seul depuis une transaction asynchrone (c'est le principe du chaînage). La profondeur de chaîne n'est pas limitée, sauf dans les orgs Developer Edition et d'essai (5 jobs, le premier compris).
 
 ## Que faire quand vous heurtez une limite
 
@@ -214,6 +247,12 @@ for (Account acc : (List<Account>) Trigger.new) {
 if (toProcess.isEmpty()) return;
 // ... votre logique, sur toProcess uniquement
 ```
+
+## Suivi des limites dans la Developer Console
+
+Dans la Developer Console → **Logs** → ouvrez un debug log → cliquez sur l'onglet **Execution Overview**.
+
+Vous verrez un graphique de la consommation des governor limits tout au long de la transaction — utile pour identifier la méthode qui consomme le plus de requêtes SOQL ou de heap.
 
 ## Tableau récapitulatif : anti-patterns → solutions
 

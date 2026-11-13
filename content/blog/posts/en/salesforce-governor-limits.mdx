@@ -209,7 +209,7 @@ public class SyncQueueable implements Queueable, Database.AllowsCallouts {
 System.enqueueJob(new SyncQueueable(accountIds));
 ```
 
-> **Limit:** Max 50 chained Queueable jobs per transaction. Max 2 Queueable jobs enqueued from a single synchronous transaction.
+> **Limit:** up to 50 Queueable jobs can be enqueued with `System.enqueueJob` from a synchronous transaction, but only one from an asynchronous one (which is how chaining works). Chain depth is unlimited, except in Developer Edition and trial orgs (5 jobs, the first one included).
 
 ## What To Do When You Hit a Limit
 

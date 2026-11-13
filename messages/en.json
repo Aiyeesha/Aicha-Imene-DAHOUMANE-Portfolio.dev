@@ -25,7 +25,7 @@
     "avatar_alt": "Profile photo of Aïcha Imène DAHOUMANE, Salesforce & Infrastructure Developer",
     "title_salesforce": "Salesforce & Infrastructure Developer",
     "subtitle_salesforce": "From the CRM to the servers, networks and pipelines around it.",
-    "title_itops": "Salesforce & Infrastructure Developer",
+    "title_itops": "Systems & IT Ops Engineer",
     "subtitle_itops": "From workstations and servers to networks and pipelines — all the way to the Salesforce CRM they run.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
     "value_itops": "Infrastructure · Automation · CI/CD — built to scale.",
@@ -201,7 +201,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog & Tutorials — Aïcha Imène DAHOUMANE",
-      "description": "Salesforce, IT Ops and web development tutorials — step-by-step guides, concrete implementations and real-world experience from a Salesforce developer."
+      "description": "Salesforce, systems & network administration and DevOps tutorials — step-by-step guides, concrete implementations and real-world experience from a Salesforce developer."
     },
     "kicker": "Blog & tutorials",
     "title": "Posts",
@@ -257,7 +257,7 @@
   "blogTags": {
     "meta": {
       "title": "Blog — Tags | Aïcha Imène DAHOUMANE",
-      "description": "Browse all blog topics — Salesforce, IT Ops, web development and more. Filter articles by tag."
+      "description": "Browse all blog topics — Salesforce, IT Ops, security, DevOps and more. Filter articles by tag."
     },
     "kicker": "Topics",
     "title": "All tags",
@@ -281,7 +281,6 @@
     "scrollNavLeft": "Scroll menu left",
     "scrollNavRight": "Scroll menu right",
     "scrollToTop": "Back to top",
-    "opensPage": "Opens a dedicated page",
     "scrollableTable": "Table, scrolls horizontally",
     "codeBlock": "Code sample, scrollable",
     "codeBlockLang": "{language} code sample, scrollable"
@@ -292,9 +291,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps | Île-de-France",
-    "description": "Salesforce · Systems & Networks · DevOps (Île-de-France) — Apex, LWC, CI/CD, integrations, infrastructure. Interviews now, available from December 2026. Permanent, fixed-term, temp or umbrella — any industry.",
+    "description": "Salesforce · Systems & Networks · DevOps in Île-de-France. Interviews now, available from December 2026 — permanent, fixed-term, temp or umbrella.",
     "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Île-de-France",
-    "descriptionItops": "Systems & IT Ops Engineer (Île-de-France) — Infrastructure, automation, CI/CD, Salesforce. Interviews now, available from December 2026. Permanent, fixed-term, temp or umbrella — any industry."
+    "descriptionItops": "Systems & IT Ops Engineer in Île-de-France: infrastructure, automation, CI/CD. Interviews now, available from December 2026."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -312,8 +311,8 @@
     "tickets": "IT tickets handled",
     "alerts": "Backup alerts triaged",
     "deployments": "Workstations deployed",
-    "periodSalesforce": "LD Digitales — October 2023 to present",
-    "periodItops": "Two one-month internships at Midrange Group — between February and May 2023"
+    "periodSalesforce": "LD Digitales — Oct 2023 to Nov 2026",
+    "periodItops": "Two one-month internships at MIDRANGE Group — between February and May 2023"
   },
   "services": {
     "discuss": "Discuss this for a role",
@@ -361,20 +360,20 @@
     "kicker": "Profile",
     "title": "From systems & networks to Salesforce development",
     "p1": "Salesforce developer with 3 years of professional experience and a strong IT infrastructure background — foundations that make a real difference on complex projects.",
-    "p2": "I started my career on the infrastructure side — two one-month internships at MIDRANGE GROUP (between February and May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 264 Dell machines (200 of them via Windows Autopilot), Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
+    "p2": "I started my career on the infrastructure side — two one-month internships at MIDRANGE Group (between February and May 2023) as a junior systems & network administrator: support for 50+ workstations, deployment of 264 Dell machines (200 of them via Windows Autopilot), Windows Server 2022 administration (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. This hands-on experience taught me how systems behave in real life and why solid foundations matter.",
     "p3": "From Oct. 2023 to Sept. 2025, I worked as a Salesforce Developer at LD Digitales (remote) while earning the Développeur Concepteur Logiciel title (RNCP Level 6) from OpenClassrooms. I built and maintained 10+ Apex classes, created 20+ automation Flows (reducing manual workload by ~30%), designed reusable LWC components, and implemented CI/CD pipelines with Salesforce CLI.",
     "p4": "I do my best work in environments that value autonomy, transparency, and continuous learning. My goal is to contribute to ambitious Salesforce and IT Ops projects — in France or internationally, within distributed teams.",
     "p1_salesforce": "Salesforce developer & administrator: I design reliable, secure, maintainable solutions with a strong focus on user experience and delivery quality.",
     "p2_salesforce": "I work with Apex, Flows, data models, security (permission sets, sharing), and CI/CD pipelines (Salesforce CLI, GitHub Actions) to ship cleanly to production.",
     "p3_salesforce": "My systems & DevOps background helps me approach Salesforce with an operations mindset: observability, risk management, documentation, and automation—so solutions stay robust over time.",
     "p4_salesforce": "Full-time Salesforce Developer at LD Digitales from October 2025 to November 2026, after two years as a work-study developer at the same company: 3 years of production Salesforce experience. The Legarant-AXG project (Heroku Connect, environment management, traceable production releases) remains the clearest proof of that Salesforce/infra crossover: not an application layer sitting on infrastructure someone else manages, but the same person on both sides. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title, Salesforce specialization (OpenClassrooms, 2025), and an active Trailhead profile (Expeditioner rank, 94 badges) — the Salesforce Platform Foundations and Platform Administrator exams are booked for December 29 and 30, 2026, followed by Platform App Builder and Platform Developer in 2027.",
-    "p1_itops": "IT Ops & DevOps: during my two one-month internships at MIDRANGE GROUP (between February and May 2023), I remotely monitored 550+ devices through Datto RMM, handled 316 support tickets and deployed 264 Dell workstations (64 re-imaged from a Sysprep image after a NIST 800-88 certified wipe, 200 via Windows Autopilot).",
+    "p1_itops": "IT Ops & DevOps: during my two one-month internships at MIDRANGE Group (between February and May 2023), I remotely monitored 550+ devices through Datto RMM, handled 316 support tickets and deployed 264 Dell workstations (64 re-imaged from a Sysprep image after a NIST 800-88 certified wipe, 200 via Windows Autopilot).",
     "p2_itops": "During my TAI and TSSR training (Greta du Val-d'Oise), I installed and administered Windows Server environments — AD DS, DNS, DHCP, GPO, pfSense/Squid filtering, virtualization — documenting every procedure as a runbook.",
     "p3_itops": "I pay close attention to service continuity: 85 Acronis backup alerts triaged during the internships.",
-    "p4_itops": "Full-time Salesforce Developer at LD Digitales until November 30, 2026 — my IT Ops & DevOps skills, built during my internships at MIDRANGE GROUP and in training, remain fully transferable in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
+    "p4_itops": "Full-time Salesforce Developer at LD Digitales until November 30, 2026 — my IT Ops & DevOps skills, built during my internships at MIDRANGE Group and in training, remain fully transferable in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — priority Paris / Île-de-France, then international relocation · Hybrid · On-site",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation · Hybrid · On-site",
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1 listening, B2 reading), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
@@ -428,7 +427,7 @@
     "transfersTitle": "Transfers outside the European Union",
     "legalBasisCookie": "Functional \"track\" cookie: it only remembers the profile you chose to display; being strictly necessary for the service you request, it is exempt from consent (Article 82 of the French Data Protection Act).",
     "legalBasisSecurity": "Rate limiting (pseudonymised IP address, kept for a few minutes) and hosting technical logs: legitimate interest in securing the site and preventing abuse (Article 6(1)(f)).",
-    "legalBasisTestimonial": "Testimonial form: your consent (Article 6(1)(a)), which you may withdraw at any time; the testimonial is then removed from the site.",
+    "legalBasisTestimonial": "Testimonial form: your consent (Article 6(1)(a)), which you may withdraw at any time; the testimonial, if it has been published, is then removed from the site.",
     "legalBasisContact": "Contact form: legitimate interest in answering the requests sent to me (Article 6(1)(f) GDPR); when the exchange concerns recruitment, steps taken at your request prior to entering into a contract (Article 6(1)(b)).",
     "legalBasisTitle": "Legal bases for processing",
     "lastUpdated": "October 31, 2026",
@@ -440,7 +439,7 @@
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
-    "editorBody": "This website is published by Aïcha Imène Dahoumane, Salesforce developer & administrator, as a personal portfolio. Publication director: Aïcha Imène Dahoumane. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène DAHOUMANE (Salesforce · Systems & Networks · DevOps), as a personal portfolio. Publication director: Aïcha Imène DAHOUMANE. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",
@@ -456,7 +455,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a start date from December 2026. I'm a full-time (permanent) Salesforce Developer at LD Digitales; my contract ends on November 30, 2026."
+        "a": "I'm available for interviews right away, with a start date from December 2026. I leave my Salesforce Developer role at LD Digitales (apprenticeship, then permanent contract, since October 2023) on November 30, 2026."
       },
       {
         "q": "What contract types are you looking for?",
@@ -472,7 +471,7 @@
       },
       {
         "q": "Where are you based? Which work mode?",
-        "a": "I'm based in Val-d'Oise (95), Île-de-France. My priority is Paris and the Île-de-France region, and I'm also open to international relocation. I work on-site or hybrid; I'm not looking for fully remote roles."
+        "a": "I'm based in Val-d'Oise (95), Île-de-France. I'm looking at Paris and the Île-de-France region, the Provence-Alpes-Côte d'Azur region or international relocation. I work on-site or hybrid; I'm not looking for fully remote roles."
       },
       {
         "q": "What happens after you're contacted?",
@@ -501,19 +500,19 @@
     "workMode": "Work modes",
     "workModeValues": "Hybrid · On-site",
     "mobility": "Mobility",
-    "mobilityValues": "Priority Paris / Île-de-France, then international relocation",
+    "mobilityValues": "Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation",
     "sector": "Industries",
     "sectorValues": "Any industry",
     "roles": "Target roles",
     "rolesValuesSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
     "rolesValuesItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
     "location": "Location",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Priority Paris / Île-de-France · Open to international relocation",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur · Open to international relocation",
     "cta": "Get in touch →"
   },
   "hybrid": {
     "metaTitle": "Hybrid Salesforce + Infrastructure profile — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Three concrete cases where solving the problem requires the combination of Salesforce + infrastructure — not their juxtaposition. Heroku↔Salesforce data migration, DevOps discipline applied to Apex releases, integration access control designed on the Salesforce side.",
+    "metaDescription": "Three cases where Salesforce and infrastructure must combine: Heroku↔Salesforce data migration, DevOps for Apex releases, access control for an integration.",
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Hybrid profile",
     "h1": "Where Salesforce and infrastructure are one head, not two",

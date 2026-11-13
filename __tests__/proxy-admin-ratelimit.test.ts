@@ -34,6 +34,7 @@ describe("proxy /admin — rate-limit sur les seuls échecs", () => {
     process.env.ADMIN_USERNAME = "admin-test";
     process.env.ADMIN_PASSWORD = "correct-horse-battery";
     limiter.remaining = 5;
+    limiter.limit.mockClear();
     limiter.getRemaining.mockImplementation(async () => ({ remaining: limiter.remaining, reset: 0 }));
     limiter.limit.mockImplementation(async () => {
       limiter.remaining -= 1;
@@ -57,6 +58,20 @@ describe("proxy /admin — rate-limit sur les seuls échecs", () => {
     // Quota exhausted: even valid credentials are refused until the window ends.
     expect((await proxy(req(basic("admin-test", "correct-horse-battery")))).status).toBe(429);
     expect(limiter.limit).toHaveBeenCalledTimes(5);
+  });
+
+  it("ne compte pas le défi 401 initial (sans en-tête Authorization)", async () => {
+    for (let i = 0; i < 10; i++) {
+      expect((await proxy(req())).status).toBe(401);
+    }
+    expect(limiter.limit).not.toHaveBeenCalled();
+  });
+
+  it("accepte un mot de passe non ASCII (décodage UTF-8)", async () => {
+    process.env.ADMIN_PASSWORD = "mötdepässe-€-très-long";
+    const utf8 = (s: string) => `Basic ${btoa(String.fromCharCode(...new TextEncoder().encode(s)))}`;
+    expect((await proxy(req(utf8("admin-test:mötdepässe-€-très-long")))).status).toBe(200);
+    expect(limiter.limit).not.toHaveBeenCalled();
   });
 
   it("reste fail-closed si Redis est indisponible", async () => {

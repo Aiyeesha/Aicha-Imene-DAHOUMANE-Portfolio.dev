@@ -32,7 +32,7 @@ The following security headers are set on all responses — static headers via `
 | `X-Frame-Options` | `DENY` | Prevents clickjacking — blocks all iframe embedding |
 | `X-Content-Type-Options` | `nosniff` | Prevents MIME type sniffing attacks |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | Limits referrer leakage to same-origin only |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), midi=(), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()` | Disables unused sensitive browser APIs (including modern APIs exploitable via third-party scripts) |
+| `Permissions-Policy` | `accelerometer=(), camera=(), clipboard-read=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), serial=(), usb=(), xr-spatial-tracking=()` | Disables unused sensitive browser APIs (including modern APIs exploitable via third-party scripts) |
 | `Content-Security-Policy` | (see below) | Allowlists trusted sources for scripts, styles, frames, and API calls |
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | Enforces HTTPS for 2 years (HSTS preload) |
 | `Cross-Origin-Opener-Policy` | `same-origin` | Prevents cross-origin window access (Spectre, `window.opener` hijack) |
@@ -62,7 +62,7 @@ report-uri /api/csp-report
 report-to csp-endpoint
 ```
 
-Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. No third-party script, stylesheet or frame is allowed: booking a call is a plain link to a Proton Calendar booking page, opened in a new tab. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs. Both report formats are parsed: CSP Level 2 (`{"csp-report": …}`, Firefox and Safari) and the Reporting API (`[{"type": "csp-violation", "body": …}]`, Chrome and Edge), see `lib/security/cspReport.ts`.
+Upstash Redis and Formhook are called server-side only, so neither appears in `connect-src`. No third-party script, stylesheet or frame is allowed: booking a call is a plain link to a Proton Calendar booking page, opened in a new tab. A second, report-only policy (`require-trusted-types-for 'script'`) reports Trusted Types violations to `/api/csp-report?ro=1` without blocking. Logged CSP reports have their URL query strings and fragments stripped, so tokens carried in URLs never reach the logs. Both report formats are parsed: CSP Level 2 (`{"csp-report": …}`, Firefox and Safari) and the Reporting API (`[{"type": "csp-violation", "body": …}]`, Chrome and Edge), see `lib/security/cspReport.ts`. Critical-violation alerts only carry normalised values (directive name, blocked origin or keyword, page path — never raw report text), disable webhook mentions, only fire for this site's pages, are de-duplicated per (directive, blocked origin) fingerprint with a global cap, and reports over 16 KB are ignored.
 
 **Nonce-based CSP** — `'unsafe-inline'` has been removed from `script-src`. A cryptographically unique nonce (`btoa(crypto.randomUUID())`) is generated per request in `proxy.ts` using the Web Crypto API. The nonce is:
 - Injected into the `Content-Security-Policy` response header as `'nonce-{value}'`
@@ -114,8 +114,9 @@ Fail-open on slowness or errors keeps the contact form usable during an Upstash 
 ### Admin Dashboard (`/admin`)
 
 - Protected by HTTP Basic Auth (credentials from `ADMIN_USERNAME` / `ADMIN_PASSWORD` environment variables, compared in constant time)
-- `ADMIN_PASSWORD` is validated at 16 characters minimum by `lib/env.ts` (the build fails below that); 24 or more random characters are recommended (see the rotation table below)
-- Rate-limited: **5 failed attempts per 15 minutes per IP** (`proxy.ts`). Authenticated requests do not consume the quota; an exhausted quota is refused before the credentials are checked
+- `ADMIN_PASSWORD` is validated at 16 characters minimum by `lib/env.ts` (production start-up fails below that: `validateEnv()` runs from `instrumentation.ts` when `VERCEL_ENV=production`); 24 or more random characters are recommended (see the rotation table below)
+- Rate-limited: **5 failed attempts per 15 minutes per IP** (`proxy.ts`; IPv6 clients are counted per /64 network, see `lib/security/ipBucket.ts`). Only requests that carry credentials and fail consume the quota — not authenticated requests, nor the browser's first 401 challenge; an exhausted quota is refused before the credentials are checked
+- Credentials are decoded as UTF-8 (`lib/security/basicAuth.ts`), as announced by the `charset="UTF-8"` challenge
 - Always routed through the middleware: the matcher lists `/admin/:path*` explicitly, and only real static file extensions (not any path containing a dot) are excluded elsewhere
 - Never cached by the service worker (`/admin` is network-only in `public/sw-template.js`), so admin pages and invitation links are not stored in the browser cache
 - Returns `503` if credentials are not configured
@@ -143,14 +144,19 @@ The site has **no database**. Content (projects, blog, about page, certification
 | Uptime history (one batch per daily cron run, no personal data) | `portfolio:uptime:history` | 30 days, key expires after 35 days without writes |
 | Incident dashboard (`/admin/incidents`, demo, no visitor data) | `portfolio:incidents`, `portfolio:incident:<uuid>` | Until deleted |
 | Used testimonial invitations (signature of the link, no personal data) | `portfolio:testimonial:used:*` | Until the invitation expires |
-| Rate-limit counters (pseudonymised with `IP_HASH_SALT`) | `portfolio:rl:*` | Sliding window |
+| Rate-limit counters (pseudonymised with `IP_HASH_SALT`, IPv6 per /64) | `portfolio:rl:*` | Sliding window |
+| Content cache (projects, About page), prefixed by environment and commit so a preview never feeds production; "not found" results are never stored | `content:<env>:<sha>:*` | 5–10 minutes |
+| Uptime views cache (`/status`, `/api/health`) | `portfolio:uptime:*` (except history) | 1–5 minutes |
 
 Contact messages and testimonials are forwarded by e-mail (Formhook) and never stored. Supabase was retired in October 2026: the former project and its tables are no longer used by the site; `supabase/` and `scripts/db/` are kept only for a possible return to SQL.
 
--------|--------|-------|
-| `projects` | `anon` SELECT where `status = 'published'` | Former copy of `content/`, no longer read by the app (the health check only pings it) |
+#### Former Supabase tables (Row Level Security, kept for reference)
+
+| Table | Policy | Notes |
+|-------|--------|-------|
+| `projects` | `anon` SELECT where `status = 'published'` | Former copy of `content/`, no longer read by the app |
 | `project_assets` | `anon` SELECT only if the parent project is `published` | Assets of unpublished projects are protected |
-| `uptime_pings` | Explicit deny (`false`) for `anon` and `authenticated` | Best-effort copy written by `/api/cron/ping` until Supabase is retired; `/status` now reads the Redis history |
+| `uptime_pings` | Explicit deny (`false`) for `anon` and `authenticated` | No longer written: `/api/cron/ping` and `/status` use the Redis history |
 | `incidents` | Explicit deny for `anon` and `authenticated` | No longer used: the incident dashboard is stored in Redis (`lib/incidents.ts`) |
 | `incident_checklist_items` | Explicit deny for `anon` and `authenticated` | No longer used (see above) |
 | `admins` | SELECT of one's own row (`auth.uid() = user_id`) | Legacy, used by `is_admin()`; no Supabase Auth login on the site |
@@ -158,7 +164,7 @@ Contact messages and testimonials are forwarded by e-mail (Formhook) and never s
 
 No table has an `anon` INSERT, UPDATE or DELETE policy; migration `20261030170000_reassert_no_anon_policies.sql` drops the legacy ones if they reappear. The `messages`, `testimonials`, `about_pages`, `goals_2026` and `certifications` tables mentioned in older migrations no longer exist in production.
 
-The `service_role` key bypasses RLS automatically and is **strictly server-side** — never exposed to the client or in any `NEXT_PUBLIC_*` variable. The admin Supabase client (`lib/supabase/admin.ts`) uses `import 'server-only'` to produce a build-time error if accidentally imported into a client bundle.
+The site no longer contains any Supabase client: the `service_role` key (which bypasses RLS) must not be configured on Vercel. If Supabase comes back, that key stays **strictly server-side** — never in any `NEXT_PUBLIC_*` variable — behind a module marked `import 'server-only'`.
 
 ---
 
@@ -171,7 +177,7 @@ The `service_role` key bypasses RLS automatically and is **strictly server-side*
 | `POST /api/revalidate` | `x-revalidate-secret` header compared to `REVALIDATE_SECRET` |
 | `GET /api/cron/ping` | `Authorization: Bearer {CRON_SECRET}` (Vercel injects automatically) |
 | `POST /api/testimonial-submit` | Signed invitation link (HMAC of `TESTIMONIAL_SUBMIT_TOKEN`, 14 days max), **single use** (claimed atomically in Redis with `SET NX` before the e-mail is sent, so two concurrent submissions cannot both pass; reuse → 410; released if Formhook fails), plus a 30-minute session key bound to that invitation (`lib/security/testimonialInvite.ts`) |
-| `POST /api/errors` | Public (client reports) — rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
+| `POST /api/errors` | Public (client reports) — same-origin `Origin` required, rate-limited 10 req / 60 s / IP; strict payload validation; no PII stored |
 | `GET /api/palette-index/[locale]` | Public, static JSON generated at build time from public content only (titles, links, tags); unknown locales return 404 |
 | `GET /api/health` | Public — CORS restricted to `NEXT_PUBLIC_SITE_URL` (no wildcard `*`) |
 

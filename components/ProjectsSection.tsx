@@ -58,11 +58,11 @@ import { useTrack } from "@/app/[locale]/providers";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getBadgeClass, tBadge, tCategory, tTag } from "@/i18n/projectTaxonomy";
-import type { ProjectWithAssets } from "@/lib/data/projectBySlug";
+import type { ProjectCard } from "@/lib/data/projectCards";
 
 type ProjectsSectionProps = {
   locale?: "en" | "fr" | "es";
-  projects: ProjectWithAssets[];
+  projects: ProjectCard[];
   /** On /projects, also list featured projects (no FeaturedProjects block above). */
   includeFeatured?: boolean;
 };

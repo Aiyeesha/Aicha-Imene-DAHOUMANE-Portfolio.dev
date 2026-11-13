@@ -25,7 +25,7 @@
     "avatar_alt": "Foto de perfil de Aïcha Imène DAHOUMANE, desarrolladora Salesforce e infraestructura",
     "title_salesforce": "Desarrolladora Salesforce e Infraestructura",
     "subtitle_salesforce": "Del CRM a los servidores, redes y pipelines que lo rodean.",
-    "title_itops": "Desarrolladora Salesforce e Infraestructura",
+    "title_itops": "Ingeniera de Sistemas & IT Ops",
     "subtitle_itops": "De los puestos y servidores a las redes y los pipelines — hasta el CRM Salesforce que sostienen.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — construido para durar.",
     "value_itops": "Infraestructura · Automatización · CI/CD — construido para escalar.",
@@ -201,7 +201,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog y tutoriales — Aïcha Imène DAHOUMANE",
-      "description": "Tutoriales de Salesforce, IT Ops y desarrollo web — guías paso a paso, implementaciones concretas y experiencia real de una desarrolladora Salesforce."
+      "description": "Tutoriales de Salesforce, administración de sistemas y redes, y DevOps — guías paso a paso, implementaciones concretas y experiencia real de una desarrolladora Salesforce."
     },
     "kicker": "Blog y tutoriales",
     "title": "Artículos",
@@ -257,7 +257,7 @@
   "blogTags": {
     "meta": {
       "title": "Blog — Etiquetas | Aïcha Imène DAHOUMANE",
-      "description": "Explora todos los temas del blog — Salesforce, IT Ops, desarrollo web y más. Filtra los artículos por etiqueta."
+      "description": "Explora todos los temas del blog — Salesforce, IT Ops, seguridad, DevOps y más. Filtra los artículos por etiqueta."
     },
     "kicker": "Temas",
     "title": "Todas las etiquetas",
@@ -281,7 +281,6 @@
     "scrollNavLeft": "Desplazar el menú a la izquierda",
     "scrollNavRight": "Desplazar el menú a la derecha",
     "scrollToTop": "Volver arriba",
-    "opensPage": "Abre una página dedicada",
     "scrollableTable": "Tabla, desplazable horizontalmente",
     "codeBlock": "Fragmento de código, desplazable",
     "codeBlockLang": "Fragmento de código {language}, desplazable"
@@ -292,9 +291,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Sistemas y Redes · DevOps | Île-de-France",
-    "description": "Salesforce · Sistemas y Redes · DevOps (Île-de-France) — Apex, LWC, CI/CD, integraciones, infraestructura. Entrevistas ya, disponible a partir de diciembre de 2026. Indefinido, temporal, ETT o portage — todos los sectores.",
+    "description": "Salesforce · Sistemas y Redes · DevOps en Île-de-France. Entrevistas desde ya, disponible a partir de diciembre de 2026 — indefinido, temporal, ETT o portage.",
     "titleItops": "Aïcha Imène DAHOUMANE — Ingeniera de Sistemas & IT Ops | Île-de-France",
-    "descriptionItops": "Ingeniera de Sistemas & IT Ops (Île-de-France) — Infraestructura, automatización, CI/CD, Salesforce. Entrevistas ya, disponible a partir de diciembre de 2026. Indefinido, temporal, ETT o portage — todos los sectores."
+    "descriptionItops": "Ingeniera de Sistemas & IT Ops en Île-de-France: infraestructura, automatización, CI/CD. Entrevistas desde ya, disponible a partir de diciembre de 2026."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -312,8 +311,8 @@
     "tickets": "Tickets IT gestionados",
     "alerts": "Alertas de copia de seguridad clasificadas",
     "deployments": "Puestos desplegados",
-    "periodSalesforce": "LD Digitales — desde octubre de 2023",
-    "periodItops": "Dos prácticas de un mes en Midrange Group — entre febrero y mayo de 2023"
+    "periodSalesforce": "LD Digitales — oct. 2023 a nov. 2026",
+    "periodItops": "Dos prácticas de un mes en MIDRANGE Group — entre febrero y mayo de 2023"
   },
   "services": {
     "maturityTitle": "Madurez operativa",
@@ -361,20 +360,20 @@
     "kicker": "Perfil",
     "title": "De sistemas y redes al desarrollo Salesforce",
     "p1": "Desarrolladora Salesforce con 3 años de experiencia profesional y una sólida base en infraestructura IT — cimientos que marcan la diferencia en proyectos complejos.",
-    "p2": "Empecé mi carrera en el área de infraestructura — dos prácticas de un mes en MIDRANGE GROUP (entre febrero y mayo de 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 264 equipos Dell (200 de ellos mediante Windows Autopilot), administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
+    "p2": "Empecé mi carrera en el área de infraestructura — dos prácticas de un mes en MIDRANGE Group (entre febrero y mayo de 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 264 equipos Dell (200 de ellos mediante Windows Autopilot), administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
     "p3": "De oct. 2023 a sept. 2025 trabajé como Desarrolladora Salesforce en LD Digitales (remoto), a la vez que obtenía el título de Desarrolladora Diseñadora de Software (RNCP Nivel 6) en OpenClassrooms. Construí y mantuve más de 10 clases Apex, creé más de 20 Flows de automatización (reduciendo la carga manual en cerca de un 30 %), diseñé componentes LWC reutilizables e implementé pipelines de CI/CD con Salesforce CLI.",
     "p4": "Doy lo mejor de mí en entornos que valoran la autonomía, la transparencia y el aprendizaje continuo. Mi objetivo es contribuir a proyectos Salesforce e IT Ops ambiciosos — en Francia o a nivel internacional, en equipos distribuidos.",
     "p1_salesforce": "Desarrolladora y administradora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
     "p2_salesforce": "Trabajo con Apex, Flows, modelos de datos, seguridad (permission sets, sharing) y pipelines de CI/CD (Salesforce CLI, GitHub Actions) para llevar el código a producción de forma limpia.",
     "p3_salesforce": "Mi base en sistemas y DevOps me permite abordar Salesforce con mentalidad de operaciones: observabilidad, gestión de riesgos, documentación y automatización, para que las soluciones se mantengan sólidas con el tiempo.",
     "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales de octubre de 2025 a noviembre de 2026, tras dos años de formación dual en la misma empresa: 3 años de experiencia Salesforce en producción. El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — los exámenes Salesforce Platform Foundations y Platform Administrator están programados para el 29 y el 30 de diciembre de 2026, seguidos de Platform App Builder y Platform Developer en 2027.",
-    "p1_itops": "IT Ops y DevOps: durante mis dos prácticas de un mes en MIDRANGE GROUP (entre febrero y mayo de 2023), supervisé en remoto más de 550 equipos con Datto RMM, gestioné 316 tickets de soporte y desplegué 264 puestos Dell (64 reinstalados desde una imagen Sysprep tras un borrado certificado NIST 800-88, 200 mediante Windows Autopilot).",
+    "p1_itops": "IT Ops y DevOps: durante mis dos prácticas de un mes en MIDRANGE Group (entre febrero y mayo de 2023), supervisé en remoto más de 550 equipos con Datto RMM, gestioné 316 tickets de soporte y desplegué 264 puestos Dell (64 reinstalados desde una imagen Sysprep tras un borrado certificado NIST 800-88, 200 mediante Windows Autopilot).",
     "p2_itops": "Durante mi formación TAI y TSSR (Greta du Val-d'Oise), instalé y administré entornos Windows Server — AD DS, DNS, DHCP, GPO, filtrado pfSense/Squid, virtualización — documentando cada procedimiento en forma de runbook.",
     "p3_itops": "Presto especial atención a la continuidad del servicio: 85 alertas de copia de seguridad Acronis clasificadas durante las prácticas.",
-    "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026 — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE GROUP y en formación, siguen plenamente aplicables en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
+    "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026 — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE Group y en formación, siguen plenamente aplicables en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — prioridad París / Île-de-France y, después, traslado internacional · Híbrido · Presencial",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional · Híbrido · Presencial",
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1 comprensión oral, B2 lectura), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
@@ -428,7 +427,7 @@
     "transfersTitle": "Transferencias fuera de la Unión Europea",
     "legalBasisCookie": "Cookie funcional «track»: solo recuerda el perfil que eliges mostrar; al ser estrictamente necesaria para el servicio que solicitas, está exenta de consentimiento (artículo 82 de la ley francesa Informatique et Libertés).",
     "legalBasisSecurity": "Limitación de solicitudes (dirección IP seudonimizada, conservada unos minutos) y registros técnicos del alojamiento: interés legítimo en garantizar la seguridad del sitio y prevenir abusos (artículo 6.1.f).",
-    "legalBasisTestimonial": "Formulario de testimonio: tu consentimiento (artículo 6.1.a), que puedes retirar en cualquier momento; el testimonio se retira entonces del sitio.",
+    "legalBasisTestimonial": "Formulario de testimonio: tu consentimiento (artículo 6.1.a), que puedes retirar en cualquier momento; el testimonio, si se ha publicado, se retira entonces del sitio.",
     "legalBasisContact": "Formulario de contacto: interés legítimo en responder a las solicitudes que se me envían (artículo 6.1.f del RGPD); cuando el intercambio se refiere a un proceso de selección, medidas precontractuales adoptadas a petición tuya (artículo 6.1.b).",
     "legalBasisTitle": "Bases jurídicas de los tratamientos",
     "lastUpdated": "31 de octubre de 2026",
@@ -440,7 +439,7 @@
   "legal": {
     "title": "Aviso legal",
     "editorTitle": "Editora",
-    "editorBody": "Este sitio web está publicado por Aïcha Imène Dahoumane, desarrolladora y administradora Salesforce, como portafolio personal. Directora de publicación: Aïcha Imène Dahoumane. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
+    "editorBody": "Este sitio web está publicado por Aïcha Imène DAHOUMANE (Salesforce · Sistemas y Redes · DevOps), como portafolio personal. Directora de publicación: Aïcha Imène DAHOUMANE. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
     "hostingTitle": "Alojamiento",
     "hostingBody": "El alojamiento es proporcionado por Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, Estados Unidos. Sitio web: vercel.com.",
     "ipTitle": "Propiedad intelectual",
@@ -456,7 +455,7 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir de diciembre de 2026. Soy Desarrolladora Salesforce con contrato indefinido en LD Digitales; mi contrato termina el 30 de noviembre de 2026."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir de diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (alternancia y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026."
       },
       {
         "q": "¿Qué tipos de contrato buscas?",
@@ -472,7 +471,7 @@
       },
       {
         "q": "¿Dónde estás ubicada? ¿Qué modalidad de trabajo?",
-        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Mi prioridad es París y la región de Île-de-France, y también estoy abierta a la reubicación internacional. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
+        "a": "Estoy ubicada en Val-d'Oise (95), Île-de-France. Busco en París y la región de Île-de-France, la región de Provenza-Alpes-Costa Azul o una reubicación internacional. Trabajo de forma presencial o híbrida; no busco puestos 100 % en remoto."
       },
       {
         "q": "¿Qué pasa después de contactarme?",
@@ -492,7 +491,7 @@
     "lastAudit": "Última verificación: 31 de octubre de 2026 — Herramientas: axe-core (CI automatizado y paleta de comandos), pruebas manuales de navegación por teclado."
   },
   "availModal": {
-    "badge": "Entrevistas ya — Disponible a partir de diciembre de 2026",
+    "badge": "Entrevistas desde ya — Disponible a partir de diciembre de 2026",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
     "delayValue": "Entrevistas desde ya · Disponible a partir de diciembre de 2026",
@@ -501,19 +500,19 @@
     "workMode": "Modalidades de trabajo",
     "workModeValues": "Híbrido · Presencial",
     "mobility": "Movilidad",
-    "mobilityValues": "Prioridad París / Île-de-France y, después, traslado internacional",
+    "mobilityValues": "París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional",
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
     "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
     "location": "Ubicación",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Prioridad París / Île-de-France · Abierta a la reubicación internacional",
+    "locationValues": "Val-d'Oise (95), Île-de-France · París / Île-de-France, Provenza-Alpes-Costa Azul · Abierta a la reubicación internacional",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
     "metaTitle": "Perfil híbrido Salesforce + Infraestructura — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Tres casos concretos donde resolver el problema exige la combinación de Salesforce + infraestructura — no su yuxtaposición. Migración de datos Heroku↔Salesforce, disciplina DevOps aplicada a las releases de Apex, control de acceso de una integración diseñado del lado de Salesforce.",
+    "metaDescription": "Tres casos en los que Salesforce y la infraestructura deben combinarse: migración Heroku↔Salesforce, DevOps de releases Apex, control de acceso de una integración.",
     "breadcrumbHome": "Inicio",
     "breadcrumbCurrent": "Perfil híbrido",
     "h1": "Donde Salesforce y la infraestructura son una sola cabeza, no dos",

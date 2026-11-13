@@ -1,6 +1,6 @@
 // lib/health.ts
 // -------------
-// Per-service health checks, used by app/api/health/route.ts (public JSON)
+// Per-service health checks (Formhook, Upstash Redis…), used by app/api/health/route.ts (public JSON)
 // and app/[locale]/status/page.tsx (direct server render). Each check returns
 // a status, a latency and an optional message; 4-second timeout per check.
 

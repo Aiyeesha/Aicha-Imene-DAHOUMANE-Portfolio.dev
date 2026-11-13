@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { contactRatelimit, safeLimit } from "@/lib/ratelimit";
 import { log } from "@/lib/logger";
-import { validate, getClientIp, isAllowedOrigin } from "@/lib/contactValidation";
+import { validate, getClientIp, isAllowedOrigin, singleLine } from "@/lib/contactValidation";
 
 // Body shape: types and maximum lengths are checked here (a non-string field
 // used to cause a 500 on .trim()); business rules (email, links, minimum
@@ -64,10 +64,12 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ ok: false, error: "invalid_payload" }, { status: 400 });
   const body = parsed.data;
 
-  const name = (body.name || "").trim();
+  // Single-line fields: control characters (CR/LF…) replaced by spaces, so
+  // nothing can turn into an extra e-mail header downstream (Formhook).
+  const name = singleLine(body.name || "");
   const email = (body.email || "").trim();
-  const topic = (body.topic || "general").trim();
-  const subject = (body.subject || "").trim();
+  const topic = singleLine(body.topic || "general");
+  const subject = singleLine(body.subject || "");
   const message = (body.message || "").trim();
   const company = (body.company || "").trim(); // honeypot
   const acceptedPolicy = Boolean(body.acceptedPolicy);
@@ -119,8 +121,9 @@ export async function POST(req: Request) {
     }
 
     if (!resp.ok) {
-      const data = (await resp.json().catch(() => null)) as Record<string, unknown> | null;
-      log.error("contact/formhook-failed", { status: resp.status, body: data });
+      // Status only: Formhook's error body can echo the submitted fields
+      // (name, e-mail, message), which must not end up in the logs.
+      log.error("contact/formhook-failed", { status: resp.status });
       return NextResponse.json({ ok: false, error: "upstream_failed" }, { status: 502 });
     }
 

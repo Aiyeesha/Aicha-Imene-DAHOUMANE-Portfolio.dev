@@ -17,10 +17,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? "Aviso legal — Aïcha Imène DAHOUMANE"
     : "Legal Notice — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Éditeur, hébergement, propriété intellectuelle et politique des données personnelles."
+    ? "Mentions légales du portfolio d'Aïcha Imène DAHOUMANE : éditeur, hébergement (Vercel), propriété intellectuelle et politique de données personnelles."
     : isEs
-    ? "Editor, alojamiento, propiedad intelectual y política de datos personales."
-    : "Publisher, hosting, intellectual property, and personal data policy.";
+    ? "Aviso legal del portafolio de Aïcha Imène DAHOUMANE: editor, alojamiento (Vercel), propiedad intelectual y política de datos personales."
+    : "Legal notice for Aïcha Imène DAHOUMANE's portfolio: publisher, hosting (Vercel), intellectual property and personal data policy.";
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   return {
     title,

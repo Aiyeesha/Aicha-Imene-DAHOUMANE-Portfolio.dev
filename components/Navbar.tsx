@@ -386,7 +386,9 @@ export default function Navbar({
     // focusProjectsMenuItem only reads refs, so it is not a dependency.
   }, [projectsDropdownOpen, projectsMenuPos]);
 
-  // Entries that open a separate page (not a home anchor) get a ↗ badge.
+  // Entries that open a separate page (not a home anchor) use <Link> rather
+  // than an in-page anchor. No ↗ icon: by convention it means "external
+  // link", which these are not.
   const PAGE_LINKS = new Set<string>(["about", "hybrid", "certifications", "uses", "workWithMe", "services", "blog", "projects"]);
 
   // Compact padding and font size up to 1850px: French and Spanish labels are
@@ -597,21 +599,13 @@ export default function Navbar({
                 const href = hrefFor(s.id);
                 const cls = `${desktopLinkClass(s.id)} whitespace-nowrap inline-flex items-center gap-1`;
                 const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && s.id === "blog");
-                const pageIcon = isPageLink ? (
-                  <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9"
-                    fill="none" stroke="currentColor" strokeWidth="1.5"
-                    strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
-                    <title>{t("a11y.opensPage")}</title>
-                    <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
-                  </svg>
-                ) : null;
 
                 // Links to separate pages
                 if (isPageLink) {
                   return (
                     <Link key={s.id} className={cls} data-section={s.id} href={href}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}{pageIcon}
+                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}
                     </Link>
                   );
                 }
@@ -744,13 +738,6 @@ export default function Navbar({
               {sections.map((s) => {
                 const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
                 const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && (s.id === "blog" || s.id === "projects"));
-                const pageIcon = isPageLink ? (
-                  <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9"
-                    fill="none" stroke="currentColor" strokeWidth="1.5"
-                    strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
-                    <path d="M1.5 7.5 L7.5 1.5 M3 1.5 H7.5 V6" />
-                  </svg>
-                ) : null;
 
                 // Links to separate pages
                 if (isPageLink) {
@@ -758,7 +745,7 @@ export default function Navbar({
                     <Link key={s.id} href={hrefFor(s.id)} data-section={s.id}
                       className={cls} onClick={() => setMobileOpen(false)}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}{pageIcon}
+                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}
                     </Link>
                   );
                 }

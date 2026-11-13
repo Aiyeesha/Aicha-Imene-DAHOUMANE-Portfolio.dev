@@ -62,3 +62,25 @@ export function parseCspReports(body: unknown): CspReport[] {
   }
   return [];
 }
+
+// ── Alert payload normalisation (app/api/csp-report/route.ts) ─────────────
+const CSP_KEYWORDS = new Set(["inline", "eval", "wasm-eval", "trusted-types-policy", "trusted-types-sink", "self"]);
+
+/** Directive name only (e.g. "script-src-elem"), or "unknown". */
+export function normaliseDirective(value: string | undefined): string {
+  const name = (value ?? "").split(" ")[0].toLowerCase();
+  return /^[a-z-]{1,40}$/.test(name) ? name : "unknown";
+}
+
+/** "inline" / "eval"… kept, a URL reduced to its origin, anything else "other". */
+export function normaliseBlocked(value: string | undefined): string {
+  const v = (value ?? "").trim().toLowerCase();
+  if (CSP_KEYWORDS.has(v)) return v;
+  try {
+    const u = new URL(v);
+    if (u.protocol === "http:" || u.protocol === "https:") return u.origin.slice(0, 200);
+    return `${u.protocol}`.slice(0, 40);
+  } catch {
+    return "other";
+  }
+}
