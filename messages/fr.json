@@ -365,7 +365,7 @@
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
-    "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, PACA ou relocalisation internationale · Hybride · Sur site",
+    "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site",
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1 en compréhension orale, B2 en lecture), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
@@ -471,7 +471,7 @@
       },
       {
         "q": "Où êtes-vous basée ? Quel mode de travail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Je vise Paris et l'Île-de-France, la région PACA ou une relocalisation internationale. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Je vise Paris et l'Île-de-France, la région Provence-Alpes-Côte d'Azur ou une relocalisation internationale. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
       },
       {
         "q": "Comment se passe la suite après une prise de contact ?",
@@ -500,14 +500,14 @@
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site",
     "mobility": "Mobilité",
-    "mobilityValues": "Paris / Île-de-France, PACA ou relocalisation internationale",
+    "mobilityValues": "Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
     "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
     "location": "Localisation",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, PACA · Ouverte à la relocalisation internationale",
+    "locationValues": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur · Ouverte à la relocalisation internationale",
     "cta": "Prendre contact →"
   },
   "hybrid": {

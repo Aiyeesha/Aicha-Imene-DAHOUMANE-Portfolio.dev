@@ -82,15 +82,15 @@ function buildJsonLd(locale: string) {
   const PERSON_TEXT = {
     fr: {
       jobTitle: "Salesforce · Systèmes & Réseaux · DevOps",
-      description: "Développeuse Salesforce et ingénieure IT Ops en Île-de-France, à la recherche d'un poste en CDI, CDD, intérim ou portage salarial, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, PACA ou relocalisation internationale.",
+      description: "Développeuse Salesforce et ingénieure IT Ops en Île-de-France, à la recherche d'un poste en CDI, CDD, intérim ou portage salarial, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale.",
     },
     es: {
       jobTitle: "Salesforce · Sistemas y Redes · DevOps",
-      description: "Desarrolladora Salesforce e ingeniera IT Ops en Île-de-France (Francia), en búsqueda de un puesto indefinido, temporal, interino o en portage salarial, en cualquier sector — presencial o híbrido; París / Île-de-France, PACA o reubicación internacional.",
+      description: "Desarrolladora Salesforce e ingeniera IT Ops en Île-de-France (Francia), en búsqueda de un puesto indefinido, temporal, interino o en portage salarial, en cualquier sector — presencial o híbrido; París / Île-de-France, Provenza-Alpes-Costa Azul o reubicación internacional.",
     },
     en: {
       jobTitle: "Salesforce · Systems & Networks · DevOps",
-      description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; Paris / Île-de-France, PACA or international relocation.",
+      description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation.",
     },
   } as const;
   const personText = PERSON_TEXT[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
