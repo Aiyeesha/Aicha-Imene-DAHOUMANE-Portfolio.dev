@@ -290,9 +290,9 @@
     "salesforce": "Salesforce"
   },
   "metadata": {
-    "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps | Île-de-France",
+    "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps",
     "description": "Salesforce · Systems & Networks · DevOps in Île-de-France. Interviews now, available from December 2026 — permanent, fixed-term, temp or umbrella.",
-    "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer | Île-de-France",
+    "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer",
     "descriptionItops": "Systems & IT Ops Engineer in Île-de-France: infrastructure, automation, CI/CD. Interviews now, available from December 2026."
   },
   "testimonials": {
@@ -492,6 +492,8 @@
   },
   "availModal": {
     "badge": "Interviews now — Available from December 2026",
+    "badgeRoleSalesforce": "Salesforce Administrator & Developer",
+    "badgeRoleItops": "Systems & Network Administrator · DevOps Engineer",
     "title": "My availability",
     "delay": "Availability",
     "delayValue": "Interviews now · Available from December 2026",
@@ -499,15 +501,13 @@
     "contractValues": "Permanent · Fixed-term · Temp · Umbrella (portage)",
     "workMode": "Work modes",
     "workModeValues": "Hybrid · On-site",
-    "mobility": "Mobility",
-    "mobilityValues": "Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation",
+    "locationMobility": "Location & mobility",
+    "locationMobilityValues": "Based in Val-d'Oise (95), Île-de-France · Mobile: Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation",
     "sector": "Industries",
     "sectorValues": "Any industry",
     "roles": "Target roles",
     "rolesValuesSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
     "rolesValuesItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
-    "location": "Location",
-    "locationValues": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur · Open to international relocation",
     "cta": "Get in touch →"
   },
   "hybrid": {

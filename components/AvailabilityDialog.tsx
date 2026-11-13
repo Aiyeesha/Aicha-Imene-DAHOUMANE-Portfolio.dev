@@ -3,7 +3,8 @@
 // AvailabilityDialog.tsx
 // ----------------------
 // Content of the "open to work" modal: availability, contract types, work
-// modes, sectors, target roles, location.
+// modes, location and mobility, sectors, target roles. Location and mobility
+// share one row: as two rows they repeated the same regions.
 //
 // Loaded on demand by AvailabilityModal (dynamic import) the first time the
 // badge is hovered, focused or clicked: none of this is needed to paint the
@@ -30,6 +31,15 @@ function IconMonitor() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0">
       <rect x="1" y="2" width="14" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
       <path d="M5 14h6M8 12v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconContract() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0">
+      <path d="M4 1.75h5.25L12 4.5v9.75H4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M6 7.5h4M6 10h4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
     </svg>
   );
 }
@@ -75,12 +85,13 @@ export default function AvailabilityDialog({ onClose }: { onClose: () => void })
 
   const rows = [
     { icon: <IconClock />,    label: t("delay"),    value: t("delayValue")     },
-    { icon: <IconTarget />,   label: t("contracts"), value: t("contractValues") },
+    // Document icon for contracts; the target is kept for target roles
+    // (both rows used the target before).
+    { icon: <IconContract />, label: t("contracts"), value: t("contractValues") },
     { icon: <IconMonitor />,  label: t("workMode"), value: t("workModeValues") },
-    { icon: <IconLocation />, label: t("mobility"), value: t("mobilityValues") },
+    { icon: <IconLocation />, label: t("locationMobility"), value: t("locationMobilityValues") },
     { icon: <IconSector />,   label: t("sector"),   value: t("sectorValues")   },
     { icon: <IconTarget />,   label: t("roles"),    value: isSalesforce ? t("rolesValuesSalesforce") : t("rolesValuesItops") },
-    { icon: <IconLocation />, label: t("location"), value: t("locationValues") },
   ];
 
   return (

@@ -40,4 +40,11 @@ describe("blog tags", () => {
     expect(missing.filter((t) => t !== "Firewall")).toEqual([]);
     expect(translateTag("Firewall", "fr")).toBe("Pare-feu");
   });
+
+  // "Architecture" reads the same in English and French but not in Spanish:
+  // it used to be listed as invariant and showed in English on /es/blog/tags.
+  it("translates Architecture in Spanish only", () => {
+    expect(translateTag("Architecture", "fr")).toBe("Architecture");
+    expect(translateTag("Architecture", "es")).toBe("Arquitectura");
+  });
 });

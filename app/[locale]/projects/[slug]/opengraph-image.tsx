@@ -29,6 +29,9 @@ export default async function Image({ params }: Props) {
   const tags       = (project?.tech_stack ?? project?.tags ?? []).slice(0, 4);
   const track      = project?.track    || "salesforce";
 
+  // Badge label in the page's language (was "Project" in every locale).
+  const projectLabel = locale === "fr" ? "Projet" : locale === "es" ? "Proyecto" : "Project";
+
   const siteUrl    = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const authorName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
@@ -85,7 +88,7 @@ export default async function Image({ params }: Props) {
               display: "flex",
             }}
           >
-            Project
+            {projectLabel}
           </div>
 
           {/* Track badge */}

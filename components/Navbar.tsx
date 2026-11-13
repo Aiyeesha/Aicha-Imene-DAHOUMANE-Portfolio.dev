@@ -58,10 +58,22 @@ const BRAND_INITIALS = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCa
 // menu, the command palette and the footer.
 const DESKTOP_IDS_STATIC = new Set(["about", "hybrid", "skills", "experience", "certifications", "services", "testimonials", "projects", "blog", "contact"]);
 
-// Accent for the "Hybrid profile" link, the most prominent nav entry. Same
-// cyan→violet gradient as the /hybride page (the two tracks combined).
-const HYBRID_ACCENT =
-  "font-semibold bg-linear-to-r from-cyan-600 to-violet-600 dark:from-cyan-300 dark:to-violet-300 bg-clip-text text-transparent";
+// Marker for the "Hybrid profile" link, the most prominent nav entry: a small
+// cyan→violet dot (the /hybride page's gradient, the two tracks combined)
+// before a label styled like the others. The label itself used to be in
+// gradient, semibold text on every page, which read as "current page".
+// Decorative: the link text already names the page.
+function HybridLabel({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span
+        aria-hidden="true"
+        className="h-2 w-2 shrink-0 rounded-full bg-linear-to-r from-cyan-500 to-violet-500"
+      />
+      {label}
+    </span>
+  );
+}
 
 type FeaturedProjectForNav = { slug: string; title: string; track: string | null };
 
@@ -605,7 +617,7 @@ export default function Navbar({
                   return (
                     <Link key={s.id} className={cls} data-section={s.id} href={href}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}
+                      {s.id === "hybrid" ? <HybridLabel label={s.label} /> : s.label}
                     </Link>
                   );
                 }
@@ -648,7 +660,10 @@ export default function Navbar({
             )}
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 min-[1850px]:gap-3">
+          {/* ml-auto: below xl the nav is hidden, and this group (controls,
+              hamburger) would otherwise sit against the logo; the menu button
+              belongs on the right, where the thumb expects it. */}
+          <div className="ml-auto flex shrink-0 items-center gap-2 min-[1850px]:gap-3">
             {/*
               Desktop / tablet controls. On very small screens they move into the
               mobile drawer. Tighter gap up to 1850px to leave room for the nav.
@@ -659,6 +674,20 @@ export default function Navbar({
               <LocaleSwitcher current={locale} />
               <CommandPaletteTrigger />
             </div>
+
+            {/* Primary call to action for recruiters, from xl (where the full
+                nav shows). "Me recruter" was only reachable from the mobile
+                menu and the footer on desktop. Track colour, like the mobile
+                drawer's main button; aria-current on its own page. */}
+            <Link
+              href={hrefFor("workWithMe")}
+              aria-current={pathname === hrefFor("workWithMe") ? "page" : undefined}
+              className={`hidden xl:inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-black hover:opacity-90 soft-ring ${
+                track === "salesforce" ? "bg-cyan-500" : "bg-violet-500"
+              }`}
+            >
+              {t("nav.workWithMe")}
+            </Link>
 
             {/* Hamburger button, below xl */}
             <button
@@ -735,7 +764,12 @@ export default function Navbar({
             </div>
 
             <div className="mt-4 space-y-2">
-              {sections.map((s) => {
+              {/* Left out to avoid duplicates: "Contact" (the drawer's main
+                  button just below, "Me contacter", leads to the same form)
+                  and "Expertises" (a section of the "Me recruter" page listed
+                  just above it). Both stay in the desktop nav and the command
+                  palette. */}
+              {sections.filter((s) => s.id !== "contact" && s.id !== "services").map((s) => {
                 const cls = `${mobileLinkClass(s.id)} flex items-center justify-between`;
                 const isPageLink = PAGE_LINKS.has(s.id) && !(isHome && (s.id === "blog" || s.id === "projects"));
 
@@ -745,7 +779,7 @@ export default function Navbar({
                     <Link key={s.id} href={hrefFor(s.id)} data-section={s.id}
                       className={cls} onClick={() => setMobileOpen(false)}
                       aria-current={activeId === s.id ? "page" : undefined}>
-                      {s.id === "hybrid" ? <span className={HYBRID_ACCENT}>{s.label}</span> : s.label}
+                      {s.id === "hybrid" ? <HybridLabel label={s.label} /> : s.label}
                     </Link>
                   );
                 }

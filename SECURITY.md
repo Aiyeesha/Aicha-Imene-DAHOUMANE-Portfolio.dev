@@ -72,7 +72,19 @@ Upstash Redis and Formhook are called server-side only, so neither appears in `c
 
 Any inline script without a matching nonce is blocked by the browser. `'unsafe-eval'` is retained in development only (webpack HMR).
 
-> **Note:** `'unsafe-inline'` remains in `style-src` — CSS injection cannot execute JavaScript, and Tailwind requires it. Nonce-based style CSP is not planned.
+#### Known limitation: `'unsafe-inline'` in `style-src`
+
+`'unsafe-inline'` remains in `style-src`, and is the weakest point of the policy. It is kept on purpose:
+
+- **Why it is needed** — React `style={{…}}` attributes (about twenty components: positioned menus, progress bars, gradients) and Framer Motion animations set inline `style` attributes. A nonce only covers `<style>` elements, never `style` attributes; allowing those without `'unsafe-inline'` would require `'unsafe-hashes'` and one hash per value, which dynamic values (positions, progress) make impossible.
+- **Residual risk** — Injected CSS cannot run JavaScript, but it can still restyle the page (UI redress) or leak data through attribute selectors that load images. Both require an attacker to inject markup first.
+- **What contains it** — No user-supplied HTML is ever rendered: content is authored in the repository (MDX, TypeScript), form inputs are sent by e-mail and never displayed, and `dangerouslySetInnerHTML` is used only for JSON-LD built with `JSON.stringify`. `img-src 'self' data:` and `connect-src 'self'` block the image or request to a third-party origin that CSS exfiltration needs.
+
+Removing it is not planned unless the site starts rendering third-party or user-supplied content.
+
+#### Trade-off: every page is rendered per request
+
+The nonce must change on every response, so pages cannot be served from a static or CDN cache: HTML responses are `Cache-Control: private, no-store` and every page is server-rendered on demand (`ƒ` in the build output). This is a deliberate choice documented in `app/[locale]/layout.tsx`. Its cost is measured and acceptable at the current traffic (about 220 KB of compressed JavaScript per page, local LCP under 0.5 s; static assets under `/_next/static` stay immutable and cached). If traffic grows, the alternative to evaluate is a hash-based CSP for pages without dynamic inline scripts, which would allow static rendering for those pages.
 
 ---
 
