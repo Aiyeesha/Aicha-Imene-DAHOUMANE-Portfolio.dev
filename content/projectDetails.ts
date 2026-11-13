@@ -9304,146 +9304,381 @@ export const projectDetails: ProjectDetails[] = [
     "slug": "cve-watchlist",
     "gallery": [
       {
-        "alt": "Cover",
-        "src": "/projects/cve-watchlist/cover.webp"
+        "alt": "cve-watch output: changes since the previous watch, then the P1 CVEs listed in CISA's KEV catalogue",
+        "src": "/projects/cve-watchlist/cover.svg"
       },
       {
-        "alt": "Filtered to Critical priority",
-        "src": "/projects/cve-watchlist/screenshot-1.webp"
+        "alt": "Web interface in French: summary, changes since the previous watch and the P1 plan with a CVE record open",
+        "src": "/projects/cve-watchlist/web-fr.png"
+      },
+      {
+        "alt": "Web interface in dark theme (English): today's watch from real NVD, KEV and EPSS data",
+        "src": "/projects/cve-watchlist/web-en-dark.png"
+      },
+      {
+        "alt": "HTML watch report in French: summary, priorities and changes",
+        "src": "/projects/cve-watchlist/report-fr.png"
+      },
+      {
+        "alt": "HTML watch report in dark theme (English)",
+        "src": "/projects/cve-watchlist/report-en-dark.png"
       }
     ],
     "locales": {
       "en": {
-        "title": "CVE Watchlist — Real-Time NVD Vulnerability Triage",
+        "title": "CVE Watchlist — which published vulnerabilities really affect us, and which first",
+        "heroSubtitle": "A daily vulnerability watch for an inventory of products: precise CPE matching against the NVD, prioritisation by known exploitation (CISA KEV) and exploitation probability (FIRST EPSS) before CVSS severity, documented decisions and a web interface refreshed every day",
         "sections": [
           {
             "type": "text",
             "title": "Context",
-            "paragraphs": [
-              "A CVSS score alone doesn't say what to patch first. This dashboard encodes that judgment call into an explicit, documented formula instead of leaving it to the raw CVSS number."
+            "body": "I rebuilt this project from scratch to replace a July 2026 prototype (FastAPI and React) that listed recent CVEs without knowing which products they concerned. The question a small IT team actually asks is different: among the vulnerabilities published for the products we run, which ones affect our versions, and which must be fixed this week? Atelier Lumen, the fictional company used across my security projects, provides an inventory of six real products — a FortiOS VPN gateway, nginx, WordPress, vsftpd, OpenSSH and Confluence — watched every day with real data."
+          },
+          {
+            "type": "bullets",
+            "title": "What the repository contains",
+            "items": [
+              "An inventory format in TOML: each product with its CPE 2.3 name (exact vendor, product and version), exposure (internet or internal), criticality and owner",
+              "A decisions format: not affected (with a VEX justification), mitigated or accepted (with an expiry date, 180 days at most), in progress (with an owner and a due date)",
+              "Five commands: cve-check (validation), cve-fetch (download NVD, KEV and EPSS), cve-match (matching), cve-watch (the watch and its changes) and cve-report (Markdown, HTML, JSON)",
+              "A step-by-step watch guide mapped to ISO/IEC 27001 (8.8, 5.9), CIS Controls v8 (2 and 7), CISA BOD 22-01, CISA VEX and NIS 2 (article 21), in French and English"
             ]
           },
           {
             "type": "bullets",
+            "title": "Matching and sources",
             "items": [
-              "I built an httpx-based NVD API v2.0 client with response parsing for CVSS v3.1/v2 metrics",
-              "I wrote a pure scoring engine (scoring.py) combining CVSS base score, CISA KEV exploitation flag, attack vector, and recency into a 0-100 priority score",
-              "I implemented SQLAlchemy upsert logic so re-syncing updates existing CVEs instead of duplicating them",
-              "I built a React dashboard with severity-band filters and a manual Sync from NVD action",
-              "I wrote 13 Pytest tests, with the NVD client mocked so the suite never depends on live network"
-            ],
-            "title": "What I built"
+              "CPE 2.3 names parsed per NIST IR 7695; a product matches when a vulnerable criterion of an NVD configuration covers its vendor, product and version, including ranges and AND configurations (an application vulnerable only on a given platform)",
+              "Version comparison that handles real-world versions (7.2.5, 9.6p1, 1.0.2a, release candidates)",
+              "Validated against the NVD's own cpeName search on the six products: identical results; the only gap — 89 WordPress plugin CVEs where WordPress is merely the platform — is excluded on purpose and covered by a test",
+              "Downloads with an allow-list of hosts, no redirects, bounded sizes, NVD rate limits respected, and a SHA-256 manifest checked before every read"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Prioritisation and follow-up",
+            "items": [
+              "Exploitation first: P1 for a critical or high CVE in CISA's Known Exploited Vulnerabilities catalogue, P2 for an EPSS of 10 % or more, then CVSS severity; one level lower for an internal-only product",
+              "Due dates counted from first detection (7/30/90/180 days), so a CVE never gets a fresh deadline on each run",
+              "A state kept between runs reports what changed: new CVEs, additions to the KEV catalogue, EPSS jumps, raised priorities, CVEs that disappeared",
+              "Every priority is explained in plain words: catalogue entry, ransomware use, EPSS percentile, CVSS score"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Daily watch and web interface",
+            "items": [
+              "A GitHub Action runs the real watch every day (NVD, KEV, EPSS), keeps its state from one day to the next and publishes the result",
+              "Web interface on GitHub Pages: today's watch, a frozen example or a local export; summary, changes, filterable plan with a full record per CVE, decisions, monitored products, CSV export protected against formula injection",
+              "An opened file is read locally and never sent or kept; every field and link is validated before display, under a strict CSP"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Engineering quality",
             "items": [
               {
-                "note": "Real NVD data, last 30 days",
-                "label": "CVEs synced",
-                "value": "100"
+                "label": "Automated tests",
+                "value": "199",
+                "note": "176 Python + 23 web"
               },
               {
-                "note": "CVE-2018-1273, Spring Data RCE",
-                "label": "Top priority score",
-                "value": "89/100"
+                "label": "CI jobs",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, examples, web interface"
               },
               {
-                "note": "Correctly cross-referenced",
-                "label": "Actively exploited (KEV)",
-                "value": "2"
+                "label": "Real CVEs in the example",
+                "value": "153",
+                "note": "from 1,094 NVD records for six products, with the KEV and EPSS of the day"
+              },
+              {
+                "label": "Runtime dependencies",
+                "value": "0"
               }
-            ],
-            "title": "Verified live"
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "How it is used",
+            "steps": [
+              {
+                "label": "Describe",
+                "description": "List the products in the inventory with their exact CPE names; cve-check refuses anything ambiguous."
+              },
+              {
+                "label": "Collect",
+                "description": "cve-fetch downloads the NVD records for these products, the KEV catalogue and the EPSS scores, with an integrity manifest."
+              },
+              {
+                "label": "Prioritise",
+                "description": "cve-watch matches, ranks and reports what changed since the last run; the decisions file records what is set aside and why."
+              },
+              {
+                "label": "Report",
+                "description": "cve-report produces the report; the web interface and the daily Action keep the watch visible."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Links",
+            "items": [
+              {
+                "label": "Live watch",
+                "href": "https://aiyeesha.github.io/cve-watchlist/"
+              },
+              {
+                "label": "Source code",
+                "href": "https://github.com/Aiyeesha/cve-watchlist"
+              },
+              {
+                "label": "Watch guide (English)",
+                "href": "https://github.com/Aiyeesha/cve-watchlist/blob/main/docs/en/watch-guide.md"
+              },
+              {
+                "label": "Release v1.1.0",
+                "href": "https://github.com/Aiyeesha/cve-watchlist/releases/tag/v1.1.0"
+              }
+            ]
           }
         ]
       },
       "fr": {
-        "title": "CVE Watchlist — Triage de vulnérabilités en temps réel (API NVD)",
-        "heroSubtitle": "Tableau de bord de triage des vulnérabilités, synchronisé avec les CVE réelles de l'API publique NVD et classé par un moteur de priorité transparent qui croise la sévérité CVSS avec le catalogue CISA des vulnérabilités activement exploitées (KEV).",
+        "title": "Veille CVE — quelles vulnérabilités publiées nous touchent vraiment, et lesquelles d'abord",
+        "heroSubtitle": "Une veille quotidienne des vulnérabilités pour un inventaire de produits : correspondance CPE précise avec le NVD, priorisation par l'exploitation avérée (CISA KEV) et la probabilité d'exploitation (FIRST EPSS) avant la gravité CVSS, décisions documentées et interface web actualisée chaque jour",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
-            "paragraphs": [
-              "Un score CVSS seul ne dit pas quoi corriger en premier. Ce tableau de bord traduit ce jugement en une formule explicite et documentée, plutôt que de s'en remettre au seul chiffre CVSS brut."
+            "body": "J'ai reconstruit ce projet de zéro pour remplacer un prototype de juillet 2026 (FastAPI et React) qui listait les CVE récentes sans savoir quels produits elles concernaient. La question que se pose réellement une petite équipe informatique est autre : parmi les vulnérabilités publiées pour les produits que nous exploitons, lesquelles touchent nos versions, et lesquelles corriger cette semaine ? Atelier Lumen, l'entreprise fictive de mes projets de sécurité, fournit un inventaire de six produits réels — une passerelle VPN FortiOS, nginx, WordPress, vsftpd, OpenSSH et Confluence — surveillés chaque jour avec des données réelles."
+          },
+          {
+            "type": "bullets",
+            "title": "Ce que contient le dépôt",
+            "items": [
+              "Un format d'inventaire en TOML : chaque produit avec son nom CPE 2.3 (éditeur, produit et version exacts), son exposition (internet ou interne), sa criticité et son responsable",
+              "Un format de décisions : non concerné (avec une justification VEX), mesure compensatoire ou risque accepté (avec une date d'expiration, 180 jours au plus), en cours (avec un responsable et une échéance)",
+              "Cinq commandes : cve-check (vérification), cve-fetch (téléchargement NVD, KEV et EPSS), cve-match (correspondance), cve-watch (la veille et ses changements) et cve-report (Markdown, HTML, JSON)",
+              "Un guide de veille pas à pas, rattaché à l'ISO/IEC 27001 (8.8, 5.9), aux CIS Controls v8 (2 et 7), à la directive CISA BOD 22-01, à CISA VEX et à NIS 2 (article 21), en français et en anglais"
             ]
           },
           {
             "type": "bullets",
+            "title": "Correspondance et sources",
             "items": [
-              "J'ai construit un client API NVD v2.0 basé sur httpx avec parsing des métriques CVSS v3.1/v2",
-              "J'ai écrit un moteur de score pur (scoring.py) combinant score de base CVSS, drapeau d'exploitation CISA KEV, vecteur d'attaque et fraîcheur en un score de priorité 0-100",
-              "J'ai implémenté une logique d'upsert SQLAlchemy pour que la resynchronisation mette à jour les CVE existantes au lieu de les dupliquer",
-              "J'ai construit un tableau de bord React avec filtres par bande de sévérité et une action manuelle Sync from NVD",
-              "J'ai écrit 13 tests Pytest, avec le client NVD simulé pour que la suite ne dépende jamais du réseau réel"
-            ],
-            "title": "Ce que j'ai construit"
+              "Noms CPE 2.3 analysés selon le NIST IR 7695 ; un produit est touché quand un critère vulnérable d'une configuration du NVD couvre son éditeur, son produit et sa version, plages et configurations ET comprises (une application vulnérable seulement sur une plateforme donnée)",
+              "Comparaison de versions adaptée aux versions réelles (7.2.5, 9.6p1, 1.0.2a, versions candidates)",
+              "Validée contre la recherche cpeName du NVD lui-même sur les six produits : résultats identiques ; le seul écart — 89 CVE d'extensions WordPress où WordPress n'est que la plateforme — est exclu volontairement et couvert par un test",
+              "Téléchargements limités à une liste d'hôtes autorisés, sans redirection, tailles bornées, limites de débit du NVD respectées, et manifeste SHA-256 vérifié avant chaque lecture"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Priorisation et suivi",
+            "items": [
+              "L'exploitation d'abord : P1 pour une CVE critique ou élevée du catalogue Known Exploited Vulnerabilities de la CISA, P2 pour un EPSS d'au moins 10 %, puis la gravité CVSS ; un niveau de moins pour un produit exposé seulement en interne",
+              "Échéances comptées depuis la première détection (7/30/90/180 jours), pour qu'une CVE ne reçoive jamais un nouveau délai à chaque exécution",
+              "Un état conservé d'une exécution à l'autre signale ce qui a changé : nouvelles CVE, entrées au catalogue KEV, bonds de l'EPSS, priorités relevées, CVE disparues",
+              "Chaque priorité est expliquée en clair : entrée au catalogue, usage par des rançongiciels, percentile EPSS, score CVSS"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Veille quotidienne et interface web",
+            "items": [
+              "Une GitHub Action exécute chaque jour la vraie veille (NVD, KEV, EPSS), garde son état d'un jour à l'autre et publie le résultat",
+              "Interface web sur GitHub Pages : veille du jour, exemple figé ou export local ; synthèse, changements, plan filtrable avec la fiche complète de chaque CVE, décisions, produits surveillés, export CSV protégé contre l'injection de formules",
+              "Un fichier ouvert est lu localement, jamais envoyé ni conservé ; chaque champ et chaque lien sont validés avant affichage, sous une CSP stricte"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Qualité d'ingénierie",
             "items": [
               {
-                "note": "Vraies données NVD, 30 derniers jours",
-                "label": "CVE synchronisées",
-                "value": "100"
+                "label": "Tests automatisés",
+                "value": "199",
+                "note": "176 Python + 23 web"
               },
               {
-                "note": "CVE-2018-1273, RCE Spring Data",
-                "label": "Score de priorité max",
-                "value": "89/100"
+                "label": "Jobs de CI",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, exemples, interface web"
               },
               {
-                "note": "Correctement croisées",
-                "label": "Activement exploitées (KEV)",
-                "value": "2"
+                "label": "CVE réelles dans l'exemple",
+                "value": "153",
+                "note": "issues de 1 094 fiches NVD pour six produits, avec le KEV et l'EPSS du jour"
+              },
+              {
+                "label": "Dépendances d'exécution",
+                "value": "0"
               }
-            ],
-            "title": "Vérifié en direct"
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Comment s'en servir",
+            "steps": [
+              {
+                "label": "Décrire",
+                "description": "Lister les produits dans l'inventaire avec leurs noms CPE exacts ; cve-check refuse toute ambiguïté."
+              },
+              {
+                "label": "Collecter",
+                "description": "cve-fetch télécharge les fiches NVD de ces produits, le catalogue KEV et les scores EPSS, avec un manifeste d'intégrité."
+              },
+              {
+                "label": "Prioriser",
+                "description": "cve-watch fait la correspondance, classe et signale ce qui a changé depuis la dernière exécution ; le fichier de décisions consigne ce qui est écarté et pourquoi."
+              },
+              {
+                "label": "Rendre compte",
+                "description": "cve-report produit le rapport ; l'interface web et l'Action quotidienne gardent la veille visible."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Liens",
+            "items": [
+              {
+                "label": "Veille en ligne",
+                "href": "https://aiyeesha.github.io/cve-watchlist/"
+              },
+              {
+                "label": "Code source",
+                "href": "https://github.com/Aiyeesha/cve-watchlist"
+              },
+              {
+                "label": "Guide de veille (français)",
+                "href": "https://github.com/Aiyeesha/cve-watchlist/blob/main/docs/fr/guide-veille.md"
+              },
+              {
+                "label": "Version v1.1.0",
+                "href": "https://github.com/Aiyeesha/cve-watchlist/releases/tag/v1.1.0"
+              }
+            ]
           }
         ]
       },
       "es": {
-        "title": "CVE Watchlist — Triaje de vulnerabilidades en tiempo real (API NVD)",
-        "heroSubtitle": "Panel de clasificación de vulnerabilidades, sincronizado con CVE reales de la API pública NVD y ordenado por un motor de prioridad transparente que cruza la gravedad CVSS con el catálogo CISA de vulnerabilidades explotadas activamente (KEV).",
+        "title": "Vigilancia de CVE — qué vulnerabilidades publicadas nos afectan de verdad, y cuáles primero",
+        "heroSubtitle": "Una vigilancia diaria de vulnerabilidades para un inventario de productos: correspondencia CPE precisa con la NVD, priorización por explotación conocida (CISA KEV) y probabilidad de explotación (FIRST EPSS) antes de la gravedad CVSS, decisiones documentadas e interfaz web actualizada cada día",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
-            "paragraphs": [
-              "Una puntuación CVSS por sí sola no dice qué corregir primero. Este dashboard traduce ese juicio en una fórmula explícita y documentada, en lugar de dejarlo únicamente al número CVSS bruto."
+            "body": "Reconstruí este proyecto desde cero para sustituir un prototipo de julio de 2026 (FastAPI y React) que listaba las CVE recientes sin saber a qué productos afectaban. La pregunta que se hace realmente un pequeño equipo de TI es otra: entre las vulnerabilidades publicadas para los productos que usamos, ¿cuáles afectan a nuestras versiones y cuáles hay que corregir esta semana? Atelier Lumen, la empresa ficticia de mis proyectos de seguridad, aporta un inventario de seis productos reales — una pasarela VPN FortiOS, nginx, WordPress, vsftpd, OpenSSH y Confluence — vigilados cada día con datos reales."
+          },
+          {
+            "type": "bullets",
+            "title": "Qué contiene el repositorio",
+            "items": [
+              "Un formato de inventario en TOML: cada producto con su nombre CPE 2.3 (fabricante, producto y versión exactos), su exposición (internet o interna), su criticidad y su responsable",
+              "Un formato de decisiones: no afectado (con una justificación VEX), mitigado o aceptado (con fecha de caducidad, 180 días como máximo), en curso (con un responsable y un plazo)",
+              "Cinco comandos: cve-check (validación), cve-fetch (descarga de NVD, KEV y EPSS), cve-match (correspondencia), cve-watch (la vigilancia y sus cambios) y cve-report (Markdown, HTML, JSON)",
+              "Una guía de vigilancia paso a paso, vinculada a ISO/IEC 27001 (8.8, 5.9), CIS Controls v8 (2 y 7), la directiva CISA BOD 22-01, CISA VEX y NIS 2 (artículo 21), en francés y en inglés"
             ]
           },
           {
             "type": "bullets",
+            "title": "Correspondencia y fuentes",
             "items": [
-              "Construí un cliente de la API NVD v2.0 basado en httpx con análisis de las métricas CVSS v3.1/v2",
-              "Escribí un motor de puntuación puro (scoring.py) que combina la puntuación base CVSS, el indicador de explotación CISA KEV, el vector de ataque y la actualidad en una puntuación de prioridad 0-100",
-              "Implementé una lógica de upsert en SQLAlchemy para que la resincronización actualice las CVE existentes en lugar de duplicarlas",
-              "Construí un dashboard React con filtros por banda de severidad y una acción manual Sync from NVD",
-              "Escribí 13 pruebas Pytest, con el cliente NVD simulado para que la suite nunca dependa de la red real"
-            ],
-            "title": "Lo que construí"
+              "Nombres CPE 2.3 analizados según NIST IR 7695; un producto se ve afectado cuando un criterio vulnerable de una configuración de la NVD cubre su fabricante, producto y versión, incluidos rangos y configuraciones Y (una aplicación vulnerable solo en una plataforma concreta)",
+              "Comparación de versiones adaptada a versiones reales (7.2.5, 9.6p1, 1.0.2a, versiones candidatas)",
+              "Validada frente a la propia búsqueda cpeName de la NVD con los seis productos: resultados idénticos; la única diferencia — 89 CVE de extensiones de WordPress en las que WordPress es solo la plataforma — se excluye a propósito y la cubre una prueba",
+              "Descargas limitadas a una lista de hosts autorizados, sin redirecciones, tamaños acotados, límites de tasa de la NVD respetados y un manifiesto SHA-256 verificado antes de cada lectura"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Priorización y seguimiento",
+            "items": [
+              "Primero la explotación: P1 para una CVE crítica o alta del catálogo Known Exploited Vulnerabilities de la CISA, P2 para un EPSS del 10 % o más, después la gravedad CVSS; un nivel menos para un producto expuesto solo internamente",
+              "Plazos contados desde la primera detección (7/30/90/180 días), para que una CVE nunca reciba un plazo nuevo en cada ejecución",
+              "Un estado conservado entre ejecuciones señala lo que ha cambiado: nuevas CVE, entradas en el catálogo KEV, saltos del EPSS, prioridades elevadas, CVE desaparecidas",
+              "Cada prioridad se explica con claridad: entrada en el catálogo, uso por ransomware, percentil EPSS, puntuación CVSS"
+            ]
+          },
+          {
+            "type": "bullets",
+            "title": "Vigilancia diaria e interfaz web",
+            "items": [
+              "Una GitHub Action ejecuta cada día la vigilancia real (NVD, KEV, EPSS), conserva su estado de un día a otro y publica el resultado",
+              "Interfaz web en GitHub Pages: vigilancia del día, ejemplo fijo o exportación local; resumen, cambios, plan filtrable con la ficha completa de cada CVE, decisiones, productos vigilados, exportación CSV protegida contra la inyección de fórmulas",
+              "Un archivo abierto se lee localmente, nunca se envía ni se conserva; cada campo y cada enlace se validan antes de mostrarse, con una CSP estricta"
+            ]
           },
           {
             "type": "metrics",
+            "title": "Calidad de ingeniería",
             "items": [
               {
-                "note": "Datos reales de NVD, últimos 30 días",
-                "label": "CVE sincronizadas",
-                "value": "100"
+                "label": "Pruebas automatizadas",
+                "value": "199",
+                "note": "176 Python + 23 web"
               },
               {
-                "note": "CVE-2018-1273, RCE de Spring Data",
-                "label": "Puntuación de prioridad máxima",
-                "value": "89/100"
+                "label": "Jobs de CI",
+                "value": "7",
+                "note": "Windows + Linux, Python 3.11/3.14, Ruff, ejemplos, interfaz web"
               },
               {
-                "note": "Cruzadas correctamente",
-                "label": "Activamente explotadas (KEV)",
-                "value": "2"
+                "label": "CVE reales en el ejemplo",
+                "value": "153",
+                "note": "a partir de 1 094 fichas de la NVD para seis productos, con el KEV y el EPSS del día"
+              },
+              {
+                "label": "Dependencias en ejecución",
+                "value": "0"
               }
-            ],
-            "title": "Verificado en vivo"
+            ]
+          },
+          {
+            "type": "timeline",
+            "title": "Cómo se usa",
+            "steps": [
+              {
+                "label": "Describir",
+                "description": "Listar los productos en el inventario con sus nombres CPE exactos; cve-check rechaza cualquier ambigüedad."
+              },
+              {
+                "label": "Recopilar",
+                "description": "cve-fetch descarga las fichas de la NVD de esos productos, el catálogo KEV y las puntuaciones EPSS, con un manifiesto de integridad."
+              },
+              {
+                "label": "Priorizar",
+                "description": "cve-watch hace la correspondencia, ordena y señala lo que ha cambiado desde la última ejecución; el archivo de decisiones registra lo que se aparta y por qué."
+              },
+              {
+                "label": "Informar",
+                "description": "cve-report genera el informe; la interfaz web y la Action diaria mantienen la vigilancia visible."
+              }
+            ]
+          },
+          {
+            "type": "resources",
+            "title": "Enlaces",
+            "items": [
+              {
+                "label": "Vigilancia en línea",
+                "href": "https://aiyeesha.github.io/cve-watchlist/"
+              },
+              {
+                "label": "Código fuente",
+                "href": "https://github.com/Aiyeesha/cve-watchlist"
+              },
+              {
+                "label": "Guía de vigilancia (inglés)",
+                "href": "https://github.com/Aiyeesha/cve-watchlist/blob/main/docs/en/watch-guide.md"
+              },
+              {
+                "label": "Versión v1.1.0",
+                "href": "https://github.com/Aiyeesha/cve-watchlist/releases/tag/v1.1.0"
+              }
+            ]
           }
         ]
       }
