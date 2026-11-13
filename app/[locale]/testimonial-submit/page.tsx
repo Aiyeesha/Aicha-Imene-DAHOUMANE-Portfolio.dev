@@ -15,38 +15,13 @@ import { isInviteUsed, isInviteValid, sessionKeyFor } from "@/lib/security/testi
 import TestimonialSubmitForm from "@/components/TestimonialSubmitForm";
 import { getSiteUrl } from "@/lib/siteUrl";
 
-// ── Invitation check (shared by generateMetadata and the page) ───────────────
-// ?invite=<hmac-sha256-hex>&exp=<unix-seconds>, where
-// invite = HMAC-SHA256(TESTIMONIAL_SUBMIT_TOKEN, "testimonial-invite:" + exp).
-// Only this time-limited derivative is shared, never the token.
-// Genuine link: the signature matches, whatever the current time (checked as
-// of one second before its own expiry). Anything else (no parameters, forged
-// or malformed link, no secret configured) gets a plain 404, like any
-// unknown URL, instead of a 200 "access denied" page.
-function readInvite(sp: Record<string, string | string[] | undefined>) {
-  const secret  = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
-  const invite  = typeof sp.invite === "string" ? sp.invite.trim() : "";
-  const expStr  = typeof sp.exp    === "string" ? sp.exp.trim()    : "";
-  const expUnix = parseInt(expStr, 10);
-  const isGenuine =
-    Number.isFinite(expUnix) && isInviteValid(secret, invite, expUnix, (expUnix - 1) * 1000);
-  return { secret, invite, expUnix, isGenuine };
-}
-
 // ── Metadata: noindex (private page) ──────────────────────────────────────────
 export async function generateMetadata({
   params,
-  searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  // notFound() here, before the HTML shell is streamed, so Next renders the
-  // localised [locale]/not-found page (lang, <title>, readable without
-  // JavaScript). Thrown only from the page body, it came too late and the
-  // response used Next's bare error shell (<html id="__next_error__">).
-  if (!readInvite(await searchParams).isGenuine) notFound();
   const isFr = locale === "fr";
   const isEs = locale === "es";
   const siteUrl = getSiteUrl();
@@ -87,13 +62,22 @@ export default async function TestimonialSubmitPage({
   const isFr                  = locale === "fr";
   const isEs                  = locale === "es";
 
-  // ── HMAC invitation link (see readInvite) ────────────────────────────────
-  const { secret, invite, expUnix, isGenuine } = readInvite(sp);
+  // ── HMAC invitation link ──────────────────────────────────────────────────
+  // ?invite=<hmac-sha256-hex>&exp=<unix-seconds>, where
+  // invite = HMAC-SHA256(TESTIMONIAL_SUBMIT_TOKEN, "testimonial-invite:" + exp).
+  // Only this time-limited derivative is shared, never the token.
+  const secret     = process.env.TESTIMONIAL_SUBMIT_TOKEN ?? "";
+  const invite     = typeof sp.invite === "string" ? sp.invite.trim() : "";
+  const expStr     = typeof sp.exp    === "string" ? sp.exp.trim()    : "";
+  const expUnix    = parseInt(expStr, 10);
   // eslint-disable-next-line react-hooks/purity -- async server component, not a React hook
   const nowSec     = Math.floor(Date.now() / 1000);
 
-  // Defence in depth: the form must never render without a genuine link,
-  // even if the metadata check above were removed or skipped.
+  // Genuine link: the signature matches, whatever the current time (checked
+  // as of one second before its own expiry). Anything else (no parameters,
+  // forged or malformed link, no secret configured) gets a plain 404, like
+  // any unknown URL, instead of a 200 "access denied" page.
+  const isGenuine = Number.isFinite(expUnix) && isInviteValid(secret, invite, expUnix, (expUnix - 1) * 1000);
   if (!isGenuine) notFound();
 
   // Genuine, unexpired and unused (single use, lib/security/testimonialInvite.ts).

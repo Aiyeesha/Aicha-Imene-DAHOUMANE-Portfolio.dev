@@ -222,9 +222,26 @@ export async function proxy(request: NextRequest) {
       : routing.defaultLocale;
   requestHeaders.set("x-next-intl-locale", detectedLocale);
 
-  const response = NextResponse.next({
-    request: { headers: requestHeaders },
-  });
+  // /{locale}/testimonial-submit without an invitation (?invite=…&exp=…):
+  // rewritten to a path no route serves, so app/not-found.tsx answers with a
+  // complete, localised 404 page (lang, <title>, text without JavaScript).
+  // In Next.js 16 the page's own notFound() is not rendered on the server:
+  // the 404 only held the empty error shell (<html id="__next_error__">),
+  // the limit already met for unknown URLs (see CHANGELOG). Links that carry
+  // parameters still reach the page, which checks the HMAC signature itself.
+  const params = request.nextUrl.searchParams;
+  const isBareTestimonialLink =
+    /^\/[a-z]{2}\/testimonial-submit\/?$/.test(pathname) &&
+    !(params.has("invite") && params.has("exp"));
+
+  const response = isBareTestimonialLink
+    ? NextResponse.rewrite(
+        new URL(`/${detectedLocale}/testimonial-submit/invitation-required`, request.url),
+        { request: { headers: requestHeaders } },
+      )
+    : NextResponse.next({
+        request: { headers: requestHeaders },
+      });
   response.headers.set("Content-Security-Policy", csp);
   response.headers.set("Content-Security-Policy-Report-Only", cspRO);
 
