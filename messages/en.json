@@ -492,6 +492,8 @@
   },
   "availModal": {
     "badge": "Interviews now — Available from December 2026",
+    "badgeRoleSalesforce": "Salesforce Administrator & Developer",
+    "badgeRoleItops": "Systems & Network Administrator · DevOps Engineer",
     "title": "My availability",
     "delay": "Availability",
     "delayValue": "Interviews now · Available from December 2026",

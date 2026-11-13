@@ -17,11 +17,12 @@ export default async function Image({ params }: Props) {
   const siteUrl = getSiteUrl().replace(/^https?:\/\//, "");
 
   const title    = isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me";
+  // Role first (Salesforce CV title), then IT Ops and the contract types.
   const subtitle = isFr
-    ? "Salesforce · IT Ops · CDI, CDD, intérim, portage · Tous secteurs"
+    ? "Administratrice & Développeuse Salesforce · IT Ops · CDI, CDD, intérim, portage · Tous secteurs"
     : isEs
-    ? "Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
-    : "Salesforce · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
+    ? "Administradora & Desarrolladora Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
+    : "Salesforce Administrator & Developer · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
   const availLabel = isFr ? `Entretiens dès maintenant — Disponible ${AVAILABILITY.fr.from}` : isEs ? `Entrevistas desde ya — Disponible ${AVAILABILITY.es.from}` : `Interviews now — Available ${AVAILABILITY.en.from}`;
 
   const cyan   = "#22d3ee";

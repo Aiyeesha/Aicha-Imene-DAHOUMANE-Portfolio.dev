@@ -492,6 +492,8 @@
   },
   "availModal": {
     "badge": "Entretiens dès maintenant — Disponible à partir de décembre 2026",
+    "badgeRoleSalesforce": "Administratrice & Développeuse Salesforce",
+    "badgeRoleItops": "Administratrice Systèmes & Réseaux · Ingénieure DevOps",
     "title": "Mes disponibilités",
     "delay": "Disponibilité",
     "delayValue": "Entretiens dès maintenant · Disponible à partir de décembre 2026",

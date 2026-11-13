@@ -23,11 +23,13 @@ export const OG_SIZE = { width: 1200, height: 630 };
 
 type OgLocale = "fr" | "en" | "es";
 
-// Target roles: same wording as the CV headers (public/cv/*.html).
+// Target roles: the Salesforce CV title ("Administratrice & Développeuse
+// Salesforce", public/cv/*-salesforce.html) first, then the IT Ops skills.
+// One image serves both tracks, so both stay named.
 const ROLES: Record<OgLocale, string> = {
-  fr: "Développeuse / Administratrice Salesforce · Systèmes & Réseaux · DevOps",
-  en: "Salesforce Developer / Administrator · Systems & Networks · DevOps",
-  es: "Desarrolladora / Administradora Salesforce · Sistemas y Redes · DevOps",
+  fr: "Administratrice & Développeuse Salesforce · Systèmes & Réseaux · DevOps",
+  en: "Salesforce Administrator & Developer · Systems & Networks · DevOps",
+  es: "Administradora & Desarrolladora Salesforce · Sistemas y Redes · DevOps",
 };
 
 const LOCATION: Record<OgLocale, string> = {

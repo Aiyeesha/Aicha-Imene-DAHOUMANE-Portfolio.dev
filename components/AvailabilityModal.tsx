@@ -3,6 +3,11 @@
 // AvailabilityModal.tsx
 // --------------------
 // "Open to work" badge of the hero, and the modal it opens.
+// Two lines: the target role of the active track (same titles as the CVs:
+// "Administratrice & Développeuse Salesforce" / "Administratrice Systèmes &
+// Réseaux · Ingénieure DevOps"), then the availability. The track comes
+// from the `track` cookie read on the server, so the right role is in the
+// first HTML, without a flash.
 //
 // The badge is part of the server-rendered HTML (visible to crawlers, link
 // previews and visitors before hydration). Only the modal content
@@ -11,6 +16,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import { useTrack } from "@/app/[locale]/providers";
 
 // Same module for the dynamic import and the preload, so webpack emits a
 // single chunk and the preload fills the cache dynamic() then reads.
@@ -24,7 +30,9 @@ function preloadDialog() {
 
 export default function AvailabilityModal() {
   const t = useTranslations("availModal");
+  const { track } = useTrack();
   const [open, setOpen] = useState(false);
+  const role = track === "itops" ? t("badgeRoleItops") : t("badgeRoleSalesforce");
 
   return (
     <>
@@ -46,9 +54,16 @@ export default function AvailabilityModal() {
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
         </span>
-        <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400
-          group-hover:underline group-hover:underline-offset-2 transition-all">
-          {t("badge")}
+        {/* Role on its own line, availability below (centred on mobile like
+            the rest of the hero, left-aligned from sm). */}
+        <span className="flex flex-col items-center sm:items-start text-center sm:text-left leading-snug">
+          <span className="text-sm font-semibold text-slate-900 dark:text-white">
+            {role}
+          </span>
+          <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400
+            group-hover:underline group-hover:underline-offset-2 transition-all">
+            {t("badge")}
+          </span>
         </span>
         {/* "Clickable" hint */}
         <span
