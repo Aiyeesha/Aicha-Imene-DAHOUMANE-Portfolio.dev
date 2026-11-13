@@ -66,10 +66,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       ? "Indefinido · Temporal · ETT · Portage salarial — todos los sectores"
       : "Permanent · Fixed-term · Temp · Umbrella (portage) — any industry",
     availMode:      isFr
-      ? "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, PACA ou relocalisation internationale · Hybride · Sur site"
+      ? "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site"
       : isEs
-      ? "Val-d'Oise (95), Île-de-France · París / Île-de-France, PACA o traslado internacional · Híbrido · Presencial"
-      : "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, PACA or international relocation · Hybrid · On-site",
+      ? "Val-d'Oise (95), Île-de-France · París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional · Híbrido · Presencial"
+      : "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation · Hybrid · On-site",
 
     lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
@@ -92,10 +92,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
       : ["Permanent", "Fixed-term", "Temp (agency)", "Umbrella company (portage)"],
     modeLabel:      isFr ? "Mode et secteurs" : isEs ? "Modalidad y sectores" : "Work mode and industries",
     modes:          isFr
-      ? ["Hybride · Sur site", "Paris / Île-de-France", "PACA", "Relocalisation internationale", "Tous secteurs d'activité"]
+      ? ["Hybride · Sur site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "Relocalisation internationale", "Tous secteurs d'activité"]
       : isEs
-      ? ["Híbrido · Presencial", "París / Île-de-France", "PACA", "Traslado internacional", "Todos los sectores"]
-      : ["Hybrid · On-site", "Paris / Île-de-France", "PACA", "International relocation", "Any industry"],
+      ? ["Híbrido · Presencial", "París / Île-de-France", "Provenza-Alpes-Costa Azul", "Traslado internacional", "Todos los sectores"]
+      : ["Hybrid · On-site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "International relocation", "Any industry"],
 
     processTitle:   isFr ? "Comment se passe un recrutement avec moi" : isEs ? "Cómo es un proceso de selección conmigo" : "How hiring me works",
     steps: isFr
