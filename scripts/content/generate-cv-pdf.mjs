@@ -2,6 +2,9 @@
 // ---------------------------
 // Generates the CV PDF files from their HTML sources with Puppeteer
 // (headless Chromium) for browser-accurate rendering.
+// Classic CVs use Inter (public/cv/fonts, static weights); ATS versions stay
+// in Arial. Each `scale` is the largest that keeps the CV on its page count
+// with its font.
 //
 // Usage: node scripts/content/generate-cv-pdf.mjs (puppeteer is a devDependency)
 
@@ -20,42 +23,42 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-en-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-itops.pdf",
-    scale: 0.96,
+    scale: 0.94,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systems & Networks — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-en-salesforce.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-salesforce.pdf",
-    scale: 0.96,
+    scale: 0.95,
     title: "Aïcha Imène DAHOUMANE — Salesforce Developer — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops.pdf",
-    scale: 0.94,
+    scale: 0.91,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.pdf",
-    scale: 0.96,
+    scale: 0.95,
     title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-es-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-itops.pdf",
-    scale: 0.89,
+    scale: 0.87,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-es-salesforce.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-salesforce.pdf",
-    scale: 0.95,
+    scale: 0.94,
     title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
