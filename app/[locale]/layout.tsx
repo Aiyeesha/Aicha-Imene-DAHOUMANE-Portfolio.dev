@@ -11,7 +11,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import CommandPaletteLoader from "@/components/CommandPaletteLoader";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import { getSiteUrl } from "@/lib/siteUrl";
-import { GITHUB_URL } from "@/lib/social";
+import { GITHUB_URL, LINKEDIN_URL } from "@/lib/social";
 import { getFeaturedProjectsForNav, getSecurityClusterCount } from "@/lib/data/projects";
 
 /**
@@ -179,6 +179,16 @@ export default async function LocaleLayout({
                         GitHub
                       </a>
                     )}
+                    {/* Same profile as the command palette and the CVs. */}
+                    <a
+                      href={LINKEDIN_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="LinkedIn"
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                    >
+                      LinkedIn
+                    </a>
                   </nav>
                 </div>
               </div>

@@ -430,7 +430,7 @@ export default function Navbar({
     if (isHome) return `#${id}`;
     if (id === "blog") return `/${locale}/blog`;
     if (id === "projects") return `/${locale}/projects`;
-    return `/${locale}/#${id}`;
+    return `/${locale}#${id}`;
   };
 
   const sections: { id: NavId; label: string }[] = [
@@ -625,7 +625,7 @@ export default function Navbar({
                 // Section links: on the home page, scroll in place (and move focus).
                 return (
                   <a key={s.id} className={cls} data-section={s.id}
-                    href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
+                    href={isHome ? `#${s.id}` : `/${locale}#${s.id}`}
                     aria-current={activeId === s.id ? "page" : undefined}
                     onClick={(e) => {
                       if (isHome) {
@@ -787,7 +787,7 @@ export default function Navbar({
                 // Section links: close the drawer and scroll in place on the home page
                 return (
                   <a key={s.id} data-section={s.id} className={cls}
-                    href={isHome ? `#${s.id}` : `/${locale}/#${s.id}`}
+                    href={isHome ? `#${s.id}` : `/${locale}#${s.id}`}
                     onClick={(e) => {
                       if (isHome) {
                         e.preventDefault();
