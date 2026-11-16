@@ -32,6 +32,14 @@ export const RETIRED_TERMS: RetiredTerm[] = [
     since: "2026",
   },
   {
+    term: "MediCare",
+    reason:
+      "Retrait temporaire, le temps de terminer le projet MediCare Solutions. " +
+      "Pour le remettre : supprimer cette entrée, puis rétablir la puce et le bouton " +
+      "de l'accueil (section bridge) et la preuve de /hybride (git revert du commit de retrait).",
+    since: "2026-11-16",
+  },
+  {
     term: "/api/redis-test",
     reason: "Endpoint de diagnostic supprimé : ne doit plus être référencé.",
     since: "2026",

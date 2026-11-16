@@ -98,11 +98,9 @@
     "bridge_title": "Where my two worlds meet",
     "bridge_points": [
       "Legarant-AXG (my RNCP Level 6 capstone): I wrote the Apex REST endpoints on the Salesforce side and built the Heroku application that consumes them — a Node.js/PostgreSQL API, two isolated environments connected by a Heroku pipeline, Heroku Connect, down to the deployment runbook.",
-      "Owning both sides removes the back-and-forth between Salesforce and DevOps teams: the Apex External ID trigger and the Matching Rule stop duplicates at the source, and the staging environment existed before the first line of Apex.",
-      "The same reflex, verifiable, on MediCare Solutions (work in progress): every Pull Request is validated against the Salesforce org by GitHub Actions, with JWT Bearer authentication and a private key wiped from the runner after every run."
+      "Owning both sides removes the back-and-forth between Salesforce and DevOps teams: the Apex External ID trigger and the Matching Rule stop duplicates at the source, and the staging environment existed before the first line of Apex."
     ],
-    "bridge_cta": "See the Legarant-AXG case study",
-    "bridge_cta2": "See the MediCare workflow (GitHub)"
+    "bridge_cta": "See the Legarant-AXG case study"
   },
   "contact": {
     "nameLabel": "Name",
@@ -543,10 +541,6 @@
         "mineTitle": "What I deliver",
         "mine": "Real DevOps discipline — automated validation of every Pull Request against the org, server-to-server JWT Bearer authentication, a private key wiped from the runner after every run, a documented SFDX rollback procedure — applied to how Salesforce releases are delivered, not just how they're coded.",
         "proofs": [
-          {
-            "label": "MediCare Solutions — validation workflow (work in progress)",
-            "href": "https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
-          },
           {
             "label": "Personal project — Salesforce release procedure",
             "href": "/projects/cicd-pipeline-setup"

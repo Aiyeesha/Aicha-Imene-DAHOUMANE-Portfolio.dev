@@ -98,11 +98,9 @@
     "bridge_title": "Donde mis dos mundos se encuentran",
     "bridge_points": [
       "Legarant-AXG (mi proyecto integrador del título RNCP 6): escribí los endpoints Apex REST del lado Salesforce y construí la aplicación Heroku que los consume — una API Node.js/PostgreSQL, dos entornos aislados conectados por un pipeline de Heroku, Heroku Connect, hasta el runbook de despliegue.",
-      "Asumir ambos lados elimina el vaivén entre equipos Salesforce y DevOps: el trigger Apex de External ID y la Matching Rule evitan duplicados en el origen, y el entorno de staging ya existía antes de la primera línea de Apex.",
-      "El mismo reflejo, verificable, en MediCare Solutions (proyecto en curso): cada Pull Request se valida contra la org de Salesforce con GitHub Actions, con autenticación JWT Bearer y una clave privada eliminada del runner tras cada ejecución."
+      "Asumir ambos lados elimina el vaivén entre equipos Salesforce y DevOps: el trigger Apex de External ID y la Matching Rule evitan duplicados en el origen, y el entorno de staging ya existía antes de la primera línea de Apex."
     ],
-    "bridge_cta": "Ver el caso de estudio Legarant-AXG",
-    "bridge_cta2": "Ver el workflow de MediCare (GitHub)"
+    "bridge_cta": "Ver el caso de estudio Legarant-AXG"
   },
   "contact": {
     "nameLabel": "Nombre",
@@ -543,10 +541,6 @@
         "mineTitle": "Lo que entrego",
         "mine": "Una disciplina DevOps real — validación automatizada de cada Pull Request contra la org, autenticación servidor a servidor JWT Bearer, clave privada eliminada del runner tras cada ejecución, procedimiento de rollback SFDX documentado — aplicada a cómo se entregan las releases de Salesforce, no solo a cómo se programan.",
         "proofs": [
-          {
-            "label": "MediCare Solutions — workflow de validación (proyecto en curso)",
-            "href": "https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
-          },
           {
             "label": "Proyecto personal — procedimiento de release Salesforce",
             "href": "/projects/cicd-pipeline-setup"
