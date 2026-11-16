@@ -375,9 +375,9 @@
     "languagesLabel": "Languages",
     "languagesValue": "French (native), English (C1 listening, B2 reading), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
-    "rolesValue": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
-    "rolesValueSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
-    "rolesValueItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
+    "rolesValue": "Salesforce Administrator & Developer · Systems & Network Administrator · DevOps Engineer",
+    "rolesValueSalesforce": "Salesforce Administrator & Developer · Systems & Network Administrator · DevOps Engineer",
+    "rolesValueItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Administrator & Developer",
     "availabilityLabel": "Availability",
     "availabilityValue": "Available from December 2026 · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
     "goalLabel": "Goal",
@@ -504,8 +504,8 @@
     "sector": "Industries",
     "sectorValues": "Any industry",
     "roles": "Target roles",
-    "rolesValuesSalesforce": "Salesforce Developer / Administrator · Systems & Network Administrator · DevOps Engineer",
-    "rolesValuesItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Developer / Administrator",
+    "rolesValuesSalesforce": "Salesforce Administrator & Developer · Systems & Network Administrator · DevOps Engineer",
+    "rolesValuesItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Administrator & Developer",
     "cta": "Get in touch →"
   },
   "hybrid": {

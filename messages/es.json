@@ -375,9 +375,9 @@
     "languagesLabel": "Idiomas",
     "languagesValue": "Francés (nativo), Inglés (C1 comprensión oral, B2 lectura), Español (B1), Italiano (A1)",
     "rolesLabel": "Puestos objetivo",
-    "rolesValue": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
-    "rolesValueSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
-    "rolesValueItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
+    "rolesValue": "Administradora & Desarrolladora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
+    "rolesValueSalesforce": "Administradora & Desarrolladora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
+    "rolesValueItops": "Administradora de sistemas y redes · Ingeniera DevOps · Administradora & Desarrolladora Salesforce",
     "availabilityLabel": "Disponibilidad",
     "availabilityValue": "Disponible a partir de diciembre de 2026 · Entrevistas desde ya · Indefinido · Temporal · ETT · Portage salarial · Todos los sectores",
     "goalLabel": "Objetivo",
@@ -504,8 +504,8 @@
     "sector": "Sectores de actividad",
     "sectorValues": "Todos los sectores",
     "roles": "Puestos buscados",
-    "rolesValuesSalesforce": "Desarrolladora / administradora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
-    "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Desarrolladora / administradora Salesforce",
+    "rolesValuesSalesforce": "Administradora & Desarrolladora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
+    "rolesValuesItops": "Administradora de sistemas y redes · Ingeniera DevOps · Administradora & Desarrolladora Salesforce",
     "cta": "Ponte en contacto →"
   },
   "hybrid": {
