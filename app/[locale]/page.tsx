@@ -162,8 +162,10 @@ export default async function Home({ params }: Props) {
 
       {/* SALESFORCE ⇄ INFRA BRIDGE: the most direct evidence of the hybrid
           profile, placed early. Explains the one truly cross-domain project
-          (Legarant-AXG, badge-bridge), with MediCare Solutions' public workflow
-          as second evidence. Cyan→violet gradient as in .badge-bridge. */}
+          (Legarant-AXG, badge-bridge). Cyan→violet gradient as in
+          .badge-bridge. A second, public piece of evidence (a project's
+          GitHub Actions workflow) is withdrawn until that project is
+          finished; see lib/retiredTerms.ts. */}
       <section id="bridge" className="py-14">
         <Reveal>
           <div
@@ -185,17 +187,6 @@ export default async function Home({ params }: Props) {
                 {t("sections.bridge_cta")}
                 <span aria-hidden="true"> →</span>
               </Link>
-              {/* Second evidence: a public, verifiable artefact (MediCare
-                  Solutions' GitHub Actions workflow), hence an external link. */}
-              <a
-                href="https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-              >
-                {t("sections.bridge_cta2")}
-                <span aria-hidden="true"> ↗</span>
-              </a>
             </div>
           </div>
         </Reveal>
