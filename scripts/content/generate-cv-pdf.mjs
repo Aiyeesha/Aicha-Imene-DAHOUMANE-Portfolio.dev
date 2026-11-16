@@ -63,21 +63,21 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid.pdf",
     scale: 0.96,
-    title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce & Infrastructure — CV",
+    title: "Aïcha Imène DAHOUMANE — Administratrice & Développeuse Salesforce · Infrastructure — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-en-hybrid.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-hybrid.pdf",
     scale: 0.96,
-    title: "Aïcha Imène DAHOUMANE — Salesforce & Infrastructure Developer — CV",
+    title: "Aïcha Imène DAHOUMANE — Salesforce Administrator & Developer · Infrastructure — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
     html: "Aicha-Imene-DAHOUMANE-CV-es-hybrid.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-hybrid.pdf",
     scale: 0.95,
-    title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce e Infraestructura — CV",
+    title: "Aïcha Imène DAHOUMANE — Administradora & Desarrolladora Salesforce · Infraestructura — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
   // ── ATS versions (single column, no sidebar) ─────────────────────────────
@@ -102,7 +102,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid-ats.pdf",
     scale: 1,
-    title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce & Infrastructure — CV (ATS)",
+    title: "Aïcha Imène DAHOUMANE — Administratrice & Développeuse Salesforce · Infrastructure — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
@@ -123,7 +123,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-en-hybrid-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-hybrid-ats.pdf",
     scale: 1,
-    title: "Aïcha Imène DAHOUMANE — Salesforce & Infrastructure Developer — CV (ATS)",
+    title: "Aïcha Imène DAHOUMANE — Salesforce Administrator & Developer · Infrastructure — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
   {
@@ -144,7 +144,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-es-hybrid-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-hybrid-ats.pdf",
     scale: 1,
-    title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce e Infraestructura — CV (ATS)",
+    title: "Aïcha Imène DAHOUMANE — Administradora & Desarrolladora Salesforce · Infraestructura — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
 ];

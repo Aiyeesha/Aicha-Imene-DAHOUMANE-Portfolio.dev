@@ -98,11 +98,9 @@
     "bridge_title": "Où mes deux mondes se rencontrent",
     "bridge_points": [
       "Legarant-AXG (projet fil rouge du titre RNCP 6) : j'ai écrit les endpoints Apex REST côté Salesforce et construit l'application Heroku qui les consomme — API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect, jusqu'au runbook de déploiement.",
-      "Porter les deux côtés supprime l'aller-retour entre équipes Salesforce et DevOps : le trigger Apex d'External ID et la Matching Rule bloquent les doublons à la source, et l'environnement de staging existait avant la première ligne d'Apex.",
-      "Même réflexe, vérifiable, sur MediCare Solutions (projet en cours) : chaque Pull Request est validée contre l'org Salesforce par GitHub Actions, avec une authentification JWT Bearer et une clé privée supprimée du runner après chaque exécution."
+      "Porter les deux côtés supprime l'aller-retour entre équipes Salesforce et DevOps : le trigger Apex d'External ID et la Matching Rule bloquent les doublons à la source, et l'environnement de staging existait avant la première ligne d'Apex."
     ],
-    "bridge_cta": "Voir l'étude de cas Legarant-AXG",
-    "bridge_cta2": "Voir le workflow MediCare (GitHub)"
+    "bridge_cta": "Voir l'étude de cas Legarant-AXG"
   },
   "contact": {
     "nameLabel": "Nom",
@@ -369,9 +367,9 @@
     "languagesLabel": "Langues",
     "languagesValue": "Français (natif), Anglais (C1 en compréhension orale, B2 en lecture), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
-    "rolesValue": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
-    "rolesValueSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
-    "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
+    "rolesValue": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValueSalesforce": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Administratrice & Développeuse Salesforce",
     "availabilityLabel": "Disponibilité",
     "availabilityValue": "Disponible à partir de décembre 2026 · Entretiens dès maintenant · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
     "goalLabel": "Objectif",
@@ -506,8 +504,8 @@
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
-    "rolesValuesSalesforce": "Développeuse / administratrice Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
-    "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Développeuse / administratrice Salesforce",
+    "rolesValuesSalesforce": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "rolesValuesItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Administratrice & Développeuse Salesforce",
     "cta": "Prendre contact →"
   },
   "hybrid": {
@@ -543,10 +541,6 @@
         "mineTitle": "Ce que je livre",
         "mine": "Une discipline DevOps réelle — validation automatisée de chaque Pull Request contre l'org, authentification serveur à serveur JWT Bearer, clé privée supprimée du runner après chaque exécution, procédure de rollback SFDX documentée — appliquée à la façon dont les releases Salesforce sont livrées, pas seulement à la façon dont elles sont codées.",
         "proofs": [
-          {
-            "label": "MediCare Solutions — workflow de validation (projet en cours)",
-            "href": "https://github.com/Aiyeesha/medicare-solutions/blob/main/.github/workflows/validate.yml"
-          },
           {
             "label": "Projet personnel — procédure de release Salesforce",
             "href": "/projects/cicd-pipeline-setup"

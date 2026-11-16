@@ -75,10 +75,10 @@ export default function WorkWithMeContent({ locale }: { locale: string }) {
     domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
     // Three target roles: a sharp focus reads better than a broad list.
     domains:        isFr
-      ? ["Développeuse / administratrice Salesforce", "Administratrice systèmes & réseaux", "Ingénieure DevOps"]
+      ? ["Administratrice & Développeuse Salesforce", "Administratrice systèmes & réseaux", "Ingénieure DevOps"]
       : isEs
-      ? ["Desarrolladora / administradora Salesforce", "Administradora de sistemas y redes", "Ingeniera DevOps"]
-      : ["Salesforce Developer / Administrator", "Systems & Network Administrator", "DevOps Engineer"],
+      ? ["Administradora & Desarrolladora Salesforce", "Administradora de sistemas y redes", "Ingeniera DevOps"]
+      : ["Salesforce Administrator & Developer", "Systems & Network Administrator", "DevOps Engineer"],
     domainsOpen:    isFr
       ? "Mon profil hybride prend toute sa valeur là où ces domaines se croisent : intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
       : isEs
