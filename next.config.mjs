@@ -267,14 +267,15 @@ const nextConfig = {
       },
       // ── Static HTML outside proxy.ts (CV pages, offline fallback) ─────────
       // proxy.ts (per-request nonce CSP) skips them; they only use an inline
-      // <style> (no script, image, font or external stylesheet), so a strict
-      // static policy fits.
+      // <style> and, for the classic CVs, the Inter font files in
+      // /cv/fonts (no script, external stylesheet or third-party origin), so
+      // a strict static policy fits: font-src 'self' is its only opening.
       {
         source: "/:file((?:cv/.*|offline)\\.html)",
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+            value: "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
           },
         ],
       },
