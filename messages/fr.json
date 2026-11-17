@@ -199,7 +199,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog & Tutoriels — Aïcha Imène DAHOUMANE",
-      "description": "Tutoriels Salesforce, administration systèmes & réseaux et DevOps — guides pas à pas, implémentations concrètes et retours d'expérience d'une développeuse Salesforce."
+      "description": "Tutoriels Salesforce, systèmes & réseaux et DevOps : guides pas à pas, cas concrets et retours d'expérience d'une administratrice & développeuse Salesforce."
     },
     "kicker": "Blog & tutoriels",
     "title": "Articles",
@@ -509,8 +509,8 @@
     "cta": "Prendre contact →"
   },
   "hybrid": {
-    "metaTitle": "Profil hybride Salesforce + Infrastructure — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Trois cas où Salesforce et l'infrastructure doivent se combiner : reprise de données Heroku↔Salesforce, DevOps des releases Apex, contrôle d'accès d'une intégration.",
+    "metaTitle": "Profil hybride Salesforce × IT Ops — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Trois cas où Salesforce et l'infrastructure se combinent : reprise de données Heroku↔Salesforce, DevOps des releases Apex, contrôle d'accès d'une intégration.",
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Profil hybride",
     "h1": "Là où Salesforce et l'infrastructure ne font qu'une seule tête",

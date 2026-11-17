@@ -79,18 +79,21 @@ function buildJsonLd(locale: string) {
   const personName = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   // Person jobTitle/description follow the page locale (they were English on
   // /fr and /es). NEXT_PUBLIC_OG_HEADLINE still drives the OG images only.
+  // jobTitle uses the same title as the CVs, the availability badge and the
+  // share images ("Administratrice & Développeuse Salesforce"), followed by
+  // the IT Ops skills: search engines may show it as the person's role.
   const PERSON_TEXT = {
     fr: {
-      jobTitle: "Salesforce · Systèmes & Réseaux · DevOps",
-      description: "Développeuse Salesforce et ingénieure IT Ops en Île-de-France, à la recherche d'un poste en CDI, CDD, intérim ou portage salarial, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale.",
+      jobTitle: "Administratrice & Développeuse Salesforce · Systèmes & Réseaux · DevOps",
+      description: "Administratrice & Développeuse Salesforce et ingénieure IT Ops en Île-de-France, à la recherche d'un poste en CDI, CDD, intérim ou portage salarial, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale.",
     },
     es: {
-      jobTitle: "Salesforce · Sistemas y Redes · DevOps",
-      description: "Desarrolladora Salesforce e ingeniera IT Ops en Île-de-France (Francia), en búsqueda de un puesto indefinido, temporal, interino o en portage salarial, en cualquier sector — presencial o híbrido; París / Île-de-France, Provenza-Alpes-Costa Azul o reubicación internacional.",
+      jobTitle: "Administradora & Desarrolladora Salesforce · Sistemas y Redes · DevOps",
+      description: "Administradora & Desarrolladora Salesforce e ingeniera IT Ops en Île-de-France (Francia), en búsqueda de un puesto indefinido, temporal, interino o en portage salarial, en cualquier sector — presencial o híbrido; París / Île-de-France, Provenza-Alpes-Costa Azul o reubicación internacional.",
     },
     en: {
-      jobTitle: "Salesforce · Systems & Networks · DevOps",
-      description: "Salesforce Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation.",
+      jobTitle: "Salesforce Administrator & Developer · Systems & Networks · DevOps",
+      description: "Salesforce Administrator & Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation.",
     },
   } as const;
   const personText = PERSON_TEXT[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];

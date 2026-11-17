@@ -25,6 +25,8 @@ test.describe("Pages 404 — HTML complet côté serveur", () => {
         expect(html, "pas d'enveloppe d'erreur vide").not.toContain('id="__next_error__"');
         expect(html).toContain(`lang="${locale}"`);
         expect(html).toContain(`<title>${title}`);
+        // A main landmark (axe: landmark-one-main, region).
+        expect(html).toMatch(/<main[\s>]/);
         // The rewritten 404 keeps the per-request CSP.
         expect(res.headers()["content-security-policy"]).toContain("nonce-");
       });

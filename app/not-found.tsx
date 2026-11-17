@@ -95,8 +95,11 @@ export default async function NotFound() {
 
   const c = content[locale];
 
+  // <main>: the 404 has no site header or footer, so its whole content is
+  // the main landmark (axe: landmark-one-main, region). id="main" keeps the
+  // usual skip-link target.
   return (
-    <div className="min-h-screen grid place-items-center px-6 bg-white dark:bg-[#070B1A] text-slate-900 dark:text-white">
+    <main id="main" className="min-h-screen grid place-items-center px-6 bg-white dark:bg-[#070B1A] text-slate-900 dark:text-white">
       <div className="w-full max-w-md text-center animate-[fadeIn_0.4s_ease_forwards]">
 
         {/* React 19 hoists <title> into <head> (axe requires a title:
@@ -155,6 +158,6 @@ export default async function NotFound() {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }
