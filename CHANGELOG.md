@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **« 316 tickets » formulé avec exactitude** — Le chiffre clé IT Ops et le profil disaient « tickets IT gérés » / « traité 316 tickets », alors que la page projet anglaise parlait de 316 tickets ouverts dans le portefeuille du client. C'est un mélange des deux : le chiffre devient « Tickets triés et suivis (Autotask) », et le profil « trié et suivi 316 tickets de support dans Autotask (dont une partie résolue moi-même à distance) », en FR/EN/ES, ainsi que l'extrait du projet « Gestion d'incidents ».
 - **Nom visible dès l'arrivée et examens Salesforce dans les CV** — Deux constats de l'audit externe :
   - **Accueil** : votre nom s'affiche au-dessus du badge de disponibilité et du titre, sur mobile comme sur ordinateur. Auparavant, l'en-tête le masquait sur la plupart des écrans d'ordinateur et le H1 n'indiquait que le rôle.
   - **CV** : les 12 CV Salesforce et hybrides (classiques et ATS, FR/EN/ES) mentionnent désormais, sous Trailhead, les examens Salesforce Platform Foundations et Platform Administrator réservés pour les 29 et 30 décembre 2026. Les CV IT Ops n'ont pas de section certifications et ne changent pas. Les 18 PDF sont régénérés, avec le même nombre de pages.

@@ -778,7 +778,7 @@ export const projects: Project[] = [
     "slug": "it-ops-incident-management",
     "nature": "internship",
     "title": "IT Incident Management — Autotask, Webroot & Datto RMM",
-    "excerpt": "At MIDRANGE Group MSP, I handled Tier-1/2 support — ticket triage, remote resolution via Splashtop, and time billing in Autotask PSA — across 316 open tickets in the client portfolio.",
+    "excerpt": "At MIDRANGE Group MSP, I triaged and followed up 316 client tickets in Autotask PSA, resolving part of them myself (Tier-1/2 support, remote resolution via Splashtop, time billing).",
     "track": "itops",
     "categories": [
       "IT Ops",
