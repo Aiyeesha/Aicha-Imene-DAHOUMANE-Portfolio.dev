@@ -28,7 +28,7 @@ describe("GET /api/search — rate limiting", () => {
     const res = await search("apex");
     expect(res.status).toBe(200);
     expect(Array.isArray((await res.json()).results)).toBe(true);
-    expect(safeLimit).toHaveBeenCalledWith({}, "search:ip:203.0.113.7");
+    expect(safeLimit).toHaveBeenCalledWith({}, "search:ip:203.0.113.7", { failOpen: true });
   });
 
   it("répond 429 avec Retry-After et no-store une fois la limite atteinte", async () => {

@@ -40,8 +40,13 @@ describe("lib/ratelimit.ts — no-op limiter (Upstash env vars absent)", () => {
   });
 });
 
-describe("safeLimit() — fail-open wrapper around Redis errors", () => {
-  afterEach(() => jest.resetModules());
+describe("safeLimit() — policy on Redis errors", () => {
+  const originalEnv = process.env.NODE_ENV;
+  afterEach(() => {
+    (process.env as Record<string, string | undefined>).NODE_ENV = originalEnv;
+    jest.resetModules();
+  });
+  const throwing = { limit: async () => { throw new Error("ECONNREFUSED"); } };
 
   it("passes through a successful limiter result", async () => {
     const { safeLimit } = require("@/lib/ratelimit");
@@ -62,11 +67,26 @@ describe("safeLimit() — fail-open wrapper around Redis errors", () => {
     expect(result.reset).toBeLessThanOrEqual(before + 11_000);
   });
 
-  it("fails OPEN when the limiter throws (e.g. Redis unreachable)", async () => {
+  it("fails OPEN outside production when the limiter throws", async () => {
+    (process.env as Record<string, string | undefined>).NODE_ENV = "test";
     const { safeLimit } = require("@/lib/ratelimit");
-    const limiter = { limit: async () => { throw new Error("ECONNREFUSED"); } };
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    expect((await safeLimit(throwing, "some-key")).success).toBe(true);
+  });
 
-    const result = await safeLimit(limiter, "some-key");
-    expect(result.success).toBe(true);
+  it("fails CLOSED in production when the limiter throws (write routes)", async () => {
+    (process.env as Record<string, string | undefined>).NODE_ENV = "production";
+    const { safeLimit } = require("@/lib/ratelimit");
+    const spy = jest.spyOn(console, "error").mockImplementation(() => {});
+    expect((await safeLimit(throwing, "contact:ip:1.2.3.4")).success).toBe(false);
+    // Logs the error class only, never the key.
+    expect(spy.mock.calls.flat().join(" ")).not.toContain("1.2.3.4");
+  });
+
+  it("stays OPEN in production with failOpen: true (read-only / telemetry routes)", async () => {
+    (process.env as Record<string, string | undefined>).NODE_ENV = "production";
+    const { safeLimit } = require("@/lib/ratelimit");
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    expect((await safeLimit(throwing, "search:ip:1.2.3.4", { failOpen: true })).success).toBe(true);
   });
 });

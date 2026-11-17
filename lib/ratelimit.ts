@@ -168,18 +168,31 @@ export async function pseudonymizeKey(key: string): Promise<string> {
   return Array.from(new Uint8Array(sig).slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// ── Fail-open helper for immediate Redis errors ───────────────────────
-// When Redis is down (quota, refused connection, expired token), `.limit()`
-// may throw despite the timeout; this returns `success: true` so legitimate
-// users are not blocked.
+// ── Redis errors: same policy as the no-op limiter ────────────────────
+// When Redis is configured but failing (quota, refused connection, expired
+// token), `.limit()` may throw. The answer follows the rule above for a
+// missing Redis: in production the request is refused (fail closed), so an
+// outage never silently disables flood protection on write routes (contact,
+// testimonials, revalidation, cache invalidation). Read-only and telemetry
+// routes opt in with `failOpen: true` (search, blog/latest, health,
+// csp-report, errors): blocking them would hide the outage or break reading
+// without protecting anything. Outside production, requests go through. Note: the 500 ms `timeout` of createRatelimit() is separate and
+// lets a slow (not failing) Redis through.
 export async function safeLimit(
   limiter: { limit: (key: string) => Promise<{ success: boolean; reset?: number }> },
-  key: string
+  key: string,
+  { failOpen = false }: { failOpen?: boolean } = {}
 ): Promise<{ success: boolean; reset: number }> {
   try {
     const result = await limiter.limit(await pseudonymizeKey(key));
     return { success: result.success, reset: result.reset ?? Date.now() + 10_000 };
-  } catch {
-    return { success: true, reset: Date.now() + 10_000 };
+  } catch (err) {
+    const closed = isProd && !failOpen;
+    // Only the error class: the key is pseudonymised and must not be logged.
+    console.error(
+      `[ratelimit] Redis error → ${closed ? "fail-closed" : "fail-open"}:`,
+      err instanceof Error ? err.name : "unknown error"
+    );
+    return { success: !closed, reset: Date.now() + 10_000 };
   }
 }
