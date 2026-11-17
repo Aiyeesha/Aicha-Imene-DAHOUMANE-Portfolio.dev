@@ -304,7 +304,7 @@
     "apex": "Classes Apex développées",
     "flows": "Flows d'automatisation",
     "workload": "Charge manuelle réduite",
-    "projects": "Projets en poste · non publiés",
+    "projects": "Projets réalisés en poste (confidentiels)",
     "rmm": "Équipements supervisés à distance (Datto RMM)",
     "tickets": "Tickets IT gérés",
     "alerts": "Alertes de sauvegarde triées",
@@ -430,6 +430,7 @@
     "legalBasisTitle": "Bases légales des traitements",
     "lastUpdated": "31 octobre 2026",
     "controllerTitle": "Responsable du traitement",
+    "contactFallback": "le formulaire de contact du site",
     "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, à titre personnel (portfolio professionnel, sans activité commerciale). Contact : {email}",
     "breachTitle": "Violation de données",
     "breachBody": "En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous serez notifié(e) dans les meilleurs délais. Conformément à l'article 33 du RGPD, la Commission Nationale de l'Informatique et des Libertés (CNIL) sera notifiée dans un délai de 72 heures. Pour toute réclamation, vous pouvez également saisir directement la CNIL : www.cnil.fr"
@@ -437,6 +438,7 @@
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
+    "contactFallback": "le formulaire de contact du site",
     "editorBody": "Ce site est édité par Aïcha Imène DAHOUMANE (Salesforce · Systèmes & Réseaux · DevOps), à titre personnel. Directrice de la publication : Aïcha Imène DAHOUMANE. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. Site : vercel.com.",
@@ -513,7 +515,7 @@
     "metaDescription": "Trois cas où Salesforce et l'infrastructure se combinent : reprise de données Heroku↔Salesforce, DevOps des releases Apex, contrôle d'accès d'une intégration.",
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Profil hybride",
-    "h1": "Là où Salesforce et l'infrastructure ne font qu'une seule tête",
+    "h1": "Là où Salesforce et l'infrastructure ne font qu'un",
     "lead": "Je ne suis pas une développeuse Salesforce qui connaît les serveurs, ni une administratrice système qui connaît Salesforce. Je résous des problématiques transverses qu'un spécialiste seul — d'un côté ou de l'autre — traiterait plus lentement, moins bien, ou pas du tout : les décisions des deux couches sont prises en même temps, par la même personne, avant que l'aller-retour habituel entre équipes ne commence. Les preuves citées ci-dessous sont des projets de formation et des projets personnels ; chaque page indique sa nature et sa période.",
     "scenariosTitle": "Trois cas où la combinaison change le résultat",
     "scenarios": [

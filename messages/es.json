@@ -304,7 +304,7 @@
     "apex": "Clases Apex desarrolladas",
     "flows": "Flows de automatización",
     "workload": "Carga manual reducida",
-    "projects": "Proyectos en el puesto · inéditos",
+    "projects": "Proyectos realizados en el puesto (confidenciales)",
     "rmm": "Equipos supervisados en remoto (Datto RMM)",
     "tickets": "Tickets IT gestionados",
     "alerts": "Alertas de copia de seguridad clasificadas",
@@ -401,7 +401,7 @@
     "techStackTitle": "Stack técnico",
     "techStackSubtitle": "Pasa el cursor sobre cada insignia para ver el nivel de dominio y el contexto de uso.",
     "careerGlanceTitle": "Trayectoria de un vistazo",
-    "careerGlanceSubtitle": "Formación → Prácticas → Alternancia → Contrato indefinido — una mejora continua de competencias.",
+    "careerGlanceSubtitle": "Formación → Prácticas → Formación dual → Contrato indefinido — una mejora continua de competencias.",
     "journeyTitle": "Trayectoria",
     "valuesTitle": "Valores",
     "passionsTitle": "Fuera del trabajo",
@@ -430,6 +430,7 @@
     "legalBasisTitle": "Bases jurídicas de los tratamientos",
     "lastUpdated": "31 de octubre de 2026",
     "controllerTitle": "Responsable del tratamiento",
+    "contactFallback": "el formulario de contacto del sitio",
     "controllerBody": "La responsable del tratamiento de los datos personales recopilados a través de este sitio es Aïcha Imène DAHOUMANE, a título personal (portfolio profesional, sin actividad comercial). Contacto: {email}",
     "breachTitle": "Notificación de brechas de datos",
     "breachBody": "En caso de una brecha de datos que pueda suponer un riesgo para tus derechos y libertades, se te notificará lo antes posible. De conformidad con el artículo 33 del RGPD, se notificará a la autoridad de control competente en un plazo de 72 horas. También tienes derecho a presentar una reclamación ante tu autoridad nacional de protección de datos (en Francia: CNIL — www.cnil.fr)."
@@ -437,6 +438,7 @@
   "legal": {
     "title": "Aviso legal",
     "editorTitle": "Editora",
+    "contactFallback": "el formulario de contacto del sitio",
     "editorBody": "Este sitio web está publicado por Aïcha Imène DAHOUMANE (Salesforce · Sistemas y Redes · DevOps), como portafolio personal. Directora de publicación: Aïcha Imène DAHOUMANE. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
     "hostingTitle": "Alojamiento",
     "hostingBody": "El alojamiento es proporcionado por Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, Estados Unidos. Sitio web: vercel.com.",
@@ -453,11 +455,11 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir de diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (alternancia y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir de diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026."
       },
       {
         "q": "¿Qué tipos de contrato buscas?",
-        "a": "Indefinido, temporal, ETT o portage salarial, en todos los sectores de actividad. Lo que me importa es el puesto: un entorno donde Salesforce e infraestructura se cruzan."
+        "a": "Indefinido, temporal, ETT o portage salarial (contrato con una empresa de portage que factura al cliente), en todos los sectores de actividad. Lo que me importa es el puesto: un entorno donde Salesforce e infraestructura se cruzan."
       },
       {
         "q": "¿A qué puestos aspiras?",
@@ -465,7 +467,7 @@
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
-        "a": "Todavía no, pero los exámenes están reservados: Salesforce Platform Foundations el 29 de diciembre de 2026 y Platform Administrator el 30 de diciembre de 2026, después Platform App Builder y Platform Developer en 2027. Ya obtenidos y verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (especialización Salesforce, 2025) y un perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos). El caso de estudio Legarant-AXG, donde el trigger Apex y el despliegue Heroku los realiza la misma persona, muestra de forma concreta lo que sé hacer."
+        "a": "Todavía no, pero los exámenes están reservados: Salesforce Platform Foundations el 29 de diciembre de 2026 y Platform Administrator el 30 de diciembre de 2026, después Platform App Builder y Platform Developer en 2027. Ya obtenidos y verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (registro nacional francés de cualificaciones, nivel grado; especialización Salesforce, 2025) y un perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos). El caso de estudio Legarant-AXG, donde el trigger Apex y el despliegue Heroku los realiza la misma persona, muestra de forma concreta lo que sé hacer."
       },
       {
         "q": "¿Dónde estás ubicada? ¿Qué modalidad de trabajo?",
