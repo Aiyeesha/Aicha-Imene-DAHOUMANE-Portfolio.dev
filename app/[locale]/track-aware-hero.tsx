@@ -113,6 +113,13 @@ export default function TrackAwareHero() {
       {/* ── Column 2: text ───────────────────────────────────────────────────── */}
       <div className="hero-text-in">
 
+        {/* Name, visible on arrival: the header hides it on most desktop
+            widths and the H1 states the role, so a recruiter coming from
+            LinkedIn sees who this is before anything else. */}
+        <p className="mb-3 font-display text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          {process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE"}
+        </p>
+
         {/* Availability badge: opens the details modal */}
         <div className="mb-2">
           <AvailabilityModal />
