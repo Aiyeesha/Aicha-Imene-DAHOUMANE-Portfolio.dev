@@ -47,8 +47,8 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
         ctaBtn:     "bg-violet-600 hover:bg-violet-700 text-white",
       };
 
-  // ── "Hire me" content (salaried roles: permanent, fixed-term, temp,
-  // umbrella). The /work-with-me URL is kept for existing links.
+  // ── "Hire me" content (permanent role, as on the CVs).
+  // The /work-with-me URL is kept for existing links.
   const labels = {
     kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
     h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
@@ -70,10 +70,10 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
     availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
     availSince:     START.summary,
     availContracts: isFr
-      ? "CDI · CDD · Intérim · Portage salarial — tous secteurs d'activité"
+      ? "CDI — tous secteurs d'activité"
       : isEs
-      ? "Indefinido · Temporal · ETT · Portage salarial — todos los sectores"
-      : "Permanent · Fixed-term · Temp · Umbrella (portage) — any industry",
+      ? "Contrato indefinido — todos los sectores"
+      : "Permanent contract — any industry",
     availMode:      isFr
       ? "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site"
       : isEs
@@ -93,12 +93,12 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
       : isEs
       ? "Mi perfil híbrido aporta todo su valor donde estos ámbitos se cruzan: integraciones Salesforce, puestas en producción automatizadas y la infraestructura que las sostiene."
       : "My hybrid profile is at its most valuable where these areas meet: Salesforce integrations, automated releases and the infrastructure that runs them.",
-    durationLabel:  isFr ? "Contrats" : isEs ? "Contratos" : "Contracts",
+    durationLabel:  isFr ? "Contrat" : isEs ? "Contrato" : "Contract",
     durations:      isFr
-      ? ["CDI", "CDD", "Intérim", "Portage salarial"]
+      ? ["CDI"]
       : isEs
-      ? ["Indefinido", "Temporal", "ETT", "Portage salarial"]
-      : ["Permanent", "Fixed-term", "Temp (agency)", "Umbrella company (portage)"],
+      ? ["Indefinido"]
+      : ["Permanent"],
     modeLabel:      isFr ? "Mode et secteurs" : isEs ? "Modalidad y sectores" : "Work mode and industries",
     modes:          isFr
       ? ["Hybride · Sur site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "Relocalisation internationale", "Tous secteurs d'activité"]

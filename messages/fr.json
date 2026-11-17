@@ -25,7 +25,7 @@
     "avatar_alt": "Photo de profil d'Aïcha Imène DAHOUMANE, développeuse Salesforce & infrastructure",
     "title_salesforce": "Développeuse Salesforce & Infrastructure",
     "subtitle_salesforce": "Du CRM aux serveurs, réseaux et pipelines qui l'entourent.",
-    "title_itops": "Ingénieure Systèmes & IT Ops",
+    "title_itops": "Administratrice Systèmes & Réseaux · Ingénieure DevOps",
     "subtitle_itops": "Des postes et serveurs aux réseaux et aux pipelines — jusqu'au CRM Salesforce qu'ils font tourner.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — pensé pour durer.",
     "value_itops": "Infrastructure · Automatisation · CI/CD — pensé pour scaler.",
@@ -38,7 +38,7 @@
     "proof1": "Fiable en production",
     "proof2": "Scalable",
     "proof3": "Documenté & maintenable",
-    "availability": "CDI · CDD · Intérim · Portage salarial",
+    "availability": "CDI",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
@@ -156,7 +156,7 @@
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
     "acceptPolicyLink": "politique de confidentialité",
-    "availability": "CDI · CDD · Intérim · Portage salarial · Tous secteurs",
+    "availability": "CDI · Tous secteurs",
     "intake": {
       "title": "Le poste (facultatif)",
       "subtitle": "Ces informations m'aident à vous répondre précisément dès le premier message.",
@@ -237,9 +237,9 @@
     "updatedOn": "Mis à jour le",
     "author": "À propos de l'auteure",
     "authorRoleSalesforce": "Administratrice & Développeuse Salesforce",
-    "authorRoleItops": "Ingénieure IT Ops · Administratrice systèmes",
+    "authorRoleItops": "Administratrice systèmes & réseaux · Ingénieure DevOps",
     "authorBioSalesforce": "Développeuse Salesforce avec un background en infrastructures IT — je construis des solutions fiables et maintenables avec Apex, Flows, LWC et CI/CD.",
-    "authorBioItops": "Ingénieure IT Ops & DevOps avec un background en administration systèmes & réseaux — monitoring, automatisation, sécurisation et infrastructure résiliente.",
+    "authorBioItops": "Administratrice systèmes & réseaux orientée DevOps — monitoring, automatisation, sécurisation et infrastructure résiliente.",
     "authorProfileLink": "Voir le profil complet →",
     "backToTop": "Retour en haut",
     "related": "Articles connexes",
@@ -289,9 +289,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps",
-    "description": "Salesforce · Systèmes & Réseaux · DevOps en Île-de-France. Entretiens dès maintenant, disponible à partir de décembre 2026 — CDI, CDD, intérim ou portage.",
-    "titleItops": "Aïcha Imène DAHOUMANE — Ingénieure Systèmes & IT Ops",
-    "descriptionItops": "Ingénieure Systèmes & IT Ops en Île-de-France : infrastructure, automatisation, CI/CD. Entretiens dès maintenant, disponible à partir de décembre 2026."
+    "description": "Salesforce · Systèmes & Réseaux · DevOps en Île-de-France. Entretiens dès maintenant, disponible à partir de décembre 2026, en CDI.",
+    "titleItops": "Aïcha Imène DAHOUMANE — Admin Systèmes & Réseaux · DevOps",
+    "descriptionItops": "Administratrice systèmes & réseaux et ingénieure DevOps en Île-de-France : infrastructure, automatisation, CI/CD. Disponible à partir de décembre 2026."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -365,13 +365,13 @@
     "basedInLabel": "Basée à",
     "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site",
     "languagesLabel": "Langues",
-    "languagesValue": "Français (natif), Anglais (C1 en compréhension orale, B2 en lecture), Espagnol (B1), Italien (A1)",
+    "languagesValue": "Français (natif), Anglais (C1+ à l'oral, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
     "rolesValue": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValueSalesforce": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Administratrice & Développeuse Salesforce",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Disponible à partir de décembre 2026 · Entretiens dès maintenant · CDI · CDD · Intérim · Portage salarial · Tous secteurs",
+    "availabilityValue": "Disponible à partir de décembre 2026 · Entretiens dès maintenant · CDI · Tous secteurs",
     "goalLabel": "Objectif",
     "goalValue": "Approfondir mon expertise Salesforce, préparer mes certifications et rejoindre une équipe où Salesforce et l'infrastructure se croisent.",
     "focusLabel": "Focus",
@@ -459,7 +459,7 @@
       },
       {
         "q": "Quels types de contrat recherchez-vous ?",
-        "a": "CDI, CDD, intérim ou portage salarial, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce et l'infrastructure se croisent."
+        "a": "Un CDI, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce et l'infrastructure se croisent."
       },
       {
         "q": "Quels postes visez-vous ?",
@@ -498,7 +498,7 @@
     "delay": "Disponibilité",
     "delayValue": "Entretiens dès maintenant · Disponible à partir de décembre 2026",
     "contracts": "Contrats",
-    "contractValues": "CDI · CDD · Intérim · Portage salarial",
+    "contractValues": "CDI",
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site",
     "locationMobility": "Localisation et mobilité",

@@ -17,7 +17,7 @@ export const AVAILABLE_NOW_OVERRIDES: Record<AvailabilityLocale, Rule[]> = {
   fr: [
     { key: "contact.intake.start.asap", from: "(à partir de décembre 2026)", to: "(disponible immédiatement)" },
     { key: "metadata.description", from: "Entretiens dès maintenant, disponible à partir de décembre 2026", to: "Disponible immédiatement" },
-    { key: "metadata.descriptionItops", from: "Entretiens dès maintenant, disponible à partir de décembre 2026", to: "Disponible immédiatement" },
+    { key: "metadata.descriptionItops", from: "Disponible à partir de décembre 2026", to: "Disponible immédiatement" },
     { key: "profile.availabilityValue", from: "Disponible à partir de décembre 2026 · Entretiens dès maintenant", to: "Disponible immédiatement" },
     { key: "profile.p4_itops", from: "Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026", to: "Trois ans de développement Salesforce chez LD Digitales (alternance puis CDI, jusqu'en novembre 2026)" },
     { key: "faq.items.0.a", value: "Je suis disponible immédiatement, pour des entretiens comme pour une prise de poste. Mon poste de Développeuse Salesforce chez LD Digitales (alternance puis CDI, depuis octobre 2023) a pris fin le 30 novembre 2026." },
@@ -27,7 +27,7 @@ export const AVAILABLE_NOW_OVERRIDES: Record<AvailabilityLocale, Rule[]> = {
   en: [
     { key: "contact.intake.start.asap", from: "(from December 2026)", to: "(available immediately)" },
     { key: "metadata.description", from: "Interviews now, available from December 2026", to: "Available immediately" },
-    { key: "metadata.descriptionItops", from: "Interviews now, available from December 2026", to: "Available immediately" },
+    { key: "metadata.descriptionItops", from: "Available from December 2026", to: "Available immediately" },
     { key: "profile.availabilityValue", from: "Available from December 2026 · Interviews now", to: "Available immediately" },
     { key: "profile.p4_itops", from: "Full-time Salesforce Developer at LD Digitales until November 30, 2026", to: "Three years of Salesforce development at LD Digitales (work-study, then full-time, until November 2026)" },
     { key: "faq.items.0.a", value: "I'm available immediately, both for interviews and to start. My Salesforce Developer role at LD Digitales (apprenticeship, then permanent contract, since October 2023) ended on November 30, 2026." },
@@ -37,10 +37,10 @@ export const AVAILABLE_NOW_OVERRIDES: Record<AvailabilityLocale, Rule[]> = {
   es: [
     { key: "contact.intake.start.asap", from: "(a partir de diciembre de 2026)", to: "(disponible de inmediato)" },
     { key: "metadata.description", from: "Entrevistas desde ya, disponible a partir de diciembre de 2026", to: "Disponible de inmediato" },
-    { key: "metadata.descriptionItops", from: "Entrevistas desde ya, disponible a partir de diciembre de 2026", to: "Disponible de inmediato" },
+    { key: "metadata.descriptionItops", from: "Disponible a partir de diciembre de 2026", to: "Disponible de inmediato" },
     { key: "profile.availabilityValue", from: "Disponible a partir de diciembre de 2026 · Entrevistas desde ya", to: "Disponible de inmediato" },
     { key: "profile.p4_itops", from: "Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026", to: "Tres años de desarrollo Salesforce en LD Digitales (formación dual y después contrato indefinido, hasta noviembre de 2026)" },
-    { key: "faq.items.0.a", value: "Estoy disponible de inmediato, tanto para entrevistas como para incorporarme. Mi puesto de Desarrolladora Salesforce en LD Digitales (alternancia y después contrato indefinido, desde octubre de 2023) terminó el 30 de noviembre de 2026." },
+    { key: "faq.items.0.a", value: "Estoy disponible de inmediato, tanto para entrevistas como para incorporarme. Mi puesto de Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde octubre de 2023) terminó el 30 de noviembre de 2026." },
     { key: "availModal.badge", value: "Disponible de inmediato" },
     { key: "availModal.delayValue", value: "Disponible de inmediato" },
   ],

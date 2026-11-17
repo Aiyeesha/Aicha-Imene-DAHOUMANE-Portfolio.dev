@@ -85,15 +85,15 @@ function buildJsonLd(locale: string) {
   const PERSON_TEXT = {
     fr: {
       jobTitle: "Administratrice & Développeuse Salesforce · Systèmes & Réseaux · DevOps",
-      description: "Administratrice & Développeuse Salesforce et ingénieure IT Ops en Île-de-France, à la recherche d'un poste en CDI, CDD, intérim ou portage salarial, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale.",
+      description: "Administratrice & Développeuse Salesforce, administratrice systèmes & réseaux et DevOps en Île-de-France, à la recherche d'un CDI, tous secteurs — sur site ou en hybride ; Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale.",
     },
     es: {
       jobTitle: "Administradora & Desarrolladora Salesforce · Sistemas y Redes · DevOps",
-      description: "Administradora & Desarrolladora Salesforce e ingeniera IT Ops en Île-de-France (Francia), en búsqueda de un puesto indefinido, temporal, interino o en portage salarial, en cualquier sector — presencial o híbrido; París / Île-de-France, Provenza-Alpes-Costa Azul o reubicación internacional.",
+      description: "Administradora & Desarrolladora Salesforce, administradora de sistemas y redes y DevOps en Île-de-France (Francia), en búsqueda de un contrato indefinido, en cualquier sector — presencial o híbrido; París / Île-de-France, Provenza-Alpes-Costa Azul o reubicación internacional.",
     },
     en: {
       jobTitle: "Salesforce Administrator & Developer · Systems & Networks · DevOps",
-      description: "Salesforce Administrator & Developer and IT Ops engineer based in Île-de-France, France, looking for a permanent, fixed-term, temp or umbrella-company role in any industry — on-site or hybrid; Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation.",
+      description: "Salesforce Administrator & Developer, systems & network administrator and DevOps, based in Île-de-France, France, looking for a permanent role in any industry — on-site or hybrid; Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation.",
     },
   } as const;
   const personText = PERSON_TEXT[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];

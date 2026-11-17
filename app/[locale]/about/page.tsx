@@ -31,10 +31,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const name  = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const title = isFr ? `À propos — ${name}` : isEs ? `Sobre mí — ${name}` : `About — ${name}`;
   const description = isFr
-    ? "De l'administration systèmes & réseaux au développement Salesforce. Administratrice & Développeuse Salesforce, ingénieure IT Ops — CDI, CDD, intérim ou portage."
+    ? "De l'administration systèmes & réseaux au développement Salesforce. Administratrice & Développeuse Salesforce, administratrice systèmes & réseaux et DevOps — en CDI."
     : isEs
-    ? "De sistemas y redes al desarrollo Salesforce. Administradora & Desarrolladora Salesforce, ingeniera IT Ops — contrato indefinido, temporal, ETT o portage."
-    : "From systems & network administration to Salesforce development. Salesforce Administrator & Developer, IT Ops Engineer — permanent, fixed-term, temp, umbrella.";
+    ? "De sistemas y redes al desarrollo Salesforce. Administradora & Desarrolladora Salesforce, administradora de sistemas y redes y DevOps — contrato indefinido."
+    : "From systems & network administration to Salesforce development. Salesforce Administrator & Developer, systems & network administrator and DevOps — permanent role.";
 
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/about`;

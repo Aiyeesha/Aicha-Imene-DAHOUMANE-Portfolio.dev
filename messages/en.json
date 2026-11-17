@@ -25,7 +25,7 @@
     "avatar_alt": "Profile photo of Aïcha Imène DAHOUMANE, Salesforce & Infrastructure Developer",
     "title_salesforce": "Salesforce & Infrastructure Developer",
     "subtitle_salesforce": "From the CRM to the servers, networks and pipelines around it.",
-    "title_itops": "Systems & IT Ops Engineer",
+    "title_itops": "Systems & Network Administrator · DevOps Engineer",
     "subtitle_itops": "From workstations and servers to networks and pipelines — all the way to the Salesforce CRM they run.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — built to last.",
     "value_itops": "Infrastructure · Automation · CI/CD — built to scale.",
@@ -38,7 +38,7 @@
     "proof1": "Production-ready",
     "proof2": "Scalable by design",
     "proof3": "Documented & maintainable",
-    "availability": "Permanent · Fixed-term · Temp · Umbrella (portage)",
+    "availability": "Permanent",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
     "startHere": "Start here:",
     "switchToSalesforce": "View Salesforce profile →",
@@ -156,7 +156,7 @@
     "acceptPolicyAria": "I accept the privacy policy",
     "acceptPolicyPrefix": "I have read and accept the",
     "acceptPolicyLink": "privacy policy",
-    "availability": "Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
+    "availability": "Permanent · Any industry",
     "intake": {
       "title": "The role (optional)",
       "subtitle": "This helps me give you a precise answer from the very first reply.",
@@ -237,9 +237,9 @@
     "updatedOn": "Updated",
     "author": "About the author",
     "authorRoleSalesforce": "Salesforce Administrator & Developer",
-    "authorRoleItops": "IT Ops Engineer · Systems Administrator",
+    "authorRoleItops": "Systems & Network Administrator · DevOps Engineer",
     "authorBioSalesforce": "Salesforce developer with a background in IT infrastructure — building reliable, maintainable solutions with Apex, Flows, LWC, and CI/CD.",
-    "authorBioItops": "IT Ops & DevOps engineer with a background in systems & network administration — monitoring, automation, hardening, and resilient infrastructure.",
+    "authorBioItops": "Systems & network administrator with a DevOps focus — monitoring, automation, hardening, and resilient infrastructure.",
     "authorProfileLink": "Full profile →",
     "backToTop": "Back to top",
     "related": "Related posts",
@@ -289,9 +289,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systems & Networks · DevOps",
-    "description": "Salesforce · Systems & Networks · DevOps in Île-de-France. Interviews now, available from December 2026 — permanent, fixed-term, temp or umbrella.",
-    "titleItops": "Aïcha Imène DAHOUMANE — Systems & IT Ops Engineer",
-    "descriptionItops": "Systems & IT Ops Engineer in Île-de-France: infrastructure, automation, CI/CD. Interviews now, available from December 2026."
+    "description": "Salesforce · Systems & Networks · DevOps in Île-de-France. Interviews now, available from December 2026 for a permanent role.",
+    "titleItops": "Aïcha Imène DAHOUMANE — Systems & Network Admin · DevOps",
+    "descriptionItops": "Systems & network administrator and DevOps engineer in Île-de-France: infrastructure, automation, CI/CD. Available from December 2026."
   },
   "testimonials": {
     "kicker": "Testimonials",
@@ -373,13 +373,13 @@
     "basedInLabel": "Based in",
     "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation · Hybrid · On-site",
     "languagesLabel": "Languages",
-    "languagesValue": "French (native), English (C1 listening, B2 reading), Spanish (B1), Italian (A1)",
+    "languagesValue": "French (native), English (C1+ listening, B2 reading — Linguaskill Business, Cambridge), Spanish (B1), Italian (A1)",
     "rolesLabel": "Target roles",
     "rolesValue": "Salesforce Administrator & Developer · Systems & Network Administrator · DevOps Engineer",
     "rolesValueSalesforce": "Salesforce Administrator & Developer · Systems & Network Administrator · DevOps Engineer",
     "rolesValueItops": "Systems & Network Administrator · DevOps Engineer · Salesforce Administrator & Developer",
     "availabilityLabel": "Availability",
-    "availabilityValue": "Available from December 2026 · Interviews now · Permanent · Fixed-term · Temp · Umbrella (portage) · Any industry",
+    "availabilityValue": "Available from December 2026 · Interviews now · Permanent · Any industry",
     "goalLabel": "Goal",
     "goalValue": "Deepen my Salesforce expertise, earn my certifications, and join a team where Salesforce and infrastructure meet.",
     "focusLabel": "Focus",
@@ -459,7 +459,7 @@
       },
       {
         "q": "What contract types are you looking for?",
-        "a": "Permanent, fixed-term, temp (agency) or umbrella-company contracts (French “portage salarial”: employed by an umbrella company while working for a client), in any industry. What matters to me is the role: an environment where Salesforce and infrastructure meet."
+        "a": "A permanent contract, in any industry. What matters to me is the role: an environment where Salesforce and infrastructure meet."
       },
       {
         "q": "Which roles are you targeting?",
@@ -498,7 +498,7 @@
     "delay": "Availability",
     "delayValue": "Interviews now · Available from December 2026",
     "contracts": "Contracts",
-    "contractValues": "Permanent · Fixed-term · Temp · Umbrella (portage)",
+    "contractValues": "Permanent",
     "workMode": "Work modes",
     "workModeValues": "Hybrid · On-site",
     "locationMobility": "Location & mobility",
