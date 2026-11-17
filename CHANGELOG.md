@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **« 316 tickets » formulé avec exactitude** — Le chiffre clé IT Ops et le profil disaient « tickets IT gérés » / « traité 316 tickets », alors que la page projet anglaise parlait de 316 tickets ouverts dans le portefeuille du client. C'est un mélange des deux : le chiffre devient « Tickets triés et suivis (Autotask) », et le profil « trié et suivi 316 tickets de support dans Autotask (dont une partie résolue moi-même à distance) », en FR/EN/ES, ainsi que l'extrait du projet « Gestion d'incidents ».
 - **Site et CV alignés (contrat, anglais, titre IT Ops)** — Trois incohérences relevées par l'audit externe :
   - **Contrat** : les CV disaient « Recherche un CDI », le site « CDI · CDD · Intérim · Portage salarial ». Le site passe en CDI uniquement (EN « Permanent », ES « Indefinido ») : badge, fenêtre de disponibilité, FAQ, profil, « Me recruter » et son image de partage, page À propos, descriptions SEO et JSON-LD. Le formulaire de contact garde la liste des types de contrat, puisqu'elle décrit l'offre du recruteur.
   - **Anglais** : une seule formule partout, fidèle au certificat : « C1+ à l'oral, B2 en lecture (Linguaskill Business, Cambridge) », sur le site et dans les 18 CV. L'intitulé de la certification (« Linguaskill Business C1+ ») ne change pas.
