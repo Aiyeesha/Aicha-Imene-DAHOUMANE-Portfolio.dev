@@ -11,6 +11,7 @@ import SkeletonCard from "@/components/SkeletonCard";
 // Above the fold: loaded immediately
 import TrackAwareSkills from "@/components/TrackAwareSkills";
 import RecruiterPaths from "@/components/RecruiterPaths";
+import CertificationsHighlight from "@/components/CertificationsHighlight";
 // Below the fold: lazy-loaded to reduce initial JS.
 //
 const TrustedBy          = dynamic(() => import("@/components/TrustedBy"));
@@ -216,17 +217,9 @@ export default async function Home({ params }: Props) {
           </Reveal>
         </div>
 
-        {/* Link to the Certifications page */}
+        {/* Compact certifications block (details on /certifications) */}
         <Reveal delayMs={150}>
-          <div className="mt-8 flex items-center gap-4">
-            <Link
-              href={`/${locale}/certifications`}
-              className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
-            >
-              {t("sections.certifications_title")}
-              <span aria-hidden="true"> ↗</span>
-            </Link>
-          </div>
+          <CertificationsHighlight locale={locale} />
         </Reveal>
       </section>
 
