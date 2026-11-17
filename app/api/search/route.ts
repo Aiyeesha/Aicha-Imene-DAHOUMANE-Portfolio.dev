@@ -115,7 +115,8 @@ export async function GET(request: NextRequest) {
   // ── Rate limiting (only queries that actually run a search) ───────────
   // The CDN cache (Cache-Control below) absorbs repeated identical queries;
   // this bounds loops of distinct queries that would each reach the function.
-  const rl = await safeLimit(searchRatelimit, `search:ip:${getClientIp(request)}`);
+  // Public read-only route: stays available if Redis fails (lib/ratelimit.ts).
+  const rl = await safeLimit(searchRatelimit, `search:ip:${getClientIp(request)}`, { failOpen: true });
   if (!rl.success) {
     const now = Date.now();
     const resetMs = typeof rl.reset === "number" ? rl.reset : now + 10_000;

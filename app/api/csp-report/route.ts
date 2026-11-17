@@ -84,9 +84,9 @@ async function sendCriticalAlert(data: {
 
   const directive = normaliseDirective(data.violatedDirective);
   const blocked = normaliseBlocked(data.blockedUri);
-  const { success } = await safeLimit(cspAlertRatelimit, `fp:${directive}|${blocked}`);
+  const { success } = await safeLimit(cspAlertRatelimit, `fp:${directive}|${blocked}`, { failOpen: true });
   if (!success) return;
-  const { success: underGlobalCap } = await safeLimit(cspAlertGlobalRatelimit, "global");
+  const { success: underGlobalCap } = await safeLimit(cspAlertGlobalRatelimit, "global", { failOpen: true });
   if (!underGlobalCap) return;
 
   const page = (() => { try { return new URL(data.documentUri).pathname.slice(0, 120); } catch { return "/"; } })();
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success: rateLimitOk } = await safeLimit(cspReportRatelimit, ip);
+  const { success: rateLimitOk } = await safeLimit(cspReportRatelimit, ip, { failOpen: true }) // telemetry;
   if (!rateLimitOk) {
     // 204 rather than 429: the browser does not need to know
     return new NextResponse(null, { status: 204 });

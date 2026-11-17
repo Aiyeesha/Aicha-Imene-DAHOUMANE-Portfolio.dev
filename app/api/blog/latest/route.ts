@@ -20,7 +20,8 @@ function getClientIp(req: Request): string {
 export async function GET(req: Request) {
   // ── Rate limiting ─────────────────────────────────────────────────────
   const ip = getClientIp(req);
-  const rl = await safeLimit(blogRatelimit, `blog:ip:${ip}`);
+  // Read-only: stays available if Redis fails (lib/ratelimit.ts).
+  const rl = await safeLimit(blogRatelimit, `blog:ip:${ip}`, { failOpen: true });
 
   if (!rl.success) {
     const now = Date.now();

@@ -58,7 +58,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success: rateLimitOk } = await safeLimit(errorRatelimit, ip);
+  const { success: rateLimitOk } = await safeLimit(errorRatelimit, ip, { failOpen: true }); // telemetry
   if (!rateLimitOk) return new NextResponse(null, { status: 429 });
 
   // ── Parse ─────────────────────────────────────────────────────────────────
