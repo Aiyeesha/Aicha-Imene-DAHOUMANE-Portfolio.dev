@@ -149,8 +149,12 @@ jobs:
       # npm overrides cannot reach; the project depends directly on a fixed
       # sharp and scripts/tooling/fix-nested-sharp.mjs removes the nested copy after
       # install, so no real risk is hidden.
+      # scripts/tooling/audit-gate.mjs runs `npm audit` and only lets through
+      # the advisories it lists, each with its reason, an expiry date and the
+      # last vulnerable version: the exception lapses by itself (the step
+      # fails again) when it expires or when a patched release is published.
       - name: Security audit
-        run: npm audit --audit-level=high --omit=dev --omit=optional
+        run: node scripts/tooling/audit-gate.mjs
 
       - name: Lint
         run: npm run lint
