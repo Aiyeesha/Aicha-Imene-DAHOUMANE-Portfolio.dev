@@ -44,7 +44,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce.pdf",
-    scale: 0.95,
+    scale: 0.94,
     title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV",
     author: "Aïcha Imène DAHOUMANE",
   },

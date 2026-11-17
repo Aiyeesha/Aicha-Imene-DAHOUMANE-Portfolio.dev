@@ -19,10 +19,10 @@ export default async function Image({ params }: Props) {
   const title    = isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me";
   // Role first (Salesforce CV title), then IT Ops and the contract types.
   const subtitle = isFr
-    ? "Administratrice & Développeuse Salesforce · IT Ops · CDI, CDD, intérim, portage · Tous secteurs"
+    ? "Administratrice & Développeuse Salesforce · IT Ops · CDI · Tous secteurs"
     : isEs
-    ? "Administradora & Desarrolladora Salesforce · IT Ops · Indefinido, temporal, ETT, portage · Todos los sectores"
-    : "Salesforce Administrator & Developer · IT Ops · Permanent, fixed-term, temp, umbrella · Any industry";
+    ? "Administradora & Desarrolladora Salesforce · IT Ops · Contrato indefinido · Todos los sectores"
+    : "Salesforce Administrator & Developer · IT Ops · Permanent role · Any industry";
   // "Interviews now — available from …", then "available immediately".
   const availLabel = availability(locale).summary.replace(" · ", " — ");
 
