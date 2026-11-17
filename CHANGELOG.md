@@ -11,6 +11,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Nom visible dès l'arrivée et examens Salesforce dans les CV** — Deux constats de l'audit externe :
+  - **Accueil** : votre nom s'affiche au-dessus du badge de disponibilité et du titre, sur mobile comme sur ordinateur. Auparavant, l'en-tête le masquait sur la plupart des écrans d'ordinateur et le H1 n'indiquait que le rôle.
+  - **CV** : les 12 CV Salesforce et hybrides (classiques et ATS, FR/EN/ES) mentionnent désormais, sous Trailhead, les examens Salesforce Platform Foundations et Platform Administrator réservés pour les 29 et 30 décembre 2026. Les CV IT Ops n'ont pas de section certifications et ne changent pas. Les 18 PDF sont régénérés, avec le même nombre de pages.
+  - **Texte alternatif** : l'image de l'accueil est décrite comme une illustration, et non plus comme une « photo de profil ».
 - **Site et CV alignés (contrat, anglais, titre IT Ops)** — Trois incohérences relevées par l'audit externe :
   - **Contrat** : les CV disaient « Recherche un CDI », le site « CDI · CDD · Intérim · Portage salarial ». Le site passe en CDI uniquement (EN « Permanent », ES « Indefinido ») : badge, fenêtre de disponibilité, FAQ, profil, « Me recruter » et son image de partage, page À propos, descriptions SEO et JSON-LD. Le formulaire de contact garde la liste des types de contrat, puisqu'elle décrit l'offre du recruteur.
   - **Anglais** : une seule formule partout, fidèle au certificat : « C1+ à l'oral, B2 en lecture (Linguaskill Business, Cambridge) », sur le site et dans les 18 CV. L'intitulé de la certification (« Linguaskill Business C1+ ») ne change pas.
