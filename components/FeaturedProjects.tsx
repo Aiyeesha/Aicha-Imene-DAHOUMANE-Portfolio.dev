@@ -16,6 +16,7 @@ import ProjectClientLogo from "./ProjectClientLogo";
 import { projectCardImage } from "@/lib/data/projectAssets";
 import { useTrack } from "@/app/[locale]/providers";
 import type { FeaturedProjectCard } from "@/lib/data/featuredProjects";
+import { HOME_FEATURED } from "@/content/homeFeatured";
 
 type FeaturedProjectsProps = {
   // Trimmed on the server (toFeaturedProjectCards): props end up in the HTML.
@@ -63,20 +64,16 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const pathnameLocale = pathname.split("/")[1];
   const locale: "en" | "fr" | "es" = pathnameLocale === "fr" ? "fr" : pathnameLocale === "es" ? "es" : "en";
 
-  // Cross-domain (is_bridge) projects stay visible on both tracks: they are
-  // the proof that the two skill sets combine.
+  // Three projects per track, in the order of content/homeFeatured.ts, each
+  // with a quantified result line. The bridge project (Legarant-AXG) is in
+  // both lists. A slug missing from the data source is skipped.
   const featured = useMemo(() => {
-    const trackMatches = projects
-      .filter((p) => p.featured && p.track === track)
-      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .slice(0, 5);
-
-    const missingBridgeProjects = projects.filter(
-      (p) => p.featured && p.is_bridge && !trackMatches.some((tm) => tm.slug === p.slug)
-    );
-
-    return [...trackMatches, ...missingBridgeProjects];
-  }, [projects, track]);
+    const bySlug = new Map(projects.map((p) => [p.slug, p]));
+    return HOME_FEATURED[track].flatMap((entry) => {
+      const p = bySlug.get(entry.slug);
+      return p ? [{ ...p, result: entry.result[locale] }] : [];
+    });
+  }, [projects, track, locale]);
 
   // ── Empty state ─────────────────────────────────────────────────────────────
   // Data source unavailable, or no featured project for the active track.
@@ -145,6 +142,11 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             {p.is_bridge ? (
               <span className="badge badge-bridge mt-2 inline-flex">{t("projects.bridgeBadge")}</span>
             ) : null}
+
+            {/* Quantified result, from the project's own published content */}
+            <p className={`mt-3 border-l-2 pl-3 text-sm font-semibold leading-snug ${track === "salesforce" ? "border-cyan-500" : "border-violet-500"}`}>
+              {p.result}
+            </p>
 
             <p className="mt-3 text-sm text-muted">{p.summary}</p>
 
