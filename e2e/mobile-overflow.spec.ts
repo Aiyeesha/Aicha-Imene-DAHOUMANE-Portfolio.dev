@@ -22,6 +22,7 @@ const ROUTES = [
   "/blog/apex-integration-patterns",
   "/certifications",
   "/hybride",
+  "/salesforce-security",
   "/work-with-me",
   "/uses",
   "/colophon",

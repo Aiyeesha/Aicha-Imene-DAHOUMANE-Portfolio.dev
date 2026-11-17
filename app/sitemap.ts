@@ -4,7 +4,7 @@
 // with hreflang alternates (EN / FR / ES / x-default).
 //
 // Static pages: home, about, certifications, blog, tags, uses, hybride,
-//               work-with-me, legal, privacy, accessibility
+//               salesforce-security, work-with-me, legal, privacy, accessibility
 //               (/colophon is noindex; /resources redirects to /uses)
 // Dynamic pages: blog posts (MDX) and project pages.
 //
@@ -91,6 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // ── Positioning & hiring ─────────────────────────────────────────────────
     ...biEntry(base, "/hybride", { priority: 0.8, changeFrequency: "monthly" }),
+    ...biEntry(base, "/salesforce-security", { priority: 0.7, changeFrequency: "monthly" }),
     ...biEntry(base, "/work-with-me", { priority: 0.7, changeFrequency: "monthly" }),
 
     // ── Legal pages (low priority, rarely change) ────────────────────────────

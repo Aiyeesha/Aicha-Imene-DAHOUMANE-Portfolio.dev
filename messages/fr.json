@@ -581,7 +581,8 @@
     "ctaTitle": "Un poste transverse à pourvoir ?",
     "ctaText": "Si le poste touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en production tracée, automatisation des déploiements — c'est exactement le terrain où mon profil fait gagner du temps à une équipe.",
     "ctaContact": "Présenter un poste",
-    "ctaCv": "Télécharger le CV hybride (PDF)"
+    "ctaCv": "Télécharger le CV hybride (PDF)",
+    "sfSecurityLink": "Le volet sécurité en détail : partage, FLS, Apex, intégrations →"
   },
   "recruiter": {
     "title": "Vous recrutez pour quel poste ?",
@@ -629,6 +630,108 @@
     "alsoShortcut": "Aussi {shortcut}",
     "groupProjects": "Projets",
     "groupPosts": "Articles",
-    "groupCerts": "Certifications"
+    "groupCerts": "Certifications",
+    "sfSecurity": "Sécurité Salesforce"
+  },
+  "sfSecurity": {
+    "metaTitle": "Sécurité Salesforce : partage, FLS, Apex, intégrations",
+    "metaDescription": "Sécuriser une org Salesforce à quatre niveaux : partage, droits sur les champs, Apex qui respecte l'utilisateur, intégrations sans secret.",
+    "breadcrumbHome": "Accueil",
+    "breadcrumbCurrent": "Sécurité Salesforce",
+    "eyebrow": "Salesforce × sécurité",
+    "h1": "Sécurité Salesforce : du modèle de partage au code Apex",
+    "lead": "La sécurité d'une org Salesforce se joue à quatre niveaux, et une faille à l'un d'eux annule les trois autres. Pour chacun, voici le principe que j'applique et le projet où je l'ai mis en œuvre.",
+    "honesty": "Ces preuves sont des projets de formation (titre RNCP 6), des projets personnels ou une étude de cas reconstituée : leur nature est indiquée à chaque fois. Mon travail en poste reste confidentiel.",
+    "principleLabel": "Le principe",
+    "appliedLabel": "Ce que j'ai fait",
+    "layers": [
+      {
+        "title": "1. Qui voit quels enregistrements",
+        "scope": "OWD, hiérarchie des rôles, règles de partage",
+        "principle": "Je pars du plus restrictif (OWD privé) et j'ouvre l'accès par les rôles et les règles de partage, jamais l'inverse : un accès trop large au départ ne se voit plus ensuite.",
+        "items": [
+          {
+            "text": "Rôles Nord/Sud, règles de partage et OWD choisis objet par objet : privé, public en lecture seule, contrôlé par le parent.",
+            "proof": "Tours For Life",
+            "nature": "Projet de formation RNCP 6",
+            "href": "/projects/tours-for-life-salesforce-solution"
+          },
+          {
+            "text": "Modèle de sécurité par zone géographique : un profil unique, des rôles et des règles de partage.",
+            "proof": "LTP",
+            "nature": "Projet de formation RNCP 6",
+            "href": "/projects/ltp-apex-backend-prototype"
+          }
+        ]
+      },
+      {
+        "title": "2. Qui modifie quels objets et quels champs",
+        "scope": "CRUD, sécurité au niveau des champs (FLS), Permission Set Groups",
+        "principle": "Le profil donne le minimum ; les droits viennent de jeux d'autorisations regroupés par métier. Un champ sensible est masqué ou verrouillé, pas seulement retiré de la mise en page.",
+        "items": [
+          {
+            "text": "FLS ciblée : le champ de zone est verrouillé, les champs financiers masqués.",
+            "proof": "LTP",
+            "nature": "Projet de formation RNCP 6",
+            "href": "/projects/ltp-apex-backend-prototype"
+          },
+          {
+            "text": "8 profils quasi identiques consolidés en 5 Permission Set Groups, pour un audit des accès lisible.",
+            "proof": "Nova Manufacturing",
+            "nature": "Étude de cas reconstituée",
+            "href": "/projects/nova-manufacturing-classic-to-lightning"
+          }
+        ]
+      },
+      {
+        "title": "3. Un code Apex qui respecte les droits de l'utilisateur",
+        "scope": "with sharing, WITH SECURITY_ENFORCED, Security.stripInaccessible",
+        "principle": "Par défaut, Apex s'exécute en mode système : sans précaution, une classe contourne le partage et la FLS. Je déclare le partage sur chaque classe et je contrôle les droits sur chaque requête et chaque écriture. Pour du code neuf, Salesforce recommande désormais WITH USER_MODE.",
+        "items": [
+          {
+            "text": "WITH SECURITY_ENFORCED sur les requêtes, Security.stripInaccessible, et des contrôles CRUD/FLS explicites là où une requête d'agrégat ne peut pas être couverte.",
+            "proof": "iDEM Connect",
+            "nature": "Projet de formation RNCP 6",
+            "href": "/projects/idemconnect-apex-backend"
+          },
+          {
+            "text": "Contrôleurs historiques en without sharing, sans aucun test de droits : passage en with sharing explicite, stripInaccessible avant toute écriture, et un test qui vérifie qu'un utilisateur sans droit d'édition est bien bloqué.",
+            "proof": "Nova Manufacturing",
+            "nature": "Étude de cas reconstituée",
+            "href": "/projects/nova-manufacturing-classic-to-lightning"
+          }
+        ]
+      },
+      {
+        "title": "4. Des intégrations et des déploiements sans secret exposé",
+        "scope": "OAuth, Named Credentials, secrets de CI",
+        "principle": "Une intégration n'a que les droits dont elle a besoin, et aucun identifiant ne vit dans le code, les métadonnées ou les journaux.",
+        "items": [
+          {
+            "text": "Jetons OAuth à portée limitée, aucun secret dans le code, flux de données restés dans l'UE (RGPD).",
+            "proof": "Legarant-AXG",
+            "nature": "Projet fil rouge RNCP 6",
+            "href": "/projects/legarant-axg-salesforce-deployment"
+          },
+          {
+            "text": "Named Credentials à la place d'endpoints REST codés en dur, dont les identifiants étaient visibles dans des Custom Settings.",
+            "proof": "Nova Manufacturing",
+            "nature": "Étude de cas reconstituée",
+            "href": "/projects/nova-manufacturing-classic-to-lightning"
+          },
+          {
+            "text": "Identifiants de déploiement dans GitHub Secrets, branches protégées : la validation contre l'org doit passer avant toute fusion.",
+            "proof": "Pipeline CI/CD",
+            "nature": "Projet personnel",
+            "href": "/projects/cicd-pipeline-setup"
+          }
+        ]
+      }
+    ],
+    "proofLabel": "Preuve",
+    "linksTitle": "Pour aller plus loin",
+    "linkHybrid": "Profil hybride : Salesforce, infrastructure et sécurité combinés",
+    "linkCerts": "Certifications et examens Salesforce programmés",
+    "backHome": "← Retour à l'accueil"
   }
 }
