@@ -304,12 +304,12 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
   },
   "tours-for-life-salesforce-solution": {
     "fr": [
-      "Modèle de données à 4 objets : Prospect (Lead), Voyageur (Person Account), objets Voyage et Voyage acheté distincts, Parc de bus lié à plusieurs voyages",
+      "Modèle de données à 5 objets : Prospect (Lead), Voyageur (Person Account), objets Voyage et Voyage acheté distincts, Parc de bus lié à plusieurs voyages",
       "2 Flows déclenchés par enregistrement : décrément automatique des places disponibles et e-mail de confirmation au changement de statut du prospect",
       "Sécurité par rôles Nord/Sud avec règles de partage et OWD par objet (privé, public en lecture seule, contrôlé par le parent)"
     ],
     "es": [
-      "Modelo de datos de 4 objetos: Prospecto (Lead), Viajero (Person Account), objetos Viaje y Viaje Comprado distintos, Flota de autobuses vinculada a varios viajes",
+      "Modelo de datos de 5 objetos: Prospecto (Lead), Viajero (Person Account), objetos Viaje y Viaje Comprado distintos, Flota de autobuses vinculada a varios viajes",
       "2 Flows desencadenados por registro: descuento automático de plazas disponibles y correo de confirmación al cambiar el estado del prospecto",
       "Seguridad por roles Norte/Sur con reglas de compartición y OWD por objeto (privado, público de solo lectura, controlado por el padre)"
     ]

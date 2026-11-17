@@ -62,7 +62,8 @@ export default async function LegalPage({
   const t = await getTranslations({ locale, namespace: "legal" });
 
   const name = process.env.NEXT_PUBLIC_OG_NAME || process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio";
-  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
+  // Without the variable, point to the contact form rather than print "—".
+  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || t("contactFallback");
 
   return (
     <div className="py-14">
@@ -71,7 +72,7 @@ export default async function LegalPage({
       <div className="mt-8 grid gap-6">
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("editorTitle")}</h2>
-          <p className="mt-2 text-sm text-muted-2">{t("editorBody", { name, email: email || "—" })}</p>
+          <p className="mt-2 text-sm text-muted-2">{t("editorBody", { name, email })}</p>
         </section>
 
         <section className="card p-6">
@@ -92,7 +93,7 @@ export default async function LegalPage({
         {/* Personal data */}
         <section className="card p-6">
           <h2 className="text-lg font-semibold">{t("dataTitle")}</h2>
-          <p className="mt-2 text-sm text-muted-2">{t("dataBody", { email: email || "—" })}</p>
+          <p className="mt-2 text-sm text-muted-2">{t("dataBody", { email })}</p>
         </section>
 
       </div>

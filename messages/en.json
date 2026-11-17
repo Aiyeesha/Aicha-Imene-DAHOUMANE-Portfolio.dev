@@ -304,7 +304,7 @@
     "apex": "Apex classes built",
     "flows": "Automation Flows",
     "workload": "Manual workload reduced",
-    "projects": "In-role projects · unpublished",
+    "projects": "Projects delivered in role (confidential)",
     "rmm": "Endpoints monitored remotely (Datto RMM)",
     "tickets": "IT tickets handled",
     "alerts": "Backup alerts triaged",
@@ -430,6 +430,7 @@
     "legalBasisTitle": "Legal bases for processing",
     "lastUpdated": "October 31, 2026",
     "controllerTitle": "Data controller",
+    "contactFallback": "the site's contact form",
     "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, acting in a personal capacity (professional portfolio, no commercial activity). Contact: {email}",
     "breachTitle": "Data breach notification",
     "breachBody": "In the event of a data breach likely to result in a risk to your rights and freedoms, you will be notified as soon as possible. In accordance with Article 33 of the GDPR, the relevant supervisory authority will be notified within 72 hours. You also have the right to lodge a complaint with your national data protection authority (in France: CNIL — www.cnil.fr)."
@@ -437,6 +438,7 @@
   "legal": {
     "title": "Legal notice",
     "editorTitle": "Publisher",
+    "contactFallback": "the site's contact form",
     "editorBody": "This website is published by Aïcha Imène DAHOUMANE (Salesforce · Systems & Networks · DevOps), as a personal portfolio. Publication director: Aïcha Imène DAHOUMANE. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, United States. Website: vercel.com.",
@@ -457,7 +459,7 @@
       },
       {
         "q": "What contract types are you looking for?",
-        "a": "Permanent, fixed-term, temp (agency) or umbrella-company (portage) contracts, in any industry. What matters to me is the role: an environment where Salesforce and infrastructure meet."
+        "a": "Permanent, fixed-term, temp (agency) or umbrella-company contracts (French “portage salarial”: employed by an umbrella company while working for a client), in any industry. What matters to me is the role: an environment where Salesforce and infrastructure meet."
       },
       {
         "q": "Which roles are you targeting?",
@@ -465,7 +467,7 @@
       },
       {
         "q": "Do you have a Salesforce certification?",
-        "a": "Not yet, but the exams are booked: Salesforce Platform Foundations on December 29, 2026 and Platform Administrator on December 30, 2026, then Platform App Builder and Platform Developer in 2027. Already earned and verifiable: the RNCP Level 6 'Développeur Concepteur Logiciel' diploma (Salesforce specialization, 2025) and an active Trailhead profile (Expeditioner rank, 94 badges, 59,775 points). The Legarant-AXG case study, where the Apex trigger and the Heroku deployment are built by the same person, shows concretely what I can do."
+        "a": "Not yet, but the exams are booked: Salesforce Platform Foundations on December 29, 2026 and Platform Administrator on December 30, 2026, then Platform App Builder and Platform Developer in 2027. Already earned and verifiable: the RNCP Level 6 'Développeur Concepteur Logiciel' diploma (French national qualification register, bachelor's level) (Salesforce specialization, 2025) and an active Trailhead profile (Expeditioner rank, 94 badges, 59,775 points). The Legarant-AXG case study, where the Apex trigger and the Heroku deployment are built by the same person, shows concretely what I can do."
       },
       {
         "q": "Where are you based? Which work mode?",
