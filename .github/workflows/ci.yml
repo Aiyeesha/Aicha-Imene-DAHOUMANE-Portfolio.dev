@@ -65,6 +65,27 @@ jobs:
           tar xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
           chmod +x /tmp/gitleaks
 
+      # Guards the config itself: a custom .gitleaks.toml without
+      # [extend] useDefault = true drops every built-in rule, and the scan
+      # below then passes whatever is committed. Fake secrets are generated at
+      # run time (never stored in the repo) in a throwaway repository; the
+      # step fails unless gitleaks reports them with the repo's config.
+      - name: Self-test — the config still detects secrets
+        run: |
+          set -u
+          dir="$(mktemp -d)"
+          git -C "$dir" init -q
+          rand() { tr -dc "$1" </dev/urandom | head -c "$2"; }
+          printf 'const gh = "ghp_%s";\nconst aws = "AKIA%s";\n' \
+            "$(rand 'A-Za-z0-9' 36)" "$(rand 'A-Z0-9' 16)" > "$dir/leak.ts"
+          git -C "$dir" add leak.ts
+          git -C "$dir" -c user.name=ci -c user.email=ci@localhost commit -qm "fake secrets"
+          if /tmp/gitleaks git --no-banner --redact --config .gitleaks.toml "$dir"; then
+            echo "::error::.gitleaks.toml detects no secret: built-in rules are not loaded ([extend] useDefault = true missing?)"
+            exit 1
+          fi
+          echo "Self-test OK: fake secrets detected with .gitleaks.toml"
+
       - name: Detect secrets
         run: /tmp/gitleaks detect --source . --no-banner --config .gitleaks.toml
 

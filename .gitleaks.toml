@@ -1,5 +1,13 @@
 title = "gitleaks config — Aicha-Imene-DAHOUMANE-Portfolio.dev"
 
+# Keep gitleaks' built-in rules (~150 secret patterns). In gitleaks v8, a
+# custom config REPLACES the defaults unless it extends them: with only the
+# [allowlist] below, the CI job and the pre-commit hook scanned with no rule
+# at all and always passed. The "Self-test" step of the secret-scan job in
+# .github/workflows/ci.yml fails if this file stops detecting a fake secret.
+[extend]
+useDefault = true
+
 [allowlist]
   description = "Known false positives"
 
@@ -12,6 +20,10 @@ title = "gitleaks config — Aicha-Imene-DAHOUMANE-Portfolio.dev"
     # Lien public de la page de réservation Proton Calendar (lib/booking.ts) :
     # l'identifiant après « # » est affiché à tous les visiteurs, ce n'est pas un secret.
     '''calendar\.proton\.me/bookings#[A-Za-z0-9+/=_-]+''',
+    # Placeholder in a curl example (doc comment of
+    # app/api/admin/testimonial-invite/route.ts), not a real credential.
+    # Matched against the captured secret, hence the exact value.
+    '''^YOUR_ADMIN_PASSWORD$''',
   ]
 
   # Fichiers exclus du scan
