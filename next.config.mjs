@@ -243,7 +243,11 @@ const nextConfig = {
     return {
       afterFiles: [
         {
-          source: "/:asset(.*\\.(?:webp|png|jpe?g|gif|svg|avif|ico|pdf))",
+          // Text assets too (.txt, .css, .js…): without this, /foo.txt fell
+          // through to the [locale] route and answered 200 with the HTML 404
+          // page and no CSP (a "soft 404"). robots.txt, sitemap.xml, the RSS
+          // feeds, sw.js and the web manifest are file routes, matched first.
+          source: "/:asset(.*\\.(?:webp|png|jpe?g|gif|svg|avif|ico|pdf|txt|xml|js|mjs|css|map|json|webmanifest|woff2?|ttf|otf))",
           destination: "/api/asset-not-found",
         },
       ],

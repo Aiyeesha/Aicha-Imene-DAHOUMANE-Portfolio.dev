@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success: rateLimitOk } = await safeLimit(blogRatelimit, `health:${ip}`, {
+  const { success: rateLimitOk } = await safeLimit(blogRatelimit, `health:ip:${ip}`, {
     failOpen: true, // must still report a Redis outage (lib/ratelimit.ts)
   });
   if (!rateLimitOk) {

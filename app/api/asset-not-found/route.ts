@@ -1,6 +1,6 @@
 // app/api/asset-not-found/route.ts
 // --------------------------------
-// Lightweight 404 for missing static files (images, PDF), reached through the
+// Lightweight 404 for missing static files (images, PDF, text assets), reached through the
 // `afterFiles` rewrite in next.config.mjs instead of the full HTML 404 page.
 // A few bytes of plain text, X-Robots-Tag: noindex, short CDN cache (5 min)
 // so a file added in the next deployment is served right away.
