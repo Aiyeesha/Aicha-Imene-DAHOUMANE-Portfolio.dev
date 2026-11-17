@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  const { success: rateLimitOk } = await safeLimit(cspReportRatelimit, ip, { failOpen: true }) // telemetry;
+  const { success: rateLimitOk } = await safeLimit(cspReportRatelimit, ip, { failOpen: true }); // telemetry
   if (!rateLimitOk) {
     // 204 rather than 429: the browser does not need to know
     return new NextResponse(null, { status: 204 });

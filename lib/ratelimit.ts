@@ -139,6 +139,16 @@ export const cspAlertGlobalRatelimit = redis
   ? createRatelimit(redis, 30, 600, "portfolio:rl:csp-alert-global")
   : createNoOpRatelimit(30, 600_000);
 
+// Server-error alerts (lib/monitoring/serverErrorAlert.ts): one alert per
+// fingerprint per 10 minutes, at most 20 per 10 minutes overall.
+export const serverErrorAlertRatelimit = redis
+  ? createRatelimit(redis, 1, 600, "portfolio:rl:server-error-alert")
+  : createNoOpRatelimit(1, 600_000, { failOpen: true });
+
+export const serverErrorAlertGlobalRatelimit = redis
+  ? createRatelimit(redis, 20, 600, "portfolio:rl:server-error-alert-global")
+  : createNoOpRatelimit(20, 600_000, { failOpen: true });
+
 // ── Identifier pseudonymisation ───────────────────────────────────────
 // Limiter identifiers contain the visitor's IP ("contact:ip:1.2.3.4"). They
 // are replaced by a truncated HMAC-SHA-256 keyed with IP_HASH_SALT before
