@@ -199,7 +199,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog & Tutorials — Aïcha Imène DAHOUMANE",
-      "description": "Salesforce, systems & network administration and DevOps tutorials — step-by-step guides, concrete implementations and real-world experience from a Salesforce developer."
+      "description": "Salesforce, systems & network and DevOps tutorials: step-by-step guides, concrete cases and real-world lessons from a Salesforce administrator & developer."
     },
     "kicker": "Blog & tutorials",
     "title": "Posts",
@@ -509,7 +509,7 @@
     "cta": "Get in touch →"
   },
   "hybrid": {
-    "metaTitle": "Hybrid Salesforce + Infrastructure profile — Aïcha Imène DAHOUMANE",
+    "metaTitle": "Hybrid Salesforce × IT Ops profile — Aïcha Imène DAHOUMANE",
     "metaDescription": "Three cases where Salesforce and infrastructure must combine: Heroku↔Salesforce data migration, DevOps for Apex releases, access control for an integration.",
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Hybrid profile",

@@ -32,10 +32,10 @@ export async function generateMetadata({
     ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
     : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
   const description = isFr
-    ? "Diplômes (RNCP 4/5/6), certifications actives (Trailhead Expeditioner) et examens Salesforce Platform Foundations et Platform Administrator planifiés en décembre 2026."
+    ? "Diplômes RNCP 4/5/6, certifications actives (Trailhead Expeditioner) et examens Salesforce Platform Foundations et Administrator planifiés en décembre 2026."
     : isEs
-    ? "Diplomas (RNCP 4/5/6), certificaciones activas (Trailhead Expeditioner) y exámenes Salesforce Platform Foundations y Platform Administrator programados en diciembre de 2026."
-    : "Degrees (RNCP 4/5/6), active certifications (Trailhead Expeditioner) and Salesforce Platform Foundations and Platform Administrator exams scheduled for December 2026.";
+    ? "Diplomas RNCP 4/5/6, certificaciones activas (Trailhead Expeditioner) y exámenes Salesforce Platform Foundations y Administrator previstos en diciembre de 2026."
+    : "RNCP 4/5/6 degrees, active certifications (Trailhead Expeditioner) and Salesforce Platform Foundations and Administrator exams scheduled for December 2026.";
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,

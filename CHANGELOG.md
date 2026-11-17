@@ -47,6 +47,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Données structurées alignées sur l'intitulé** — Le JSON-LD `Person` (toutes les pages) gardait « Salesforce · Systèmes & Réseaux · DevOps » et « Développeuse Salesforce… » : `jobTitle` et `description` commencent désormais par « Administratrice & Développeuse Salesforce » (« Salesforce Administrator & Developer », « Administradora & Desarrolladora Salesforce »), comme le site, les CV et les images de partage.
+- **Extraits Google** — Dix meta descriptions dépassaient 160 caractères (163 à 179 : `/about` EN/ES, `/hybride` FR/ES, `/certifications` et `/blog` dans les trois langues) et les titres de `/hybride` 65 caractères (66–67) : textes resserrés, titres de `/hybride` sur le libellé de la palette (« Profil hybride Salesforce × IT Ops », 58 caractères). `e2e/seo-meta.spec.ts` vérifie ces longueurs sur les 15 pages fixes × 3 langues, et l'intitulé du JSON-LD.
+- **Page 404 accessible** — Son contenu est dans un `<main id="main">` (axe : `landmark-one-main`, `region`), pour les URL inconnues comme pour `/testimonial-submit` sans invitation ; `e2e/not-found.spec.ts` le vérifie.
+
 - **Formulaire de contact : plus de faux succès** — Sans `FORMHOOK_ENDPOINT` en production, `/api/contact` répondait `{ ok: true }` alors que le message n'était transmis nulle part. La route répond désormais 503 (`upstream_failed`, « utilisez un autre canal »), comme `/api/testimonial-submit` ; le comportement local est inchangé.
 - **Ancres de section** — Les liens de l'en-tête, du menu mobile et de la palette depuis une sous-page pointaient vers `/{locale}/#section`, redirigé en 308 vers `/{locale}` : ils visent directement `/{locale}#section`.
 - **Page Statut sur mobile** — À 375 px, les noms de services étaient tronqués (« Formul… », « Cache (… ») : nom et description passent sur leur propre ligne sous `sm`, une seule ligne au-dessus.
