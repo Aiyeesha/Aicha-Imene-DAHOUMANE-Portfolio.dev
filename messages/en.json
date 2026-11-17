@@ -581,7 +581,8 @@
     "ctaTitle": "Hiring for a cross-cutting role?",
     "ctaText": "If the role touches both Salesforce and infrastructure — integration, migration, traceable go-live, deployment automation — that's exactly where this profile saves a team time.",
     "ctaContact": "Tell me about the role",
-    "ctaCv": "Download the hybrid CV (PDF)"
+    "ctaCv": "Download the hybrid CV (PDF)",
+    "sfSecurityLink": "Security in detail: sharing, FLS, Apex, integrations →"
   },
   "recruiter": {
     "title": "Which role are you hiring for?",
@@ -629,6 +630,108 @@
     "alsoShortcut": "Also {shortcut}",
     "groupProjects": "Projects",
     "groupPosts": "Posts",
-    "groupCerts": "Certifications"
+    "groupCerts": "Certifications",
+    "sfSecurity": "Salesforce security"
+  },
+  "sfSecurity": {
+    "metaTitle": "Salesforce security: sharing, FLS, Apex, integrations",
+    "metaDescription": "Securing a Salesforce org at four levels: sharing, field-level access, Apex that respects the user, integrations with no secret in code.",
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "Salesforce security",
+    "eyebrow": "Salesforce × security",
+    "h1": "Salesforce security: from the sharing model to Apex code",
+    "lead": "Securing a Salesforce org happens at four levels, and a gap at any one of them cancels out the other three. For each, here is the principle I apply and the project where I applied it.",
+    "honesty": "This evidence comes from training projects (French RNCP Level 6 qualification), personal projects or a reconstructed case study: the nature of each is stated. My work in my current role remains confidential.",
+    "principleLabel": "The principle",
+    "appliedLabel": "What I did",
+    "layers": [
+      {
+        "title": "1. Who sees which records",
+        "scope": "OWD, role hierarchy, sharing rules",
+        "principle": "I start from the most restrictive setting (private OWD) and open access through roles and sharing rules, never the other way round: access that is too broad at the start goes unnoticed later.",
+        "items": [
+          {
+            "text": "North/South roles, sharing rules and OWD chosen object by object: private, public read-only, controlled by parent.",
+            "proof": "Tours For Life",
+            "nature": "RNCP 6 training project",
+            "href": "/projects/tours-for-life-salesforce-solution"
+          },
+          {
+            "text": "Security model by geographic zone: a single profile, roles and sharing rules.",
+            "proof": "LTP",
+            "nature": "RNCP 6 training project",
+            "href": "/projects/ltp-apex-backend-prototype"
+          }
+        ]
+      },
+      {
+        "title": "2. Who can change which objects and fields",
+        "scope": "CRUD, field-level security (FLS), Permission Set Groups",
+        "principle": "The profile grants the minimum; permissions come from permission sets grouped by job. A sensitive field is hidden or read-only, not just removed from the page layout.",
+        "items": [
+          {
+            "text": "Targeted FLS: the zone field is read-only, financial fields are hidden.",
+            "proof": "LTP",
+            "nature": "RNCP 6 training project",
+            "href": "/projects/ltp-apex-backend-prototype"
+          },
+          {
+            "text": "8 near-identical profiles consolidated into 5 Permission Set Groups, for a readable access audit.",
+            "proof": "Nova Manufacturing",
+            "nature": "Reconstructed case study",
+            "href": "/projects/nova-manufacturing-classic-to-lightning"
+          }
+        ]
+      },
+      {
+        "title": "3. Apex code that respects the user's permissions",
+        "scope": "with sharing, WITH SECURITY_ENFORCED, Security.stripInaccessible",
+        "principle": "By default, Apex runs in system mode: without care, a class bypasses sharing and FLS. I declare sharing on every class and check permissions on every query and every write. For new code, Salesforce now recommends WITH USER_MODE.",
+        "items": [
+          {
+            "text": "WITH SECURITY_ENFORCED on queries, Security.stripInaccessible, and explicit CRUD/FLS checks where an aggregate query cannot be covered.",
+            "proof": "iDEM Connect",
+            "nature": "RNCP 6 training project",
+            "href": "/projects/idemconnect-apex-backend"
+          },
+          {
+            "text": "Legacy controllers in without sharing, with no permission tests at all: moved to explicit with sharing, stripInaccessible before any write, and a test that checks a user without edit access is actually blocked.",
+            "proof": "Nova Manufacturing",
+            "nature": "Reconstructed case study",
+            "href": "/projects/nova-manufacturing-classic-to-lightning"
+          }
+        ]
+      },
+      {
+        "title": "4. Integrations and deployments with no exposed secret",
+        "scope": "OAuth, Named Credentials, CI secrets",
+        "principle": "An integration only has the access it needs, and no credential lives in code, metadata or logs.",
+        "items": [
+          {
+            "text": "Narrow-scope OAuth tokens, no secret in the code, data flows kept within the EU (GDPR).",
+            "proof": "Legarant-AXG",
+            "nature": "RNCP 6 capstone project",
+            "href": "/projects/legarant-axg-salesforce-deployment"
+          },
+          {
+            "text": "Named Credentials instead of hard-coded REST endpoints whose credentials were visible in Custom Settings.",
+            "proof": "Nova Manufacturing",
+            "nature": "Reconstructed case study",
+            "href": "/projects/nova-manufacturing-classic-to-lightning"
+          },
+          {
+            "text": "Deployment credentials in GitHub Secrets, protected branches: validation against the org must pass before any merge.",
+            "proof": "CI/CD pipeline",
+            "nature": "Personal project",
+            "href": "/projects/cicd-pipeline-setup"
+          }
+        ]
+      }
+    ],
+    "proofLabel": "Proof",
+    "linksTitle": "Further reading",
+    "linkHybrid": "Hybrid profile: Salesforce, infrastructure and security combined",
+    "linkCerts": "Certifications and booked Salesforce exams",
+    "backHome": "← Back to home"
   }
 }

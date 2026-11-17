@@ -17,6 +17,7 @@ const PAGES = [
   "",
   "/about",
   "/hybride",
+  "/salesforce-security",
   "/certifications",
   "/uses",
   "/work-with-me",

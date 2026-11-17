@@ -141,6 +141,16 @@ export default async function HybrideContent({ locale }: { locale: string }) {
         </ol>
       </section>
 
+      {/* Link to the detailed Salesforce security page */}
+      <p className="mb-10 text-sm">
+        <Link
+          href={`/${locale}/salesforce-security`}
+          className="underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+        >
+          {t("sfSecurityLink")}
+        </Link>
+      </p>
+
       {/* What the combination removes */}
       <section aria-labelledby="section-eliminates" className="mb-10">
         <h2 id="section-eliminates" className="text-lg font-semibold mb-4">
