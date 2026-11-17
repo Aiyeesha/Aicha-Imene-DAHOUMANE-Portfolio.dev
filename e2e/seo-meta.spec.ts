@@ -40,9 +40,18 @@ const ROLE = {
   es: "Administradora & Desarrolladora Salesforce",
 } as const;
 
-/** Decodes the few HTML entities found in <title> and meta content. */
+/**
+ * Decodes the few HTML entities found in <title> and meta content.
+ * &amp; is decoded last, so "&amp;lt;" gives "&lt;" and is not decoded twice
+ * into "<" (CodeQL: js/double-escaping).
+ */
 const decode = (s: string) =>
-  s.replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  s
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
 
 /** Length in code points ("é", "—", "×" count as 1), like lib/seo.ts. */
 const len = (s: string) => [...s].length;
