@@ -20,8 +20,9 @@ const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 // Local dev and CI: success=true (no friction without Redis). Production:
 // success=false (fail closed), so an Upstash outage never silently disables
 // flood protection.
-// `failOpen` exempts public read-only routes, for which failing closed would
-// switch the feature off for every visitor (e.g. the blog search).
+// `failOpen` exempts public read-only and telemetry routes, for which failing
+// closed would switch the feature off for every visitor (blog search,
+// blog/latest and health, CSP and error reports), as safeLimit() does.
 const isProd = process.env.NODE_ENV === "production";
 function createNoOpRatelimit(maxReq: number, windowMs: number, { failOpen = false } = {}) {
   const closed = isProd && !failOpen;
@@ -72,7 +73,7 @@ export const contactRatelimit = redis
 // 30 requests / 60s / IP: a read-only route with no spam risk
 export const blogRatelimit = redis
   ? createRatelimit(redis, 30, 60, "portfolio:rl:blog")
-  : createNoOpRatelimit(30, 60_000);
+  : createNoOpRatelimit(30, 60_000, { failOpen: true });
 
 // ── /api/search ────────────────────────────────────────────────────────
 // 30 requests / 60s / IP: public full-text search, cheap per call but each
@@ -109,14 +110,14 @@ export const adminRatelimit = redis
 // function invocations.
 export const cspReportRatelimit = redis
   ? createRatelimit(redis, 20, 60, "portfolio:rl:csp-report")
-  : createNoOpRatelimit(20, 60_000);
+  : createNoOpRatelimit(20, 60_000, { failOpen: true });
 
 // ── /api/errors (client error reporting) ──────────────────────────────
 // 10 reports / 60s / IP: room for a client in a crash loop, with the
 // client-side dedup (GlobalErrorHandler) already reducing noise.
 export const errorRatelimit = redis
   ? createRatelimit(redis, 10, 60, "portfolio:rl:errors")
-  : createNoOpRatelimit(10, 60_000);
+  : createNoOpRatelimit(10, 60_000, { failOpen: true });
 
 // ── /api/revalidate ───────────────────────────────────────────────────
 // 10 requests / 60s / IP: guards against flooding if REVALIDATE_SECRET leaks,

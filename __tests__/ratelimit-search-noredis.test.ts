@@ -5,7 +5,8 @@
 // Without Upstash (CI runs `next start`, NODE_ENV=production), the no-op
 // limiters fail closed, which suits write routes (contact, admin). The blog
 // search is a public read route: failing closed would switch search off
-// entirely, so its no-op limiter lets requests through.
+// entirely, so its no-op limiter lets requests through; same for blog/latest,
+// health and the CSP and error reports (otherwise /api/health answers 429).
 
 describe("searchRatelimit sans Redis, en production", () => {
   const original = { ...process.env };
@@ -22,6 +23,13 @@ describe("searchRatelimit sans Redis, en production", () => {
   it("laisse passer les recherches (route publique en lecture seule)", async () => {
     const { searchRatelimit, safeLimit } = await load();
     expect((await safeLimit(searchRatelimit, "search:ip:203.0.113.7")).success).toBe(true);
+  });
+
+  it("laisse passer les routes en lecture seule et de télémétrie (blog/latest, health, CSP, erreurs)", async () => {
+    const { blogRatelimit, cspReportRatelimit, errorRatelimit, safeLimit } = await load();
+    for (const limiter of [blogRatelimit, cspReportRatelimit, errorRatelimit]) {
+      expect((await safeLimit(limiter, "health:ip:203.0.113.7")).success).toBe(true);
+    }
   });
 
   it("garde le refus par défaut pour les routes d'écriture (contact)", async () => {
