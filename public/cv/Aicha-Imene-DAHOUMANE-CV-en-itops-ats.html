@@ -40,9 +40,15 @@
     .plain-list { font-size: 10pt; margin-top: 2px; }
     .plain-list-item { margin-bottom: 3px; }
     @media print {
-      body { font-size: 9.5pt; padding: 12mm 14mm; }
-      @page { margin: 0; size: A4; }
+      /* Page margins come from the PDF generator (12 mm / 14 mm on every
+         page), so page 2 gets the same top margin as page 1. */
+      body { font-size: 9.5pt; padding: 0; }
+      @page { size: A4; }
       .section { margin-top: 11px; }
+      /* Never split an entry across pages, and keep a heading with what
+         follows it. */
+      .exp-item, .edu-item, .plain-list-item, li, p.summary { break-inside: avoid; }
+      .section-title, .exp-title, .exp-meta, .edu-title { break-after: avoid; }
     }
   </style>
 </head>
