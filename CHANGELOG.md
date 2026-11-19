@@ -11,7 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- **CV ATS, mise en page** : même marge en haut des deux pages, et aucune expérience, formation ou projet coupé entre la page 1 et la page 2.
+- **CV ATS, mise en page** : même marge en haut des deux pages, aucune expérience, formation ou projet coupé entre la page 1 et la page 2, nouvelle présentation (nom et titres de section en bleu foncé, coordonnées regroupées sur moins de lignes, texte un peu plus grand). Toujours une seule colonne de texte, sans tableau ni icône.
 
 - **Corrections de l'audit indépendant (contenu)** :
   - **Disponibilité** : « Disponible dès décembre 2026 » (ES « desde diciembre de 2026 ») sur le site et dans les CV.
