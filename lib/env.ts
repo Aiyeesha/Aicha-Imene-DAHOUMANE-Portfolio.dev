@@ -99,7 +99,8 @@ export function validateEnv(): void {
   const message = `[env] ⚠ Variables d'environnement invalides :\n${block}`;
 
   // In production an invalid configuration stops the start-up. Previews
-  // and local development only warn.
+  // and local development only warn: console.warn, so a secret missing from
+  // a Preview environment does not show up among the runtime errors.
   if (isProductionDeployment) throw new Error(message);
-  console.error(message);
+  console.warn(message);
 }
