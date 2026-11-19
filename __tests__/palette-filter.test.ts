@@ -22,7 +22,7 @@ describe("lib/search/paletteFilter", () => {
 
   it("classe une correspondance dans le titre avant un mot-clé", () => {
     const byTitle = paletteFilter(v("Sécuriser les accès avec pfSense & Squid"), "pfsense");
-    const byKeyword = paletteFilter(v("Déploiement de postes"), "pfsense", ["PfSense"]);
+    const byKeyword = paletteFilter(v("Déploiement de postes"), "pfsense", ["pfSense"]);
     expect(byTitle).toBeGreaterThan(byKeyword);
     expect(byKeyword).toBeGreaterThan(0);
   });

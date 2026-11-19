@@ -25,7 +25,7 @@
     "avatar_alt": "Ilustración de Aïcha Imène DAHOUMANE en su puesto de trabajo, rodeada de los logotipos de Salesforce, Linux y de las herramientas que utiliza",
     "title_salesforce": "Desarrolladora Salesforce e Infraestructura",
     "subtitle_salesforce": "Del CRM a los servidores, redes y pipelines que lo rodean.",
-    "title_itops": "Administradora de Sistemas y Redes · Ingeniera DevOps",
+    "title_itops": "Administradora de Sistemas y Redes · orientada a DevOps",
     "subtitle_itops": "De los puestos y servidores a las redes y los pipelines — hasta el CRM Salesforce que sostienen.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — construido para durar.",
     "value_itops": "Infraestructura · Automatización · CI/CD — construido para escalar.",
@@ -176,7 +176,7 @@
       "startLabel": "Fecha de incorporación deseada",
       "startPlaceholder": "Seleccionar una fecha",
       "start": {
-        "asap": "Lo antes posible (a partir de diciembre de 2026)",
+        "asap": "Lo antes posible (desde diciembre de 2026)",
         "q1_2027": "Primer trimestre de 2027",
         "later": "Más adelante",
         "tbd": "Por definir"
@@ -237,7 +237,7 @@
     "updatedOn": "Actualizado el",
     "author": "Sobre la autora",
     "authorRoleSalesforce": "Administradora y Desarrolladora Salesforce",
-    "authorRoleItops": "Administradora de sistemas y redes · Ingeniera DevOps",
+    "authorRoleItops": "Administradora de sistemas y redes · orientada a DevOps",
     "authorBioSalesforce": "Desarrolladora Salesforce con formación en infraestructura IT — construyo soluciones fiables y mantenibles con Apex, Flows, LWC y CI/CD.",
     "authorBioItops": "Administradora de sistemas y redes con enfoque DevOps — monitorización, automatización, hardening e infraestructura resiliente.",
     "authorProfileLink": "Ver perfil completo →",
@@ -289,9 +289,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Sistemas y Redes · DevOps",
-    "description": "Salesforce · Sistemas y Redes · DevOps en Île-de-France. Entrevistas desde ya, disponible a partir de diciembre de 2026, con contrato indefinido.",
+    "description": "Salesforce · Sistemas y Redes · DevOps en Île-de-France. Entrevistas desde ya, disponible desde diciembre de 2026, con contrato indefinido.",
     "titleItops": "Aïcha Imène DAHOUMANE — Admin. Sistemas y Redes · DevOps",
-    "descriptionItops": "Administradora de sistemas y redes e ingeniera DevOps en Île-de-France: infraestructura, automatización, CI/CD. Disponible a partir de diciembre de 2026."
+    "descriptionItops": "Administradora de sistemas y redes orientada a DevOps en Île-de-France: infraestructura, automatización, CI/CD. Disponible desde diciembre de 2026."
   },
   "testimonials": {
     "kicker": "Testimonios",
@@ -315,7 +315,7 @@
   "services": {
     "maturityTitle": "Madurez operativa",
     "maturityBody": "Este portfolio se explota como un producto en producción, no solo se presenta como tal: /status muestra el estado real de sus servicios (sitio, caché, formulario de contacto, integridad del contenido), comprobado cada día, con latencia y disponibilidad de 30 días — no una página estática. El colofón explica cómo está construido y protegido: CSP con nonce, cabeceras de seguridad, límites de tasa, auditorías Lighthouse y axe en integración continua, dependencias vigiladas.",
-    "maturityBodySalesforce": "La misma disciplina se aplica a mis entregas Salesforce: un pipeline CI/CD con validaciones Apex automatizadas y despliegues trazables de sandbox a producción (ver el proyecto puente Salesforce ⇄ Infra más arriba). Este portfolio es esa disciplina aplicada a escala: /status muestra el estado real de sus servicios, comprobado cada día, y el colofón explica sus decisiones de seguridad y su integración continua.",
+    "maturityBodySalesforce": "La misma disciplina se aplica a mis entregas Salesforce: un pipeline CI/CD con validaciones Apex automatizadas y despliegues trazables de sandbox a producción (ver el proyecto Legarant-AXG, que une Salesforce y la infraestructura). Este portfolio es esa disciplina aplicada a escala: /status muestra el estado real de sus servicios, comprobado cada día, y el colofón explica sus decisiones de seguridad y su integración continua.",
     "maturityStatusCta": "Ver el estado del sitio",
     "maturityChangelogCta": "Ver cómo está construido este sitio",
     "discuss": "Hablar de ello para un puesto",
@@ -332,7 +332,7 @@
       },
       {
         "label": "Telecomunicaciones",
-        "note": "App Lightning para equipos comerciales (Avenir Telecom) — Quick Actions, Aura, modelo de compartición."
+        "note": "App Lightning para equipos comerciales (Avenir Télécom) — Quick Actions, Aura, modelo de compartición."
       },
       {
         "label": "Formación y EdTech",
@@ -358,13 +358,13 @@
     "kicker": "Perfil",
     "title": "De sistemas y redes al desarrollo Salesforce",
     "p1": "Desarrolladora Salesforce con 3 años de experiencia profesional y una sólida base en infraestructura IT — cimientos que marcan la diferencia en proyectos complejos.",
-    "p2": "Empecé mi carrera en el área de infraestructura — dos prácticas de un mes en MIDRANGE Group (entre febrero y mayo de 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 264 equipos Dell (200 de ellos mediante Windows Autopilot), administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
+    "p2": "Empecé mi carrera en el área de infraestructura — dos prácticas de un mes en MIDRANGE Group (entre febrero y mayo de 2023) como administradora júnior de sistemas y redes: soporte a más de 50 puestos de trabajo, despliegue de 264 equipos Dell (200 de ellos mediante Windows Autopilot), administración de Windows Server 2022 (AD DS, DNS, DHCP, GPO), pfSense/Squid, Acronis, Datto RMM. Esta experiencia práctica me enseñó cómo se comportan los sistemas en la realidad y por qué unos cimientos sólidos son fundamentales.",
     "p3": "De oct. 2023 a sept. 2025 trabajé como Desarrolladora Salesforce en LD Digitales (remoto), a la vez que obtenía el título de Desarrolladora Diseñadora de Software (RNCP Nivel 6) en OpenClassrooms. Construí y mantuve más de 10 clases Apex, creé más de 20 Flows de automatización (reduciendo la carga manual en cerca de un 30 %), diseñé componentes LWC reutilizables e implementé pipelines de CI/CD con Salesforce CLI.",
     "p4": "Doy lo mejor de mí en entornos que valoran la autonomía, la transparencia y el aprendizaje continuo. Mi objetivo es contribuir a proyectos Salesforce e IT Ops ambiciosos — en Francia o a nivel internacional, en equipos distribuidos.",
     "p1_salesforce": "Desarrolladora y administradora Salesforce: diseño soluciones fiables, seguras y mantenibles, con un fuerte enfoque en la experiencia de usuario y la calidad de la entrega.",
     "p2_salesforce": "Trabajo con Apex, Flows, modelos de datos, seguridad (permission sets, sharing) y pipelines de CI/CD (Salesforce CLI, GitHub Actions) para llevar el código a producción de forma limpia.",
     "p3_salesforce": "Mi base en sistemas y DevOps me permite abordar Salesforce con mentalidad de operaciones: observabilidad, gestión de riesgos, documentación y automatización, para que las soluciones se mantengan sólidas con el tiempo.",
-    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales de octubre de 2025 a noviembre de 2026, tras dos años de formación dual en la misma empresa: 3 años de experiencia Salesforce en producción. El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — los exámenes Salesforce Platform Foundations y Platform Administrator están programados para el 29 y el 30 de diciembre de 2026, seguidos de Platform App Builder y Platform Developer en 2027.",
+    "p4_salesforce": "Desarrolladora Salesforce a tiempo completo en LD Digitales de octubre de 2025 a noviembre de 2026, tras dos años de formación dual en la misma empresa: 3 años de experiencia Salesforce en producción. El proyecto Legarant-AXG (Heroku Connect, gestión de entornos, despliegues en producción trazables) sigue siendo la prueba más directa de ese cruce Salesforce/infraestructura: no una capa de aplicación sobre una infraestructura que gestiona otra persona, sino la misma persona a ambos lados. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel», especialización Salesforce (OpenClassrooms, 2025), y un perfil Trailhead activo (rango Expeditioner, 94 badges) — los exámenes Salesforce Platform Foundations y Platform Administrator están previstos para finales de diciembre de 2026, seguidos de Platform App Builder y Platform Developer en 2027.",
     "p1_itops": "IT Ops y DevOps: durante mis dos prácticas de un mes en MIDRANGE Group (entre febrero y mayo de 2023), supervisé en remoto más de 550 equipos con Datto RMM, clasifiqué y seguí 316 tickets de soporte en Autotask (resolviendo yo misma una parte en remoto) y desplegué 264 puestos Dell (64 reinstalados desde una imagen Sysprep tras un borrado certificado NIST 800-88, 200 mediante Windows Autopilot).",
     "p2_itops": "Durante mi formación TAI y TSSR (Greta du Val-d'Oise), instalé y administré entornos Windows Server — AD DS, DNS, DHCP, GPO, filtrado pfSense/Squid, virtualización — documentando cada procedimiento en forma de runbook.",
     "p3_itops": "Presto especial atención a la continuidad del servicio: 85 alertas de copia de seguridad Acronis clasificadas durante las prácticas.",
@@ -379,7 +379,7 @@
     "rolesValueSalesforce": "Administradora & Desarrolladora Salesforce · Administradora de sistemas y redes · Ingeniera DevOps",
     "rolesValueItops": "Administradora de sistemas y redes · Ingeniera DevOps · Administradora & Desarrolladora Salesforce",
     "availabilityLabel": "Disponibilidad",
-    "availabilityValue": "Disponible a partir de diciembre de 2026 · Entrevistas desde ya · Indefinido · Todos los sectores",
+    "availabilityValue": "Disponible desde diciembre de 2026 · Entrevistas desde ya · Indefinido · Todos los sectores",
     "goalLabel": "Objetivo",
     "goalValue": "Profundizar mi experiencia en Salesforce, obtener mis certificaciones e incorporarme a un equipo donde Salesforce e infraestructura se cruzan.",
     "focusLabel": "Enfoque",
@@ -455,7 +455,7 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación a partir de diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación desde diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026."
       },
       {
         "q": "¿Qué tipos de contrato buscas?",
@@ -467,7 +467,7 @@
       },
       {
         "q": "¿Tienes alguna certificación Salesforce?",
-        "a": "Todavía no, pero los exámenes están reservados: Salesforce Platform Foundations el 29 de diciembre de 2026 y Platform Administrator el 30 de diciembre de 2026, después Platform App Builder y Platform Developer en 2027. Ya obtenidos y verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (registro nacional francés de cualificaciones, nivel grado; especialización Salesforce, 2025) y un perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos). El caso de estudio Legarant-AXG, donde el trigger Apex y el despliegue Heroku los realiza la misma persona, muestra de forma concreta lo que sé hacer."
+        "a": "Todavía no, pero los exámenes Salesforce Platform Foundations y Platform Administrator están previstos para finales de diciembre de 2026, después Platform App Builder y Platform Developer en 2027. Ya obtenidos y verificables: el título RNCP nivel 6 «Développeur Concepteur Logiciel» (registro nacional francés de cualificaciones, nivel grado; especialización Salesforce, 2025) y un perfil Trailhead activo (rango Expeditioner, 94 insignias, 59.775 puntos). El caso de estudio Legarant-AXG, donde el trigger Apex y el despliegue Heroku los realiza la misma persona, muestra de forma concreta lo que sé hacer."
       },
       {
         "q": "¿Dónde estás ubicada? ¿Qué modalidad de trabajo?",
@@ -491,12 +491,12 @@
     "lastAudit": "Última verificación: 31 de octubre de 2026 — Herramientas: axe-core (CI automatizado y paleta de comandos), pruebas manuales de navegación por teclado."
   },
   "availModal": {
-    "badge": "Entrevistas desde ya — Disponible a partir de diciembre de 2026",
+    "badge": "Entrevistas desde ya — Disponible desde diciembre de 2026",
     "badgeRoleSalesforce": "Administradora & Desarrolladora Salesforce",
-    "badgeRoleItops": "Administradora de Sistemas y Redes · Ingeniera DevOps",
+    "badgeRoleItops": "Administradora de Sistemas y Redes · orientada a DevOps",
     "title": "Mi disponibilidad",
     "delay": "Disponibilidad",
-    "delayValue": "Entrevistas desde ya · Disponible a partir de diciembre de 2026",
+    "delayValue": "Entrevistas desde ya · Disponible desde diciembre de 2026",
     "contracts": "Contratos",
     "contractValues": "Indefinido",
     "workMode": "Modalidades de trabajo",
@@ -596,7 +596,9 @@
     "itopsTitle": "Puesto de sistemas, redes y DevOps",
     "itopsBody": "Administración de Windows Server y Active Directory, supervisión, copias de seguridad, automatización y CI/CD.",
     "showProfile": "Mostrar este perfil",
-    "cv": "CV (PDF)"
+    "cv": "CV (PDF)",
+    "cvAts": "Versión ATS",
+    "cvAtsTitle": "CV en texto simple, legible por los sistemas de seguimiento de candidatos (ATS)"
   },
   "commandPalette": {
     "title": "Paleta de comandos",

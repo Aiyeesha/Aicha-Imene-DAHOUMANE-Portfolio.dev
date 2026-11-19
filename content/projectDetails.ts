@@ -5605,14 +5605,14 @@ export const projectDetails: ProjectDetails[] = [
     "locales": {
       "en": {
         "title": "Mass Workstation Deployment — 264 Dell Devices",
-        "heroSubtitle": "Certified data erasure, Sysprep imaging, and zero-touch Autopilot — 264 Dell devices deployed at MIDRANGE Group.",
+        "heroSubtitle": "Certified data erasure, Sysprep imaging and Windows Autopilot — 264 Dell devices deployed at MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Context",
             "paragraphs": [
-              "At MIDRANGE Group (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 Dell Optiplex desktop PCs for on-site staff and 200 Dell Latitude laptops for field users.",
-              "The two fleets required completely different workflows: the Optiplex machines were repurposed hardware that needed certified wiping before reuse, while the Latitude laptops were brand-new units destined for zero-touch remote deployment via Windows Autopilot."
+              "At MIDRANGE Group (Alternative Partner Solutions team), I owned the deployment of two device fleets for a client rollout: 64 repurposed Dell Optiplex desktops, and 200 new Dell devices (Optiplex and Latitude).",
+              "The two fleets required different workflows: the repurposed Optiplex machines needed certified wiping and a fresh image before reuse, while the new devices were enrolled through Windows Autopilot."
             ]
           },
           {
@@ -5635,17 +5635,17 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "title": "Phase 2 — Sysprep golden image (64 Dell Optiplex)",
-                "description": "A reference Optiplex was fully configured: Windows 11, latest drivers, corporate app suite, domain join settings. Sysprep was run (/oobe /generalize /shutdown) to prepare the image for deployment. A WinPE USB key was used to boot and capture the image with DISM (dism /Capture-Image). The resulting .wim file was deployed to all 63 remaining Optiplex machines via the same WinPE environment (dism /Apply-Image). Each machine then completed OOBE and joined the domain."
+                "description": "A reference Optiplex was fully configured: Windows 11, latest drivers, corporate app suite, domain join settings. Sysprep was run (/oobe /generalize /shutdown) to prepare the image for deployment. The image was captured, then deployed to the other Optiplex machines, by network boot (WDS/PXE) or from a WinPE USB key depending on the machine. Each machine then completed OOBE and joined the domain."
               },
               {
-                "title": "Phase 3 — Windows Autopilot via Dell ImageAssist (200 Dell Latitude)",
-                "description": "Each new Latitude was booted from a Dell ImageAssist USB key. ImageAssist automatically applied the deployment profile, pulled a fresh Windows image from the cloud, captured the hardware hash, and uploaded it to the Intune tenant. The machine rebooted into a clean, pre-registered OOBE. Users then only needed to enter their corporate email — Azure AD authenticated them, the Autopilot profile downloaded, and Intune silently pushed policies and apps in the background. Total IT intervention per Latitude after initial setup: under 5 minutes."
+                "title": "Phase 3 — Windows Autopilot (200 Dell Optiplex and Latitude)",
+                "description": "Each new device's hardware hash was captured (Dell ImageAssist) and registered in the Intune tenant. At first start, the user signed in with their corporate email: Azure AD authenticated them, the Autopilot profile was applied and Intune pushed policies and applications."
               }
             ],
             "title": "How it was done — 3 phases"
           },
           {
-            "body": "264 devices deployed on schedule with zero compliance gaps — certified erasure for all repurposed hardware, under 5 minutes of IT time per new device.",
+            "body": "264 devices deployed: certified erasure for all repurposed hardware, a common Sysprep image for the Optiplex fleet, and Autopilot enrollment for the new devices.",
             "type": "text",
             "title": "Impact"
           },
@@ -5653,7 +5653,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "64 Optiplex (Sysprep) + 200 Latitude (Autopilot)",
+                "note": "64 Optiplex (Sysprep) + 200 Optiplex/Latitude (Autopilot)",
                 "label": "Devices deployed",
                 "value": "264"
               },
@@ -5663,13 +5663,8 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "64"
               },
               {
-                "note": "After Intune profile and ImageAssist setup",
-                "label": "IT time per Latitude",
-                "value": "< 5 min"
-              },
-              {
-                "note": "No physical IT at user desks",
-                "label": "Zero-touch Autopilot",
+                "note": "Optiplex and Latitude, enrolled in Intune",
+                "label": "Autopilot devices",
                 "value": "200"
               }
             ],
@@ -5678,8 +5673,8 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Blancco and Autopilot are complementary, not competing tools: Blancco handles the compliance layer for repurposed hardware, Autopilot handles the zero-touch provisioning layer for new hardware.",
-              "Dell ImageAssist significantly reduces Autopilot setup time on large Dell orders: no need to run PowerShell per device, no pre-enrollment requirement.",
+              "Blancco and Autopilot are complementary, not competing tools: Blancco handles the compliance layer for repurposed hardware, Autopilot handles provisioning for new hardware.",
+              "Dell ImageAssist simplifies hardware hash capture for Autopilot on Dell devices: no PowerShell script to run by hand on each device.",
               "Sysprep golden images must be rebuilt for each hardware model — drivers are hardware-specific. A single image covering all Optiplex SKUs requires careful driver injection.",
               "Staggering Autopilot rollouts (batch of 20–30/day) is critical: it surfaces Intune policy failures early, before they affect hundreds of users.",
               "Generating Blancco certificates at the time of erasure (not retroactively) is the only way to guarantee an unbroken chain of custody for compliance audits."
@@ -5691,7 +5686,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "No documented fallback for a device failing mid-process — a Optiplex failing Blancco erasure (disk fault) or a Latitude failing Autopilot enrollment (hardware defect) was handled case-by-case, not as part of the repeatable process",
               "The rollout covers day-1 provisioning only: no defined re-provisioning path for a device that comes back later (employee offboarding, hardware swap, repair return) — that's a separate lifecycle process this project didn't scope",
-              "Zero-touch Autopilot assumes reliable internet at first boot to reach Intune — no offline or on-prem fallback was built for sites where that assumption might not hold",
+              "Autopilot assumes reliable internet at first boot to reach Intune — no offline or on-prem fallback was built for sites where that assumption might not hold",
               "20–30 devices/day was chosen to catch Intune policy failures early without slowing the rollout to a crawl — untested whether a larger batch size would have surfaced the same failures just as fast"
             ],
             "title": "Known Limitations & Decisions"
@@ -5722,14 +5717,14 @@ export const projectDetails: ProjectDetails[] = [
       },
       "fr": {
         "title": "Déploiement en masse de postes de travail — 264 appareils Dell",
-        "heroSubtitle": "Effacement certifié, image Sysprep et Autopilot zero-touch — 264 appareils Dell déployés chez MIDRANGE Group.",
+        "heroSubtitle": "Effacement certifié, image Sysprep et Windows Autopilot — 264 appareils Dell déployés chez MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Contexte",
             "paragraphs": [
-              "Chez MIDRANGE Group (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex pour les collaborateurs sur site et 200 laptops Dell Latitude pour les utilisateurs en mobilité.",
-              "Les deux flottes nécessitaient des workflows entièrement différents : les machines Optiplex étaient du matériel reconditionné qui devait être effacé de manière certifiée avant réutilisation, tandis que les laptops Latitude étaient du matériel neuf destiné à un déploiement zero-touch à distance via Windows Autopilot."
+              "Chez MIDRANGE Group (équipe Alternative Partner Solutions), j'ai pris en charge le déploiement de deux flottes d'appareils pour un client : 64 PC de bureau Dell Optiplex reconditionnés, et 200 appareils Dell neufs (Optiplex et Latitude).",
+              "Les deux flottes nécessitaient des workflows différents : les Optiplex reconditionnés devaient être effacés de manière certifiée puis réimagés avant réutilisation, tandis que les appareils neufs étaient enrôlés via Windows Autopilot."
             ]
           },
           {
@@ -5752,17 +5747,17 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "title": "Phase 2 — Image Sysprep dorée (64 Dell Optiplex)",
-                "description": "Une machine Optiplex de référence a été entièrement configurée : Windows 11, derniers pilotes, suite d'applications métier, paramètres de jonction au domaine. Sysprep a été exécuté (/oobe /generalize /shutdown) pour préparer l'image au déploiement. Une clé USB WinPE a été utilisée pour démarrer et capturer l'image avec DISM (dism /Capture-Image). Le fichier .wim résultant a été déployé sur les 63 autres Optiplex via le même environnement WinPE (dism /Apply-Image). Chaque machine a ensuite complété l'OOBE et rejoint le domaine."
+                "description": "Une machine Optiplex de référence a été entièrement configurée : Windows 11, derniers pilotes, suite d'applications métier, paramètres de jonction au domaine. Sysprep a été exécuté (/oobe /generalize /shutdown) pour préparer l'image au déploiement. L'image a été capturée puis déployée sur les autres Optiplex, par démarrage réseau (WDS/PXE) ou depuis une clé USB WinPE selon les machines. Chaque machine a ensuite complété l'OOBE et rejoint le domaine."
               },
               {
-                "title": "Phase 3 — Windows Autopilot via Dell ImageAssist (200 Dell Latitude)",
-                "description": "Chaque nouveau Latitude a été démarré depuis une clé USB Dell ImageAssist. ImageAssist a appliqué automatiquement le profil de déploiement, récupéré une image Windows fraîche depuis le cloud, capturé le hash matériel et l'a uploadé dans le tenant Intune. La machine a redémarré sur une OOBE propre et pré-enregistrée. Les utilisateurs n'avaient plus qu'à saisir leur email professionnel — Azure AD les authentifiait, le profil Autopilot se téléchargeait et Intune poussait silencieusement stratégies et applications en arrière-plan. Temps d'intervention IT par Latitude après la configuration initiale : moins de 5 minutes."
+                "title": "Phase 3 — Windows Autopilot (200 Dell Optiplex et Latitude)",
+                "description": "Le hash matériel de chaque appareil neuf a été capturé (Dell ImageAssist) et enregistré dans le tenant Intune. Au premier démarrage, l'utilisateur se connectait avec son e-mail professionnel : Azure AD l'authentifiait, le profil Autopilot s'appliquait et Intune poussait stratégies et applications."
               }
             ],
             "title": "Déroulement — 3 phases"
           },
           {
-            "body": "264 appareils déployés dans les délais sans écart de conformité — effacement certifié pour l'intégralité du matériel reconditionné, moins de 5 minutes d'intervention IT par poste neuf.",
+            "body": "264 appareils déployés : effacement certifié pour tout le matériel reconditionné, image Sysprep commune pour la flotte Optiplex et enrôlement Autopilot pour les appareils neufs.",
             "type": "text",
             "title": "Impact"
           },
@@ -5770,7 +5765,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "64 Optiplex (Sysprep) + 200 Latitude (Autopilot)",
+                "note": "64 Optiplex (Sysprep) + 200 Optiplex/Latitude (Autopilot)",
                 "label": "Appareils déployés",
                 "value": "264"
               },
@@ -5780,13 +5775,8 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "64"
               },
               {
-                "note": "Après configuration du profil Intune et ImageAssist",
-                "label": "Temps IT par Latitude",
-                "value": "< 5 min"
-              },
-              {
-                "note": "Aucune intervention physique de l'IT chez les utilisateurs",
-                "label": "Autopilot zero-touch",
+                "note": "Optiplex et Latitude, enrôlés dans Intune",
+                "label": "Appareils Autopilot",
                 "value": "200"
               }
             ],
@@ -5795,8 +5785,8 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Blancco et Autopilot sont complémentaires, pas concurrents : Blancco gère la couche conformité pour le matériel reconditionné, Autopilot gère la couche provisionnement zero-touch pour le matériel neuf.",
-              "Dell ImageAssist réduit significativement le temps de configuration Autopilot sur les grandes commandes Dell : pas besoin d'exécuter PowerShell appareil par appareil, pas de prérequis d'enrôlement préalable.",
+              "Blancco et Autopilot sont complémentaires, pas concurrents : Blancco gère la couche conformité pour le matériel reconditionné, Autopilot gère le provisionnement du matériel neuf.",
+              "Dell ImageAssist simplifie la capture des hashs matériels pour Autopilot sur les appareils Dell : pas de script PowerShell à lancer à la main sur chaque appareil.",
               "Les images Sysprep dorées doivent être reconstruites pour chaque modèle matériel — les pilotes sont spécifiques au hardware. Une seule image couvrant tous les SKU Optiplex nécessite une injection de pilotes soigneuse.",
               "Échelonner les déploiements Autopilot (lots de 20–30/jour) est critique : cela fait remonter les échecs de stratégie Intune tôt, avant qu'ils touchent des centaines d'utilisateurs.",
               "Générer les certificats Blancco au moment de l'effacement (pas rétroactivement) est le seul moyen de garantir une chaîne de traçabilité ininterrompue pour les audits de conformité."
@@ -5808,7 +5798,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Aucun repli documenté pour un poste en échec en cours de process — un Optiplex échouant à l'effacement Blancco (disque défectueux) ou un Latitude échouant à l'enrôlement Autopilot (défaut matériel) était traité au cas par cas, pas intégré au processus reproductible",
               "Le déploiement couvre uniquement la mise en service jour 1 : aucun parcours de re-provisioning défini pour un poste qui revient plus tard (départ collaborateur, échange matériel, retour SAV) — c'est un processus de cycle de vie séparé, hors périmètre de ce projet",
-              "L'Autopilot zero-touch suppose une connexion internet fiable au premier démarrage pour joindre Intune — aucun repli hors-ligne ou on-prem n'a été construit pour les sites où cette hypothèse pourrait ne pas tenir",
+              "Autopilot suppose une connexion internet fiable au premier démarrage pour joindre Intune — aucun repli hors-ligne ou on-prem n'a été construit pour les sites où cette hypothèse pourrait ne pas tenir",
               "Le rythme de 20-30 postes/jour a été choisi pour détecter tôt les échecs de policy Intune sans ralentir excessivement le déploiement — jamais vérifié si un lot plus large aurait révélé les mêmes échecs aussi vite"
             ],
             "title": "Limites connues & décisions"
@@ -5839,14 +5829,14 @@ export const projectDetails: ProjectDetails[] = [
       },
       "es": {
         "title": "Despliegue masivo de puestos de trabajo — 264 dispositivos Dell",
-        "heroSubtitle": "Borrado certificado, imagen Sysprep y Autopilot zero-touch: 264 dispositivos Dell desplegados en MIDRANGE Group.",
+        "heroSubtitle": "Borrado certificado, imagen Sysprep y Windows Autopilot: 264 dispositivos Dell desplegados en MIDRANGE Group.",
         "sections": [
           {
             "type": "text",
             "title": "Contexto",
             "paragraphs": [
-              "En MIDRANGE Group (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex para el personal in situ y 200 portátiles Dell Latitude para usuarios en movilidad.",
-              "Las dos flotas requerían flujos de trabajo completamente distintos: las máquinas Optiplex eran hardware reacondicionado que debía borrarse de forma certificada antes de su reutilización, mientras que los portátiles Latitude eran unidades nuevas destinadas a un despliegue remoto zero-touch vía Windows Autopilot."
+              "En MIDRANGE Group (equipo Alternative Partner Solutions), lideré el despliegue de dos flotas de equipos para un cliente: 64 PC de sobremesa Dell Optiplex reacondicionados y 200 equipos Dell nuevos (Optiplex y Latitude).",
+              "Las dos flotas requerían flujos de trabajo distintos: los Optiplex reacondicionados debían borrarse de forma certificada y reinstalarse con una imagen antes de reutilizarse, mientras que los equipos nuevos se inscribían mediante Windows Autopilot."
             ]
           },
           {
@@ -5869,17 +5859,17 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "title": "Fase 2 — Imagen dorada con Sysprep (64 Dell Optiplex)",
-                "description": "Se configuró completamente un Optiplex de referencia: Windows 11, últimos controladores, suite de aplicaciones corporativas, ajustes de unión al dominio. Se ejecutó Sysprep (/oobe /generalize /shutdown) para preparar la imagen para su despliegue. Se utilizó una llave USB WinPE para arrancar y capturar la imagen con DISM (dism /Capture-Image). El archivo .wim resultante se desplegó en los 63 Optiplex restantes mediante el mismo entorno WinPE (dism /Apply-Image). Cada máquina completó después el OOBE y se unió al dominio."
+                "description": "Se configuró completamente un Optiplex de referencia: Windows 11, últimos controladores, suite de aplicaciones corporativas, ajustes de unión al dominio. Se ejecutó Sysprep (/oobe /generalize /shutdown) para preparar la imagen para su despliegue. La imagen se capturó y se desplegó en los demás Optiplex, mediante arranque en red (WDS/PXE) o desde una llave USB WinPE según el equipo. Cada máquina completó después el OOBE y se unió al dominio."
               },
               {
-                "title": "Fase 3 — Windows Autopilot vía Dell ImageAssist (200 Dell Latitude)",
-                "description": "Cada Latitude nuevo se arrancó desde una llave USB de Dell ImageAssist. ImageAssist aplicó automáticamente el perfil de despliegue, descargó una imagen de Windows actualizada desde la nube, capturó el hash de hardware y lo subió al tenant de Intune. El equipo reinició en un OOBE limpio y pre-registrado. Los usuarios solo tenían que introducir su correo corporativo — Azure AD los autenticaba, el perfil de Autopilot se descargaba e Intune desplegaba silenciosamente políticas y aplicaciones en segundo plano. Tiempo total de intervención de IT por Latitude tras la configuración inicial: menos de 5 minutos."
+                "title": "Fase 3 — Windows Autopilot (200 Dell Optiplex y Latitude)",
+                "description": "El hash de hardware de cada equipo nuevo se capturó (Dell ImageAssist) y se registró en el tenant de Intune. En el primer arranque, el usuario iniciaba sesión con su correo corporativo: Azure AD lo autenticaba, se aplicaba el perfil de Autopilot e Intune desplegaba políticas y aplicaciones."
               }
             ],
             "title": "Cómo se hizo — 3 fases"
           },
           {
-            "body": "264 dispositivos desplegados en plazo sin brechas de conformidad — borrado certificado para todo el hardware reacondicionado, menos de 5 minutos de intervención de IT por equipo nuevo.",
+            "body": "264 dispositivos desplegados: borrado certificado para todo el hardware reacondicionado, imagen Sysprep común para la flota Optiplex e inscripción en Autopilot para los equipos nuevos.",
             "type": "text",
             "title": "Impacto"
           },
@@ -5887,7 +5877,7 @@ export const projectDetails: ProjectDetails[] = [
             "type": "metrics",
             "items": [
               {
-                "note": "64 Optiplex (Sysprep) + 200 Latitude (Autopilot)",
+                "note": "64 Optiplex (Sysprep) + 200 Optiplex/Latitude (Autopilot)",
                 "label": "Equipos desplegados",
                 "value": "264"
               },
@@ -5897,13 +5887,8 @@ export const projectDetails: ProjectDetails[] = [
                 "value": "64"
               },
               {
-                "note": "Tras la configuración del perfil Intune e ImageAssist",
-                "label": "Tiempo de IT por Latitude",
-                "value": "< 5 min"
-              },
-              {
-                "note": "Sin intervención física de IT en los puestos de usuario",
-                "label": "Autopilot zero-touch",
+                "note": "Optiplex y Latitude, inscritos en Intune",
+                "label": "Equipos Autopilot",
                 "value": "200"
               }
             ],
@@ -5912,8 +5897,8 @@ export const projectDetails: ProjectDetails[] = [
           {
             "type": "bullets",
             "items": [
-              "Blancco y Autopilot son complementarios, no competidores: Blancco gestiona la capa de conformidad para el hardware reacondicionado, Autopilot gestiona la capa de provisión zero-touch para el hardware nuevo.",
-              "Dell ImageAssist reduce significativamente el tiempo de configuración de Autopilot en grandes pedidos Dell: no es necesario ejecutar PowerShell por dispositivo, ni requiere inscripción previa.",
+              "Blancco y Autopilot son complementarios, no competidores: Blancco gestiona la capa de conformidad para el hardware reacondicionado, Autopilot gestiona el aprovisionamiento del hardware nuevo.",
+              "Dell ImageAssist simplifica la captura de los hashes de hardware para Autopilot en equipos Dell: no hay que ejecutar un script de PowerShell a mano en cada equipo.",
               "Las imágenes doradas de Sysprep deben reconstruirse para cada modelo de hardware — los controladores son específicos del hardware. Una única imagen que cubra todos los SKU de Optiplex requiere una inyección cuidadosa de controladores.",
               "Escalonar los despliegues de Autopilot (lotes de 20–30/día) es crítico: permite detectar fallos de política de Intune de forma temprana, antes de que afecten a cientos de usuarios.",
               "Generar los certificados Blancco en el momento del borrado (no de forma retroactiva) es la única forma de garantizar una cadena de custodia ininterrumpida para las auditorías de conformidad."
@@ -5925,7 +5910,7 @@ export const projectDetails: ProjectDetails[] = [
             "items": [
               "Sin repliegue documentado para un equipo que falla a mitad de proceso — un Optiplex que falla en el borrado Blancco (disco defectuoso) o un Latitude que falla en la inscripción Autopilot (defecto de hardware) se gestionaba caso por caso, sin formar parte del proceso repetible",
               "El despliegue cubre solo la puesta en marcha del día 1: no hay un proceso de re-aprovisionamiento definido para un equipo que vuelve más tarde (baja de empleado, cambio de hardware, retorno de reparación) — es un proceso de ciclo de vida aparte, fuera del alcance de este proyecto",
-              "El Autopilot zero-touch asume una conexión a internet fiable en el primer arranque para llegar a Intune — no se construyó ningún repliegue offline u on-prem para sedes donde esa hipótesis pudiera no cumplirse",
+              "Autopilot asume una conexión a internet fiable en el primer arranque para llegar a Intune — no se construyó ningún repliegue offline u on-prem para sedes donde esa hipótesis pudiera no cumplirse",
               "El ritmo de 20-30 equipos/día se eligió para detectar pronto los fallos de política de Intune sin ralentizar demasiado el despliegue — nunca se verificó si un lote mayor habría revelado los mismos fallos igual de rápido"
             ],
             "title": "Límites conocidos y decisiones"

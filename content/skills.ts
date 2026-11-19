@@ -44,7 +44,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
         {
           title: "Soft skills & manière de travailler",
           items: [
-            "Français (natif), Anglais (C1+ à l'oral, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
+            "Français (natif), Anglais (C1+ en compréhension orale, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
             "Documentation technique claire",
             "Communication active avec des interlocuteurs non techniques",
             "Collaboration à distance (multi-fuseaux horaires)",
@@ -89,7 +89,7 @@ export function getSkillGroups(locale: Locale, track: Track): SkillGroup[] {
       {
         title: "Langues & collaboration",
         items: [
-          "Français (natif), Anglais (C1+ à l'oral, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
+          "Français (natif), Anglais (C1+ en compréhension orale, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
           "Collaboration à distance",
           "Communication structurée",
           "Autonomie",

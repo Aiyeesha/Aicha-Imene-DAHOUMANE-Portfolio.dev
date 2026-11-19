@@ -5,7 +5,7 @@
 // "Open to work" badge of the hero, and the modal it opens.
 // Two lines: the target role of the active track (same titles as the CVs:
 // "Administratrice & Développeuse Salesforce" / "Administratrice Systèmes &
-// Réseaux · Ingénieure DevOps"), then the availability. The track comes
+// Réseaux · orientée DevOps"), then the availability. The track comes
 // from the `track` cookie read on the server, so the right role is in the
 // first HTML, without a flash.
 //

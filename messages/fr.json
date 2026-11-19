@@ -20,12 +20,12 @@
   "hero": {
     "title": "Développeuse Salesforce & Infrastructure",
     "subtitle": "Apex · LWC · Intégrations · Sysadmin",
-    "intro_salesforce": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal configuré, un déploiement sans filet. J'ai pratiqué les trois — Salesforce, systèmes et réseaux, CI/CD — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
-    "intro_itops": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal configuré, un déploiement sans filet. J'ai pratiqué les trois — Salesforce, systèmes et réseaux, CI/CD — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
+    "intro_salesforce": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal configuré, un déploiement sans filet. J'ai pratiqué les trois — Salesforce, systèmes et réseaux, CI/CD — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
+    "intro_itops": "Sur un site industriel, en énergie, en santé ou en logistique, un incident traverse rarement une seule couche : une intégration qui casse, un serveur mal configuré, un déploiement sans filet. J'ai pratiqué les trois — Salesforce, systèmes et réseaux, CI/CD — et c'est ce qui me permet de faire le lien entre les équipes qui les portent.",
     "avatar_alt": "Illustration d'Aïcha Imène DAHOUMANE à son poste de travail, entourée des logos Salesforce, Linux et des outils qu'elle utilise",
     "title_salesforce": "Développeuse Salesforce & Infrastructure",
     "subtitle_salesforce": "Du CRM aux serveurs, réseaux et pipelines qui l'entourent.",
-    "title_itops": "Administratrice Systèmes & Réseaux · Ingénieure DevOps",
+    "title_itops": "Administratrice Systèmes & Réseaux · orientée DevOps",
     "subtitle_itops": "Des postes et serveurs aux réseaux et aux pipelines — jusqu'au CRM Salesforce qu'ils font tourner.",
     "value_salesforce": "Apex · Flows · LWC · CI/CD — pensé pour durer.",
     "value_itops": "Infrastructure · Automatisation · CI/CD — pensé pour scaler.",
@@ -40,7 +40,7 @@
     "proof3": "Documenté & maintenable",
     "availability": "CDI",
     "credentialsSummary": "RNCP6 · Trailhead Expeditioner",
-    "startHere": "Commencer ici :",
+    "startHere": "Commencer ici :",
     "switchToSalesforce": "Voir le profil Salesforce →",
     "switchToItops": "Voir le profil IT Ops →"
   },
@@ -97,8 +97,8 @@
     "profile_subtitle": "Des systèmes & réseaux au développement Salesforce",
     "bridge_title": "Où mes deux mondes se rencontrent",
     "bridge_points": [
-      "Legarant-AXG (projet fil rouge du titre RNCP 6) : j'ai écrit les endpoints Apex REST côté Salesforce et construit l'application Heroku qui les consomme — API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect, jusqu'au runbook de déploiement.",
-      "Porter les deux côtés supprime l'aller-retour entre équipes Salesforce et DevOps : le trigger Apex d'External ID et la Matching Rule bloquent les doublons à la source, et l'environnement de staging existait avant la première ligne d'Apex."
+      "Legarant-AXG (projet fil rouge du titre RNCP 6) : j'ai écrit les endpoints Apex REST côté Salesforce et construit l'application Heroku qui les consomme — API Node.js/PostgreSQL, deux environnements isolés reliés par une pipeline Heroku, Heroku Connect, jusqu'au runbook de déploiement.",
+      "Porter les deux côtés supprime l'aller-retour entre équipes Salesforce et DevOps : le trigger Apex d'External ID et la Matching Rule bloquent les doublons à la source, et l'environnement de staging existait avant la première ligne d'Apex."
     ],
     "bridge_cta": "Voir l'étude de cas Legarant-AXG"
   },
@@ -112,7 +112,7 @@
     "send": "Envoyer",
     "sending": "Envoi…",
     "success": "Message envoyé.",
-    "error": "Erreur :",
+    "error": "Erreur :",
     "privacyNote": "Votre message est envoyé de façon sécurisée. Évitez de partager des secrets (mots de passe, tokens).",
     "otherWays": "Autres moyens",
     "bookCall": "Réserver un appel",
@@ -137,7 +137,7 @@
       "policy_not_accepted": "Vous devez accepter la politique de confidentialité pour envoyer un message.",
       "too_many_links": "Trop de liens dans le message."
     },
-    "homeIntro": "Un email est le moyen le plus rapide de me joindre ; LinkedIn et le CV sont accessibles en un clic.",
+    "homeIntro": "Un email est le moyen le plus rapide de me joindre ; LinkedIn et le CV sont accessibles en un clic.",
     "homeMethodsTitle": "Liens rapides",
     "homeCv": "Télécharger le CV",
     "homeLinkedIn": "LinkedIn",
@@ -151,7 +151,7 @@
     "topicItOps": "Poste IT Ops / DevOps / Infrastructure",
     "topicAvailability": "Disponibilité / entretien",
     "topicOther": "Autre",
-    "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
+    "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
     "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment.",
     "acceptPolicyAria": "J'accepte la politique de confidentialité",
     "acceptPolicyPrefix": "J'ai lu et j'accepte la",
@@ -161,7 +161,7 @@
       "title": "Le poste (facultatif)",
       "subtitle": "Ces informations m'aident à vous répondre précisément dès le premier message.",
       "roleLabel": "Intitulé du poste",
-      "rolePlaceholder": "Ex. : Développeuse Salesforce, Ingénieure systèmes…",
+      "rolePlaceholder": "Ex. : Développeuse Salesforce, Ingénieure systèmes…",
       "contractLabel": "Type de contrat",
       "contractPlaceholder": "Sélectionner un type de contrat",
       "contract": {
@@ -172,11 +172,11 @@
         "other": "Autre / à préciser"
       },
       "workplaceLabel": "Lieu et mode de travail",
-      "workplacePlaceholder": "Ex. : Paris, hybride 2 j/semaine",
+      "workplacePlaceholder": "Ex. : Paris, hybride 2 j/semaine",
       "startLabel": "Prise de poste souhaitée",
       "startPlaceholder": "Sélectionner une date",
       "start": {
-        "asap": "Dès que possible (à partir de décembre 2026)",
+        "asap": "Dès que possible (dès décembre 2026)",
         "q1_2027": "Premier trimestre 2027",
         "later": "Plus tard",
         "tbd": "À définir"
@@ -187,7 +187,7 @@
   "blog": {
     "card_tutorials_kicker": "Nouveau",
     "card_tutorials_title": "Lire les tutoriels",
-    "card_tutorials_desc": "Articles orientés implémentation : Salesforce, CI/CD, Next.js.",
+    "card_tutorials_desc": "Articles orientés implémentation : Salesforce, CI/CD, Next.js.",
     "card_topics_kicker": "Thématiques",
     "card_topics_desc": "Je publie des notes pratiques, patterns et checklists.",
     "card_cta": "Ouvrir le blog",
@@ -199,7 +199,7 @@
   "blogIndex": {
     "meta": {
       "title": "Blog & Tutoriels — Aïcha Imène DAHOUMANE",
-      "description": "Tutoriels Salesforce, systèmes & réseaux et DevOps : guides pas à pas, cas concrets et retours d'expérience d'une administratrice & développeuse Salesforce."
+      "description": "Tutoriels Salesforce, systèmes & réseaux et DevOps : guides pas à pas, cas concrets et retours d'expérience d'une administratrice & développeuse Salesforce."
     },
     "kicker": "Blog & tutoriels",
     "title": "Articles",
@@ -237,7 +237,7 @@
     "updatedOn": "Mis à jour le",
     "author": "À propos de l'auteure",
     "authorRoleSalesforce": "Administratrice & Développeuse Salesforce",
-    "authorRoleItops": "Administratrice systèmes & réseaux · Ingénieure DevOps",
+    "authorRoleItops": "Administratrice systèmes & réseaux · orientée DevOps",
     "authorBioSalesforce": "Développeuse Salesforce avec un background en infrastructures IT — je construis des solutions fiables et maintenables avec Apex, Flows, LWC et CI/CD.",
     "authorBioItops": "Administratrice systèmes & réseaux orientée DevOps — monitoring, automatisation, sécurisation et infrastructure résiliente.",
     "authorProfileLink": "Voir le profil complet →",
@@ -246,7 +246,7 @@
     "share": "Partager",
     "shareLinkedIn": "Partager sur LinkedIn",
     "copyLink": "Copier le lien",
-    "copied": "Copié !"
+    "copied": "Copié !"
   },
   "blogToc": {
     "title": "Sommaire",
@@ -289,9 +289,9 @@
   },
   "metadata": {
     "title": "Aïcha Imène DAHOUMANE — Salesforce · Systèmes & Réseaux · DevOps",
-    "description": "Salesforce · Systèmes & Réseaux · DevOps en Île-de-France. Entretiens dès maintenant, disponible à partir de décembre 2026, en CDI.",
+    "description": "Salesforce · Systèmes & Réseaux · DevOps en Île-de-France. Entretiens dès maintenant, disponible dès décembre 2026, en CDI.",
     "titleItops": "Aïcha Imène DAHOUMANE — Admin Systèmes & Réseaux · DevOps",
-    "descriptionItops": "Administratrice systèmes & réseaux et ingénieure DevOps en Île-de-France : infrastructure, automatisation, CI/CD. Disponible à partir de décembre 2026."
+    "descriptionItops": "Administratrice systèmes & réseaux orientée DevOps en Île-de-France : infrastructure, automatisation, CI/CD. Disponible dès décembre 2026."
   },
   "testimonials": {
     "kicker": "Témoignages",
@@ -315,12 +315,12 @@
   "services": {
     "discuss": "En parler pour un poste",
     "maturityTitle": "Maturité d'exploitation",
-    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (site, cache, formulaire de contact, intégrité du contenu), relevé chaque jour, avec latence et disponibilité sur 30 jours — pas une page statique. Le colophon détaille comment il est construit et sécurisé : CSP à nonce, en-têtes de sécurité, limites de débit, audits Lighthouse et axe en intégration continue, dépendances surveillées.",
-    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Pont Salesforce ⇄ Infra ci-dessus). Ce portfolio en est la preuve à l'échelle : /status expose la santé réelle de ses services, relevée chaque jour, et le colophon détaille ses choix de sécurité et son intégration continue.",
+    "maturityBody": "Ce portfolio est lui-même exploité comme un produit en production, pas juste montré : /status expose l'état réel de ses services (site, cache, formulaire de contact, intégrité du contenu), relevé chaque jour, avec latence et disponibilité sur 30 jours — pas une page statique. Le colophon détaille comment il est construit et sécurisé : CSP à nonce, en-têtes de sécurité, limites de débit, audits Lighthouse et axe en intégration continue, dépendances surveillées.",
+    "maturityBodySalesforce": "La même discipline s'applique à mes livraisons Salesforce : pipeline CI/CD avec validations Apex automatiques et déploiements traçables sandbox → production (voir le projet Legarant-AXG, qui relie Salesforce et l'infrastructure). Ce portfolio en est la preuve à l'échelle : /status expose la santé réelle de ses services, relevée chaque jour, et le colophon détaille ses choix de sécurité et son intégration continue.",
     "maturityStatusCta": "Voir le statut du site",
     "maturityChangelogCta": "Voir comment ce site est construit",
     "sectorsTitle": "Secteurs abordés dans mes études de cas",
-    "sectorsBody": "Mes projets de formation (titre RNCP 6, OpenClassrooms) reposent sur des scénarios d'entreprise fictifs mais réalistes : chacun m'a obligée à tenir compte des contraintes de son secteur en matière de conformité, de traçabilité et de tolérance à l'erreur.",
+    "sectorsBody": "Mes projets de formation (titre RNCP 6, OpenClassrooms) reposent sur des scénarios d'entreprise fictifs mais réalistes : chacun m'a obligée à tenir compte des contraintes de son secteur en matière de conformité, de traçabilité et de tolérance à l'erreur.",
     "sectors": [
       {
         "label": "Luxe & Mode",
@@ -332,7 +332,7 @@
       },
       {
         "label": "Télécom",
-        "note": "Application Lightning pour les équipes commerciales (Avenir Telecom) — Quick Actions, Aura, modèle de partage."
+        "note": "Application Lightning pour les équipes commerciales (Avenir Télécom) — Quick Actions, Aura, modèle de partage."
       },
       {
         "label": "Formation & EdTech",
@@ -358,34 +358,34 @@
     "kicker": "Profil",
     "title": "Des systèmes & réseaux au développement Salesforce",
     "p1": "Développeuse Salesforce avec 3 ans d'expérience en entreprise et un solide background en infrastructures IT — des fondations qui font la différence sur des projets complexes.",
-    "p2": "J'ai commencé ma carrière côté infrastructure — deux stages d'un mois chez MIDRANGE Group (entre février et mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 264 postes Dell (dont 200 via Windows Autopilot), administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), PfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
+    "p2": "J'ai commencé ma carrière côté infrastructure — deux stages d'un mois chez MIDRANGE Group (entre février et mai 2023) en tant qu'administratrice systèmes et réseaux junior : support de plus de 50 postes, déploiement de 264 postes Dell (dont 200 via Windows Autopilot), administration Windows Server 2022 (AD DS, DNS, DHCP, GPO), pfSense/Squid, Acronis, Datto RMM. Cette expérience de terrain m'a appris comment les systèmes se comportent dans la réalité et pourquoi des fondations robustes sont essentielles.",
     "p3": "D'oct. 2023 à sept. 2025, j'ai travaillé comme développeuse Salesforce chez LD Digitales (remote) tout en obtenant le titre Développeur Concepteur Logiciel (niveau 6 RNCP) chez OpenClassrooms. J'ai construit et maintenu 10+ classes Apex, créé 20+ Flows (réduction d'environ 30 % de la charge manuelle), conçu des LWC réutilisables et mis en place des pipelines CI/CD avec Salesforce CLI.",
     "p4": "Je donne le meilleur de moi-même dans des environnements où l'autonomie, la transparence et l'apprentissage continu sont valorisés. Mon objectif est de contribuer à des projets Salesforce et IT Ops ambitieux — en France ou à l'international, en équipe distribuée.",
     "atAGlanceTitle": "En bref",
     "basedInLabel": "Basée à",
     "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site",
     "languagesLabel": "Langues",
-    "languagesValue": "Français (natif), Anglais (C1+ à l'oral, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
+    "languagesValue": "Français (natif), Anglais (C1+ en compréhension orale, B2 en lecture — Linguaskill Business, Cambridge), Espagnol (B1), Italien (A1)",
     "rolesLabel": "Postes visés",
     "rolesValue": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValueSalesforce": "Administratrice & Développeuse Salesforce · Administratrice systèmes & réseaux · Ingénieure DevOps",
     "rolesValueItops": "Administratrice systèmes & réseaux · Ingénieure DevOps · Administratrice & Développeuse Salesforce",
     "availabilityLabel": "Disponibilité",
-    "availabilityValue": "Disponible à partir de décembre 2026 · Entretiens dès maintenant · CDI · Tous secteurs",
+    "availabilityValue": "Disponible dès décembre 2026 · Entretiens dès maintenant · CDI · Tous secteurs",
     "goalLabel": "Objectif",
     "goalValue": "Approfondir mon expertise Salesforce, préparer mes certifications et rejoindre une équipe où Salesforce et l'infrastructure se croisent.",
     "focusLabel": "Focus",
     "focusValueSalesforce": "Apex · Flows · CI/CD · Qualité · Documentation",
     "focusValueItOps": "Supervision · Runbooks · Automatisation · Sauvegardes",
     "readMore": "Lire la suite",
-    "p1_salesforce": "Développeuse & administratrice Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
+    "p1_salesforce": "Développeuse & administratrice Salesforce : je conçois des solutions fiables, sécurisées et maintenables, avec une attention forte à l'expérience utilisateur et à la qualité de livraison.",
     "p2_salesforce": "Je travaille sur Apex, Flows, modèles de données, sécurité (permission sets, sharing), et sur des pipelines CI/CD (Salesforce CLI, GitHub Actions) pour livrer proprement en production.",
-    "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
-    "p4_salesforce": "En CDI chez LD Digitales d'octobre 2025 à novembre 2026, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les examens Salesforce Platform Foundations et Platform Administrator sont planifiés les 29 et 30 décembre 2026, suivis de Platform App Builder et Platform Developer en 2027.",
-    "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE Group (entre février et mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, trié et suivi 316 tickets de support dans Autotask (dont une partie résolue moi-même à distance) et déployé 264 postes Dell (64 réimagés depuis une image Sysprep après effacement certifié NIST 800-88, 200 via Windows Autopilot).",
+    "p3_salesforce": "Mon background systèmes & DevOps me permet d'aborder Salesforce avec une logique d'exploitation : observabilité, gestion des risques, documentation et automatisation — pour des solutions qui tiennent dans la durée.",
+    "p4_salesforce": "En CDI chez LD Digitales d'octobre 2025 à novembre 2026, après deux ans d'alternance dans la même entreprise : 3 ans d'expérience Salesforce en production. Le projet Legarant-AXG (Heroku Connect, gestion d'environnements, mise en prod tracée) reste la preuve la plus directe de ce croisement Salesforce/infra : pas une couche applicative posée sur une infra que quelqu'un d'autre gère, mais la même personne des deux côtés. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel », spécialisation Salesforce (OpenClassrooms, 2025), et un profil Trailhead actif (rang Expeditioner, 94 badges) — les examens Salesforce Platform Foundations et Platform Administrator sont prévus fin décembre 2026, suivis de Platform App Builder et Platform Developer en 2027.",
+    "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE Group (entre février et mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, trié et suivi 316 tickets de support dans Autotask (dont une partie résolue moi-même à distance) et déployé 264 postes Dell (64 réimagés depuis une image Sysprep après effacement certifié NIST 800-88, 200 via Windows Autopilot).",
     "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
-    "p3_itops": "Je garde une attention particulière à la continuité de service : 85 alertes de sauvegarde Acronis triées pendant les stages.",
-    "p4_itops": "Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026 — les compétences IT Ops & DevOps, acquises en stages chez MIDRANGE Group puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
+    "p3_itops": "Je garde une attention particulière à la continuité de service : 85 alertes de sauvegarde Acronis triées pendant les stages.",
+    "p4_itops": "Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026 — les compétences IT Ops & DevOps, acquises en stages chez MIDRANGE Group puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
   },
   "mdx": {
     "copy": "Copier",
@@ -410,71 +410,71 @@
   "privacy": {
     "title": "Politique de confidentialité",
     "analyticsTitle": "Mesure d'audience",
-    "analyticsBody": "Ce site n'utilise aucun outil de mesure d'audience ni de suivi des visiteurs : aucune statistique de navigation n'est collectée. Les performances du site sont contrôlées uniquement en laboratoire, lors du développement (Lighthouse CI), sans aucune donnée sur les visiteurs.",
+    "analyticsBody": "Ce site n'utilise aucun outil de mesure d'audience ni de suivi des visiteurs : aucune statistique de navigation n'est collectée. Les performances du site sont contrôlées uniquement en laboratoire, lors du développement (Lighthouse CI), sans aucune donnée sur les visiteurs.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "Aucun cookie marketing ni de suivi n'est déposé. La préférence de langue est reflétée dans l'URL (ex. /en/, /fr/) et non dans un cookie. Un cookie fonctionnel « track » (durée : 1 an) et une entrée équivalente dans le stockage local du navigateur mémorisent uniquement le profil affiché (Salesforce ou IT Ops) ; ils ne contiennent aucune donnée personnelle. Vercel peut déposer des cookies techniques à des fins d'infrastructure (CDN, protection DDoS). La prise de rendez-vous se fait sur la page de réservation Proton Calendar, ouverte dans un nouvel onglet : aucun script tiers n'est chargé sur ce site, et la politique de confidentialité de Proton s'applique sur sa page.",
+    "cookiesBody": "Aucun cookie marketing ni de suivi n'est déposé. La préférence de langue est reflétée dans l'URL (ex. /en/, /fr/) et non dans un cookie. Un cookie fonctionnel « track » (durée : 1 an) et une entrée équivalente dans le stockage local du navigateur mémorisent uniquement le profil affiché (Salesforce ou IT Ops) ; ils ne contiennent aucune donnée personnelle. Vercel peut déposer des cookies techniques à des fins d'infrastructure (CDN, protection DDoS). La prise de rendez-vous se fait sur la page de réservation Proton Calendar, ouverte dans un nouvel onglet : aucun script tiers n'est chargé sur ce site, et la politique de confidentialité de Proton s'applique sur sa page.",
     "formTitle": "Données du formulaire de contact",
-    "formBody": "Lorsque vous envoyez le formulaire de contact, les données que vous saisissez — nom, email, sujet, message — sont transmises par email via Formhook (service d'acheminement d'emails hébergé dans l'Union européenne) afin de traiter votre demande. Le site n'en conserve aucune copie sur ses serveurs. Votre adresse IP est utilisée uniquement de façon transitoire pour limiter les envois abusifs (anti-spam) et n'est pas conservée avec votre message. Le formulaire de témoignage, accessible uniquement sur invitation, fonctionne de la même façon : nom, rôle, entreprise, contexte de collaboration, message et lien de photo facultatif sont transmis par email via Formhook, sans copie conservée sur le site.",
-    "retention": "Conservation : le site ne stocke ni les messages de contact ni les témoignages. Une fois transmis par email, votre message est conservé dans la boîte de réception selon les pratiques habituelles de messagerie ; vous pouvez en demander la suppression à tout moment en me contactant.",
+    "formBody": "Lorsque vous envoyez le formulaire de contact, les données que vous saisissez — nom, email, sujet, message — sont transmises par email via Formhook (service d'acheminement d'emails hébergé dans l'Union européenne) afin de traiter votre demande. Le site n'en conserve aucune copie sur ses serveurs. Votre adresse IP est utilisée uniquement de façon transitoire pour limiter les envois abusifs (anti-spam) et n'est pas conservée avec votre message. Le formulaire de témoignage, accessible uniquement sur invitation, fonctionne de la même façon : nom, rôle, entreprise, contexte de collaboration, message et lien de photo facultatif sont transmis par email via Formhook, sans copie conservée sur le site.",
+    "retention": "Conservation : le site ne stocke ni les messages de contact ni les témoignages. Une fois transmis par email, votre message est conservé dans la boîte de réception selon les pratiques habituelles de messagerie ; vous pouvez en demander la suppression à tout moment en me contactant.",
     "rightsTitle": "Vos droits",
     "rightsBody": "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données personnelles, ainsi que d'un droit d'opposition.",
-    "contact": "Pour exercer vos droits : {email}",
+    "contact": "Pour exercer vos droits : {email}",
     "processorsTitle": "Sous-traitants",
-    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Formhook (acheminement par email des formulaires de contact et de témoignage — Union européenne), Vercel (hébergement et CDN — États-Unis), Upstash (limitation de débit anti-spam, compteur par adresse IP pseudonymisée — données éphémères ; historique de disponibilité et tableau des incidents du site, sans donnée de visiteur). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD.",
-    "transfersBody": "L'hébergeur Vercel Inc. est établi aux États-Unis : les données techniques de connexion (adresse IP, requêtes) peuvent y être traitées. Ce transfert est encadré par le Data Privacy Framework UE–États-Unis, auquel Vercel est certifiée (décision d'adéquation de la Commission européenne du 10 juillet 2023), et, à titre complémentaire, par les clauses contractuelles types de la Commission européenne prévues dans l'accord de traitement des données (DPA) de Vercel. Les messages des formulaires sont acheminés par Formhook, hébergé dans l'Union européenne.",
+    "processorsBody": "Les données collectées via ce site sont traitées par les sous-traitants suivants : Formhook (acheminement par email des formulaires de contact et de témoignage — Union européenne), Vercel (hébergement et CDN — États-Unis), Upstash (limitation de débit anti-spam, compteur par adresse IP pseudonymisée — données éphémères ; historique de disponibilité et tableau des incidents du site, sans donnée de visiteur). Ces prestataires agissent en qualité de sous-traitants au sens de l'article 28 du RGPD.",
+    "transfersBody": "L'hébergeur Vercel Inc. est établi aux États-Unis : les données techniques de connexion (adresse IP, requêtes) peuvent y être traitées. Ce transfert est encadré par le Data Privacy Framework UE–États-Unis, auquel Vercel est certifiée (décision d'adéquation de la Commission européenne du 10 juillet 2023), et, à titre complémentaire, par les clauses contractuelles types de la Commission européenne prévues dans l'accord de traitement des données (DPA) de Vercel. Les messages des formulaires sont acheminés par Formhook, hébergé dans l'Union européenne.",
     "transfersTitle": "Transferts hors de l'Union européenne",
-    "legalBasisCookie": "Cookie fonctionnel « track » : il mémorise uniquement le profil affiché, à votre demande ; strictement nécessaire au service que vous sollicitez, il est dispensé de consentement (article 82 de la loi Informatique et Libertés).",
-    "legalBasisSecurity": "Limitation de débit (adresse IP pseudonymisée, conservée quelques minutes) et journaux techniques d'hébergement : intérêt légitime à assurer la sécurité du site et à prévenir les abus (article 6.1.f).",
-    "legalBasisTestimonial": "Formulaire de témoignage : votre consentement (article 6.1.a), que vous pouvez retirer à tout moment ; le témoignage, s'il a été publié, est alors retiré du site.",
-    "legalBasisContact": "Formulaire de contact : intérêt légitime à répondre aux demandes qui me sont adressées (article 6.1.f du RGPD) ; lorsque l'échange porte sur un recrutement, mesures précontractuelles prises à votre demande (article 6.1.b).",
+    "legalBasisCookie": "Cookie fonctionnel « track » : il mémorise uniquement le profil affiché, à votre demande ; strictement nécessaire au service que vous sollicitez, il est dispensé de consentement (article 82 de la loi Informatique et Libertés).",
+    "legalBasisSecurity": "Limitation de débit (adresse IP pseudonymisée, conservée quelques minutes) et journaux techniques d'hébergement : intérêt légitime à assurer la sécurité du site et à prévenir les abus (article 6.1.f).",
+    "legalBasisTestimonial": "Formulaire de témoignage : votre consentement (article 6.1.a), que vous pouvez retirer à tout moment ; le témoignage, s'il a été publié, est alors retiré du site.",
+    "legalBasisContact": "Formulaire de contact : intérêt légitime à répondre aux demandes qui me sont adressées (article 6.1.f du RGPD) ; lorsque l'échange porte sur un recrutement, mesures précontractuelles prises à votre demande (article 6.1.b).",
     "legalBasisTitle": "Bases légales des traitements",
     "lastUpdated": "31 octobre 2026",
     "controllerTitle": "Responsable du traitement",
     "contactFallback": "le formulaire de contact du site",
-    "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, à titre personnel (portfolio professionnel, sans activité commerciale). Contact : {email}",
+    "controllerBody": "Le responsable du traitement des données collectées via ce site est Aïcha Imène DAHOUMANE, à titre personnel (portfolio professionnel, sans activité commerciale). Contact : {email}",
     "breachTitle": "Violation de données",
-    "breachBody": "En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous serez notifié(e) dans les meilleurs délais. Conformément à l'article 33 du RGPD, la Commission Nationale de l'Informatique et des Libertés (CNIL) sera notifiée dans un délai de 72 heures. Pour toute réclamation, vous pouvez également saisir directement la CNIL : www.cnil.fr"
+    "breachBody": "En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous serez notifié(e) dans les meilleurs délais. Conformément à l'article 33 du RGPD, la Commission Nationale de l'Informatique et des Libertés (CNIL) sera notifiée dans un délai de 72 heures. Pour toute réclamation, vous pouvez également saisir directement la CNIL : www.cnil.fr"
   },
   "legal": {
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
     "contactFallback": "le formulaire de contact du site",
-    "editorBody": "Ce site est édité par Aïcha Imène DAHOUMANE (Salesforce · Systèmes & Réseaux · DevOps), à titre personnel. Directrice de la publication : Aïcha Imène DAHOUMANE. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène DAHOUMANE (Salesforce · Systèmes & Réseaux · DevOps), à titre personnel. Directrice de la publication : Aïcha Imène DAHOUMANE. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
-    "hostingBody": "L'hébergement est assuré par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. Site : vercel.com.",
+    "hostingBody": "L'hébergement est assuré par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
-    "ipBody": "Le code source de ce site est publié sous licence MIT (https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev) : vous pouvez le réutiliser selon les termes de cette licence. En revanche, les contenus éditoriaux et visuels (textes, articles, études de cas, CV, photographies, illustrations, logos et visuels de projets) restent la propriété de l'éditeur, sauf mention contraire : leur reproduction, représentation ou diffusion, totale ou partielle, sans autorisation écrite préalable est interdite et constituerait une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle. Les marques et logos de tiers cités (Salesforce, Microsoft, etc.) appartiennent à leurs titulaires respectifs.",
+    "ipBody": "Le code source de ce site est publié sous licence MIT (https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev) : vous pouvez le réutiliser selon les termes de cette licence. En revanche, les contenus éditoriaux et visuels (textes, articles, études de cas, CV, photographies, illustrations, logos et visuels de projets) restent la propriété de l'éditeur, sauf mention contraire : leur reproduction, représentation ou diffusion, totale ou partielle, sans autorisation écrite préalable est interdite et constituerait une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle. Les marques et logos de tiers cités (Salesforce, Microsoft, etc.) appartiennent à leurs titulaires respectifs.",
     "liabilityTitle": "Responsabilité",
-    "liabilityBody": "Les informations présentes sur ce site sont fournies à titre indicatif et ne sauraient engager la responsabilité de l'éditeur. L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées, mais ne peut garantir leur exhaustivité ni leur absence d'erreurs. Les liens hypertextes vers des sites tiers sont fournis à titre informatif ; l'éditeur n'exerce aucun contrôle sur leur contenu.",
+    "liabilityBody": "Les informations présentes sur ce site sont fournies à titre indicatif et ne sauraient engager la responsabilité de l'éditeur. L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées, mais ne peut garantir leur exhaustivité ni leur absence d'erreurs. Les liens hypertextes vers des sites tiers sont fournis à titre informatif ; l'éditeur n'exerce aucun contrôle sur leur contenu.",
     "dataTitle": "Données personnelles",
-    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont transmises par email via un service d'acheminement d'emails pour répondre à votre demande ; elles ne sont pas conservées sur les serveurs du site et ne sont pas transmises à d'autres tiers. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
+    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont transmises par email via un service d'acheminement d'emails pour répondre à votre demande ; elles ne sont pas conservées sur les serveurs du site et ne sont pas transmises à d'autres tiers. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
   },
   "faq": {
     "title": "Questions fréquentes",
     "subtitle": "Les réponses aux questions que les recruteurs me posent le plus souvent.",
     "items": [
       {
-        "q": "Quelle est votre disponibilité ?",
-        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible à partir de décembre 2026. Je quitte mon poste de Développeuse Salesforce chez LD Digitales (alternance puis CDI, depuis octobre 2023) le 30 novembre 2026."
+        "q": "Quelle est votre disponibilité ?",
+        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible dès décembre 2026. Je quitte mon poste de Développeuse Salesforce chez LD Digitales (alternance puis CDI, depuis octobre 2023) le 30 novembre 2026."
       },
       {
-        "q": "Quels types de contrat recherchez-vous ?",
-        "a": "Un CDI, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce et l'infrastructure se croisent."
+        "q": "Quels types de contrat recherchez-vous ?",
+        "a": "Un CDI, dans tous les secteurs d'activité. Ce qui compte pour moi, c'est le poste : un environnement où Salesforce et l'infrastructure se croisent."
       },
       {
-        "q": "Quels postes visez-vous ?",
-        "a": "Trois postes, clairement définis : développeuse ou administratrice Salesforce, administratrice systèmes & réseaux, et ingénieure DevOps. Mon profil hybride prend toute sa valeur là où ces domaines se croisent — intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
+        "q": "Quels postes visez-vous ?",
+        "a": "Trois postes, clairement définis : développeuse ou administratrice Salesforce, administratrice systèmes & réseaux, et ingénieure DevOps. Mon profil hybride prend toute sa valeur là où ces domaines se croisent — intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
       },
       {
-        "q": "Avez-vous une certification Salesforce ?",
-        "a": "Pas encore, mais les examens sont réservés : Salesforce Platform Foundations le 29 décembre 2026 et Platform Administrator le 30 décembre 2026, puis Platform App Builder et Platform Developer en 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
+        "q": "Avez-vous une certification Salesforce ?",
+        "a": "Pas encore, mais les examens Salesforce Platform Foundations et Platform Administrator sont prévus fin décembre 2026, puis Platform App Builder et Platform Developer en 2027. Déjà acquis et vérifiables : le titre RNCP niveau 6 « Développeur Concepteur Logiciel » (spécialisation Salesforce, 2025) et un profil Trailhead actif (rang Expeditioner, 94 badges, 59 775 points). L'étude de cas Legarant-AXG, où le trigger Apex et le déploiement Heroku sont réalisés par la même personne, montre concrètement ce que je sais faire."
       },
       {
-        "q": "Où êtes-vous basée ? Quel mode de travail ?",
-        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Je vise Paris et l'Île-de-France, la région Provence-Alpes-Côte d'Azur ou une relocalisation internationale. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
+        "q": "Où êtes-vous basée ? Quel mode de travail ?",
+        "a": "Je suis basée dans le Val-d'Oise (95), en Île-de-France. Je vise Paris et l'Île-de-France, la région Provence-Alpes-Côte d'Azur ou une relocalisation internationale. Je travaille sur site ou en hybride ; je ne recherche pas de poste en télétravail complet."
       },
       {
-        "q": "Comment se passe la suite après une prise de contact ?",
+        "q": "Comment se passe la suite après une prise de contact ?",
         "a": "Je réponds sous 48 h. Je suis ensuite disponible pour un échange téléphonique ou en visio, des entretiens techniques (exercices Apex, SOQL, Flow, ou mises en situation systèmes et réseaux) et je peux fournir mes diplômes ainsi que des exemples concrets de mes réalisations (code, documentation)."
       }
     ]
@@ -482,27 +482,27 @@
   "accessibility": {
     "title": "Accessibilité",
     "commitmentTitle": "Engagement d'accessibilité",
-    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
+    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
     "limitsTitle": "Limites connues",
     "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours me sont précieux.",
-    "helpTitle": "Un problème d'accessibilité ?",
+    "helpTitle": "Un problème d'accessibilité ?",
     "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de me le signaler en précisant l'URL de la page concernée et la nature du problème, via le <form>formulaire de contact</form>.",
     "helpEmail": "Vous pouvez aussi m'écrire à <mail>{email}</mail>.",
-    "lastAudit": "Dernière vérification : 31 octobre 2026 — Outils : axe-core (CI automatisé et palette de commandes), vérification manuelle de la navigation au clavier."
+    "lastAudit": "Dernière vérification : 31 octobre 2026 — Outils : axe-core (CI automatisé et palette de commandes), vérification manuelle de la navigation au clavier."
   },
   "availModal": {
-    "badge": "Entretiens dès maintenant — Disponible à partir de décembre 2026",
+    "badge": "Entretiens dès maintenant — Disponible dès décembre 2026",
     "badgeRoleSalesforce": "Administratrice & Développeuse Salesforce",
-    "badgeRoleItops": "Administratrice Systèmes & Réseaux · Ingénieure DevOps",
+    "badgeRoleItops": "Administratrice Systèmes & Réseaux · orientée DevOps",
     "title": "Mes disponibilités",
     "delay": "Disponibilité",
-    "delayValue": "Entretiens dès maintenant · Disponible à partir de décembre 2026",
+    "delayValue": "Entretiens dès maintenant · Disponible dès décembre 2026",
     "contracts": "Contrats",
     "contractValues": "CDI",
     "workMode": "Modes de travail",
     "workModeValues": "Hybride · Sur site",
     "locationMobility": "Localisation et mobilité",
-    "locationMobilityValues": "Basée dans le Val-d'Oise (95), Île-de-France · Mobile : Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale",
+    "locationMobilityValues": "Basée dans le Val-d'Oise (95), Île-de-France · Mobile : Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale",
     "sector": "Secteurs d'activité",
     "sectorValues": "Tous secteurs",
     "roles": "Postes visés",
@@ -512,20 +512,20 @@
   },
   "hybrid": {
     "metaTitle": "Profil hybride Salesforce × IT Ops — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Trois cas où Salesforce et l'infrastructure se combinent : reprise de données Heroku↔Salesforce, DevOps des releases Apex, contrôle d'accès d'une intégration.",
+    "metaDescription": "Trois cas où Salesforce et l'infrastructure se combinent : reprise de données Heroku↔Salesforce, DevOps des releases Apex, contrôle d'accès d'une intégration.",
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Profil hybride",
     "h1": "Là où Salesforce et l'infrastructure ne font qu'un",
-    "lead": "Je ne suis pas une développeuse Salesforce qui connaît les serveurs, ni une administratrice système qui connaît Salesforce. Je résous des problématiques transverses qu'un spécialiste seul — d'un côté ou de l'autre — traiterait plus lentement, moins bien, ou pas du tout : les décisions des deux couches sont prises en même temps, par la même personne, avant que l'aller-retour habituel entre équipes ne commence. Les preuves citées ci-dessous sont des projets de formation et des projets personnels ; chaque page indique sa nature et sa période.",
+    "lead": "Je ne suis pas une développeuse Salesforce qui connaît les serveurs, ni une administratrice système qui connaît Salesforce. Je résous des problématiques transverses qu'un spécialiste seul — d'un côté ou de l'autre — traiterait plus lentement, moins bien, ou pas du tout : les décisions des deux couches sont prises en même temps, par la même personne, avant que l'aller-retour habituel entre équipes ne commence. Les preuves citées ci-dessous sont des projets de formation et des projets personnels ; chaque page indique sa nature et sa période.",
     "scenariosTitle": "Trois cas où la combinaison change le résultat",
     "scenarios": [
       {
         "title": "Reprise de données Heroku ↔ Salesforce, avec une app mobile terrain",
-        "problem": "Un assureur rachète un concurrent : les données du CRM racheté doivent remonter dans Salesforce (sens unique), et les assureurs de terrain ont besoin d'une application mobile qui lit et écrit dans la même org.",
+        "problem": "Un assureur rachète un concurrent : les données du CRM racheté doivent remonter dans Salesforce (sens unique), et les assureurs de terrain ont besoin d'une application mobile qui lit et écrit dans la même org.",
         "soloTitle": "Un profil spécialiste seul",
         "solo": "Un profil Salesforce s'arrête à la couche Apex REST et sous-traite l'infrastructure Heroku — les décisions d'intégration sont prises sans connaître les contraintes de l'autre côté. Un profil infra déploie l'app Heroku, mais ne conçoit ni le trigger Apex d'External ID ni la Matching Rule qui bloquent les doublons à la source.",
         "mineTitle": "Ce que je livre",
-        "mine": "Les deux : les endpoints Apex REST, l'application Node.js/PostgreSQL qui les consomme, Heroku Connect configuré objet par objet, deux environnements isolés reliés par une pipeline, jusqu'au runbook de déploiement. L'environnement de staging existait avant que la première ligne d'Apex ne soit écrite — pas après.",
+        "mine": "Les deux : les endpoints Apex REST, l'application Node.js/PostgreSQL qui les consomme, Heroku Connect configuré objet par objet, deux environnements isolés reliés par une pipeline, jusqu'au runbook de déploiement. L'environnement de staging existait avant que la première ligne d'Apex ne soit écrite — pas après.",
         "proofs": [
           {
             "label": "Projet fil rouge RNCP 6 — Déploiement Legarant-AXG",
@@ -533,7 +533,7 @@
           }
         ],
         "sectorLabel": "Où ça compte",
-        "sector": "Assurance et finance : réconcilier deux portefeuilles clients où un doublon n'est pas une gêne mais un dossier orphelin et un risque de non-conformité."
+        "sector": "Assurance et finance : réconcilier deux portefeuilles clients où un doublon n'est pas une gêne mais un dossier orphelin et un risque de non-conformité."
       },
       {
         "title": "Discipline DevOps appliquée aux releases Salesforce",
@@ -549,11 +549,11 @@
           }
         ],
         "sectorLabel": "Où ça compte",
-        "sector": "Tout secteur régulé — santé, énergie, finance : chaque changement en production doit être traçable et réversible, pas seulement fonctionnel."
+        "sector": "Tout secteur régulé — santé, énergie, finance : chaque changement en production doit être traçable et réversible, pas seulement fonctionnel."
       },
       {
         "title": "Contrôle d'accès d'une intégration, conçu côté Salesforce",
-        "problem": "Une intégration Salesforce expose des endpoints REST : quel utilisateur les appelle, avec quels droits, et à quelles données peut-il accéder ?",
+        "problem": "Une intégration Salesforce expose des endpoints REST : quel utilisateur les appelle, avec quels droits, et à quelles données peut-il accéder ?",
         "soloTitle": "Un profil spécialiste seul",
         "solo": "Un développeur Salesforce livre l'endpoint en s'appuyant sur un profil existant trop permissif. Une équipe infra configure l'authentification côté serveur — mais ne sait pas quel Permission Set, quelle vérification CRUD/FLS ou quelle Sharing Rule limite réellement l'accès côté Salesforce.",
         "mineTitle": "Ce que je livre",
@@ -569,34 +569,36 @@
           }
         ],
         "sectorLabel": "Où ça compte",
-        "sector": "Santé et luxe : les intégrations qui font transiter de la donnée patient ou de la provenance produit — là où un accès mal cadré n'est pas un détail technique mais une atteinte à la confiance."
+        "sector": "Santé et luxe : les intégrations qui font transiter de la donnée patient ou de la provenance produit — là où un accès mal cadré n'est pas un détail technique mais une atteinte à la confiance."
       }
     ],
     "eliminatesTitle": "Ce que la combinaison élimine",
     "eliminates": [
       "L'aller-retour entre l'équipe Salesforce et l'équipe infra/DevOps sur chaque décision d'intégration.",
       "Les décisions prises d'un côté sans connaître les contraintes de l'autre — un trigger conçu sans savoir comment l'infra le sollicite, un pipeline conçu sans connaître les limites de déploiement Salesforce.",
-      "Le délai entre « l'API est auditée » et « le contrôle est en place » : les deux se font dans le même sprint."
+      "Le délai entre « l'API est auditée » et « le contrôle est en place » : les deux se font dans le même sprint."
     ],
-    "ctaTitle": "Un poste transverse à pourvoir ?",
+    "ctaTitle": "Un poste transverse à pourvoir ?",
     "ctaText": "Si le poste touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en production tracée, automatisation des déploiements — c'est exactement le terrain où mon profil fait gagner du temps à une équipe.",
     "ctaContact": "Présenter un poste",
     "ctaCv": "Télécharger le CV hybride (PDF)",
-    "sfSecurityLink": "Le volet sécurité en détail : partage, FLS, Apex, intégrations →"
+    "sfSecurityLink": "Le volet sécurité en détail : partage, FLS, Apex, intégrations →"
   },
   "recruiter": {
-    "title": "Vous recrutez pour quel poste ?",
-    "subtitle": "Choisissez le profil qui correspond à votre besoin : le site et le CV s'adaptent.",
+    "title": "Vous recrutez pour quel poste ?",
+    "subtitle": "Choisissez le profil qui correspond à votre besoin : le site et le CV s'adaptent.",
     "recommended": "Mon profil de référence",
     "hybridTitle": "Profil hybride Salesforce + infrastructure",
-    "hybridBody": "Un poste où Salesforce et l'infrastructure se croisent : intégrations, mises en production tracées, automatisation des déploiements. C'est là que mon parcours fait la différence.",
+    "hybridBody": "Un poste où Salesforce et l'infrastructure se croisent : intégrations, mises en production tracées, automatisation des déploiements. C'est là que mon parcours fait la différence.",
     "hybridCta": "Voir le profil hybride",
     "salesforceTitle": "Poste Salesforce",
-    "salesforceBody": "Développeuse ou administratrice Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
+    "salesforceBody": "Développeuse ou administratrice Salesforce : Apex, Flows, LWC, modèle de sécurité et CI/CD.",
     "itopsTitle": "Poste systèmes, réseaux & DevOps",
     "itopsBody": "Administration Windows Server et Active Directory, supervision, sauvegardes, automatisation et CI/CD.",
     "showProfile": "Afficher ce profil",
-    "cv": "CV (PDF)"
+    "cv": "CV (PDF)",
+    "cvAts": "Version ATS",
+    "cvAtsTitle": "CV en texte simple, lisible par les logiciels de tri des candidatures (ATS)"
   },
   "commandPalette": {
     "title": "Palette de commandes",
@@ -634,30 +636,30 @@
     "sfSecurity": "Sécurité Salesforce"
   },
   "sfSecurity": {
-    "metaTitle": "Sécurité Salesforce : partage, FLS, Apex, intégrations",
-    "metaDescription": "Sécuriser une org Salesforce à quatre niveaux : partage, droits sur les champs, Apex qui respecte l'utilisateur, intégrations sans secret.",
+    "metaTitle": "Sécurité Salesforce : partage, FLS, Apex, intégrations",
+    "metaDescription": "Sécuriser une org Salesforce à quatre niveaux : partage, droits sur les champs, Apex qui respecte l'utilisateur, intégrations sans secret.",
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Sécurité Salesforce",
     "eyebrow": "Salesforce × sécurité",
-    "h1": "Sécurité Salesforce : du modèle de partage au code Apex",
+    "h1": "Sécurité Salesforce : du modèle de partage au code Apex",
     "lead": "La sécurité d'une org Salesforce se joue à quatre niveaux, et une faille à l'un d'eux annule les trois autres. Pour chacun, voici le principe que j'applique et le projet où je l'ai mis en œuvre.",
-    "honesty": "Ces preuves sont des projets de formation (titre RNCP 6), des projets personnels ou une étude de cas reconstituée : leur nature est indiquée à chaque fois. Mon travail en poste reste confidentiel.",
+    "honesty": "Ces preuves sont des projets de formation (titre RNCP 6), des projets personnels ou une étude de cas reconstituée : leur nature est indiquée à chaque fois. Mon travail en poste reste confidentiel.",
     "principleLabel": "Le principe",
     "appliedLabel": "Ce que j'ai fait",
     "layers": [
       {
         "title": "1. Qui voit quels enregistrements",
         "scope": "OWD, hiérarchie des rôles, règles de partage",
-        "principle": "Je pars du plus restrictif (OWD privé) et j'ouvre l'accès par les rôles et les règles de partage, jamais l'inverse : un accès trop large au départ ne se voit plus ensuite.",
+        "principle": "Je pars du plus restrictif (OWD privé) et j'ouvre l'accès par les rôles et les règles de partage, jamais l'inverse : un accès trop large au départ ne se voit plus ensuite.",
         "items": [
           {
-            "text": "Rôles Nord/Sud, règles de partage et OWD choisis objet par objet : privé, public en lecture seule, contrôlé par le parent.",
+            "text": "Rôles Nord/Sud, règles de partage et OWD choisis objet par objet : privé, public en lecture seule, contrôlé par le parent.",
             "proof": "Tours For Life",
             "nature": "Projet de formation RNCP 6",
             "href": "/projects/tours-for-life-salesforce-solution"
           },
           {
-            "text": "Modèle de sécurité par zone géographique : un profil unique, des rôles et des règles de partage.",
+            "text": "Modèle de sécurité par zone géographique : un profil unique, des rôles et des règles de partage.",
             "proof": "LTP",
             "nature": "Projet de formation RNCP 6",
             "href": "/projects/ltp-apex-backend-prototype"
@@ -667,10 +669,10 @@
       {
         "title": "2. Qui modifie quels objets et quels champs",
         "scope": "CRUD, sécurité au niveau des champs (FLS), Permission Set Groups",
-        "principle": "Le profil donne le minimum ; les droits viennent de jeux d'autorisations regroupés par métier. Un champ sensible est masqué ou verrouillé, pas seulement retiré de la mise en page.",
+        "principle": "Le profil donne le minimum ; les droits viennent de jeux d'autorisations regroupés par métier. Un champ sensible est masqué ou verrouillé, pas seulement retiré de la mise en page.",
         "items": [
           {
-            "text": "FLS ciblée : le champ de zone est verrouillé, les champs financiers masqués.",
+            "text": "FLS ciblée : le champ de zone est verrouillé, les champs financiers masqués.",
             "proof": "LTP",
             "nature": "Projet de formation RNCP 6",
             "href": "/projects/ltp-apex-backend-prototype"
@@ -686,7 +688,7 @@
       {
         "title": "3. Un code Apex qui respecte les droits de l'utilisateur",
         "scope": "with sharing, WITH SECURITY_ENFORCED, Security.stripInaccessible",
-        "principle": "Par défaut, Apex s'exécute en mode système : sans précaution, une classe contourne le partage et la FLS. Je déclare le partage sur chaque classe et je contrôle les droits sur chaque requête et chaque écriture. Pour du code neuf, Salesforce recommande désormais WITH USER_MODE.",
+        "principle": "Par défaut, Apex s'exécute en mode système : sans précaution, une classe contourne le partage et la FLS. Je déclare le partage sur chaque classe et je contrôle les droits sur chaque requête et chaque écriture. Pour du code neuf, Salesforce recommande désormais WITH USER_MODE.",
         "items": [
           {
             "text": "WITH SECURITY_ENFORCED sur les requêtes, Security.stripInaccessible, et des contrôles CRUD/FLS explicites là où une requête d'agrégat ne peut pas être couverte.",
@@ -695,7 +697,7 @@
             "href": "/projects/idemconnect-apex-backend"
           },
           {
-            "text": "Contrôleurs historiques en without sharing, sans aucun test de droits : passage en with sharing explicite, stripInaccessible avant toute écriture, et un test qui vérifie qu'un utilisateur sans droit d'édition est bien bloqué.",
+            "text": "Contrôleurs historiques en without sharing, sans aucun test de droits : passage en with sharing explicite, stripInaccessible avant toute écriture, et un test qui vérifie qu'un utilisateur sans droit d'édition est bien bloqué.",
             "proof": "Nova Manufacturing",
             "nature": "Étude de cas reconstituée",
             "href": "/projects/nova-manufacturing-classic-to-lightning"
@@ -720,7 +722,7 @@
             "href": "/projects/nova-manufacturing-classic-to-lightning"
           },
           {
-            "text": "Identifiants de déploiement dans GitHub Secrets, branches protégées : la validation contre l'org doit passer avant toute fusion.",
+            "text": "Identifiants de déploiement dans GitHub Secrets, branches protégées : la validation contre l'org doit passer avant toute fusion.",
             "proof": "Pipeline CI/CD",
             "nature": "Projet personnel",
             "href": "/projects/cicd-pipeline-setup"
@@ -730,7 +732,7 @@
     ],
     "proofLabel": "Preuve",
     "linksTitle": "Pour aller plus loin",
-    "linkHybrid": "Profil hybride : Salesforce, infrastructure et sécurité combinés",
+    "linkHybrid": "Profil hybride : Salesforce, infrastructure et sécurité combinés",
     "linkCerts": "Certifications et examens Salesforce programmés",
     "backHome": "← Retour à l'accueil"
   }

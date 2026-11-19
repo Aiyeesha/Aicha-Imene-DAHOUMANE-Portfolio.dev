@@ -735,7 +735,7 @@ export const projects: Project[] = [
     "slug": "workstation-mass-deployment",
     "nature": "internship",
     "title": "Mass Workstation Deployment — 264 Dell Devices",
-    "excerpt": "At MIDRANGE Group, I provisioned a 264-device fleet end to end (64 Optiplex desktops + 200 Latitude laptops): Blancco certified wipe, Dell Image Assist WIM imaging, and Windows Autopilot enrollment.",
+    "excerpt": "At MIDRANGE Group, I provisioned a 264-device fleet end to end (64 repurposed Optiplex + 200 new Optiplex and Latitude): Blancco certified wipe, Sysprep imaging, and Windows Autopilot enrollment.",
     "track": "itops",
     "categories": [
       "IT Ops",
@@ -764,9 +764,8 @@ export const projects: Project[] = [
       "PowerShell"
     ],
     "highlights": [
-      "I wiped 64 Dell Optiplex units with Blancco (NIST 800-88 erasure) and imaged them from a Sysprep golden image",
-      "I deployed 200 Dell Latitude laptops zero-touch via Windows Autopilot and Dell ImageAssist",
-      "I kept hands-on IT time per Latitude post-setup under 5 minutes",
+      "I wiped 64 Dell Optiplex units with Blancco (NIST 800-88 erasure) and imaged them from a Sysprep golden image (WDS/PXE or WinPE USB key)",
+      "I enrolled 200 new Dell devices (Optiplex and Latitude) through Windows Autopilot and Intune, capturing hardware hashes with Dell ImageAssist",
       "I generated a Blancco compliance certificate for every wiped device",
       "I configured Intune deployment profiles, BitLocker, Defender, and update rings"
     ],

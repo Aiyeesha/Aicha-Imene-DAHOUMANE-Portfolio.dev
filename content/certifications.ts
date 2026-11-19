@@ -27,8 +27,8 @@ export const certifications: Certification[] = [
     issuer: 'GRETA du Val d\'Oise',
     badgeUrl: '/certifications/systems-networks-badge.png',
     earnedDate: 'Jun 2023',
-    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Two one-month internships at MIDRANGE Group: deployment of 264 workstations (64 re-imaged with Sysprep, 200 via Windows Autopilot), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, PfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
-    skills: ['Windows Server 2022', 'Active Directory', 'DNS', 'DHCP', 'WDS', 'GPO', 'PXE Deployment', 'VMware Workstation 17', 'PfSense', 'Squid Proxy', 'Acronis Cyber Protect', 'Datto RMM', 'Windows Autopilot', 'Sysprep', 'Blancco Secure Erase', 'Splashtop', 'Autotask', 'Webroot']
+    description: 'RNCP Level 5 (Bac+2) in systems and network administration. Two one-month internships at MIDRANGE Group: deployment of 264 workstations (64 re-imaged with Sysprep, 200 via Windows Autopilot), VMware Workstation 17, Windows Server 2022, AD DS, DNS, DHCP, WDS, GPO, PXE, pfSense/Squid, Acronis Cyber Protect Cloud, Datto RMM.',
+    skills: ['Windows Server 2022', 'Active Directory', 'DNS', 'DHCP', 'WDS', 'GPO', 'PXE Deployment', 'VMware Workstation 17', 'pfSense', 'Squid Proxy', 'Acronis Cyber Protect', 'Datto RMM', 'Windows Autopilot', 'Sysprep', 'Blancco Secure Erase', 'Splashtop', 'Autotask', 'Webroot']
   },
   {
     id: 'tai-greta-valdoise',
@@ -58,8 +58,10 @@ export const certifications: Certification[] = [
 // __tests__/scheduled-exams.test.ts fails a week later as a reminder to
 // record the result (FAQ, About page, this file).
 export const SCHEDULED_EXAMS = {
-  platformFoundations:   { iso: "2026-12-29", fr: "29 déc. 2026", en: "Dec 29, 2026", es: "29 dic. 2026" },
-  platformAdministrator: { iso: "2026-12-30", fr: "30 déc. 2026", en: "Dec 30, 2026", es: "30 dic. 2026" },
+  // `iso` stays exact (it drives the switch below) but is never displayed:
+  // the site and the CVs only say "late December 2026".
+  platformFoundations:   { iso: "2026-12-29", fr: "fin décembre 2026", en: "late December 2026", es: "finales de diciembre de 2026" },
+  platformAdministrator: { iso: "2026-12-30", fr: "fin décembre 2026", en: "late December 2026", es: "finales de diciembre de 2026" },
 } as const;
 
 export type ScheduledExam = (typeof SCHEDULED_EXAMS)[keyof typeof SCHEDULED_EXAMS];
@@ -73,17 +75,17 @@ export function isExamPast(exam: ScheduledExam, now: Date = new Date()): boolean
   return now.getTime() >= dayAfter.getTime();
 }
 
-/** "Examen le 29 déc. 2026", or "Examen passé le …, résultat à venir" afterwards. */
+/** "Examen prévu fin décembre 2026", or "Examen passé fin décembre 2026, résultat à venir" afterwards. */
 export function examTargetLabel(exam: ScheduledExam, locale: string, now: Date = new Date()): string {
   const past = isExamPast(exam, now);
-  if (locale === "fr") return past ? `Examen passé le ${exam.fr} — résultat à venir` : `Examen le ${exam.fr}`;
-  if (locale === "es") return past ? `Examen realizado el ${exam.es} — resultado pendiente` : `Examen el ${exam.es}`;
-  return past ? `Exam taken on ${exam.en} — result pending` : `Exam on ${exam.en}`;
+  if (locale === "fr") return past ? `Examen passé ${exam.fr} — résultat à venir` : `Examen prévu ${exam.fr}`;
+  if (locale === "es") return past ? `Examen realizado a ${exam.es} — resultado pendiente` : `Examen previsto para ${exam.es}`;
+  return past ? `Exam taken in ${exam.en} — result pending` : `Exam planned for ${exam.en}`;
 }
 
 export const upcomingCertifications: string[] = [
-  'Salesforce Platform Foundations — examen le 29 déc. 2026',
-  'Salesforce Platform Administrator — examen le 30 déc. 2026',
+  'Salesforce Platform Foundations — examen prévu fin décembre 2026',
+  'Salesforce Platform Administrator — examen prévu fin décembre 2026',
   'Salesforce Platform App Builder — 2027',
   'Salesforce Platform Developer (ex-Platform Developer I) — 2027',
   'CompTIA Security+ (SY0-701) — 2027',
