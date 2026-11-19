@@ -42,10 +42,10 @@ module.exports = {
   // suites are added.
   coverageThreshold: {
     global: {
-      statements: 7,
-      branches: 41,
-      functions: 16,
-      lines: 7,
+      statements: 20,
+      branches: 60,
+      functions: 45,
+      lines: 20,
     },
   },
 };

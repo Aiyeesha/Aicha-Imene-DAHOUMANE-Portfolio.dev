@@ -66,6 +66,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Correctifs techniques (audit indépendant)** :
+  - **404 complètes pour les projets et articles inconnus** : `/fr/projects/<slug inconnu>` et `/fr/blog/<slug inconnu>` renvoyaient une page vide côté serveur (`<html id="__next_error__">`, sans langue, titre ni texte). `proxy.ts` les réécrit désormais vers la 404 localisée de `app/not-found.tsx`, comme pour `testimonial-submit`. Les slugs publiés sont listés dans `lib/data/publishedSlugs.ts`, tenu à jour par un test. Les images de partage des pages d'index et `/blog/tags` sont exclues.
+  - **Previews Vercel** : une variable manquante en Preview (par exemple `REVALIDATE_SECRET`) est signalée par un avertissement et non plus une erreur, pour ne plus polluer les erreurs d'exécution. La production reste bloquante.
+  - **Seuils de couverture** remontés au niveau réellement mesuré : 20 % des instructions et des lignes, 60 % des branches, 45 % des fonctions (au lieu de 7, 41, 16 et 7).
 - **Correctifs techniques (audit externe)** :
   - **Fausses pages 200** : une adresse inexistante avec extension (`/foo.txt`, `/bar.css`, `.js`, `.json`…) renvoyait 200 avec la page 404 HTML et sans CSP (« soft 404 » pour les moteurs). La réécriture `afterFiles` de `next.config.mjs` les envoie désormais vers la 404 légère (`/api/asset-not-found`, `X-Robots-Tag: noindex`). robots.txt, sitemap.xml, les flux RSS, sw.js et le manifeste restent servis (test `e2e/asset-not-found.spec.ts`).
   - **Limiteurs sans Redis** : sans Upstash en production, `/api/health`, `/api/blog/latest` et les rapports CSP et d'erreurs répondaient 429. Leurs limiteurs de repli laissent passer, comme `safeLimit({ failOpen: true })` ; les routes d'écriture restent bloquantes.

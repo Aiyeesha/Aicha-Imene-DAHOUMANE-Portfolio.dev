@@ -47,7 +47,9 @@ describe("validateEnv", () => {
     process.env.VERCEL_ENV = "preview";
     delete process.env.CRON_SECRET;
     await expect(run()).resolves.toBeUndefined();
-    expect(error).toHaveBeenCalled();
+    // Warning, not error: a Preview secret must not pollute runtime errors.
+    expect(warn).toHaveBeenCalled();
+    expect(error).not.toHaveBeenCalled();
   });
 
   it("démarre sans message quand tout est présent et assez long", async () => {

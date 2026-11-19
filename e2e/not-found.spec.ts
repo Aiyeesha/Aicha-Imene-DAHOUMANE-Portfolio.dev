@@ -3,8 +3,9 @@
 // 404 pages must be complete server-rendered HTML (readable without
 // JavaScript, in the URL's language), not Next.js's empty error shell
 // (<html id="__next_error__">), which a page's own notFound() produces in
-// Next.js 16. Covers unknown URLs (app/not-found.tsx) and the testimonial
-// page opened without an invitation (rewritten by proxy.ts to that 404).
+// Next.js 16. Covers unknown URLs (app/not-found.tsx), the testimonial page
+// opened without an invitation, and unknown project or article slugs (both
+// rewritten by proxy.ts to that 404).
 
 import { test, expect } from "@playwright/test";
 
@@ -16,7 +17,12 @@ const TITLES = {
 
 test.describe("Pages 404 — HTML complet côté serveur", () => {
   for (const [locale, title] of Object.entries(TITLES)) {
-    for (const path of [`/${locale}/page-inexistante`, `/${locale}/testimonial-submit`]) {
+    for (const path of [
+      `/${locale}/page-inexistante`,
+      `/${locale}/testimonial-submit`,
+      `/${locale}/projects/projet-inexistant`,
+      `/${locale}/blog/article-inexistant`,
+    ]) {
       test(`${path} : 404 localisée, lisible sans JavaScript`, async ({ request }) => {
         const res = await request.get(path);
         expect(res.status()).toBe(404);
@@ -32,6 +38,12 @@ test.describe("Pages 404 — HTML complet côté serveur", () => {
       });
     }
   }
+
+  test("un vrai projet et un vrai article restent servis (200)", async ({ request }) => {
+    expect((await request.get("/fr/projects/legarant-axg-salesforce-deployment")).status()).toBe(200);
+    expect((await request.get("/fr/blog/windows-autopilot-deployment")).status()).toBe(200);
+    expect((await request.get("/fr/blog/tags")).status()).toBe(200);
+  });
 
   test("un lien d'invitation forgé reste refusé (404)", async ({ request }) => {
     const res = await request.get("/fr/testimonial-submit?invite=forged&exp=9999999999");

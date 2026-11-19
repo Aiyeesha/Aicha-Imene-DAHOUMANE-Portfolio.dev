@@ -22,6 +22,16 @@ import { routing } from "./i18n/routing";
 import { adminRatelimit, pseudonymizeKey } from "./lib/ratelimit";
 import { timingSafeStringEqual } from "./lib/security/timingSafeEqual";
 import { decodeBasicCredentials } from "./lib/security/basicAuth";
+import { PUBLISHED_BLOG_SLUGS, PUBLISHED_PROJECT_SLUGS } from "./lib/data/publishedSlugs";
+
+/** decodeURIComponent that never throws (a malformed %-sequence is kept as is). */
+function safeDecode(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
 
 const intlHandler = createMiddleware({
   locales: routing.locales,
@@ -256,11 +266,27 @@ export async function proxy(request: NextRequest) {
     /^\/[a-z]{2}\/testimonial-submit\/?$/.test(pathname) &&
     !(params.has("invite") && params.has("exp"));
 
-  const response = isBareTestimonialLink
-    ? NextResponse.rewrite(
-        new URL(`/${detectedLocale}/testimonial-submit/invitation-required`, request.url),
-        { request: { headers: requestHeaders } },
-      )
+  // Same limit for unknown project and article slugs: the page's notFound()
+  // would only send the empty error shell, so a slug that is not published
+  // (lib/data/publishedSlugs.ts) is rewritten to a path no route serves.
+  const detailMatch = pathname.match(/^\/[a-z]{2}\/(projects|blog)\/([^/]+)\/?$/);
+  const isUnknownDetail =
+    !!detailMatch &&
+    // Not a slug: the tag index and the generated share images of the
+    // /projects and /blog index pages.
+    !["tags", "opengraph-image", "twitter-image"].includes(detailMatch[2]) &&
+    !(detailMatch[1] === "projects" ? PUBLISHED_PROJECT_SLUGS : PUBLISHED_BLOG_SLUGS).includes(
+      safeDecode(detailMatch[2]),
+    );
+
+  const notFoundPath = isBareTestimonialLink
+    ? `/${detectedLocale}/testimonial-submit/invitation-required`
+    : isUnknownDetail
+      ? `/${detectedLocale}/${detailMatch![1]}/${detailMatch![2]}/introuvable`
+      : null;
+
+  const response = notFoundPath
+    ? NextResponse.rewrite(new URL(notFoundPath, request.url), { request: { headers: requestHeaders } })
     : NextResponse.next({
         request: { headers: requestHeaders },
       });
