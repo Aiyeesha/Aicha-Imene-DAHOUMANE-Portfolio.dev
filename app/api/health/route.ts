@@ -1,15 +1,16 @@
 // app/api/health/route.ts
 // ----------------------
-// Public JSON health check: pings Supabase, Redis and Formhook and returns
-// each service's status (GET /api/health → HealthReport). Never cached, no
-// authentication (statuses only, no secrets).
+// Public JSON health check: pings Redis and Formhook and returns each
+// service's status (GET /api/health → HealthReport). The checks are reused
+// for 60 s per instance (runHealthChecksCached); the HTTP response itself is
+// never cached. No authentication (statuses only, no secrets).
 //
 // CORS is limited to the site origin: monitoring tools call server-to-server
 // and need no CORS, and a wildcard would let any page read internal latencies.
 // Light rate limiting prevents abuse loops.
 
 import { NextRequest, NextResponse } from "next/server";
-import { runHealthChecks } from "@/lib/health";
+import { runHealthChecksCached } from "@/lib/health";
 import { getLatestPingReport } from "@/lib/uptime";
 import { blogRatelimit, safeLimit } from "@/lib/ratelimit";
 
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest) {
 
   // Run live checks + read last cron-stored ping in parallel
   const [report, storedPing] = await Promise.all([
-    runHealthChecks(),
+    runHealthChecksCached(),
     getLatestPingReport(),
   ]);
 
@@ -46,7 +47,7 @@ export async function GET(req: NextRequest) {
                                        503;  // Service Unavailable
 
   // Strip internal details from public response:
-  //   - latencyMs : reveals infrastructure timings (Supabase: 117ms, Redis: 66ms)
+  //   - latencyMs : reveals infrastructure timings (e.g. Redis: 66ms)
   //                 enabling fingerprinting and timing attacks.
   //   - message   : reveals internal configuration state ("Formhook not configured",
   //                 "Redis unavailable", etc.) — information an attacker can use to

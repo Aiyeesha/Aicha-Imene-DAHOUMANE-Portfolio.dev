@@ -59,10 +59,10 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
         ? `Tras tres años de desarrollo Salesforce en LD Digitales (formación dual y después contrato indefinido, de octubre de 2023 a noviembre de 2026), busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
         : `After three years of Salesforce development at LD Digitales (work-study, then full-time, October 2023 to November 2026), I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`)
       : (isFr
-        ? `Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${START.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
+        ? `Développeuse Salesforce en CDI chez LD Digitales, en préavis jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${START.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
         : isEs
-        ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
-        : `A full-time Salesforce Developer at LD Digitales until November 30, 2026, I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`),
+        ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales, en preaviso hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
+        : `A full-time Salesforce Developer at LD Digitales, working my notice until November 30, 2026, I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`),
 
     availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
     availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",

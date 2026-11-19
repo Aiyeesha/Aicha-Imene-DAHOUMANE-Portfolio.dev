@@ -67,11 +67,18 @@ async function checkRedis(): Promise<ServiceHealth> {
 async function checkContactForm(): Promise<ServiceHealth> {
   const start = Date.now();
   try {
-    // FORMHOOK_ENDPOINT, as in app/api/contact/route.ts. Not configured is not
-    // a degradation.
+    // FORMHOOK_ENDPOINT, as in app/api/contact/route.ts. Missing in production
+    // means the form answers 503: report it as an outage. Elsewhere (local,
+    // previews) the form is simply not wired, which is not a degradation.
     const endpoint = process.env.FORMHOOK_ENDPOINT;
     if (!endpoint) {
-      return { name: "Contact form", status: "operational", latencyMs: null, message: "Formhook not configured" };
+      const production = process.env.VERCEL_ENV === "production";
+      return {
+        name: "Contact form",
+        status: production ? "outage" : "operational",
+        latencyMs: null,
+        message: "Formhook not configured",
+      };
     }
 
     // X-Auth-Token is required by Formhook for server-to-server requests. A
@@ -175,6 +182,28 @@ function aggregateStatus(services: ServiceHealth[]): ServiceStatus {
 }
 
 // ── Entry point ───────────────────────────────────────────────────────────────
+
+// Last report served by the public endpoint. Each warm instance re-checks at
+// most once a minute, so /api/health cannot be used to hammer Formhook or
+// Redis. The cron (app/api/cron/ping) keeps calling runHealthChecks() directly.
+const PUBLIC_REPORT_TTL_MS = 60_000;
+let lastPublicReport: { at: number; report: Promise<HealthReport> } | null = null;
+
+/** runHealthChecks() reused for 60 seconds, for the public /api/health route. */
+export function runHealthChecksCached(now: number = Date.now()): Promise<HealthReport> {
+  if (!lastPublicReport || now - lastPublicReport.at >= PUBLIC_REPORT_TTL_MS) {
+    const report = runHealthChecks();
+    lastPublicReport = { at: now, report };
+    // A failed run must not be served for a minute.
+    report.catch(() => { lastPublicReport = null; });
+  }
+  return lastPublicReport.report;
+}
+
+/** Test helper: forget the cached public report. */
+export function resetHealthCache(): void {
+  lastPublicReport = null;
+}
 
 export async function runHealthChecks(): Promise<HealthReport> {
   // Network checks in parallel; static checks are instant

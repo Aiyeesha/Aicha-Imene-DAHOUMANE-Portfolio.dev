@@ -317,13 +317,15 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // feed/*: per-tag RSS feeds, outside i18n.
+  // feed/*: per-tag RSS feeds, outside i18n (only the feed/ folder: a page
+  // such as /feedback must still get the CSP). The feed*.xml files are
+  // covered by the extension list.
   // Only extensions actually served from public/ or by a file route are
   // excluded (a blanket `.*\\..*` exclusion let any dotted path skip the CSP
   // and rate limit); HTML CVs (public/cv/) and offline.html by path. /admin is
   // listed explicitly so it always goes through the proxy.
   matcher: [
-    "/((?!api|_next|opengraph-image|twitter-image|feed|cv/|offline\\.html|.*\\.(?:png|jpe?g|gif|webp|avif|svg|ico|txt|xml|js|css|map|pdf|webmanifest|woff2?)$).*)",
+    "/((?!api|_next|opengraph-image|twitter-image|feed/|cv/|offline\\.html|.*\\.(?:png|jpe?g|gif|webp|avif|svg|ico|txt|xml|js|css|map|pdf|webmanifest|woff2?)$).*)",
     "/admin",
     "/admin/:path*",
   ],

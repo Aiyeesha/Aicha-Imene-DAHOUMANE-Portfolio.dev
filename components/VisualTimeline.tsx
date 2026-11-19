@@ -3,7 +3,7 @@
 // VisualTimeline.tsx
 // ------------------
 // Animated vertical timeline for the "Journey" section of the About page
-// (paragraphs from Supabase). Steps slide and fade in on scroll, the
+// (paragraphs from content/about.ts). Steps slide and fade in on scroll, the
 // connecting line "draws" downwards; static with reduced motion. Semantic
 // ol > li with an aria-label.
 //

@@ -18,7 +18,7 @@ export default function DevConsoleMessage() {
       "%cThis portfolio is built with:\n" +
         "  → Next.js 16 (App Router) + React 19 + TypeScript\n" +
         "  → Tailwind CSS + next-themes (dark mode)\n" +
-        "  → Supabase (PostgreSQL) + Upstash Redis\n" +
+        "  → Content in TypeScript + MDX, Upstash Redis (rate limiting)\n" +
         "  → next-intl (FR/EN/ES) + MDX blog\n" +
         "  → Deployed on Vercel",
       "font-size:13px; color:#94a3b8; line-height:1.6;"

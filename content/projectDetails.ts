@@ -11209,15 +11209,15 @@ export const projectDetails: ProjectDetails[] = [
     ],
     "locales": {
       "en": {
-        "title": "Visualforce to Lightning migration (WireBright)",
+        "title": "Visualforce to Lightning migration (WireBrite)",
         "heroSubtitle": "Full scoping of a Salesforce Classic → Lightning migration: component inventory, a decomposed estimate (17 days), a per-component risk matrix, a tooled diagnostic, then a prototype of the two most critical components (LWC + Aura Quick Action)."
       },
       "fr": {
-        "title": "Migration Visualforce vers Lightning (WireBright Consulting)",
+        "title": "Migration Visualforce vers Lightning (WireBrite Consulting)",
         "heroSubtitle": "Cadrage complet d'une migration Salesforce Classic → Lightning : inventaire des composants, chiffrage décomposé (17 jours), matrice de risques par composant, diagnostic outillé, puis prototype des deux composants les plus critiques (LWC + Aura Quick Action)."
       },
       "es": {
-        "title": "Migración de Visualforce a Lightning (WireBright)",
+        "title": "Migración de Visualforce a Lightning (WireBrite)",
         "heroSubtitle": "Encuadre completo de una migración de Salesforce Classic → Lightning: inventario de componentes, una estimación descompuesta (17 días), una matriz de riesgos por componente, un diagnóstico apoyado en herramientas, y luego un prototipo de los dos componentes más críticos (LWC + Aura Quick Action)."
       }
     }

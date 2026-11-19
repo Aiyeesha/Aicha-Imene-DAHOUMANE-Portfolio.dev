@@ -9,7 +9,24 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.0.0] — 2026-11-19
+
 ### Changed
+
+- **Vérification de l'audit externe** :
+  - **Fin du CDI** : « en préavis jusqu'au 30 novembre 2026 » (accueil IT Ops, page Me recruter, FAQ, parcours), au lieu d'un CDI daté sans explication.
+  - **Legarant-AXG** : l'upsert sur External ID empêche les doublons, la Matching Rule (mode Alerte) ne fait que les signaler ; la limite « synchro à sens unique » vise la reprise AXG → Salesforce (le chemin mobile reste bidirectionnel) ; la durée de 5,7 s est précisée (toute la suite Postman, scripts de test inclus).
+  - **Linguaskill** : la carte indique « C1+ listening · B2 reading ».
+  - **WireBrite** : nom aligné sur le dépôt GitHub (l'adresse de la page ne change pas).
+  - **Colophon** : liens OpenSSF Scorecard (scorecard.dev) et next-intl (next-intl.dev) corrigés, « proxy.ts » au lieu de « middleware », plus de mention de l'ancienne table Supabase.
+  - **Mentions légales** : renvoi vers la politique de confidentialité pour le détail des services utilisés.
+
+### Fixed
+
+- **`/api/health`** : le formulaire de contact est signalé en panne en production si Formhook n'est pas configuré (il répondrait 503) ; les vérifications sont réutilisées 60 s par instance.
+- **Témoignages** : `/api/testimonial-submit` vérifie l'origine de la requête, comme le formulaire de contact.
+- **`proxy.ts`** : seul le dossier `feed/` échappe au proxy ; une future page `/feedback` recevrait bien la CSP.
+- **Restes de Supabase** : message de la console développeur et commentaires mis à jour (le site n'utilise plus Supabase).
 
 - **CV ATS, mise en page** : même marge en haut des deux pages, aucune expérience, formation ou projet coupé entre la page 1 et la page 2, nouvelle présentation (nom et titres de section en bleu foncé, coordonnées sur trois lignes, texte un peu plus grand). Toujours une seule colonne de texte, sans tableau ni icône.
 
@@ -806,7 +823,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-[Unreleased]: https://github.com/Aiyeesha/portfolio-next/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev/compare/v1.8.0...v2.0.0
 [1.8.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/Aiyeesha/portfolio-next/compare/v1.5.0...v1.6.0

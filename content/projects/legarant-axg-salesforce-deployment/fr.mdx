@@ -95,7 +95,7 @@ Le livrable n'est pas seulement du code : c'est un **document de déploiement** 
 
 Un projet honnête nomme ce qu'il ne fait pas :
 
-- **Pas de résolution de conflit.** Acceptable ici : la synchro est à sens unique, il n'y a pas de write concurrent à arbitrer. Ce n'est pas un manque, c'est une conséquence du périmètre.
+- **Pas de résolution de conflit.** Acceptable ici : la reprise AXG → Salesforce est à sens unique, il n'y a pas d'écriture concurrente à arbitrer (le chemin mobile, lui, passe par Heroku Connect). Ce n'est pas un manque, c'est une conséquence du périmètre.
 - **Pas de retry/backoff documenté** sur les appels Heroku Connect. À l'échelle réelle, il faudrait une file d'attente ou un mécanisme de reprise — hors périmètre du démonstrateur, mais identifié.
 - **Heroku Connect en Demo Edition** : suffisant pour prouver le montage, pas dimensionné pour un volume de production réel.
 
@@ -105,7 +105,7 @@ Un projet honnête nomme ce qu'il ne fait pas :
 |---|---|
 | Endpoints API livrés | 4 (GET, POST, PATCH, DELETE) |
 | Suite de tests Postman | 17 tests, 100 % passés |
-| Temps d'exécution / réponse moyenne | 5,7 s au total · 232 ms en moyenne |
+| Temps d'exécution / réponse moyenne | 5,7 s pour toute la suite Postman (scripts de test inclus) · 232 ms de réponse moyenne par requête |
 | Synchronisation Heroku ↔ Salesforce | Bidirectionnelle, opérationnelle |
 | Évaluation du titre RNCP | 2/2 compétences validées — mention Félicitations, architecture jugée propre et bien documentée |
 
@@ -113,7 +113,7 @@ Un projet honnête nomme ce qu'il ne fait pas :
 
 C'est le point qui distingue ce projet d'un livrable Salesforce classique. J'ai construit **la couche Apex REST ET l'application Heroku qui la consomme** : API Express + PostgreSQL, deux environnements isolés sur une pipeline Heroku, Heroku Connect configuré objet par objet, jusqu'au runbook de déploiement.
 
-Un profil Salesforce seul se serait arrêté à la couche Apex et aurait confié l'infrastructure Heroku à quelqu'un d'autre — avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infrastructure seul aurait pu déployer l'app Heroku, mais pas concevoir le Trigger Apex d'External ID ni la Matching Rule qui empêchent les doublons à la source. Livrer les deux ensemble a supprimé l'aller-retour habituel entre équipe Salesforce et équipe DevOps : l'environnement de staging existait **avant** que la première ligne d'Apex ne soit écrite.
+Un profil Salesforce seul se serait arrêté à la couche Apex et aurait confié l'infrastructure Heroku à quelqu'un d'autre — avec le risque classique de décisions prises sans connaître les contraintes de l'autre côté. Un profil infrastructure seul aurait pu déployer l'app Heroku, mais pas concevoir le Trigger Apex d'External ID qui empêche les doublons à la source (upsert sur External ID), ni la Matching Rule qui signale les cas restants sans bloquer la saisie. Livrer les deux ensemble a supprimé l'aller-retour habituel entre équipe Salesforce et équipe DevOps : l'environnement de staging existait **avant** que la première ligne d'Apex ne soit écrite.
 
 **Prochaine étape déjà cadrée** : migrer le flux sandbox/PoC vers OAuth 2.0 JWT Bearer Flow (certificat plutôt que mot de passe) pour aligner tous les environnements sur un flow server-to-server. C'est le point de départ exact d'un projet de croisement plus poussé — synchronisation temps réel Heroku ↔ Salesforce via Platform Events.
 

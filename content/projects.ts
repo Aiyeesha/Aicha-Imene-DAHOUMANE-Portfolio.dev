@@ -1577,7 +1577,7 @@ export const projects: Project[] = [
   {
     "slug": "wirebright-visualforce-to-lightning",
     "nature": "rncp",
-    "title": "Visualforce to Lightning migration (WireBright)",
+    "title": "Visualforce to Lightning migration (WireBrite)",
     "excerpt": "Technical specifications and Classic-to-Lightning migration prototype for EG Manufacture: converting a Visualforce page into a Lightning Web Component and a JavaScript button into an Aura Quick Action, with detailed cost estimates and risk management.",
     "track": "salesforce",
     "categories": [

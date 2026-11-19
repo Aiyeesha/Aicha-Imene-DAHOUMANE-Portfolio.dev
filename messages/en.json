@@ -368,7 +368,7 @@
     "p1_itops": "IT Ops & DevOps: during my two one-month internships at MIDRANGE Group (between February and May 2023), I remotely monitored 550+ devices through Datto RMM, triaged and followed up 316 support tickets in Autotask (resolving part of them myself, remotely) and deployed 264 Dell workstations (64 re-imaged from a Sysprep image after a NIST 800-88 certified wipe, 200 via Windows Autopilot).",
     "p2_itops": "During my TAI and TSSR training (Greta du Val-d'Oise), I installed and administered Windows Server environments — AD DS, DNS, DHCP, GPO, pfSense/Squid filtering, virtualization — documenting every procedure as a runbook.",
     "p3_itops": "I pay close attention to service continuity: 85 Acronis backup alerts triaged during the internships.",
-    "p4_itops": "Full-time Salesforce Developer at LD Digitales until November 30, 2026 — my IT Ops & DevOps skills, built during my internships at MIDRANGE Group and in training, remain fully transferable in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
+    "p4_itops": "Full-time Salesforce Developer at LD Digitales, working my notice until November 30, 2026 — my IT Ops & DevOps skills, built during my internships at MIDRANGE Group and in training, remain fully transferable in a hybrid role. The Legarant-AXG project (the Apex REST layer AND its companion Heroku app, deployment runbook included) shows this crossover isn't just a resume line: the same person designs the Salesforce integration and runs the infrastructure it depends on. On the academic side, I hold the RNCP Level 6 (Bac+3/4 equivalent) 'Développeur Concepteur Logiciel' title (OpenClassrooms, 2025).",
     "atAGlanceTitle": "At a glance",
     "basedInLabel": "Based in",
     "basedInValue": "Val-d'Oise (95), Île-de-France — Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation · Hybrid · On-site",
@@ -447,7 +447,7 @@
     "liabilityTitle": "Liability",
     "liabilityBody": "The information on this website is provided for informational purposes only and does not constitute a commitment from the publisher. The publisher strives to ensure the accuracy of published information but cannot guarantee its completeness or freedom from errors. Links to third-party websites are provided for reference only; the publisher has no control over their content.",
     "dataTitle": "Personal data",
-    "dataBody": "Data collected via the contact form (name, email, message) is forwarded by email via an email delivery service to respond to your request; it is not stored on the site's servers and is not shared with any other third parties. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. Contact: {email}."
+    "dataBody": "Data collected via the contact form (name, email, message) is forwarded by email via an email delivery service to respond to your request; it is not stored on the site's servers and is not shared with any other third parties. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. The services involved (email delivery, hosting, rate limiting) are listed in the privacy policy. Contact: {email}."
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -455,7 +455,7 @@
     "items": [
       {
         "q": "What's your availability?",
-        "a": "I'm available for interviews right away, with a start date from December 2026. I leave my Salesforce Developer role at LD Digitales (apprenticeship, then permanent contract, since October 2023) on November 30, 2026."
+        "a": "I'm available for interviews right away, with a start date from December 2026. I leave my Salesforce Developer role at LD Digitales (apprenticeship, then permanent contract, since October 2023) on November 30, 2026: my notice period is under way."
       },
       {
         "q": "What contract types are you looking for?",

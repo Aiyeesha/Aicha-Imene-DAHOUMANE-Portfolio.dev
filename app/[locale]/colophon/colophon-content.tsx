@@ -52,7 +52,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
     },
     {
       title: "i18n",
-      items: [{ name: "next-intl", role: isFr ? "Internationalisation EN/FR/ES (App Router, middleware)" : isEs ? "Internacionalización EN/FR/ES (App Router, middleware)" : "EN/FR/ES internationalisation (App Router, middleware)", link: "https://next-intl-docs.vercel.app" }],
+      items: [{ name: "next-intl", role: isFr ? "Internationalisation EN/FR/ES (App Router, proxy.ts)" : isEs ? "Internacionalización EN/FR/ES (App Router, proxy.ts)" : "EN/FR/ES internationalisation (App Router, proxy.ts)", link: "https://next-intl.dev" }],
     },
     {
       title: "Blog",
@@ -83,8 +83,8 @@ export default function ColophonContent({ locale }: { locale: string }) {
         { name: "Lighthouse CI",     role: isFr ? "Budgets performance & accessibilité sur chaque PR, bloquants en cas de régression" : isEs ? "Presupuestos de rendimiento y accesibilidad en cada PR, bloqueantes en caso de regresión" : "Performance & accessibility budgets on every PR, blocking on regression", link: "https://github.com/GoogleChrome/lighthouse-ci" },
         { name: "axe-core / Playwright", role: isFr ? "Audit WCAG 2.2 AA automatisé sur 9 routes — zéro tolérance pour les violations critiques" : isEs ? "Auditoría WCAG 2.2 AA automatizada en 9 rutas — tolerancia cero para violaciones críticas" : "Automated WCAG 2.2 AA audit on 9 routes — zero tolerance for critical violations", link: "https://github.com/dequelabs/axe-core" },
         { name: "Dependabot",        role: isFr ? "Mises à jour npm hebdomadaires (5 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle" : isEs ? "Actualizaciones npm semanales (5 grupos), Actions mensuales — versiones mayores de next-intl/framer-motion bajo revisión manual" : "Weekly npm updates (5 groups), monthly Actions — next-intl/framer-motion majors require manual review" },
-        { name: "OpenSSF Scorecard", role: isFr ? "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits" : isEs ? "Puntuación semanal de seguridad de la cadena de suministro — branch protection, SAST, dependency pinning, signed commits" : "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits", link: "https://securityscorecard.com" },
-        { name: "Content Publish Safety", role: isFr ? "Contrôle quotidien de public.projects : aucun projet n'est publié sans ses trois langues" : isEs ? "Verificación diaria de public.projects: ningún proyecto se publica sin sus tres idiomas" : "Daily check of public.projects: no project goes live without its three languages" },
+        { name: "OpenSSF Scorecard", role: isFr ? "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits" : isEs ? "Puntuación semanal de seguridad de la cadena de suministro — branch protection, SAST, dependency pinning, signed commits" : "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits", link: "https://scorecard.dev" },
+        { name: "Content Publish Safety", role: isFr ? "Contrôle quotidien du contenu des projets : aucun projet n'est publié sans ses trois langues" : isEs ? "Verificación diaria del contenido de los proyectos: ningún proyecto se publica sin sus tres idiomas" : "Daily check of the project content: no project goes live without its three languages" },
       ],
     },
   ];
