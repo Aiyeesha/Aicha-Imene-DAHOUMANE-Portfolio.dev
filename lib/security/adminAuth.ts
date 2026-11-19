@@ -3,9 +3,9 @@
 // Admin HTTP Basic auth check for server components and server actions.
 //
 // proxy.ts protects /admin (fail-closed rate limit + Basic auth), but the
-// admin server components read Supabase with the service_role key, so they
-// re-check authentication themselves (defence in depth) rather than relying
-// on routing alone. The layout, every page and every action share this rule.
+// admin server components read server-only data, so they re-check
+// authentication themselves (defence in depth) rather than relying on
+// routing alone. The layout, every page and every action share this rule.
 //
 // `server-only`: importing this from a client component fails the build;
 // admin credentials must never reach the browser.

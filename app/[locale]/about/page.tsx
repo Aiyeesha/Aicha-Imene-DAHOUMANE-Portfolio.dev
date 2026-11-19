@@ -1,10 +1,10 @@
 // about/page.tsx
 // ---------------
-// About page, fed by Supabase through getAboutPageCached:
+// About page, fed by the static content of content/about.ts (getAboutPageCached):
 //   1. ProfileFactsCard: "At a glance", per track (client component)
 //   2. AboutTrackIntro: positioning, per track (client component)
 //   3. tech stack grid and career timeline (static)
-//   4. journey, values, passions (Supabase)
+//   4. journey, values, passions (content/about.ts)
 
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";

@@ -5,6 +5,7 @@
 // moderation happens when reading the email, and a published testimonial is
 // added to content/testimonials.ts by hand.
 //
+//   0. Origin guard (same rule as the contact form)
 //   1. Signed invitation, not expired, not used, with a session key bound to
 //      it (lib/security/testimonialInvite.ts)
 //   2. Rate limit: 3 submissions / 24h per IP (Upstash Redis)
@@ -20,7 +21,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { log } from "@/lib/logger";
-import { singleLine } from "@/lib/contactValidation";
+import { isAllowedOrigin, singleLine } from "@/lib/contactValidation";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
 import { headers } from "next/headers";
 import {
@@ -41,6 +42,14 @@ const VALID_RELATIONS = new Set([
 ]);
 
 export async function POST(req: NextRequest) {
+  // ── 0. Origin guard, as in app/api/contact/route.ts: in production the
+  // request must come from the site itself. Vercel previews are exempt
+  // (ephemeral URLs). The signed invitation remains the main protection.
+  const isPreview = process.env.VERCEL_ENV === "preview";
+  if (!isPreview && process.env.NODE_ENV === "production" && !isAllowedOrigin(req)) {
+    return NextResponse.json({ error: "forbidden_origin" }, { status: 403 });
+  }
+
   // ── 1. Per-IP rate limit ────────────────────────────────────────────────────
   const headersList = await headers();
   const ip =

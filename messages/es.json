@@ -368,7 +368,7 @@
     "p1_itops": "IT Ops y DevOps: durante mis dos prácticas de un mes en MIDRANGE Group (entre febrero y mayo de 2023), supervisé en remoto más de 550 equipos con Datto RMM, clasifiqué y seguí 316 tickets de soporte en Autotask (resolviendo yo misma una parte en remoto) y desplegué 264 puestos Dell (64 reinstalados desde una imagen Sysprep tras un borrado certificado NIST 800-88, 200 mediante Windows Autopilot).",
     "p2_itops": "Durante mi formación TAI y TSSR (Greta du Val-d'Oise), instalé y administré entornos Windows Server — AD DS, DNS, DHCP, GPO, filtrado pfSense/Squid, virtualización — documentando cada procedimiento en forma de runbook.",
     "p3_itops": "Presto especial atención a la continuidad del servicio: 85 alertas de copia de seguridad Acronis clasificadas durante las prácticas.",
-    "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales hasta el 30 de noviembre de 2026 — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE Group y en formación, siguen plenamente aplicables en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
+    "p4_itops": "Desarrolladora Salesforce con contrato indefinido en LD Digitales, en preaviso hasta el 30 de noviembre de 2026 — mis habilidades de IT Ops y DevOps, adquiridas durante mis prácticas en MIDRANGE Group y en formación, siguen plenamente aplicables en un puesto híbrido. El proyecto Legarant-AXG (la capa Apex REST Y la aplicación Heroku que la acompaña, con su runbook de despliegue) muestra que este cruce no es solo una línea de currículum: la misma persona diseña la integración Salesforce y opera la infraestructura de la que depende. En el plano académico, tengo el título RNCP nivel 6 (equivalente a Bac+3/4) «Développeur Concepteur Logiciel» (OpenClassrooms, 2025).",
     "atAGlanceTitle": "En resumen",
     "basedInLabel": "Ubicada en",
     "basedInValue": "Val-d'Oise (95), Île-de-France — París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional · Híbrido · Presencial",
@@ -447,7 +447,7 @@
     "liabilityTitle": "Responsabilidad",
     "liabilityBody": "La información de este sitio web se proporciona con fines informativos y no constituye un compromiso por parte de la editora. La editora se esfuerza por garantizar la exactitud de la información publicada, pero no puede garantizar su exhaustividad ni la ausencia de errores. Los enlaces a sitios web de terceros se proporcionan únicamente como referencia; la editora no tiene control sobre su contenido.",
     "dataTitle": "Datos personales",
-    "dataBody": "Los datos recopilados a través del formulario de contacto (nombre, email, mensaje) se envían por correo electrónico a través de un servicio de entrega de emails para responder a tu solicitud; no se conservan en los servidores del sitio ni se comparten con otros terceros. De conformidad con la normativa de protección de datos aplicable, tienes derecho a acceder, corregir y eliminar tus datos. Contacto: {email}."
+    "dataBody": "Los datos recopilados a través del formulario de contacto (nombre, email, mensaje) se envían por correo electrónico a través de un servicio de entrega de emails para responder a tu solicitud; no se conservan en los servidores del sitio ni se comparten con otros terceros. De conformidad con la normativa de protección de datos aplicable, tienes derecho a acceder, corregir y eliminar tus datos. Los servicios utilizados (envío de correos, alojamiento, limitación de solicitudes) se detallan en la política de privacidad. Contacto: {email}."
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -455,7 +455,7 @@
     "items": [
       {
         "q": "¿Cuál es tu disponibilidad?",
-        "a": "Estoy disponible para entrevistas desde ya, con incorporación desde diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026."
+        "a": "Estoy disponible para entrevistas desde ya, con incorporación desde diciembre de 2026. Dejo mi puesto de Desarrolladora Salesforce en LD Digitales (formación dual y después contrato indefinido, desde octubre de 2023) el 30 de noviembre de 2026: mi preaviso está en curso."
       },
       {
         "q": "¿Qué tipos de contrato buscas?",

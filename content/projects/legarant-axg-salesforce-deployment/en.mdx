@@ -95,7 +95,7 @@ The deliverable is not just code: it's a **deployment document** listing the del
 
 An honest project names what it doesn't do:
 
-- **No conflict resolution.** Acceptable here: the sync is one-way, there's no concurrent write to arbitrate. Not a gap — a consequence of scope.
+- **No conflict resolution.** Acceptable here: the AXG → Salesforce migration is one-way, there's no concurrent write to arbitrate (the mobile path goes through Heroku Connect). Not a gap — a consequence of scope.
 - **No documented retry/backoff** on Heroku Connect calls. At real scale, a queue or retry mechanism would be needed — out of scope for the demonstrator, but identified.
 - **Heroku Connect on Demo Edition**: enough to prove the setup, not sized for real production volume.
 
@@ -105,7 +105,7 @@ An honest project names what it doesn't do:
 |---|---|
 | API endpoints delivered | 4 (GET, POST, PATCH, DELETE) |
 | Postman test suite | 17 tests, 100% passed |
-| Run time / average response | 5.7 s total · 232 ms average |
+| Run time / average response | 5.7 s for the whole Postman run (test scripts included) · 232 ms average response per request |
 | Heroku ↔ Salesforce sync | Bidirectional, operational |
 | RNCP diploma evaluation | 2/2 competencies validated — distinction, architecture judged clean and well documented |
 
@@ -113,7 +113,7 @@ An honest project names what it doesn't do:
 
 This is what sets the project apart from a classic Salesforce deliverable. I built **the Apex REST layer AND the Heroku application that consumes it**: Express + PostgreSQL API, two isolated environments on a Heroku pipeline, Heroku Connect configured object by object, right down to the deployment runbook.
 
-A Salesforce-only profile would have stopped at the Apex layer and handed the Heroku infrastructure to someone else — with the classic risk of decisions made without knowing the constraints on the other side. An infrastructure-only profile could have deployed the Heroku app, but not designed the External ID Apex trigger or the Matching Rule that stop duplicates at the source. Delivering both together removed the usual back-and-forth between the Salesforce team and the DevOps team: the staging environment existed **before** the first line of Apex was written.
+A Salesforce-only profile would have stopped at the Apex layer and handed the Heroku infrastructure to someone else — with the classic risk of decisions made without knowing the constraints on the other side. An infrastructure-only profile could have deployed the Heroku app, but not designed the External ID Apex trigger that stops duplicates at the source (upsert on External ID), or the Matching Rule that flags the remaining cases without blocking data entry. Delivering both together removed the usual back-and-forth between the Salesforce team and the DevOps team: the staging environment existed **before** the first line of Apex was written.
 
 **Next step already scoped**: migrate the sandbox/PoC flow to OAuth 2.0 JWT Bearer Flow (certificate instead of password) to align every environment on a server-to-server flow. That's the exact starting point of a deeper crossover project — real-time Heroku ↔ Salesforce sync via Platform Events.
 

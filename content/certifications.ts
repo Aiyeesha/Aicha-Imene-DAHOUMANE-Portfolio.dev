@@ -41,7 +41,7 @@ export const certifications: Certification[] = [
   },
   {
     id: 'linguaskill-cambridge',
-    name: 'Linguaskill Business — C1+',
+    name: 'Linguaskill Business — C1+ listening · B2 reading',
     issuer: 'Cambridge Assessment English',
     badgeUrl: '/certifications/linguaskill-badge.png',
     credentialUrl: 'https://results.linguaskill.com',

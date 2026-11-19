@@ -385,7 +385,7 @@
     "p1_itops": "IT Ops & DevOps : lors de mes deux stages d'un mois chez MIDRANGE Group (entre février et mai 2023), j'ai supervisé à distance plus de 550 équipements via Datto RMM, trié et suivi 316 tickets de support dans Autotask (dont une partie résolue moi-même à distance) et déployé 264 postes Dell (64 réimagés depuis une image Sysprep après effacement certifié NIST 800-88, 200 via Windows Autopilot).",
     "p2_itops": "En formation TAI puis TSSR (Greta du Val-d'Oise), j'ai installé et administré des environnements Windows Server — AD DS, DNS, DHCP, GPO, filtrage pfSense/Squid, virtualisation — en documentant chaque procédure sous forme de runbook.",
     "p3_itops": "Je garde une attention particulière à la continuité de service : 85 alertes de sauvegarde Acronis triées pendant les stages.",
-    "p4_itops": "Développeuse Salesforce en CDI chez LD Digitales jusqu'au 30 novembre 2026 — les compétences IT Ops & DevOps, acquises en stages chez MIDRANGE Group puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
+    "p4_itops": "Développeuse Salesforce en CDI chez LD Digitales, en préavis jusqu'au 30 novembre 2026 — les compétences IT Ops & DevOps, acquises en stages chez MIDRANGE Group puis en formation, restent pleinement mobilisables sur un poste hybride. Le projet Legarant-AXG (couche Apex REST ET application Heroku associée, runbook de déploiement inclus) montre que ce croisement n'est pas qu'une ligne de CV : la même personne conçoit l'intégration Salesforce et exploite l'infrastructure qui la fait tourner. Côté académique, je porte le titre RNCP niveau 6 (Bac+3/4) « Développeur Concepteur Logiciel » (OpenClassrooms, 2025)."
   },
   "mdx": {
     "copy": "Copier",
@@ -447,7 +447,7 @@
     "liabilityTitle": "Responsabilité",
     "liabilityBody": "Les informations présentes sur ce site sont fournies à titre indicatif et ne sauraient engager la responsabilité de l'éditeur. L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées, mais ne peut garantir leur exhaustivité ni leur absence d'erreurs. Les liens hypertextes vers des sites tiers sont fournis à titre informatif ; l'éditeur n'exerce aucun contrôle sur leur contenu.",
     "dataTitle": "Données personnelles",
-    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont transmises par email via un service d'acheminement d'emails pour répondre à votre demande ; elles ne sont pas conservées sur les serveurs du site et ne sont pas transmises à d'autres tiers. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Contact : {email}."
+    "dataBody": "Les données collectées via le formulaire de contact (nom, email, message) sont transmises par email via un service d'acheminement d'emails pour répondre à votre demande ; elles ne sont pas conservées sur les serveurs du site et ne sont pas transmises à d'autres tiers. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Le détail des services utilisés (acheminement des e-mails, hébergement, limitation de débit) figure dans la politique de confidentialité. Contact : {email}."
   },
   "faq": {
     "title": "Questions fréquentes",
@@ -455,7 +455,7 @@
     "items": [
       {
         "q": "Quelle est votre disponibilité ?",
-        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible dès décembre 2026. Je quitte mon poste de Développeuse Salesforce chez LD Digitales (alternance puis CDI, depuis octobre 2023) le 30 novembre 2026."
+        "a": "Je suis disponible dès maintenant pour des entretiens, avec une prise de poste possible dès décembre 2026. Je quitte mon poste de Développeuse Salesforce chez LD Digitales (alternance puis CDI, depuis octobre 2023) le 30 novembre 2026 : mon préavis est en cours."
       },
       {
         "q": "Quels types de contrat recherchez-vous ?",

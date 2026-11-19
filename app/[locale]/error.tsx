@@ -1,7 +1,7 @@
 // app/[locale]/error.tsx
 // ----------------------
-// Locale error boundary for crashes in app/[locale]/* (Supabase or Redis
-// timeouts…). useParams() gives the locale without a flash.
+// Locale error boundary for crashes in app/[locale]/* (Redis timeouts,
+// rendering errors…). useParams() gives the locale without a flash.
 // Props from Next.js: error (.digest = server id for logging) and reset
 // (re-renders the segment without a full reload).
 
