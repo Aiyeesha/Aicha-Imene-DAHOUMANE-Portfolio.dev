@@ -19,15 +19,23 @@ describe("isExamPast", () => {
 describe("examTargetLabel", () => {
   const before = new Date("2026-12-01T12:00:00Z");
   const after = new Date("2027-01-02T12:00:00Z");
-  it("shows the booked date before the exam", () => {
-    expect(examTargetLabel(exam, "fr", before)).toBe("Examen le 29 déc. 2026");
-    expect(examTargetLabel(exam, "en", before)).toBe("Exam on Dec 29, 2026");
-    expect(examTargetLabel(exam, "es", before)).toBe("Examen el 29 dic. 2026");
+  it("shows 'late December 2026' before the exam, never the exact date", () => {
+    expect(examTargetLabel(exam, "fr", before)).toBe("Examen prévu fin décembre 2026");
+    expect(examTargetLabel(exam, "en", before)).toBe("Exam planned for late December 2026");
+    expect(examTargetLabel(exam, "es", before)).toBe("Examen previsto para finales de diciembre de 2026");
   });
   it("switches to 'result pending' afterwards", () => {
-    expect(examTargetLabel(exam, "fr", after)).toBe("Examen passé le 29 déc. 2026 — résultat à venir");
-    expect(examTargetLabel(exam, "en", after)).toBe("Exam taken on Dec 29, 2026 — result pending");
-    expect(examTargetLabel(exam, "es", after)).toBe("Examen realizado el 29 dic. 2026 — resultado pendiente");
+    expect(examTargetLabel(exam, "fr", after)).toBe("Examen passé fin décembre 2026 — résultat à venir");
+    expect(examTargetLabel(exam, "en", after)).toBe("Exam taken in late December 2026 — result pending");
+    expect(examTargetLabel(exam, "es", after)).toBe("Examen realizado a finales de diciembre de 2026 — resultado pendiente");
+  });
+});
+
+describe("no exact exam date is published", () => {
+  it("labels never show the day of the exam", () => {
+    for (const e of Object.values(SCHEDULED_EXAMS)) {
+      for (const label of [e.fr, e.en, e.es]) expect(label).not.toMatch(/\b(29|30)\b/);
+    }
   });
 });
 

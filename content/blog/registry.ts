@@ -78,24 +78,24 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     tags: ["IT Ops", "Active Directory", "GPO", "Windows Server", "Sécurité"],
   },
 
-  // --- PfSense + Squid
+  // --- pfSense + Squid
   {
     slug: "pfsense-squid-proxy-setup",
     locale: "en",
-    title: "PfSense + Squid Proxy: Secure Internet Access with Content Filtering",
+    title: "pfSense + Squid Proxy: Secure Internet Access with Content Filtering",
     excerpt:
-      "How to set up PfSense as a perimeter firewall with Squid as a transparent proxy — including HTTPS inspection, ACLs, and SquidGuard content filtering.",
+      "How to set up pfSense as a perimeter firewall with Squid as a transparent proxy — including HTTPS inspection, ACLs, and SquidGuard content filtering.",
     date: "2025-08-04",
-    tags: ["IT Ops", "PfSense", "Network", "Security", "Firewall", "Proxy"],
+    tags: ["IT Ops", "pfSense", "Network", "Security", "Firewall", "Proxy"],
   },
   {
     slug: "pfsense-squid-proxy-setup",
     locale: "fr",
-    title: "PfSense + Squid : accès internet sécurisé avec filtrage de contenu",
+    title: "pfSense + Squid : accès internet sécurisé avec filtrage de contenu",
     excerpt:
-      "Comment configurer PfSense comme pare-feu périmétrique avec Squid en proxy transparent — inspection HTTPS, ACL et filtrage SquidGuard.",
+      "Comment configurer pfSense comme pare-feu périmétrique avec Squid en proxy transparent — inspection HTTPS, ACL et filtrage SquidGuard.",
     date: "2025-08-04",
-    tags: ["IT Ops", "PfSense", "Réseau", "Sécurité", "Pare-feu", "Proxy"],
+    tags: ["IT Ops", "pfSense", "Réseau", "Sécurité", "Pare-feu", "Proxy"],
   },
 
   // --- Windows Server Hardening

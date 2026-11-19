@@ -24,9 +24,9 @@ export function isAvailableNow(now: Date = new Date()): boolean {
 
 /** Labels before the start date. */
 export const AVAILABILITY = {
-  fr: { from: "à partir de décembre 2026",     badge: "Déc. 2026", summary: "Entretiens dès maintenant · Disponible à partir de décembre 2026" },
+  fr: { from: "dès décembre 2026",     badge: "Déc. 2026", summary: "Entretiens dès maintenant · Disponible dès décembre 2026" },
   en: { from: "from December 2026",            badge: "Dec. 2026", summary: "Interviews now · Available from December 2026" },
-  es: { from: "a partir de diciembre de 2026", badge: "Dic. 2026", summary: "Entrevistas desde ya · Disponible a partir de diciembre de 2026" },
+  es: { from: "desde diciembre de 2026", badge: "Dic. 2026", summary: "Entrevistas desde ya · Disponible desde diciembre de 2026" },
 } as const;
 
 /** Labels from the start date on. */

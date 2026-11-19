@@ -227,11 +227,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       trainingPeriod: isFr ? "oct. 2022 – juin 2023" : isEs ? "oct. 2022 – jun. 2023" : "Oct 2022 – Jun 2023",
       level: isFr ? "Titre RNCP niveau 5 (Bac+2)" : isEs ? "Título RNCP nivel 5 (equivalente a Bac+2)" : "RNCP Level 5 (Bac+2)",
       description: isFr
-        ? "Administration systèmes & réseaux. Deux stages d'un mois chez MIDRANGE Group : déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
+        ? "Administration systèmes & réseaux. Deux stages d'un mois chez MIDRANGE Group : déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM."
         : isEs
-        ? "Administración de sistemas y redes. Dos prácticas de un mes en MIDRANGE Group: despliegue de 264 equipos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM."
-        : "Systems & network administration. Two one-month internships at MIDRANGE Group: deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), PfSense/Squid, Acronis, Datto RMM.",
-      skills: ["Windows Server 2022", "Active Directory", "DNS / DHCP / WDS", "GPO", "PXE", "VMware Workstation 17", "PfSense", "Squid Proxy", "Acronis Cyber Protect", "Datto RMM", "Windows Autopilot"],
+        ? "Administración de sistemas y redes. Dos prácticas de un mes en MIDRANGE Group: despliegue de 264 equipos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM."
+        : "Systems & network administration. Two one-month internships at MIDRANGE Group: deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM.",
+      skills: ["Windows Server 2022", "Active Directory", "DNS / DHCP / WDS", "GPO", "PXE", "VMware Workstation 17", "pfSense", "Squid Proxy", "Acronis Cyber Protect", "Datto RMM", "Windows Autopilot"],
       credentialUrl: undefined,
       diplomaUrl: "/certifications/tssr-greta-diploma.pdf",
       initials: "TSSR",
@@ -322,10 +322,10 @@ export default async function CertificationsPage({ params }: PageProps) {
       issuer: "Salesforce",
       target: examTargetLabel(SCHEDULED_EXAMS.platformAdministrator, locale),
       description: isFr
-        ? "Administration avancée : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
+        ? "Administration de la plateforme : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
         : isEs
-        ? "Administración avanzada: configuración, seguridad, automatizaciones con Flows, gestión de usuarios y mantenimiento de la org."
-        : "Advanced administration: configuration, security, Flow automations, user management and org maintenance.",
+        ? "Administración de la plataforma: configuración, seguridad, automatizaciones con Flows, gestión de usuarios y mantenimiento de la org."
+        : "Platform administration: configuration, security, Flow automations, user management and org maintenance.",
       initials: "ADM",
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",

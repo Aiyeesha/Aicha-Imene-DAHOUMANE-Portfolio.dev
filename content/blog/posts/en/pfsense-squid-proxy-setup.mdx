@@ -1,17 +1,17 @@
 ---
-title: "PfSense + Squid Proxy: Secure Internet Access with Content Filtering"
-excerpt: "How to set up PfSense as a perimeter firewall with Squid as a transparent proxy — including HTTPS inspection, ACLs, and SquidGuard content filtering."
+title: "pfSense + Squid Proxy: Secure Internet Access with Content Filtering"
+excerpt: "How to set up pfSense as a perimeter firewall with Squid as a transparent proxy — including HTTPS inspection, ACLs, and SquidGuard content filtering."
 date: "2025-08-04"
-tags: ["IT Ops", "PfSense", "Network", "Security", "Firewall", "Proxy"]
+tags: ["IT Ops", "pfSense", "Network", "Security", "Firewall", "Proxy"]
 projects: ["it-ops-network-security"]
 ---
 
-PfSense is one of the most powerful open-source firewall distributions available. Combined with Squid and SquidGuard, it becomes a complete secure internet access solution — SSL inspection, content filtering, bandwidth management, and detailed logging. Here's how to set it up properly.
+pfSense is one of the most powerful open-source firewall distributions available. Combined with Squid and SquidGuard, it becomes a complete secure internet access solution — SSL inspection, content filtering, bandwidth management, and detailed logging. Here's how to set it up properly.
 
 ## Architecture Overview
 
 ```
-[Internet] ──── [PfSense] ──── [LAN Switch]
+[Internet] ──── [pfSense] ──── [LAN Switch]
                     │
                  Squid Proxy (transparent)
                  SquidGuard (content filtering)
@@ -23,7 +23,7 @@ PfSense is one of the most powerful open-source firewall distributions available
 **LAN interface:** 192.168.1.1/24 (or your internal range)
 Squid runs as a **transparent proxy** on port 3128 — clients don't need manual proxy configuration.
 
-## Phase 1: PfSense Initial Configuration
+## Phase 1: pfSense Initial Configuration
 
 ### Interfaces
 
@@ -223,7 +223,7 @@ Log File Rotate: 7 days
 
 Logs are stored at `/var/squid/logs/access.log`.
 
-**Read logs from PfSense shell:**
+**Read logs from pfSense shell:**
 ```bash
 tail -f /var/squid/logs/access.log
 
@@ -236,7 +236,7 @@ grep "192.168.1.100" /var/squid/logs/access.log | tail -50
 timestamp | duration | client IP | action/status | size | method | URL | peer | content-type
 ```
 
-### PfSense Dashboard Monitoring
+### pfSense Dashboard Monitoring
 
 Install the **Status Traffic Totals** package for bandwidth monitoring:
 ```
@@ -278,7 +278,7 @@ Services → Squid Proxy Server → SSL/MITM → Splice (bypass inspection) for:
 **Issue:** SquidGuard not blocking
 **Fix:** Enable SquidGuard in `Services → SquidGuard → General → Enable`. Apply settings. Blacklist must be downloaded.
 
-**Issue:** High CPU on PfSense
+**Issue:** High CPU on pfSense
 **Fix:** Reduce SSL inspection scope. Bypass large file downloads (`.iso`, `.exe` extensions):
 ```
 Services → Squid → General → Maximum Download Size: 100 MB
@@ -291,20 +291,20 @@ Services → Squid → General → Maximum Download Size: 100 MB
 - [ ] SSL bypass list for certificate-pinned apps (Windows Update, Apple, banking)
 - [ ] SquidGuard blocking malware and phishing categories
 - [ ] Access logs retained for 30 days minimum
-- [ ] PfSense admin access restricted to management VLAN only
-- [ ] SSH disabled on PfSense (or key-only authentication)
+- [ ] pfSense admin access restricted to management VLAN only
+- [ ] SSH disabled on pfSense (or key-only authentication)
 - [ ] pfBlockerNG installed for DNS-based ad/malware blocking
 - [ ] Firewall default deny on all interfaces
 - [ ] Automatic updates scheduled (System → Update → Auto Update)
 
 ## Conclusion
 
-A PfSense + Squid + SquidGuard stack gives small and mid-sized organizations enterprise-grade network security without enterprise-grade costs. The key is in the CA distribution (so HTTPS inspection doesn't break browsers) and a well-tuned bypass list for certificate-pinned applications. Once running, the combination of transparent proxying, content filtering, and detailed access logs gives you full visibility into what's happening on your network.
+A pfSense + Squid + SquidGuard stack gives small and mid-sized organizations enterprise-grade network security without enterprise-grade costs. The key is in the CA distribution (so HTTPS inspection doesn't break browsers) and a well-tuned bypass list for certificate-pinned applications. Once running, the combination of transparent proxying, content filtering, and detailed access logs gives you full visibility into what's happening on your network.
 
 ---
 
 **Useful Resources:**
-- [PfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
+- [pfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
 - [Squid Proxy Configuration Guide](http://www.squid-cache.org/Doc/config/)
 - [Shallalist Blacklists](http://www.shallalist.de/)
 - [pfBlockerNG - Package Guide](https://docs.netgate.com/pfsense/en/latest/packages/pfblocker.html)

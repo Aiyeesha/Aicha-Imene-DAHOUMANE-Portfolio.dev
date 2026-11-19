@@ -89,6 +89,17 @@ export default function RecruiterPaths() {
                 >
                   {t("cv")}
                 </a>
+                {/* Plain-text CV for applicant tracking systems (same content,
+                    single column, no letter-spaced headings). */}
+                <a
+                  href={cvFor(isHybrid ? "hybrid" : (p.id as Track)).replace(/\.pdf$/, "-ats.pdf")}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={t("cvAtsTitle")}
+                  className="self-center text-xs text-muted-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                >
+                  {t("cvAts")}
+                </a>
               </div>
             </li>
           );

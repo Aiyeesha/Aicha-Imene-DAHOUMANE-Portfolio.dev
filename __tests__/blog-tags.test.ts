@@ -27,7 +27,7 @@ describe("blog tags", () => {
   const INVARIANT = new Set([
     "IT Ops", "Salesforce", "Apex", "API", "Flow", "Architecture", "SOQL", "Sandbox",
     "DevOps", "CI/CD", "Governor Limits", "Active Directory", "GPO", "Windows Server",
-    "Windows", "Windows Autopilot", "Intune", "PfSense", "Proxy", "Supabase", "Runbook",
+    "Windows", "Windows Autopilot", "Intune", "pfSense", "Proxy", "Supabase", "Runbook",
     "Performance", "Support",
   ]);
 

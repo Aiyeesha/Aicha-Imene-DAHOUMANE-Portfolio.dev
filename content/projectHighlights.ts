@@ -140,16 +140,14 @@ export const PROJECT_HIGHLIGHTS: Record<string, LocalizedHighlights> = {
   },
   "workstation-mass-deployment": {
     "fr": [
-      "J'ai effacé 64 Dell Optiplex avec Blancco (norme NIST 800-88) et les ai réimagés depuis une image Sysprep de référence",
-      "J'ai déployé 200 portables Dell Latitude sans intervention (zero-touch) via Windows Autopilot et Dell ImageAssist",
-      "J'ai limité le temps d'intervention par Latitude après installation à moins de 5 minutes",
+      "J'ai effacé 64 Dell Optiplex avec Blancco (norme NIST 800-88) et les ai réimagés depuis une image Sysprep de référence (WDS/PXE ou clé WinPE)",
+      "J'ai enrôlé 200 appareils Dell neufs (Optiplex et Latitude) via Windows Autopilot et Intune, avec capture des hashs matériels par Dell ImageAssist",
       "J'ai produit un certificat d'effacement Blancco pour chaque appareil effacé",
       "J'ai configuré les profils de déploiement Intune, BitLocker, Defender et les anneaux de mise à jour"
     ],
     "es": [
-      "Borré 64 Dell Optiplex con Blancco (norma NIST 800-88) y los reinstalé a partir de una imagen Sysprep de referencia",
-      "Desplegué 200 portátiles Dell Latitude sin intervención (zero-touch) mediante Windows Autopilot y Dell ImageAssist",
-      "Mantuve el tiempo de intervención por Latitude tras la instalación por debajo de 5 minutos",
+      "Borré 64 Dell Optiplex con Blancco (norma NIST 800-88) y los reinstalé a partir de una imagen Sysprep de referencia (WDS/PXE o llave WinPE)",
+      "Inscribí 200 equipos Dell nuevos (Optiplex y Latitude) mediante Windows Autopilot e Intune, con captura de los hashes de hardware con Dell ImageAssist",
       "Generé un certificado de borrado Blancco para cada equipo borrado",
       "Configuré los perfiles de despliegue de Intune, BitLocker, Defender y los anillos de actualización"
     ]

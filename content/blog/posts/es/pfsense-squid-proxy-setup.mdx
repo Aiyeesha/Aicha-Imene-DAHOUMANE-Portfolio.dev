@@ -1,17 +1,17 @@
 ---
-title: "PfSense + Squid Proxy: acceso a internet seguro con filtrado de contenido"
-excerpt: "Cómo configurar PfSense como firewall perimetral con Squid como proxy transparente — incluyendo inspección HTTPS, ACL y filtrado de contenido con SquidGuard."
+title: "pfSense + Squid Proxy: acceso a internet seguro con filtrado de contenido"
+excerpt: "Cómo configurar pfSense como firewall perimetral con Squid como proxy transparente — incluyendo inspección HTTPS, ACL y filtrado de contenido con SquidGuard."
 date: "2025-08-04"
-tags: ["IT Ops", "PfSense", "Network", "Security", "Firewall", "Proxy"]
+tags: ["IT Ops", "pfSense", "Network", "Security", "Firewall", "Proxy"]
 projects: ["it-ops-network-security"]
 ---
 
-PfSense es una de las distribuciones de firewall open source más potentes disponibles. Combinado con Squid y SquidGuard, se convierte en una solución completa de acceso a internet seguro — inspección SSL, filtrado de contenido, gestión de ancho de banda y logging detallado. Así se configura correctamente.
+pfSense es una de las distribuciones de firewall open source más potentes disponibles. Combinado con Squid y SquidGuard, se convierte en una solución completa de acceso a internet seguro — inspección SSL, filtrado de contenido, gestión de ancho de banda y logging detallado. Así se configura correctamente.
 
 ## Visión general de la arquitectura
 
 ```
-[Internet] ──── [PfSense] ──── [Switch LAN]
+[Internet] ──── [pfSense] ──── [Switch LAN]
                     │
                  Proxy Squid (transparente)
                  SquidGuard (filtrado de contenido)
@@ -23,7 +23,7 @@ PfSense es una de las distribuciones de firewall open source más potentes dispo
 **Interfaz LAN:** 192.168.1.1/24 (o tu rango interno)
 Squid se ejecuta como **proxy transparente** en el puerto 3128 — los clientes no necesitan configuración manual de proxy.
 
-## Fase 1: configuración inicial de PfSense
+## Fase 1: configuración inicial de pfSense
 
 ### Interfaces
 
@@ -223,7 +223,7 @@ Log File Rotate: 7 days
 
 Los logs se almacenan en `/var/squid/logs/access.log`.
 
-**Leer los logs desde la shell de PfSense:**
+**Leer los logs desde la shell de pfSense:**
 ```bash
 tail -f /var/squid/logs/access.log
 
@@ -236,7 +236,7 @@ grep "192.168.1.100" /var/squid/logs/access.log | tail -50
 timestamp | duration | client IP | action/status | size | method | URL | peer | content-type
 ```
 
-### Monitorización desde el dashboard de PfSense
+### Monitorización desde el dashboard de pfSense
 
 Instala el paquete **Status Traffic Totals** para monitorizar el ancho de banda:
 ```
@@ -278,7 +278,7 @@ Services → Squid Proxy Server → SSL/MITM → Splice (bypass inspection) for:
 **Problema:** SquidGuard no bloquea nada
 **Solución:** habilita SquidGuard en `Services → SquidGuard → General → Enable`. Aplica los ajustes. La lista negra debe estar descargada.
 
-**Problema:** alto consumo de CPU en PfSense
+**Problema:** alto consumo de CPU en pfSense
 **Solución:** reduce el alcance de la inspección SSL. Excluye las descargas de archivos grandes (extensiones `.iso`, `.exe`):
 ```
 Services → Squid → General → Maximum Download Size: 100 MB
@@ -291,20 +291,20 @@ Services → Squid → General → Maximum Download Size: 100 MB
 - [ ] Lista de exclusión SSL para apps con certificate pinning (Windows Update, Apple, banca)
 - [ ] SquidGuard bloqueando las categorías de malware y phishing
 - [ ] Logs de acceso retenidos durante al menos 30 días
-- [ ] Acceso de administración a PfSense restringido a la VLAN de gestión
-- [ ] SSH deshabilitado en PfSense (o autenticación solo por clave)
+- [ ] Acceso de administración a pfSense restringido a la VLAN de gestión
+- [ ] SSH deshabilitado en pfSense (o autenticación solo por clave)
 - [ ] pfBlockerNG instalado para bloqueo de anuncios/malware basado en DNS
 - [ ] Firewall con denegación por defecto en todas las interfaces
 - [ ] Actualizaciones automáticas programadas (System → Update → Auto Update)
 
 ## Conclusión
 
-Un stack PfSense + Squid + SquidGuard ofrece a organizaciones pequeñas y medianas seguridad de red de nivel empresarial sin costes de nivel empresarial. La clave está en la distribución de la CA (para que la inspección HTTPS no rompa los navegadores) y en una lista de exclusión bien ajustada para las aplicaciones con certificate pinning. Una vez en marcha, la combinación de proxy transparente, filtrado de contenido y logs de acceso detallados te da visibilidad total sobre lo que ocurre en tu red.
+Un stack pfSense + Squid + SquidGuard ofrece a organizaciones pequeñas y medianas seguridad de red de nivel empresarial sin costes de nivel empresarial. La clave está en la distribución de la CA (para que la inspección HTTPS no rompa los navegadores) y en una lista de exclusión bien ajustada para las aplicaciones con certificate pinning. Una vez en marcha, la combinación de proxy transparente, filtrado de contenido y logs de acceso detallados te da visibilidad total sobre lo que ocurre en tu red.
 
 ---
 
 **Recursos útiles:**
-- [Documentación de PfSense](https://docs.netgate.com/pfsense/en/latest/)
+- [Documentación de pfSense](https://docs.netgate.com/pfsense/en/latest/)
 - [Guía de configuración de Squid](http://www.squid-cache.org/Doc/config/)
 - [Listas negras de Shallalist](http://www.shallalist.de/)
 - [pfBlockerNG - Guía del paquete](https://docs.netgate.com/pfsense/en/latest/packages/pfblocker.html)

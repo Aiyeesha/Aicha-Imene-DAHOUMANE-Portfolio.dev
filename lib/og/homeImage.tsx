@@ -50,7 +50,7 @@ function badge(l: OgLocale): string {
 }
 
 const SALESFORCE_TAGS = ["Apex", "LWC", "Flows", "SOQL", "CI/CD"];
-const ITOPS_TAGS = ["Windows Server", "AD DS", "Linux", "PfSense", "Docker"];
+const ITOPS_TAGS = ["Windows Server", "AD DS", "Linux", "pfSense", "Docker"];
 
 const CYAN = "#22d3ee";
 const VIOLET = "#a78bfa";

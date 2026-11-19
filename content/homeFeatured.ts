@@ -53,9 +53,9 @@ export const HOME_FEATURED: Record<HomeTrack, HomeFeaturedEntry[]> = {
     {
       slug: "workstation-mass-deployment",
       result: {
-        fr: "264 postes Dell déployés, moins de 5 min d'intervention par portable",
-        en: "264 Dell devices deployed, under 5 minutes of hands-on time per laptop",
-        es: "264 equipos Dell desplegados, menos de 5 min de intervención por portátil",
+        fr: "264 postes Dell : 64 réimagés (Sysprep), 200 enrôlés via Windows Autopilot",
+        en: "264 Dell devices: 64 re-imaged (Sysprep), 200 enrolled through Windows Autopilot",
+        es: "264 equipos Dell: 64 reinstalados (Sysprep), 200 inscritos mediante Windows Autopilot",
       },
     },
     {

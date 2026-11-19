@@ -11,6 +11,14 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Corrections de l'audit indépendant (contenu)** :
+  - **Disponibilité** : « Disponible dès décembre 2026 » (ES « desde diciembre de 2026 ») sur le site et dans les CV.
+  - **Examens Salesforce** : plus aucune date exacte publiée. Le site et les 12 CV concernés indiquent « prévus fin décembre 2026 ». Les libellés passent seuls à « examen passé fin décembre 2026, résultat à venir » après la date ; un test interdit le retour d'une date précise.
+  - **Projet « 264 postes Dell »** : une seule version, sobre et cohérente, dans l'étude de cas (FR/EN/ES), les points forts, la carte de l'accueil, les deux articles de blog, la page À propos et les 18 CV : 64 Optiplex reconditionnés réimagés par image Sysprep (WDS/PXE ou clé WinPE), 200 Optiplex et Latitude neufs enrôlés via Windows Autopilot. Les affirmations invérifiables sont retirées (« zero-touch », « moins de 5 minutes par poste », « 3 semaines de configuration Intune », « aucune intervention physique »).
+  - **Titre IT Ops** : « Administratrice Systèmes & Réseaux · orientée DevOps » (site, badge, carte d'auteur, descriptions, CV IT Ops). « Ingénieure DevOps » reste seulement dans les postes visés.
+  - **Finitions** : espaces fines insécables avant « ? ! : ; » % » et après « « » dans les textes français de l'interface ; « pfSense » (au lieu de « PfSense ») ; « Avenir Télécom » ; milliers « 59.775 » dans les CV espagnols comme sur le site ; anglais « C1+ en compréhension orale » ; Platform Administrator décrit comme « Administration de la plateforme » (et non « avancée ») ; la référence « projet … ci-dessus » de « Me recruter » renvoie à Legarant-AXG.
+  - **CV au format ATS** : un lien « Version ATS » s'affiche à côté de chaque « CV (PDF) » dans le bloc « Vous recrutez pour quel poste ? ».
+  - Les 18 PDF sont régénérés avec le même nombre de pages ; les échelles des CV IT Ops FR (0,89) et EN (0,92) sont ajustées.
 - **« 316 tickets » formulé avec exactitude** — Le chiffre clé IT Ops et le profil disaient « tickets IT gérés » / « traité 316 tickets », alors que la page projet anglaise parlait de 316 tickets ouverts dans le portefeuille du client. C'est un mélange des deux : le chiffre devient « Tickets triés et suivis (Autotask) », et le profil « trié et suivi 316 tickets de support dans Autotask (dont une partie résolue moi-même à distance) », en FR/EN/ES, ainsi que l'extrait du projet « Gestion d'incidents ».
 - **Nom visible dès l'arrivée et examens Salesforce dans les CV** — Deux constats de l'audit externe :
   - **Accueil** : votre nom s'affiche au-dessus du badge de disponibilité et du titre, sur mobile comme sur ordinateur. Auparavant, l'en-tête le masquait sur la plupart des écrans d'ordinateur et le H1 n'indiquait que le rôle.

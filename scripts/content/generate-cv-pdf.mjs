@@ -23,7 +23,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-en-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-itops.pdf",
-    scale: 0.94,
+    scale: 0.92,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systems & Networks — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -37,7 +37,7 @@ const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-fr-itops.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops.pdf",
-    scale: 0.91,
+    scale: 0.89,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV",
     author: "Aïcha Imène DAHOUMANE",
   },
