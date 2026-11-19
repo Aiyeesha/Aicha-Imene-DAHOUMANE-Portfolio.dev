@@ -20,8 +20,9 @@ const REVIEWED: Record<string, string> = {
   // GRETA titles: birth details and identifiers blurred at scan time.
   "public/certifications/tai-greta-diploma.pdf": "bf328f7ea7c9fcacef99caa18c390a1aeb233812ccbeb81272d3e98286cad927",
   "public/certifications/tssr-greta-diploma.pdf": "04848dcee157c67e59380695b6ffe3916088d4cd140ccdab9dee2d5e05e39b85",
-  // OpenClassrooms RNCP 6: birth line, both signatures and certificate id masked.
-  "public/certifications/openclassrooms-dcl-diploma.pdf": "7c31263600e3d6efebaf07d630c20cb24c9c2e578be1dfa0b78ca1116b3a63ed",
+  // OpenClassrooms RNCP 6: birth line, both signatures, the "Signature du
+  // titulaire" label and the certificate id masked.
+  "public/certifications/openclassrooms-dcl-diploma.pdf": "8b847a1ccd06eff13d9c015df6e7c2cad5861f3a611485b4e4ed9af6a66e9931",
   // Linguaskill: birth date, username, reference and candidate number masked.
   "public/certifications/Certification_LINGUASKILL.pdf": "107f821d51f9a8370dbd13e4e4caad5bfebfa4596223cde1b46d31e01e0ad37e",
 };
