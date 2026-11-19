@@ -5,44 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CV — Aïcha Imène DAHOUMANE — Salesforce &amp; Infraestructura (versión ATS)</title>
   <style>
+    /* ATS CV: one column, real text, standard headings, no tables or icons.
+       A single dark-blue accent and a grey for secondary lines; both print
+       well in black and white. */
+    :root { --ink: #1a1a1a; --accent: #1f3a5f; --muted: #4a4a4a; --rule: #c9d3df; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 10.5pt;
-      line-height: 1.5;
-      color: #000000;
+      font-size: 10pt;
+      line-height: 1.4;
+      color: var(--ink);
       background: white;
       max-width: 210mm;
       margin: 0 auto;
       padding: 22px 30px;
     }
-    h1 { font-size: 18pt; font-weight: 700; }
-    .title { font-size: 11pt; margin-top: 2px; }
-    .contacts { font-size: 9.5pt; margin-top: 8px; line-height: 1.6; }
-    .contacts a { color: #000000; text-decoration: none; }
-    .section { margin-top: 16px; }
-    .section-title {
-      font-size: 10.5pt; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.5px; border-bottom: 1px solid #000000;
-      padding-bottom: 3px; margin-bottom: 8px;
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    h1 { font-size: 21pt; font-weight: 700; letter-spacing: 0.3px; color: var(--accent); line-height: 1.15; }
+    .title { font-size: 11.5pt; font-weight: 700; margin-top: 3px; }
+    .contacts {
+      font-size: 9pt; color: var(--muted); line-height: 1.5;
+      margin-top: 7px; padding-bottom: 9px; border-bottom: 2px solid var(--accent);
     }
-    p.summary { font-size: 10.5pt; line-height: 1.55; }
-    .exp-item { margin-top: 10px; }
+
+    /* Sections */
+    .section { margin-top: 13px; }
+    .section-title {
+      font-size: 10.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--accent); border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px; margin-bottom: 6px;
+    }
+    p.summary { line-height: 1.45; }
+
+    /* Experience and projects */
+    .exp-item { margin-top: 8px; }
+    .exp-item:first-of-type { margin-top: 2px; }
     .exp-title { font-weight: 700; font-size: 10.5pt; }
-    .exp-meta { font-size: 9.5pt; font-style: italic; }
-    .exp-note { font-size: 9.5pt; font-style: italic; margin-top: 2px; }
-    ul { padding-left: 18px; margin-top: 4px; }
-    li { font-size: 10pt; margin-bottom: 2px; }
-    .edu-item { margin-top: 8px; }
-    .edu-title { font-weight: 700; font-size: 10.5pt; }
-    .edu-meta { font-size: 9.5pt; font-style: italic; }
-    .edu-detail { font-size: 9.5pt; margin-top: 1px; }
-    .plain-list { font-size: 10pt; margin-top: 2px; }
-    .plain-list-item { margin-bottom: 3px; }
+    .exp-meta { font-size: 9pt; color: var(--muted); margin-top: 1px; }
+    .exp-note { font-size: 9pt; font-style: italic; color: var(--muted); margin-top: 2px; }
+    ul { padding-left: 15px; margin-top: 3px; }
+    li { margin-bottom: 1.5px; padding-left: 2px; }
+    li::marker { color: var(--accent); }
+
+    /* Education */
+    .edu-item { margin-top: 6px; }
+    .edu-item:first-of-type { margin-top: 2px; }
+    .edu-title { font-weight: 700; }
+    .edu-meta { font-size: 9pt; color: var(--muted); margin-top: 1px; }
+    .edu-detail { font-size: 9pt; margin-top: 1px; }
+
+    /* Skills, certifications, languages */
+    .plain-list-item { margin-bottom: 2.5px; }
+    .plain-list-item strong { color: var(--accent); }
+
     @media print {
-      body { font-size: 9.5pt; padding: 12mm 14mm; }
-      @page { margin: 0; size: A4; }
-      .section { margin-top: 11px; }
+      /* Page margins come from the PDF generator (12 mm / 14 mm on every
+         page), so page 2 gets the same top margin as page 1. */
+      body { font-size: 10pt; padding: 0; }
+      @page { size: A4; }
+      /* Never split an entry across pages, and keep a heading with what
+         follows it. */
+      .exp-item, .edu-item, .plain-list-item, li, p.summary { break-inside: avoid; }
+      .section-title, .exp-title, .exp-meta, .edu-title { break-after: avoid; }
     }
   </style>
 </head>
@@ -51,11 +77,9 @@
   <h1>Aïcha Imène DAHOUMANE</h1>
   <div class="title">Administradora &amp; Desarrolladora Salesforce — Sistemas y Redes — DevOps</div>
   <div class="contacts">
-    Disponible desde diciembre de 2026 — busco un contrato indefinido<br>
-    Email: <a href="mailto:ai.dahoumane@proton.me">ai.dahoumane@proton.me</a><br>
-    LinkedIn: <a href="https://www.linkedin.com/in/a%C3%AFcha-im%C3%A8ne-dahoumane/">linkedin.com/in/aïcha-imène-dahoumane</a> — Portfolio: <a href="https://aicha-imene-dahoumane-portfolio.vercel.app">aicha-imene-dahoumane-portfolio.vercel.app</a><br>
-    Trailhead: <a href="https://www.salesforce.com/trailblazer/aidahoumane">salesforce.com/trailblazer/aidahoumane</a><br>
-    Ubicación: Val-d'Oise (95) · Île-de-France — París / Île-de-France, Provenza-Alpes-Costa Azul o internacional — Híbrido o presencial
+    <a href="mailto:ai.dahoumane@proton.me">ai.dahoumane@proton.me</a> · <a href="https://www.linkedin.com/in/a%C3%AFcha-im%C3%A8ne-dahoumane/">linkedin.com/in/aïcha-imène-dahoumane</a> · <a href="https://aicha-imene-dahoumane-portfolio.vercel.app">aicha-imene-dahoumane-portfolio.vercel.app</a><br>
+    Trailhead: <a href="https://www.salesforce.com/trailblazer/aidahoumane">salesforce.com/trailblazer/aidahoumane</a> · Disponible desde diciembre de 2026 — busco un contrato indefinido<br>
+    Ubicación: Val-d'Oise (95) — París / Île-de-France, Provenza-Alpes-Costa Azul o internacional — Híbrido o presencial
   </div>
 
   <div class="section">

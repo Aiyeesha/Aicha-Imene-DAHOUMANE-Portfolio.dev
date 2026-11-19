@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **CV ATS, mise en page** : même marge en haut des deux pages, aucune expérience, formation ou projet coupé entre la page 1 et la page 2, nouvelle présentation (nom et titres de section en bleu foncé, coordonnées sur trois lignes, texte un peu plus grand). Toujours une seule colonne de texte, sans tableau ni icône.
+
 - **Corrections de l'audit indépendant (contenu)** :
   - **Disponibilité** : « Disponible dès décembre 2026 » (ES « desde diciembre de 2026 ») sur le site et dans les CV.
   - **Examens Salesforce** : plus aucune date exacte publiée. Le site et les 12 CV concernés indiquent « prévus fin décembre 2026 ». Les libellés passent seuls à « examen passé fin décembre 2026, résultat à venir » après la date ; un test interdit le retour d'une date précise.

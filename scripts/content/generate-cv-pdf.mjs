@@ -19,6 +19,12 @@ const __dirname  = dirname(__filename);
 const CV_DIR     = join(__dirname, "../../public/cv");
 
 // CVs to generate: HTML source → target PDF + metadata
+// Classic CVs fit on one page and draw their own margins. ATS CVs run on two
+// pages, so the margins are set per page here: page 2 then starts at the
+// same distance from the top as page 1.
+const NO_MARGIN  = { top: "0", right: "0", bottom: "0", left: "0" };
+const ATS_MARGIN = { top: "12mm", right: "14mm", bottom: "12mm", left: "14mm" };
+
 const CV_FILES = [
   {
     html: "Aicha-Imene-DAHOUMANE-CV-en-itops.html",
@@ -91,6 +97,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-fr-itops-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-itops-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systèmes & Réseaux — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -98,6 +105,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-salesforce-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — Développeuse Salesforce — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -105,6 +113,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-fr-hybrid-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — Administratrice & Développeuse Salesforce · Infrastructure — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -112,6 +121,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-en-itops-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-itops-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Systems & Networks — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -119,6 +129,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-en-salesforce-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-salesforce-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — Salesforce Developer — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -126,6 +137,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-en-hybrid-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-en-hybrid-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — Salesforce Administrator & Developer · Infrastructure — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -133,6 +145,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-es-itops-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-itops-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — IT Ops / Sistemas y Redes — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -140,6 +153,7 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-es-salesforce-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-salesforce-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — Desarrolladora Salesforce — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
@@ -147,12 +161,13 @@ const CV_FILES = [
     html: "Aicha-Imene-DAHOUMANE-CV-es-hybrid-ats.html",
     pdf: "Aicha-Imene-DAHOUMANE-CV-es-hybrid-ats.pdf",
     scale: 1,
+    margin: ATS_MARGIN,
     title: "Aïcha Imène DAHOUMANE — Administradora & Desarrolladora Salesforce · Infraestructura — CV (ATS)",
     author: "Aïcha Imène DAHOUMANE",
   },
 ];
 
-async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
+async function generatePdf(browser, htmlFile, pdfFile, scale, title, author, margin = NO_MARGIN) {
   const htmlPath = join(CV_DIR, htmlFile);
   const pdfPath  = join(CV_DIR, pdfFile);
 
@@ -184,7 +199,7 @@ async function generatePdf(browser, htmlFile, pdfFile, scale, title, author) {
     format:            "A4",
     printBackground:   true,
     scale,
-    margin:            { top: "0", right: "0", bottom: "0", left: "0" },
+    margin,
   });
 
   await page.close();
@@ -213,9 +228,9 @@ async function main() {
 
   let success = 0;
 
-  for (const { html, pdf, scale, title, author } of CV_FILES) {
+  for (const { html, pdf, scale, title, author, margin } of CV_FILES) {
     process.stdout.write(`  Génération de ${pdf}...`);
-    const ok = await generatePdf(browser, html, pdf, scale, title, author);
+    const ok = await generatePdf(browser, html, pdf, scale, title, author, margin);
     if (ok) {
       console.log(" ✓");
       success++;
