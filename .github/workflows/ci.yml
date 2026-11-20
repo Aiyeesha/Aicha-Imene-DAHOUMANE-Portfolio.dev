@@ -128,10 +128,12 @@ jobs:
 
       # Phantom dependencies: direct imports missing from package.json and only
       # resolved transitively. "missing" only (not "unused"), to avoid false
-      # positives on config packages (tailwind, eslint…).
+      # positives on config packages (tailwind, eslint…). The archives
+      # (scripts/archive, docs/archive) keep imports of packages that are no
+      # longer installed, such as the former Supabase client: not scanned.
       - name: Ghost dependency check (depcheck)
         run: |
-          npx --yes depcheck@1.4.7 --ignores="server-only,playwright,mdx" --json 2>/dev/null > /tmp/depcheck.json || true
+          npx --yes depcheck@1.4.7 --ignores="server-only,playwright,mdx" --ignore-patterns="scripts/archive,docs/archive" --json 2>/dev/null > /tmp/depcheck.json || true
           node -e "
             const r = require('/tmp/depcheck.json');
             const missing = Object.keys(r.missing || {});
