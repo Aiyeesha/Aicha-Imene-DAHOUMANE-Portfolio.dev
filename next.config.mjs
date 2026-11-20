@@ -338,12 +338,13 @@ const nextConfig = {
           // The Content-Security-Policy is built per request in proxy.ts (with
           // a nonce): never add a static CSP here, it would override it on
           // HTML routes. See buildCSP() in proxy.ts.
-          // HSTS for 2 years (includeSubDomains + preload): only valid while
-          // the domain is always served over HTTPS.
+          // HSTS for 2 years with includeSubDomains. No `preload`: the browser
+          // preload list does not accept *.vercel.app subdomains; add it back
+          // once the site has its own domain.
           {
             key: "Strict-Transport-Security",
-            // 63072000 s = 2 years (preload minimum)
-  value: 'max-age=63072000; includeSubDomains; preload'
+            // 63072000 s = 2 years
+            value: 'max-age=63072000; includeSubDomains'
           },
           // Isolates the browsing context from cross-origin windows
           // (Spectre-style attacks, window.opener abuse).

@@ -75,7 +75,8 @@
     "noMatch": "Aucun projet ne correspond à votre recherche ou vos filtres.",
     "resetFilters": "Réinitialiser les filtres",
     "bridgeBadge": "Pont Salesforce ⇄ Infra",
-    "securityBadge": "Cybersécurité"
+    "securityBadge": "Cybersécurité",
+    "securityBadgeSalesforce": "Sécurité Salesforce"
   },
   "sections": {
     "testimonials_title": "Témoignages",
@@ -412,7 +413,7 @@
     "analyticsTitle": "Mesure d'audience",
     "analyticsBody": "Ce site n'utilise aucun outil de mesure d'audience ni de suivi des visiteurs : aucune statistique de navigation n'est collectée. Les performances du site sont contrôlées uniquement en laboratoire, lors du développement (Lighthouse CI), sans aucune donnée sur les visiteurs.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "Aucun cookie marketing ni de suivi n'est déposé. La préférence de langue est reflétée dans l'URL (ex. /en/, /fr/) et non dans un cookie. Un cookie fonctionnel « track » (durée : 1 an) et une entrée équivalente dans le stockage local du navigateur mémorisent uniquement le profil affiché (Salesforce ou IT Ops) ; ils ne contiennent aucune donnée personnelle. Vercel peut déposer des cookies techniques à des fins d'infrastructure (CDN, protection DDoS). La prise de rendez-vous se fait sur la page de réservation Proton Calendar, ouverte dans un nouvel onglet : aucun script tiers n'est chargé sur ce site, et la politique de confidentialité de Proton s'applique sur sa page.",
+    "cookiesBody": "Aucun cookie marketing ni de suivi n'est déposé. La préférence de langue est reflétée dans l'URL (ex. /en/, /fr/) et non dans un cookie. Un cookie fonctionnel « track » (durée : 1 an) et une entrée équivalente dans le stockage local du navigateur mémorisent uniquement le profil affiché (Salesforce ou IT Ops) ; ils ne contiennent aucune donnée personnelle. Vercel peut déposer des cookies techniques à des fins d'infrastructure (CDN, protection DDoS). La prise de rendez-vous se fait sur la page de réservation Proton Calendar, ouverte dans un nouvel onglet : aucun script tiers n'est chargé sur ce site, et la politique de confidentialité de Proton s'applique sur sa page. Le thème clair ou sombre est mémorisé dans le stockage local du navigateur, et un service worker garde en cache des pages et fichiers du site pour permettre une consultation hors ligne ; ces données restent sur votre appareil et vous pouvez les effacer depuis les réglages du navigateur.",
     "formTitle": "Données du formulaire de contact",
     "formBody": "Lorsque vous envoyez le formulaire de contact, les données que vous saisissez — nom, email, sujet, message — sont transmises par email via Formhook (service d'acheminement d'emails hébergé dans l'Union européenne) afin de traiter votre demande. Le site n'en conserve aucune copie sur ses serveurs. Votre adresse IP est utilisée uniquement de façon transitoire pour limiter les envois abusifs (anti-spam) et n'est pas conservée avec votre message. Le formulaire de témoignage, accessible uniquement sur invitation, fonctionne de la même façon : nom, rôle, entreprise, contexte de collaboration, message et lien de photo facultatif sont transmis par email via Formhook, sans copie conservée sur le site.",
     "retention": "Conservation : le site ne stocke ni les messages de contact ni les témoignages. Une fois transmis par email, votre message est conservé dans la boîte de réception selon les pratiques habituelles de messagerie ; vous pouvez en demander la suppression à tout moment en me contactant.",
@@ -424,7 +425,7 @@
     "transfersBody": "L'hébergeur Vercel Inc. est établi aux États-Unis : les données techniques de connexion (adresse IP, requêtes) peuvent y être traitées. Ce transfert est encadré par le Data Privacy Framework UE–États-Unis, auquel Vercel est certifiée (décision d'adéquation de la Commission européenne du 10 juillet 2023), et, à titre complémentaire, par les clauses contractuelles types de la Commission européenne prévues dans l'accord de traitement des données (DPA) de Vercel. Les messages des formulaires sont acheminés par Formhook, hébergé dans l'Union européenne.",
     "transfersTitle": "Transferts hors de l'Union européenne",
     "legalBasisCookie": "Cookie fonctionnel « track » : il mémorise uniquement le profil affiché, à votre demande ; strictement nécessaire au service que vous sollicitez, il est dispensé de consentement (article 82 de la loi Informatique et Libertés).",
-    "legalBasisSecurity": "Limitation de débit (adresse IP pseudonymisée, conservée quelques minutes) et journaux techniques d'hébergement : intérêt légitime à assurer la sécurité du site et à prévenir les abus (article 6.1.f).",
+    "legalBasisSecurity": "Limitation de débit (adresse IP pseudonymisée, conservée de quelques minutes à 24 heures selon le formulaire) et journaux techniques d'hébergement : intérêt légitime à assurer la sécurité du site et à prévenir les abus (article 6.1.f). Les rapports techniques que le navigateur envoie en cas d'erreur d'affichage ou de blocage par la politique de sécurité (CSP) ne sont pas conservés : ils contiennent l'adresse de la page et le type d'erreur, sans adresse IP.",
     "legalBasisTestimonial": "Formulaire de témoignage : votre consentement (article 6.1.a), que vous pouvez retirer à tout moment ; le témoignage, s'il a été publié, est alors retiré du site.",
     "legalBasisContact": "Formulaire de contact : intérêt légitime à répondre aux demandes qui me sont adressées (article 6.1.f du RGPD) ; lorsque l'échange porte sur un recrutement, mesures précontractuelles prises à votre demande (article 6.1.b).",
     "legalBasisTitle": "Bases légales des traitements",
@@ -482,11 +483,11 @@
   "accessibility": {
     "title": "Accessibilité",
     "commitmentTitle": "Engagement d'accessibilité",
-    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation entièrement possible au clavier, contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
+    "commitmentBody": "Ce site vise à être accessible au plus grand nombre, conformément aux recommandations des WCAG 2.2 (niveau AA). Les mesures mises en place incluent : navigation au clavier (vérifiée manuellement sur les pages principales), contrastes de couleur conformes aux ratios recommandés (4,5:1 minimum pour le texte normal), textes alternatifs sur toutes les images porteuses d’information, structure HTML sémantique avec landmarks ARIA, lien d’évitement vers le contenu principal, et indicateurs focus-visible sur tous les éléments interactifs.",
     "limitsTitle": "Limites connues",
     "limitsBody": "Certains contenus tiers (lecteurs de PDF, widgets externes) peuvent ne pas être entièrement accessibles. Si vous utilisez un lecteur d'écran (NVDA, VoiceOver, JAWS) et rencontrez une difficulté spécifique, vos retours me sont précieux.",
     "helpTitle": "Un problème d'accessibilité ?",
-    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de me le signaler en précisant l'URL de la page concernée et la nature du problème, via le <form>formulaire de contact</form>.",
+    "helpBody": "Si vous rencontrez un obstacle lors de la navigation sur ce site — élément non accessible au clavier, image sans alternative, contraste insuffisant, ou toute autre difficulté — merci de me le signaler en précisant l'URL de la page concernée et la nature du problème, via le <form>formulaire de contact</form>. Statut : conformité partielle, auto-évaluée (pas d'audit RGAA complet). Si vous n'obtenez pas de réponse satisfaisante, vous pouvez saisir le Défenseur des droits (defenseurdesdroits.fr).",
     "helpEmail": "Vous pouvez aussi m'écrire à <mail>{email}</mail>.",
     "lastAudit": "Dernière vérification : 31 octobre 2026 — Outils : axe-core (CI automatisé et palette de commandes), vérification manuelle de la navigation au clavier."
   },

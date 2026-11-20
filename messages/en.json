@@ -75,7 +75,8 @@
     "noMatch": "No projects match your search or filters.",
     "resetFilters": "Reset filters",
     "bridgeBadge": "Salesforce ⇄ Infra bridge",
-    "securityBadge": "Cybersecurity"
+    "securityBadge": "Cybersecurity",
+    "securityBadgeSalesforce": "Salesforce security"
   },
   "sections": {
     "testimonials_title": "Testimonials",
@@ -412,7 +413,7 @@
     "analyticsTitle": "Audience measurement",
     "analyticsBody": "This site uses no audience measurement or visitor tracking tool: no browsing statistics are collected. Site performance is checked only in the lab, during development (Lighthouse CI), without any visitor data.",
     "cookiesTitle": "Cookies",
-    "cookiesBody": "No marketing or tracking cookies are set. The language preference is stored in the URL (e.g. /en/, /fr/) and not in a cookie. A functional 'track' cookie (1-year lifetime) and a matching browser local-storage entry only remember which profile is displayed (Salesforce or IT Ops); they contain no personal data. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection). Booking happens on the Proton Calendar booking page, opened in a new tab: no third-party script is loaded on this site, and Proton's privacy policy applies on its page.",
+    "cookiesBody": "No marketing or tracking cookies are set. The language preference is stored in the URL (e.g. /en/, /fr/) and not in a cookie. A functional 'track' cookie (1-year lifetime) and a matching browser local-storage entry only remember which profile is displayed (Salesforce or IT Ops); they contain no personal data. Vercel may set technical cookies for infrastructure purposes (CDN, DDoS protection). Booking happens on the Proton Calendar booking page, opened in a new tab: no third-party script is loaded on this site, and Proton's privacy policy applies on its page. The light or dark theme is remembered in the browser's local storage, and a service worker caches pages and files of the site so it can be read offline; this data stays on your device and you can clear it from your browser settings.",
     "formTitle": "Contact form data",
     "formBody": "When you submit the contact form, the data you enter — name, email, topic, message — is forwarded by email via Formhook (an EU-hosted email delivery service) to handle your request. The site keeps no copy of this data on its servers. Your IP address is used only transiently to rate-limit abusive submissions (anti-spam) and is not stored with your message. The testimonial form, reachable only by invitation, works the same way: name, role, company, collaboration context, message and optional photo link are forwarded by email via Formhook, with no copy kept on the site.",
     "retention": "Retention: the site stores neither contact messages nor testimonials. Once forwarded by email, your message is retained in the mailbox under normal email practice; you may request its deletion at any time by contacting me.",
@@ -424,7 +425,7 @@
     "transfersBody": "The hosting provider Vercel Inc. is established in the United States: technical connection data (IP address, requests) may be processed there. This transfer is covered by the EU–U.S. Data Privacy Framework, under which Vercel is certified (European Commission adequacy decision of 10 July 2023), and additionally by the European Commission's standard contractual clauses included in Vercel's data processing agreement (DPA). Form messages are routed by Formhook, hosted in the European Union.",
     "transfersTitle": "Transfers outside the European Union",
     "legalBasisCookie": "Functional \"track\" cookie: it only remembers the profile you chose to display; being strictly necessary for the service you request, it is exempt from consent (Article 82 of the French Data Protection Act).",
-    "legalBasisSecurity": "Rate limiting (pseudonymised IP address, kept for a few minutes) and hosting technical logs: legitimate interest in securing the site and preventing abuse (Article 6(1)(f)).",
+    "legalBasisSecurity": "Rate limiting (pseudonymised IP address, kept from a few minutes up to 24 hours depending on the form) and hosting technical logs: legitimate interest in securing the site and preventing abuse (Article 6(1)(f)). Technical reports sent by the browser after a display error or a block by the security policy (CSP) are not stored: they contain the page address and the type of error, with no IP address.",
     "legalBasisTestimonial": "Testimonial form: your consent (Article 6(1)(a)), which you may withdraw at any time; the testimonial, if it has been published, is then removed from the site.",
     "legalBasisContact": "Contact form: legitimate interest in answering the requests sent to me (Article 6(1)(f) GDPR); when the exchange concerns recruitment, steps taken at your request prior to entering into a contract (Article 6(1)(b)).",
     "legalBasisTitle": "Legal bases for processing",
@@ -482,11 +483,11 @@
   "accessibility": {
     "title": "Accessibility",
     "commitmentTitle": "Accessibility commitment",
-    "commitmentBody": "This website aims to be accessible to as many people as possible, in line with WCAG 2.2 guidelines (Level AA). Measures implemented include: full keyboard navigation, color contrast meeting recommended ratios (minimum 4.5:1 for normal text), alternative text on all informative images, semantic HTML structure with ARIA landmarks, a skip-to-content link, and focus-visible indicators on all interactive elements.",
+    "commitmentBody": "This website aims to be accessible to as many people as possible, in line with WCAG 2.2 guidelines (Level AA). Measures implemented include: keyboard navigation (checked by hand on the main pages), color contrast meeting recommended ratios (minimum 4.5:1 for normal text), alternative text on all informative images, semantic HTML structure with ARIA landmarks, a skip-to-content link, and focus-visible indicators on all interactive elements.",
     "limitsTitle": "Known limitations",
     "limitsBody": "Some third-party content (PDF viewers, external widgets) may not be fully accessible. If you use a screen reader (NVDA, VoiceOver, JAWS) and encounter a specific issue, your feedback is welcome.",
     "helpTitle": "Accessibility issue?",
-    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please let me know, specifying the URL of the page and the nature of the problem, via the <form>contact form</form>.",
+    "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please let me know, specifying the URL of the page and the nature of the problem, via the <form>contact form</form>. Status: partial conformance, self-assessed (no full RGAA audit). If you do not get a satisfactory answer, you can refer the matter to the French Défenseur des droits (defenseurdesdroits.fr).",
     "helpEmail": "You can also email me at <mail>{email}</mail>.",
     "lastAudit": "Last verified: October 31, 2026 — Tools: axe-core (automated CI and command palette), manual keyboard navigation testing."
   },

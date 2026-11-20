@@ -1,14 +1,10 @@
-import { cacheGetOrSet, contentCacheKey } from "@/lib/cache";
+// lib/data/projects.cached.ts
+// ---------------------------
+// Kept as the single entry point used by pages. The project content is
+// static TypeScript already in memory, so it is no longer copied to Upstash:
+// a Redis round trip on every render cost more than rebuilding the list.
 import { getPublishedProjectsWithAssets } from "@/lib/data/projects";
 
-// Real type inferred from the source function (always in sync)
-type ProjectsWithAssets = Awaited<ReturnType<typeof getPublishedProjectsWithAssets>>;
-
 export async function getPublishedProjectsWithAssetsCached(locale: string) {
-  const key = contentCacheKey(`projects_with_assets:${locale}`);
-  const ttl = 600; // 10 minutes: projects rarely change in production
-
-  return cacheGetOrSet<ProjectsWithAssets>(key, ttl, async () => {
-    return getPublishedProjectsWithAssets(locale);
-  });
+  return getPublishedProjectsWithAssets(locale);
 }
