@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Maintenance
+
+- **`content/projectDetails.ts` découpé** : un fichier par projet dans `content/project-details/<slug>.ts` (46 projets), le fichier d'origine garde les types et assemble la liste dans le même ordre. Contenu vérifié identique avant et après.
+
 ### Fixed
 
 - **Formulaire de contact** : la case obligatoire « J'ai lu et j'accepte » est remplacée par une simple mention d'information, cohérente avec la base légale déclarée (intérêt légitime) ; le serveur n'exige plus d'accord.
