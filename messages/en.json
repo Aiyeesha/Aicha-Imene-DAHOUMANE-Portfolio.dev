@@ -135,7 +135,6 @@
       "invalid_topic": "Please select a valid topic.",
       "message_too_long": "Your message is too long (max 2000 characters).",
       "forbidden_origin": "Request rejected. Please use the website contact form.",
-      "policy_not_accepted": "You must accept the privacy policy to send a message.",
       "too_many_links": "Too many links in the message."
     },
     "homeIntro": "Email is the fastest way to reach me; LinkedIn and my CV are one click away.",
@@ -154,8 +153,7 @@
     "topicOther": "Other",
     "envHint": "Missing configuration: some contact information is not set.",
     "linkedInMissing": "The LinkedIn link is not available right now.",
-    "acceptPolicyAria": "I accept the privacy policy",
-    "acceptPolicyPrefix": "I have read and accept the",
+    "privacyNotice": "Your details are only used to answer your message; the site does not keep them. Learn more:",
     "acceptPolicyLink": "privacy policy",
     "availability": "Permanent · Any industry",
     "intake": {
@@ -440,7 +438,7 @@
     "title": "Legal notice",
     "editorTitle": "Publisher",
     "contactFallback": "the site's contact form",
-    "editorBody": "This website is published by Aïcha Imène DAHOUMANE (Salesforce · Systems & Networks · DevOps), as a personal portfolio. Publication director: Aïcha Imène DAHOUMANE. Address: Val-d'Oise (95), France. SIRET: not applicable (personal portfolio). Contact: {email}.",
+    "editorBody": "This website is published by Aïcha Imène DAHOUMANE (Salesforce · Systems & Networks · DevOps), as a personal portfolio. Publication director: Aïcha Imène DAHOUMANE. Address: Val-d'Oise (95), Île-de-France, France (postal address available on request). SIRET: not applicable (personal portfolio). Contact: {email}.",
     "hostingTitle": "Hosting",
     "hostingBody": "Hosting is provided by Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, United States. Website: vercel.com.",
     "ipTitle": "Intellectual property",

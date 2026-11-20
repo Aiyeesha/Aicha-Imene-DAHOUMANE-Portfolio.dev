@@ -72,7 +72,6 @@ export async function POST(req: Request) {
   const subject = singleLine(body.subject || "");
   const message = (body.message || "").trim();
   const company = (body.company || "").trim(); // honeypot
-  const acceptedPolicy = Boolean(body.acceptedPolicy);
   const clientLocale = (body.locale || "").trim() || null;
 
   // Bot check — before rate limiter so bots don't consume tokens
@@ -97,7 +96,7 @@ export async function POST(req: Request) {
   }
   // --- End Rate Limit ---
 
-  const v = validate({ name, email, message, topic, acceptedPolicy });
+  const v = validate({ name, email, message, topic });
   if (v) return NextResponse.json({ ok: false, error: v }, { status: 400 });
 
   // Forward to Formhook if configured

@@ -18,8 +18,10 @@ describe("validate() — contact form", () => {
     expect(validate(VALID)).toBeNull();
   });
 
-  it("rejects when the privacy policy isn't accepted", () => {
-    expect(validate({ ...VALID, acceptedPolicy: false })).toBe("policy_not_accepted");
+  it("does not require a consent flag (legitimate interest, information notice only)", () => {
+    expect(validate({ ...VALID, acceptedPolicy: false })).toBeNull();
+    const { acceptedPolicy: _ignored, ...withoutFlag } = VALID;
+    expect(validate(withoutFlag)).toBeNull();
   });
 
   it("rejects a name shorter than 2 characters", () => {

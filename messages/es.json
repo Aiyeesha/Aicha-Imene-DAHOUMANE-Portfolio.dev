@@ -135,7 +135,6 @@
       "invalid_topic": "Selecciona un tema válido.",
       "message_too_long": "Tu mensaje es demasiado largo (máximo 2000 caracteres).",
       "forbidden_origin": "Solicitud rechazada. Usa el formulario de contacto del sitio.",
-      "policy_not_accepted": "Debes aceptar la política de privacidad para enviar un mensaje.",
       "too_many_links": "Demasiados enlaces en el mensaje."
     },
     "homeIntro": "El email es la forma más rápida de contactarme; LinkedIn y mi CV están a un clic.",
@@ -154,8 +153,7 @@
     "topicOther": "Otro",
     "envHint": "Configuración incompleta: falta cierta información de contacto.",
     "linkedInMissing": "El enlace de LinkedIn no está disponible por el momento.",
-    "acceptPolicyAria": "Acepto la política de privacidad",
-    "acceptPolicyPrefix": "He leído y acepto la",
+    "privacyNotice": "Tus datos solo se usan para responder a tu mensaje; el sitio no los conserva. Más información:",
     "acceptPolicyLink": "política de privacidad",
     "availability": "Indefinido · Todos los sectores",
     "intake": {
@@ -440,7 +438,7 @@
     "title": "Aviso legal",
     "editorTitle": "Editora",
     "contactFallback": "el formulario de contacto del sitio",
-    "editorBody": "Este sitio web está publicado por Aïcha Imène DAHOUMANE (Salesforce · Sistemas y Redes · DevOps), como portafolio personal. Directora de publicación: Aïcha Imène DAHOUMANE. Dirección: Val-d'Oise (95), Francia. SIRET: no aplicable (portafolio personal). Contacto: {email}.",
+    "editorBody": "Este sitio web está publicado por Aïcha Imène DAHOUMANE (Salesforce · Sistemas y Redes · DevOps), como portafolio personal. Directora de publicación: Aïcha Imène DAHOUMANE. Dirección: Val-d'Oise (95), Île-de-France, Francia (dirección postal disponible bajo petición). SIRET: no aplicable (portafolio personal). Contacto: {email}.",
     "hostingTitle": "Alojamiento",
     "hostingBody": "El alojamiento es proporcionado por Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, Estados Unidos. Sitio web: vercel.com.",
     "ipTitle": "Propiedad intelectual",

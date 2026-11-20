@@ -13,10 +13,13 @@ import { render, screen } from "@testing-library/react";
 import ContactForm from "@/components/ContactForm";
 
 describe("ContactForm", () => {
-  it("requires privacy consent checkbox (HTML required)", () => {
+  it("shows a privacy information notice, without a consent checkbox", () => {
+    // Legitimate interest (privacy policy): informing is enough, a mandatory
+    // "I accept" box would look like a consent the form does not rely on.
     render(<ContactForm />);
-    const checkbox = screen.getByRole("checkbox");
-    expect(checkbox).toBeRequired();
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    expect(screen.getByText(/contact\.privacyNotice/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "contact.acceptPolicyLink" })).toHaveAttribute("href", "/en/privacy");
   });
 
   it("contains a honeypot field named company", () => {

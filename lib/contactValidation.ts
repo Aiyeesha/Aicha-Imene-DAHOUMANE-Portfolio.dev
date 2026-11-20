@@ -21,16 +21,16 @@ export function validate({
   email,
   message,
   topic,
-  acceptedPolicy,
 }: {
   name: string;
   email: string;
   message: string;
   topic: string;
-  acceptedPolicy: boolean;
+  /** Ignored: older clients still send it. The legal basis of the contact
+   *  form is legitimate interest (privacy policy), not consent, so no
+   *  checkbox gates the submission. */
+  acceptedPolicy?: boolean;
 }) {
-  if (!acceptedPolicy) return "policy_not_accepted";
-
   if (name.length < 2) return "name_too_short";
   if (name.length > MAX_NAME_LEN) return "name_too_long";
 

@@ -11,6 +11,8 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Formulaire de contact** : la case obligatoire « J'ai lu et j'accepte » est remplacée par une simple mention d'information, cohérente avec la base légale déclarée (intérêt légitime) ; le serveur n'exige plus d'accord.
+- **Mentions légales** : localisation au même niveau de précision que le reste du site (« Val-d'Oise (95), Île-de-France »), adresse postale sur demande.
 - **Note de fin de CDI** : « Préavis en cours » disparaît le 1er décembre 2026, en même temps que la bascule de disponibilité (test ajouté).
 - **`SECURITY.md` et colophon** : comportement réel de la limitation de débit décrit (routes d'écriture bloquées en production si Redis échoue).
 - **Titre « Certifications »** traduit en espagnol sur l'accueil.

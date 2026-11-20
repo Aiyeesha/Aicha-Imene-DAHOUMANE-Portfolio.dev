@@ -135,7 +135,6 @@
       "invalid_topic": "Merci de sélectionner un sujet valide.",
       "message_too_long": "Votre message est trop long (2000 caractères max).",
       "forbidden_origin": "Requête refusée. Merci d'utiliser le formulaire du site.",
-      "policy_not_accepted": "Vous devez accepter la politique de confidentialité pour envoyer un message.",
       "too_many_links": "Trop de liens dans le message."
     },
     "homeIntro": "Un email est le moyen le plus rapide de me joindre ; LinkedIn et le CV sont accessibles en un clic.",
@@ -154,8 +153,7 @@
     "topicOther": "Autre",
     "envHint": "Configuration manquante : certaines informations de contact ne sont pas renseignées.",
     "linkedInMissing": "Le lien LinkedIn n'est pas disponible pour le moment.",
-    "acceptPolicyAria": "J'accepte la politique de confidentialité",
-    "acceptPolicyPrefix": "J'ai lu et j'accepte la",
+    "privacyNotice": "Vos données servent uniquement à répondre à votre message ; elles ne sont pas conservées sur le site. En savoir plus :",
     "acceptPolicyLink": "politique de confidentialité",
     "availability": "CDI · Tous secteurs",
     "intake": {
@@ -440,7 +438,7 @@
     "title": "Mentions légales",
     "editorTitle": "Éditeur du site",
     "contactFallback": "le formulaire de contact du site",
-    "editorBody": "Ce site est édité par Aïcha Imène DAHOUMANE (Salesforce · Systèmes & Réseaux · DevOps), à titre personnel. Directrice de la publication : Aïcha Imène DAHOUMANE. Adresse : Val-d'Oise (95), France. SIRET : non applicable (portfolio personnel). Contact : {email}.",
+    "editorBody": "Ce site est édité par Aïcha Imène DAHOUMANE (Salesforce · Systèmes & Réseaux · DevOps), à titre personnel. Directrice de la publication : Aïcha Imène DAHOUMANE. Adresse : Val-d'Oise (95), Île-de-France, France (adresse postale communiquée sur demande). SIRET : non applicable (portfolio personnel). Contact : {email}.",
     "hostingTitle": "Hébergement",
     "hostingBody": "L'hébergement est assuré par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. Site : vercel.com.",
     "ipTitle": "Propriété intellectuelle",
