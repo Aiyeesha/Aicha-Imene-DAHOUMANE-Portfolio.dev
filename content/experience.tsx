@@ -6,6 +6,8 @@
 // and the "Contract · Period · Location" line; `note` is shown before the
 // achievements in muted italics.
 
+import { isAvailableNow } from "@/lib/availability";
+
 export type Locale = "en" | "fr" | "es";
 
 export type ExperienceItem = {
@@ -20,7 +22,13 @@ export type ExperienceItem = {
   highlights: string[];
 };
 
-export function getExperienceItems(locale: Locale): ExperienceItem[] {
+/**
+ * `now` decides the wording of the current contract's note: "notice period
+ * under way" until AVAILABLE_FROM (lib/availability.ts), then just the end
+ * date, in step with the availability badge.
+ */
+export function getExperienceItems(locale: Locale, now: Date = new Date()): ExperienceItem[] {
+  const ended = isAvailableNow(now);
   if (locale === "fr") {
     return [
       {
@@ -30,7 +38,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         contract: "CDI",
         period: "Oct. 2025 — Nov. 2026",
         location: "Télétravail",
-        note: "CDI proposé à l'issue de l'alternance, sans période d'essai. Préavis en cours, fin de contrat le 30 novembre 2026.",
+        note: `CDI proposé à l'issue de l'alternance, sans période d'essai. ${ended ? "Fin de contrat le 30 novembre 2026." : "Préavis en cours, fin de contrat le 30 novembre 2026."}`,
         highlights: [
           "Conception et mise en œuvre de solutions Salesforce avancées en collaboration avec les équipes métier.",
           "Optimisation et refactoring du code Apex existant pour améliorer la qualité, la performance et la maintenabilité.",
@@ -83,7 +91,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
         contract: "Contrato indefinido",
         period: "oct. 2025 — nov. 2026",
         location: "Remoto",
-        note: "Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba. Preaviso en curso, fin del contrato el 30 de noviembre de 2026.",
+        note: `Conversión directa desde el contrato de formación en alternancia — sin periodo de prueba. ${ended ? "Fin del contrato el 30 de noviembre de 2026." : "Preaviso en curso, fin del contrato el 30 de noviembre de 2026."}`,
         highlights: [
           "Diseño e implementación de soluciones Salesforce avanzadas en estrecha colaboración con las áreas de negocio.",
           "Refactorización del código Apex existente para mejorar la calidad, el rendimiento y la mantenibilidad.",
@@ -136,7 +144,7 @@ export function getExperienceItems(locale: Locale): ExperienceItem[] {
       contract: "Full-time",
       period: "Oct 2025 — Nov 2026",
       location: "Remote",
-      note: "Direct conversion from apprenticeship — no probation period. Notice period under way, contract ends November 30, 2026.",
+      note: `Direct conversion from apprenticeship — no probation period. ${ended ? "Contract ended November 30, 2026." : "Notice period under way, contract ends November 30, 2026."}`,
       highlights: [
         "Designed and delivered advanced Salesforce solutions in close collaboration with business stakeholders.",
         "Refactored existing Apex codebases to improve quality, performance and maintainability.",

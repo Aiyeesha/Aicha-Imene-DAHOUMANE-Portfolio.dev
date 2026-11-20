@@ -6,7 +6,7 @@
 #   macOS  : brew install gitleaks
 #   Linux  : see https://github.com/gitleaks/gitleaks#installing
 #
-# Temporary bypass (not recommended): SKIP=gitleaks git commit ...
+# Bypass in an emergency only (skips every hook): git commit --no-verify
 
 if command -v gitleaks >/dev/null 2>&1; then
   gitleaks protect --staged --redact --no-banner

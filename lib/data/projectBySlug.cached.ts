@@ -1,23 +1,17 @@
-import { cacheGetOrSet, contentCacheKey } from "@/lib/cache";
+// lib/data/projectBySlug.cached.ts
+// --------------------------------
+// Kept as the single entry point used by pages. The project content is
+// static TypeScript already in memory, so it is no longer copied to Upstash
+// (see lib/data/projects.cached.ts).
 import { getPublishedProjectBySlugWithAssets } from "@/lib/data/projectBySlug";
 import { oneBySlug } from "@/lib/data/projectsSource";
 import { isValidSlug } from "@/lib/security/slug";
-
-// Real type inferred from the source function (always in sync)
-type ProjectWithAssets = Awaited<ReturnType<typeof getPublishedProjectBySlugWithAssets>>;
 
 export async function getPublishedProjectBySlugWithAssetsCached(
   locale: string,
   slug: string
 ) {
-  // Unknown or malformed slug: answer from memory, without touching Redis
-  // (no key per invented URL, no Redis quota spent by crawlers).
+  // Unknown or malformed slug: answer at once.
   if (!isValidSlug(slug) || !oneBySlug(locale, slug)) return null;
-
-  const key = contentCacheKey(`project:${locale}:${slug}`);
-  const ttl = 300; // 5 minutes
-
-  return cacheGetOrSet<ProjectWithAssets | null>(key, ttl, async () => {
-    return getPublishedProjectBySlugWithAssets(locale, slug);
-  });
+  return getPublishedProjectBySlugWithAssets(locale, slug);
 }

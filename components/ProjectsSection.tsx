@@ -396,7 +396,12 @@ export default function ProjectsSection({ locale: localeProp, projects, includeF
                     <span className="badge badge-bridge inline-flex">{t("bridgeBadge")}</span>
                   )}
                   {p.is_security && (
-                    <span className="badge badge-security inline-flex">{t("securityBadge")}</span>
+                    // Salesforce projects show "Salesforce security" (sharing,
+                    // FLS, Apex security), not "Cybersecurity", which is kept
+                    // for the security track (SOC, vulnerability, GRC labs).
+                    <span className="badge badge-security inline-flex">
+                      {t(p.track === "salesforce" ? "securityBadgeSalesforce" : "securityBadge")}
+                    </span>
                   )}
                 </div>
               )}

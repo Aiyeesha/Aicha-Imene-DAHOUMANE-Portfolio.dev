@@ -69,6 +69,18 @@ describe("ExperienceTimeline", () => {
     expect(note.parentElement?.firstElementChild).toBe(note);
   });
 
+  it("parle du préavis jusqu'à la bascule de disponibilité, puis seulement de la fin de contrat", () => {
+    const before = new Date("2026-11-30T12:00:00+01:00");
+    const after = new Date("2026-12-01T00:00:00+01:00");
+    for (const locale of ["fr", "en", "es"] as Locale[]) {
+      const noteBefore = getExperienceItems(locale, before)[0].note!;
+      const noteAfter = getExperienceItems(locale, after)[0].note!;
+      expect(noteBefore).toMatch(/Préavis|Notice period|Preaviso/);
+      expect(noteAfter).not.toMatch(/Préavis|Notice period|Preaviso|préavis|preaviso/);
+      expect(noteAfter).toMatch(/30/);
+    }
+  });
+
   it("conserve le lieu d'origine en anglais et en espagnol", () => {
     expect(getExperienceItems("en")[0].location).toBe("Remote");
     expect(getExperienceItems("es")[0].location).toBe("Remoto");

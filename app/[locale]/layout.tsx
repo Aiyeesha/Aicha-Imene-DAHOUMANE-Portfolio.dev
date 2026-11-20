@@ -102,6 +102,27 @@ export default async function LocaleLayout({
                   {/* Links get py-2 (≈36px tap targets instead of 20px); the padding
                       replaces the vertical gap between wrapped rows. */}
                   <nav aria-label={t("footer.nav")} className="flex flex-wrap items-center gap-x-4 gap-y-0">
+                    {/* Main pages first: About, Projects, Blog */}
+                    <Link
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/about`}
+                    >
+                      {t("nav.about")}
+                    </Link>
+                    {/* Projects index */}
+                    <Link
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/projects`}
+                    >
+                      {t("nav.projects")}
+                    </Link>
+                    {/* Blog index */}
+                    <Link
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/blog`}
+                    >
+                      {t("nav.blog")}
+                    </Link>
                     {/* Certifications (RNCP 6 diploma, Trailhead, upcoming
                         vendor certification) */}
                     <Link
@@ -123,6 +144,13 @@ export default async function LocaleLayout({
                       href={`/${locale}/hybride`}
                     >
                       {t("footer.hybrid")}
+                    </Link>
+                    {/* Salesforce security: sharing model, data, Apex, delivery */}
+                    <Link
+                      className="inline-block py-2 underline underline-offset-4 hover:opacity-80 soft-ring rounded-sm"
+                      href={`/${locale}/salesforce-security`}
+                    >
+                      {t("commandPalette.sfSecurity")}
                     </Link>
                     {/* "Contact me" → the home page contact form, same label and
                         destination as in the hero and mobile menu */}

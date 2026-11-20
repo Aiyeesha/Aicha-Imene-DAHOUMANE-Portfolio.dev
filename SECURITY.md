@@ -114,12 +114,12 @@ IP extraction prioritises `x-real-ip` (injected by Vercel, not attacker-controll
 
 | Situation | Effect |
 |-----------|--------|
-| Upstash variables missing in production | Fail-closed — every limiter returns `success: false` |
+| Upstash variables missing in production | Fail-closed on write routes (contact, testimonials, revalidation, cache invalidation, `/admin`); read-only and telemetry routes (search, latest posts, health, CSP reports, error reports) stay open |
 | Upstash variables missing in development / CI | Permissive — `success: true` |
-| Redis slower than 500 ms (`timeout`) | Fail-open — the request is allowed |
-| Redis throws (quota, network, token) | Fail-open through `safeLimit()`, **except `/admin`**, which is fail-closed (`proxy.ts`) |
+| Redis throws (quota, network, token) in production | Same rule through `safeLimit()`: write routes refuse the request (fail-closed), read-only and telemetry routes opt in with `failOpen: true`; `/admin` is always fail-closed (`proxy.ts`) |
+| Redis slower than 500 ms (Upstash `timeout`) | The request is allowed: a slow Redis is not treated as an error |
 
-Fail-open on slowness or errors keeps the contact form usable during an Upstash incident, at the cost of rate limiting during that window. Moving the sensitive limiters to fail-closed is under review.
+Write routes fail closed so that an Upstash outage never silently disables flood protection; read-only routes stay open because blocking them would hide the outage without protecting anything. The 500 ms timeout is the remaining fail-open case.
 
 ---
 

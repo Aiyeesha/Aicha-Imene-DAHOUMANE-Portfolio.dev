@@ -23,6 +23,7 @@ type Locale = "fr" | "en" | "es";
 // ── Localised labels ─────────────────────────────────────────────────────────
 const L = {
   fr: {
+    title: "Certifications",
     earned: "✓ Obtenu",
     active: "↻ Actif",
     booked: "📅 Programmés",
@@ -37,6 +38,7 @@ const L = {
     more: "Voir toutes les certifications",
   },
   en: {
+    title: "Certifications",
     earned: "✓ Earned",
     active: "↻ Active",
     booked: "📅 Booked",
@@ -51,6 +53,7 @@ const L = {
     more: "See all certifications",
   },
   es: {
+    title: "Certificaciones",
     earned: "✓ Obtenido",
     active: "↻ Activo",
     booked: "📅 Programados",
@@ -90,7 +93,7 @@ export default function CertificationsHighlight({ locale: rawLocale }: { locale:
 
   return (
     <div className="mt-10">
-      <h3 className="text-xl font-semibold">Certifications</h3>
+      <h3 className="text-xl font-semibold">{t.title}</h3>
 
       <ul className="mt-4 grid gap-4 md:grid-cols-3">
         {/* 1. Earned diplomas */}

@@ -20,7 +20,7 @@ test.describe("Security headers — non-regression", () => {
     expect(csp, "CSP must block framing").toContain("frame-ancestors 'none'");
   });
 
-  test("Strict-Transport-Security header is present with preload", async ({ request }) => {
+  test("Strict-Transport-Security header is present with includeSubDomains", async ({ request }) => {
     const response = await request.get("/en");
     const hsts = response.headers()["strict-transport-security"];
 
