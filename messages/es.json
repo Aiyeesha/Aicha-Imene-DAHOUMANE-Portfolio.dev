@@ -20,8 +20,8 @@
   "hero": {
     "title": "Desarrolladora Salesforce e Infraestructura",
     "subtitle": "Apex · LWC · Integraciones · Sistemas",
-    "intro_salesforce": "En un sitio industrial, en energía, salud o logística, un incidente rara vez se queda en una sola capa: una integración que falla, un servidor mal configurado, un despliegue sin red de seguridad. He trabajado en las tres — Salesforce, sistemas y redes, CI/CD — y eso me permite hacer de puente entre los equipos que las gestionan.",
-    "intro_itops": "En un sitio industrial, en energía, salud o logística, un incidente rara vez se queda en una sola capa: una integración que falla, un servidor mal configurado, un despliegue sin red de seguridad. He trabajado en las tres — Salesforce, sistemas y redes, CI/CD — y eso me permite hacer de puente entre los equipos que las gestionan.",
+    "intro_salesforce": "Un incidente rara vez se queda en una sola capa: una integración que falla, un servidor mal configurado, un despliegue sin red de seguridad. He trabajado en las tres — Salesforce, sistemas y redes, CI/CD — y eso me permite hacer de puente entre los equipos que las gestionan.",
+    "intro_itops": "Un incidente rara vez se queda en una sola capa: una integración que falla, un servidor mal configurado, un despliegue sin red de seguridad. He trabajado en las tres — Salesforce, sistemas y redes, CI/CD — y eso me permite hacer de puente entre los equipos que las gestionan.",
     "avatar_alt": "Ilustración de Aïcha Imène DAHOUMANE en su puesto de trabajo, rodeada de los logotipos de Salesforce, Linux y de las herramientas que utiliza",
     "title_salesforce": "Desarrolladora Salesforce e Infraestructura",
     "subtitle_salesforce": "Del CRM a los servidores, redes y pipelines que lo rodean.",
@@ -517,14 +517,14 @@
     "breadcrumbHome": "Inicio",
     "breadcrumbCurrent": "Perfil híbrido",
     "h1": "Donde Salesforce y la infraestructura son una sola cabeza, no dos",
-    "lead": "No soy una desarrolladora Salesforce que sabe de servidores, ni una administradora de sistemas que sabe Salesforce. Resuelvo problemas transversales que un especialista solo — de un lado o del otro — abordaría más despacio, peor o directamente no abordaría: las decisiones de ambas capas se toman a la vez, por la misma persona, antes de que empiece el habitual ida y vuelta entre equipos. Las pruebas citadas a continuación proceden de proyectos de formación y proyectos personales; cada página indica su naturaleza y su periodo.",
+    "lead": "No soy una desarrolladora Salesforce que sabe de servidores, ni una administradora de sistemas que sabe Salesforce. Trabajo en las dos capas a la vez: en un mismo proyecto, tomo juntas las decisiones del lado Salesforce y del lado infraestructura, lo que reduce las idas y vueltas entre equipos. Las pruebas citadas a continuación proceden de proyectos de formación y proyectos personales; cada página indica su naturaleza y su periodo.",
     "scenariosTitle": "Tres casos donde la combinación cambia el resultado",
     "scenarios": [
       {
         "title": "Migración de datos Heroku ↔ Salesforce, con una app móvil de campo",
-        "problem": "Una aseguradora adquiere a un competidor: los datos del CRM adquirido deben pasar a Salesforce (en un solo sentido), y los agentes de campo necesitan una app móvil que lee y escribe en la misma org.",
+        "problem": "Proyecto de formación (RNCP 6) — una aseguradora ficticia adquiere a un competidor: los datos del CRM adquirido deben pasar a Salesforce (en un solo sentido), y los agentes de campo necesitan una app móvil que lee y escribe en la misma org.",
         "soloTitle": "Un único especialista",
-        "solo": "Un perfil Salesforce se detiene en la capa Apex REST y delega la infraestructura de Heroku — las decisiones de integración se toman sin conocer las restricciones del otro lado. Un perfil de infraestructura despliega la app de Heroku, pero no diseña ni el trigger Apex de External ID ni la Matching Rule que frenan los duplicados en el origen.",
+        "solo": "Repartido entre dos equipos, este proyecto obliga a coordinar la capa Apex REST y la infraestructura de Heroku, con el riesgo de que las decisiones de integración se tomen sin conocer las restricciones del otro lado.",
         "mineTitle": "Lo que entrego",
         "mine": "Ambas cosas: los endpoints Apex REST, la app Node.js/PostgreSQL que los consume, Heroku Connect configurado objeto por objeto, dos entornos aislados unidos por un pipeline, hasta el runbook de despliegue. El entorno de staging existía antes de escribir la primera línea de Apex — no después.",
         "proofs": [
@@ -542,7 +542,7 @@
         "soloTitle": "Un único especialista",
         "solo": "Un perfil Salesforce sabe programar la funcionalidad, pero despliega con Change Set manual, sin procedimiento de rollback documentado. Un perfil DevOps sabe construir un pipeline, pero no conoce las trampas del despliegue de metadatos de Salesforce — sin deshacer nativo, orden de dependencia entre componentes.",
         "mineTitle": "Lo que entrego",
-        "mine": "Una disciplina DevOps real — validación automatizada de cada Pull Request contra la org, autenticación servidor a servidor JWT Bearer, clave privada eliminada del runner tras cada ejecución, procedimiento de rollback SFDX documentado — aplicada a cómo se entregan las releases de Salesforce, no solo a cómo se programan.",
+        "mine": "Prácticas DevOps aplicadas a la entrega de Salesforce — validación automatizada de cada Pull Request contra la org, autenticación servidor a servidor JWT Bearer, clave privada eliminada del runner tras cada ejecución, procedimiento de rollback SFDX documentado — aplicada a cómo se entregan las releases de Salesforce, no solo a cómo se programan.",
         "proofs": [
           {
             "label": "Proyecto personal — procedimiento de release Salesforce",

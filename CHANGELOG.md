@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Formulations plus factuelles (FR/EN/ES)** : accueil sans secteurs non étayés (industrie, énergie, santé, logistique) ; profil hybride sans comparaison avec « un spécialiste seul », scénario Legarant-AXG présenté comme projet de formation, Matching Rule non décrite comme bloquante, « pratiques DevOps » au lieu de « discipline DevOps réelle » ; Nova Manufacturing n'est plus rattachée au poste et sa charge est présentée comme une estimation.
 - **Note de fin de CDI** : « Préavis en cours » disparaît le 1er décembre 2026, en même temps que la bascule de disponibilité (test ajouté).
 - **`SECURITY.md` et colophon** : comportement réel de la limitation de débit décrit (routes d'écriture bloquées en production si Redis échoue).
 - **Titre « Certifications »** traduit en espagnol sur l'accueil.

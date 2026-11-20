@@ -131,9 +131,9 @@ const NATURES: Record<ProjectNature, NatureInfo> = {
   reconstructed: {
     label: { fr: "Étude de cas reconstituée", en: "Reconstructed case study", es: "Caso de estudio reconstruido" },
     note: {
-      fr: "Scénario, entreprise et chiffres fictifs. Elle s'inspire du type de travaux que je réalise en poste, dont le détail reste confidentiel.",
-      en: "Fictional scenario, company and figures. It is inspired by the kind of work I do in my role, whose specifics remain confidential.",
-      es: "Escenario, empresa y cifras ficticios. Se inspira en el tipo de trabajo que realizo en mi puesto, cuyos detalles siguen siendo confidenciales.",
+      fr: "Scénario, entreprise et chiffres fictifs ; ni une mission client, ni une mission réalisée en poste.",
+      en: "Fictional scenario, company and figures; neither a client engagement nor work done in my job.",
+      es: "Escenario, empresa y cifras ficticios; ni un encargo de cliente ni un trabajo realizado en mi puesto.",
     },
   },
 };
