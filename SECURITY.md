@@ -160,7 +160,7 @@ The site has **no database**. Content (projects, blog, about page, certification
 | Content cache (projects, About page), prefixed by environment and commit so a preview never feeds production; "not found" results are never stored | `content:<env>:<sha>:*` | 5–10 minutes |
 | Uptime views cache (`/status`, `/api/health`) | `portfolio:uptime:*` (except history) | 1–5 minutes |
 
-Contact messages and testimonials are forwarded by e-mail (Formhook) and never stored. Supabase was retired in October 2026: the former project and its tables are no longer used by the site; `supabase/` and `scripts/db/` are kept only for a possible return to SQL.
+Contact messages and testimonials are forwarded by e-mail (Formhook) and never stored. Supabase was retired in October 2026: the former project and its tables are no longer used by the site; its SQL history and scripts are archived in `docs/archive/supabase/` and `scripts/archive/db/`, and the Supabase client is no longer installed.
 
 #### Former Supabase tables (Row Level Security, kept for reference)
 

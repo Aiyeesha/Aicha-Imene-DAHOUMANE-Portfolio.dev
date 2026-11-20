@@ -111,7 +111,7 @@ All commands run from the repository root.
 | `npm run test:ci` | Tests in CI mode (no interactive output) |
 | `npm run test:e2e` | Playwright end-to-end tests |
 
-Content, assets and database commands (`content:*`, `assets:*`, `db:*`) are described in [`scripts/README.md`](scripts/README.md). The site no longer uses Supabase; `supabase/` and `scripts/db/` are kept only in case the content moves back to a SQL database.
+Content and asset commands (`content:*`, `assets:*`) are described in [`scripts/README.md`](scripts/README.md). The site no longer uses Supabase; its former SQL history and scripts are archived in `docs/archive/supabase/` and `scripts/archive/db/`.
 
 **Before opening a PR, always run:**
 
