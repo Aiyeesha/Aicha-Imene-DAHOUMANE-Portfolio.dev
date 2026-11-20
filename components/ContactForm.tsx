@@ -28,8 +28,6 @@ const LINKEDIN_HREF = LINKEDIN_URL;
 // Convert API error codes into i18n keys
 function errorToKey(code: string) {
   switch (code) {
-    case "policy_not_accepted":
-      return "contact.errors.policy_not_accepted";
     case "invalid_json":
       return "contact.errors.invalid_json";
     case "name_too_short":
@@ -140,8 +138,6 @@ export default function ContactForm() {
       email: String(form.get("email") || ""),
       topic: String(form.get("topic") || "general"),
       message,
-      // Explicit GDPR consent (required)
-      acceptedPolicy: Boolean(form.get("acceptedPolicy")),
       company,
       locale
     };
@@ -329,27 +325,20 @@ export default function ContactForm() {
           />
         </div>
 
-        <div className="mt-1 flex items-start gap-3">
-          <input
-            id="contact-accepted-policy"
-            name="acceptedPolicy"
-            type="checkbox"
-            required
-            className="mt-1 h-4 w-4 rounded-sm border border-black/20 dark:border-white/20 bg-black/5 dark:bg-white/5"
-          />
-          <label htmlFor="contact-accepted-policy" className="text-xs text-muted-2">
-            {t("contact.acceptPolicyPrefix")} {" "}
-            <a
-              className="underline underline-offset-4 hover:opacity-90"
-              href={`/${locale}/privacy`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t("contact.acceptPolicyLink")}
-            </a>
-            .
-          </label>
-        </div>
+        {/* Information notice, not a consent box: the contact form relies on
+            legitimate interest (privacy policy, art. 6.1.f GDPR). */}
+        <p className="mt-1 text-xs text-muted-2">
+          {t("contact.privacyNotice")}{" "}
+          <a
+            className="underline underline-offset-4 hover:opacity-90"
+            href={`/${locale}/privacy`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t("contact.acceptPolicyLink")}
+          </a>
+          .
+        </p>
 
         <div className="flex items-center gap-3 flex-wrap">
           <button

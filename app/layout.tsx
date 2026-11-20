@@ -134,8 +134,9 @@ function buildJsonLd(locale: string) {
         address: {
           "@type": "PostalAddress",
           addressCountry: "FR",
-          // addressLocality is a town: "Val-d'Oise" (a département) was wrong
-          // there. The region is precise enough for a job search.
+          // Same place as the legal notice, profile and CVs ("Val-d'Oise (95),
+          // Île-de-France"), at the level schema.org can express: it has no
+          // field for a département, and addressLocality must be a town.
           addressRegion: "Île-de-France"
         },
         // Key skills for the Knowledge Graph
