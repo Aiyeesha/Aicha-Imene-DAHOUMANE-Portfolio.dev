@@ -9,7 +9,8 @@
 //   1. Signed invitation, not expired, not used, with a session key bound to
 //      it (lib/security/testimonialInvite.ts)
 //   2. Rate limit: 3 submissions / 24h per IP (Upstash Redis)
-//   3. Honeypot ("website" must be empty)
+//   3. Honeypot ("website" must be empty), then a strict zod schema (known
+//      keys only, right types)
 //   4. Required fields (full_name, role, relation_type, message, locale) and
 //      maximum lengths
 //   5. Atomic single-use claim of the invitation (Redis SET NX)
@@ -20,6 +21,7 @@
 // (server-only, never NEXT_PUBLIC_).
 
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { log } from "@/lib/logger";
 import { isAllowedOrigin, singleLine } from "@/lib/contactValidation";
 import { testimonialRatelimit, safeLimit } from "@/lib/ratelimit";
@@ -35,6 +37,28 @@ import {
 // Formhook call timeout, so a slow upstream cannot keep the function open
 // until the platform timeout (same value as the contact form).
 const FORMHOOK_TIMEOUT_MS = 5000;
+
+// ── Body shape ────────────────────────────────────────────────────────────────
+// Exactly the fields sent by TestimonialSubmitForm, all optional strings with
+// generous ceilings: .strict() rejects unknown keys and wrong types up front
+// (400 instead of a silent coercion), the precise rules (required fields,
+// lengths, https photo URL) follow below with their own messages.
+const TestimonialBodySchema = z
+  .object({
+    invite:                z.string().max(512).optional(),
+    exp:                   z.number().optional(),
+    sessionKey:            z.string().max(256).optional(),
+    full_name:             z.string().max(500).optional(),
+    role:                  z.string().max(500).optional(),
+    company:               z.string().max(500).optional(),
+    relation_type:         z.string().max(50).optional(),
+    collaboration_context: z.string().max(2000).optional(),
+    message:               z.string().max(10_000).optional(),
+    photo_url:             z.string().max(2000).optional(),
+    locale:                z.string().max(10).optional(),
+    website:               z.string().max(500).optional(), // honeypot
+  })
+  .strict();
 
 // ── Allowed relation_type values ──────────────────────────────────────────────
 const VALID_RELATIONS = new Set([
@@ -74,10 +98,17 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 3. Honeypot ("website" must be missing or empty) ────────────────────────
-  if (body.website) {
+  if (body && typeof body === "object" && (body as Record<string, unknown>).website) {
     // Bot: answer 200 so it is not tipped off
     return NextResponse.json({ ok: true });
   }
+
+  // ── 3b. Shape: known keys only, right types ─────────────────────────────────
+  const parsed = TestimonialBodySchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
+  }
+  body = parsed.data;
 
   // ── 4. Invitation and session key ───────────────────────────────────────────
   // The signed invitation must be valid, unexpired and unused; the session key

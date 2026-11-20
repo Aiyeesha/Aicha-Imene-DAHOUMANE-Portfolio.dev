@@ -47,6 +47,10 @@ const patchedRestConfig = restConfig.map((cfg) => {
   return { ...cfg, rules: { ...cfg.rules, ...ruleOverrides } };
 });
 
-const flatConfig = [customBase, ...patchedRestConfig];
+// Archived code (former Supabase tooling, kept for reference) and generated
+// coverage reports are not linted.
+const ignores = { ignores: ["scripts/archive/**", "docs/archive/**", "coverage/**"] };
+
+const flatConfig = [ignores, customBase, ...patchedRestConfig];
 
 export default flatConfig;

@@ -41,11 +41,22 @@ module.exports = {
   // lib/ratelimit.ts…) rather than a high global figure. Raise them as test
   // suites are added.
   coverageThreshold: {
+    // Just under the measured level so a change that drops tests fails the
+    // build. Jest leaves the files matched by a path threshold out of
+    // "global" (Nov 2026, without lib/security: 22.5 / 65+ / 50.5 / 22.5).
     global: {
-      statements: 20,
-      branches: 60,
-      functions: 45,
-      lines: 20,
+      statements: 22,
+      branches: 65,
+      functions: 50,
+      lines: 22,
+    },
+    // Security helpers are held to a much higher bar, file by file: each one
+    // guards a trust boundary (auth, invitations, CSP reports, slugs, keys).
+    "./lib/security/**/*.ts": {
+      statements: 90,
+      branches: 70,
+      functions: 90,
+      lines: 90,
     },
   },
 };

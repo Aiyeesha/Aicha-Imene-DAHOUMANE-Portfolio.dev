@@ -262,10 +262,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 │   ├── en.json                 # English translations (~440 keys)
 │   ├── fr.json                 # French translations (same keys)
 │   └── es.json                 # Spanish translations (same keys)
-├── supabase/                   # Kept for a possible return to SQL; not used by the site
-│   ├── migrations/             # DDL + RLS history (does not rebuild a blank database on its own)
-│   ├── maintenance/            # Former manual GDPR purge
-│   └── archive/                # One-off fixes and seeds of the former projects table
+├── docs/archive/               # Archives: CHANGELOG 2.0.0 detail, PR descriptions, former Supabase SQL history
 ├── scripts/                    # Utility scripts by theme, see scripts/README.md
 └── public/
     ├── .well-known/
@@ -284,7 +281,7 @@ All `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets in t
 3. Region: `fra1` (see `vercel.json`); daily cron at 08:00 UTC
 4. Deploy — Vercel handles build, CDN, and HTTPS automatically. `NEXT_PUBLIC_*` values are inlined at build time: redeploy after changing one.
 
-> **No database required.** The site runs on Vercel + Upstash Redis + Formhook. If the content ever moves back to SQL, note that `supabase/migrations/` records the former schema history but does not create every table it relied on (`admins`, for instance, predates the migrations): start from a schema dump rather than replaying the migrations on an empty database.
+> **No database required.** The site runs on Vercel + Upstash Redis + Formhook. If the content ever moves back to SQL, note that `docs/archive/supabase/migrations/` records the former schema history but does not create every table it relied on (`admins`, for instance, predates the migrations): start from a schema dump rather than replaying the migrations on an empty database.
 
 ---
 
