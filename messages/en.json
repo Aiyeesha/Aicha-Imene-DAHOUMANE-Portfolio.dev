@@ -20,8 +20,8 @@
   "hero": {
     "title": "Salesforce & Infrastructure Developer",
     "subtitle": "Apex · LWC · Integrations · Systems",
-    "intro_salesforce": "On an industrial site, in energy, healthcare or logistics, an incident rarely stays in one layer: a broken integration, a misconfigured server, a deployment with no safety net. I've worked across all three — Salesforce, systems and networks, CI/CD — and that's what lets me bridge the teams behind them.",
-    "intro_itops": "On an industrial site, in energy, healthcare or logistics, an incident rarely stays in one layer: a broken integration, a misconfigured server, a deployment with no safety net. I've worked across all three — Salesforce, systems and networks, CI/CD — and that's what lets me bridge the teams behind them.",
+    "intro_salesforce": "An incident rarely stays in one layer: a broken integration, a misconfigured server, a deployment with no safety net. I've worked across all three — Salesforce, systems and networks, CI/CD — and that's what lets me bridge the teams behind them.",
+    "intro_itops": "An incident rarely stays in one layer: a broken integration, a misconfigured server, a deployment with no safety net. I've worked across all three — Salesforce, systems and networks, CI/CD — and that's what lets me bridge the teams behind them.",
     "avatar_alt": "Illustration of Aïcha Imène DAHOUMANE at her desk, surrounded by the Salesforce and Linux logos and the tools she uses",
     "title_salesforce": "Salesforce & Infrastructure Developer",
     "subtitle_salesforce": "From the CRM to the servers, networks and pipelines around it.",
@@ -515,14 +515,14 @@
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Hybrid profile",
     "h1": "Where Salesforce and infrastructure are one head, not two",
-    "lead": "I'm not a Salesforce developer who knows servers, nor a sysadmin who knows Salesforce. I solve cross-cutting problems that a single specialist — on either side — would handle more slowly, less well, or not at all: both layers' decisions are made at the same time, by the same person, before the usual back-and-forth between teams even starts. The evidence cited below comes from training and personal projects; each page states its type and period.",
+    "lead": "I'm not a Salesforce developer who knows servers, nor a sysadmin who knows Salesforce. I work on both layers at once: on the same project, I make the Salesforce and the infrastructure decisions together, which cuts down the back-and-forth between teams. The evidence cited below comes from training and personal projects; each page states its type and period.",
     "scenariosTitle": "Three cases where the combination changes the outcome",
     "scenarios": [
       {
         "title": "Heroku ↔ Salesforce data migration, with a field mobile app",
-        "problem": "An insurer acquires a competitor: the acquired CRM's data has to flow into Salesforce (one-way), and field agents need a mobile app that reads and writes against the same org.",
+        "problem": "Training project (RNCP 6) — a fictional insurer acquires a competitor: the acquired CRM's data has to flow into Salesforce (one-way), and field agents need a mobile app that reads and writes against the same org.",
         "soloTitle": "A single specialist",
-        "solo": "A Salesforce profile stops at the Apex REST layer and hands off the Heroku infrastructure — integration decisions are made without knowing the constraints on the other side. An infrastructure profile deploys the Heroku app, but designs neither the External ID Apex trigger nor the Matching Rule that stop duplicates at the source.",
+        "solo": "Split between two teams, this project means coordinating the Apex REST layer and the Heroku infrastructure, with the risk of integration decisions being made without knowing the constraints on the other side.",
         "mineTitle": "What I deliver",
         "mine": "Both: the Apex REST endpoints, the Node.js/PostgreSQL app that consumes them, Heroku Connect configured object by object, two isolated environments linked by a pipeline, right down to the deployment runbook. The staging environment existed before the first line of Apex was written — not after.",
         "proofs": [
@@ -540,7 +540,7 @@
         "soloTitle": "A single specialist",
         "solo": "A Salesforce profile can code the feature, but deploys via manual Change Set, with no documented rollback procedure. A DevOps profile can build a pipeline, but doesn't know the pitfalls of deploying Salesforce metadata — no native undo, dependency order between components.",
         "mineTitle": "What I deliver",
-        "mine": "Real DevOps discipline — automated validation of every Pull Request against the org, server-to-server JWT Bearer authentication, a private key wiped from the runner after every run, a documented SFDX rollback procedure — applied to how Salesforce releases are delivered, not just how they're coded.",
+        "mine": "DevOps practices applied to Salesforce delivery — automated validation of every Pull Request against the org, server-to-server JWT Bearer authentication, a private key wiped from the runner after every run, a documented SFDX rollback procedure — applied to how Salesforce releases are delivered, not just how they're coded.",
         "proofs": [
           {
             "label": "Personal project — Salesforce release procedure",

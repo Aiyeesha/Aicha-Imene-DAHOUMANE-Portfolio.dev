@@ -11890,7 +11890,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Classic to Lightning migration and Apex security hardening for an international industrial equipment manufacturer.",
         "sections": [
           {
-            "body": "> Reconstructed case study: the scenario, company and figures are fictional. It is inspired by the kind of work I do in my role, whose specifics remain confidential, and does not describe a client engagement.\n\nNova Manufacturing is an international manufacturer of industrial equipment (~150 sales reps spread across 3 sites/hubs in Europe). Its Salesforce CRM, still mostly running on Classic, had accumulated several generations of development: Visualforce pages, JavaScript buttons, Process Builder, heavily customized profiles, and REST integrations with third-party systems (ERP, billing). With Classic being progressively deprecated, the scenario is the modernization of the application — with an explicit mandate: don't just migrate the interface, harden the security of the legacy Apex code along the way, some of which had never been audited since its initial release.",
+            "body": "> Reconstructed case study: the scenario, company and figures are fictional. It describes neither a client engagement nor my job.\n\nNova Manufacturing is an international manufacturer of industrial equipment (~150 sales reps spread across 3 sites/hubs in Europe). Its Salesforce CRM, still mostly running on Classic, had accumulated several generations of development: Visualforce pages, JavaScript buttons, Process Builder, heavily customized profiles, and REST integrations with third-party systems (ERP, billing). With Classic being progressively deprecated, the scenario is the modernization of the application — with an explicit mandate: don't just migrate the interface, harden the security of the legacy Apex code along the way, some of which had never been audited since its initial release.",
             "type": "text",
             "title": "Context"
           },
@@ -11960,7 +11960,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "note": "audit + migration + security + testing + documentation",
-                "label": "Total effort",
+                "label": "Estimated effort",
                 "value": "25 days"
               },
               {
@@ -11987,7 +11987,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Migration Classic → Lightning et durcissement sécurité Apex pour un fabricant industriel international.",
         "sections": [
           {
-            "body": "> Étude de cas reconstituée : le scénario, l'entreprise et les chiffres sont fictifs. Elle s'inspire du type de travaux que je réalise en poste, dont le détail reste confidentiel, et ne décrit pas une mission client.\n\nNova Manufacturing est un fabricant international d'équipements industriels (~150 commerciaux répartis sur 3 sites/pôles en Europe). Son CRM Salesforce, encore majoritairement sous Classic, accumulait plusieurs générations de développements : pages Visualforce, boutons JavaScript, Process Builder, profils très personnalisés, intégrations REST vers des systèmes tiers (ERP, facturation). Avec la dépréciation progressive de Classic, le scénario porte sur la modernisation de l'application — avec un mandat explicite : ne pas se contenter de migrer l'interface, mais durcir la sécurité des développements Apex historiques au passage, dont plusieurs n'avaient jamais été audités depuis leur mise en production initiale.",
+            "body": "> Étude de cas reconstituée : le scénario, l'entreprise et les chiffres sont fictifs. Elle ne décrit ni une mission client ni mon poste.\n\nNova Manufacturing est un fabricant international d'équipements industriels (~150 commerciaux répartis sur 3 sites/pôles en Europe). Son CRM Salesforce, encore majoritairement sous Classic, accumulait plusieurs générations de développements : pages Visualforce, boutons JavaScript, Process Builder, profils très personnalisés, intégrations REST vers des systèmes tiers (ERP, facturation). Avec la dépréciation progressive de Classic, le scénario porte sur la modernisation de l'application — avec un mandat explicite : ne pas se contenter de migrer l'interface, mais durcir la sécurité des développements Apex historiques au passage, dont plusieurs n'avaient jamais été audités depuis leur mise en production initiale.",
             "type": "text",
             "title": "Contexte"
           },
@@ -12057,7 +12057,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "note": "audit + migration + sécurité + tests + documentation",
-                "label": "Charge totale",
+                "label": "Charge estimée",
                 "value": "25 jours"
               },
               {
@@ -12084,7 +12084,7 @@ export const projectDetails: ProjectDetails[] = [
         "heroSubtitle": "Migración de Classic a Lightning y refuerzo de seguridad Apex para un fabricante internacional de equipos industriales.",
         "sections": [
           {
-            "body": "> Caso de estudio reconstruido: el escenario, la empresa y las cifras son ficticios. Se inspira en el tipo de trabajo que realizo en mi puesto, cuyos detalles siguen siendo confidenciales, y no describe un encargo de cliente.\n\nNova Manufacturing es un fabricante internacional de equipos industriales (~150 comerciales repartidos en 3 sedes/polos en Europa). Su CRM Salesforce, todavía mayoritariamente en Classic, acumulaba varias generaciones de desarrollos: páginas Visualforce, botones JavaScript, Process Builder, perfiles muy personalizados, integraciones REST con sistemas externos (ERP, facturación). Con la progresiva desaparición de Classic, el escenario plantea la modernización de la aplicación — con un mandato explícito: no limitarse a migrar la interfaz, sino reforzar también la seguridad de los desarrollos Apex heredados, varios de los cuales nunca habían sido auditados desde su puesta en producción inicial.",
+            "body": "> Caso de estudio reconstruido: el escenario, la empresa y las cifras son ficticios. No describe ni un encargo de cliente ni mi puesto.\n\nNova Manufacturing es un fabricante internacional de equipos industriales (~150 comerciales repartidos en 3 sedes/polos en Europa). Su CRM Salesforce, todavía mayoritariamente en Classic, acumulaba varias generaciones de desarrollos: páginas Visualforce, botones JavaScript, Process Builder, perfiles muy personalizados, integraciones REST con sistemas externos (ERP, facturación). Con la progresiva desaparición de Classic, el escenario plantea la modernización de la aplicación — con un mandato explícito: no limitarse a migrar la interfaz, sino reforzar también la seguridad de los desarrollos Apex heredados, varios de los cuales nunca habían sido auditados desde su puesta en producción inicial.",
             "type": "text",
             "title": "Contexto"
           },
@@ -12154,7 +12154,7 @@ export const projectDetails: ProjectDetails[] = [
               },
               {
                 "note": "auditoría + migración + seguridad + pruebas + documentación",
-                "label": "Esfuerzo total",
+                "label": "Esfuerzo estimado",
                 "value": "25 días"
               },
               {
