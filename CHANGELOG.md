@@ -14,6 +14,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Témoignages** : schéma zod `.strict()` sur `/api/testimonial-submit` (clés inconnues et mauvais types refusés en 400 `invalid_payload`), et premiers tests de la route (8 cas).
 - **Supabase archivé** : `@supabase/supabase-js` désinstallé, commandes `db:*` retirées, scripts déplacés dans `scripts/archive/db/` et historique SQL dans `docs/archive/supabase/` ; l'archive est exclue du typecheck et du lint.
 - **Couverture** : seuils globaux relevés au niveau mesuré, et seuils par fichier sur `lib/security/**` (90 % des instructions, lignes et fonctions, 70 % des branches).
+- **`content/projectDetails.ts` découpé** : un fichier par projet dans `content/project-details/<slug>.ts` (46 projets), le fichier d'origine garde les types et assemble la liste dans le même ordre. Contenu vérifié identique avant et après.
 
 ### Fixed
 
