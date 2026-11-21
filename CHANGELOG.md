@@ -11,6 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Maintenance
 
+- **i18n, lot B** : page Certifications (libellés dans `messages`, données des titres via `pick()`), page projet, métadonnées de uses, colophon, accessibilité, mentions légales et confidentialité. 109 ternaires migrés sur 181 au total. Rendu vérifié identique (60 pages).
 - **i18n, lot A** : 60 des 181 ternaires `isFr ? … : isEs ? …` déplacés dans `messages/*.json` (petits composants, pages secondaires, images de partage). Les objets déjà traduits passent par `pick()` (`lib/i18n/pick.ts`) et les codes de langue Open Graph par `lib/i18n/ogLocale.ts` (18 pages). Rendu vérifié identique avant et après (39 pages, 21 images de partage).
 - **Témoignages** : schéma zod `.strict()` sur `/api/testimonial-submit` (clés inconnues et mauvais types refusés en 400 `invalid_payload`), et premiers tests de la route (8 cas).
 - **Supabase archivé** : `@supabase/supabase-js` désinstallé, commandes `db:*` retirées, scripts déplacés dans `scripts/archive/db/` et historique SQL dans `docs/archive/supabase/` ; l'archive est exclue du typecheck et du lint.

@@ -440,7 +440,9 @@
     "contactFallback": "el formulario de contacto del sitio",
     "controllerBody": "La responsable del tratamiento de los datos personales recopilados a través de este sitio es Aïcha Imène DAHOUMANE, a título personal (portfolio profesional, sin actividad comercial). Contacto: {email}",
     "breachTitle": "Notificación de brechas de datos",
-    "breachBody": "En caso de una brecha de datos que pueda suponer un riesgo para tus derechos y libertades, se te notificará lo antes posible. De conformidad con el artículo 33 del RGPD, se notificará a la autoridad de control competente en un plazo de 72 horas. También tienes derecho a presentar una reclamación ante tu autoridad nacional de protección de datos (en Francia: CNIL — www.cnil.fr)."
+    "breachBody": "En caso de una brecha de datos que pueda suponer un riesgo para tus derechos y libertades, se te notificará lo antes posible. De conformidad con el artículo 33 del RGPD, se notificará a la autoridad de control competente en un plazo de 72 horas. También tienes derecho a presentar una reclamación ante tu autoridad nacional de protección de datos (en Francia: CNIL — www.cnil.fr).",
+    "metaTitle": "Política de privacidad — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Política de privacidad del portafolio: datos recogidos por el formulario de contacto, cookies, plazos de conservación y tus derechos RGPD."
   },
   "legal": {
     "title": "Aviso legal",
@@ -454,7 +456,9 @@
     "liabilityTitle": "Responsabilidad",
     "liabilityBody": "La información de este sitio web se proporciona con fines informativos y no constituye un compromiso por parte de la editora. La editora se esfuerza por garantizar la exactitud de la información publicada, pero no puede garantizar su exhaustividad ni la ausencia de errores. Los enlaces a sitios web de terceros se proporcionan únicamente como referencia; la editora no tiene control sobre su contenido.",
     "dataTitle": "Datos personales",
-    "dataBody": "Los datos recopilados a través del formulario de contacto (nombre, email, mensaje) se envían por correo electrónico a través de un servicio de entrega de emails para responder a tu solicitud; no se conservan en los servidores del sitio ni se comparten con otros terceros. De conformidad con la normativa de protección de datos aplicable, tienes derecho a acceder, corregir y eliminar tus datos. Los servicios utilizados (envío de correos, alojamiento, limitación de solicitudes) se detallan en la política de privacidad. Contacto: {email}."
+    "dataBody": "Los datos recopilados a través del formulario de contacto (nombre, email, mensaje) se envían por correo electrónico a través de un servicio de entrega de emails para responder a tu solicitud; no se conservan en los servidores del sitio ni se comparten con otros terceros. De conformidad con la normativa de protección de datos aplicable, tienes derecho a acceder, corregir y eliminar tus datos. Los servicios utilizados (envío de correos, alojamiento, limitación de solicitudes) se detallan en la política de privacidad. Contacto: {email}.",
+    "metaTitle": "Aviso legal — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Aviso legal del portafolio de Aïcha Imène DAHOUMANE: editor, alojamiento (Vercel), propiedad intelectual y política de datos personales."
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -495,7 +499,9 @@
     "helpTitle": "¿Un problema de accesibilidad?",
     "helpBody": "Si encuentras una barrera al navegar por este sitio web — un elemento no accesible mediante teclado, una imagen sin alternativa, contraste insuficiente o cualquier otra dificultad —, indícamelo especificando la URL de la página y la naturaleza del problema, a través del <form>formulario de contacto</form>. Estado: conformidad parcial, autoevaluada (sin auditoría RGAA completa). Si no obtienes una respuesta satisfactoria, puedes acudir al Défenseur des droits francés (defenseurdesdroits.fr).",
     "helpEmail": "También puedes escribirme a <mail>{email}</mail>.",
-    "lastAudit": "Última verificación: 31 de octubre de 2026 — Herramientas: axe-core (CI automatizado y paleta de comandos), pruebas manuales de navegación por teclado."
+    "lastAudit": "Última verificación: 31 de octubre de 2026 — Herramientas: axe-core (CI automatizado y paleta de comandos), pruebas manuales de navegación por teclado.",
+    "metaTitle": "Accesibilidad — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Compromiso WCAG 2.2 (nivel AA), limitaciones conocidas y contacto para reportar un problema de accesibilidad."
   },
   "availModal": {
     "badge": "Entrevistas desde ya — Disponible desde diciembre de 2026",
@@ -758,7 +764,9 @@
   "uses": {
     "title": "Configuración y herramientas",
     "intro": "Mi entorno de trabajo diario — editor, herramientas Salesforce, IT Ops y productividad. Inspirado en la convención",
-    "visit": "Visitar"
+    "visit": "Visitar",
+    "metaTitle": "Configuración y herramientas — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Mi entorno de desarrollo, mis herramientas de Salesforce e IT Ops, y las referencias que uso a diario."
   },
   "securityAck": {
     "title": "Agradecimientos de seguridad",
@@ -817,5 +825,58 @@
     "body": "Este proyecto no existe o ha sido trasladado.",
     "seeAll": "Ver todos los proyectos",
     "youMightLike": "Quizás te interese"
+  },
+  "projectPage": {
+    "localeFallback": "Este estudio de caso aún no está disponible en español — se muestra la versión en {language}.",
+    "backToProjects": "Volver a proyectos",
+    "coverAlt": "imagen de portada",
+    "bridge": "Puente Salesforce ⇄ Infra",
+    "natureLabel": "Naturaleza del proyecto",
+    "screenshots": "Capturas de pantalla",
+    "info": "Información",
+    "period": "Periodo",
+    "profile": "Perfil",
+    "skills": "Habilidades",
+    "techStack": "Tecnologías",
+    "viewSource": "Ver el código",
+    "liveDemo": "Ver el proyecto",
+    "allProjects": "Todos los proyectos"
+  },
+  "colophonPage": {
+    "metaTitle": "Colofón — Cómo está construido este sitio",
+    "metaDescription": "Stack técnico completo, decisiones de arquitectura, estrategia de caché y prácticas de seguridad de este portfolio Next.js."
+  },
+  "certificationsPage": {
+    "rangerProgress": "Progreso hacia Ranger — {badges}/100 badges",
+    "metaTitle": "Certificaciones y diplomas — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Diplomas RNCP 4/5/6, certificaciones activas (Trailhead Expeditioner) y exámenes Salesforce Platform Foundations y Administrator previstos en diciembre de 2026.",
+    "statusEarned": "✓ Obtenido",
+    "statusActive": "↻ Activo",
+    "statusUpcoming": "◎ En preparación",
+    "sectionCompleted": "Obtenido",
+    "sectionCompletedSub": "Diplomas y certificados — progresión RNCP 4 → 5 → 6",
+    "sectionActive": "Activo",
+    "sectionActiveSub": "Aprendizaje continuo",
+    "sectionUpcoming": "En preparación",
+    "sectionUpcomingSub": "Dos exámenes programados en diciembre de 2026, después 2027",
+    "trailheadBadges": "badges",
+    "trailheadPoints": "puntos",
+    "trailheadTrails": "trails",
+    "trailheadProfile": "Ver el perfil de Trailhead",
+    "trailheadHint": "Rango Trailhead: Expeditioner — verificable en línea · 6 badges para alcanzar Ranger",
+    "activelyPreparing": "Preparación activa",
+    "backHome": "Volver al inicio",
+    "credentialLink": "Ver el justificante",
+    "diplomaLink": "Ver el diploma",
+    "breadcrumbHome": "Inicio",
+    "intro": "Diplomas RNCP obtenidos, certificaciones activas y certificaciones actualmente en preparación.",
+    "breadcrumb": "Ruta de navegación",
+    "title": "Certificaciones y diplomas",
+    "earnedLabel": "Obtenido:",
+    "trainingLabel": "Formación:",
+    "rangerProgressLabel": "Progreso hacia Ranger",
+    "inProgressTitle": "En curso / Próximos plazos",
+    "inProgressSub": "— diciembre de 2026, después 2027",
+    "inProgressBadge": "↻ En curso"
   }
 }

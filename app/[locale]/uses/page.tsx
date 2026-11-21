@@ -1,4 +1,5 @@
 // app/[locale]/uses/page.tsx — server component (metadata only)
+import { getTranslations } from "next-intl/server";
 import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -8,21 +9,12 @@ type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "uses" });
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/uses`;
-  const title = isFr
-    ? "Setup & Outils — Aïcha Imène DAHOUMANE"
-    : isEs
-    ? "Configuración y herramientas — Aïcha Imène DAHOUMANE"
-    : "Uses & Setup — Aïcha Imène DAHOUMANE";
-  const description = isFr
-    ? "Mon environnement de développement, mes outils Salesforce et IT Ops, et les références que j'utilise au quotidien."
-    : isEs
-    ? "Mi entorno de desarrollo, mis herramientas de Salesforce e IT Ops, y las referencias que uso a diario."
-    : "My development environment, Salesforce & IT Ops tools, and the references I use daily.";
+  const title = t("metaTitle");
+  const description = t("metaDescription");
   return {
     title,
     description,
