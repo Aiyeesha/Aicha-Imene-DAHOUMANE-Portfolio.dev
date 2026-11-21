@@ -1,4 +1,5 @@
 // app/[locale]/colophon/page.tsx — server component (metadata only)
+import { getTranslations } from "next-intl/server";
 import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -8,21 +9,12 @@ type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "colophonPage" });
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/colophon`;
-  const title = isFr
-    ? "Colophon — Comment ce site est construit"
-    : isEs
-    ? "Colofón — Cómo está construido este sitio"
-    : "Colophon — How this site is built";
-  const description = isFr
-    ? "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js."
-    : isEs
-    ? "Stack técnico completo, decisiones de arquitectura, estrategia de caché y prácticas de seguridad de este portfolio Next.js."
-    : "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio.";
+  const title = t("metaTitle");
+  const description = t("metaDescription");
   return {
     metadataBase: new URL(siteUrl),
     title,

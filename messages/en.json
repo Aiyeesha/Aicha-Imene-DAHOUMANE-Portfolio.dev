@@ -440,7 +440,9 @@
     "contactFallback": "the site's contact form",
     "controllerBody": "The data controller for personal data collected via this website is Aïcha Imène DAHOUMANE, acting in a personal capacity (professional portfolio, no commercial activity). Contact: {email}",
     "breachTitle": "Data breach notification",
-    "breachBody": "In the event of a data breach likely to result in a risk to your rights and freedoms, you will be notified as soon as possible. In accordance with Article 33 of the GDPR, the relevant supervisory authority will be notified within 72 hours. You also have the right to lodge a complaint with your national data protection authority (in France: CNIL — www.cnil.fr)."
+    "breachBody": "In the event of a data breach likely to result in a risk to your rights and freedoms, you will be notified as soon as possible. In accordance with Article 33 of the GDPR, the relevant supervisory authority will be notified within 72 hours. You also have the right to lodge a complaint with your national data protection authority (in France: CNIL — www.cnil.fr).",
+    "metaTitle": "Privacy policy — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Portfolio privacy policy: data collected through the contact form, cookies, retention periods and your GDPR rights."
   },
   "legal": {
     "title": "Legal notice",
@@ -454,7 +456,9 @@
     "liabilityTitle": "Liability",
     "liabilityBody": "The information on this website is provided for informational purposes only and does not constitute a commitment from the publisher. The publisher strives to ensure the accuracy of published information but cannot guarantee its completeness or freedom from errors. Links to third-party websites are provided for reference only; the publisher has no control over their content.",
     "dataTitle": "Personal data",
-    "dataBody": "Data collected via the contact form (name, email, message) is forwarded by email via an email delivery service to respond to your request; it is not stored on the site's servers and is not shared with any other third parties. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. The services involved (email delivery, hosting, rate limiting) are listed in the privacy policy. Contact: {email}."
+    "dataBody": "Data collected via the contact form (name, email, message) is forwarded by email via an email delivery service to respond to your request; it is not stored on the site's servers and is not shared with any other third parties. In accordance with applicable data protection regulations, you have the right to access, correct, and delete your data. The services involved (email delivery, hosting, rate limiting) are listed in the privacy policy. Contact: {email}.",
+    "metaTitle": "Legal Notice — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Legal notice for Aïcha Imène DAHOUMANE's portfolio: publisher, hosting (Vercel), intellectual property and personal data policy."
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -495,7 +499,9 @@
     "helpTitle": "Accessibility issue?",
     "helpBody": "If you encounter a barrier while navigating this website — element not reachable by keyboard, missing image alternative, insufficient contrast, or any other difficulty — please let me know, specifying the URL of the page and the nature of the problem, via the <form>contact form</form>. Status: partial conformance, self-assessed (no full RGAA audit). If you do not get a satisfactory answer, you can refer the matter to the French Défenseur des droits (defenseurdesdroits.fr).",
     "helpEmail": "You can also email me at <mail>{email}</mail>.",
-    "lastAudit": "Last verified: October 31, 2026 — Tools: axe-core (automated CI and command palette), manual keyboard navigation testing."
+    "lastAudit": "Last verified: October 31, 2026 — Tools: axe-core (automated CI and command palette), manual keyboard navigation testing.",
+    "metaTitle": "Accessibility — Aïcha Imène DAHOUMANE",
+    "metaDescription": "WCAG 2.2 (Level AA) commitment, known limitations, and contact to report an accessibility issue."
   },
   "availModal": {
     "badge": "Interviews now — Available from December 2026",
@@ -758,7 +764,9 @@
   "uses": {
     "title": "Uses & Setup",
     "intro": "My daily working environment — editor, Salesforce tools, IT Ops, and productivity. Inspired by the",
-    "visit": "Visit"
+    "visit": "Visit",
+    "metaTitle": "Uses & Setup — Aïcha Imène DAHOUMANE",
+    "metaDescription": "My development environment, Salesforce & IT Ops tools, and the references I use daily."
   },
   "securityAck": {
     "title": "Security Acknowledgments",
@@ -817,5 +825,58 @@
     "body": "This project doesn't exist or may have been moved.",
     "seeAll": "See all projects",
     "youMightLike": "You might like"
+  },
+  "projectPage": {
+    "localeFallback": "This case study isn't available in English yet — showing the {language} version.",
+    "backToProjects": "Back to projects",
+    "coverAlt": "cover image",
+    "bridge": "Salesforce ⇄ Infra bridge",
+    "natureLabel": "Project type",
+    "screenshots": "Screenshots",
+    "info": "Project info",
+    "period": "Period",
+    "profile": "Profile",
+    "skills": "Skills",
+    "techStack": "Tech stack",
+    "viewSource": "View source",
+    "liveDemo": "Live demo",
+    "allProjects": "All projects"
+  },
+  "colophonPage": {
+    "metaTitle": "Colophon — How this site is built",
+    "metaDescription": "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio."
+  },
+  "certificationsPage": {
+    "rangerProgress": "Progress to Ranger — {badges}/100 badges",
+    "metaTitle": "Certifications & Diplomas — Aïcha Imène DAHOUMANE",
+    "metaDescription": "RNCP 4/5/6 degrees, active certifications (Trailhead Expeditioner) and Salesforce Platform Foundations and Administrator exams scheduled for December 2026.",
+    "statusEarned": "✓ Completed",
+    "statusActive": "↻ Active",
+    "statusUpcoming": "◎ In preparation",
+    "sectionCompleted": "Completed",
+    "sectionCompletedSub": "Degrees & certificates — RNCP progression 4 → 5 → 6",
+    "sectionActive": "Active",
+    "sectionActiveSub": "Continuous learning",
+    "sectionUpcoming": "In preparation",
+    "sectionUpcomingSub": "Two exams booked for December 2026, then 2027",
+    "trailheadBadges": "badges",
+    "trailheadPoints": "points",
+    "trailheadTrails": "trails",
+    "trailheadProfile": "View Trailhead profile",
+    "trailheadHint": "Trailhead rank: Expeditioner — verifiable online · 6 badges to reach Ranger",
+    "activelyPreparing": "Actively preparing",
+    "backHome": "Back to home",
+    "credentialLink": "View credential",
+    "diplomaLink": "View diploma",
+    "breadcrumbHome": "Home",
+    "intro": "Earned RNCP degrees, active certifications, and certifications currently in preparation.",
+    "breadcrumb": "Breadcrumb",
+    "title": "Certifications & Diplomas",
+    "earnedLabel": "Earned:",
+    "trainingLabel": "Training:",
+    "rangerProgressLabel": "Progress to Ranger",
+    "inProgressTitle": "In progress / Next up",
+    "inProgressSub": "— December 2026, then 2027",
+    "inProgressBadge": "↻ In progress"
   }
 }

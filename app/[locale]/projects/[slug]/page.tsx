@@ -1,3 +1,5 @@
+import { pick } from "@/lib/i18n/pick";
+import { getTranslations } from "next-intl/server";
 import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectBySlug.cached";
 import { notFound } from "next/navigation";
@@ -36,7 +38,7 @@ type ProjectSection =
 type Params = { locale: string; slug: string };
 
 // Locale display names, keyed by the reader's locale (rows) then the target locale (cols).
-const LOCALE_NAMES: Record<string, Record<string, string>> = {
+const LOCALE_NAMES: { en: Record<string, string>; fr: Record<string, string>; es: Record<string, string> } = {
   en: { fr: "French", es: "Spanish", en: "English" },
   fr: { en: "anglaise", es: "espagnole", fr: "française" },
   es: { en: "inglés", fr: "francés", es: "español" },
@@ -254,8 +256,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const siteUrl = getSiteUrl();
 
-  const isFrPage = locale === "fr";
-  const isEsPage = locale === "es";
+  const t  = await getTranslations({ locale, namespace: "projectPage" });
+  const tc = await getTranslations({ locale, namespace: "common" });
+  const tn = await getTranslations({ locale, namespace: "nav" });
   const safeLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   const breadcrumbSchema = {
@@ -265,13 +268,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       {
         "@type": "ListItem",
         position: 1,
-        name: isFrPage ? "Accueil" : isEsPage ? "Inicio" : "Home",
+        name: tc("home"),
         item: `${siteUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: isFrPage ? "Projets" : isEsPage ? "Proyectos" : "Projects",
+        name: tn("projects"),
         item: `${siteUrl}/${locale}/projects`,
       },
       {
@@ -335,8 +338,6 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const coverImage  = gallery[0] ?? null;
   const galleryRest = gallery.slice(1);
 
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
 
   return (
     // <article>, not <main>: the [locale] layout already renders
@@ -360,7 +361,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           href={`/${locale}/projects`}
           className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
         >
-          ← {isFr ? "Retour aux projets" : isEs ? "Volver a proyectos" : "Back to projects"}
+          ← {t("backToProjects")}
         </Link>
 
         {/* ── COVER IMAGE ──────────────────────────────────────────────────── */}
@@ -370,7 +371,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               <Image
                 src={coverImage.src}
                 alt={isGenericAlt(coverImage.alt)
-                  ? `${project.title} — ${isFr ? "image de couverture" : isEs ? "imagen de portada" : "cover image"}`
+                  ? `${project.title} — ${t("coverAlt")}`
                   : coverImage.alt}
                 fill
                 sizes="(max-width: 768px) 100vw, 1200px"
@@ -391,11 +392,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             visitor mistake unrelated-locale content for a native page. */}
         {project.locale !== locale && (
           <div className="mt-8 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
-            {isFr
-              ? `Cette étude de cas n'est pas encore disponible en français — version ${LOCALE_NAMES.fr[project.locale] ?? project.locale} affichée.`
-              : isEs
-              ? `Este estudio de caso aún no está disponible en español — se muestra la versión en ${LOCALE_NAMES.es[project.locale] ?? project.locale}.`
-              : `This case study isn't available in English yet — showing the ${LOCALE_NAMES.en[project.locale] ?? project.locale} version.`}
+            {t("localeFallback", { language: pick(LOCALE_NAMES, locale)[project.locale] ?? project.locale })}
           </div>
         )}
 
@@ -406,7 +403,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               {badge && <span className={badgeClass}>{tBadge(badge.label, safeLocale)}</span>}
               {project.is_bridge && (
                 <span className="badge badge-bridge">
-                  {isFr ? "Pont Salesforce ⇄ Infra" : isEs ? "Puente Salesforce ⇄ Infra" : "Salesforce ⇄ Infra bridge"}
+                  {t("bridge")}
                 </span>
               )}
             </div>
@@ -429,7 +426,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               (lib/projectNature.ts). */}
           {nature && (
             <aside
-              aria-label={isFr ? "Nature du projet" : isEs ? "Naturaleza del proyecto" : "Project type"}
+              aria-label={t("natureLabel")}
               className="mt-6 max-w-3xl rounded-xl border border-black/10 dark:border-white/10 bg-black/3 dark:bg-white/4 px-4 py-3 text-sm"
             >
               <p className="font-medium text-strong">
@@ -463,7 +460,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 <div className="flex items-center gap-3 mb-5">
                   <span className="h-5 w-1.5 rounded-full bg-slate-400 shrink-0" aria-hidden />
                   <h2 className="text-base font-semibold text-strong tracking-tight">
-                    {isFr ? "Captures d'écran" : isEs ? "Capturas de pantalla" : "Screenshots"}
+                    {t("screenshots")}
                   </h2>
                 </div>
                 <ImageGallery images={galleryRest} title={project.title} />
@@ -478,7 +475,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               {/* Project metadata card */}
               <div className="card p-5 space-y-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-2">
-                  {isFr ? "Informations" : isEs ? "Información" : "Project info"}
+                  {t("info")}
                 </p>
 
                 {badge && (
@@ -491,7 +488,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {nature?.period && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
-                      {isFr ? "Période" : isEs ? "Periodo" : "Period"}
+                      {t("period")}
                     </p>
                     <p className="text-sm text-strong">{nature.period}</p>
                   </div>
@@ -500,10 +497,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {project.is_bridge && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
-                      {isFr ? "Profil" : isEs ? "Perfil" : "Profile"}
+                      {t("profile")}
                     </p>
                     <span className="badge badge-bridge">
-                      {isFr ? "Pont Salesforce ⇄ Infra" : isEs ? "Puente Salesforce ⇄ Infra" : "Salesforce ⇄ Infra bridge"}
+                      {t("bridge")}
                     </span>
                   </div>
                 )}
@@ -511,7 +508,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {tags.length > 0 && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
-                      {isFr ? "Compétences" : isEs ? "Habilidades" : "Skills"}
+                      {t("skills")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {tags.map((tag) => (
@@ -524,7 +521,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 {techStack.length > 0 && (
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-2 mb-2">
-                      {isFr ? "Technologies" : isEs ? "Tecnologías" : "Tech stack"}
+                      {t("techStack")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {techStack.map((t) => (
@@ -546,7 +543,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                       className="flex items-center justify-center gap-2 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-3 text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-colors soft-ring text-strong"
                     >
                       <span aria-hidden>↗</span>
-                      {isFr ? "Voir le code" : isEs ? "Ver el código" : "View source"}
+                      {t("viewSource")}
                     </a>
                   )}
                   {liveHref && (
@@ -557,7 +554,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                       className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black hover:opacity-90 transition-opacity soft-ring"
                     >
                       <span aria-hidden>↗</span>
-                      {isFr ? "Voir le projet" : isEs ? "Ver el proyecto" : "Live demo"}
+                      {t("liveDemo")}
                     </a>
                   )}
                 </div>
@@ -568,7 +565,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 href={`/${locale}/projects`}
                 className="flex items-center gap-1.5 text-sm text-muted hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors soft-ring rounded-full"
               >
-                ← {isFr ? "Tous les projets" : isEs ? "Todos los proyectos" : "All projects"}
+                ← {t("allProjects")}
               </Link>
 
             </div>

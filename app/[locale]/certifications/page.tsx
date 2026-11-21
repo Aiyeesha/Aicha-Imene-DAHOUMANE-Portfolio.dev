@@ -6,6 +6,8 @@
 //   3. In preparation (amber ◎): Salesforce, CompTIA Security+
 // Data: content/certifications.ts (static).
 
+import { getTranslations } from "next-intl/server";
+import { pick } from "@/lib/i18n/pick";
 import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import { SCHEDULED_EXAMS, examTargetLabel, trailheadProfile } from "@/content/certifications";
 import AnimatedCounter from "@/components/AnimatedCounter";
@@ -23,20 +25,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "certificationsPage" });
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
-  const title = isFr
-    ? "Certifications & Diplômes — Aïcha Imène DAHOUMANE"
-    : isEs
-    ? "Certificaciones y diplomas — Aïcha Imène DAHOUMANE"
-    : "Certifications & Diplomas — Aïcha Imène DAHOUMANE";
-  const description = isFr
-    ? "Diplômes RNCP 4/5/6, certifications actives (Trailhead Expeditioner) et examens Salesforce Platform Foundations et Administrator planifiés en décembre 2026."
-    : isEs
-    ? "Diplomas RNCP 4/5/6, certificaciones activas (Trailhead Expeditioner) y exámenes Salesforce Platform Foundations y Administrator previstos en diciembre de 2026."
-    : "RNCP 4/5/6 degrees, active certifications (Trailhead Expeditioner) and Salesforce Platform Foundations and Administrator exams scheduled for December 2026.";
+  const title = t("metaTitle");
+  const description = t("metaDescription");
   const urlPath = `${siteUrl}/${locale}/certifications`;
   return {
     title,
@@ -76,24 +69,23 @@ type StatusBadgeProps = {
   locale: string;
 };
 
-function StatusBadge({ status, locale }: StatusBadgeProps) {
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+async function StatusBadge({ status, locale }: StatusBadgeProps) {
+  const t = await getTranslations({ locale, namespace: "certificationsPage" });
 
   // Colours and labels per status
   const config = {
     completed: {
-      label: isFr ? "✓ Obtenu" : isEs ? "✓ Obtenido" : "✓ Completed",
+      label: t("statusEarned"),
       className:
         "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800",
     },
     active: {
-      label: isFr ? "↻ Actif" : isEs ? "↻ Activo" : "↻ Active",
+      label: t("statusActive"),
       className:
         "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800",
     },
     upcoming: {
-      label: isFr ? "◎ En préparation" : isEs ? "◎ En preparación" : "◎ In preparation",
+      label: t("statusUpcoming"),
       className:
         "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800",
     },
@@ -149,44 +141,32 @@ type PageProps = {
 export default async function CertificationsPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t  = await getTranslations({ locale, namespace: "certificationsPage" });
+  const tn = await getTranslations({ locale, namespace: "nav" });
 
   // Static data only (complete, in every locale); Supabase is not used here.
 
   // ── Static i18n content ───────────────────────────────────────────────────
 
   const labels = {
-    sectionCompleted: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",
-    sectionCompletedSub: isFr
-      ? "Diplômes et certificats — progression RNCP 4 → 5 → 6"
-      : isEs
-      ? "Diplomas y certificados — progresión RNCP 4 → 5 → 6"
-      : "Degrees & certificates — RNCP progression 4 → 5 → 6",
-    sectionActive: isFr ? "Actif" : isEs ? "Activo" : "Active",
-    sectionActiveSub: isFr ? "Progression continue" : isEs ? "Aprendizaje continuo" : "Continuous learning",
-    sectionUpcoming: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation",
-    sectionUpcomingSub: isFr ? "Deux examens planifiés en décembre 2026, puis 2027" : isEs ? "Dos exámenes programados en diciembre de 2026, después 2027" : "Two exams booked for December 2026, then 2027",
-    trailheadBadges: isFr ? "badges" : isEs ? "badges" : "badges",
-    trailheadPoints: isFr ? "points" : isEs ? "puntos" : "points",
-    trailheadTrails: isFr ? "parcours" : isEs ? "trails" : "trails",
-    trailheadProfile: isFr ? "Voir le profil Trailhead" : isEs ? "Ver el perfil de Trailhead" : "View Trailhead profile",
-    trailheadHint: isFr
-      ? "Classement Trailhead : Expeditioner — vérifiable en ligne · 6 badges pour atteindre Ranger"
-      : isEs
-      ? "Rango Trailhead: Expeditioner — verificable en línea · 6 badges para alcanzar Ranger"
-      : "Trailhead rank: Expeditioner — verifiable online · 6 badges to reach Ranger",
-    activelyPreparing: isFr ? "Préparation active" : isEs ? "Preparación activa" : "Actively preparing",
-    backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
-    credentialLink: isFr ? "Voir le justificatif" : isEs ? "Ver el justificante" : "View credential",
-    diplomaLink: isFr ? "Voir le diplôme" : isEs ? "Ver el diploma" : "View diploma",
-    breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    breadcrumbCerts: isEs ? "Certificaciones" : "Certifications",
-    intro: isFr
-      ? "Diplômes RNCP obtenus, certifications actives et certifications en cours de préparation."
-      : isEs
-      ? "Diplomas RNCP obtenidos, certificaciones activas y certificaciones actualmente en preparación."
-      : "Earned RNCP degrees, active certifications, and certifications currently in preparation.",
+    sectionCompleted: t("sectionCompleted"),
+    sectionCompletedSub: t("sectionCompletedSub"),
+    sectionActive: t("sectionActive"),
+    sectionActiveSub: t("sectionActiveSub"),
+    sectionUpcoming: t("sectionUpcoming"),
+    sectionUpcomingSub: t("sectionUpcomingSub"),
+    trailheadBadges: t("trailheadBadges"),
+    trailheadPoints: t("trailheadPoints"),
+    trailheadTrails: t("trailheadTrails"),
+    trailheadProfile: t("trailheadProfile"),
+    trailheadHint: t("trailheadHint"),
+    activelyPreparing: t("activelyPreparing"),
+    backHome: t("backHome"),
+    credentialLink: t("credentialLink"),
+    diplomaLink: t("diplomaLink"),
+    breadcrumbHome: t("breadcrumbHome"),
+    breadcrumbCerts: tn("certifications"),
+    intro: t("intro"),
   };
 
   // ── Completed certifications: translated labels ───────────────────────────
@@ -194,21 +174,21 @@ export default async function CertificationsPage({ params }: PageProps) {
   const completedCerts = [
     {
       id: "tai-greta-valdoise",
-      name: isFr
-        ? "Technicien(ne) d'Assistance Informatique"
-        : isEs
-        ? "Técnico/a de Asistencia Informática"
-        : "IT Support Technician",
+      name: pick({
+        fr: "Technicien(ne) d'Assistance Informatique",
+        es: "Técnico/a de Asistencia Informática",
+        en: "IT Support Technician",
+      }, locale),
       issuer: "GRETA du Val d'Oise — Lycée Louis Jouvet",
       // Award date of the diploma; the training period is shown separately.
-      earnedDate: isFr ? "4 juillet 2022" : isEs ? "4 de julio de 2022" : "July 4, 2022",
-      trainingPeriod: isFr ? "janv. – juil. 2022" : isEs ? "ene. – jul. 2022" : "Jan – Jul 2022",
-      level: isFr ? "Titre RNCP niveau 4 (Bac)" : isEs ? "Título RNCP nivel 4 (equivalente a Bachillerato)" : "RNCP Level 4 (Bac)",
-      description: isFr
-        ? "Support et assistance informatique. Formation au Lycée Louis Jouvet (Taverny). Installation Windows 10, virtualisation VirtualBox, configuration réseau TP-Link, profils itinérants Active Directory, diagnostic matériel."
-        : isEs
-        ? "Soporte y asistencia informática. Formación en el Lycée Louis Jouvet (Taverny). Instalación de Windows 10, virtualización con VirtualBox, configuración de red TP-Link, perfiles móviles de Active Directory, diagnóstico de hardware."
-        : "IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, hardware diagnosis.",
+      earnedDate: pick({ fr: "4 juillet 2022", es: "4 de julio de 2022", en: "July 4, 2022" }, locale),
+      trainingPeriod: pick({ fr: "janv. – juil. 2022", es: "ene. – jul. 2022", en: "Jan – Jul 2022" }, locale),
+      level: pick({ fr: "Titre RNCP niveau 4 (Bac)", es: "Título RNCP nivel 4 (equivalente a Bachillerato)", en: "RNCP Level 4 (Bac)" }, locale),
+      description: pick({
+        fr: "Support et assistance informatique. Formation au Lycée Louis Jouvet (Taverny). Installation Windows 10, virtualisation VirtualBox, configuration réseau TP-Link, profils itinérants Active Directory, diagnostic matériel.",
+        es: "Soporte y asistencia informática. Formación en el Lycée Louis Jouvet (Taverny). Instalación de Windows 10, virtualización con VirtualBox, configuración de red TP-Link, perfiles móviles de Active Directory, diagnóstico de hardware.",
+        en: "IT support and user assistance. Training at Lycée Louis Jouvet (Taverny). Windows 10 installation, VirtualBox virtualization, TP-Link network configuration, Active Directory roaming profiles, hardware diagnosis.",
+      }, locale),
       skills: ["Windows 10", "VirtualBox", "Active Directory", "Roaming Profiles", "WiFi Configuration", "Hardware Diagnosis", "User Support"],
       credentialUrl: undefined,
       diplomaUrl: "/certifications/tai-greta-diploma.pdf",
@@ -218,20 +198,20 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
     {
       id: "tssr-greta-valdoise",
-      name: isFr
-        ? "Technicienne Supérieure Systèmes & Réseaux"
-        : isEs
-        ? "Técnica Superior en Sistemas y Redes"
-        : "Higher Technician in Systems & Networks",
+      name: pick({
+        fr: "Technicienne Supérieure Systèmes & Réseaux",
+        es: "Técnica Superior en Sistemas y Redes",
+        en: "Higher Technician in Systems & Networks",
+      }, locale),
       issuer: "GRETA du Val d'Oise",
-      earnedDate: isFr ? "27 juin 2023" : isEs ? "27 de junio de 2023" : "June 27, 2023",
-      trainingPeriod: isFr ? "oct. 2022 – juin 2023" : isEs ? "oct. 2022 – jun. 2023" : "Oct 2022 – Jun 2023",
-      level: isFr ? "Titre RNCP niveau 5 (Bac+2)" : isEs ? "Título RNCP nivel 5 (equivalente a Bac+2)" : "RNCP Level 5 (Bac+2)",
-      description: isFr
-        ? "Administration systèmes & réseaux. Deux stages d'un mois chez MIDRANGE Group : déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM."
-        : isEs
-        ? "Administración de sistemas y redes. Dos prácticas de un mes en MIDRANGE Group: despliegue de 264 equipos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM."
-        : "Systems & network administration. Two one-month internships at MIDRANGE Group: deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM.",
+      earnedDate: pick({ fr: "27 juin 2023", es: "27 de junio de 2023", en: "June 27, 2023" }, locale),
+      trainingPeriod: pick({ fr: "oct. 2022 – juin 2023", es: "oct. 2022 – jun. 2023", en: "Oct 2022 – Jun 2023" }, locale),
+      level: pick({ fr: "Titre RNCP niveau 5 (Bac+2)", es: "Título RNCP nivel 5 (equivalente a Bac+2)", en: "RNCP Level 5 (Bac+2)" }, locale),
+      description: pick({
+        fr: "Administration systèmes & réseaux. Deux stages d'un mois chez MIDRANGE Group : déploiement de 264 postes Dell (dont 200 via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM.",
+        es: "Administración de sistemas y redes. Dos prácticas de un mes en MIDRANGE Group: despliegue de 264 equipos Dell (200 de ellos vía Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM.",
+        en: "Systems & network administration. Two one-month internships at MIDRANGE Group: deployment of 264 Dell workstations (200 of them via Windows Autopilot), Windows Server 2022 (AD DS, DNS, DHCP, GPO, WDS, PXE), pfSense/Squid, Acronis, Datto RMM.",
+      }, locale),
       skills: ["Windows Server 2022", "Active Directory", "DNS / DHCP / WDS", "GPO", "PXE", "VMware Workstation 17", "pfSense", "Squid Proxy", "Acronis Cyber Protect", "Datto RMM", "Windows Autopilot"],
       credentialUrl: undefined,
       diplomaUrl: "/certifications/tssr-greta-diploma.pdf",
@@ -241,21 +221,21 @@ export default async function CertificationsPage({ params }: PageProps) {
     },
     {
       id: "dev-concepteur-logiciel-openclassrooms",
-      name: isFr
-        ? "Développeur Concepteur Logiciel"
-        : isEs
-        ? "Développeur Concepteur Logiciel"
-        : "Développeur Concepteur Logiciel",
+      name: pick({
+        fr: "Développeur Concepteur Logiciel",
+        es: "Développeur Concepteur Logiciel",
+        en: "Développeur Concepteur Logiciel",
+      }, locale),
       issuer: "OpenClassrooms",
-      earnedDate: isFr ? "Oct. 2025" : isEs ? "Oct. 2025" : "Oct 2025",
+      earnedDate: pick({ fr: "Oct. 2025", es: "Oct. 2025", en: "Oct 2025" }, locale),
       // RNCP35976: the record the diploma cites (France compétences decision
       // published Oct 15, 2021); since replaced by RNCP38038.
-      level: isFr ? "Titre RNCP niveau 6 (Bac+3/4) · RNCP35976" : isEs ? "Título RNCP nivel 6 (equivalente a Bac+3/4) · RNCP35976" : "RNCP Level 6 (Bac+3/4 equivalent) · RNCP35976",
-      description: isFr
-        ? "Titre professionnel en conception et développement logiciel avec spécialisation Salesforce : Apex, Flows, modélisation des données, CI/CD (Salesforce CLI, GitHub Actions), LWC, sécurité et permission sets."
-        : isEs
-        ? "Título profesional en diseño y desarrollo de software con especialización en Salesforce: Apex, Flows, modelado de datos, CI/CD (Salesforce CLI, GitHub Actions), LWC, seguridad y permission sets."
-        : "Professional title in software design & development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.",
+      level: pick({ fr: "Titre RNCP niveau 6 (Bac+3/4) · RNCP35976", es: "Título RNCP nivel 6 (equivalente a Bac+3/4) · RNCP35976", en: "RNCP Level 6 (Bac+3/4 equivalent) · RNCP35976" }, locale),
+      description: pick({
+        fr: "Titre professionnel en conception et développement logiciel avec spécialisation Salesforce : Apex, Flows, modélisation des données, CI/CD (Salesforce CLI, GitHub Actions), LWC, sécurité et permission sets.",
+        es: "Título profesional en diseño y desarrollo de software con especialización en Salesforce: Apex, Flows, modelado de datos, CI/CD (Salesforce CLI, GitHub Actions), LWC, seguridad y permission sets.",
+        en: "Professional title in software design & development. Salesforce specialization: Apex, Flows, data modeling, CI/CD with Salesforce CLI and GitHub Actions, LWC, security, and permission sets.",
+      }, locale),
       skills: ["Apex", "Salesforce Flows", "LWC", "Data Modeling", "CI/CD", "GitHub Actions", "Salesforce CLI", "API Integration", "Security & Permissions", "Automated Testing"],
       credentialUrl: "https://www.francecompetences.fr/recherche/rncp/35976/",
       diplomaUrl: "/certifications/openclassrooms-dcl-diploma.pdf",
@@ -267,13 +247,13 @@ export default async function CertificationsPage({ params }: PageProps) {
       id: "linguaskill-cambridge",
       name: "Linguaskill Business — C1+",
       issuer: "Cambridge Assessment English",
-      earnedDate: isFr ? "Avr. 2021" : isEs ? "Abr. 2021" : "Apr 2021",
-      level: isFr ? "Score 180+ (C1+) écoute · 179 (B2) lecture" : isEs ? "Puntuación 180+ (C1+) comprensión oral · 179 (B2) comprensión lectora" : "Score 180+ (C1+) listening · 179 (B2) reading",
-      description: isFr
-        ? "Certification anglais des affaires Cambridge. Score : 180+ (C1+) compréhension orale, 179 (B2) compréhension écrite. Délivré via Astrolabe Formation PFD."
-        : isEs
-        ? "Certificación de inglés de negocios de Cambridge. Puntuación: 180+ (C1+) comprensión oral, 179 (B2) comprensión lectora. Emitida a través de Astrolabe Formation PFD."
-        : "Cambridge Business English certification. Score: 180+ (C1+) listening, 179 (B2) reading. Issued via Astrolabe Formation PFD.",
+      earnedDate: pick({ fr: "Avr. 2021", es: "Abr. 2021", en: "Apr 2021" }, locale),
+      level: pick({ fr: "Score 180+ (C1+) écoute · 179 (B2) lecture", es: "Puntuación 180+ (C1+) comprensión oral · 179 (B2) comprensión lectora", en: "Score 180+ (C1+) listening · 179 (B2) reading" }, locale),
+      description: pick({
+        fr: "Certification anglais des affaires Cambridge. Score : 180+ (C1+) compréhension orale, 179 (B2) compréhension écrite. Délivré via Astrolabe Formation PFD.",
+        es: "Certificación de inglés de negocios de Cambridge. Puntuación: 180+ (C1+) comprensión oral, 179 (B2) comprensión lectora. Emitida a través de Astrolabe Formation PFD.",
+        en: "Cambridge Business English certification. Score: 180+ (C1+) listening, 179 (B2) reading. Issued via Astrolabe Formation PFD.",
+      }, locale),
       skills: ["Business English", "Listening Comprehension", "Reading Comprehension", "Professional Communication"],
       diplomaUrl: "/certifications/Certification_LINGUASKILL_Page_1.webp",
       initials: "C1+",
@@ -307,11 +287,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       name: "Salesforce Platform Foundations",
       issuer: "Salesforce",
       target: examTargetLabel(SCHEDULED_EXAMS.platformFoundations, locale),
-      description: isFr
-        ? "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples."
-        : isEs
-        ? "Fundamentos de la plataforma Salesforce: navegación, objetos estándar, seguridad básica y automatizaciones simples."
-        : "Salesforce platform fundamentals: navigation, standard objects, basic security and simple automations.",
+      description: pick({
+        fr: "Fondamentaux de la plateforme Salesforce : navigation, objets standard, sécurité de base et automatisations simples.",
+        es: "Fundamentos de la plataforma Salesforce: navegación, objetos estándar, seguridad básica y automatizaciones simples.",
+        en: "Salesforce platform fundamentals: navigation, standard objects, basic security and simple automations.",
+      }, locale),
       initials: "PF",
       color: "bg-sky-700",
       logoUrl: "/certifications/salesforce.svg",
@@ -322,11 +302,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       name: "Salesforce Platform Administrator",
       issuer: "Salesforce",
       target: examTargetLabel(SCHEDULED_EXAMS.platformAdministrator, locale),
-      description: isFr
-        ? "Administration de la plateforme : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org."
-        : isEs
-        ? "Administración de la plataforma: configuración, seguridad, automatizaciones con Flows, gestión de usuarios y mantenimiento de la org."
-        : "Platform administration: configuration, security, Flow automations, user management and org maintenance.",
+      description: pick({
+        fr: "Administration de la plateforme : configuration, sécurité, automatisations Flows, gestion des utilisateurs et maintenance org.",
+        es: "Administración de la plataforma: configuración, seguridad, automatizaciones con Flows, gestión de usuarios y mantenimiento de la org.",
+        en: "Platform administration: configuration, security, Flow automations, user management and org maintenance.",
+      }, locale),
       initials: "ADM",
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
@@ -337,11 +317,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       name: "Salesforce Platform App Builder",
       issuer: "Salesforce",
       target: "2027",
-      description: isFr
-        ? "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code."
-        : isEs
-        ? "Diseño y despliegue de aplicaciones personalizadas en la plataforma Salesforce con herramientas low-code."
-        : "Design and deployment of custom applications on the Salesforce platform using low-code tools.",
+      description: pick({
+        fr: "Conception et déploiement d’applications personnalisées sur la plateforme Salesforce avec les outils low-code.",
+        es: "Diseño y despliegue de aplicaciones personalizadas en la plataforma Salesforce con herramientas low-code.",
+        en: "Design and deployment of custom applications on the Salesforce platform using low-code tools.",
+      }, locale),
       initials: "PAB",
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
@@ -352,11 +332,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       name: "Salesforce Platform Developer",
       issuer: "Salesforce",
       target: "2027",
-      description: isFr
-        ? "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques."
-        : isEs
-        ? "Desarrollo Salesforce: Apex, SOQL, Lightning Web Components, pruebas unitarias y buenas prácticas."
-        : "Salesforce development: Apex, SOQL, Lightning Web Components, unit testing and best practices.",
+      description: pick({
+        fr: "Développement Salesforce : Apex, SOQL, Lightning Web Components, tests unitaires et bonnes pratiques.",
+        es: "Desarrollo Salesforce: Apex, SOQL, Lightning Web Components, pruebas unitarias y buenas prácticas.",
+        en: "Salesforce development: Apex, SOQL, Lightning Web Components, unit testing and best practices.",
+      }, locale),
       initials: "PDI",
       color: "bg-sky-800",
       logoUrl: "/certifications/salesforce.svg",
@@ -368,11 +348,11 @@ export default async function CertificationsPage({ params }: PageProps) {
       name: "CompTIA Security+ (SY0-701)",
       issuer: "CompTIA",
       target: "2027",
-      description: isFr
-        ? "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents."
-        : isEs
-        ? "Certificación de ciberseguridad de referencia: amenazas, arquitectura de seguridad, gestión de identidades y respuesta a incidentes."
-        : "Industry-standard cybersecurity cert: threats, security architecture, identity management and incident response.",
+      description: pick({
+        fr: "Certification cybersécurité de référence : menaces, architecture de sécurité, gestion des identités et réponse aux incidents.",
+        es: "Certificación de ciberseguridad de referencia: amenazas, arquitectura de seguridad, gestión de identidades y respuesta a incidentes.",
+        en: "Industry-standard cybersecurity cert: threats, security architecture, identity management and incident response.",
+      }, locale),
       initials: "S+",
       color: "bg-red-700",
       logoUrl: "/certifications/comptia-security.svg",
@@ -403,7 +383,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
       {/* ── Breadcrumb ─────────────────────────────────────────────────────── */}
       <nav
-        aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
+        aria-label={t("breadcrumb")}
         className="mb-6 flex items-center gap-2 text-sm text-muted-2"
       >
         <Link href={`/${safeLocale}`} className="hover:underline soft-ring rounded-sm px-1">
@@ -415,7 +395,7 @@ export default async function CertificationsPage({ params }: PageProps) {
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <h1 className="text-3xl font-semibold">
-        {isFr ? "Certifications & Diplômes" : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas"}
+        {t("title")}
       </h1>
       <p className="mt-3 text-muted">{labels.intro}</p>
 
@@ -447,12 +427,12 @@ export default async function CertificationsPage({ params }: PageProps) {
                   <p className="mt-0.5 text-sm text-muted">{cert.issuer}</p>
                   <p className="mt-0.5 text-xs text-muted-2">{cert.level}</p>
                   <p className="mt-0.5 text-xs text-muted-2">
-                    {isFr ? "Obtenu :" : isEs ? "Obtenido:" : "Earned:"} {cert.earnedDate}
+                    {t("earnedLabel")} {cert.earnedDate}
                   </p>
                   {/* Training period, for diplomas earned after a course */}
                   {"trainingPeriod" in cert && cert.trainingPeriod && (
                     <p className="mt-0.5 text-xs text-muted-2">
-                      {isFr ? "Formation :" : isEs ? "Formación:" : "Training:"} {cert.trainingPeriod}
+                      {t("trainingLabel")} {cert.trainingPeriod}
                     </p>
                   )}
                 </div>
@@ -563,11 +543,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                 <div className="mt-5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-muted-2">
-                      {isFr
-                        ? `Progression vers Ranger — ${trailheadProfile.badges}/100 badges`
-                        : isEs
-                        ? `Progreso hacia Ranger — ${trailheadProfile.badges}/100 badges`
-                        : `Progress to Ranger — ${trailheadProfile.badges}/100 badges`}
+                      {t("rangerProgress", { badges: trailheadProfile.badges })}
                     </span>
                     <span className="text-xs font-medium text-cyan-700 dark:text-cyan-300">
                       {trailheadProfile.badges}%
@@ -578,7 +554,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                     aria-valuenow={trailheadProfile.badges}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-label={isFr ? "Progression vers Ranger" : isEs ? "Progreso hacia Ranger" : "Progress to Ranger"}
+                    aria-label={t("rangerProgressLabel")}
                     className="h-1.5 w-full rounded-full bg-black/10 dark:bg-white/10 overflow-hidden"
                   >
                     <div
@@ -621,10 +597,10 @@ export default async function CertificationsPage({ params }: PageProps) {
         <div className="mt-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              {isFr ? "En cours / Prochaines échéances" : isEs ? "En curso / Próximos plazos" : "In progress / Next up"}
+              {t("inProgressTitle")}
             </span>
             <span className="text-xs text-muted-2">
-              {isFr ? "— décembre 2026, puis 2027" : isEs ? "— diciembre de 2026, después 2027" : "— December 2026, then 2027"}
+              {t("inProgressSub")}
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -645,7 +621,7 @@ export default async function CertificationsPage({ params }: PageProps) {
                 <div className="mt-4 flex items-center gap-2">
                   {cert.isActive ? (
                     <span className="inline-flex items-center rounded-full bg-cyan-100 dark:bg-cyan-900/30 px-2.5 py-0.5 text-xs font-medium text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
-                      {isFr ? "↻ En cours" : isEs ? "↻ En curso" : "↻ In progress"}
+                      {t("inProgressBadge")}
                     </span>
                   ) : (
                     <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-300">
