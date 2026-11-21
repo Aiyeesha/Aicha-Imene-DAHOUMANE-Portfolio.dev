@@ -1,6 +1,8 @@
 // Server component: accents use the `itops:` CSS variant (globals.css), which
 // also follows a track switch, so no client JavaScript is needed.
 
+import { getTranslations } from "next-intl/server";
+import { pick } from "@/lib/i18n/pick";
 import Link from "next/link";
 
 const REPO_URL = "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.dev";
@@ -8,140 +10,131 @@ const REPO_URL = "https://github.com/Aiyeesha/Aicha-Imene-DAHOUMANE-Portfolio.de
 type StackItem = { name: string; role: string; link?: string };
 type StackSection = { title: string; items: StackItem[] };
 
-export default function ColophonContent({ locale }: { locale: string }) {
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+export default async function ColophonContent({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "colophonPage" });
 
   // Salesforce by default, IT Ops through the `itops:` variant.
   const arrowClass  = "text-cyan-500 dark:text-cyan-400 itops:text-violet-500 itops:dark:text-violet-400";
   const ctaBtnClass = "bg-cyan-500 text-black hover:opacity-90 itops:bg-violet-600 itops:text-white";
 
   const labels = {
-    breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    backHome:       isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
-    title:          isEs ? "Colofón" : "Colophon",
-    subtitle: isFr
-      ? "Comment ce site est construit — stack, architecture, cache et sécurité."
-      : isEs
-      ? "Cómo está construido este sitio — stack, arquitectura, caché y seguridad."
-      : "How this site is built — stack, architecture, caching, and security.",
-    stackTitle:     isFr ? "Stack technique" : isEs ? "Stack técnico" : "Tech stack",
-    archTitle:      isFr ? "Décisions d'architecture" : isEs ? "Decisiones de arquitectura" : "Architecture decisions",
-    cacheTitle:     isFr ? "Stratégie de cache" : isEs ? "Estrategia de caché" : "Caching strategy",
-    secTitle:       isFr ? "Sécurité" : isEs ? "Seguridad" : "Security",
-    openSourceTitle:isFr ? "Code source" : isEs ? "Código fuente" : "Source code",
-    sourceNote:     isFr
-      ? "Le dépôt de ce site est public — architecture, CI/CD, tests et sécurité consultables directement sur GitHub."
-      : isEs
-      ? "El repositorio de este sitio es público — arquitectura, CI/CD, pruebas y seguridad consultables directamente en GitHub."
-      : "This site's repository is public — architecture, CI/CD, tests, and security are all viewable directly on GitHub.",
-    learnMore:      isFr ? "Voir le dépôt GitHub" : isEs ? "Ver el repositorio en GitHub" : "View the GitHub repository",
-    viewLive:       isFr ? "Voir le site en ligne" : isEs ? "Ver el sitio en vivo" : "View live site",
+    breadcrumbHome: t("breadcrumbHome"),
+    backHome:       t("backHome"),
+    title:          t("title"),
+    subtitle: t("subtitle"),
+    stackTitle:     t("stackTitle"),
+    archTitle:      t("archTitle"),
+    cacheTitle:     t("cacheTitle"),
+    secTitle:       t("secTitle"),
+    openSourceTitle:t("openSourceTitle"),
+    sourceNote:     t("sourceNote"),
+    learnMore:      t("learnMore"),
+    viewLive:       t("viewLive"),
   };
 
   const stackSections: StackSection[] = [
     {
       title: "Frontend",
       items: [
-        { name: "Next.js",      role: isFr ? "Framework React (App Router, SSR, SSG)" : isEs ? "Framework de React (App Router, SSR, SSG)" : "React framework (App Router, SSR, SSG)", link: "https://nextjs.org" },
-        { name: "React",        role: isFr ? "Bibliothèque UI — Server & Client Components" : isEs ? "Biblioteca de UI — Server & Client Components" : "UI library — Server & Client Components", link: "https://react.dev" },
-        { name: "TypeScript",   role: isFr ? "Typage statique de bout en bout" : isEs ? "Tipado estático de extremo a extremo" : "End-to-end static typing", link: "https://www.typescriptlang.org" },
-        { name: "Tailwind CSS 4", role: isFr ? "CSS utility-first, configuration CSS-first (`@theme`) — mode sombre via class" : isEs ? "CSS utility-first, configuración CSS-first (`@theme`) — modo oscuro vía class" : "Utility-first CSS, CSS-first configuration (`@theme`) — dark mode via class", link: "https://tailwindcss.com" },
-        { name: "next-themes",  role: isFr ? "Toggle dark/light avec persistance" : isEs ? "Selector claro/oscuro con persistencia" : "Dark/light toggle with persistence", link: "https://github.com/pacocoursey/next-themes" },
+        { name: "Next.js",      role: pick({ fr: "Framework React (App Router, SSR, SSG)", es: "Framework de React (App Router, SSR, SSG)", en: "React framework (App Router, SSR, SSG)" }, locale), link: "https://nextjs.org" },
+        { name: "React",        role: pick({ fr: "Bibliothèque UI — Server & Client Components", es: "Biblioteca de UI — Server & Client Components", en: "UI library — Server & Client Components" }, locale), link: "https://react.dev" },
+        { name: "TypeScript",   role: pick({ fr: "Typage statique de bout en bout", es: "Tipado estático de extremo a extremo", en: "End-to-end static typing" }, locale), link: "https://www.typescriptlang.org" },
+        { name: "Tailwind CSS 4", role: pick({ fr: "CSS utility-first, configuration CSS-first (`@theme`) — mode sombre via class", es: "CSS utility-first, configuración CSS-first (`@theme`) — modo oscuro vía class", en: "Utility-first CSS, CSS-first configuration (`@theme`) — dark mode via class" }, locale), link: "https://tailwindcss.com" },
+        { name: "next-themes",  role: pick({ fr: "Toggle dark/light avec persistance", es: "Selector claro/oscuro con persistencia", en: "Dark/light toggle with persistence" }, locale), link: "https://github.com/pacocoursey/next-themes" },
       ],
     },
     {
       title: "i18n",
-      items: [{ name: "next-intl", role: isFr ? "Internationalisation EN/FR/ES (App Router, proxy.ts)" : isEs ? "Internacionalización EN/FR/ES (App Router, proxy.ts)" : "EN/FR/ES internationalisation (App Router, proxy.ts)", link: "https://next-intl.dev" }],
+      items: [{ name: "next-intl", role: pick({ fr: "Internationalisation EN/FR/ES (App Router, proxy.ts)", es: "Internacionalización EN/FR/ES (App Router, proxy.ts)", en: "EN/FR/ES internationalisation (App Router, proxy.ts)" }, locale), link: "https://next-intl.dev" }],
     },
     {
       title: "Blog",
       items: [
-        { name: "@next/mdx",     role: isFr ? "Rendu MDX intégré Next.js" : isEs ? "Renderizado MDX integrado en Next.js" : "Next.js MDX rendering", link: "https://nextjs.org/docs/app/building-your-application/configuring/mdx" },
-        { name: "gray-matter",   role: isFr ? "Parsing des frontmatter YAML" : isEs ? "Parsing de frontmatter YAML" : "YAML frontmatter parsing", link: "https://github.com/jonschlinkert/gray-matter" },
-        { name: "rehype / remark", role: isFr ? "Transformation AST HTML + Markdown" : isEs ? "Transformación de AST HTML + Markdown" : "HTML + Markdown AST transformation" },
-        { name: "shiki",         role: isFr ? "Coloration syntaxique côté serveur" : isEs ? "Resaltado de sintaxis en el servidor" : "Server-side syntax highlighting", link: "https://shiki.style" },
+        { name: "@next/mdx",     role: pick({ fr: "Rendu MDX intégré Next.js", es: "Renderizado MDX integrado en Next.js", en: "Next.js MDX rendering" }, locale), link: "https://nextjs.org/docs/app/building-your-application/configuring/mdx" },
+        { name: "gray-matter",   role: pick({ fr: "Parsing des frontmatter YAML", es: "Parsing de frontmatter YAML", en: "YAML frontmatter parsing" }, locale), link: "https://github.com/jonschlinkert/gray-matter" },
+        { name: "rehype / remark", role: pick({ fr: "Transformation AST HTML + Markdown", es: "Transformación de AST HTML + Markdown", en: "HTML + Markdown AST transformation" }, locale) },
+        { name: "shiki",         role: pick({ fr: "Coloration syntaxique côté serveur", es: "Resaltado de sintaxis en el servidor", en: "Server-side syntax highlighting" }, locale), link: "https://shiki.style" },
       ],
     },
     {
       title: "Backend",
       items: [
-        { name: "Upstash Redis", role: isFr ? "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health) + historique de disponibilité sur 30 jours" : isEs ? "Caché stale-while-revalidate + rate-limiting en los endpoints de escritura y sensibles (contacto, testimonios, invalidación de caché, admin, informes CSP, health) + historial de disponibilidad de 30 días" : "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health) + 30-day uptime history", link: "https://upstash.com" },
-        { name: "Formhook",      role: isFr ? "Acheminement par email des messages du formulaire de contact — hébergé dans l'UE, aucune persistance côté serveur" : isEs ? "Entrega por email de los mensajes del formulario de contacto — alojado en la UE, sin persistencia en el servidor" : "Email delivery for contact-form messages — EU-hosted, no server-side persistence", link: "https://formhook.app" },
+        { name: "Upstash Redis", role: pick({ fr: "Cache stale-while-revalidate + rate-limiting sur les endpoints d'écriture et sensibles (contact, témoignages, invalidation cache, admin, rapports CSP, health) + historique de disponibilité sur 30 jours", es: "Caché stale-while-revalidate + rate-limiting en los endpoints de escritura y sensibles (contacto, testimonios, invalidación de caché, admin, informes CSP, health) + historial de disponibilidad de 30 días", en: "Stale-while-revalidate cache + rate-limiting on write and sensitive endpoints (contact, testimonials, cache invalidation, admin, CSP reports, health) + 30-day uptime history" }, locale), link: "https://upstash.com" },
+        { name: "Formhook",      role: pick({ fr: "Acheminement par email des messages du formulaire de contact — hébergé dans l'UE, aucune persistance côté serveur", es: "Entrega por email de los mensajes del formulario de contacto — alojado en la UE, sin persistencia en el servidor", en: "Email delivery for contact-form messages — EU-hosted, no server-side persistence" }, locale), link: "https://formhook.app" },
       ],
     },
     {
-      title: isFr ? "Déploiement & Observabilité" : isEs ? "Despliegue y Observabilidad" : "Deployment & Observability",
+      title: pick({ fr: "Déploiement & Observabilité", es: "Despliegue y Observabilidad", en: "Deployment & Observability" }, locale),
       items: [
-        { name: "Vercel",                role: isFr ? "Hébergement — CDN mondial, HTTPS automatique, preview deployments" : isEs ? "Alojamiento — CDN global, HTTPS automático, despliegues de preview" : "Hosting — global CDN, automatic HTTPS, preview deployments", link: "https://vercel.com" },
+        { name: "Vercel",                role: pick({ fr: "Hébergement — CDN mondial, HTTPS automatique, preview deployments", es: "Alojamiento — CDN global, HTTPS automático, despliegues de preview", en: "Hosting — global CDN, automatic HTTPS, preview deployments" }, locale), link: "https://vercel.com" },
       ],
     },
     {
-      title: isFr ? "CI/CD & Qualité" : isEs ? "CI/CD y Calidad" : "CI/CD & Quality",
+      title: pick({ fr: "CI/CD & Qualité", es: "CI/CD y Calidad", en: "CI/CD & Quality" }, locale),
       items: [
-        { name: "GitHub Actions",    role: isFr ? "Pipeline CI : build, lint, typecheck, tests unitaires, audit sécurité npm, E2E Playwright, Lighthouse CI" : isEs ? "Pipeline de CI: build, lint, typecheck, pruebas unitarias, auditoría de seguridad npm, E2E Playwright, Lighthouse CI" : "CI pipeline: build, lint, typecheck, unit tests, npm security audit, Playwright E2E, Lighthouse CI" },
-        { name: "Lighthouse CI",     role: isFr ? "Budgets performance & accessibilité sur chaque PR, bloquants en cas de régression" : isEs ? "Presupuestos de rendimiento y accesibilidad en cada PR, bloqueantes en caso de regresión" : "Performance & accessibility budgets on every PR, blocking on regression", link: "https://github.com/GoogleChrome/lighthouse-ci" },
-        { name: "axe-core / Playwright", role: isFr ? "Audit WCAG 2.2 AA automatisé sur 9 routes — zéro tolérance pour les violations critiques" : isEs ? "Auditoría WCAG 2.2 AA automatizada en 9 rutas — tolerancia cero para violaciones críticas" : "Automated WCAG 2.2 AA audit on 9 routes — zero tolerance for critical violations", link: "https://github.com/dequelabs/axe-core" },
-        { name: "Dependabot",        role: isFr ? "Mises à jour npm hebdomadaires (5 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle" : isEs ? "Actualizaciones npm semanales (5 grupos), Actions mensuales — versiones mayores de next-intl/framer-motion bajo revisión manual" : "Weekly npm updates (5 groups), monthly Actions — next-intl/framer-motion majors require manual review" },
-        { name: "OpenSSF Scorecard", role: isFr ? "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits" : isEs ? "Puntuación semanal de seguridad de la cadena de suministro — branch protection, SAST, dependency pinning, signed commits" : "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits", link: "https://scorecard.dev" },
-        { name: "Content Publish Safety", role: isFr ? "Contrôle quotidien du contenu des projets : aucun projet n'est publié sans ses trois langues" : isEs ? "Verificación diaria del contenido de los proyectos: ningún proyecto se publica sin sus tres idiomas" : "Daily check of the project content: no project goes live without its three languages" },
+        { name: "GitHub Actions",    role: pick({ fr: "Pipeline CI : build, lint, typecheck, tests unitaires, audit sécurité npm, E2E Playwright, Lighthouse CI", es: "Pipeline de CI: build, lint, typecheck, pruebas unitarias, auditoría de seguridad npm, E2E Playwright, Lighthouse CI", en: "CI pipeline: build, lint, typecheck, unit tests, npm security audit, Playwright E2E, Lighthouse CI" }, locale) },
+        { name: "Lighthouse CI",     role: pick({ fr: "Budgets performance & accessibilité sur chaque PR, bloquants en cas de régression", es: "Presupuestos de rendimiento y accesibilidad en cada PR, bloqueantes en caso de regresión", en: "Performance & accessibility budgets on every PR, blocking on regression" }, locale), link: "https://github.com/GoogleChrome/lighthouse-ci" },
+        { name: "axe-core / Playwright", role: pick({ fr: "Audit WCAG 2.2 AA automatisé sur 9 routes — zéro tolérance pour les violations critiques", es: "Auditoría WCAG 2.2 AA automatizada en 9 rutas — tolerancia cero para violaciones críticas", en: "Automated WCAG 2.2 AA audit on 9 routes — zero tolerance for critical violations" }, locale), link: "https://github.com/dequelabs/axe-core" },
+        { name: "Dependabot",        role: pick({ fr: "Mises à jour npm hebdomadaires (5 groupes), Actions mensuelles — majors next-intl/framer-motion en revue manuelle", es: "Actualizaciones npm semanales (5 grupos), Actions mensuales — versiones mayores de next-intl/framer-motion bajo revisión manual", en: "Weekly npm updates (5 groups), monthly Actions — next-intl/framer-motion majors require manual review" }, locale) },
+        { name: "OpenSSF Scorecard", role: pick({ fr: "Score supply chain sécurité hebdomadaire — branch protection, SAST, dependency pinning, signed commits", es: "Puntuación semanal de seguridad de la cadena de suministro — branch protection, SAST, dependency pinning, signed commits", en: "Weekly supply chain security scoring — branch protection, SAST, dependency pinning, signed commits" }, locale), link: "https://scorecard.dev" },
+        { name: "Content Publish Safety", role: pick({ fr: "Contrôle quotidien du contenu des projets : aucun projet n'est publié sans ses trois langues", es: "Verificación diaria del contenido de los proyectos: ningún proyecto se publica sin sus tres idiomas", en: "Daily check of the project content: no project goes live without its three languages" }, locale) },
       ],
     },
   ];
 
-  const archDecisions = isFr
-    ? [
+  const archDecisions = pick({
+    fr: [
         "**One-page landing** avec sections distinctes pour les compétences, l'expérience, les services, les projets et le contact — navigation par ancres.",
         "**Track toggle** côté client (cookie `track`) : un seul composant hero, compétences et services adaptés selon le profil Salesforce ou IT Ops.",
         "**Pages dédiées** pour About, Certifications et Blog — accessibles via la navbar, non dupliquées dans la landing.",
         "**Server Components par défaut** : seuls les composants interactifs (hero, toggle de thème, formulaire) sont marqués `use client`.",
         "**Aucune lecture de base de données côté client** : l'historique de disponibilité et le tableau des incidents sont lus dans Redis côté serveur. Les fiches projets sont versionnées dans `content/` et servies statiquement.",
         "**Blog MDX** : articles écrits en `.mdx` dans `content/blog/posts/{locale}/` — rendu statique au build, pas de base de données requise.",
-      ]
-    : isEs
-    ? [
+      ],
+    es: [
         "**One-page landing** con secciones diferenciadas para habilidades, experiencia, servicios, proyectos y contacto — navegación por anclas.",
         "**Selector de track** en el cliente (cookie `track`): un único componente hero, con habilidades y servicios adaptados al perfil Salesforce o IT Ops.",
         "**Páginas dedicadas** para About, Certificaciones y Blog — accesibles desde la navbar, sin duplicarse en la landing.",
         "**Server Components por defecto**: solo los componentes interactivos (hero, selector de tema, formulario) están marcados como `use client`.",
         "**Ninguna lectura de base de datos desde el cliente**: el historial de disponibilidad y el panel de incidencias se leen en Redis desde el servidor. Las fichas de proyecto están versionadas en `content/` y se sirven de forma estática.",
         "**Blog en MDX**: artículos escritos en `.mdx` dentro de `content/blog/posts/{locale}/` — renderizado estático en el build, sin necesidad de base de datos.",
-      ]
-    : [
+      ],
+    en: [
         "**One-page landing** with distinct sections for skills, experience, services, projects, and contact — anchor-based navigation.",
         "**Client-side track toggle** (cookie `track`): a single hero component, skills and services adapt to Salesforce or IT Ops profile.",
         "**Dedicated pages** for About, Certifications, and Blog — accessible via the navbar, not duplicated in the landing.",
         "**Server Components by default**: only interactive components (hero, theme toggle, contact form) are marked `use client`.",
         "**No database reads from the client**: the uptime history and the incident dashboard are read from Redis on the server. Project entries are version-controlled in `content/` and served statically.",
         "**MDX Blog**: articles written as `.mdx` files in `content/blog/posts/{locale}/` — statically rendered at build time, no database required.",
-      ];
+      ],
+  }, locale);
 
-  const cachePoints = isFr
-    ? [
+  const cachePoints = pick({
+    fr: [
         "**Upstash Redis** conserve l'historique de disponibilité (un relevé par jour, 30 jours) , le tableau des incidents de l'administration, et met en cache les vues de `/status` avec un TTL de 1 à 5 minutes.",
         "**stale-while-revalidate** : si la donnée est en cache, elle est retournée immédiatement pendant qu'une revalidation asynchrone se déclenche en arrière-plan.",
         "**Invalidation manuelle** : l'endpoint `POST /api/cache/invalidate` (protégé par secret) permet de purger le cache après une mise à jour des données.",
         "**RSS feed** : `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en cache CDN, revalidé toutes les 24h.",
         "**ISR (pages HTML)** : non activé sur Vercel CDN par choix de sécurité — le nonce CSP généré par requête (suppression de `'unsafe-inline'`) est incompatible avec un HTML mis en cache.",
-      ]
-    : isEs
-    ? [
+      ],
+    es: [
         "**Upstash Redis** guarda el historial de disponibilidad (un registro al día, 30 días) , el panel de incidencias de la administración, y almacena en caché las vistas de `/status` con un TTL de 1 a 5 minutos.",
         "**stale-while-revalidate**: si el dato está en caché, se devuelve de inmediato mientras se dispara una revalidación asíncrona en segundo plano.",
         "**Invalidación manual**: el endpoint `POST /api/cache/invalidate` (protegido por secreto) permite purgar la caché tras una actualización de datos.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h en caché CDN, revalidado cada 24h.",
         "**ISR (páginas HTML)**: no activado en el CDN de Vercel por decisión de seguridad — el nonce CSP generado por solicitud (eliminación de `'unsafe-inline'`) es incompatible con un HTML cacheado.",
-      ]
-    : [
+      ],
+    en: [
         "**Upstash Redis** keeps the uptime history (one check a day, 30 days) , the admin incident dashboard, and caches the `/status` views with a 1- to 5-minute TTL.",
         "**stale-while-revalidate**: if data is cached, it's returned immediately while an async revalidation runs in the background.",
         "**Manual invalidation**: the `POST /api/cache/invalidate` endpoint (protected by secret) allows purging cache after data updates.",
         "**RSS feed**: `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` — 1h CDN cache, revalidated every 24h.",
         "**ISR (HTML pages)**: disabled on Vercel CDN by security design — the per-request CSP nonce (eliminating `'unsafe-inline'`) is incompatible with cached HTML.",
-      ];
+      ],
+  }, locale);
 
-  const secPoints = isFr
-    ? [
+  const secPoints = pick({
+    fr: [
         "**CSP nonce-based** : `'unsafe-inline'` retiré de `script-src`. Un nonce cryptographique unique est généré par requête dans le proxy (`proxy.ts`) et appliqué aux scripts d'hydratation de Next.js ; les scripts qu'ils chargent héritent de la confiance via `'strict-dynamic'`. Tout script inline sans nonce est bloqué par le navigateur. Aucun script, style ni cadre tiers n'est autorisé : le site ne charge ni outil de mesure d'audience ni widget externe.",
         "**En-têtes HTTP** dans `next.config.mjs` : HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy étendu, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Fingerprinting du framework désactivé (`poweredByHeader: false`).",
         "**Contenu des projets versionné** : les fiches projets et leurs visuels sont commités dans le dépôt et servis statiquement — aucune base de données n'est exposée pour cette partie.",
@@ -152,9 +145,8 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**security.txt** disponible à `/.well-known/security.txt` (RFC 9116) — contact de divulgation responsable.",
         "**Aucun secret** dans les variables `NEXT_PUBLIC_*` — toutes les clés sensibles (token Redis, identifiants admin, secrets HMAC) restent strictement côté serveur.",
         "**Validation externe (tiers neutres)** : [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — posture HTTP vérifiée indépendamment du site.",
-      ]
-    : isEs
-    ? [
+      ],
+    es: [
         "**CSP basada en nonce**: `'unsafe-inline'` eliminado de `script-src`. Se genera un nonce criptográfico único por solicitud en el proxy (`proxy.ts`) y se aplica a los scripts de hidratación de Next.js; los scripts que estos cargan heredan la confianza mediante `'strict-dynamic'`. Cualquier script inline sin nonce es bloqueado por el navegador. No se autoriza ningún script, estilo ni marco de terceros: el sitio no carga ninguna herramienta de medición de audiencia ni widget externo.",
         "**Cabeceras HTTP** en `next.config.mjs`: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy extendida, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Fingerprinting del framework desactivado (`poweredByHeader: false`).",
         "**Contenido de proyectos versionado**: las fichas de proyecto y sus recursos se versionan en el repositorio y se sirven de forma estática — no se expone ninguna base de datos para esta parte.",
@@ -165,8 +157,8 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**security.txt** disponible en `/.well-known/security.txt` (RFC 9116) — contacto de divulgación responsable.",
         "**Ningún secreto** en las variables `NEXT_PUBLIC_*` — todas las claves sensibles (token de Redis, credenciales de admin, secretos HMAC) permanecen estrictamente en el servidor.",
         "**Validación externa (terceros neutrales)**: [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — postura HTTP verificada de forma independiente al sitio.",
-      ]
-    : [
+      ],
+    en: [
         "**Nonce-based CSP**: `'unsafe-inline'` removed from `script-src`. A unique cryptographic nonce is generated per request in the proxy (`proxy.ts`) and applied to Next.js hydration scripts; scripts they load inherit trust through `'strict-dynamic'`. Any inline script without a nonce is blocked by the browser. No third-party script, style or frame is allowed: the site loads no audience-measurement tool and no external widget.",
         "**HTTP headers** in `next.config.mjs`: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, extended Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin`), Cross-Origin-Resource-Policy (`same-origin`), Report-To, Reporting-Endpoints. Framework fingerprinting disabled (`poweredByHeader: false`).",
         "**Version-controlled project content**: project entries and their assets are committed to the repo and served statically — no database is exposed for this part.",
@@ -177,7 +169,8 @@ export default function ColophonContent({ locale }: { locale: string }) {
         "**security.txt** at `/.well-known/security.txt` (RFC 9116) — responsible disclosure contact.",
         "**No secrets in `NEXT_PUBLIC_*`** — all sensitive keys (Redis token, admin credentials, HMAC secrets) remain strictly server-side.",
         "**External validation (neutral third parties)**: [securityheaders.com](https://securityheaders.com/?q=aicha-imene-dahoumane-portfolio.vercel.app&followRedirects=on) · [Mozilla Observatory](https://observatory.mozilla.org/analyze/aicha-imene-dahoumane-portfolio.vercel.app) — HTTP security posture verified independently from the site.",
-      ];
+      ],
+  }, locale);
 
   function renderMarkdown(text: string): React.ReactNode[] {
     const regex = /\*\*(.*?)\*\*|\[([^\]]+)\]\(([^)]+)\)/g;
@@ -201,7 +194,7 @@ export default function ColophonContent({ locale }: { locale: string }) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
 
-      <nav aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+      <nav aria-label={t("breadcrumb")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">{labels.breadcrumbHome}</Link>
         <span aria-hidden="true">›</span>
         <span className="text-muted">{labels.title}</span>

@@ -814,7 +814,30 @@
   },
   "workWithMePage": {
     "metaTitle": "Hire me — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Availability, contract types, target roles and how hiring works: everything you need to hire a Salesforce & IT Ops profile in Île-de-France."
+    "metaDescription": "Availability, contract types, target roles and how hiring works: everything you need to hire a Salesforce & IT Ops profile in Île-de-France.",
+    "domainsOpen": "My hybrid profile is at its most valuable where these areas meet: Salesforce integrations, automated releases and the infrastructure that runs them.",
+    "durationLabel": "Contract",
+    "modeLabel": "Work mode and industries",
+    "processTitle": "How hiring me works",
+    "ctaTitle": "Hiring for a role?",
+    "kicker": "Hiring · Paris / Île-de-France · Open to relocation",
+    "h1": "Hire me",
+    "availTitle": "Availability",
+    "availOpen": "Available",
+    "availLimited": "Limited availability",
+    "availNo": "Not available",
+    "availContracts": "Permanent contract — any industry",
+    "availMode": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation · Hybrid · On-site",
+    "lookingTitle": "What I'm looking for",
+    "domainsLabel": "Target roles",
+    "ctaSubtitle": "Tell me about the role in a few lines — I reply within 48 hours.",
+    "ctaContact": "Tell me about the role",
+    "ctaCall": "Schedule a call",
+    "ctaCv": "Download the hybrid résumé",
+    "ctaHybrid": "See the hybrid profile",
+    "backHome": "← Back to home",
+    "breadHome": "Home",
+    "breadLabel": "Breadcrumb"
   },
   "aboutPage": {
     "metaTitle": "About — {name}",
@@ -844,7 +867,20 @@
   },
   "colophonPage": {
     "metaTitle": "Colophon — How this site is built",
-    "metaDescription": "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio."
+    "metaDescription": "Full technical stack, architecture decisions, caching strategy, and security practices behind this Next.js portfolio.",
+    "breadcrumbHome": "Home",
+    "backHome": "Back to home",
+    "subtitle": "How this site is built — stack, architecture, caching, and security.",
+    "stackTitle": "Tech stack",
+    "archTitle": "Architecture decisions",
+    "cacheTitle": "Caching strategy",
+    "secTitle": "Security",
+    "openSourceTitle": "Source code",
+    "sourceNote": "This site's repository is public — architecture, CI/CD, tests, and security are all viewable directly on GitHub.",
+    "learnMore": "View the GitHub repository",
+    "viewLive": "View live site",
+    "breadcrumb": "Breadcrumb",
+    "title": "Colophon"
   },
   "certificationsPage": {
     "rangerProgress": "Progress to Ranger — {badges}/100 badges",
@@ -878,5 +914,29 @@
     "inProgressTitle": "In progress / Next up",
     "inProgressSub": "— December 2026, then 2027",
     "inProgressBadge": "↻ In progress"
+  },
+  "statusPage": {
+    "staleWarning": "Warning: monitoring data may be stale ({hours} h old). The check cron may not have run recently.",
+    "metaTitle": "Site Status — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Operational status of the site and its services, checked daily, with a 30-day history.",
+    "headline": "Site Status",
+    "breadcrumb": "Status",
+    "home": "Home",
+    "ariaLabel": "Breadcrumb",
+    "allOk": "All systems are operational.",
+    "degraded": "Some services are experiencing issues.",
+    "outage": "An outage is currently in progress.",
+    "maintenance": "Maintenance in progress.",
+    "servicesTitle": "Services",
+    "lastChecked": "Last checked",
+    "latency": "Latency",
+    "sparklineLabel": "7-day latency",
+    "backHome": "← Back to home",
+    "unknown": "Status unknown: no check is available yet.",
+    "noIncidents": "No disruption recorded over the last 30 days.",
+    "noHistory": "No checks recorded yet.",
+    "incidentTitle": "Recorded disruptions (30 days)",
+    "apiLink": "Raw JSON endpoint ↗",
+    "uptimeTitle": "30-day uptime"
   }
 }

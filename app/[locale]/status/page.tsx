@@ -4,6 +4,8 @@
 // (lib/uptime.ts), filled by the daily cron (app/api/cron/ping); no outgoing
 // check runs at render time.
 
+import { getTranslations } from "next-intl/server";
+import { intlLocale } from "@/lib/i18n/ogLocale";
 import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -88,22 +90,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "statusPage" });
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
   const urlPath = `${siteUrl}/${locale}/status`;
-  const title = isFr
-    ? "Statut du site — Aïcha Imène DAHOUMANE"
-    : isEs
-    ? "Estado del sitio — Aïcha Imène DAHOUMANE"
-    : "Site Status — Aïcha Imène DAHOUMANE";
-  const description = isFr
-    // Daily check (cron at 08:00 UTC, vercel.json), not real time.
-    ? "État opérationnel du site et de ses services, relevé chaque jour, et historique sur 30 jours."
-    : isEs
-    ? "Estado operativo del sitio y sus servicios, comprobado cada día, con historial de 30 días."
-    : "Operational status of the site and its services, checked daily, with a 30-day history.";
+  const title = t("metaTitle");
+  // Daily check (cron at 08:00 UTC, vercel.json), not real time.
+  const description = t("metaDescription");
   return {
     title,
     description,
@@ -145,8 +138,7 @@ export default async function StatusPage({
 }) {
   const { locale } = await params;
   const safeLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
-  const isFr = safeLocale === "fr";
-  const isEs = safeLocale === "es";
+  const t = await getTranslations({ locale: safeLocale, namespace: "statusPage" });
 
   // Latest report stored by the cron, uptime stats and latency history, all
   // from the Redis uptime history; no live outgoing calls.
@@ -167,7 +159,7 @@ export default async function StatusPage({
     // Explicit Europe/Paris time zone with its name: the page is rendered on
     // the server (UTC). dateStyle/timeStyle cannot be combined with
     // timeZoneName (Intl TypeError), hence the detailed fields.
-    ? new Date(report.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", {
+    ? new Date(report.checkedAt).toLocaleString(intlLocale(safeLocale), {
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -188,37 +180,25 @@ export default async function StatusPage({
   const isStale = ageHours !== null && ageHours > STALE_THRESHOLD_HOURS;
 
   const labels = {
-    headline:      isFr ? "Statut du site"           : isEs ? "Estado del sitio"              : "Site Status",
-    breadcrumb:    isFr ? "Statut"                   : isEs ? "Estado"                          : "Status",
-    home:          isFr ? "Accueil"                  : isEs ? "Inicio"                          : "Home",
-    ariaLabel:     isFr ? "Fil d'Ariane"             : isEs ? "Ruta de navegación"              : "Breadcrumb",
-    allOk:         isFr ? "Tous les systèmes sont opérationnels." : isEs ? "Todos los sistemas están operativos." : "All systems are operational.",
-    degraded:      isFr ? "Certains services sont dégradés."      : isEs ? "Algunos servicios presentan problemas." : "Some services are experiencing issues.",
-    outage:        isFr ? "Une panne est en cours."               : isEs ? "Hay una interrupción en curso."       : "An outage is currently in progress.",
-    maintenance:   isFr ? "Maintenance en cours."                 : isEs ? "Mantenimiento en curso."               : "Maintenance in progress.",
-    servicesTitle: isFr ? "Services"                 : isEs ? "Servicios"                       : "Services",
-    lastChecked:   isFr ? "Vérifié le"               : isEs ? "Verificado el"                   : "Last checked",
-    latency:       isFr ? "Latence"                  : isEs ? "Latencia"                         : "Latency",
-    sparklineLabel: isFr ? "Latence sur 7 jours"     : isEs ? "Latencia de 7 días"               : "7-day latency",
-    backHome:      isFr ? "← Retour à l'accueil"    : isEs ? "← Volver al inicio"                : "← Back to home",
-    unknown:       isFr ? "État inconnu : aucun relevé disponible pour le moment." : isEs ? "Estado desconocido: todavía no hay ninguna comprobación disponible." : "Status unknown: no check is available yet.",
-    noIncidents:   isFr
-      ? "Aucune perturbation relevée sur les 30 derniers jours."
-      : isEs
-      ? "No se ha registrado ninguna incidencia en los últimos 30 días."
-      : "No disruption recorded over the last 30 days.",
-    noHistory:     isFr
-      ? "Aucun relevé enregistré pour l'instant."
-      : isEs
-      ? "Todavía no hay comprobaciones registradas."
-      : "No checks recorded yet.",
-    incidentTitle: isFr ? "Perturbations relevées (30 jours)" : isEs ? "Incidencias registradas (30 días)" : "Recorded disruptions (30 days)",
-    apiLink:       isFr ? "Endpoint JSON brut ↗"    : isEs ? "Endpoint JSON sin procesar ↗"      : "Raw JSON endpoint ↗",
-    staleWarning:  isFr
-      ? `Avertissement : données de monitoring potentiellement obsolètes (${Math.floor(ageHours ?? 0)} h). Le cron de vérification n'a peut-être pas tourné récemment.`
-      : isEs
-      ? `Advertencia: los datos de monitoreo podrían estar desactualizados (${Math.floor(ageHours ?? 0)} h). Es posible que el cron de verificación no se haya ejecutado recientemente.`
-      : `Warning: monitoring data may be stale (${Math.floor(ageHours ?? 0)} h old). The check cron may not have run recently.`,
+    headline:      t("headline"),
+    breadcrumb:    t("breadcrumb"),
+    home:          t("home"),
+    ariaLabel:     t("ariaLabel"),
+    allOk:         t("allOk"),
+    degraded:      t("degraded"),
+    outage:        t("outage"),
+    maintenance:   t("maintenance"),
+    servicesTitle: t("servicesTitle"),
+    lastChecked:   t("lastChecked"),
+    latency:       t("latency"),
+    sparklineLabel: t("sparklineLabel"),
+    backHome:      t("backHome"),
+    unknown:       t("unknown"),
+    noIncidents:   t("noIncidents"),
+    noHistory:     t("noHistory"),
+    incidentTitle: t("incidentTitle"),
+    apiLink:       t("apiLink"),
+    staleWarning:  t("staleWarning", { hours: Math.floor(ageHours ?? 0) }),
   };
 
   const globalMessage =
@@ -307,7 +287,7 @@ export default async function StatusPage({
                   {uptimeStats[service.name] != null && (
                     <span
                       className="text-xs text-muted-2 tabular-nums"
-                      title={isFr ? "Disponibilité sur 30 jours" : isEs ? "Disponibilidad de 30 días" : "30-day uptime"}
+                      title={t("uptimeTitle")}
                     >
                       {uptimeStats[service.name]}%
                     </span>
@@ -338,7 +318,7 @@ export default async function StatusPage({
             {disruptions.map((d) => (
               <li key={d.checkedAt} className="bg-white dark:bg-white/2 px-4 py-3 sm:px-6">
                 <p className="text-xs text-muted-2">
-                  {new Date(d.checkedAt).toLocaleString(isFr ? "fr-FR" : locale === "es" ? "es-ES" : "en-US", {
+                  {new Date(d.checkedAt).toLocaleString(intlLocale(safeLocale), {
                     day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
                     timeZone: "Europe/Paris", timeZoneName: "short",
                   })}

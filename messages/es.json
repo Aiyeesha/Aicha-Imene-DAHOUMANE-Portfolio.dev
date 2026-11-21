@@ -814,7 +814,30 @@
   },
   "workWithMePage": {
     "metaTitle": "Contratarme — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Disponibilidad, contratos buscados, puestos y proceso de selección: lo esencial para contratar un perfil Salesforce & IT Ops en Île-de-France."
+    "metaDescription": "Disponibilidad, contratos buscados, puestos y proceso de selección: lo esencial para contratar un perfil Salesforce & IT Ops en Île-de-France.",
+    "domainsOpen": "Mi perfil híbrido aporta todo su valor donde estos ámbitos se cruzan: integraciones Salesforce, puestas en producción automatizadas y la infraestructura que las sostiene.",
+    "durationLabel": "Contrato",
+    "modeLabel": "Modalidad y sectores",
+    "processTitle": "Cómo es un proceso de selección conmigo",
+    "ctaTitle": "¿Tienes un puesto por cubrir?",
+    "kicker": "Selección · París / Île-de-France · Movilidad",
+    "h1": "Contratarme",
+    "availTitle": "Disponibilidad",
+    "availOpen": "Disponible",
+    "availLimited": "Disponibilidad limitada",
+    "availNo": "No disponible",
+    "availContracts": "Contrato indefinido — todos los sectores",
+    "availMode": "Val-d'Oise (95), Île-de-France · París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional · Híbrido · Presencial",
+    "lookingTitle": "Lo que busco",
+    "domainsLabel": "Puestos buscados",
+    "ctaSubtitle": "Preséntame el puesto en pocas líneas — respondo en 48 h.",
+    "ctaContact": "Presentar un puesto",
+    "ctaCall": "Programar una llamada",
+    "ctaCv": "Descargar el CV híbrido",
+    "ctaHybrid": "Ver el perfil híbrido",
+    "backHome": "← Volver al inicio",
+    "breadHome": "Inicio",
+    "breadLabel": "Ruta de navegación"
   },
   "aboutPage": {
     "metaTitle": "Sobre mí — {name}",
@@ -844,7 +867,20 @@
   },
   "colophonPage": {
     "metaTitle": "Colofón — Cómo está construido este sitio",
-    "metaDescription": "Stack técnico completo, decisiones de arquitectura, estrategia de caché y prácticas de seguridad de este portfolio Next.js."
+    "metaDescription": "Stack técnico completo, decisiones de arquitectura, estrategia de caché y prácticas de seguridad de este portfolio Next.js.",
+    "breadcrumbHome": "Inicio",
+    "backHome": "Volver al inicio",
+    "subtitle": "Cómo está construido este sitio — stack, arquitectura, caché y seguridad.",
+    "stackTitle": "Stack técnico",
+    "archTitle": "Decisiones de arquitectura",
+    "cacheTitle": "Estrategia de caché",
+    "secTitle": "Seguridad",
+    "openSourceTitle": "Código fuente",
+    "sourceNote": "El repositorio de este sitio es público — arquitectura, CI/CD, pruebas y seguridad consultables directamente en GitHub.",
+    "learnMore": "Ver el repositorio en GitHub",
+    "viewLive": "Ver el sitio en vivo",
+    "breadcrumb": "Ruta de navegación",
+    "title": "Colofón"
   },
   "certificationsPage": {
     "rangerProgress": "Progreso hacia Ranger — {badges}/100 badges",
@@ -878,5 +914,29 @@
     "inProgressTitle": "En curso / Próximos plazos",
     "inProgressSub": "— diciembre de 2026, después 2027",
     "inProgressBadge": "↻ En curso"
+  },
+  "statusPage": {
+    "staleWarning": "Advertencia: los datos de monitoreo podrían estar desactualizados ({hours} h). Es posible que el cron de verificación no se haya ejecutado recientemente.",
+    "metaTitle": "Estado del sitio — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Estado operativo del sitio y sus servicios, comprobado cada día, con historial de 30 días.",
+    "headline": "Estado del sitio",
+    "breadcrumb": "Estado",
+    "home": "Inicio",
+    "ariaLabel": "Ruta de navegación",
+    "allOk": "Todos los sistemas están operativos.",
+    "degraded": "Algunos servicios presentan problemas.",
+    "outage": "Hay una interrupción en curso.",
+    "maintenance": "Mantenimiento en curso.",
+    "servicesTitle": "Servicios",
+    "lastChecked": "Verificado el",
+    "latency": "Latencia",
+    "sparklineLabel": "Latencia de 7 días",
+    "backHome": "← Volver al inicio",
+    "unknown": "Estado desconocido: todavía no hay ninguna comprobación disponible.",
+    "noIncidents": "No se ha registrado ninguna incidencia en los últimos 30 días.",
+    "noHistory": "Todavía no hay comprobaciones registradas.",
+    "incidentTitle": "Incidencias registradas (30 días)",
+    "apiLink": "Endpoint JSON sin procesar ↗",
+    "uptimeTitle": "Disponibilidad de 30 días"
   }
 }
