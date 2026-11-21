@@ -814,7 +814,30 @@
   },
   "workWithMePage": {
     "metaTitle": "Me recruter — Aïcha Imène DAHOUMANE",
-    "metaDescription": "Disponibilité, contrats recherchés, postes visés et déroulé d'un recrutement : l'essentiel pour recruter un profil Salesforce & IT Ops en Île-de-France."
+    "metaDescription": "Disponibilité, contrats recherchés, postes visés et déroulé d'un recrutement : l'essentiel pour recruter un profil Salesforce & IT Ops en Île-de-France.",
+    "domainsOpen": "Mon profil hybride prend toute sa valeur là où ces domaines se croisent : intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner.",
+    "durationLabel": "Contrat",
+    "modeLabel": "Mode et secteurs",
+    "processTitle": "Comment se passe un recrutement avec moi",
+    "ctaTitle": "Un poste à pourvoir ?",
+    "kicker": "Recrutement · Paris / Île-de-France · Mobilité",
+    "h1": "Me recruter",
+    "availTitle": "Disponibilité",
+    "availOpen": "Disponible",
+    "availLimited": "Disponibilité limitée",
+    "availNo": "Non disponible",
+    "availContracts": "CDI — tous secteurs d'activité",
+    "availMode": "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site",
+    "lookingTitle": "Ce que je recherche",
+    "domainsLabel": "Postes visés",
+    "ctaSubtitle": "Présentez-moi le poste en quelques lignes — je réponds sous 48 h.",
+    "ctaContact": "Présenter un poste",
+    "ctaCall": "Planifier un échange",
+    "ctaCv": "Télécharger le CV hybride",
+    "ctaHybrid": "Voir le profil hybride",
+    "backHome": "← Retour à l'accueil",
+    "breadHome": "Accueil",
+    "breadLabel": "Fil d'Ariane"
   },
   "aboutPage": {
     "metaTitle": "À propos — {name}",
@@ -844,7 +867,20 @@
   },
   "colophonPage": {
     "metaTitle": "Colophon — Comment ce site est construit",
-    "metaDescription": "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js."
+    "metaDescription": "Stack technique complète, décisions d'architecture, stratégie de cache et pratiques de sécurité de ce portfolio Next.js.",
+    "breadcrumbHome": "Accueil",
+    "backHome": "Retour à l'accueil",
+    "subtitle": "Comment ce site est construit — stack, architecture, cache et sécurité.",
+    "stackTitle": "Stack technique",
+    "archTitle": "Décisions d'architecture",
+    "cacheTitle": "Stratégie de cache",
+    "secTitle": "Sécurité",
+    "openSourceTitle": "Code source",
+    "sourceNote": "Le dépôt de ce site est public — architecture, CI/CD, tests et sécurité consultables directement sur GitHub.",
+    "learnMore": "Voir le dépôt GitHub",
+    "viewLive": "Voir le site en ligne",
+    "breadcrumb": "Fil d'Ariane",
+    "title": "Colophon"
   },
   "certificationsPage": {
     "rangerProgress": "Progression vers Ranger — {badges}/100 badges",
@@ -878,5 +914,29 @@
     "inProgressTitle": "En cours / Prochaines échéances",
     "inProgressSub": "— décembre 2026, puis 2027",
     "inProgressBadge": "↻ En cours"
+  },
+  "statusPage": {
+    "staleWarning": "Avertissement : données de monitoring potentiellement obsolètes ({hours} h). Le cron de vérification n'a peut-être pas tourné récemment.",
+    "metaTitle": "Statut du site — Aïcha Imène DAHOUMANE",
+    "metaDescription": "État opérationnel du site et de ses services, relevé chaque jour, et historique sur 30 jours.",
+    "headline": "Statut du site",
+    "breadcrumb": "Statut",
+    "home": "Accueil",
+    "ariaLabel": "Fil d'Ariane",
+    "allOk": "Tous les systèmes sont opérationnels.",
+    "degraded": "Certains services sont dégradés.",
+    "outage": "Une panne est en cours.",
+    "maintenance": "Maintenance en cours.",
+    "servicesTitle": "Services",
+    "lastChecked": "Vérifié le",
+    "latency": "Latence",
+    "sparklineLabel": "Latence sur 7 jours",
+    "backHome": "← Retour à l'accueil",
+    "unknown": "État inconnu : aucun relevé disponible pour le moment.",
+    "noIncidents": "Aucune perturbation relevée sur les 30 derniers jours.",
+    "noHistory": "Aucun relevé enregistré pour l'instant.",
+    "incidentTitle": "Perturbations relevées (30 jours)",
+    "apiLink": "Endpoint JSON brut ↗",
+    "uptimeTitle": "Disponibilité sur 30 jours"
   }
 }

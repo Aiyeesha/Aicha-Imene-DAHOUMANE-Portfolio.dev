@@ -1,5 +1,6 @@
 "use client";
 
+import { pick } from "@/lib/i18n/pick";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useTrack } from "@/app/[locale]/providers";
@@ -18,12 +19,13 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
   // same wording, even at the switch date.
   const START = availabilityLabels(locale, availableNow);
   const { track } = useTrack();
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const lang: "fr" | "es" | "en" = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
+  const startFrom = START.from;
   const isSf = track === "salesforce";
   // FAQ from the `faq` namespace of messages/*.json, also used by the FAQPage
   // JSON-LD in page.tsx.
   const tFaq = useTranslations("faq");
+  const tw = useTranslations("workWithMePage");
   const tSections = useTranslations("sections");
   const faqItems = tFaq.raw("items") as { q: string; a: string }[];
 
@@ -50,90 +52,78 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
   // ── "Hire me" content (permanent role, as on the CVs).
   // The /work-with-me URL is kept for existing links.
   const labels = {
-    kicker:         isFr ? "Recrutement · Paris / Île-de-France · Mobilité" : isEs ? "Selección · París / Île-de-France · Movilidad" : "Hiring · Paris / Île-de-France · Open to relocation",
-    h1:             isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me",
+    kicker:         tw("kicker"),
+    h1:             tw("h1"),
     subtitle:       availableNow
-      ? (isFr
-        ? `Après trois ans de développement Salesforce chez LD Digitales (alternance puis CDI, d'octobre 2023 à novembre 2026), je recherche mon prochain poste, disponible ${START.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
-        : isEs
-        ? `Tras tres años de desarrollo Salesforce en LD Digitales (formación dual y después contrato indefinido, de octubre de 2023 a noviembre de 2026), busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
-        : `After three years of Salesforce development at LD Digitales (work-study, then full-time, October 2023 to November 2026), I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`)
-      : (isFr
-        ? `Développeuse Salesforce en CDI chez LD Digitales, en préavis jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${START.from} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`
-        : isEs
-        ? `Desarrolladora Salesforce con contrato indefinido en LD Digitales, en preaviso hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${START.from}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`
-        : `A full-time Salesforce Developer at LD Digitales, working my notice until November 30, 2026, I'm looking for my next role, available ${START.from}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`),
+      ? pick({
+          fr: `Après trois ans de développement Salesforce chez LD Digitales (alternance puis CDI, d'octobre 2023 à novembre 2026), je recherche mon prochain poste, disponible ${startFrom} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`,
+          es: `Tras tres años de desarrollo Salesforce en LD Digitales (formación dual y después contrato indefinido, de octubre de 2023 a noviembre de 2026), busco mi próximo puesto, disponible ${startFrom}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`,
+          en: `After three years of Salesforce development at LD Digitales (work-study, then full-time, October 2023 to November 2026), I'm looking for my next role, available ${startFrom}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`,
+        }, locale)
+      : pick({
+          fr: `Développeuse Salesforce en CDI chez LD Digitales, en préavis jusqu'au 30 novembre 2026, je recherche mon prochain poste, disponible ${startFrom} : un rôle où Salesforce et l'infrastructure se croisent. Voici l'essentiel pour un recruteur, en une page.`,
+          es: `Desarrolladora Salesforce con contrato indefinido en LD Digitales, en preaviso hasta el 30 de noviembre de 2026, busco mi próximo puesto, disponible ${startFrom}: un rol donde Salesforce e infraestructura se cruzan. Aquí tienes lo esencial para un reclutador, en una página.`,
+          en: `A full-time Salesforce Developer at LD Digitales, working my notice until November 30, 2026, I'm looking for my next role, available ${startFrom}: one where Salesforce and infrastructure meet. Here is everything a recruiter needs, on one page.`,
+        }, locale),
 
-    availTitle:     isFr ? "Disponibilité" : isEs ? "Disponibilidad" : "Availability",
-    availOpen:      isFr ? "Disponible" : isEs ? "Disponible" : "Available",
-    availLimited:   isFr ? "Disponibilité limitée" : isEs ? "Disponibilidad limitada" : "Limited availability",
-    availNo:        isFr ? "Non disponible" : isEs ? "No disponible" : "Not available",
+    availTitle:     tw("availTitle"),
+    availOpen:      tw("availOpen"),
+    availLimited:   tw("availLimited"),
+    availNo:        tw("availNo"),
     availSince:     START.summary,
-    availContracts: isFr
-      ? "CDI — tous secteurs d'activité"
-      : isEs
-      ? "Contrato indefinido — todos los sectores"
-      : "Permanent contract — any industry",
-    availMode:      isFr
-      ? "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur ou relocalisation internationale · Hybride · Sur site"
-      : isEs
-      ? "Val-d'Oise (95), Île-de-France · París / Île-de-France, Provenza-Alpes-Costa Azul o traslado internacional · Híbrido · Presencial"
-      : "Val-d'Oise (95), Île-de-France · Paris / Île-de-France, Provence-Alpes-Côte d'Azur or international relocation · Hybrid · On-site",
+    availContracts: tw("availContracts"),
+    availMode:      tw("availMode"),
 
-    lookingTitle:   isFr ? "Ce que je recherche" : isEs ? "Lo que busco" : "What I'm looking for",
-    domainsLabel:   isFr ? "Postes visés" : isEs ? "Puestos buscados" : "Target roles",
+    lookingTitle:   tw("lookingTitle"),
+    domainsLabel:   tw("domainsLabel"),
     // Three target roles: a sharp focus reads better than a broad list.
-    domains:        isFr
-      ? ["Administratrice & Développeuse Salesforce", "Administratrice systèmes & réseaux", "Ingénieure DevOps"]
-      : isEs
-      ? ["Administradora & Desarrolladora Salesforce", "Administradora de sistemas y redes", "Ingeniera DevOps"]
-      : ["Salesforce Administrator & Developer", "Systems & Network Administrator", "DevOps Engineer"],
-    domainsOpen:    isFr
-      ? "Mon profil hybride prend toute sa valeur là où ces domaines se croisent : intégrations Salesforce, mises en production automatisées et infrastructure qui les fait tourner."
-      : isEs
-      ? "Mi perfil híbrido aporta todo su valor donde estos ámbitos se cruzan: integraciones Salesforce, puestas en producción automatizadas y la infraestructura que las sostiene."
-      : "My hybrid profile is at its most valuable where these areas meet: Salesforce integrations, automated releases and the infrastructure that runs them.",
-    durationLabel:  isFr ? "Contrat" : isEs ? "Contrato" : "Contract",
-    durations:      isFr
-      ? ["CDI"]
-      : isEs
-      ? ["Indefinido"]
-      : ["Permanent"],
-    modeLabel:      isFr ? "Mode et secteurs" : isEs ? "Modalidad y sectores" : "Work mode and industries",
-    modes:          isFr
-      ? ["Hybride · Sur site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "Relocalisation internationale", "Tous secteurs d'activité"]
-      : isEs
-      ? ["Híbrido · Presencial", "París / Île-de-France", "Provenza-Alpes-Costa Azul", "Traslado internacional", "Todos los sectores"]
-      : ["Hybrid · On-site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "International relocation", "Any industry"],
+    domains:        pick({
+      fr: ["Administratrice & Développeuse Salesforce", "Administratrice systèmes & réseaux", "Ingénieure DevOps"],
+      es: ["Administradora & Desarrolladora Salesforce", "Administradora de sistemas y redes", "Ingeniera DevOps"],
+      en: ["Salesforce Administrator & Developer", "Systems & Network Administrator", "DevOps Engineer"],
+    }, locale),
+    domainsOpen:    tw("domainsOpen"),
+    durationLabel:  tw("durationLabel"),
+    durations:      pick({
+      fr: ["CDI"],
+      es: ["Indefinido"],
+      en: ["Permanent"],
+    }, locale),
+    modeLabel:      tw("modeLabel"),
+    modes:          pick({
+      fr: ["Hybride · Sur site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "Relocalisation internationale", "Tous secteurs d'activité"],
+      es: ["Híbrido · Presencial", "París / Île-de-France", "Provenza-Alpes-Costa Azul", "Traslado internacional", "Todos los sectores"],
+      en: ["Hybrid · On-site", "Paris / Île-de-France", "Provence-Alpes-Côte d'Azur", "International relocation", "Any industry"],
+    }, locale),
 
-    processTitle:   isFr ? "Comment se passe un recrutement avec moi" : isEs ? "Cómo es un proceso de selección conmigo" : "How hiring me works",
-    steps: isFr
-      ? [
+    processTitle:   tw("processTitle"),
+    steps: pick({
+      fr: [
           { n: "01", title: "Premier contact",      desc: "Par email, LinkedIn ou le formulaire recruteur. Je réponds sous 48 h, avec mon CV adapté au poste.",                        badge: "48 h" },
           { n: "02", title: "Entretiens",           desc: "Échange RH, entretien technique (Apex, SOQL, Flow, ou mise en situation systèmes et réseaux), rencontre de l'équipe.",       badge: "Dès maintenant" },
           { n: "03", title: "Prise de poste",       desc: `Arrivée ${START.from}, diplômes fournis sur demande.`,                                            badge: START.badge },
-        ]
-      : isEs
-      ? [
+        ],
+      es: [
           { n: "01", title: "Primer contacto",      desc: "Por email, LinkedIn o el formulario para reclutadores. Respondo en 48 h, con mi CV adaptado al puesto.",                     badge: "48 h" },
           { n: "02", title: "Entrevistas",          desc: "Entrevista de RR. HH., entrevista técnica (Apex, SOQL, Flow o caso práctico de sistemas y redes), encuentro con el equipo.", badge: "Desde ya" },
           { n: "03", title: "Incorporación",        desc: `Incorporación ${START.from}; diplomas disponibles bajo petición.`,                             badge: START.badge },
-        ]
-      : [
+        ],
+      en: [
           { n: "01", title: "First contact",        desc: "By email, LinkedIn or the recruiter form. I reply within 48 hours, with a résumé tailored to the role.",                    badge: "48 h" },
           { n: "02", title: "Interviews",           desc: "HR screening, technical interview (Apex, SOQL, Flow, or a systems and network scenario), meeting the team.",                 badge: "Now" },
           { n: "03", title: "Start",                desc: `Start ${START.from}; diplomas available on request.`,                                                  badge: START.badge },
         ],
+    }, locale),
 
-    ctaTitle:    isFr ? "Un poste à pourvoir ?" : isEs ? "¿Tienes un puesto por cubrir?" : "Hiring for a role?",
-    ctaSubtitle: isFr ? "Présentez-moi le poste en quelques lignes — je réponds sous 48 h." : isEs ? "Preséntame el puesto en pocas líneas — respondo en 48 h." : "Tell me about the role in a few lines — I reply within 48 hours.",
-    ctaContact:  isFr ? "Présenter un poste" : isEs ? "Presentar un puesto" : "Tell me about the role",
-    ctaCall:     isFr ? "Planifier un échange" : isEs ? "Programar una llamada" : "Schedule a call",
-    ctaCv:       isFr ? "Télécharger le CV hybride" : isEs ? "Descargar el CV híbrido" : "Download the hybrid résumé",
-    ctaHybrid:   isFr ? "Voir le profil hybride" : isEs ? "Ver el perfil híbrido" : "See the hybrid profile",
-    backHome:    isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
-    breadHome:   isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    breadLabel:  isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb",
+    ctaTitle:    tw("ctaTitle"),
+    ctaSubtitle: tw("ctaSubtitle"),
+    ctaContact:  tw("ctaContact"),
+    ctaCall:     tw("ctaCall"),
+    ctaCv:       tw("ctaCv"),
+    ctaHybrid:   tw("ctaHybrid"),
+    backHome:    tw("backHome"),
+    breadHome:   tw("breadHome"),
+    breadLabel:  tw("breadLabel"),
   };
 
   const statusLabel = AVAILABILITY.status === "open" ? labels.availOpen
@@ -147,7 +137,7 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
     : AVAILABILITY.status === "limited" ? "bg-amber-500" : "bg-red-500";
 
   // The breadcrumb JSON-LD is emitted by page.tsx.
-  const cvUrl = `/cv/Aicha-Imene-DAHOUMANE-CV-${isFr ? "fr" : isEs ? "es" : "en"}-hybrid.pdf`;
+  const cvUrl = `/cv/Aicha-Imene-DAHOUMANE-CV-${lang}-hybrid.pdf`;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
@@ -218,7 +208,7 @@ export default function WorkWithMeContent({ locale, availableNow }: { locale: st
       <section id="services" aria-labelledby="section-services" className="mb-10 scroll-mt-24">
         <h2 id="section-services" className="text-lg font-semibold">{tSections("services_title")}</h2>
         <p className="mt-2 text-sm text-muted">{tSections("services_subtitle")}</p>
-        <TrackAwareServices locale={isFr ? "fr" : isEs ? "es" : "en"} />
+        <TrackAwareServices locale={lang} />
       </section>
 
       {/* Process */}

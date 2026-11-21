@@ -15,3 +15,10 @@ export function ogAlternateLocales(locale: string): string[] {
   const current = ogLocale(locale);
   return ["en_US", "fr_FR", "es_ES"].filter((l) => l !== current);
 }
+
+const INTL: Record<string, string> = { fr: "fr-FR", en: "en-US", es: "es-ES" };
+
+/** BCP 47 tag for Intl / toLocaleString(): "fr-FR", "es-ES" or "en-US". */
+export function intlLocale(locale: string): string {
+  return INTL[locale] ?? INTL.en;
+}
