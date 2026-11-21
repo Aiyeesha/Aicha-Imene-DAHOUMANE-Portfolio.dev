@@ -2,6 +2,7 @@
 // ---------------------------------------
 // Each section is an independent component.
 
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import { rssAlternates } from "@/lib/seo";
 import dynamic from "next/dynamic";
 import TrackAwareHero from "./track-aware-hero";
@@ -77,8 +78,8 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       url: canonical,
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       title,
       description,
       siteName: "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",

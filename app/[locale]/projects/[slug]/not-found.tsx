@@ -1,11 +1,10 @@
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getPublishedProjectsWithAssetsCached } from "@/lib/data/projects.cached";
 
 export default async function ProjectNotFound() {
   const locale = await getLocale();
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "projectNotFound" });
 
   const allProjects = await getPublishedProjectsWithAssetsCached(locale);
   const suggested = allProjects.slice(0, 3);
@@ -20,27 +19,23 @@ export default async function ProjectNotFound() {
         </p>
 
         <h1 className="mt-4 text-2xl font-semibold text-strong">
-          {isFr ? "Projet introuvable" : isEs ? "Proyecto no encontrado" : "Project not found"}
+          {t("title")}
         </h1>
         <p className="mt-3 text-sm text-muted">
-          {isFr
-            ? "Ce projet n'existe pas ou a été déplacé."
-            : isEs
-            ? "Este proyecto no existe o ha sido trasladado."
-            : "This project doesn't exist or may have been moved."}
+          {t("body")}
         </p>
 
         <Link
           href={`/${locale}/projects`}
           className="mt-8 inline-flex items-center gap-2 rounded-full bg-cyan-500 px-6 py-2.5 text-sm font-medium text-black hover:opacity-90 transition-opacity"
         >
-          {isFr ? "Voir tous les projets" : isEs ? "Ver todos los proyectos" : "See all projects"}
+          {t("seeAll")}
         </Link>
 
         {suggested.length > 0 && (
           <div className="mt-16">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-2 mb-6">
-              {isFr ? "Vous aimerez peut-être" : isEs ? "Quizás te interese" : "You might like"}
+              {t("youMightLike")}
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
               {suggested.map((project) => (

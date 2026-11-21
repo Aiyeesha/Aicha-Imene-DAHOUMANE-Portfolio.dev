@@ -6,6 +6,7 @@
 //   3. In preparation (amber ◎): Salesforce, CompTIA Security+
 // Data: content/certifications.ts (static).
 
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import { SCHEDULED_EXAMS, examTargetLabel, trailheadProfile } from "@/content/certifications";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import Image from "next/image";
@@ -54,8 +55,8 @@ export async function generateMetadata({
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       siteName,
       images: [{ url: `${siteUrl}/${locale}/certifications/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

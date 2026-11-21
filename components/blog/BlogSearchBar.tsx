@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ type Result = {
 export default function BlogSearchBar() {
   const params = useParams();
   const locale = (params?.locale as string) ?? "en";
+  const t = useTranslations("blogIndex");
 
   const [query, setQuery]     = useState("");
   const [results, setResults] = useState<Result[]>([]);
@@ -68,9 +70,7 @@ export default function BlogSearchBar() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
-  const placeholder = isFr ? "Rechercher un article…" : isEs ? "Buscar un artículo…" : "Search articles…";
+  const placeholder = t("searchPlaceholder");
 
   const expanded = open && results.length > 0;
 
@@ -78,12 +78,8 @@ export default function BlogSearchBar() {
   const status = !open || query.length < 2 || loading
     ? ""
     : results.length === 0
-      ? (isFr ? "Aucun résultat" : isEs ? "Sin resultados" : "No results")
-      : isFr
-        ? `${results.length} résultat${results.length > 1 ? "s" : ""}, flèches haut et bas pour parcourir`
-        : isEs
-          ? `${results.length} resultado${results.length > 1 ? "s" : ""}, flechas arriba y abajo para recorrer`
-          : `${results.length} result${results.length > 1 ? "s" : ""}, use up and down arrows to browse`;
+      ? t("searchNoResults")
+      : t("searchResultsStatus", { count: results.length });
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
@@ -165,7 +161,7 @@ export default function BlogSearchBar() {
         <div
           id={listboxId}
           role="listbox"
-          aria-label={isFr ? "Articles trouvés" : isEs ? "Artículos encontrados" : "Matching articles"}
+          aria-label={t("searchResultsLabel")}
           className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-black/10 bg-white shadow-lg dark:bg-[#0D1426] dark:border-white/10"
         >
           {results.map((r, i) => (
@@ -208,7 +204,7 @@ export default function BlogSearchBar() {
       {open && results.length === 0 && query.length >= 2 && !loading && (
         <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border border-black/10 bg-white px-4 py-3 shadow-lg dark:bg-[#0D1426] dark:border-white/10">
           <p className="text-sm text-muted-2">
-            {isFr ? <>Aucun résultat pour &laquo;&nbsp;</> : isEs ? <>Sin resultados para &laquo;&nbsp;</> : <>No results for &ldquo;</>}{query}{isFr ? <>&nbsp;&raquo;</> : isEs ? <>&nbsp;&raquo;</> : <>&rdquo;</>}
+            {t("searchNoResultsFor", { query })}
           </p>
         </div>
       )}

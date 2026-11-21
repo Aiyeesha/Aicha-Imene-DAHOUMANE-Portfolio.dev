@@ -1,27 +1,20 @@
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "securityAck" });
   const siteUrl = getSiteUrl();
-  const title = isFr
-    ? "Remerciements sécurité — Aïcha Imène DAHOUMANE"
-    : isEs
-    ? "Agradecimientos de seguridad — Aïcha Imène DAHOUMANE"
-    : "Security Acknowledgments — Aïcha Imène DAHOUMANE";
+  const title = t("metaTitle");
   return {
     title,
     // Own description (would otherwise inherit the home page's)
-    description: isFr
-      ? "Remerciements aux chercheurs en sécurité ayant signalé de manière responsable une vulnérabilité sur ce portfolio, via la politique de divulgation security.txt."
-      : isEs
-      ? "Agradecimientos a los investigadores de seguridad que notificaron de forma responsable una vulnerabilidad en este portfolio mediante su política security.txt."
-      : "Thanks to the security researchers who responsibly disclosed a vulnerability in this portfolio through its security.txt disclosure policy.",
+    description: t("metaDescription"),
     robots: { index: false },
     alternates: {
       canonical: `${siteUrl}/${locale}/security/acknowledgments`,
@@ -38,8 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       url: `${siteUrl}/${locale}/security/acknowledgments`,
       type: "website",
-      locale: isFr ? "fr_FR" : isEs ? "es_ES" : "en_US",
-      alternateLocale: isFr ? ["en_US", "es_ES"] : isEs ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       images: [{ url: `${siteUrl}/${locale}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
   };
@@ -47,37 +40,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function SecurityAcknowledgmentsPage({ params }: PageProps) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t  = await getTranslations({ locale, namespace: "securityAck" });
+  const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
     <div className="py-14 max-w-2xl">
-      <h1 className="text-3xl font-semibold text-strong">
-        {isFr ? "Remerciements sécurité" : isEs ? "Agradecimientos de seguridad" : "Security Acknowledgments"}
-      </h1>
+      <h1 className="text-3xl font-semibold text-strong">{t("title")}</h1>
       <p className="mt-4 text-sm text-muted leading-relaxed">
-        {isFr
-          ? "Cette page remercie les chercheurs en sécurité qui ont signalé des vulnérabilités de manière responsable via la politique de divulgation disponible dans le fichier "
-          : isEs
-          ? "Esta página agradece a los investigadores de seguridad que han divulgado vulnerabilidades de forma responsable a través de la política de divulgación disponible en el archivo "
-          : "This page acknowledges security researchers who have responsibly disclosed vulnerabilities through the disclosure policy available in the "}
-        <a
-          href="/.well-known/security.txt"
-          className="underline underline-offset-4 hover:opacity-70 transition-opacity"
-        >
-          security.txt
-        </a>
-        {isFr ? "." : isEs ? "." : " file."}
+        {t.rich("intro", {
+          link: (chunks) => (
+            <a
+              href="/.well-known/security.txt"
+              className="underline underline-offset-4 hover:opacity-70 transition-opacity"
+            >
+              {chunks}
+            </a>
+          ),
+        })}
       </p>
 
       <div className="mt-10 card p-6">
-        <p className="text-sm text-muted-2 italic">
-          {isFr
-            ? "Aucun rapport reçu à ce jour. Merci pour votre vigilance."
-            : isEs
-            ? "No se ha recibido ningún informe hasta la fecha. Gracias por su vigilancia."
-            : "No reports received to date. Thank you for your vigilance."}
-        </p>
+        <p className="text-sm text-muted-2 italic">{t("none")}</p>
       </div>
 
       <div className="mt-10">
@@ -85,7 +68,7 @@ export default async function SecurityAcknowledgmentsPage({ params }: PageProps)
           href={`/${locale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
         >
-          ← {isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home"}
+          {tc("backHome")}
         </Link>
       </div>
     </div>

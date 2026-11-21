@@ -3,6 +3,8 @@
 // OpenGraph image for the About page, with the cyan (Salesforce) + violet
 // (IT Ops) palette of the home page image.
 
+import { pick } from "@/lib/i18n/pick";
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -14,30 +16,25 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name     = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-  const title    = isFr ? "À propos" : isEs ? "Sobre mí" : "About me";
-  const subtitle = isFr
-    ? "De l'administration systèmes & réseaux au développement Salesforce"
-    : isEs
-    ? "De la administración de sistemas y redes al desarrollo Salesforce"
-    : "From systems & network administration to Salesforce development";
+  const title    = t("aboutTitle");
+  const subtitle = t("aboutSubtitle");
 
   // Cyan (Salesforce) + violet (IT Ops)
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
-  const tags = isFr
-    ? ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 ans d'expérience"]
-    : isEs
-    ? ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 años de experiencia"]
-    : ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 years experience"];
+  const tags = pick({
+    fr: ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 ans d'expérience"],
+    es: ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 años de experiencia"],
+    en: ["Salesforce Dev", "IT Ops", "LWC · Apex · Flows", "3 years experience"],
+  }, locale);
 
   return new ImageResponse(
     (

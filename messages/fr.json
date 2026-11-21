@@ -226,7 +226,12 @@
       "prev": "Précédent",
       "next": "Suivant"
     },
-    "ctaAllPosts": "Voir tous les articles"
+    "ctaAllPosts": "Voir tous les articles",
+    "searchPlaceholder": "Rechercher un article…",
+    "searchNoResults": "Aucun résultat",
+    "searchResultsStatus": "{count, plural, one {# résultat} other {# résultats}}, flèches haut et bas pour parcourir",
+    "searchResultsLabel": "Articles trouvés",
+    "searchNoResultsFor": "Aucun résultat pour « {query} »"
   },
   "blogPost": {
     "back": "Retour",
@@ -245,7 +250,9 @@
     "share": "Partager",
     "shareLinkedIn": "Partager sur LinkedIn",
     "copyLink": "Copier le lien",
-    "copied": "Copié !"
+    "copied": "Copié !",
+    "series": "Série",
+    "seriesAria": "Série : {name}"
   },
   "blogToc": {
     "title": "Sommaire",
@@ -404,7 +411,8 @@
     "journeyTitle": "Parcours",
     "valuesTitle": "Valeurs",
     "passionsTitle": "En dehors du travail",
-    "backHome": "Retour à l'accueil"
+    "backHome": "Retour à l'accueil",
+    "careerTimelineLabel": "Frise de carrière"
   },
   "privacy": {
     "title": "Politique de confidentialité",
@@ -581,7 +589,10 @@
     "ctaText": "Si le poste touche à la fois Salesforce et l'infrastructure — intégration, migration, mise en production tracée, automatisation des déploiements — c'est exactement le terrain où mon profil fait gagner du temps à une équipe.",
     "ctaContact": "Présenter un poste",
     "ctaCv": "Télécharger le CV hybride (PDF)",
-    "sfSecurityLink": "Le volet sécurité en détail : partage, FLS, Apex, intégrations →"
+    "sfSecurityLink": "Le volet sécurité en détail : partage, FLS, Apex, intégrations →",
+    "problemLabel": "Le problème",
+    "proofsLabel": "Preuves",
+    "verifiableLabel": "Vérifiable"
   },
   "recruiter": {
     "title": "Vous recrutez pour quel poste ?",
@@ -734,5 +745,77 @@
     "linkHybrid": "Profil hybride : Salesforce, infrastructure et sécurité combinés",
     "linkCerts": "Certifications et examens Salesforce programmés",
     "backHome": "← Retour à l'accueil"
+  },
+  "common": {
+    "home": "Accueil",
+    "breadcrumb": "Fil d'Ariane",
+    "backHome": "← Retour à l'accueil",
+    "newTab": "nouvel onglet",
+    "opensInNewTab": "(s'ouvre dans un nouvel onglet)",
+    "previous": "Précédent",
+    "next": "Suivant"
+  },
+  "uses": {
+    "title": "Setup & Outils",
+    "intro": "Mon environnement de travail au quotidien — éditeur, outils Salesforce, IT Ops, et productivité. Inspiré de la convention",
+    "visit": "Visiter"
+  },
+  "securityAck": {
+    "title": "Remerciements sécurité",
+    "metaTitle": "Remerciements sécurité — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Remerciements aux chercheurs en sécurité ayant signalé de manière responsable une vulnérabilité sur ce portfolio, via la politique de divulgation security.txt.",
+    "intro": "Cette page remercie les chercheurs en sécurité qui ont signalé des vulnérabilités de manière responsable via la politique de divulgation disponible dans le fichier <link>security.txt</link>.",
+    "none": "Aucun rapport reçu à ce jour. Merci pour votre vigilance."
+  },
+  "projectsPage": {
+    "metaTitle": "Projets — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Galerie complète des projets Salesforce et IT Ops : automatisations, déploiements, migrations, sécurité et plus.",
+    "title": "Tous les projets",
+    "subtitle": "Galerie complète — Salesforce et IT Ops.",
+    "indexTitle": "Index des projets ({count})",
+    "empty": "Aucun projet disponible pour l'instant."
+  },
+  "og": {
+    "workWithMeTitle": "Me recruter",
+    "workWithMeSubtitle": "Administratrice & Développeuse Salesforce · IT Ops · CDI · Tous secteurs",
+    "usesTitle": "Setup & Outils",
+    "usesSubtitle": "Outils, stacks et références en Salesforce, IT Ops et développement web",
+    "sfSecurityTitle": "Sécurité Salesforce",
+    "sfSecuritySubtitle": "Du modèle de partage au code Apex : quatre niveaux, chacun relié à un projet",
+    "hybridTitle": "Profil hybride",
+    "hybridSubtitle": "Salesforce + infrastructure + sécurité : la combinaison, pas la juxtaposition",
+    "blogTitle": "Blog & Tutoriels",
+    "blogSubtitle": "Guides Salesforce, IT Ops et développement web — implémentations concrètes et retours d'expérience",
+    "aboutTitle": "À propos",
+    "aboutSubtitle": "De l'administration systèmes & réseaux au développement Salesforce",
+    "certTitle": "Certifications & Diplômes",
+    "badgeEarned": "Obtenu",
+    "badgeActive": "Actif",
+    "badgePreparing": "En préparation",
+    "certSubtitleTaken": "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Examens Salesforce Platform Foundations & Administrator passés (déc. 2026)",
+    "certSubtitleScheduled": "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Examens Salesforce Platform Foundations & Administrator planifiés (déc. 2026)"
+  },
+  "testimonialPage": {
+    "metaTitle": "Partagez votre témoignage — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Formulaire privé réservé aux anciens collègues, jurys et mentors d'Aïcha Imène DAHOUMANE pour partager un témoignage sur leur collaboration.",
+    "expiredTitle": "Lien expiré",
+    "expiredBody": "Ce lien d'invitation a expiré ou a déjà été utilisé. Contactez Aïcha pour en recevoir un nouveau.",
+    "title": "Partagez votre témoignage",
+    "intro": "Votre retour aide d'autres professionnels à comprendre comment je travaille. Merci d'avoir pris le temps de répondre — votre témoignage sera relu avant publication.",
+    "privacy": "Vos informations ne sont utilisées qu'aux fins du témoignage sur ce portfolio. Elles ne seront jamais revendues ni partagées avec des tiers."
+  },
+  "workWithMePage": {
+    "metaTitle": "Me recruter — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Disponibilité, contrats recherchés, postes visés et déroulé d'un recrutement : l'essentiel pour recruter un profil Salesforce & IT Ops en Île-de-France."
+  },
+  "aboutPage": {
+    "metaTitle": "À propos — {name}",
+    "metaDescription": "Des systèmes & réseaux au développement Salesforce. Administratrice & Développeuse Salesforce, administratrice systèmes & réseaux et DevOps — en CDI."
+  },
+  "projectNotFound": {
+    "title": "Projet introuvable",
+    "body": "Ce projet n'existe pas ou a été déplacé.",
+    "seeAll": "Voir tous les projets",
+    "youMightLike": "Vous aimerez peut-être"
   }
 }

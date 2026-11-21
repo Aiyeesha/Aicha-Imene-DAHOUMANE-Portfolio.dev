@@ -2,6 +2,7 @@
 // --------------------------------------
 // OpenGraph image for the Blog page.
 
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -13,28 +14,19 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  const title   = isFr ? "Blog & Tutoriels" : isEs ? "Blog y tutoriales" : "Blog & Tutorials";
-  const subtitle = isFr
-    ? "Guides Salesforce, IT Ops et développement web — implémentations concrètes et retours d'expérience"
-    : isEs
-    ? "Guías de Salesforce, IT Ops y desarrollo web — implementaciones concretas y experiencias reales"
-    : "Salesforce, IT Ops and web development guides — concrete implementations and real-world experience";
+  const title   = t("blogTitle");
+  const subtitle = t("blogSubtitle");
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
-  const tags = isFr
-    ? ["Salesforce", "IT Ops", "DevOps", "Next.js"]
-    : isEs
-    ? ["Salesforce", "IT Ops", "DevOps", "Next.js"]
-    : ["Salesforce", "IT Ops", "DevOps", "Next.js"];
+  const tags = ["Salesforce", "IT Ops", "DevOps", "Next.js"];
 
   return new ImageResponse(
     (

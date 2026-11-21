@@ -5,6 +5,7 @@
 // category: Salesforce cyan (#22d3ee), IT Ops violet (#a78bfa), Next.js/Web
 // orange (#f97316), otherwise cyan.
 
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { readAllPosts, readPostMeta } from "@/content/blog/fs";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -92,8 +93,7 @@ export default async function Image({ params }: Props) {
   const excerpt     = post?.excerpt     || "";
   const tags        = (post?.tags?.slice(0, 3) ?? []).map((t) => translateTag(t, safeLocale));
   const readingTime = post?.readingTime ?? null;
-  const isFr        = safeLocale === "fr";
-  const isEs        = safeLocale === "es";
+  const t           = await getTranslations({ locale: safeLocale, namespace: "blogPost" });
 
   const siteUrl    = getSiteUrl()
     .replace(/^https?:\/\//, "");
@@ -185,7 +185,7 @@ export default async function Image({ params }: Props) {
                 display: "flex",
               }}
             >
-              {readingTime} min {isFr ? "de lecture" : isEs ? "de lectura" : "read"}
+              {readingTime} {t("readingTime")}
             </div>
           )}
 

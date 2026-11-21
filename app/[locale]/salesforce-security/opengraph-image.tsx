@@ -3,6 +3,8 @@
 // OpenGraph image for the Salesforce security page, same layout and palette
 // as the Hybrid profile image (app/[locale]/hybride/opengraph-image.tsx).
 
+import { pick } from "@/lib/i18n/pick";
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -14,30 +16,25 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name     = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-  const title    = isFr ? "Sécurité Salesforce" : isEs ? "Seguridad Salesforce" : "Salesforce security";
-  const subtitle = isFr
-    ? "Du modèle de partage au code Apex : quatre niveaux, chacun relié à un projet"
-    : isEs
-    ? "Del modelo de uso compartido al código Apex: cuatro niveles, cada uno ligado a un proyecto"
-    : "From the sharing model to Apex code: four levels, each tied to a project";
+  const title    = t("sfSecurityTitle");
+  const subtitle = t("sfSecuritySubtitle");
 
   // Cyan (Salesforce) + violet (IT Ops)
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
-  const tags = isFr
-    ? ["Partage & OWD", "FLS", "Apex sécurisé", "Intégrations"]
-    : isEs
-    ? ["Uso compartido y OWD", "FLS", "Apex seguro", "Integraciones"]
-    : ["Sharing & OWD", "FLS", "Secure Apex", "Integrations"];
+  const tags = pick({
+    fr: ["Partage & OWD", "FLS", "Apex sécurisé", "Intégrations"],
+    es: ["Uso compartido y OWD", "FLS", "Apex seguro", "Integraciones"],
+    en: ["Sharing & OWD", "FLS", "Secure Apex", "Integrations"],
+  }, locale);
 
   return new ImageResponse(
     (

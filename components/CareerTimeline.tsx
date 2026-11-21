@@ -11,6 +11,8 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { pick, type Localized } from "@/lib/i18n/pick";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -177,45 +179,35 @@ const MILESTONES: Milestone[] = [
 // ── Colours per type ──────────────────────────────────────────────────────────
 
 const TYPE_CONFIG: Record<MilestoneType, {
-  badge: string;        // EN label
-  badgeFr: string;      // FR label
-  badgeEs: string;      // ES label
+  badge: Localized;     // type label
   badgeClass: string;   // pill badge classes
   dotClass: string;     // dot
   lineClass: string;    // connecting line
   borderStyle: React.CSSProperties; // card left border (inline, as in LatestPosts)
 }> = {
   formation: {
-    badge: "Training",
-    badgeFr: "Formation",
-    badgeEs: "Formación",
+    badge: { en: "Training", fr: "Formation", es: "Formación" },
     badgeClass: "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300",
     dotClass:   "bg-violet-500 dark:bg-violet-400",
     lineClass:  "bg-linear-to-b from-violet-400/40 to-violet-400/10",
     borderStyle: { borderLeft: "3px solid #8b5cf6" },
   },
   stage: {
-    badge: "Internship",
-    badgeFr: "Stage",
-    badgeEs: "Prácticas",
+    badge: { en: "Internship", fr: "Stage", es: "Prácticas" },
     badgeClass: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
     dotClass:   "bg-amber-500 dark:bg-amber-400",
     lineClass:  "bg-linear-to-b from-amber-400/40 to-amber-400/10",
     borderStyle: { borderLeft: "3px solid #f59e0b" },
   },
   alternance: {
-    badge: "Work-study",
-    badgeFr: "Alternance",
-    badgeEs: "Formación dual",
+    badge: { en: "Work-study", fr: "Alternance", es: "Formación dual" },
     badgeClass: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300",
     dotClass:   "bg-cyan-500 dark:bg-cyan-400",
     lineClass:  "bg-linear-to-b from-cyan-400/50 to-cyan-400/10",
     borderStyle: { borderLeft: "3px solid #06b6d4" },
   },
   emploi: {
-    badge: "Position",
-    badgeFr: "Poste",
-    badgeEs: "Puesto",
+    badge: { en: "Position", fr: "Poste", es: "Puesto" },
     badgeClass: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300",
     dotClass:   "bg-emerald-500 dark:bg-emerald-400",
     lineClass:  "bg-linear-to-b from-emerald-400/50 to-emerald-400/10",
@@ -228,14 +220,12 @@ const TYPE_CONFIG: Record<MilestoneType, {
 function TimelineItem({
   milestone,
   isLast,
-  isFr,
-  isEs,
+  locale,
   shouldReduce,
 }: {
   milestone: Milestone;
   isLast: boolean;
-  isFr: boolean;
-  isEs: boolean;
+  locale: string;
   shouldReduce: boolean | null;
 }) {
   const ref  = useRef<HTMLLIElement>(null);
@@ -248,13 +238,13 @@ function TimelineItem({
   const periodLabel =
     typeof milestone.period === "string"
       ? milestone.period
-      : isFr ? milestone.period.fr : isEs ? milestone.period.es : milestone.period.en;
+      : pick(milestone.period, locale);
 
   // Localised organisation (same rule as the period).
   const orgLabel =
     typeof milestone.org === "string"
       ? milestone.org
-      : isFr ? milestone.org.fr : isEs ? milestone.org.es : milestone.org.en;
+      : pick(milestone.org, locale);
 
   return (
     <li ref={ref} className="flex gap-4 md:gap-6">
@@ -310,7 +300,7 @@ function TimelineItem({
         {/* Header: type + title */}
         <div className="flex flex-wrap items-start gap-2 mb-2">
           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${cfg.badgeClass}`}>
-            {isFr ? cfg.badgeFr : isEs ? cfg.badgeEs : cfg.badge}
+            {pick(cfg.badge, locale)}
           </span>
           {/* Period, mobile only (replaces the left-column badge). */}
           <span className="rounded-full bg-black/5 dark:bg-white/8 px-2 py-0.5 text-xs font-mono font-medium text-muted-2 whitespace-nowrap sm:hidden">
@@ -323,7 +313,7 @@ function TimelineItem({
         <div className="flex items-start justify-between gap-3 max-sm:flex-wrap">
           <div className="min-w-0">
             <h3 className="text-sm font-semibold leading-snug">
-              {isFr ? milestone.title.fr : isEs ? milestone.title.es : milestone.title.en}
+              {pick(milestone.title, locale)}
             </h3>
             <p className="mt-0.5 text-xs font-medium text-muted-2">{orgLabel}</p>
           </div>
@@ -351,7 +341,7 @@ function TimelineItem({
         </div>
 
         <p className="mt-2 text-sm text-muted leading-relaxed">
-          {isFr ? milestone.description.fr : isEs ? milestone.description.es : milestone.description.en}
+          {pick(milestone.description, locale)}
         </p>
 
         {/* Tags */}
@@ -376,18 +366,16 @@ function TimelineItem({
 
 export default function CareerTimeline({ locale }: { locale: string }) {
   const shouldReduce = useReducedMotion();
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = useTranslations("about");
 
   return (
-    <ol className="mt-6 list-none space-y-0" aria-label={isFr ? "Frise de carrière" : isEs ? "Cronología profesional" : "Career timeline"}>
+    <ol className="mt-6 list-none space-y-0" aria-label={t("careerTimelineLabel")}>
       {MILESTONES.map((m, i) => (
         <TimelineItem
           key={`${typeof m.period === "string" ? m.period : m.period.en}-${m.type}`}
           milestone={m}
           isLast={i === MILESTONES.length - 1}
-          isFr={isFr}
-          isEs={isEs}
+          locale={locale}
           shouldReduce={shouldReduce}
         />
       ))}

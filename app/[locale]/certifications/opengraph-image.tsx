@@ -2,6 +2,7 @@
 // ------------------------------------------------
 // OG image for the Certifications page.
 
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { SCHEDULED_EXAMS, isExamPast } from "@/content/certifications";
@@ -13,28 +14,23 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME  || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  const title    = isFr ? "Certifications & Diplômes"  : isEs ? "Certificaciones y diplomas" : "Certifications & Diplomas";
+  const title    = t("certTitle");
   // The Salesforce certifications are not obtained yet: the share image must
   // say "exam scheduled" unambiguously, then "exams taken" (result pending)
   // once the last booked exam day is over.
   const examsTaken = isExamPast(SCHEDULED_EXAMS.platformAdministrator);
-  const subtitle = isFr
-    ? `RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Examens Salesforce Platform Foundations & Administrator ${examsTaken ? "passés" : "planifiés"} (déc. 2026)`
-    : isEs
-    ? `RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Exámenes Salesforce Platform Foundations y Administrator ${examsTaken ? "realizados" : "programados"} (dic. 2026)`
-    : `RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Platform Foundations & Administrator exams ${examsTaken ? "taken" : "scheduled"} (Dec. 2026)`;
+  const subtitle = examsTaken ? t("certSubtitleTaken") : t("certSubtitleScheduled");
 
   const badges = [
-    { label: isFr ? "Obtenu" : isEs ? "Obtenido" : "Completed",         color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
-    { label: isFr ? "Actif"  : isEs ? "Activo" : "Active",             color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
-    { label: isFr ? "En préparation" : isEs ? "En preparación" : "In preparation", color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
+    { label: t("badgeEarned"), color: "rgba(16,185,129,0.2)",  border: "rgba(16,185,129,0.4)",  text: "#6ee7b7" },
+    { label: t("badgeActive"), color: "rgba(34,211,238,0.15)", border: "rgba(34,211,238,0.35)", text: "#22d3ee" },
+    { label: t("badgePreparing"), color: "rgba(251,191,36,0.15)", border: "rgba(251,191,36,0.35)", text: "#fcd34d" },
   ];
 
   return new ImageResponse(

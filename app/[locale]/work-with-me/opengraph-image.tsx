@@ -1,4 +1,6 @@
 // app/[locale]/work-with-me/opengraph-image.tsx
+import { pick } from "@/lib/i18n/pick";
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { availability } from "@/lib/availability";
@@ -10,19 +12,14 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl().replace(/^https?:\/\//, "");
 
-  const title    = isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me";
+  const title    = t("workWithMeTitle");
   // Role first (Salesforce CV title), then IT Ops and the contract types.
-  const subtitle = isFr
-    ? "Administratrice & Développeuse Salesforce · IT Ops · CDI · Tous secteurs"
-    : isEs
-    ? "Administradora & Desarrolladora Salesforce · IT Ops · Contrato indefinido · Todos los sectores"
-    : "Salesforce Administrator & Developer · IT Ops · Permanent role · Any industry";
+  const subtitle = t("workWithMeSubtitle");
   // "Interviews now — available from …", then "available immediately".
   const availLabel = availability(locale).summary.replace(" · ", " — ");
 
@@ -30,11 +27,11 @@ export default async function Image({ params }: Props) {
   const violet = "#a78bfa";
   const green  = "#34d399";
 
-  const domains = isFr
-    ? ["Salesforce Dev", "Admin Salesforce", "IT Ops", "DevOps / CI·CD"]
-    : isEs
-    ? ["Salesforce Dev", "Administración Salesforce", "IT Ops", "DevOps / CI·CD"]
-    : ["Salesforce Dev", "Salesforce Admin", "IT Ops", "DevOps / CI·CD"];
+  const domains = pick({
+    fr: ["Salesforce Dev", "Admin Salesforce", "IT Ops", "DevOps / CI·CD"],
+    es: ["Salesforce Dev", "Administración Salesforce", "IT Ops", "DevOps / CI·CD"],
+    en: ["Salesforce Dev", "Salesforce Admin", "IT Ops", "DevOps / CI·CD"],
+  }, locale);
 
   return new ImageResponse(
     (

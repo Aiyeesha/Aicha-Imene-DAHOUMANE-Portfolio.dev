@@ -9,6 +9,7 @@
 // the invitee knows to ask for a new one. noindex. Submissions are emailed
 // to the site owner through Formhook (app/api/testimonial-submit/route.ts).
 
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isInviteUsed, isInviteValid, sessionKeyFor } from "@/lib/security/testimonialInvite";
@@ -22,22 +23,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "testimonialPage" });
   const siteUrl = getSiteUrl();
 
   return {
-    title: isFr
-      ? "Partagez votre témoignage — Aïcha Imène DAHOUMANE"
-      : isEs
-      ? "Comparte tu testimonio — Aïcha Imène DAHOUMANE"
-      : "Share your testimonial — Aïcha Imène DAHOUMANE",
+    title: t("metaTitle"),
     // Own description (would otherwise inherit the home page's)
-    description: isFr
-      ? "Formulaire privé réservé aux anciens collègues, jurys et mentors d'Aïcha Imène DAHOUMANE pour partager un témoignage sur leur collaboration."
-      : isEs
-      ? "Formulario privado para antiguos compañeros, miembros de tribunal y mentores de Aïcha Imène DAHOUMANE para compartir un testimonio de colaboración."
-      : "Private form for former colleagues, jury members and mentors of Aïcha Imène DAHOUMANE to share a testimonial about working together.",
+    description: t("metaDescription"),
     // Keep out of search engines
     robots: { index: false, follow: false },
     // Own canonical
@@ -59,8 +51,7 @@ export default async function TestimonialSubmitPage({
   const { locale: rawLocale } = await params;
   const sp                    = await searchParams;
   const locale: "en" | "fr" | "es" = rawLocale === "fr" ? "fr" : rawLocale === "es" ? "es" : "en";
-  const isFr                  = locale === "fr";
-  const isEs                  = locale === "es";
+  const t = await getTranslations({ locale, namespace: "testimonialPage" });
 
   // ── HMAC invitation link ──────────────────────────────────────────────────
   // ?invite=<hmac-sha256-hex>&exp=<unix-seconds>, where
@@ -90,14 +81,10 @@ export default async function TestimonialSubmitPage({
         <p className="text-4xl">🔒</p>
         {/* Reached only with a genuine invitation that expired or was used */}
         <h1 className="mt-4 text-xl font-semibold">
-          {isFr ? "Lien expiré" : isEs ? "Enlace caducado" : "Link expired"}
+          {t("expiredTitle")}
         </h1>
         <p className="mt-3 text-sm text-muted">
-          {isFr
-            ? "Ce lien d'invitation a expiré ou a déjà été utilisé. Contactez Aïcha pour en recevoir un nouveau."
-            : isEs
-            ? "Este enlace de invitación ha caducado o ya se ha utilizado. Contacta con Aïcha para recibir uno nuevo."
-            : "This invitation link has expired or has already been used. Please contact Aïcha for a new one."}
+          {t("expiredBody")}
         </p>
       </div>
     );
@@ -113,14 +100,10 @@ export default async function TestimonialSubmitPage({
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold">
-          {isFr ? "Partagez votre témoignage" : isEs ? "Comparte tu testimonio" : "Share your testimonial"}
+          {t("title")}
         </h1>
         <p className="mt-2 text-sm text-muted">
-          {isFr
-            ? "Votre retour aide d'autres professionnels à comprendre comment je travaille. Merci d'avoir pris le temps de répondre — votre témoignage sera relu avant publication."
-            : isEs
-            ? "Tu opinión ayuda a otros profesionales a entender cómo trabajo. Gracias por tomarte el tiempo de responder — tu testimonio será revisado antes de publicarse."
-            : "Your feedback helps other professionals understand what it's like to work with me. Thank you for taking the time — your testimonial will be reviewed before being published."}
+          {t("intro")}
         </p>
       </div>
 
@@ -129,11 +112,7 @@ export default async function TestimonialSubmitPage({
 
       {/* Privacy */}
       <p className="mt-8 text-xs text-muted-2">
-        {isFr
-          ? "Vos informations ne sont utilisées qu'aux fins du témoignage sur ce portfolio. Elles ne seront jamais revendues ni partagées avec des tiers."
-          : isEs
-          ? "Tu información se utiliza únicamente para el testimonio en este portfolio. Nunca será vendida ni compartida con terceros."
-          : "Your information is used solely for this portfolio testimonial. It will never be sold or shared with third parties."}
+        {t("privacy")}
       </p>
     </div>
   );

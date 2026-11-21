@@ -6,6 +6,7 @@
 //   3. tech stack grid and career timeline (static)
 //   4. journey, values, passions (content/about.ts)
 
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getAboutPageCached } from "@/lib/data/about.cached";
@@ -25,16 +26,11 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "aboutPage" });
 
   const name  = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
-  const title = isFr ? `À propos — ${name}` : isEs ? `Sobre mí — ${name}` : `About — ${name}`;
-  const description = isFr
-    ? "Des systèmes & réseaux au développement Salesforce. Administratrice & Développeuse Salesforce, administratrice systèmes & réseaux et DevOps — en CDI."
-    : isEs
-    ? "De sistemas y redes al desarrollo Salesforce. Administradora & Desarrolladora Salesforce, administradora de sistemas y redes y DevOps — contrato indefinido."
-    : "From systems & networks to Salesforce development. Salesforce Administrator & Developer, systems & network administrator and DevOps — permanent role.";
+  const title = t("metaTitle", { name });
+  const description = t("metaDescription");
 
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/about`;
@@ -57,8 +53,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       siteName,
       images: [{ url: `${siteUrl}/${locale}/about/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

@@ -12,10 +12,9 @@ type Layer = { title: string; scope: string; principle: string; items: Item[] };
 
 export default async function SalesforceSecurityContent({ locale }: { locale: string }) {
   const t = await getTranslations({ locale, namespace: "sfSecurity" });
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const tc = await getTranslations({ locale, namespace: "common" });
   const layers = t.raw("layers") as Layer[];
-  const breadLabel = isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb";
+  const breadLabel = tc("breadcrumb");
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">

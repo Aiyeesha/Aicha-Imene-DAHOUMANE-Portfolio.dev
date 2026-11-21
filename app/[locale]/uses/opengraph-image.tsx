@@ -2,6 +2,7 @@
 // -------------------------------------------
 // OpenGraph image for the Uses page (setup, tools and references).
 
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -13,28 +14,19 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name    = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl = getSiteUrl()
     .replace(/^https?:\/\//, "");
 
-  const title   = isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup";
-  const subtitle = isFr
-    ? "Outils, stacks et références en Salesforce, IT Ops et développement web"
-    : isEs
-    ? "Herramientas, stacks y referencias en Salesforce, IT Ops y desarrollo web"
-    : "Tools, stacks and references across Salesforce, IT Ops and web development";
+  const title   = t("usesTitle");
+  const subtitle = t("usesSubtitle");
 
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
-  const tags = isFr
-    ? ["Salesforce", "IT Ops", "Web Dev", "Open Source"]
-    : isEs
-    ? ["Salesforce", "IT Ops", "Web Dev", "Open Source"]
-    : ["Salesforce", "IT Ops", "Web Dev", "Open Source"];
+  const tags = ["Salesforce", "IT Ops", "Web Dev", "Open Source"];
 
   return new ImageResponse(
     (

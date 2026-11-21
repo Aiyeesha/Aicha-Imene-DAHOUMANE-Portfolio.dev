@@ -19,6 +19,15 @@ jest.mock("@/lib/security/testimonialInvite", () => {
   return { ...actual, isInviteUsed: jest.fn(async () => false) };
 });
 jest.mock("@/components/TestimonialSubmitForm", () => () => null);
+// Server translations outside Next.js: read the real French messages, so the
+// assertions below still check the displayed text.
+jest.mock("next-intl/server", () => {
+  const fr = jest.requireActual("../messages/fr.json");
+  return {
+    getTranslations: async ({ namespace }: { namespace: string }) =>
+      (key: string) => fr[namespace][key],
+  };
+});
 
 import Page from "@/app/[locale]/testimonial-submit/page";
 import { signInvite } from "@/lib/security/testimonialInvite";

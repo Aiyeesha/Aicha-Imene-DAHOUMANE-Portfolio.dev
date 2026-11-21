@@ -4,7 +4,9 @@
 // the home page, the command palette and project pages' back link. Rendered
 // on the server with the Redis cache (getPublishedProjectsWithAssetsCached).
 
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -19,20 +21,11 @@ type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "projectsPage" });
   const siteUrl = getSiteUrl();
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops";
-  const title = isFr
-    ? "Projets — Aïcha Imène DAHOUMANE"
-    : isEs
-    ? "Proyectos — Aïcha Imène DAHOUMANE"
-    : "Projects — Aïcha Imène DAHOUMANE";
-  const description = isFr
-    ? "Galerie complète des projets Salesforce et IT Ops : automatisations, déploiements, migrations, sécurité et plus."
-    : isEs
-    ? "Galería completa de proyectos de Salesforce e IT Ops: automatizaciones, despliegues, migraciones, seguridad y más."
-    : "Full gallery of Salesforce and IT Ops projects: automations, deployments, migrations, security, and more.";
+  const title = t("metaTitle");
+  const description = t("metaDescription");
   const urlPath = `${siteUrl}/${locale}/projects`;
   return {
     metadataBase: new URL(siteUrl),
@@ -50,8 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       title,
       description,
       siteName,
@@ -68,31 +61,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProjectsPage({ params }: PageProps) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t  = await getTranslations({ locale, namespace: "projectsPage" });
+  const tc = await getTranslations({ locale, namespace: "common" });
+  const tn = await getTranslations({ locale, namespace: "nav" });
   const uiLocale: "en" | "fr" | "es" = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
 
   const projects = await getPublishedProjectsWithAssetsCached(locale);
 
   const L = {
-    breadcrumbHome: isFr ? "Accueil" : isEs ? "Inicio" : "Home",
-    title: isFr ? "Tous les projets" : isEs ? "Todos los proyectos" : "All projects",
-    subtitle: isFr
-      ? "Galerie complète — Salesforce et IT Ops."
-      : isEs
-      ? "Galería completa — Salesforce e IT Ops."
-      : "Full gallery — Salesforce and IT Ops.",
-    backHome: isFr ? "Retour à l'accueil" : isEs ? "Volver al inicio" : "Back to home",
-    indexTitle: isFr
-      ? `Index des projets (${projects.length})`
-      : isEs
-      ? `Índice de proyectos (${projects.length})`
-      : `Project index (${projects.length})`,
-    empty: isFr
-      ? "Aucun projet disponible pour l'instant."
-      : isEs
-      ? "No hay proyectos disponibles por el momento."
-      : "No projects available at the moment.",
+    breadcrumbHome: tc("home"),
+    title:          t("title"),
+    subtitle:       t("subtitle"),
+    backHome:       tc("backHome"),
+    indexTitle:     t("indexTitle", { count: projects.length }),
+    empty:          t("empty"),
   };
 
   const jsonLdBreadcrumb = {
@@ -100,7 +82,7 @@ export default async function ProjectsPage({ params }: PageProps) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: L.breadcrumbHome, item: `${getSiteUrl()}/${locale}` },
-      { "@type": "ListItem", position: 2, name: isFr ? "Projets" : isEs ? "Proyectos" : "Projects", item: `${getSiteUrl()}/${locale}/projects` },
+      { "@type": "ListItem", position: 2, name: tn("projects"), item: `${getSiteUrl()}/${locale}/projects` },
     ],
   };
 
@@ -110,7 +92,7 @@ export default async function ProjectsPage({ params }: PageProps) {
 
       {/* ── Breadcrumb ─────────────────────────────────────────────────────── */}
       <nav
-        aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"}
+        aria-label={tc("breadcrumb")}
         className="mb-6 flex items-center gap-2 text-sm text-muted-2"
       >
         <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">
@@ -167,7 +149,7 @@ export default async function ProjectsPage({ params }: PageProps) {
           href={`/${locale}`}
           className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-5 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 soft-ring"
         >
-          ← {L.backHome}
+          {L.backHome}
         </Link>
       </div>
     </div>
