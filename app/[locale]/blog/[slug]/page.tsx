@@ -1,3 +1,4 @@
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -78,8 +79,8 @@ export async function generateMetadata(
     alternates: { canonical: urlPath, languages, ...rssAlternates(locale) },
     openGraph: {
       type: "article",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       title,
       description,
       url: urlPath,

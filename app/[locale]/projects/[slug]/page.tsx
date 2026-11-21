@@ -1,3 +1,4 @@
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import { getPublishedProjectBySlugWithAssetsCached } from "@/lib/data/projectBySlug.cached";
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
@@ -230,8 +231,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       title: project.title,
       description,
       url: canonical,
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       siteName,
       images: [{ url: ogImage, width: 1200, height: 630, alt: project.title }],
     },

@@ -226,7 +226,12 @@
       "prev": "Previous",
       "next": "Next"
     },
-    "ctaAllPosts": "See all posts"
+    "ctaAllPosts": "See all posts",
+    "searchPlaceholder": "Search articles…",
+    "searchNoResults": "No results",
+    "searchResultsStatus": "{count, plural, one {# result} other {# results}}, use up and down arrows to browse",
+    "searchResultsLabel": "Matching articles",
+    "searchNoResultsFor": "No results for “{query}”"
   },
   "blogPost": {
     "back": "Back",
@@ -245,7 +250,9 @@
     "share": "Share",
     "shareLinkedIn": "Share on LinkedIn",
     "copyLink": "Copy link",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "series": "Series",
+    "seriesAria": "Series: {name}"
   },
   "blogToc": {
     "title": "Table of contents",
@@ -404,7 +411,8 @@
     "journeyTitle": "Journey",
     "valuesTitle": "Values",
     "passionsTitle": "Outside of work",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "careerTimelineLabel": "Career timeline"
   },
   "privacy": {
     "title": "Privacy policy",
@@ -581,7 +589,10 @@
     "ctaText": "If the role touches both Salesforce and infrastructure — integration, migration, traceable go-live, deployment automation — that's exactly where this profile saves a team time.",
     "ctaContact": "Tell me about the role",
     "ctaCv": "Download the hybrid CV (PDF)",
-    "sfSecurityLink": "Security in detail: sharing, FLS, Apex, integrations →"
+    "sfSecurityLink": "Security in detail: sharing, FLS, Apex, integrations →",
+    "problemLabel": "The problem",
+    "proofsLabel": "Proof",
+    "verifiableLabel": "Verifiable"
   },
   "recruiter": {
     "title": "Which role are you hiring for?",
@@ -734,5 +745,77 @@
     "linkHybrid": "Hybrid profile: Salesforce, infrastructure and security combined",
     "linkCerts": "Certifications and booked Salesforce exams",
     "backHome": "← Back to home"
+  },
+  "common": {
+    "home": "Home",
+    "breadcrumb": "Breadcrumb",
+    "backHome": "← Back to home",
+    "newTab": "new tab",
+    "opensInNewTab": "(opens in a new tab)",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "uses": {
+    "title": "Uses & Setup",
+    "intro": "My daily working environment — editor, Salesforce tools, IT Ops, and productivity. Inspired by the",
+    "visit": "Visit"
+  },
+  "securityAck": {
+    "title": "Security Acknowledgments",
+    "metaTitle": "Security Acknowledgments — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Thanks to the security researchers who responsibly disclosed a vulnerability in this portfolio through its security.txt disclosure policy.",
+    "intro": "This page acknowledges security researchers who have responsibly disclosed vulnerabilities through the disclosure policy available in the <link>security.txt</link> file.",
+    "none": "No reports received to date. Thank you for your vigilance."
+  },
+  "projectsPage": {
+    "metaTitle": "Projects — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Full gallery of Salesforce and IT Ops projects: automations, deployments, migrations, security, and more.",
+    "title": "All projects",
+    "subtitle": "Full gallery — Salesforce and IT Ops.",
+    "indexTitle": "Project index ({count})",
+    "empty": "No projects available at the moment."
+  },
+  "og": {
+    "workWithMeTitle": "Hire me",
+    "workWithMeSubtitle": "Salesforce Administrator & Developer · IT Ops · Permanent role · Any industry",
+    "usesTitle": "Uses & Setup",
+    "usesSubtitle": "Tools, stacks and references across Salesforce, IT Ops and web development",
+    "sfSecurityTitle": "Salesforce security",
+    "sfSecuritySubtitle": "From the sharing model to Apex code: four levels, each tied to a project",
+    "hybridTitle": "Hybrid profile",
+    "hybridSubtitle": "Salesforce + infrastructure + security: combined, not side by side",
+    "blogTitle": "Blog & Tutorials",
+    "blogSubtitle": "Salesforce, IT Ops and web development guides — concrete implementations and real-world experience",
+    "aboutTitle": "About me",
+    "aboutSubtitle": "From systems & network administration to Salesforce development",
+    "certTitle": "Certifications & Diplomas",
+    "badgeEarned": "Completed",
+    "badgeActive": "Active",
+    "badgePreparing": "In preparation",
+    "certSubtitleTaken": "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Platform Foundations & Administrator exams taken (Dec. 2026)",
+    "certSubtitleScheduled": "RNCP 4 · RNCP 5 · RNCP 6 · Trailhead Expeditioner · Salesforce Platform Foundations & Administrator exams scheduled (Dec. 2026)"
+  },
+  "testimonialPage": {
+    "metaTitle": "Share your testimonial — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Private form for former colleagues, jury members and mentors of Aïcha Imène DAHOUMANE to share a testimonial about working together.",
+    "expiredTitle": "Link expired",
+    "expiredBody": "This invitation link has expired or has already been used. Please contact Aïcha for a new one.",
+    "title": "Share your testimonial",
+    "intro": "Your feedback helps other professionals understand what it's like to work with me. Thank you for taking the time — your testimonial will be reviewed before being published.",
+    "privacy": "Your information is used solely for this portfolio testimonial. It will never be sold or shared with third parties."
+  },
+  "workWithMePage": {
+    "metaTitle": "Hire me — Aïcha Imène DAHOUMANE",
+    "metaDescription": "Availability, contract types, target roles and how hiring works: everything you need to hire a Salesforce & IT Ops profile in Île-de-France."
+  },
+  "aboutPage": {
+    "metaTitle": "About — {name}",
+    "metaDescription": "From systems & networks to Salesforce development. Salesforce Administrator & Developer, systems & network administrator and DevOps — permanent role."
+  },
+  "projectNotFound": {
+    "title": "Project not found",
+    "body": "This project doesn't exist or may have been moved.",
+    "seeAll": "See all projects",
+    "youMightLike": "You might like"
   }
 }

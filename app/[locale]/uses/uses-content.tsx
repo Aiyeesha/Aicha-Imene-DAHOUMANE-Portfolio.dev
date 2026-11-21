@@ -2,6 +2,7 @@
 // also follows a track switch, so no client JavaScript is needed.
 
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 type Locale = "en" | "fr" | "es";
 
@@ -97,10 +98,10 @@ const USES: UseCategory[] = [
   },
 ];
 
-export default function UsesContent({ locale }: { locale: string }) {
+export default async function UsesContent({ locale }: { locale: string }) {
+  const t  = await getTranslations({ locale, namespace: "uses" });
+  const tc = await getTranslations({ locale, namespace: "common" });
   const safeLocale: Locale = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
 
   // Open-source badge follows the track (Salesforce by default, IT Ops via
   // the `itops:` variant)
@@ -124,15 +125,11 @@ export default function UsesContent({ locale }: { locale: string }) {
     "itops:hover:border-violet-400/40 itops:dark:hover:border-violet-400/40 itops:hover:text-violet-700 itops:dark:hover:text-violet-300";
 
   const labels = {
-    title:    isFr ? "Setup & Outils" : isEs ? "Configuración y herramientas" : "Uses & Setup",
-    intro:    isFr
-      ? "Mon environnement de travail au quotidien — éditeur, outils Salesforce, IT Ops, et productivité. Inspiré de la convention"
-      : isEs
-      ? "Mi entorno de trabajo diario — editor, herramientas Salesforce, IT Ops y productividad. Inspirado en la convención"
-      : "My daily working environment — editor, Salesforce tools, IT Ops, and productivity. Inspired by the",
+    title:      t("title"),
+    intro:      t("intro"),
     convention: "uses.tech",
-    visit:    isFr ? "Visiter" : isEs ? "Visitar" : "Visit",
-    backHome: isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
+    visit:      t("visit"),
+    backHome:   tc("backHome"),
   };
 
   function Badge({ label }: { label: string }) {
@@ -146,9 +143,9 @@ export default function UsesContent({ locale }: { locale: string }) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
 
-      <nav aria-label={isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb"} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
+      <nav aria-label={tc("breadcrumb")} className="mb-6 flex items-center gap-2 text-sm text-muted-2">
         <Link href={`/${locale}`} className="hover:underline soft-ring rounded-sm px-1">
-          {isFr ? "Accueil" : isEs ? "Inicio" : "Home"}
+          {tc("home")}
         </Link>
         <span aria-hidden="true">›</span>
         <span className="text-muted">{labels.title}</span>
@@ -184,7 +181,7 @@ export default function UsesContent({ locale }: { locale: string }) {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`${labels.visit} ${item.name} (${isFr ? "nouvel onglet" : isEs ? "nueva pestaña" : "new tab"})`}
+                      aria-label={`${labels.visit} ${item.name} (${tc("newTab")})`}
                       className={`inline-flex items-center gap-1.5 self-start rounded-full border border-black/10 dark:border-white/10 px-3 py-1.5 text-xs font-medium text-muted-2 transition-colors soft-ring ${linkHover}`}
                     >
                       {labels.visit}<span aria-hidden="true"> ↗</span>

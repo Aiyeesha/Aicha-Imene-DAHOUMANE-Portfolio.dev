@@ -4,6 +4,7 @@
 // Salesforce + infrastructure + security combined, not side by side. Content
 // from the "hybrid" namespace of messages/{fr,en,es}.json. Track-neutral (the
 // subject is the combination), fully server-rendered.
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -36,9 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      locale: ogLocale(locale),
       alternateLocale:
-        locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+        ogAlternateLocales(locale),
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [{ url: `${siteUrl}/${locale}/hybride/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

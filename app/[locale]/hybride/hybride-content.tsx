@@ -24,19 +24,18 @@ type Scenario = {
 
 export default async function HybrideContent({ locale }: { locale: string }) {
   const t = await getTranslations({ locale, namespace: "hybrid" });
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const tc = await getTranslations({ locale, namespace: "common" });
 
   const scenarios = t.raw("scenarios") as Scenario[];
   const eliminates = t.raw("eliminates") as string[];
 
   const labels = {
-    problem: isFr ? "Le problème" : isEs ? "El problema" : "The problem",
-    proofs: isFr ? "Preuves" : isEs ? "Pruebas" : "Proof",
-    verifiable: isFr ? "Vérifiable" : isEs ? "Verificable" : "Verifiable",
-    newTab: isFr ? "(s'ouvre dans un nouvel onglet)" : isEs ? "(se abre en una nueva pestaña)" : "(opens in a new tab)",
-    backHome: isFr ? "← Retour à l'accueil" : isEs ? "← Volver al inicio" : "← Back to home",
-    breadLabel: isFr ? "Fil d'Ariane" : isEs ? "Ruta de navegación" : "Breadcrumb",
+    problem: t("problemLabel"),
+    proofs: t("proofsLabel"),
+    verifiable: t("verifiableLabel"),
+    newTab: tc("opensInNewTab"),
+    backHome: tc("backHome"),
+    breadLabel: tc("breadcrumb"),
     cvHref: `/cv/Aicha-Imene-DAHOUMANE-CV-${locale}-hybrid.pdf`,
   };
 

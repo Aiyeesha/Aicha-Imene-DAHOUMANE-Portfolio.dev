@@ -1,4 +1,5 @@
 // app/[locale]/uses/page.tsx — server component (metadata only)
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import UsesContent from "./uses-content";
@@ -39,8 +40,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       siteName,
       images: [{ url: `${urlPath}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },

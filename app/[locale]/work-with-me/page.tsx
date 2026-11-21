@@ -1,4 +1,5 @@
 // app/[locale]/work-with-me/page.tsx — server component (metadata only)
+import { ogLocale, ogAlternateLocales } from "@/lib/i18n/ogLocale";
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { getTranslations } from "next-intl/server";
@@ -10,20 +11,11 @@ type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "workWithMePage" });
   const siteUrl = getSiteUrl();
   const urlPath = `${siteUrl}/${locale}/work-with-me`;
-  const title = isFr
-    ? "Me recruter — Aïcha Imène DAHOUMANE"
-    : isEs
-    ? "Contratarme — Aïcha Imène DAHOUMANE"
-    : "Hire me — Aïcha Imène DAHOUMANE";
-  const description = isFr
-    ? "Disponibilité, contrats recherchés, postes visés et déroulé d'un recrutement : l'essentiel pour recruter un profil Salesforce & IT Ops en Île-de-France."
-    : isEs
-    ? "Disponibilidad, contratos buscados, puestos y proceso de selección: lo esencial para contratar un perfil Salesforce & IT Ops en Île-de-France."
-    : "Availability, contract types, target roles and how hiring works: everything you need to hire a Salesforce & IT Ops profile in Île-de-France.";
+  const title = t("metaTitle");
+  const description = t("metaDescription");
   return {
     title,
     description,
@@ -41,8 +33,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: urlPath,
       type: "website",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
-      alternateLocale: locale === "fr" ? ["en_US", "es_ES"] : locale === "es" ? ["en_US", "fr_FR"] : ["fr_FR", "es_ES"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Aïcha Imène DAHOUMANE — Salesforce & IT Ops",
       images: [{ url: `${siteUrl}/${locale}/work-with-me/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
@@ -58,14 +50,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function WorkWithMePage({ params }: PageProps) {
   const { locale } = await params;
   const siteUrl = getSiteUrl();
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const tc = await getTranslations({ locale, namespace: "common" });
+  const tn = await getTranslations({ locale, namespace: "nav" });
   const jsonLdBreadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : isEs ? "Inicio" : "Home", item: `${siteUrl}/${locale}` },
-      { "@type": "ListItem", position: 2, name: isFr ? "Me recruter" : isEs ? "Contratarme" : "Hire me", item: `${siteUrl}/${locale}/work-with-me` },
+      { "@type": "ListItem", position: 1, name: tc("home"), item: `${siteUrl}/${locale}` },
+      { "@type": "ListItem", position: 2, name: tn("workWithMe"), item: `${siteUrl}/${locale}/work-with-me` },
     ],
   };
   // FAQPage JSON-LD, from the same `faq` namespace as the displayed FAQ.

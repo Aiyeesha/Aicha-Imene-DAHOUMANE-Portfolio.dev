@@ -4,6 +4,8 @@
 // the About page's layout, with the cyan (Salesforce) + violet (IT Ops)
 // palette of the home page image.
 
+import { pick } from "@/lib/i18n/pick";
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { getSiteUrl } from "@/lib/siteUrl";
 
@@ -15,30 +17,25 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function Image({ params }: Props) {
   const { locale } = await params;
-  const isFr = locale === "fr";
-  const isEs = locale === "es";
+  const t = await getTranslations({ locale, namespace: "og" });
 
   const name     = process.env.NEXT_PUBLIC_OG_NAME || "Aïcha Imène DAHOUMANE";
   const siteUrl  = getSiteUrl()
     .replace(/^https?:\/\//, "");
   const initials = (process.env.NEXT_PUBLIC_BRAND_INITIALS || "A").toUpperCase();
 
-  const title    = isFr ? "Profil hybride" : isEs ? "Perfil híbrido" : "Hybrid profile";
-  const subtitle = isFr
-    ? "Salesforce + infrastructure + sécurité : la combinaison, pas la juxtaposition"
-    : isEs
-    ? "Salesforce + infraestructura + seguridad: la combinación, no la yuxtaposición"
-    : "Salesforce + infrastructure + security: combined, not side by side";
+  const title    = t("hybridTitle");
+  const subtitle = t("hybridSubtitle");
 
   // Cyan (Salesforce) + violet (IT Ops)
   const cyan   = "#22d3ee";
   const violet = "#a78bfa";
 
-  const tags = isFr
-    ? ["Salesforce", "IT Ops", "Sécurité", "3 cas concrets"]
-    : isEs
-    ? ["Salesforce", "IT Ops", "Seguridad", "3 casos concretos"]
-    : ["Salesforce", "IT Ops", "Security", "3 real cases"];
+  const tags = pick({
+    fr: ["Salesforce", "IT Ops", "Sécurité", "3 cas concrets"],
+    es: ["Salesforce", "IT Ops", "Seguridad", "3 casos concretos"],
+    en: ["Salesforce", "IT Ops", "Security", "3 real cases"],
+  }, locale);
 
   return new ImageResponse(
     (
